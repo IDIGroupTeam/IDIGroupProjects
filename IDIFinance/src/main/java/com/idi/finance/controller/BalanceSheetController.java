@@ -3,6 +3,7 @@ package com.idi.finance.controller;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,11 +11,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.idi.finance.bean.BalanceSheet;
+import com.idi.finance.dao.BalanceSheetDAO;
 import com.idi.finance.utils.ExcelProcessor;
 
 @Controller
-public class FinanceController {
-	private static final Logger logger = Logger.getLogger(FinanceController.class);
+public class BalanceSheetController {
+	private static final Logger logger = Logger.getLogger(BalanceSheetController.class);
+	
+	@Autowired
+	BalanceSheetDAO balanceSheetDAO;
 
 	@RequestMapping("/")
 	public String finance(Model model) {
@@ -38,8 +43,8 @@ public class FinanceController {
 		if (file != null && file.getSize() > 0) {
 			System.out.println(file.getName() + " - " + file.getSize());
 			try {
-				List<BalanceSheet> financies = ExcelProcessor.readExcel(file.getInputStream());
-
+				List<BalanceSheet> bss = ExcelProcessor.readExcel(file.getInputStream());
+				//balanceSheetDAO.insertOrUpdateBss(bss);
 				return "redirect:/";
 			} catch (Exception e) {
 				String comment = "Không thể đọc excel file " + file.getName()

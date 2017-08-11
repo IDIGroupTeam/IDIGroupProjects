@@ -11,6 +11,7 @@ public class BalanceSheet {
 	private String note;
 	private String description;
 	private double assetsValue;
+	private double changedRatio;
 	private Date assetsPeriod;
 
 	public int getAssetsId() {
@@ -69,6 +70,14 @@ public class BalanceSheet {
 		this.assetsValue = assetsValue;
 	}
 
+	public double getChangedRatio() {
+		return changedRatio;
+	}
+
+	public void setChangedRatio(double changedRatio) {
+		this.changedRatio = changedRatio;
+	}
+
 	public Date getAssetsPeriod() {
 		return assetsPeriod;
 	}
@@ -81,8 +90,8 @@ public class BalanceSheet {
 	public String toString() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(assetsPeriod);
-		String out = assetsName + "  " + rule + " " + assetsCode + "  " + note + " " + assetsValue + "  "
-				+ cal.get(Calendar.MONTH);
+		String out = assetsName + "  " + rule + " " + assetsCode + "  " + note + " " + assetsValue + "  " + changedRatio
+				+ " " + cal.get(Calendar.MONTH);
 		return out;
 	}
 }

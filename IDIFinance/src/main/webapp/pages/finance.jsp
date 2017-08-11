@@ -13,33 +13,25 @@
 <title>Tập đoàn IDI</title>
 </head>
 <body>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h4>Tài chính</h4>
-		</div>
-		<div class="panel-body">
-			<table width="100%">
-				<tr>
-					<td align="left" width="40%">
-						<div class="form-group">
-							<label for="sel1">Chỉ số KPI</label> <select name="kpiList"
-								class="form-control" id="sel1">
-								<option value="1">Khả năng thanh toán tức thời</option>
-								<option value="2">Khả năng thanh toán nhanh</option>
-								<option value="3">Khả năng thanh toán thành tiền</option>
-								<option value="4">Vòng quay khoản phải thu</option>
-								<option value="5">Vòng quay hàng tồn kho theo giá thị trường</option>
-								<option value="6">Vòng quay hàng tồn kho theo giá trị sổ sách</option>
-							</select>
-						</div>
-					</td>
-					<td align="right"><a href="${url}/update"
-						title="Cập nhật dữ liệu"><span
-							class="glyphicon glyphicon-pencil btn-lg"></span></a></td>
-				</tr>
-			</table>
-		</div>
-	</div>
-
+	<table width="100%">
+		<tr>
+			<td align="left" width="40%">
+				<div class="form-group">
+					<label for="sel1">Chỉ số KPI</label> <select name="kpiList"
+						class="form-control" id="sel1">
+						<option value="1">Khả năng thanh toán tức thời</option>
+						<option value="2">Khả năng thanh toán nhanh</option>
+						<option value="3">Khả năng thanh toán thành tiền</option>
+						<option value="4">Vòng quay khoản phải thu</option>
+						<option value="5">Vòng quay hàng tồn kho theo giá thị trường</option>
+						<option value="6">Vòng quay hàng tồn kho theo giá trị sổ sách</option>
+					</select>
+				</div>
+			</td>
+			<td align="right"><a href="${url}/update"
+				title="Cập nhật dữ liệu"><span
+					class="glyphicon glyphicon-pencil btn-lg"></span></a></td>
+		</tr>
+	</table>
 </body>
 </html>

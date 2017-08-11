@@ -120,6 +120,29 @@ public class ExcelProcessor {
 					}
 				}
 
+				// Read changed ration
+				if (columnStrIndex.equalsIgnoreCase("M")) {
+					CellType cellType = cell.getCellTypeEnum();
+					switch (cellType) {
+					case FORMULA:
+						// Formula
+						FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+						// Get value
+						CellValue value = evaluator.evaluate(cell);
+						CellType cellValueType = value.getCellTypeEnum();
+						switch (cellValueType) {
+						case STRING:
+							finance.setChangedRatio(value.getNumberValue());
+							break;
+						}
+						break;
+					case STRING:
+						finance.setChangedRatio(cell.getNumericCellValue());
+						break;
+					}
+				}
+
 				// Read period
 				if (columnStrIndex.equalsIgnoreCase("N")) {
 					CellType cellType = cell.getCellTypeEnum();

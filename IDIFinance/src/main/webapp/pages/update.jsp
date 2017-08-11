@@ -9,18 +9,11 @@
 <title>Tập đoàn IDI - Cập nhật dữ liệu tài chính</title>
 </head>
 <body>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h4>Cập nhật dữ liệu tài chính</h4>
-		</div>
-		<div class="panel-body">
-			<p>Chọn file dữ liệu tài chính excel muốn cập nhật</p>
-			<form method="POST" action="save" enctype="multipart/form-data">
-				<span style="color: red;">${comment}</span><br /> <input
-					name="file" type="file" /> <br /> <input
-					class="btn btn-info btn-sm" type="submit" value="Cập nhật" />
-			</form>
-		</div>
-	</div>
+	<p>Chọn file dữ liệu tài chính excel muốn cập nhật</p>
+	<form method="POST" action="save" enctype="multipart/form-data">
+		<span style="color: red;">${comment}</span><br /> <input name="file"
+			type="file" /> <br /> <input class="btn btn-info btn-sm"
+			type="submit" value="Cập nhật" />
+	</form>
 </body>
 </html>
