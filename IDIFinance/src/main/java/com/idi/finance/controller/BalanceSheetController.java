@@ -41,12 +41,13 @@ public class BalanceSheetController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String save(Model model, @RequestParam("file") MultipartFile file) {
 		if (file != null && file.getSize() > 0) {
-			System.out.println(file.getName() + " - " + file.getSize());
+			logger.info(file.getName() + " - " + file.getSize());
 			try {
 				List<BalanceSheet> bss = ExcelProcessor.readExcel(file.getInputStream());
-				//balanceSheetDAO.insertOrUpdateBss(bss);
+				balanceSheetDAO.insertOrUpdateBss(bss);
 				return "redirect:/";
 			} catch (Exception e) {
+				e.printStackTrace();
 				String comment = "Không thể đọc excel file " + file.getName()
 						+ ". Có thể file bị lỗi, không đúng định dạng, hoặc đường truyền chậm, xin mời thử lại.";
 				model.addAttribute("comment", comment);
