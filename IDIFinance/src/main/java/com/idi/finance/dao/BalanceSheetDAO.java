@@ -6,4 +6,6 @@ import com.idi.finance.bean.BalanceSheet;
 
 public interface BalanceSheetDAO {
 	public void insertOrUpdateBss(List<BalanceSheet> bss);
+
+	public List<BalanceSheet> listBss();
 }

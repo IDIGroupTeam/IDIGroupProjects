@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellValue;
@@ -18,10 +19,13 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.idi.finance.bean.BalanceSheet;
+import com.idi.finance.dao.impl.BalanceSheetDAOImpl;
 
 public class ExcelProcessor {
+	private static final Logger logger = Logger.getLogger(ExcelProcessor.class);
+
 	public static List<BalanceSheet> readExcel(InputStream in) throws IOException {
-		List<BalanceSheet> financies = new ArrayList<BalanceSheet>();
+		List<BalanceSheet> bss = new ArrayList<BalanceSheet>();
 
 		// Reading xls file
 		XSSFWorkbook workbook = new XSSFWorkbook(in);
@@ -37,38 +41,38 @@ public class ExcelProcessor {
 				continue;
 			}
 
-			BalanceSheet finance = new BalanceSheet();
+			BalanceSheet bs = new BalanceSheet();
 			// Read by shell
 			Iterator<Cell> cellIter = row.iterator();
 			while (cellIter.hasNext()) {
 				Cell cell = cellIter.next();
 				String columnStrIndex = CellReference.convertNumToColString(cell.getColumnIndex());
 
-				// Read title
+				// Read name
 				if (columnStrIndex.equalsIgnoreCase("B")) {
 					CellType cellType = cell.getCellTypeEnum();
 					switch (cellType) {
 					case STRING:
-						String title = cell.getStringCellValue();
+						String name = cell.getStringCellValue();
 						String rule = "";
-						if (title != null && title.indexOf(".") > 0) {
-							title = title.substring(title.indexOf(".") + 1, title.length());
+						if (name != null && name.indexOf(".") > 0) {
+							name = name.substring(name.indexOf(".") + 1, name.length());
 						}
-						if (title != null && title.indexOf("-") > 0) {
-							title = title.substring(title.indexOf("-") + 1, title.length());
+						if (name != null && name.indexOf("-") > 0) {
+							name = name.substring(name.indexOf("-") + 1, name.length());
 						}
-						if (title != null && title.indexOf("(") > 0) {
-							rule = title.substring(title.indexOf("(") + 1, title.indexOf(")"));
-							title = title.substring(0, title.indexOf("("));
+						if (name != null && name.indexOf("(") > 0) {
+							rule = name.substring(name.indexOf("(") + 1, name.indexOf(")"));
+							name = name.substring(0, name.indexOf("("));
 						}
-						if (title != null) {
-							title = title.trim();
+						if (name != null) {
+							name = name.trim();
 						}
 						if (rule != null) {
 							rule = rule.trim();
 						}
-						finance.setAssetsName(title);
-						finance.setRule(rule);
+						bs.setAssetsName(name);
+						bs.setRule(rule);
 						break;
 					}
 				}
@@ -79,10 +83,10 @@ public class ExcelProcessor {
 					switch (cellType) {
 					case NUMERIC:
 						String code = cell.getNumericCellValue() + "";
-						finance.setAssetsCode(code.substring(0, code.indexOf(".")));
+						bs.setAssetsCode(code.substring(0, code.indexOf(".")));
 						break;
 					case STRING:
-						finance.setAssetsCode(cell.getStringCellValue());
+						bs.setAssetsCode(cell.getStringCellValue());
 						break;
 					}
 				}
@@ -92,7 +96,7 @@ public class ExcelProcessor {
 					CellType cellType = cell.getCellTypeEnum();
 					switch (cellType) {
 					case STRING:
-						finance.setDescription(cell.getStringCellValue());
+						bs.setDescription(cell.getStringCellValue());
 						break;
 					}
 				}
@@ -110,12 +114,12 @@ public class ExcelProcessor {
 						CellType cellValueType = value.getCellTypeEnum();
 						switch (cellValueType) {
 						case NUMERIC:
-							finance.setAssetsValue(value.getNumberValue());
+							bs.setAssetsValue(value.getNumberValue());
 							break;
 						}
 						break;
 					case NUMERIC:
-						finance.setAssetsValue(cell.getNumericCellValue());
+						bs.setAssetsValue(cell.getNumericCellValue());
 						break;
 					}
 				}
@@ -132,13 +136,10 @@ public class ExcelProcessor {
 						CellValue value = evaluator.evaluate(cell);
 						CellType cellValueType = value.getCellTypeEnum();
 						switch (cellValueType) {
-						case STRING:
-							finance.setChangedRatio(value.getNumberValue());
+						case NUMERIC:
+							bs.setChangedRatio(value.getNumberValue());
 							break;
 						}
-						break;
-					case STRING:
-						finance.setChangedRatio(cell.getNumericCellValue());
 						break;
 					}
 				}
@@ -156,65 +157,39 @@ public class ExcelProcessor {
 						CellType cellValueType = value.getCellTypeEnum();
 						switch (cellValueType) {
 						case STRING:
-							finance.setAssetsPeriod(getPeriod(value.getStringValue()));
+							bs.setAssetsPeriod(getPeriod(value.getStringValue()));
 							break;
 						}
 						break;
 					case STRING:
-						finance.setAssetsPeriod(getPeriod(cell.getStringCellValue()));
+						bs.setAssetsPeriod(getPeriod(cell.getStringCellValue()));
 						break;
 					}
 				}
 			}
 
-			financies.add(finance);
-			System.out.println(finance);
+			bss.add(bs);
 		}
 
-		return financies;
+		return bss;
 	}
 
 	private static Date getPeriod(String month) {
 		Calendar cal = Calendar.getInstance();
-		month = month.substring(5).trim();
-		switch (month) {
-		case "1":
-			cal.set(Calendar.MONTH, 1);
-			break;
-		case "2":
-			cal.set(Calendar.MONTH, 2);
-			break;
-		case "3":
-			cal.set(Calendar.MONTH, 3);
-			break;
-		case "4":
-			cal.set(Calendar.MONTH, 4);
-			break;
-		case "5":
-			cal.set(Calendar.MONTH, 5);
-			break;
-		case "6":
-			cal.set(Calendar.MONTH, 6);
-			break;
-		case "7":
-			cal.set(Calendar.MONTH, 7);
-			break;
-		case "8":
-			cal.set(Calendar.MONTH, 8);
-			break;
-		case "9":
-			cal.set(Calendar.MONTH, 9);
-			break;
-		case "10":
-			cal.set(Calendar.MONTH, 10);
-			break;
-		case "11":
-			cal.set(Calendar.MONTH, 11);
-			break;
-		case "12":
-			cal.set(Calendar.MONTH, 12);
-			break;
+		try {
+			month = month.substring(5).trim();
+			int monthNum = Integer.parseInt(month) - 1;
+			cal.set(Calendar.MONTH, monthNum);
+		} catch (Exception e) {
+			logger.info(e.getMessage());
+			return null;
 		}
+
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+
 		return cal.getTime();
 	}
 }
