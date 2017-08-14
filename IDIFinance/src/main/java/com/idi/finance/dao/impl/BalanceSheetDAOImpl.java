@@ -1,11 +1,16 @@
 package com.idi.finance.dao.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.idi.finance.bean.BalanceSheet;
 import com.idi.finance.dao.BalanceSheetDAO;
@@ -58,8 +63,45 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	}
 
 	@Override
-	public List<BalanceSheet> listBss() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<BalanceSheet> listBssByAssetsCodeAndYear(String assetsCode, Date year) {
+		if (assetsCode == null || year == null)
+			return null;
+
+		String query = "SELECT * FROM BALANCE_SHEET WHERE ASSETS_CODE = ? AND YEAR(ASSETS_PERIOD)=?";
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(year);
+
+		logger.info("Get list of balance sheet by asserts_code and year ...");
+		logger.info("Query " + query);
+		logger.info("assetsCode " + assetsCode + ". Year " + cal.get(Calendar.YEAR));
+
+		Object[] params = { assetsCode, cal.get(Calendar.YEAR) };
+		List<BalanceSheet> bss = jdbcTmpl.query(query, params, new BalanceSheetMapper());
+
+		return bss;
+	}
+
+	public class BalanceSheetMapper implements RowMapper<BalanceSheet> {
+		public BalanceSheet mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+			BalanceSheet bs = new BalanceSheet();
+
+			bs.setAssetsId(rs.getInt("ASSETS_ID"));
+			bs.setAssetsName(rs.getString("ASSETS_NAME"));
+			bs.setRule(rs.getString("RULE"));
+			bs.setAssetsCode(rs.getString("ASSETS_CODE"));
+			bs.setNote(rs.getString("NOTE"));
+			bs.setAssetsValue(rs.getDouble("ASSETS_VALUE"));
+			bs.setChangedRatio(rs.getDouble("CHANGED_RATIO"));
+			Timestamp assetPeriod = rs.getTimestamp("ASSETS_PERIOD");
+			Date date = new Date(assetPeriod.getTime());
+			bs.setAssetsPeriod(date);
+			bs.setDescription(rs.getString("DESCRIPTION"));
+
+			logger.info("bs: " + bs);
+
+			return bs;
+		}
 	}
 }

@@ -19,7 +19,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.idi.finance.bean.BalanceSheet;
-import com.idi.finance.dao.impl.BalanceSheetDAOImpl;
 
 public class ExcelProcessor {
 	private static final Logger logger = Logger.getLogger(ExcelProcessor.class);
@@ -174,6 +173,10 @@ public class ExcelProcessor {
 		return bss;
 	}
 
+	public boolean validateData() {
+		return true;
+	}
+
 	private static Date getPeriod(String month) {
 		Calendar cal = Calendar.getInstance();
 		try {
@@ -189,6 +192,7 @@ public class ExcelProcessor {
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
 
 		return cal.getTime();
 	}

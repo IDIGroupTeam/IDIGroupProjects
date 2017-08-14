@@ -7,21 +7,31 @@
 	<mvc:annotation-driven />
 	<mvc:resources mapping="/public/**" location="/public/" />
 	<mvc:default-servlet-handler />
-
 	<context:component-scan base-package="com.idi.finance" />
 
+	<!-- Config folder to load jsp page for view layer -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/pages/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
 
+	<!-- Read idifinance.properties properties file -->
+	<bean id="properties"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:idifinance.properties" />
+		<!-- <property name="ignoreUnresolvablePlaceholders" value="true" /> -->
+		<!-- <property name="ignoreResourceNotFound" value="true" /> -->
+	</bean>
+
+	<!-- Config for upload file feature -->
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<!-- setting maximum upload size -->
 		<property name="maxUploadSize" value="1000000" />
 	</bean>
 
+	<!-- Config database connection -->
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
@@ -29,7 +39,6 @@
 		<property name="username" value="root" />
 		<property name="password" value="" />
 	</bean>
-
 	<bean id="jdbcTmpl" class="org.springframework.jdbc.core.JdbcTemplate">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>

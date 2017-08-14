@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
-<div class="footer container-fluid text-center">
+<footer class="footer container-fluid text-center">
 	<table>
 		<tr>
 			<td colspan="2" align="left">
@@ -14,8 +14,8 @@
 			<td align="right">Fax: 043 7535763</td>
 		</tr>
 		<tr>
-			<td align="left">Website : idigroup.vn</td>
+			<td align="left">Website : <a href="http://idigroup.vn">http://idigroup.vn</a></td>
 			<td align="right">Email : info@idigroup.vn</td>
 		</tr>
 	</table>
-</div>
+</footer>

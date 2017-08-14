@@ -4,7 +4,7 @@
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 <div class="panel panel-default">
 	<div class="panel-heading">
-		<h4>IDI Group</h4>
+		<h4>Nghiệp vụ</h4>
 	</div>
 	<div class="panel-body">
 		<ul class="nav nav-pills nav-stacked">
