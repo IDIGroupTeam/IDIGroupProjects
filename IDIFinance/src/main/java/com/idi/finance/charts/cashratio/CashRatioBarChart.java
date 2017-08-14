@@ -1,4 +1,4 @@
-package com.idi.finance.charts.quickratio;
+package com.idi.finance.charts.cashratio;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,38 +15,44 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Week;
 import org.jfree.data.xy.XYDataset;
 
-import com.idi.finance.kpi.QuickRatio;
-
 import de.laures.cewolf.DatasetProduceException;
 import de.laures.cewolf.DatasetProducer;
 import de.laures.cewolf.tooltips.XYToolTipGenerator;
 
-public class QuickRatioLineChart implements DatasetProducer, XYToolTipGenerator {
-	private static final Logger logger = Logger.getLogger(QuickRatioLineChart.class);
-	private HashMap<Date, QuickRatio> quickRatios;
-	private double threshold = 1.0;
+import com.idi.finance.kpi.CashRatio;
+import com.idi.finance.kpi.CurrentRatio;
 
-	public QuickRatioLineChart(HashMap<Date, QuickRatio> quickRatios, double threshold) {
-		this.quickRatios = quickRatios;
-		this.threshold = threshold;
+public class CashRatioBarChart implements DatasetProducer, XYToolTipGenerator {
+	private static final Logger logger = Logger.getLogger(CashRatioBarChart.class);
+	private HashMap<Date, CashRatio> cashRatios;
+
+	public CashRatioBarChart(HashMap<Date, CashRatio> cashRatios) {
+		this.cashRatios = cashRatios;
 	}
 
 	@Override
 	public Object produceDataset(Map<String, Object> map) throws DatasetProduceException {
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
 
-		TimeSeries series = new TimeSeries("Tiêu chuẩn");
+		TimeSeries series = new TimeSeries("Số liệu");
 		dataset.addSeries(series);
 
-		if (quickRatios != null && quickRatios.size() > 0) {
-			List<Date> periods = new ArrayList<>(quickRatios.keySet());
+		if (cashRatios != null && cashRatios.size() > 0) {
+			List<Date> periods = new ArrayList<>(cashRatios.keySet());
 			Collections.sort(periods);
 
 			Iterator<Date> iter = periods.iterator();
 			while (iter.hasNext()) {
 				Date period = iter.next();
+
 				Week week = new Week(period);
-				series.add(week, threshold);
+
+				CashRatio currentRatio = cashRatios.get(period);
+				if (currentRatio != null && currentRatio.getValue() > 0) {
+					series.add(week, currentRatio.getValue());
+				} else {
+					series.add(week, null);
+				}
 			}
 		}
 
@@ -59,16 +65,17 @@ public class QuickRatioLineChart implements DatasetProducer, XYToolTipGenerator 
 		Date date = new Date(dataset.getX(series, point).longValue());
 
 		String toolTip = "Tháng: " + format.format(date) + "<br>Giá trị: " + dataset.getYValue(series, point);
+		logger.info(toolTip);
 		return toolTip;
 	}
 
 	@Override
 	public String getProducerId() {
-		return "QuickRatioLineChart";
+		return "CashRatioChart";
 	}
 
 	@Override
-	public boolean hasExpired(Map arg0, Date arg1) {
+	public boolean hasExpired(Map map, Date date) {
 		return true;
 	}
 }

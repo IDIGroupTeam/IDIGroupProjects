@@ -64,7 +64,7 @@ public class CurrentRatioLineChart implements DatasetProducer, XYToolTipGenerato
 
 	@Override
 	public String getProducerId() {
-		return "CurrentRatioChart";
+		return "CurrentRatioLineChart";
 	}
 
 	@Override

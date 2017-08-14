@@ -1,4 +1,4 @@
-package com.idi.finance.charts.quickratio;
+package com.idi.finance.charts.cashratio;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -14,8 +14,8 @@ import org.jfree.chart.plot.XYPlot;
 
 import de.laures.cewolf.ChartPostProcessor;
 
-public class QuickRatioChartProcessor implements ChartPostProcessor, Serializable {
-	private static final Logger logger = Logger.getLogger(QuickRatioChartProcessor.class);
+public class CashRatioChartProcessor implements ChartPostProcessor, Serializable {
+	private static final Logger logger = Logger.getLogger(CashRatioChartProcessor.class);
 
 	@Override
 	public void processChart(JFreeChart chart, Map<String, String> params) {

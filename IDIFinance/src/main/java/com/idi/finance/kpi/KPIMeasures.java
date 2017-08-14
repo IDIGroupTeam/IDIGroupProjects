@@ -92,7 +92,7 @@ public class KPIMeasures {
 	 */
 	public static HashMap<Date, QuickRatio> quickRatio(List<BalanceSheet> currentAssets, List<BalanceSheet> inventories,
 			List<BalanceSheet> currentLiabilities, double thresold) {
-		if (currentAssets != null && currentLiabilities != null) {
+		if (currentAssets != null && inventories != null && currentLiabilities != null) {
 			HashMap<Date, QuickRatio> map = new HashMap<>();
 			HashMap<Date, BalanceSheet> inventoriesMap = Utils.convertList2Map(inventories);
 			HashMap<Date, BalanceSheet> currentLiabilitiesMap = Utils.convertList2Map(currentLiabilities);
@@ -144,6 +144,70 @@ public class KPIMeasures {
 	private static double quickRatio(double currentAsset, double inventory, double currentLiability) {
 		if (currentLiability != 0) {
 			return (currentAsset - inventory) / currentLiability;
+		}
+		return 0;
+	}
+
+	/**
+	 * This method calculate list of quick ratio from list of current assets, list
+	 * of inventories and list of current liabilities. For each period, quick ratio
+	 * is current asset sub to inventory, and divide to current liability.
+	 * 
+	 * @param currentAssets
+	 * @param inventories
+	 * @param currentLiabilities
+	 * @return a map of all quick ratio. Key is period.
+	 */
+	public static HashMap<Date, CashRatio> cashRatio(List<BalanceSheet> cashEquivalents,
+			List<BalanceSheet> currentLiabilities, double thresold) {
+		if (cashEquivalents != null && currentLiabilities != null) {
+			HashMap<Date, CashRatio> map = new HashMap<>();
+			HashMap<Date, BalanceSheet> currentLiabilitiesMap = Utils.convertList2Map(currentLiabilities);
+
+			Iterator<BalanceSheet> iter = cashEquivalents.iterator();
+			while (iter.hasNext()) {
+				BalanceSheet cashEquivalent = iter.next();
+				BalanceSheet currentLiability = currentLiabilitiesMap.get(cashEquivalent.getAssetsPeriod());
+
+				CashRatio cashRatio = new CashRatio();
+				cashRatio.setPeriod(cashEquivalent.getAssetsPeriod());
+				cashRatio.setValue(cashRatio(cashEquivalent.getAssetsValue(), currentLiability.getAssetsValue()));
+				cashRatio.setThresold(thresold);
+				if (currentLiability.getAssetsValue() != 0) {
+					// If has data for evaluating
+					if (cashRatio.getValue() >= thresold) {
+						// This is good situation
+						cashRatio.setEvaluate(1);
+					} else {
+						// This is bad situation
+						cashRatio.setEvaluate(-1);
+					}
+				}
+				// cashRatio.setCashEquivalent(cashEquivalent.getAssetsValue());
+				// cashRatio.setCurrentLiability(currentLiability.getAssetsValue());
+
+				map.put(cashRatio.getPeriod(), cashRatio);
+				logger.info("cashRatio " + cashRatio);
+			}
+
+			return map;
+		}
+
+		return null;
+	}
+
+	/**
+	 * For each period, quick ratio is current asset sub to inventory, and divide to
+	 * current liability.
+	 * 
+	 * @param currentAsset
+	 * @param inventory
+	 * @param currentLiability
+	 * @return current ratio
+	 */
+	private static double cashRatio(double cashEquivalent, double currentLiability) {
+		if (currentLiability != 0) {
+			return cashEquivalent / currentLiability;
 		}
 		return 0;
 	}

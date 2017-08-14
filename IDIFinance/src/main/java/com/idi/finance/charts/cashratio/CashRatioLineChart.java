@@ -1,4 +1,4 @@
-package com.idi.finance.charts.quickratio;
+package com.idi.finance.charts.cashratio;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,19 +15,20 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Week;
 import org.jfree.data.xy.XYDataset;
 
-import com.idi.finance.kpi.QuickRatio;
+import com.idi.finance.kpi.CashRatio;
+import com.idi.finance.kpi.CurrentRatio;
 
 import de.laures.cewolf.DatasetProduceException;
 import de.laures.cewolf.DatasetProducer;
 import de.laures.cewolf.tooltips.XYToolTipGenerator;
 
-public class QuickRatioLineChart implements DatasetProducer, XYToolTipGenerator {
-	private static final Logger logger = Logger.getLogger(QuickRatioLineChart.class);
-	private HashMap<Date, QuickRatio> quickRatios;
+public class CashRatioLineChart implements DatasetProducer, XYToolTipGenerator {
+	private static final Logger logger = Logger.getLogger(CashRatioLineChart.class);
+	private HashMap<Date, CashRatio> cashRatios;
 	private double threshold = 1.0;
 
-	public QuickRatioLineChart(HashMap<Date, QuickRatio> quickRatios, double threshold) {
-		this.quickRatios = quickRatios;
+	public CashRatioLineChart(HashMap<Date, CashRatio> cashRatios, double threshold) {
+		this.cashRatios = cashRatios;
 		this.threshold = threshold;
 	}
 
@@ -38,8 +39,8 @@ public class QuickRatioLineChart implements DatasetProducer, XYToolTipGenerator 
 		TimeSeries series = new TimeSeries("Tiêu chuẩn");
 		dataset.addSeries(series);
 
-		if (quickRatios != null && quickRatios.size() > 0) {
-			List<Date> periods = new ArrayList<>(quickRatios.keySet());
+		if (cashRatios != null && cashRatios.size() > 0) {
+			List<Date> periods = new ArrayList<>(cashRatios.keySet());
 			Collections.sort(periods);
 
 			Iterator<Date> iter = periods.iterator();
@@ -64,7 +65,7 @@ public class QuickRatioLineChart implements DatasetProducer, XYToolTipGenerator 
 
 	@Override
 	public String getProducerId() {
-		return "QuickRatioLineChart";
+		return "CashRatioLineChart";
 	}
 
 	@Override

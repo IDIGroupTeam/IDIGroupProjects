@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.idi.finance.bean.BalanceSheet;
+import com.idi.finance.charts.cashratio.CashRatioBarChart;
+import com.idi.finance.charts.cashratio.CashRatioChartProcessor;
+import com.idi.finance.charts.cashratio.CashRatioLineChart;
 import com.idi.finance.charts.currentratio.CurrentRatioBarChart;
 import com.idi.finance.charts.currentratio.CurrentRatioChartProcessor;
 import com.idi.finance.charts.currentratio.CurrentRatioLineChart;
@@ -26,6 +29,7 @@ import com.idi.finance.charts.quickratio.QuickRatioLineChart;
 import com.idi.finance.dao.BalanceSheetDAO;
 import com.idi.finance.kpi.KPIMeasures;
 import com.idi.finance.kpi.QuickRatio;
+import com.idi.finance.kpi.CashRatio;
 import com.idi.finance.kpi.CurrentRatio;
 import com.idi.finance.utils.ExcelProcessor;
 
@@ -103,7 +107,7 @@ public class BalanceSheetController {
 		logger.info("currentLiabilities " + currentLiabilities.size());
 
 		// Calculate list of quick ratios
-		double threshold = 1.0;
+		double threshold = 0.0;
 		HashMap<Date, QuickRatio> quickRatios = KPIMeasures.quickRatio(currentAssets, inventories, currentLiabilities,
 				threshold);
 
@@ -133,6 +137,45 @@ public class BalanceSheetController {
 
 	@RequestMapping("/knttbangtien")
 	public String kpiCashRation(Model model) {
+		// Vẽ biểu đồ Khả năng thanh toán nhanh theo tất cả các kỳ (tháng) trong năm
+		// Với từng kỳ, lấy tài sản ngắn hạn (100) trừ hàng tồn kho (140),
+		// tất cả chia cho nợ ngắn hạn (310)
+
+		// Get list current assets, inventories and current liabilites for all period in
+		// a year
+		Date currentYear = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currentYear);
+		List<BalanceSheet> cashEquivalents = balanceSheetDAO.listBssByAssetsCodeAndYear("110", currentYear);
+		logger.info("cashEquivalents " + cashEquivalents.size());
+		List<BalanceSheet> currentLiabilities = balanceSheetDAO.listBssByAssetsCodeAndYear("310", currentYear);
+		logger.info("currentLiabilities " + currentLiabilities.size());
+
+		// Calculate list of quick ratios
+		double threshold = 0.1;
+		HashMap<Date, CashRatio> cashRatios = KPIMeasures.cashRatio(cashEquivalents, currentLiabilities, threshold);
+
+		// Start drawing charts:
+		CashRatioBarChart cashRatioBarChart = new CashRatioBarChart(cashRatios);
+		CashRatioLineChart cashRatioLineChart = new CashRatioLineChart(cashRatios, threshold);
+		CashRatioChartProcessor cashRatioChartProcessor = new CashRatioChartProcessor();
+
+		// Sorting list of quick ratios by period (month)
+		SortedMap<Date, CashRatio> sortedCashRatios = new TreeMap<Date, CashRatio>(new Comparator<Date>() {
+			@Override
+			public int compare(Date date1, Date date2) {
+				return date1.compareTo(date2);
+			}
+		});
+		sortedCashRatios.putAll(cashRatios);
+
+		model.addAttribute("action", "knttnhanh");
+		model.addAttribute("cashRatios", sortedCashRatios);
+		model.addAttribute("cashRatioBarChart", cashRatioBarChart);
+		model.addAttribute("cashRatioLineChart", cashRatioLineChart);
+		model.addAttribute("cashRatioChartProcessor", cashRatioChartProcessor);
+		model.addAttribute("year", cal.get(Calendar.YEAR));
+
 		model.addAttribute("action", "knttbangtien");
 		return "kpiCashRatio";
 	}
