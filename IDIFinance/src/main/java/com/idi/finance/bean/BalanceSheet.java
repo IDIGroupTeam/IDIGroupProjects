@@ -88,10 +88,8 @@ public class BalanceSheet {
 
 	@Override
 	public String toString() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(assetsPeriod);
 		String out = assetsName + "  " + rule + " " + assetsCode + "  " + note + " " + assetsValue + "  " + changedRatio
-				+ " " + cal.get(Calendar.MONTH);
+				+ " " + assetsPeriod;
 		return out;
 	}
 }

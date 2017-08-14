@@ -1,6 +1,12 @@
 package com.idi.finance.controller;
 
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,34 +17,150 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.idi.finance.bean.BalanceSheet;
+import com.idi.finance.charts.currentratio.CurrentRatioBarChart;
+import com.idi.finance.charts.currentratio.CurrentRatioChartProcessor;
+import com.idi.finance.charts.currentratio.CurrentRatioLineChart;
+import com.idi.finance.charts.quickratio.QuickRatioBarChart;
+import com.idi.finance.charts.quickratio.QuickRatioChartProcessor;
+import com.idi.finance.charts.quickratio.QuickRatioLineChart;
 import com.idi.finance.dao.BalanceSheetDAO;
+import com.idi.finance.kpi.KPIMeasures;
+import com.idi.finance.kpi.QuickRatio;
+import com.idi.finance.kpi.CurrentRatio;
 import com.idi.finance.utils.ExcelProcessor;
 
 @Controller
 public class BalanceSheetController {
 	private static final Logger logger = Logger.getLogger(BalanceSheetController.class);
-	
+
 	@Autowired
 	BalanceSheetDAO balanceSheetDAO;
 
 	@RequestMapping("/")
 	public String finance(Model model) {
-		// Đọc thông tin một biểu đồ mặc định và vẽ biểu đồ đó ra
-		
-		return "finance";
+		return "forward:/kntttucthoi";
 	}
 
-	@RequestMapping("kpi")
-	public String kpi(Model model) {
-		return "finance";
+	@RequestMapping("/kntttucthoi")
+	public String kpiCurrentRatio(Model model) {
+		// Vẽ biểu đồ Khả năng thanh toán tức thời theo tất cả các kỳ (tháng) trong năm
+		// Với từng kỳ, lấy tài sản ngắn hạn (100) chia cho nợ ngắn hạn (310)
+
+		// Get list current assets and current liabilites for all period in a year
+		Date currentYear = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currentYear);
+		List<BalanceSheet> currentAssets = balanceSheetDAO.listBssByAssetsCodeAndYear("100", currentYear);
+		logger.info("currentAssets " + currentAssets.size());
+		List<BalanceSheet> currentLiabilities = balanceSheetDAO.listBssByAssetsCodeAndYear("310", currentYear);
+		logger.info("currentLiabilities " + currentLiabilities.size());
+
+		// Calculate list of current ratios
+		double threshold = 1.0;
+		HashMap<Date, CurrentRatio> currentRatios = KPIMeasures.currentRatio(currentAssets, currentLiabilities,
+				threshold);
+
+		// Start drawing charts:
+		CurrentRatioBarChart currentRatioBarChart = new CurrentRatioBarChart(currentRatios);
+		CurrentRatioLineChart currentRatioLineChart = new CurrentRatioLineChart(currentRatios, threshold);
+		CurrentRatioChartProcessor currentRatioChartProcessor = new CurrentRatioChartProcessor();
+
+		// Sorting list of current ratios by period (month)
+		SortedMap<Date, CurrentRatio> sortedCurrentRatios = new TreeMap<Date, CurrentRatio>(new Comparator<Date>() {
+			@Override
+			public int compare(Date date1, Date date2) {
+				return date1.compareTo(date2);
+			}
+		});
+		sortedCurrentRatios.putAll(currentRatios);
+
+		model.addAttribute("action", "kntttucthoi");
+		model.addAttribute("currentRatios", sortedCurrentRatios);
+		model.addAttribute("currentRatioBarChart", currentRatioBarChart);
+		model.addAttribute("currentRatioLineChart", currentRatioLineChart);
+		model.addAttribute("currentRatioChartProcessor", currentRatioChartProcessor);
+		model.addAttribute("year", cal.get(Calendar.YEAR));
+
+		return "kpiCurrentRatio";
 	}
 
-	@RequestMapping("/update")
+	@RequestMapping("/knttnhanh")
+	public String kpiQuickRation(Model model) {
+		// Vẽ biểu đồ Khả năng thanh toán nhanh theo tất cả các kỳ (tháng) trong năm
+		// Với từng kỳ, lấy tài sản ngắn hạn (100) trừ hàng tồn kho (140),
+		// tất cả chia cho nợ ngắn hạn (310)
+
+		// Get list current assets, inventories and current liabilites for all period in
+		// a year
+		Date currentYear = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currentYear);
+		List<BalanceSheet> currentAssets = balanceSheetDAO.listBssByAssetsCodeAndYear("100", currentYear);
+		logger.info("currentAssets " + currentAssets.size());
+		List<BalanceSheet> inventories = balanceSheetDAO.listBssByAssetsCodeAndYear("140", currentYear);
+		logger.info("inventories " + inventories.size());
+		List<BalanceSheet> currentLiabilities = balanceSheetDAO.listBssByAssetsCodeAndYear("310", currentYear);
+		logger.info("currentLiabilities " + currentLiabilities.size());
+
+		// Calculate list of quick ratios
+		double threshold = 1.0;
+		HashMap<Date, QuickRatio> quickRatios = KPIMeasures.quickRatio(currentAssets, inventories, currentLiabilities,
+				threshold);
+
+		// Start drawing charts:
+		QuickRatioBarChart quickRatioBarChart = new QuickRatioBarChart(quickRatios);
+		QuickRatioLineChart quickRatioLineChart = new QuickRatioLineChart(quickRatios, threshold);
+		QuickRatioChartProcessor quickRatioChartProcessor = new QuickRatioChartProcessor();
+
+		// Sorting list of quick ratios by period (month)
+		SortedMap<Date, QuickRatio> sortedQuickRatios = new TreeMap<Date, QuickRatio>(new Comparator<Date>() {
+			@Override
+			public int compare(Date date1, Date date2) {
+				return date1.compareTo(date2);
+			}
+		});
+		sortedQuickRatios.putAll(quickRatios);
+
+		model.addAttribute("action", "knttnhanh");
+		model.addAttribute("quickRatios", sortedQuickRatios);
+		model.addAttribute("quickRatioBarChart", quickRatioBarChart);
+		model.addAttribute("quickRatioLineChart", quickRatioLineChart);
+		model.addAttribute("quickRatioChartProcessor", quickRatioChartProcessor);
+		model.addAttribute("year", cal.get(Calendar.YEAR));
+
+		return "kpiQuickRatio";
+	}
+
+	@RequestMapping("/knttbangtien")
+	public String kpiCashRation(Model model) {
+		model.addAttribute("action", "knttbangtien");
+		return "kpiCashRatio";
+	}
+
+	@RequestMapping("/vqkhoanthu")
+	public String kpiReceivableTurnOver(Model model) {
+		model.addAttribute("action", "vqkhoanthu");
+		return "kpiReceivableTurnOver";
+	}
+
+	@RequestMapping("/vqhangtonkho_sosach")
+	public String kpiInventoriesTurnOverByDocument(Model model) {
+		model.addAttribute("action", "vqhangtonkho_sosach");
+		return "kpiInventoriesTurnOverByDocument";
+	}
+
+	@RequestMapping("/vqhangtonkho_thitruong")
+	public String kpiInventoriesTurnOverByPrice(Model model) {
+		model.addAttribute("action", "vqhangtonkho_thitruong");
+		return "kpiInventoriesTurnOverByPrice";
+	}
+
+	@RequestMapping("/capnhat")
 	public String update(Model model) {
 		return "update";
 	}
 
-	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	@RequestMapping(value = "/luutru", method = RequestMethod.POST)
 	public String save(Model model, @RequestParam("file") MultipartFile file) {
 		if (file != null && file.getSize() > 0) {
 			logger.info(file.getName() + " - " + file.getSize());

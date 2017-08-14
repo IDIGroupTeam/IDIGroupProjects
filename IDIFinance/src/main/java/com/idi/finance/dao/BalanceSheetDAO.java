@@ -1,5 +1,6 @@
 package com.idi.finance.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.idi.finance.bean.BalanceSheet;
@@ -7,5 +8,5 @@ import com.idi.finance.bean.BalanceSheet;
 public interface BalanceSheetDAO {
 	public void insertOrUpdateBss(List<BalanceSheet> bss);
 
-	public List<BalanceSheet> listBss();
+	public List<BalanceSheet> listBssByAssetsCodeAndYear(String assetsCode, Date year);
 }
