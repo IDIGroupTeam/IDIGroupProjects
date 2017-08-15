@@ -96,7 +96,7 @@
 					</c:forEach>
 				</tr>
 				<tr>
-					<td>Tài sản ngắn hạn</td>
+					<td>Tiền & Tương đương tiền</td>
 					<c:forEach items="${cashRatios}" var="cashRatio">
 						<td><fmt:formatNumber
 								value="${cashRatio.value.cashEquivalent}" maxFractionDigits="0"

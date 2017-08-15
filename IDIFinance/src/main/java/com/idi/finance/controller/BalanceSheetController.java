@@ -26,6 +26,9 @@ import com.idi.finance.charts.currentratio.CurrentRatioLineChart;
 import com.idi.finance.charts.debtratio.DebtRatioBarChart;
 import com.idi.finance.charts.debtratio.DebtRatioChartProcessor;
 import com.idi.finance.charts.debtratio.DebtRatioLineChart;
+import com.idi.finance.charts.financialleverage.FinancialLeverageBarChart;
+import com.idi.finance.charts.financialleverage.FinancialLeverageChartProcessor;
+import com.idi.finance.charts.financialleverage.FinancialLeverageLineChart;
 import com.idi.finance.charts.quickratio.QuickRatioBarChart;
 import com.idi.finance.charts.quickratio.QuickRatioChartProcessor;
 import com.idi.finance.charts.quickratio.QuickRatioLineChart;
@@ -35,6 +38,7 @@ import com.idi.finance.kpi.QuickRatio;
 import com.idi.finance.kpi.CashRatio;
 import com.idi.finance.kpi.CurrentRatio;
 import com.idi.finance.kpi.DebtRatio;
+import com.idi.finance.kpi.FinancialLeverage;
 import com.idi.finance.utils.ExcelProcessor;
 
 @Controller
@@ -144,7 +148,7 @@ public class BalanceSheetController {
 		// Vẽ biểu đồ Khả năng thanh bằng tiền theo tất cả các kỳ (tháng) trong năm
 		// Với từng kỳ, lấy tiền & tương đương tiền (110) chia cho nợ ngắn hạn (310)
 
-		// Get list current assets, inventories and current liabilites for all period in
+		// Get list of cashes & equivalents and current liabilites for all period in
 		// a year
 		Date currentYear = new Date();
 		Calendar cal = Calendar.getInstance();
@@ -207,7 +211,7 @@ public class BalanceSheetController {
 		// Vẽ biểu đồ Hệ số nợ theo tất cả các kỳ (tháng) trong năm
 		// Với từng kỳ, lấy tổng số nợ (300) chia cho tổng tài sản (270)
 
-		// Get list current assets and current liabilites for all period in a year
+		// Get list of total debts and total assets for all period in a year
 		Date currentYear = new Date();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(currentYear);
@@ -246,7 +250,43 @@ public class BalanceSheetController {
 
 	@RequestMapping("/donbaytaichinh")
 	public String kpiFinancialLeverage(Model model) {
+		// Vẽ biểu đồ đòn bẩy tài chính theo tất cả các kỳ (tháng) trong năm
+		// Với từng kỳ, lấy tổng tài sản (270) chia cho vốn chủ sở hữu (400)
 
+		// Get list of total assets and total equities for all period in a year
+		Date currentYear = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currentYear);
+		List<BalanceSheet> totalAssets = balanceSheetDAO.listBssByAssetsCodeAndYear("270", currentYear);
+		logger.info("totalAssets " + totalAssets.size());
+		List<BalanceSheet> totalEquities = balanceSheetDAO.listBssByAssetsCodeAndYear("400", currentYear);
+		logger.info("totalEquities " + totalEquities.size());
+
+		// Calculate list of financial leverages
+		double threshold = 0.0;
+		HashMap<Date, FinancialLeverage> financialLeverages = KPIMeasures.financialLeverage(totalAssets, totalEquities,
+				threshold);
+
+		// Start drawing charts:
+		FinancialLeverageBarChart financialLeverageBarChart = new FinancialLeverageBarChart(financialLeverages);
+		FinancialLeverageLineChart financialLeverageLineChart = new FinancialLeverageLineChart(financialLeverages, threshold);
+		FinancialLeverageChartProcessor financialLeverageChartProcessor = new FinancialLeverageChartProcessor();
+
+		// Sorting list of financial leverages by period (month)
+		SortedMap<Date, FinancialLeverage> sortedFinancialLeverages = new TreeMap<Date, FinancialLeverage>(
+				new Comparator<Date>() {
+					@Override
+					public int compare(Date date1, Date date2) {
+						return date1.compareTo(date2);
+					}
+				});
+		sortedFinancialLeverages.putAll(financialLeverages);
+
+		model.addAttribute("financialLeverages", sortedFinancialLeverages);
+		model.addAttribute("financialLeverageBarChart", financialLeverageBarChart);
+		model.addAttribute("financialLeverageLineChart", financialLeverageLineChart);
+		model.addAttribute("financialLeverageChartProcessor", financialLeverageChartProcessor);
+		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "donbaytaichinh");
 
 		return "kpiFinancialLeverage";

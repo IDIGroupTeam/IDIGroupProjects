@@ -26,10 +26,9 @@
 </head>
 <body>
 	<div class="text-center">
-		<cewolf:overlaidchart id="debtRatiosChart"
-			title="Khả năng thanh toán tức thời" yaxislabel="Giá trị"
-			xaxislabel="Năm ${year}" xaxistype="date" yaxistype="number"
-			type="overlaidxy" showlegend="true">
+		<cewolf:overlaidchart id="debtRatiosChart" title="Hệ số nợ"
+			yaxislabel="Giá trị" xaxislabel="Năm ${year}" xaxistype="date"
+			yaxistype="number" type="overlaidxy" showlegend="true">
 			<cewolf:colorpaint color="#99CCFF" />
 
 			<cewolf:plot type="xyshapesandlines">
@@ -96,14 +95,14 @@
 					</c:forEach>
 				</tr>
 				<tr>
-					<td>Tài sản ngắn hạn</td>
+					<td>Tổng nợ</td>
 					<c:forEach items="${debtRatios}" var="debtRatio">
 						<td><fmt:formatNumber value="${debtRatio.value.totalDebt}"
 								maxFractionDigits="0" minFractionDigits="0"></fmt:formatNumber></td>
 					</c:forEach>
 				</tr>
 				<tr>
-					<td>Nợ ngắn hạn</td>
+					<td>Tổng tài sản</td>
 					<c:forEach items="${debtRatios}" var="debtRatio">
 						<td><fmt:formatNumber value="${debtRatio.value.totalAsset}"
 								maxFractionDigits="0" minFractionDigits="0"></fmt:formatNumber>
