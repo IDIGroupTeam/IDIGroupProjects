@@ -272,4 +272,66 @@ public class KPIMeasures {
 		}
 		return 0;
 	}
+
+	/**
+	 * This method calculate list of financial leverage from list of total assets
+	 * and list of total equities. For each period, financial leverage is total
+	 * asset divide to total equity.
+	 * 
+	 * @param totalAssets
+	 * @param totalEquities
+	 * @param thresold
+	 * @return a map of all financial leverages. Key is period.
+	 */
+	public static HashMap<Date, FinancialLeverage> financialLeverage(List<BalanceSheet> totalAssets,
+			List<BalanceSheet> totalEquities, double thresold) {
+		if (totalAssets != null && totalEquities != null) {
+			HashMap<Date, FinancialLeverage> map = new HashMap<>();
+			HashMap<Date, BalanceSheet> totalEquitiesMap = Utils.convertList2Map(totalEquities);
+
+			Iterator<BalanceSheet> iter = totalAssets.iterator();
+			while (iter.hasNext()) {
+				BalanceSheet totalAsset = iter.next();
+				BalanceSheet totalEquity = totalEquitiesMap.get(totalAsset.getAssetsPeriod());
+
+				FinancialLeverage financialLeverage = new FinancialLeverage();
+				financialLeverage.setPeriod(totalAsset.getAssetsPeriod());
+				financialLeverage.setValue(financialLeverage(totalAsset.getEndValue(), totalEquity.getEndValue()));
+				financialLeverage.setThresold(thresold);
+				if (totalEquity.getEndValue() != 0) {
+					// If has data for evaluating
+					if (financialLeverage.getValue() >= thresold) {
+						// This is good situation
+						financialLeverage.setEvaluate(1);
+					} else {
+						// This is bad situation
+						financialLeverage.setEvaluate(-1);
+					}
+				}
+				// financialLeverage.setTotalAsset(totalAsset.getEndValue());
+				// financialLeverage.setTotalEquity(totalEquity.getEndValue());
+
+				map.put(financialLeverage.getPeriod(), financialLeverage);
+				logger.info("financialLeverage " + financialLeverage);
+			}
+
+			return map;
+		}
+
+		return null;
+	}
+
+	/**
+	 * For each period, financial leverage is total asset divide to total equity.
+	 * 
+	 * @param totalAsset
+	 * @param totalEquity
+	 * @return financial leverage
+	 */
+	private static double financialLeverage(double totalAsset, double totalEquity) {
+		if (totalEquity != 0) {
+			return totalAsset / totalEquity;
+		}
+		return 0;
+	}
 }
