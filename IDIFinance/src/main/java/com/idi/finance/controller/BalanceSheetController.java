@@ -23,6 +23,9 @@ import com.idi.finance.charts.cashratio.CashRatioLineChart;
 import com.idi.finance.charts.currentratio.CurrentRatioBarChart;
 import com.idi.finance.charts.currentratio.CurrentRatioChartProcessor;
 import com.idi.finance.charts.currentratio.CurrentRatioLineChart;
+import com.idi.finance.charts.debtratio.DebtRatioBarChart;
+import com.idi.finance.charts.debtratio.DebtRatioChartProcessor;
+import com.idi.finance.charts.debtratio.DebtRatioLineChart;
 import com.idi.finance.charts.quickratio.QuickRatioBarChart;
 import com.idi.finance.charts.quickratio.QuickRatioChartProcessor;
 import com.idi.finance.charts.quickratio.QuickRatioLineChart;
@@ -31,6 +34,7 @@ import com.idi.finance.kpi.KPIMeasures;
 import com.idi.finance.kpi.QuickRatio;
 import com.idi.finance.kpi.CashRatio;
 import com.idi.finance.kpi.CurrentRatio;
+import com.idi.finance.kpi.DebtRatio;
 import com.idi.finance.utils.ExcelProcessor;
 
 @Controller
@@ -78,12 +82,12 @@ public class BalanceSheetController {
 		});
 		sortedCurrentRatios.putAll(currentRatios);
 
-		model.addAttribute("action", "kntttucthoi");
 		model.addAttribute("currentRatios", sortedCurrentRatios);
 		model.addAttribute("currentRatioBarChart", currentRatioBarChart);
 		model.addAttribute("currentRatioLineChart", currentRatioLineChart);
 		model.addAttribute("currentRatioChartProcessor", currentRatioChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
+		model.addAttribute("action", "kntttucthoi");
 
 		return "kpiCurrentRatio";
 	}
@@ -125,21 +129,20 @@ public class BalanceSheetController {
 		});
 		sortedQuickRatios.putAll(quickRatios);
 
-		model.addAttribute("action", "knttnhanh");
 		model.addAttribute("quickRatios", sortedQuickRatios);
 		model.addAttribute("quickRatioBarChart", quickRatioBarChart);
 		model.addAttribute("quickRatioLineChart", quickRatioLineChart);
 		model.addAttribute("quickRatioChartProcessor", quickRatioChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
+		model.addAttribute("action", "knttnhanh");
 
 		return "kpiQuickRatio";
 	}
 
 	@RequestMapping("/knttbangtien")
 	public String kpiCashRation(Model model) {
-		// Vẽ biểu đồ Khả năng thanh toán nhanh theo tất cả các kỳ (tháng) trong năm
-		// Với từng kỳ, lấy tài sản ngắn hạn (100) trừ hàng tồn kho (140),
-		// tất cả chia cho nợ ngắn hạn (310)
+		// Vẽ biểu đồ Khả năng thanh bằng tiền theo tất cả các kỳ (tháng) trong năm
+		// Với từng kỳ, lấy tiền & tương đương tiền (110) chia cho nợ ngắn hạn (310)
 
 		// Get list current assets, inventories and current liabilites for all period in
 		// a year
@@ -151,7 +154,7 @@ public class BalanceSheetController {
 		List<BalanceSheet> currentLiabilities = balanceSheetDAO.listBssByAssetsCodeAndYear("310", currentYear);
 		logger.info("currentLiabilities " + currentLiabilities.size());
 
-		// Calculate list of quick ratios
+		// Calculate list of cash ratios
 		double threshold = 0.1;
 		HashMap<Date, CashRatio> cashRatios = KPIMeasures.cashRatio(cashEquivalents, currentLiabilities, threshold);
 
@@ -160,7 +163,7 @@ public class BalanceSheetController {
 		CashRatioLineChart cashRatioLineChart = new CashRatioLineChart(cashRatios, threshold);
 		CashRatioChartProcessor cashRatioChartProcessor = new CashRatioChartProcessor();
 
-		// Sorting list of quick ratios by period (month)
+		// Sorting list of cash ratios by period (month)
 		SortedMap<Date, CashRatio> sortedCashRatios = new TreeMap<Date, CashRatio>(new Comparator<Date>() {
 			@Override
 			public int compare(Date date1, Date date2) {
@@ -169,20 +172,21 @@ public class BalanceSheetController {
 		});
 		sortedCashRatios.putAll(cashRatios);
 
-		model.addAttribute("action", "knttnhanh");
 		model.addAttribute("cashRatios", sortedCashRatios);
 		model.addAttribute("cashRatioBarChart", cashRatioBarChart);
 		model.addAttribute("cashRatioLineChart", cashRatioLineChart);
 		model.addAttribute("cashRatioChartProcessor", cashRatioChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
-
 		model.addAttribute("action", "knttbangtien");
+
 		return "kpiCashRatio";
 	}
 
-	@RequestMapping("/vqkhoanthu")
+	@RequestMapping("/vqkhoanphaithu")
 	public String kpiReceivableTurnOver(Model model) {
-		model.addAttribute("action", "vqkhoanthu");
+
+		model.addAttribute("action", "vqkhoanphaithu");
+
 		return "kpiReceivableTurnOver";
 	}
 
@@ -196,6 +200,56 @@ public class BalanceSheetController {
 	public String kpiInventoriesTurnOverByPrice(Model model) {
 		model.addAttribute("action", "vqhangtonkho_thitruong");
 		return "kpiInventoriesTurnOverByPrice";
+	}
+
+	@RequestMapping("/hesono")
+	public String kpiDebtRatio(Model model) {
+		// Vẽ biểu đồ Hệ số nợ theo tất cả các kỳ (tháng) trong năm
+		// Với từng kỳ, lấy tổng số nợ (300) chia cho tổng tài sản (270)
+
+		// Get list current assets and current liabilites for all period in a year
+		Date currentYear = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currentYear);
+		List<BalanceSheet> totalDebts = balanceSheetDAO.listBssByAssetsCodeAndYear("300", currentYear);
+		logger.info("totalDebt " + totalDebts.size());
+		List<BalanceSheet> totalAssets = balanceSheetDAO.listBssByAssetsCodeAndYear("270", currentYear);
+		logger.info("totalAssets " + totalAssets.size());
+
+		// Calculate list of debt ratios
+		double threshold = 0.0;
+		HashMap<Date, DebtRatio> debtRatios = KPIMeasures.debtRatio(totalDebts, totalAssets, threshold);
+
+		// Start drawing charts:
+		DebtRatioBarChart debtRatioBarChart = new DebtRatioBarChart(debtRatios);
+		DebtRatioLineChart debtRatioLineChart = new DebtRatioLineChart(debtRatios, threshold);
+		DebtRatioChartProcessor debtRatioChartProcessor = new DebtRatioChartProcessor();
+
+		// Sorting list of debt ratios by period (month)
+		SortedMap<Date, DebtRatio> sortedDebtRatios = new TreeMap<Date, DebtRatio>(new Comparator<Date>() {
+			@Override
+			public int compare(Date date1, Date date2) {
+				return date1.compareTo(date2);
+			}
+		});
+		sortedDebtRatios.putAll(debtRatios);
+
+		model.addAttribute("debtRatios", sortedDebtRatios);
+		model.addAttribute("debtRatioBarChart", debtRatioBarChart);
+		model.addAttribute("debtRatioLineChart", debtRatioLineChart);
+		model.addAttribute("debtRatioChartProcessor", debtRatioChartProcessor);
+		model.addAttribute("year", cal.get(Calendar.YEAR));
+		model.addAttribute("action", "hesono");
+
+		return "kpiDebtRatio";
+	}
+
+	@RequestMapping("/donbaytaichinh")
+	public String kpiFinancialLeverage(Model model) {
+
+		model.addAttribute("action", "donbaytaichinh");
+
+		return "kpiFinancialLeverage";
 	}
 
 	@RequestMapping("/capnhat")

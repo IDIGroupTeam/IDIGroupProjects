@@ -100,7 +100,7 @@ public class ExcelProcessor {
 					}
 				}
 
-				// Read value
+				// Read end value
 				if (columnStrIndex.equalsIgnoreCase("I")) {
 					CellType cellType = cell.getCellTypeEnum();
 					switch (cellType) {
@@ -113,12 +113,35 @@ public class ExcelProcessor {
 						CellType cellValueType = value.getCellTypeEnum();
 						switch (cellValueType) {
 						case NUMERIC:
-							bs.setAssetsValue(value.getNumberValue());
+							bs.setEndValue(value.getNumberValue());
 							break;
 						}
 						break;
 					case NUMERIC:
-						bs.setAssetsValue(cell.getNumericCellValue());
+						bs.setEndValue(cell.getNumericCellValue());
+						break;
+					}
+				}
+				
+				// Read start value
+				if (columnStrIndex.equalsIgnoreCase("J")) {
+					CellType cellType = cell.getCellTypeEnum();
+					switch (cellType) {
+					case FORMULA:
+						// Formula
+						FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+						// Get value
+						CellValue value = evaluator.evaluate(cell);
+						CellType cellValueType = value.getCellTypeEnum();
+						switch (cellValueType) {
+						case NUMERIC:
+							bs.setStartValue(value.getNumberValue());
+							break;
+						}
+						break;
+					case NUMERIC:
+						bs.setStartValue(cell.getNumericCellValue());
 						break;
 					}
 				}

@@ -26,6 +26,7 @@ public class KPIMeasures {
 	 * 
 	 * @param currentAssets
 	 * @param currentLiabilities
+	 * @param thresold
 	 * @return a map of all current ratio. Key is period.
 	 */
 	public static HashMap<Date, CurrentRatio> currentRatio(List<BalanceSheet> currentAssets,
@@ -41,9 +42,9 @@ public class KPIMeasures {
 
 				CurrentRatio currentRatio = new CurrentRatio();
 				currentRatio.setPeriod(currentAsset.getAssetsPeriod());
-				currentRatio.setValue(currentRatio(currentAsset.getAssetsValue(), currentLiability.getAssetsValue()));
+				currentRatio.setValue(currentRatio(currentAsset.getEndValue(), currentLiability.getEndValue()));
 				currentRatio.setThresold(thresold);
-				if (currentLiability.getAssetsValue() != 0) {
+				if (currentLiability.getEndValue() != 0) {
 					// If has data for evaluating
 					if (currentRatio.getValue() >= thresold) {
 						// This is good situation
@@ -53,8 +54,8 @@ public class KPIMeasures {
 						currentRatio.setEvaluate(-1);
 					}
 				}
-				// currentRatio.setCurrentAsset(currentAsset.getAssetsValue());
-				// currentRatio.setCurrentLiability(currentLiability.getAssetsValue());
+				// currentRatio.setCurrentAsset(currentAsset.getEndValue());
+				// currentRatio.setCurrentLiability(currentLiability.getEndValue());
 
 				map.put(currentRatio.getPeriod(), currentRatio);
 				logger.info("currentRatio " + currentRatio);
@@ -88,6 +89,7 @@ public class KPIMeasures {
 	 * @param currentAssets
 	 * @param inventories
 	 * @param currentLiabilities
+	 * @param thresold
 	 * @return a map of all quick ratio. Key is period.
 	 */
 	public static HashMap<Date, QuickRatio> quickRatio(List<BalanceSheet> currentAssets, List<BalanceSheet> inventories,
@@ -105,10 +107,10 @@ public class KPIMeasures {
 
 				QuickRatio quickRatio = new QuickRatio();
 				quickRatio.setPeriod(currentAsset.getAssetsPeriod());
-				quickRatio.setValue(quickRatio(currentAsset.getAssetsValue(), inventory.getAssetsValue(),
-						currentLiability.getAssetsValue()));
+				quickRatio.setValue(quickRatio(currentAsset.getEndValue(), inventory.getEndValue(),
+						currentLiability.getEndValue()));
 				quickRatio.setThresold(thresold);
-				if (currentLiability.getAssetsValue() != 0) {
+				if (currentLiability.getEndValue() != 0) {
 					// If has data for evaluating
 					if (quickRatio.getValue() >= thresold) {
 						// This is good situation
@@ -118,9 +120,9 @@ public class KPIMeasures {
 						quickRatio.setEvaluate(-1);
 					}
 				}
-				// quickRatio.setCurrentAsset(currentAsset.getAssetsValue());
-				// quickRatio.setInventory(inventory.getAssetsValue());
-				// quickRatio.setCurrentLiability(currentLiability.getAssetsValue());
+				// quickRatio.setCurrentAsset(currentAsset.getEndValue());
+				// quickRatio.setInventory(inventory.getEndValue());
+				// quickRatio.setCurrentLiability(currentLiability.getEndValue());
 
 				map.put(quickRatio.getPeriod(), quickRatio);
 				logger.info("quickRatio " + quickRatio);
@@ -149,14 +151,14 @@ public class KPIMeasures {
 	}
 
 	/**
-	 * This method calculate list of quick ratio from list of current assets, list
-	 * of inventories and list of current liabilities. For each period, quick ratio
-	 * is current asset sub to inventory, and divide to current liability.
+	 * This method calculate list of cash ratio from list of cash & equivalents and
+	 * list of current liabilities. For each period, cash ratio is cash & equivalent
+	 * divide to current liability.
 	 * 
-	 * @param currentAssets
-	 * @param inventories
+	 * @param cashEquivalents
 	 * @param currentLiabilities
-	 * @return a map of all quick ratio. Key is period.
+	 * @param thresold
+	 * @return a map of all cash ratio. Key is period.
 	 */
 	public static HashMap<Date, CashRatio> cashRatio(List<BalanceSheet> cashEquivalents,
 			List<BalanceSheet> currentLiabilities, double thresold) {
@@ -171,9 +173,9 @@ public class KPIMeasures {
 
 				CashRatio cashRatio = new CashRatio();
 				cashRatio.setPeriod(cashEquivalent.getAssetsPeriod());
-				cashRatio.setValue(cashRatio(cashEquivalent.getAssetsValue(), currentLiability.getAssetsValue()));
+				cashRatio.setValue(cashRatio(cashEquivalent.getEndValue(), currentLiability.getEndValue()));
 				cashRatio.setThresold(thresold);
-				if (currentLiability.getAssetsValue() != 0) {
+				if (currentLiability.getEndValue() != 0) {
 					// If has data for evaluating
 					if (cashRatio.getValue() >= thresold) {
 						// This is good situation
@@ -183,8 +185,8 @@ public class KPIMeasures {
 						cashRatio.setEvaluate(-1);
 					}
 				}
-				// cashRatio.setCashEquivalent(cashEquivalent.getAssetsValue());
-				// cashRatio.setCurrentLiability(currentLiability.getAssetsValue());
+				// cashRatio.setCashEquivalent(cashEquivalent.getEndValue());
+				// cashRatio.setCurrentLiability(currentLiability.getEndValue());
 
 				map.put(cashRatio.getPeriod(), cashRatio);
 				logger.info("cashRatio " + cashRatio);
@@ -197,17 +199,76 @@ public class KPIMeasures {
 	}
 
 	/**
-	 * For each period, quick ratio is current asset sub to inventory, and divide to
-	 * current liability.
+	 * For each period, cash ratio is cash & equivalent divide to current liability.
 	 * 
-	 * @param currentAsset
-	 * @param inventory
+	 * @param cashEquivalent
 	 * @param currentLiability
-	 * @return current ratio
+	 * @return cash ratio
 	 */
 	private static double cashRatio(double cashEquivalent, double currentLiability) {
 		if (currentLiability != 0) {
 			return cashEquivalent / currentLiability;
+		}
+		return 0;
+	}
+
+	/**
+	 * This method calculate debt ratio from list of total debts and list of total
+	 * assets. For each period, debt ratio is total debt divide to total asset.
+	 * 
+	 * @param totalDebts
+	 * @param totalAssets
+	 * @param thresold
+	 * @return a map of all debt ratio. Key is period.
+	 */
+	public static HashMap<Date, DebtRatio> debtRatio(List<BalanceSheet> totalDebts, List<BalanceSheet> totalAssets,
+			double thresold) {
+		if (totalDebts != null && totalAssets != null) {
+			HashMap<Date, DebtRatio> map = new HashMap<>();
+			HashMap<Date, BalanceSheet> totalAssetsMap = Utils.convertList2Map(totalAssets);
+
+			Iterator<BalanceSheet> iter = totalDebts.iterator();
+			while (iter.hasNext()) {
+				BalanceSheet totalDebt = iter.next();
+				BalanceSheet totalAsset = totalAssetsMap.get(totalDebt.getAssetsPeriod());
+
+				DebtRatio debtRatio = new DebtRatio();
+				debtRatio.setPeriod(totalDebt.getAssetsPeriod());
+				debtRatio.setValue(debtRatio(totalDebt.getEndValue(), totalAsset.getEndValue()));
+				debtRatio.setThresold(thresold);
+				if (totalAsset.getEndValue() != 0) {
+					// If has data for evaluating
+					if (debtRatio.getValue() >= thresold) {
+						// This is good situation
+						debtRatio.setEvaluate(1);
+					} else {
+						// This is bad situation
+						debtRatio.setEvaluate(-1);
+					}
+				}
+				// debtRatio.setTotalDebt(totalDebt.getEndValue());
+				// debtRatio.setTotalAsset(totalAsset.getEndValue());
+
+				map.put(debtRatio.getPeriod(), debtRatio);
+				logger.info("debtRatio " + debtRatio);
+			}
+
+			return map;
+		}
+
+		return null;
+	}
+
+	/**
+	 * For each period, debt ratio is total debt divide to total asset.
+	 * 
+	 * @param totalDebt
+	 * @param totalAsset
+	 * @return debt ratio
+	 */
+	private static double debtRatio(double totalDebt, double totalAsset) {
+		if (totalAsset != 0) {
+			return totalDebt / totalAsset;
 		}
 		return 0;
 	}

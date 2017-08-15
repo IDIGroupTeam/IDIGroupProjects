@@ -77,9 +77,11 @@
 											<option value="kntttucthoi">Khả năng thanh toán tức thời</option>
 											<option value="knttnhanh">Khả năng thanh toán nhanh</option>
 											<option value="knttbangtien">Khả năng thanh toán thành tiền</option>
-											<option value="vqkhoanthu">Vòng quay khoản phải thu</option>
+											<option value="vqkhoanphaithu">Vòng quay khoản phải thu</option>
 											<option value="vqhangtonkho_sosach">Vòng quay hàng tồn kho theo giá trị sổ sách</option>
 											<option value="vqhangtonkho_thitruong">Vòng quay hàng tồn kho theo giá thị trường</option>
+											<option value="hesono">Hệ số nợ</option>
+											<option value="donbaytaichinh">Đòn bẩy tài chính</option>
 										</select>
 									</div>
 								</td>

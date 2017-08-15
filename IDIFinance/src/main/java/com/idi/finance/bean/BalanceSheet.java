@@ -1,6 +1,5 @@
 package com.idi.finance.bean;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class BalanceSheet {
@@ -10,7 +9,8 @@ public class BalanceSheet {
 	private String rule;
 	private String note;
 	private String description;
-	private double assetsValue;
+	private double startValue;
+	private double endValue;
 	private double changedRatio;
 	private Date assetsPeriod;
 
@@ -62,14 +62,6 @@ public class BalanceSheet {
 		this.description = description;
 	}
 
-	public double getAssetsValue() {
-		return assetsValue;
-	}
-
-	public void setAssetsValue(double assetsValue) {
-		this.assetsValue = assetsValue;
-	}
-
 	public double getChangedRatio() {
 		return changedRatio;
 	}
@@ -88,8 +80,24 @@ public class BalanceSheet {
 
 	@Override
 	public String toString() {
-		String out = assetsName + "  " + rule + " " + assetsCode + "  " + note + " " + assetsValue + "  " + changedRatio
-				+ " " + assetsPeriod;
+		String out = assetsName + "  " + rule + " " + assetsCode + "  " + note + " " + endValue + " " + startValue + " "
+				+ changedRatio + " " + assetsPeriod;
 		return out;
+	}
+
+	public double getStartValue() {
+		return startValue;
+	}
+
+	public void setStartValue(double startValue) {
+		this.startValue = startValue;
+	}
+
+	public double getEndValue() {
+		return endValue;
+	}
+
+	public void setEndValue(double endValue) {
+		this.endValue = endValue;
 	}
 }

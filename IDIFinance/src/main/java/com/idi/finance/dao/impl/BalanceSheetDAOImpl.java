@@ -33,8 +33,8 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		if (bss == null)
 			return;
 
-		String updateQry = "UPDATE BALANCE_SHEET SET ASSETS_VALUE=?, CHANGED_RATIO=? WHERE ASSETS_CODE=? AND ASSETS_PERIOD=?";
-		String insertQry = "INSERT INTO BALANCE_SHEET(ASSETS_NAME, RULE, ASSETS_CODE, NOTE, ASSETS_VALUE, CHANGED_RATIO, ASSETS_PERIOD) VALUES(?, ?, ?, ?, ?, ?, ?)";
+		String updateQry = "UPDATE BALANCE_SHEET SET END_VALUE=?, START_VALUE=?, CHANGED_RATIO=? WHERE ASSETS_CODE=? AND ASSETS_PERIOD=?";
+		String insertQry = "INSERT INTO BALANCE_SHEET(ASSETS_NAME, RULE, ASSETS_CODE, NOTE, END_VALUE, START_VALUE, CHANGED_RATIO, ASSETS_PERIOD) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 
 		Iterator<BalanceSheet> iter = bss.iterator();
 		while (iter.hasNext()) {
@@ -45,15 +45,15 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 			try {
 				// update firstly, if now row is updated, we will be insert data
 				Timestamp assetsPeriod = new Timestamp(bs.getAssetsPeriod().getTime());
-				count = jdbcTmpl.update(updateQry, bs.getAssetsValue(), bs.getChangedRatio(), bs.getAssetsCode(),
-						assetsPeriod);
+				count = jdbcTmpl.update(updateQry, bs.getEndValue(), bs.getStartValue(), bs.getChangedRatio(),
+						bs.getAssetsCode(), assetsPeriod);
 
 				// This is new data, so insert it.
 				if (count == 0) {
 					// logger.info("Insert new data " + bs);
 					if (bs.getAssetsCode() != null) {
 						count = jdbcTmpl.update(insertQry, bs.getAssetsName(), bs.getRule(), bs.getAssetsCode(),
-								bs.getNote(), bs.getAssetsValue(), bs.getChangedRatio(), assetsPeriod);
+								bs.getNote(), bs.getEndValue(), bs.getStartValue(), bs.getChangedRatio(), assetsPeriod);
 					}
 				}
 			} catch (Exception e) {
@@ -92,7 +92,8 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 			bs.setRule(rs.getString("RULE"));
 			bs.setAssetsCode(rs.getString("ASSETS_CODE"));
 			bs.setNote(rs.getString("NOTE"));
-			bs.setAssetsValue(rs.getDouble("ASSETS_VALUE"));
+			bs.setEndValue(rs.getDouble("END_VALUE"));
+			bs.setStartValue(rs.getDouble("START_VALUE"));
 			bs.setChangedRatio(rs.getDouble("CHANGED_RATIO"));
 			Timestamp assetPeriod = rs.getTimestamp("ASSETS_PERIOD");
 			Date date = new Date(assetPeriod.getTime());
