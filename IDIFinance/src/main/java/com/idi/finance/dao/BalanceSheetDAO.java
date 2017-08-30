@@ -6,7 +6,11 @@ import java.util.List;
 import com.idi.finance.bean.BalanceSheet;
 
 public interface BalanceSheetDAO {
-	public void insertOrUpdateBss(List<BalanceSheet> bss);
+	public void insertOrUpdateBSs(List<BalanceSheet> bss);
+	
+	public void insertOrUpdateSR(List<BalanceSheet> srs);
 
-	public List<BalanceSheet> listBssByAssetsCodeAndYear(String assetsCode, Date year);
+	public List<BalanceSheet> listBSsByAssetsCodeAndYear(String assetsCode, Date year);
+	
+	public List<BalanceSheet> listSRsByAssetsCodeAndYear(String assetsCode, Date year);
 }

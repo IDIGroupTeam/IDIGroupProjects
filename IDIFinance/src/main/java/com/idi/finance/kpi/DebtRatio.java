@@ -23,7 +23,7 @@ public class DebtRatio extends KpiProperties {
 	@Override
 	public String toString() {
 		String result = getPeriod() + " " + getValue() + " " + totalDebt + " " + totalAsset + " " + getEvaluate() + " "
-				+ getThresold();
+				+ getThreshold();
 		return result;
 	}
 }

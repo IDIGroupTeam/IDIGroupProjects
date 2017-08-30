@@ -16,14 +16,11 @@
 <title>Tập đoàn IDI</title>
 
 <jsp:useBean id="quickRatioBarChart"
-	type="com.idi.finance.charts.quickratio.QuickRatioBarChart"
-	scope="request" />
+	type="com.idi.finance.charts.KpiBarChart" scope="request" />
 <jsp:useBean id="quickRatioLineChart"
-	type="com.idi.finance.charts.quickratio.QuickRatioLineChart"
-	scope="request" />
+	type="com.idi.finance.charts.KpiLineChart" scope="request" />
 <jsp:useBean id="quickRatioChartProcessor"
-	type="com.idi.finance.charts.quickratio.QuickRatioChartProcessor"
-	scope="request" />
+	type="com.idi.finance.charts.KpiChartProcessor" scope="request" />
 </head>
 <body>
 	<div class="text-center">
@@ -83,7 +80,7 @@
 				<tr>
 					<td>Tiêu chuẩn</td>
 					<c:forEach items="${quickRatios}" var="quickRatio">
-						<td><c:out value="${quickRatio.value.thresold}"></c:out></td>
+						<td><c:out value="${quickRatio.value.threshold}"></c:out></td>
 					</c:forEach>
 				</tr>
 				<tr>

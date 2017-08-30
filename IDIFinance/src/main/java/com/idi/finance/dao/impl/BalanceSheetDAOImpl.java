@@ -29,7 +29,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	}
 
 	@Override
-	public void insertOrUpdateBss(List<BalanceSheet> bss) {
+	public void insertOrUpdateBSs(List<BalanceSheet> bss) {
 		if (bss == null)
 			return;
 
@@ -63,7 +63,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	}
 
 	@Override
-	public List<BalanceSheet> listBssByAssetsCodeAndYear(String assetsCode, Date year) {
+	public List<BalanceSheet> listBSsByAssetsCodeAndYear(String assetsCode, Date year) {
 		if (assetsCode == null || year == null)
 			return null;
 
@@ -73,7 +73,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		cal.setTime(year);
 
 		logger.info("Get list of balance sheet by asserts_code and year ...");
-		logger.info("Query " + query);
+		logger.info(query);
 		logger.info("assetsCode " + assetsCode + ". Year " + cal.get(Calendar.YEAR));
 
 		Object[] params = { assetsCode, cal.get(Calendar.YEAR) };
@@ -100,9 +100,61 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 			bs.setAssetsPeriod(date);
 			bs.setDescription(rs.getString("DESCRIPTION"));
 
-			logger.info("bs: " + bs);
-
 			return bs;
 		}
+	}
+
+	@Override
+	public void insertOrUpdateSR(List<BalanceSheet> srs) {
+		if (srs == null)
+			return;
+
+		String updateQry = "UPDATE SALE_RESULT SET END_VALUE=?, START_VALUE=?, CHANGED_RATIO=? WHERE ASSETS_CODE=? AND ASSETS_PERIOD=?";
+		String insertQry = "INSERT INTO SALE_RESULT(ASSETS_NAME, RULE, ASSETS_CODE, NOTE, END_VALUE, START_VALUE, CHANGED_RATIO, ASSETS_PERIOD) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+
+		Iterator<BalanceSheet> iter = srs.iterator();
+		while (iter.hasNext()) {
+			BalanceSheet bs = iter.next();
+			logger.info(bs);
+
+			int count = 0;
+			try {
+				// update firstly, if now row is updated, we will be insert data
+				Timestamp assetsPeriod = new Timestamp(bs.getAssetsPeriod().getTime());
+				count = jdbcTmpl.update(updateQry, bs.getEndValue(), bs.getStartValue(), bs.getChangedRatio(),
+						bs.getAssetsCode(), assetsPeriod);
+
+				// This is new data, so insert it.
+				if (count == 0) {
+					// logger.info("Insert new data " + bs);
+					if (bs.getAssetsCode() != null) {
+						count = jdbcTmpl.update(insertQry, bs.getAssetsName(), bs.getRule(), bs.getAssetsCode(),
+								bs.getNote(), bs.getEndValue(), bs.getStartValue(), bs.getChangedRatio(), assetsPeriod);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public List<BalanceSheet> listSRsByAssetsCodeAndYear(String assetsCode, Date year) {
+		if (assetsCode == null || year == null)
+			return null;
+
+		String query = "SELECT * FROM SALE_RESULT WHERE ASSETS_CODE = ? AND YEAR(ASSETS_PERIOD)=?";
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(year);
+
+		logger.info("Get list of sale result by asserts_code and year ...");
+		logger.info(query);
+		logger.info("assetsCode " + assetsCode + ". Year " + cal.get(Calendar.YEAR));
+
+		Object[] params = { assetsCode, cal.get(Calendar.YEAR) };
+		List<BalanceSheet> srs = jdbcTmpl.query(query, params, new BalanceSheetMapper());
+
+		return srs;
 	}
 }

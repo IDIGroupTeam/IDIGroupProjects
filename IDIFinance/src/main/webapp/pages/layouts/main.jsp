@@ -76,10 +76,25 @@
 											class="form-control" id="sel1">
 											<option value="kntttucthoi">Khả năng thanh toán tức thời</option>
 											<option value="knttnhanh">Khả năng thanh toán nhanh</option>
-											<option value="knttbangtien">Khả năng thanh toán thành tiền</option>
+											<option value="knttbangtien">Khả năng thanh toán bằng tiền</option>
 											<option value="vqkhoanphaithu">Vòng quay khoản phải thu</option>
+											<option value="kttienbinhquan">Kỳ thu tiền bình quân</option>
 											<option value="vqhangtonkho_sosach">Vòng quay hàng tồn kho theo giá trị sổ sách</option>
 											<option value="vqhangtonkho_thitruong">Vòng quay hàng tồn kho theo giá thị trường</option>
+											<option value="sntonkhobinhquan_sosach">Số ngày tồn kho bình quân theo giá trị sổ sách</option>
+											<option value="sntonkhobinhquan_thitruong">Số ngày hàng tồn kho  bình quân theo giá thị trường</option>
+											<option value="chukyhoatdong_sosach">Chu kỳ hoạt động của doanh nghiệp theo giá trị sổ sách</option>
+											<option value="chukyhoatdong_thitruong">Chu kỳ hoạt động của doanh nghiệp theo giá thị trường</option>
+											<option value="vqkhoanphaitra">Vòng quay khoản phải trả</option>
+											<option value="kyphaitrabinhquan">Kỳ phải trả bình quân</option>
+											<option value="ckluanchuyentien_sosach">Chu kỳ luân chuyển tiền theo giá trị sổ sách</option>
+											<option value="ckluanchuyentien_thitruong">Chu kỳ luân chuyển tiền theo giá trị thị trường</option>
+											<option value="knttlaivay">Khả năng thanh toán lãi vay</option>
+											<option value="hssdtongtaisan">Hiệu suất sử dụng tổng tài sản (Vòng quay tổng tài sản)</option>
+											<option value="hssdtaisancodinh">Hiệu suất sử dụng tài sản cố định</option>
+											<option value="hssdvonluudong">Hiệu suất sử dụng trên vòng quay vốn lưu động</option>
+											<option value="tysuatloinhuangop">Tỷ suất lợi nhuận gộp (Lợi nhuận gộp biên)</option>
+											<option value="tysuatloinhuanrong">Tỷ suất lợi nhuận ròng (Lợi nhuận ròng biên)</option>
 											<option value="hesono">Hệ số nợ</option>
 											<option value="donbaytaichinh">Đòn bẩy tài chính</option>
 										</select>

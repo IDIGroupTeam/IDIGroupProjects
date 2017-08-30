@@ -12,12 +12,6 @@ import com.idi.finance.utils.Utils;
 
 public class KPIMeasures {
 	private static final Logger logger = Logger.getLogger(KPIMeasures.class);
-	public String KNTT_TUC_THOI = "Khả năng thanh toán tức thời";
-	public String KNTT_NHANH = "Khả năng thanh toán nhanh";
-	public String KNTT_BANG_TIEN = "Khả năng thanh toán bằng tiền";
-	public String VQ_PHAI_THU = "Vòng quay phải thu";
-	public String VQ_HANG_TON_KHO = "Vòng quay hàng tồn kho";
-	public String KNTT_LAI_VAY = "Khả năng thanh toán lãi vay";
 
 	/**
 	 * This method calculate list of current ratio from list of current assets and
@@ -26,11 +20,11 @@ public class KPIMeasures {
 	 * 
 	 * @param currentAssets
 	 * @param currentLiabilities
-	 * @param thresold
+	 * @param threshold
 	 * @return a map of all current ratio. Key is period.
 	 */
 	public static HashMap<Date, CurrentRatio> currentRatio(List<BalanceSheet> currentAssets,
-			List<BalanceSheet> currentLiabilities, double thresold) {
+			List<BalanceSheet> currentLiabilities, double threshold) {
 		if (currentAssets != null && currentLiabilities != null) {
 			HashMap<Date, CurrentRatio> map = new HashMap<>();
 			HashMap<Date, BalanceSheet> currentLiabilitiesMap = Utils.convertList2Map(currentLiabilities);
@@ -43,10 +37,10 @@ public class KPIMeasures {
 				CurrentRatio currentRatio = new CurrentRatio();
 				currentRatio.setPeriod(currentAsset.getAssetsPeriod());
 				currentRatio.setValue(currentRatio(currentAsset.getEndValue(), currentLiability.getEndValue()));
-				currentRatio.setThresold(thresold);
+				currentRatio.setThreshold(threshold);
 				if (currentLiability.getEndValue() != 0) {
 					// If has data for evaluating
-					if (currentRatio.getValue() >= thresold) {
+					if (currentRatio.getValue() >= threshold) {
 						// This is good situation
 						currentRatio.setEvaluate(1);
 					} else {
@@ -58,7 +52,7 @@ public class KPIMeasures {
 				// currentRatio.setCurrentLiability(currentLiability.getEndValue());
 
 				map.put(currentRatio.getPeriod(), currentRatio);
-				logger.info("currentRatio " + currentRatio);
+				logger.info(currentRatio);
 			}
 
 			return map;
@@ -89,11 +83,11 @@ public class KPIMeasures {
 	 * @param currentAssets
 	 * @param inventories
 	 * @param currentLiabilities
-	 * @param thresold
+	 * @param threshold
 	 * @return a map of all quick ratio. Key is period.
 	 */
 	public static HashMap<Date, QuickRatio> quickRatio(List<BalanceSheet> currentAssets, List<BalanceSheet> inventories,
-			List<BalanceSheet> currentLiabilities, double thresold) {
+			List<BalanceSheet> currentLiabilities, double threshold) {
 		if (currentAssets != null && inventories != null && currentLiabilities != null) {
 			HashMap<Date, QuickRatio> map = new HashMap<>();
 			HashMap<Date, BalanceSheet> inventoriesMap = Utils.convertList2Map(inventories);
@@ -109,10 +103,10 @@ public class KPIMeasures {
 				quickRatio.setPeriod(currentAsset.getAssetsPeriod());
 				quickRatio.setValue(quickRatio(currentAsset.getEndValue(), inventory.getEndValue(),
 						currentLiability.getEndValue()));
-				quickRatio.setThresold(thresold);
+				quickRatio.setThreshold(threshold);
 				if (currentLiability.getEndValue() != 0) {
 					// If has data for evaluating
-					if (quickRatio.getValue() >= thresold) {
+					if (quickRatio.getValue() >= threshold) {
 						// This is good situation
 						quickRatio.setEvaluate(1);
 					} else {
@@ -157,11 +151,11 @@ public class KPIMeasures {
 	 * 
 	 * @param cashEquivalents
 	 * @param currentLiabilities
-	 * @param thresold
+	 * @param threshold
 	 * @return a map of all cash ratio. Key is period.
 	 */
 	public static HashMap<Date, CashRatio> cashRatio(List<BalanceSheet> cashEquivalents,
-			List<BalanceSheet> currentLiabilities, double thresold) {
+			List<BalanceSheet> currentLiabilities, double threshold) {
 		if (cashEquivalents != null && currentLiabilities != null) {
 			HashMap<Date, CashRatio> map = new HashMap<>();
 			HashMap<Date, BalanceSheet> currentLiabilitiesMap = Utils.convertList2Map(currentLiabilities);
@@ -174,10 +168,10 @@ public class KPIMeasures {
 				CashRatio cashRatio = new CashRatio();
 				cashRatio.setPeriod(cashEquivalent.getAssetsPeriod());
 				cashRatio.setValue(cashRatio(cashEquivalent.getEndValue(), currentLiability.getEndValue()));
-				cashRatio.setThresold(thresold);
+				cashRatio.setThreshold(threshold);
 				if (currentLiability.getEndValue() != 0) {
 					// If has data for evaluating
-					if (cashRatio.getValue() >= thresold) {
+					if (cashRatio.getValue() >= threshold) {
 						// This is good situation
 						cashRatio.setEvaluate(1);
 					} else {
@@ -213,16 +207,377 @@ public class KPIMeasures {
 	}
 
 	/**
+	 * This method calculate list of receivable turnover from list of total
+	 * operating revenues and list of receivables. For each period, receivable
+	 * turnover is total operating revenue divide to average of end receivable and
+	 * start receivable. (short receivable & long receivable)
+	 * 
+	 * @param totalOperatingRevenues
+	 * @param shortReceivables
+	 * @param longReceivables
+	 * @param threshold
+	 * @return a map of all receivable turnover. Key is period.
+	 */
+	public static HashMap<Date, ReceivableTurnover> receivableTurnover(List<BalanceSheet> totalOperatingRevenues,
+			List<BalanceSheet> shortReceivables, List<BalanceSheet> longReceivables, double threshold) {
+		if (totalOperatingRevenues != null && shortReceivables != null && longReceivables != null) {
+			HashMap<Date, ReceivableTurnover> map = new HashMap<>();
+			HashMap<Date, BalanceSheet> shortReceivablesMap = Utils.convertList2Map(shortReceivables);
+			HashMap<Date, BalanceSheet> longReceivablesMap = Utils.convertList2Map(longReceivables);
+
+			Iterator<BalanceSheet> iter = totalOperatingRevenues.iterator();
+			while (iter.hasNext()) {
+				BalanceSheet totalOperatingRevenue = iter.next();
+				BalanceSheet shortReceivable = shortReceivablesMap.get(totalOperatingRevenue.getAssetsPeriod());
+				BalanceSheet longReceivable = longReceivablesMap.get(totalOperatingRevenue.getAssetsPeriod());
+				double startReceivable = shortReceivable.getStartValue() + longReceivable.getStartValue();
+				double endReceivable = shortReceivable.getEndValue() + longReceivable.getEndValue();
+
+				ReceivableTurnover receivablesTurnover = new ReceivableTurnover();
+				receivablesTurnover.setPeriod(totalOperatingRevenue.getAssetsPeriod());
+				receivablesTurnover.setValue(
+						receivableTurnover(totalOperatingRevenue.getEndValue(), endReceivable, startReceivable));
+				receivablesTurnover.setThreshold(threshold);
+				if (endReceivable != 0) {
+					// If has data for evaluating
+					if (receivablesTurnover.getValue() >= threshold) {
+						// This is good situation
+						receivablesTurnover.setEvaluate(1);
+					} else {
+						// This is bad situation
+						receivablesTurnover.setEvaluate(-1);
+					}
+				}
+				// receivablesTurnover.setTotalOperatingRevenue(totalOperatingRevenue.getEndValue());
+				// receivablesTurnover.setEndReceivable(endReceivable);
+				// receivablesTurnover.setStartReceivable(startReceivable);
+
+				map.put(receivablesTurnover.getPeriod(), receivablesTurnover);
+				logger.info(receivablesTurnover);
+			}
+
+			return map;
+		}
+
+		return null;
+	}
+
+	/**
+	 * This method calculate list of receivable turnover from list of total
+	 * operating revenues and list of receivables. For each period, receivable
+	 * turnover is total operating revenue divide to average of end receivable and
+	 * start receivable.
+	 * 
+	 * @param totalOperatingRevenues
+	 * @param receivables
+	 * @param threshold
+	 * @return a map of all receivable turnover. Key is period.
+	 */
+	public static HashMap<Date, ReceivableTurnover> receivableTurnover(List<BalanceSheet> totalOperatingRevenues,
+			List<BalanceSheet> receivables, double threshold) {
+		if (totalOperatingRevenues != null && receivables != null) {
+			HashMap<Date, ReceivableTurnover> map = new HashMap<>();
+			HashMap<Date, BalanceSheet> receivablesMap = Utils.convertList2Map(receivables);
+
+			Iterator<BalanceSheet> iter = totalOperatingRevenues.iterator();
+			while (iter.hasNext()) {
+				BalanceSheet totalOperatingRevenue = iter.next();
+				BalanceSheet receivable = receivablesMap.get(totalOperatingRevenue.getAssetsPeriod());
+
+				ReceivableTurnover receivablesTurnover = new ReceivableTurnover();
+				receivablesTurnover.setPeriod(totalOperatingRevenue.getAssetsPeriod());
+				receivablesTurnover.setValue(receivableTurnover(totalOperatingRevenue.getEndValue(),
+						receivable.getEndValue(), receivable.getStartValue()));
+
+				receivablesTurnover.setThreshold(threshold);
+				if (receivable.getEndValue() != 0) {
+					// If has data for evaluating
+					if (receivablesTurnover.getValue() >= threshold) {
+						// This is good situation
+						receivablesTurnover.setEvaluate(1);
+					} else {
+						// This is bad situation
+						receivablesTurnover.setEvaluate(-1);
+					}
+				}
+				// receivablesTurnover.setTotalOperatingRevenue(totalOperatingRevenue.getEndValue());
+				// receivablesTurnover.setEndReceivable(receivable.getEndValue());
+				// receivablesTurnover.setStartReceivable(receivable.getStartValue());
+
+				map.put(receivablesTurnover.getPeriod(), receivablesTurnover);
+				logger.info(receivablesTurnover);
+			}
+
+			return map;
+		}
+
+		return null;
+	}
+
+	/**
+	 * For each period, receivable turnover is total operating revenue divide to
+	 * average of end receivable and start receivable.
+	 * 
+	 * @param totalOperatingRevenue
+	 * @param endReceivable
+	 * @param startReceivable
+	 * @return receivable turnover
+	 */
+	private static double receivableTurnover(double totalOperatingRevenue, double endReceivable,
+			double startReceivable) {
+		double avegareReceivable = (endReceivable + startReceivable) / 2;
+		if (avegareReceivable != 0) {
+			return totalOperatingRevenue / avegareReceivable;
+		}
+		return 0;
+	}
+
+	/**
+	 * This method calculate list of receivable turnover from list of total
+	 * operating revenues and list of receivables. For each period, receivable
+	 * turnover is total operating revenue divide to average of end receivable and
+	 * start receivable.
+	 * 
+	 * @param totalOperatingRevenues
+	 * @param receivables
+	 * @param threshold
+	 * @param numberOfPeriods
+	 * @return a map of all receivable turnover. Key is period.
+	 */
+	public static HashMap<Date, ReceivableTurnover> avgReceivablePeriod(List<BalanceSheet> totalOperatingRevenues,
+			List<BalanceSheet> shortReceivables, List<BalanceSheet> longReceivables, double threshold,
+			int numberOfPeriods) {
+		if (totalOperatingRevenues != null && shortReceivables != null && longReceivables != null) {
+			HashMap<Date, ReceivableTurnover> map = new HashMap<>();
+			HashMap<Date, BalanceSheet> shortReceivablesMap = Utils.convertList2Map(shortReceivables);
+			HashMap<Date, BalanceSheet> longReceivablesMap = Utils.convertList2Map(longReceivables);
+
+			Iterator<BalanceSheet> iter = totalOperatingRevenues.iterator();
+			while (iter.hasNext()) {
+				BalanceSheet totalOperatingRevenue = iter.next();
+				BalanceSheet shortReceivable = shortReceivablesMap.get(totalOperatingRevenue.getAssetsPeriod());
+				BalanceSheet longReceivable = longReceivablesMap.get(totalOperatingRevenue.getAssetsPeriod());
+				double startReceivable = shortReceivable.getStartValue() + longReceivable.getStartValue();
+				double endReceivable = shortReceivable.getEndValue() + longReceivable.getEndValue();
+
+				ReceivableTurnover receivablesTurnover = new ReceivableTurnover();
+				receivablesTurnover.setPeriod(totalOperatingRevenue.getAssetsPeriod());
+				receivablesTurnover.setValue(avgReceivablePeriod(totalOperatingRevenue.getEndValue(), endReceivable,
+						startReceivable, numberOfPeriods));
+
+				receivablesTurnover.setThreshold(threshold);
+				if (endReceivable != 0) {
+					// If has data for evaluating
+					if (receivablesTurnover.getValue() >= threshold) {
+						// This is good situation
+						receivablesTurnover.setEvaluate(1);
+					} else {
+						// This is bad situation
+						receivablesTurnover.setEvaluate(-1);
+					}
+				}
+				// receivablesTurnover.setTotalOperatingRevenue(totalOperatingRevenue.getEndValue());
+				// receivablesTurnover.setEndReceivable(endReceivable);
+				// receivablesTurnover.setStartReceivable(startReceivable);
+
+				map.put(receivablesTurnover.getPeriod(), receivablesTurnover);
+				logger.info(receivablesTurnover);
+			}
+
+			return map;
+		}
+
+		return null;
+	}
+
+	/**
+	 * This method calculate list of receivable turnover from list of total
+	 * operating revenues and list of receivables. For each period, receivable
+	 * turnover is total operating revenue divide to average of end receivable and
+	 * start receivable.
+	 * 
+	 * @param totalOperatingRevenues
+	 * @param receivables
+	 * @param threshold
+	 * @param numberOfPeriods
+	 * @return a map of all receivable turnover. Key is period.
+	 */
+	public static HashMap<Date, ReceivableTurnover> avgReceivablePeriod(List<BalanceSheet> totalOperatingRevenues,
+			List<BalanceSheet> receivables, double threshold, int numberOfPeriods) {
+		if (totalOperatingRevenues != null && receivables != null) {
+			HashMap<Date, ReceivableTurnover> map = new HashMap<>();
+			HashMap<Date, BalanceSheet> receivablesMap = Utils.convertList2Map(receivables);
+
+			Iterator<BalanceSheet> iter = totalOperatingRevenues.iterator();
+			while (iter.hasNext()) {
+				BalanceSheet totalOperatingRevenue = iter.next();
+				BalanceSheet receivable = receivablesMap.get(totalOperatingRevenue.getAssetsPeriod());
+
+				ReceivableTurnover receivablesTurnover = new ReceivableTurnover();
+				receivablesTurnover.setPeriod(totalOperatingRevenue.getAssetsPeriod());
+				receivablesTurnover.setValue(avgReceivablePeriod(totalOperatingRevenue.getEndValue(),
+						receivable.getEndValue(), receivable.getStartValue(), numberOfPeriods));
+
+				receivablesTurnover.setThreshold(threshold);
+				if (receivable.getEndValue() != 0) {
+					// If has data for evaluating
+					if (receivablesTurnover.getValue() >= threshold) {
+						// This is good situation
+						receivablesTurnover.setEvaluate(1);
+					} else {
+						// This is bad situation
+						receivablesTurnover.setEvaluate(-1);
+					}
+				}
+				// receivablesTurnover.setTotalOperatingRevenue(totalOperatingRevenue.getEndValue());
+				// receivablesTurnover.setEndReceivable(receivable.getEndValue());
+				// receivablesTurnover.setStartReceivable(receivable.getStartValue());
+
+				map.put(receivablesTurnover.getPeriod(), receivablesTurnover);
+				logger.info(receivablesTurnover);
+			}
+
+			return map;
+		}
+
+		return null;
+	}
+
+	/**
+	 * For each period, receivable turnover is total operating revenue divide to
+	 * average of end receivable and start receivable.
+	 * 
+	 * @param totalOperatingRevenue
+	 * @param endReceivable
+	 * @param startReceivable
+	 * @param numberOfPeriods
+	 * @return receivable turnover
+	 */
+	private static double avgReceivablePeriod(double totalOperatingRevenue, double endReceivable,
+			double startReceivable, int numberOfPeriods) {
+		double avegareReceivable = (endReceivable + startReceivable) / 2;
+		if (totalOperatingRevenue != 0) {
+			return numberOfPeriods * avegareReceivable / totalOperatingRevenue;
+		}
+		return 0;
+	}
+
+	/**
+	 * @param totalOperatingRevenues
+	 * @param shortReceivables
+	 * @param longReceivables
+	 * @param costOfSolds
+	 * @param inventories
+	 * @param threshold
+	 * @param numberOfPeriods
+	 * @return
+	 */
+	public static HashMap<Date, OperatingCycle> operatingCycle(HashMap<Date, ReceivableTurnover> receivableTurnovers,
+			HashMap<Date, ReceivableTurnover> dayInInventories, double threshold) {
+		if (receivableTurnovers != null && dayInInventories != null) {
+			HashMap<Date, OperatingCycle> map = new HashMap<>();
+
+			Iterator<Date> iter = receivableTurnovers.keySet().iterator();
+			while (iter.hasNext()) {
+				Date period = iter.next();
+
+				ReceivableTurnover receivableTurnover = receivableTurnovers.get(period);
+				ReceivableTurnover dayInInventory = dayInInventories.get(period);
+
+				if (receivableTurnover != null && dayInInventory != null) {
+					OperatingCycle operatingCycle = new OperatingCycle();
+					operatingCycle.setPeriod(period);
+					operatingCycle.setValue(receivableTurnover.getValue() + dayInInventory.getValue());
+					operatingCycle.setThreshold(threshold);
+
+					if (operatingCycle.getValue() != 0) {
+						// If has data for evaluating
+						if (operatingCycle.getValue() >= threshold) {
+							// This is good situation
+							operatingCycle.setEvaluate(1);
+						} else {
+							// This is bad situation
+							operatingCycle.setEvaluate(-1);
+						}
+					}
+					operatingCycle.setTotalOperatingRevenue(receivableTurnover.getTotalOperatingRevenue());
+					operatingCycle.setStartReceivable(receivableTurnover.getStartReceivable());
+					operatingCycle.setEndReceivable(receivableTurnover.getEndReceivable());
+					operatingCycle.setCostOfSold(dayInInventory.getTotalOperatingRevenue());
+					operatingCycle.setStartInventory(dayInInventory.getStartReceivable());
+					operatingCycle.setEndInventory(dayInInventory.getEndReceivable());
+
+					map.put(period, operatingCycle);
+					logger.info(operatingCycle);
+				}
+			}
+
+			return map;
+		}
+
+		return null;
+	}
+
+	public static HashMap<Date, CashConversionCycle> cashConversionCycle(HashMap<Date, OperatingCycle> operatingCycles,
+			HashMap<Date, ReceivableTurnover> avgPaymentPeriods, double threshold) {
+		if (operatingCycles != null && avgPaymentPeriods != null) {
+			HashMap<Date, CashConversionCycle> map = new HashMap<>();
+
+			Iterator<Date> iter = operatingCycles.keySet().iterator();
+			while (iter.hasNext()) {
+				Date period = iter.next();
+
+				OperatingCycle operatingCycle = operatingCycles.get(period);
+				ReceivableTurnover avgPaymentPeriod = avgPaymentPeriods.get(period);
+
+				if (operatingCycle != null && avgPaymentPeriod != null) {
+					CashConversionCycle cashConversionCycle = new CashConversionCycle();
+					cashConversionCycle.setPeriod(period);
+					cashConversionCycle
+							.setValue(cashConversionCycle(operatingCycle.getValue(), avgPaymentPeriod.getValue()));
+					cashConversionCycle.setThreshold(threshold);
+
+					if (cashConversionCycle.getValue() != 0) {
+						// If has data for evaluating
+						if (cashConversionCycle.getValue() >= threshold) {
+							// This is good situation
+							cashConversionCycle.setEvaluate(1);
+						} else {
+							// This is bad situation
+							cashConversionCycle.setEvaluate(-1);
+						}
+					}
+					cashConversionCycle.setOperatingCycle(operatingCycle.getValue());
+					cashConversionCycle.setAvgPaymentPeriod(avgPaymentPeriod.getValue());
+
+					map.put(period, cashConversionCycle);
+					logger.info(operatingCycle);
+				}
+			}
+
+			return map;
+		}
+		return null;
+	}
+
+	private static double cashConversionCycle(double operatingCycle, double avgPaymentPeriod) {
+		if (avgPaymentPeriod != 0) {
+			return operatingCycle / avgPaymentPeriod;
+		}
+		return 0;
+	}
+
+	/**
 	 * This method calculate debt ratio from list of total debts and list of total
 	 * assets. For each period, debt ratio is total debt divide to total asset.
 	 * 
 	 * @param totalDebts
 	 * @param totalAssets
-	 * @param thresold
+	 * @param threshold
 	 * @return a map of all debt ratio. Key is period.
 	 */
 	public static HashMap<Date, DebtRatio> debtRatio(List<BalanceSheet> totalDebts, List<BalanceSheet> totalAssets,
-			double thresold) {
+			double threshold) {
 		if (totalDebts != null && totalAssets != null) {
 			HashMap<Date, DebtRatio> map = new HashMap<>();
 			HashMap<Date, BalanceSheet> totalAssetsMap = Utils.convertList2Map(totalAssets);
@@ -235,10 +590,10 @@ public class KPIMeasures {
 				DebtRatio debtRatio = new DebtRatio();
 				debtRatio.setPeriod(totalDebt.getAssetsPeriod());
 				debtRatio.setValue(debtRatio(totalDebt.getEndValue(), totalAsset.getEndValue()));
-				debtRatio.setThresold(thresold);
+				debtRatio.setThreshold(threshold);
 				if (totalAsset.getEndValue() != 0) {
 					// If has data for evaluating
-					if (debtRatio.getValue() >= thresold) {
+					if (debtRatio.getValue() >= threshold) {
 						// This is good situation
 						debtRatio.setEvaluate(1);
 					} else {
@@ -280,11 +635,11 @@ public class KPIMeasures {
 	 * 
 	 * @param totalAssets
 	 * @param totalEquities
-	 * @param thresold
+	 * @param threshold
 	 * @return a map of all financial leverages. Key is period.
 	 */
 	public static HashMap<Date, FinancialLeverage> financialLeverage(List<BalanceSheet> totalAssets,
-			List<BalanceSheet> totalEquities, double thresold) {
+			List<BalanceSheet> totalEquities, double threshold) {
 		if (totalAssets != null && totalEquities != null) {
 			HashMap<Date, FinancialLeverage> map = new HashMap<>();
 			HashMap<Date, BalanceSheet> totalEquitiesMap = Utils.convertList2Map(totalEquities);
@@ -297,10 +652,10 @@ public class KPIMeasures {
 				FinancialLeverage financialLeverage = new FinancialLeverage();
 				financialLeverage.setPeriod(totalAsset.getAssetsPeriod());
 				financialLeverage.setValue(financialLeverage(totalAsset.getEndValue(), totalEquity.getEndValue()));
-				financialLeverage.setThresold(thresold);
+				financialLeverage.setThreshold(threshold);
 				if (totalEquity.getEndValue() != 0) {
 					// If has data for evaluating
-					if (financialLeverage.getValue() >= thresold) {
+					if (financialLeverage.getValue() >= threshold) {
 						// This is good situation
 						financialLeverage.setEvaluate(1);
 					} else {
