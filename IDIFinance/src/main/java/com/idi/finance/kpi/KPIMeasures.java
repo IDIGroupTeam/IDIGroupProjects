@@ -14,6 +14,71 @@ public class KPIMeasures {
 	private static final Logger logger = Logger.getLogger(KPIMeasures.class);
 
 	/**
+	 * @param currentAssets
+	 * @param currentLiabilities
+	 * @param incomes
+	 * @param threshold
+	 * @return a map of all current ratio. Key is period.
+	 */
+	public static HashMap<Date, NetProfitMargin> netProfitMargin(List<BalanceSheet> grossProfits,
+			List<BalanceSheet> netIncomes, List<BalanceSheet> financeNetIncomes, double threshold) {
+		if (grossProfits != null && netIncomes != null && financeNetIncomes != null) {
+			HashMap<Date, NetProfitMargin> map = new HashMap<>();
+			HashMap<Date, BalanceSheet> netIncomesMap = Utils.convertList2Map(netIncomes);
+			HashMap<Date, BalanceSheet> financeNetIncomesMap = Utils.convertList2Map(financeNetIncomes);
+
+			Iterator<BalanceSheet> iter = grossProfits.iterator();
+			while (iter.hasNext()) {
+				BalanceSheet grossProfit = iter.next();
+				BalanceSheet netIncome = netIncomesMap.get(grossProfit.getAssetsPeriod());
+				BalanceSheet financeNetIncome = financeNetIncomesMap.get(grossProfit.getAssetsPeriod());
+
+				NetProfitMargin netProfitMargin = new NetProfitMargin();
+				netProfitMargin.setPeriod(grossProfit.getAssetsPeriod());
+				netProfitMargin.setValue(netProfitMargin(grossProfit.getEndValue(), netIncome.getEndValue(),
+						financeNetIncome.getEndValue()));
+				netProfitMargin.setThreshold(threshold);
+				if (netProfitMargin.getValue() != 0) {
+					// If has data for evaluating
+					if (netProfitMargin.getValue() >= threshold) {
+						// This is good situation
+						netProfitMargin.setEvaluate(1);
+					} else {
+						// This is bad situation
+						netProfitMargin.setEvaluate(-1);
+					}
+				}
+				// netProfitMargin.setGrossProfit(grossProfit.getEndValue());
+				// netProfitMargin.setNetIncome(netIncome.getEndValue());
+				// netProfitMargin.setFinanceNetIncome(financeNetIncome.getEndValue());
+
+				map.put(netProfitMargin.getPeriod(), netProfitMargin);
+				logger.info(netProfitMargin);
+			}
+
+			return map;
+		}
+
+		return null;
+	}
+
+	/**
+	 * For each period, netProfitMargin is grossProfit divide to total of netIncome
+	 * and financeNetIncome.
+	 * 
+	 * @param grossProfit
+	 * @param netIncome
+	 * @param financeNetIncome
+	 * @return netProfitMargin
+	 */
+	private static double netProfitMargin(double grossProfit, double netIncome, double financeNetIncome) {
+		if ((netIncome + financeNetIncome) != 0) {
+			return grossProfit / (netIncome + financeNetIncome);
+		}
+		return 0;
+	}
+
+	/**
 	 * This method calculate list of current ratio from list of current assets and
 	 * list of current liabilities. For each period, current ratio is current asset
 	 * divide to current liability.

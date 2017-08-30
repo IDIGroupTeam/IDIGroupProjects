@@ -197,7 +197,7 @@ public class ExcelProcessor {
 		Iterator<Row> rowIter = sheet.iterator();
 		while (rowIter.hasNext()) {
 			Row row = rowIter.next();
-			if (row.getRowNum() < 5) {
+			if (row.getRowNum() < 4) {
 				continue;
 			}
 
