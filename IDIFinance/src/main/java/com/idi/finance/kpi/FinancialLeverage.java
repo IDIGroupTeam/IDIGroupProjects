@@ -23,7 +23,7 @@ public class FinancialLeverage extends KpiProperties {
 	@Override
 	public String toString() {
 		String result = getPeriod() + " " + getValue() + " " + totalAsset + " " + totalEquity + " " + getEvaluate()
-				+ " " + getThresold();
+				+ " " + getThreshold();
 		return result;
 	}
 }

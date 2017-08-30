@@ -15,14 +15,11 @@
 </script>
 <title>Tập đoàn IDI</title>
 <jsp:useBean id="debtRatioBarChart"
-	type="com.idi.finance.charts.debtratio.DebtRatioBarChart"
-	scope="request" />
+	type="com.idi.finance.charts.KpiBarChart" scope="request" />
 <jsp:useBean id="debtRatioLineChart"
-	type="com.idi.finance.charts.debtratio.DebtRatioLineChart"
-	scope="request" />
+	type="com.idi.finance.charts.KpiLineChart" scope="request" />
 <jsp:useBean id="debtRatioChartProcessor"
-	type="com.idi.finance.charts.debtratio.DebtRatioChartProcessor"
-	scope="request" />
+	type="com.idi.finance.charts.KpiChartProcessor" scope="request" />
 </head>
 <body>
 	<div class="text-center">
@@ -81,7 +78,7 @@
 				<tr>
 					<td>Tiêu chuẩn</td>
 					<c:forEach items="${debtRatios}" var="debtRatio">
-						<td><c:out value="${debtRatio.value.thresold}"></c:out></td>
+						<td><c:out value="${debtRatio.value.threshold}"></c:out></td>
 					</c:forEach>
 				</tr>
 				<tr>

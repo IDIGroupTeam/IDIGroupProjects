@@ -101,7 +101,7 @@
 				<tr>
 					<td>Tiêu chuẩn</td>
 					<c:forEach items="${currentRatios}" var="currentRatio">
-						<td><c:out value="${currentRatio.value.thresold}"></c:out></td>
+						<td><c:out value="${currentRatio.value.threshold}"></c:out></td>
 					</c:forEach>
 				</tr>
 				<tr>

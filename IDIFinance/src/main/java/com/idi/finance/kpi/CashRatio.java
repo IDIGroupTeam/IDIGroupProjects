@@ -23,7 +23,7 @@ public class CashRatio extends KpiProperties {
 	@Override
 	public String toString() {
 		String result = getPeriod() + " " + getValue() + " " + cashEquivalent + " " + currentLiability + " "
-				+ getEvaluate() + " " + getThresold();
+				+ getEvaluate() + " " + getThreshold();
 		return result;
 	}
 }

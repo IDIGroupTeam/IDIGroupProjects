@@ -15,19 +15,16 @@
 </script>
 <title>Tập đoàn IDI</title>
 <jsp:useBean id="cashRatioBarChart"
-	type="com.idi.finance.charts.cashratio.CashRatioBarChart"
-	scope="request" />
+	type="com.idi.finance.charts.KpiBarChart" scope="request" />
 <jsp:useBean id="cashRatioLineChart"
-	type="com.idi.finance.charts.cashratio.CashRatioLineChart"
-	scope="request" />
+	type="com.idi.finance.charts.KpiLineChart" scope="request" />
 <jsp:useBean id="cashRatioChartProcessor"
-	type="com.idi.finance.charts.cashratio.CashRatioChartProcessor"
-	scope="request" />
+	type="com.idi.finance.charts.KpiChartProcessor" scope="request" />
 </head>
 <body>
 	<div class="text-center">
 		<cewolf:overlaidchart id="cashRatiosChart"
-			title="Khả năng thanh toán tức thời" yaxislabel="Giá trị"
+			title="Khả năng thanh toán bằng tiền" yaxislabel="Giá trị"
 			xaxislabel="Năm ${year}" xaxistype="date" yaxistype="number"
 			type="overlaidxy" showlegend="true">
 			<cewolf:colorpaint color="#99CCFF" />
@@ -82,7 +79,7 @@
 				<tr>
 					<td>Tiêu chuẩn</td>
 					<c:forEach items="${cashRatios}" var="cashRatio">
-						<td><c:out value="${cashRatio.value.thresold}"></c:out></td>
+						<td><c:out value="${cashRatio.value.threshold}"></c:out></td>
 					</c:forEach>
 				</tr>
 				<tr>

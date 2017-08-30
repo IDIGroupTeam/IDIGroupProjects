@@ -32,7 +32,7 @@ public class QuickRatio extends KpiProperties {
 	@Override
 	public String toString() {
 		String result = getPeriod() + " " + getValue() + " " + currentAsset + " " + inventory + " " + currentLiability
-				+ " " + getEvaluate() + " " + getThresold();
+				+ " " + getEvaluate() + " " + getThreshold();
 		return result;
 	}
 }

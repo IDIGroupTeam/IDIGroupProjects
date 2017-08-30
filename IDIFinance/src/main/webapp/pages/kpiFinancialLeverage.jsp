@@ -16,14 +16,11 @@
 <title>Tập đoàn IDI</title>
 
 <jsp:useBean id="financialLeverageBarChart"
-	type="com.idi.finance.charts.financialleverage.FinancialLeverageBarChart"
-	scope="request" />
+	type="com.idi.finance.charts.KpiBarChart" scope="request" />
 <jsp:useBean id="financialLeverageLineChart"
-	type="com.idi.finance.charts.financialleverage.FinancialLeverageLineChart"
-	scope="request" />
+	type="com.idi.finance.charts.KpiLineChart" scope="request" />
 <jsp:useBean id="financialLeverageChartProcessor"
-	type="com.idi.finance.charts.financialleverage.FinancialLeverageChartProcessor"
-	scope="request" />
+	type="com.idi.finance.charts.KpiChartProcessor" scope="request" />
 </head>
 <body>
 	<div class="text-center">
@@ -84,7 +81,7 @@
 				<tr>
 					<td>Tiêu chuẩn</td>
 					<c:forEach items="${financialLeverages}" var="financialLeverage">
-						<td><c:out value="${financialLeverage.value.thresold}"></c:out></td>
+						<td><c:out value="${financialLeverage.value.threshold}"></c:out></td>
 					</c:forEach>
 				</tr>
 				<tr>

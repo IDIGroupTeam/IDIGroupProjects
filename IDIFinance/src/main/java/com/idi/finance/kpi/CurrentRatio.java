@@ -23,7 +23,7 @@ public class CurrentRatio extends KpiProperties {
 	@Override
 	public String toString() {
 		String result = getPeriod() + " " + getValue() + " " + currentAsset + " " + currentLiability + " "
-				+ getEvaluate() + " " + getThresold();
+				+ getEvaluate() + " " + getThreshold();
 		return result;
 	}
 }

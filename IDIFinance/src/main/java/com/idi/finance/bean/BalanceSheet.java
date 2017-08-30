@@ -80,7 +80,7 @@ public class BalanceSheet {
 
 	@Override
 	public String toString() {
-		String out = assetsName + "  " + rule + " " + assetsCode + "  " + note + " " + endValue + " " + startValue + " "
+		String out = assetsName + "  " + rule + " " + assetsCode + "  " + note + " " + startValue + " " + endValue + " "
 				+ changedRatio + " " + assetsPeriod;
 		return out;
 	}

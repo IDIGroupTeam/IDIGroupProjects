@@ -6,7 +6,7 @@ public class KpiProperties {
 	private Date period;
 	private double value;
 	private int evaluate;
-	private double thresold;
+	private double threshold;
 
 	public Date getPeriod() {
 		return period;
@@ -35,11 +35,11 @@ public class KpiProperties {
 		this.evaluate = evaluate;
 	}
 
-	public double getThresold() {
-		return thresold;
+	public double getThreshold() {
+		return threshold;
 	}
 
-	public void setThresold(double thresold) {
-		this.thresold = thresold;
+	public void setThreshold(double threshold) {
+		this.threshold = threshold;
 	}
 }

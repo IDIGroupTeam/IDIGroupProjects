@@ -17,14 +17,11 @@
 <title>Tập đoàn IDI</title>
 
 <jsp:useBean id="currentRatioBarChart"
-	type="com.idi.finance.charts.currentratio.CurrentRatioBarChart"
-	scope="request" />
+	type="com.idi.finance.charts.KpiBarChart" scope="request" />
 <jsp:useBean id="currentRatioLineChart"
-	type="com.idi.finance.charts.currentratio.CurrentRatioLineChart"
-	scope="request" />
+	type="com.idi.finance.charts.KpiLineChart" scope="request" />
 <jsp:useBean id="currentRatioChartProcessor"
-	type="com.idi.finance.charts.currentratio.CurrentRatioChartProcessor"
-	scope="request" />
+	type="com.idi.finance.charts.KpiChartProcessor" scope="request" />
 </head>
 <body>
 	<div class="text-center">
@@ -85,7 +82,7 @@
 				<tr>
 					<td>Tiêu chuẩn</td>
 					<c:forEach items="${currentRatios}" var="currentRatio">
-						<td><c:out value="${currentRatio.value.thresold}"></c:out></td>
+						<td><c:out value="${currentRatio.value.threshold}"></c:out></td>
 					</c:forEach>
 				</tr>
 				<tr>
