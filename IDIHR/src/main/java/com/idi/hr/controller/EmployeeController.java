@@ -42,7 +42,7 @@ public class EmployeeController {
 
 	@RequestMapping(value = "/insertNewEmployee", method = RequestMethod.POST)
 	public String insertNewEmployee(Model model, @ModelAttribute("employeeForm") EmployeeInfo employeeInfo) {
-		System.err.println("before insert 11");
+		System.err.println("before insert");
 		try {
 			// employeeDAO.insertEmployee(employeeInfo);
 			// redirectAttributes.addFlashAttribute("message", "Insert new employee
