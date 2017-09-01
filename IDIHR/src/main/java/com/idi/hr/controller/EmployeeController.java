@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.idi.hr.bean.EmployeeInfo;
 import com.idi.hr.bean.JobTitle;
@@ -40,11 +41,11 @@ public class EmployeeController {
 		return "listEmployee";
 	}
 
-	@RequestMapping(value = "/insertNewEmployee", method = RequestMethod.POST)
-	public String insertNewEmployee(Model model, @ModelAttribute("employeeForm") EmployeeInfo employeeInfo) {
+	@RequestMapping(value = "/insertOrUpdateEmployee", method = RequestMethod.POST)
+	public String insertOrUpdateEmployee(Model model, @ModelAttribute("employeeForm") EmployeeInfo employeeInfo) {
 		System.err.println("before insert here");
 		try {
-			// employeeDAO.insertEmployee(employeeInfo);
+			// employeeDAO.insertOrUpdateEmployee(employeeInfo);
 			// redirectAttributes.addFlashAttribute("message", "Insert new employee
 			// successful");
 		} catch (Exception e) {
@@ -59,11 +60,17 @@ public class EmployeeController {
 		// get list title
 		model.addAttribute("titleMap", titleMap);
 		// get list department
-		return "insertEmployee";
+		
+		if (employeeInfo.getEmployeeId() == null) {
+			model.addAttribute("formTitle", "Thêm mới nhân viên");
+		} else {
+			model.addAttribute("formTitle", "Sửa thông tin nhân viên");
+		}
+		return "formEmployee";
 	}
 
 	@RequestMapping(value = { "/insertEmployee" })
-	public String addNewEmployee(Model model) {
+	public String insertEmployee(Model model) {
 		EmployeeInfo employeeInfo = new EmployeeInfo();
 		return this.employeeForm(model, employeeInfo);
 	}
@@ -85,4 +92,31 @@ public class EmployeeController {
 		return titleMap;
 	}
 
+	   @RequestMapping("/editEmployee")
+	   public String editEmployee(Model model, @RequestParam("employeeId") String employeeId) {
+		   EmployeeInfo employeeInfo = null;
+	       if (employeeId != null) {
+	    	   employeeInfo = this.employeeDAO.getEmployee(employeeId);
+	       }
+	       if (employeeInfo == null) {
+	           return "redirect:/listEmployee";
+	       }
+	 
+	       return this.employeeForm(model, employeeInfo);
+	   }
+	
+	   @RequestMapping("/viewEmployee")
+	   public String viewEmployee(Model model, @RequestParam("employeeId") String employeeId) {
+		   EmployeeInfo employeeInfo = null;
+	       if (employeeId != null) {
+	    	   employeeInfo = this.employeeDAO.getEmployee(employeeId);
+	    	   model.addAttribute("employeeForm", employeeInfo);
+	       }
+	       if (employeeInfo == null) {
+	           return "redirect:/listEmployee";
+	       }
+	 
+	       return "viewEmployee";
+	   }
+	
 }

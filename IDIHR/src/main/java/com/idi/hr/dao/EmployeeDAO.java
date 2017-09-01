@@ -40,8 +40,10 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	 * 
 	 * @param employeeId
 	 * @return employee object
-	 * @throws AppException If having any checked exception
-	 * @throws SysException If runtime exception happen
+	 * @throws AppException
+	 *             If having any checked exception
+	 * @throws SysException
+	 *             If runtime exception happen
 	 */
 	public EmployeeInfo getEmployee(String employeeId) {
 
@@ -58,35 +60,60 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	}
 
 	/**
-	 * Insert a employee into database
+	 * Insert or update a employee into database
 	 * 
 	 * @param employeeInfo
-	 * @throws AppException If having any checked exception
-	 * @throws SysException If runtime exception happen
+	 * @throws AppException
+	 *             If having any checked exception
+	 * @throws SysException
+	 *             If runtime exception happen
 	 */
-	public void insertEmployee(EmployeeInfo employeeInfo) throws Exception {
+	public void insertOrUpdateEmployee(EmployeeInfo employeeInfo) throws Exception {
 		try {
-			String sql = hr.getProperty("INSERT_EMPLOYEE_INFO").toString();
-			log.info("INSERT_EMPLOYEE_INFO query: " + sql);
-			Object[] params = new Object[] { employeeInfo.getEmployeeId(), employeeInfo.getFullName(),
-					employeeInfo.getGender(), employeeInfo.getJobTitle(), employeeInfo.getWorkStatus(), employeeInfo.getDOB(),
-					employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(), employeeInfo.getPersonalId(),
-					employeeInfo.getIssueDate(), employeeInfo.getDepartment(), employeeInfo.getPhoneNo(),
-					employeeInfo.getJoinDate(), employeeInfo.getOfficalJoinDate(), employeeInfo.getEmail(),
-					employeeInfo.getTerminationDate(), employeeInfo.getReasonforLeave(),
-					employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
-					employeeInfo.getNation(), employeeInfo.getImage(), employeeInfo.getEmerName(), employeeInfo.getEmerPhoneNo(),
-					employeeInfo.getBankNo(), employeeInfo.getBankName(), employeeInfo.getBankBranch(), employeeInfo.getSalary(),
-					employeeInfo.getSalarySocicalInsu(), employeeInfo.getSocicalInsuNo(), employeeInfo.getHealthInsuNo(), employeeInfo.getPercentSocicalInsu()};
-			jdbcTmpl.update(sql, params);
+			if (employeeInfo.getEmployeeId() != null) {
+				// update
+				String sql = hr.getProperty("UPDATE_EMPLOYEE_INFO").toString();
+				log.info("UPDATE_EMPLOYEE_INFO query: " + sql);
+				Object[] params = new Object[] { employeeInfo.getFullName(),
+						employeeInfo.getGender(), employeeInfo.getJobTitle(), employeeInfo.getWorkStatus(),
+						employeeInfo.getDOB(), employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(),
+						employeeInfo.getPersonalId(), employeeInfo.getIssueDate(), employeeInfo.getDepartment(),
+						employeeInfo.getPhoneNo(), employeeInfo.getJoinDate(), employeeInfo.getOfficalJoinDate(),
+						employeeInfo.getEmail(), employeeInfo.getTerminationDate(), employeeInfo.getReasonforLeave(),
+						employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
+						employeeInfo.getNation(), employeeInfo.getImage(), employeeInfo.getEmerName(),
+						employeeInfo.getEmerPhoneNo(), employeeInfo.getBankNo(), employeeInfo.getBankName(),
+						employeeInfo.getBankBranch(), employeeInfo.getSalary(), employeeInfo.getSalarySocicalInsu(),
+						employeeInfo.getSocicalInsuNo(), employeeInfo.getHealthInsuNo(),
+						employeeInfo.getPercentSocicalInsu(), employeeInfo.getEmployeeId()};
+				jdbcTmpl.update(sql, params);
+			} else {
+				// insert
+				String sql = hr.getProperty("INSERT_EMPLOYEE_INFO").toString();
+				log.info("INSERT_EMPLOYEE_INFO query: " + sql);
+				Object[] params = new Object[] { employeeInfo.getEmployeeId(), employeeInfo.getFullName(),
+						employeeInfo.getGender(), employeeInfo.getJobTitle(), employeeInfo.getWorkStatus(),
+						employeeInfo.getDOB(), employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(),
+						employeeInfo.getPersonalId(), employeeInfo.getIssueDate(), employeeInfo.getDepartment(),
+						employeeInfo.getPhoneNo(), employeeInfo.getJoinDate(), employeeInfo.getOfficalJoinDate(),
+						employeeInfo.getEmail(), employeeInfo.getTerminationDate(), employeeInfo.getReasonforLeave(),
+						employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
+						employeeInfo.getNation(), employeeInfo.getImage(), employeeInfo.getEmerName(),
+						employeeInfo.getEmerPhoneNo(), employeeInfo.getBankNo(), employeeInfo.getBankName(),
+						employeeInfo.getBankBranch(), employeeInfo.getSalary(), employeeInfo.getSalarySocicalInsu(),
+						employeeInfo.getSocicalInsuNo(), employeeInfo.getHealthInsuNo(),
+						employeeInfo.getPercentSocicalInsu() };
+				jdbcTmpl.update(sql, params);
 
-			// if (employeeInfo.getImage() != null) {
-			// stmt.setBinaryStream(++i, new ByteArrayInputStream(employeeInfo.getImage()),
-			// employeeInfo.getImage().length);
-			// }
+				// if (employeeInfo.getImage() != null) {
+				// stmt.setBinaryStream(++i, new ByteArrayInputStream(employeeInfo.getImage()),
+				// employeeInfo.getImage().length);
+				// }
+			}
+
 		} catch (Exception e) {
 			log.error(e, e);
-			
+
 		}
 	}
 

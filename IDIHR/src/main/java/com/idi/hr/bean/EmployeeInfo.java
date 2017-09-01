@@ -38,19 +38,24 @@ public class EmployeeInfo implements Serializable {
 	private String bankNo;
 	private String bankName;
 	private String bankBranch;
-	private String salary; 
+	private String salary;
 	private String salarySocicalInsu;
 	private String socicalInsuNo;
 	private String healthInsuNo;
 	private String percentSocicalInsu;
-	
+
 	public EmployeeInfo() {
-		
+
 	}
-	
-	public EmployeeInfo(String employeeId, String loginAccount, String gender, String fullName, String maritalStatus, String jobTitle, String department,
-			Date DOB, String personalId, Date issueDate, String phoneNo, Date joinDate, Date officalJoinDate, String email,
-			Date terminationDate, String reasonforLeave, String currentAdress, String permanentAdress, String note, String workStatus) {
+
+	public EmployeeInfo(String employeeId, String loginAccount, String gender, String fullName, String maritalStatus,
+			String jobTitle, String department, Date DOB, String personalId, Date issueDate, String phoneNo,
+			Date joinDate, Date officalJoinDate, String email, Date terminationDate, String reasonforLeave,
+			String currentAdress, String permanentAdress, String note, String emerName, String emerPhoneNo,
+			String nation, byte[] image, String workStatus, String bankNo, String bankName, String bankBranch,
+			String salary, String salarySocicalInsu, String socicalInsuNo, String healthInsuNo,
+			String percentSocicalInsu) {
+
 		this.employeeId = employeeId;
 		this.loginAccount = loginAccount;
 		this.gender = gender;
@@ -69,9 +74,21 @@ public class EmployeeInfo implements Serializable {
 		this.currentAdress = currentAdress;
 		this.permanentAdress = permanentAdress;
 		this.note = note;
+		this.emerName = emerName;
+		this.emerPhoneNo = emerPhoneNo;
+		this.nation = nation;
+		this.image = image;
 		this.workStatus = workStatus;
+		this.bankNo = bankNo;
+		this.bankName = bankName;
+		this.bankBranch = bankBranch;
+		this.salary = salary;
+		this.salarySocicalInsu = salarySocicalInsu;
+		this.socicalInsuNo = socicalInsuNo;
+		this.healthInsuNo = healthInsuNo;
+		this.percentSocicalInsu = percentSocicalInsu;
 	}
-	
+
 	public String getEmployeeId() {
 		return employeeId;
 	}
