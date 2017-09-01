@@ -34,9 +34,9 @@
 					<td>${employee.jobTitle}</td>
 					<td>${employee.gender}</td>
 					<td>${employee.phoneNo}</td>
-					<td><a href="viewEmployeeInfo?id=${employee.employeeId}">View</a>
+					<td><a href="viewEmployee?employeeId=${employee.employeeId}">View</a>
 					</td>
-					<td><a href="editEmployeeInfo?id=${employee.employeeId}">Edit</a>
+					<td><a href="editEmployee?employeeId=${employee.employeeId}">Edit</a>
 					</td>
 				</tr>
 			</c:forEach>

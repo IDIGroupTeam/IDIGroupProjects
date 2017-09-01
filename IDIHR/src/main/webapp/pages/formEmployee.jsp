@@ -17,11 +17,11 @@
 </head>
 <body>
 	<h4>
-		<b>Thêm mới nhân viên</b>
+		<b>${formTitle}</b>
 	</h4>
-	<form:form method="POST" action="insertNewEmployee"
-		modelAttribute="employeeForm">
+	<form:form modelAttribute="employeeForm" method="POST" action="insertOrUpdateEmployee">
 		<div class="table table-bordered">
+		<form:hidden path="employeeId" />
 			<table class="table">
 				<tbody>
 					<tr>
@@ -130,7 +130,7 @@
 						<td>Đ/c thường trú:</td>
 						<td><form:input path="permanentAdress" /></td>
 						<td>yyyyy:</td>
-						<td><form:input path="" /></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td colspan="4" nowrap="nowrap" bgcolor="999999">Liên lạc
