@@ -13,7 +13,7 @@ public class EmployeeMapper implements RowMapper<EmployeeInfo> {
 	@Override
 	public EmployeeInfo mapRow(ResultSet rs, int nowNum) throws SQLException {
 
-		String employeeId = rs.getString("EMPLOYEE_ID");
+		int employeeId = rs.getInt("EMPLOYEE_ID");
 		String loginAccount = rs.getString("LOGIN_ACCOUNT");
 		String fullName = rs.getString("FULL_NAME");
 		String gender = rs.getString("GENDER");
@@ -47,10 +47,12 @@ public class EmployeeMapper implements RowMapper<EmployeeInfo> {
 		String healthInsuNo = rs.getString("HEALTH_INSU_NO");
 		String percentSocicalInsu = rs.getString("PERCENT_SOCI_INSU");
 
-		return new EmployeeInfo(employeeId, loginAccount, gender, fullName, maritalStatus, jobTitle, department, DOB,
-				personalId, issueDate, phoneNo, joinDate, officalJoinDate, email, terminationDate, reasonforLeave,
-				currentAdress, permanentAdress, note, emerName, emerPhoneNo, nation, image, workStatus, bankNo,
-				bankName, bankBranch, salary, salarySocicalInsu, socicalInsuNo, healthInsuNo, percentSocicalInsu);
+		return new EmployeeInfo(employeeId, loginAccount, gender, fullName, maritalStatus,
+				jobTitle, department, DOB, personalId, issueDate, phoneNo,
+				joinDate, officalJoinDate, email, terminationDate, reasonforLeave,
+				currentAdress, permanentAdress, note, emerName, emerPhoneNo,
+				nation, image, workStatus, bankNo, bankName, bankBranch,
+				salary, salarySocicalInsu, socicalInsuNo, healthInsuNo, percentSocicalInsu);
 
 	}
 }

@@ -20,15 +20,16 @@
 	<bean id="properties"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location" value="classpath:hr.properties" />
-		<!-- <property name="ignoreUnresolvablePlaceholders" value="true" />
-		<property name="ignoreResourceNotFound" value="true" /> -->
+		<!-- <property name="ignoreUnresolvablePlaceholders" value="true" /> <property 
+			name="ignoreResourceNotFound" value="true" /> -->
 	</bean>
 
 	<!-- Config database connection -->
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/idigroup" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/idigroup?useUnicode=true&amp;characterEncoding=UTF-8" />
 		<property name="username" value="root" />
 		<property name="password" value="" />
 	</bean>
@@ -36,11 +37,15 @@
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 
-	<bean id="employeeDAO" class="com.idi.hr.dao.EmployeeDAO"> 
+	<bean id="employeeDAO" class="com.idi.hr.dao.EmployeeDAO">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
-	<bean id="jobTitleDAO" class="com.idi.hr.dao.JobTitleDAO"> 
+	<bean id="jobTitleDAO" class="com.idi.hr.dao.JobTitleDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+
+	<bean id="departmentDAO" class="com.idi.hr.dao.DepartmentDAO">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 </beans>
