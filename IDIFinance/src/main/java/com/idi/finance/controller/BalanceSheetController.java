@@ -23,6 +23,7 @@ import com.idi.finance.charts.KpiChartProcessor;
 import com.idi.finance.charts.KpiLineChart;
 import com.idi.finance.dao.BalanceSheetDAO;
 import com.idi.finance.kpi.KPIMeasures;
+import com.idi.finance.kpi.NetProfitMargin;
 import com.idi.finance.kpi.OperatingCycle;
 import com.idi.finance.kpi.QuickRatio;
 import com.idi.finance.kpi.ReceivableTurnover;
@@ -1034,10 +1035,10 @@ public class BalanceSheetController {
 		logger.info("Tỷ suất lợi nhuận gộp (Lợi nhuận gộp biên):");
 		List<BalanceSheet> grossProfits = balanceSheetDAO.listSRsByAssetsCodeAndYear("20", currentYear);
 		logger.info("Lợi nhuận gộp (20) " + grossProfits.size());
-		List<BalanceSheet> netComes = balanceSheetDAO.listSRsByAssetsCodeAndYear("10", currentYear);
-		logger.info("Doanh thu thuần (10) " + netComes.size());
+		List<BalanceSheet> netIncomes = balanceSheetDAO.listSRsByAssetsCodeAndYear("10", currentYear);
+		logger.info("Doanh thu thuần (10) " + netIncomes.size());
 
-		HashMap<Date, CurrentRatio> grossProfitMargins = KPIMeasures.currentRatio(grossProfits, netComes, threshold);
+		HashMap<Date, CurrentRatio> grossProfitMargins = KPIMeasures.currentRatio(grossProfits, netIncomes, threshold);
 
 		// Start drawing charts:
 		KpiBarChart grossProfitMarginBarChart = new KpiBarChart(grossProfitMargins);
@@ -1068,7 +1069,8 @@ public class BalanceSheetController {
 	@RequestMapping("/tysuatloinhuanrong")
 	public String kpiNetProfitMargin(Model model) {
 		// Vẽ biểu đồ Tỷ suất lợi nhuận ròng theo các kỳ (tháng) trong năm. Với
-		// từng kỳ, lấy lợi nhuận sau thuế (60) chia doanh thu (01).
+		// từng kỳ, lấy lợi nhuận sau thuế (60) chia tổng doanh thu bán hàng (01) và
+		// doan thu hoạt động tài chính (21).
 
 		Date currentYear = new Date();
 		Calendar cal = Calendar.getInstance();
@@ -1076,13 +1078,16 @@ public class BalanceSheetController {
 
 		double threshold = 1.0;
 
-		logger.info("Tỷ suất lợi nhuận ròng (Lợi nhuận ròng biên):");
+		logger.info("Tỷ suất lợi nhuận ròng (Lợi nhuận ròng ròng):");
 		List<BalanceSheet> grossProfits = balanceSheetDAO.listSRsByAssetsCodeAndYear("60", currentYear);
-		logger.info("Lợi nhuận gộp (60) " + grossProfits.size());
-		List<BalanceSheet> netComes = balanceSheetDAO.listSRsByAssetsCodeAndYear("01", currentYear);
-		logger.info("Doanh thu thuần (01) " + netComes.size());
+		logger.info("Lợi nhuận sau thuế (60) " + grossProfits.size());
+		List<BalanceSheet> netIncomes = balanceSheetDAO.listSRsByAssetsCodeAndYear("01", currentYear);
+		logger.info("Doanh thu bán hàng và cung cấp dịch vụ (01) " + netIncomes.size());
+		List<BalanceSheet> financeNetIncomes = balanceSheetDAO.listSRsByAssetsCodeAndYear("21", currentYear);
+		logger.info("Doanh thu hoạt động tài chính (21) " + financeNetIncomes.size());
 
-		HashMap<Date, CurrentRatio> netProfitMargins = KPIMeasures.currentRatio(grossProfits, netComes, threshold);
+		HashMap<Date, NetProfitMargin> netProfitMargins = KPIMeasures.netProfitMargin(grossProfits, netIncomes,
+				financeNetIncomes, threshold);
 
 		// Start drawing charts:
 		KpiBarChart netProfitMarginBarChart = new KpiBarChart(netProfitMargins);
@@ -1090,12 +1095,13 @@ public class BalanceSheetController {
 		KpiChartProcessor netProfitMarginChartProcessor = new KpiChartProcessor();
 
 		// Sorting list of Interest Coverages by period (month)
-		SortedMap<Date, CurrentRatio> sortedNetProfitMargins = new TreeMap<Date, CurrentRatio>(new Comparator<Date>() {
-			@Override
-			public int compare(Date date1, Date date2) {
-				return date1.compareTo(date2);
-			}
-		});
+		SortedMap<Date, NetProfitMargin> sortedNetProfitMargins = new TreeMap<Date, NetProfitMargin>(
+				new Comparator<Date>() {
+					@Override
+					public int compare(Date date1, Date date2) {
+						return date1.compareTo(date2);
+					}
+				});
 		sortedNetProfitMargins.putAll(netProfitMargins);
 
 		model.addAttribute("netProfitMargins", sortedNetProfitMargins);
