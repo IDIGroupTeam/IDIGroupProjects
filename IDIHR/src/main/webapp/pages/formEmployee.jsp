@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Tập đoàn IDI - Thêm mới nhân viên</title>
+<title>Tập đoàn IDI - Quản lý nhân viên</title>
 <style>
 .error-message {
 	color: red;
@@ -19,21 +19,23 @@
 	<h4>
 		<b>${formTitle}</b>
 	</h4>
-	<form:form modelAttribute="employeeForm" method="POST" action="insertOrUpdateEmployee">
+	<form:form modelAttribute="employeeForm" method="POST"
+		action="insertOrUpdateEmployee">
 		<div class="table table-bordered">
-		<form:hidden path="employeeId" />
+			<form:hidden path="employeeId" />
 			<table class="table">
 				<tbody>
 					<tr>
 						<td>Mã NV:</td>
-						<td><form:input path="employeeId" size="6" /></td>
-						<%-- 	<td><form:errors path="employeeId" class="error-message" /></td> --%>
+						<td><form:input path="employeeId" size="5" disabled="true"
+								title="Tự động tăng" /></td>
+						<%-- <td><form:errors path="employeeId" class="error-message" /></td> --%>
 
 						<td>Ngày vào cty:</td>
 						<td><form:input path="joinDate" size="10" /></td>
 
 						<td>Lương:</td>
-						<td><form:input path="salary" /></td>
+						<td><form:input path="salary" size="12" /></td>
 					</tr>
 
 					<tr>
@@ -45,7 +47,7 @@
 						<td><form:input path="officalJoinDate" size="10" /></td>
 
 						<td>Lương đóng BHXH:</td>
-						<td><form:input path="salarySocicalInsu" /></td>
+						<td><form:input path="salarySocicalInsu" size="12" /></td>
 					</tr>
 
 					<tr>
@@ -59,20 +61,14 @@
 							</form:select></td>
 
 						<td>Tỉ lệ đóng BHXH:</td>
-						<td><form:input path="percentSocicalInsu" /></td>
+						<td><form:input path="percentSocicalInsu" size="6" /></td>
 					</tr>
 					<tr>
-						<td>Ngày sinh:</td>
-						<td><form:input path="DOB" size="10" /></td>
+						<td>Account:</td>
+						<td><form:input path="loginAccount" size="10" /></td>
 						<td>Phòng:</td>
 						<td><form:select path="department">
-								<form:option value="CNTT" label="CNTT" />
-								<form:option value="KT" label="Kế toán" />
-								<form:option value="ĐT" label="Đầu tư" />
-								<form:option value="XNK" label="Xuất nhập khẩu" />
-								<form:option value="NS" label="Nhân sự" />
-								<form:option value="HC" label="Hành chính" />
-								<form:option value="KTh" label="Kỹ thuật" />
+								<form:options items="${departmentMap}" />
 							</form:select></td>
 						<td>Số sổ BHXH:</td>
 						<td><form:input path="socicalInsuNo" size="12" /></td>
@@ -80,35 +76,29 @@
 					<tr>
 						<td>Giới tính:</td>
 						<td><form:select path="gender">
-								<form:option value="M" label="Male" />
-								<form:option value="F" label="Female" />
+								<form:option value="" label="-Giới tính-" />
+								<form:option value="Nam" label="Nam" />
+								<form:option value="Nữ" label="Nữ" />
 							</form:select></td>
 
 						<td>T/T hôn nhân:</td>
 						<td><form:select path="maritalStatus">
+								<form:option value="" label="-Hôn nhân-" />
 								<form:option value="Độc thân" label="Độc thân" />
 								<form:option value="Đã lập gia đình" label="Đã lập gia đình" />
 								<form:option value="Góa" label="Góa" />
 							</form:select></td>
 
 						<td>Số thẻ BHYT:</td>
-						<td><form:input path="healthInsuNo" /></td>
+						<td><form:input path="healthInsuNo" size="12" /></td>
 					</tr>
 					<tr>
-						<td>Quốc tịch:</td>
-						<td><form:input path="nation" /></td>
+						<td>Ngày sinh:</td>
+						<td><form:input path="DOB" size="10" /></td>
 
 						<td>Trạng thái LĐ:</td>
 						<td><form:select path="workStatus">
-								<form:option value="Thử việc" label="1. NV thử việc" />
-								<form:option value="Thời vụ" label="2. NV thời vụ" />
-								<form:option value="Cộng tác viên" label="3. Cộng tác viên" />
-								<form:option value="Chính thức" label="4. NV chính thức" />
-								<form:option value="Nghỉ thai sản" label="5. Nghỉ thai sản" />
-								<form:option value="Nghỉ ốm" label="6. Nghỉ ốm" />
-								<form:option value="Nghỉ không lương"
-									label="7. Nghỉ không lương" />
-								<form:option value="Đã thôi việc" label="8. Đã thôi việc" />
+								<form:options items="${workStatusMap}" />
 							</form:select></td>
 
 						<td>Số đt:</td>
@@ -121,8 +111,8 @@
 						<td>Ngày cấp:</td>
 						<td><form:input path="issueDate" size="10" /></td>
 
-						<td>xxxx:</td>
-						<td></td>
+						<td>Quốc tịch:</td>
+						<td><form:input path="nation" size="14" /></td>
 					</tr>
 					<tr>
 						<td>Đ/c hiện tại:</td>
@@ -164,9 +154,8 @@
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
-						<td><input type="submit" value="Submit" />
-							<a href="${pageContext.request.contextPath}/">Cancel</a>
-						</td>
+						<td><input type="submit" value="Submit" /> <a
+							href="${pageContext.request.contextPath}/">Cancel</a></td>
 						<td>&nbsp;</td>
 					</tr>
 				</tbody>

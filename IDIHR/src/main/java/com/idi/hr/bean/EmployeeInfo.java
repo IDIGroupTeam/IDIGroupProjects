@@ -7,11 +7,12 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class EmployeeInfo implements Serializable {
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-	private String employeeId;
+	private static final long serialVersionUID = 6492149113228672629L;
+	private int employeeId;
 	private String emerName;
 	private String emerPhoneNo;
 	private String fullName;
@@ -48,7 +49,7 @@ public class EmployeeInfo implements Serializable {
 
 	}
 
-	public EmployeeInfo(String employeeId, String loginAccount, String gender, String fullName, String maritalStatus,
+	public EmployeeInfo(int employeeId, String loginAccount, String gender, String fullName, String maritalStatus,
 			String jobTitle, String department, Date DOB, String personalId, Date issueDate, String phoneNo,
 			Date joinDate, Date officalJoinDate, String email, Date terminationDate, String reasonforLeave,
 			String currentAdress, String permanentAdress, String note, String emerName, String emerPhoneNo,
@@ -89,11 +90,11 @@ public class EmployeeInfo implements Serializable {
 		this.percentSocicalInsu = percentSocicalInsu;
 	}
 
-	public String getEmployeeId() {
+	public int getEmployeeId() {
 		return employeeId;
 	}
 
-	public void setEmployeeId(String employeeId) {
+	public void setEmployeeId(int employeeId) {
 		this.employeeId = employeeId;
 	}
 
