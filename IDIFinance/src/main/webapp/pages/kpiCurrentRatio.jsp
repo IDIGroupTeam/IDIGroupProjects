@@ -87,9 +87,7 @@
 			<tr>
 				<td>Tài sản ngắn hạn</td>
 				<c:forEach items="${currentRatios}" var="currentRatio">
-					<td><fmt:formatNumber
-							value="${currentRatio.value.currentAsset}" maxFractionDigits="0"
-							minFractionDigits="0"></fmt:formatNumber></td>
+					<td>${currentRatio.value.currentAsset}</td>
 				</c:forEach>
 			</tr>
 			<tr>
