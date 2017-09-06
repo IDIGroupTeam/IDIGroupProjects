@@ -4,11 +4,10 @@
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 <html>
 <head>
-<meta charset="UTF-8">
 <title>Danh sách nhân viên</title>
 </head>
 <body>
-	<a href="${pageContext.request.contextPath}/insertEmployee">Thêm mới nhân viên</a>
+	<a href="${pageContext.request.contextPath}/insertEmployee"><button>Thêm mới nhân viên</button></a>
 	<br />
 	<div class="table-responsive">
 		<h1>Danh sách nhân viên</h1>

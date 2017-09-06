@@ -8,9 +8,11 @@
 	</div>
 	<div class="panel-body">
 		<ul class="nav nav-pills nav-stacked">
-			<li><a href="${url}">Tài chính</a></li>
-			<li><a href="#">Nhân sự</a></li>
-			<li><a href="#">Kinh doanh</a></li>
+			<li><a href="/IDIFinance">Quản lý tài chính</a></li>
+			<li><a href="/IDIHR">Quản lý nhân sự</a></li>
+			<li><a href="#">Quản lý khách hàng</a></li>
+			<li><a href="#">Quản lý kho</a></li>
+			<li><a href="#">Quản lý nguồn vốn</a></li>
 		</ul>
 	</div>
 </div>

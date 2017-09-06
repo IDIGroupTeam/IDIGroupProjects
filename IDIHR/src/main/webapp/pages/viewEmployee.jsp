@@ -27,7 +27,7 @@
 					<td><c:out value="${employeeForm.employeeId}" /></td>
 
 					<td>Ngày vào cty:</td>
-					<td align="left"><c:out value="${employeeForm.joinDate}" /></td>
+					<td><c:out value="${employeeForm.joinDate}" /></td>
 
 					<td>Lương:</td>
 					<td><c:out value="${employeeForm.salary}" /></td>
@@ -37,7 +37,7 @@
 					<td><c:out value="${employeeForm.fullName}" /></td>
 
 					<td>Ngày ký HĐLĐ:</td>
-					<td align="left"><c:out value="${employeeForm.officalJoinDate}" /></td>
+					<td><c:out value="${employeeForm.officalJoinDate}" /></td>
 
 					<td>Lương đóng BHXH:</td>
 					<td><c:out value="${employeeForm.salarySocicalInsu}" /></td>
@@ -47,7 +47,7 @@
 					<td><c:out value="${employeeForm.email}" /></td>
 
 					<td>Chức vụ:</td>
-					<td align="left"><c:out value="${employeeForm.jobTitle}" /></td>
+					<td><c:out value="${employeeForm.jobTitle}" /></td>
 
 					<td>Tỉ lệ đóng BHXH:</td>
 					<td><c:out value="${employeeForm.percentSocicalInsu}" /></td>
@@ -56,7 +56,7 @@
 					<td>Account:</td>
 					<td><c:out value="${employeeForm.loginAccount}" /></td>
 					<td>Phòng:</td>
-					<td align="left"><c:out value="${employeeForm.department}" /></td>
+					<td><c:out value="${employeeForm.department}" /></td>
 					<td>Số sổ BHXH:</td>
 					<td><c:out value="${employeeForm.socicalInsuNo}" /></td>
 				</tr>
@@ -97,7 +97,7 @@
 					<td><c:out value="${employeeForm.currentAdress}" /></td>
 					<td>Đ/c thường trú:</td>
 					<td><c:out value="${employeeForm.permanentAdress}" /></td>
-					<td>yyyyy:</td>
+					<td></td>
 					<td></td>
 				</tr>
 				<tr>

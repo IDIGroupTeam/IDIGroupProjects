@@ -2,7 +2,6 @@ package com.idi.hr.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -20,14 +19,14 @@ public class EmployeeMapper implements RowMapper<EmployeeInfo> {
 		String maritalStatus = rs.getString("MARITAL_STATUS");
 		String jobTitle = rs.getString("JOB_TITLE");
 		String department = rs.getString("DEPARTMENT");
-		Date DOB = rs.getDate("DOB");
+		String DOB = rs.getString("DOB");
 		String personalId = rs.getString("PERSONAL_ID");
-		Date issueDate = rs.getDate("ISSUE_DATE");
+		String issueDate = rs.getString("ISSUE_DATE");
 		String phoneNo = rs.getString("PHONE_NO");
-		Date joinDate = rs.getDate("JOIN_DATE");
-		Date officalJoinDate = rs.getDate("OFFICIAL_JOIN_DATE");
+		String joinDate = rs.getString("JOIN_DATE");
+		String officalJoinDate = rs.getString("OFFICIAL_JOIN_DATE");
 		String email = rs.getString("EMAIL");
-		Date terminationDate = rs.getDate("TERMINATION_DATE");
+		String terminationDate = rs.getString("TERMINATION_DATE");
 		String reasonforLeave = rs.getString("REASON_FOR_LEAVE");
 		String currentAdress = rs.getString("CURRENT_ADDRESS");
 		String permanentAdress = rs.getString("PERMANENT_ADDRESS");
