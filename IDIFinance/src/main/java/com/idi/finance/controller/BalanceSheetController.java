@@ -1,5 +1,6 @@
 package com.idi.finance.controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
@@ -12,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +24,7 @@ import com.idi.finance.charts.KpiBarChart;
 import com.idi.finance.charts.KpiChartProcessor;
 import com.idi.finance.charts.KpiLineChart;
 import com.idi.finance.dao.BalanceSheetDAO;
+import com.idi.finance.form.BalanceSheetForm;
 import com.idi.finance.kpi.KPIMeasures;
 import com.idi.finance.kpi.NetProfitMargin;
 import com.idi.finance.kpi.OperatingCycle;
@@ -33,6 +36,7 @@ import com.idi.finance.kpi.CurrentRatio;
 import com.idi.finance.kpi.DebtRatio;
 import com.idi.finance.kpi.FinancialLeverage;
 import com.idi.finance.utils.ExcelProcessor;
+import com.idi.finance.utils.Utils;
 
 @Controller
 public class BalanceSheetController {
@@ -85,12 +89,12 @@ public class BalanceSheetController {
 		model.addAttribute("currentRatioChartProcessor", currentRatioChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "kntttucthoi");
-
+		model.addAttribute("tab", "tabKNTT");
 		return "kpiCurrentRatio";
 	}
 
 	@RequestMapping("/knttnhanh")
-	public String kpiQuickRation(Model model) {
+	public String kpiQuickRatio(Model model) {
 		// Vẽ biểu đồ Khả năng thanh toán nhanh theo tất cả các kỳ (tháng) trong năm
 		// Với từng kỳ, lấy tài sản ngắn hạn (100) trừ hàng tồn kho (140),
 		// tất cả chia cho nợ ngắn hạn (310)
@@ -132,13 +136,14 @@ public class BalanceSheetController {
 		model.addAttribute("quickRatioChartProcessor", quickRatioChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "knttnhanh");
-
+		model.addAttribute("tab", "tabKNTT");
 		return "kpiQuickRatio";
 	}
 
 	@RequestMapping("/knttbangtien")
-	public String kpiCashRation(Model model) {
-		// Vẽ biểu đồ Khả năng thanh bằng tiền theo tất cả các kỳ (tháng) trong năm.
+	public String kpiCashRatio(Model model) {
+		// Vẽ biểu đồ Khả năng thanh toán bằng tiền theo tất cả các kỳ (tháng) trong
+		// năm.
 		// Với từng kỳ, lấy tiền & tương đương tiền (110) chia cho nợ ngắn hạn (310)
 
 		// Get list of cashes & equivalents and current liabilites for all period in a
@@ -175,7 +180,7 @@ public class BalanceSheetController {
 		model.addAttribute("cashRatioChartProcessor", cashRatioChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "knttbangtien");
-
+		model.addAttribute("tab", "tabKNTT");
 		return "kpiCashRatio";
 	}
 
@@ -222,7 +227,7 @@ public class BalanceSheetController {
 		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "vqkhoanphaithu");
-
+		model.addAttribute("tab", "tabKNHD");
 		return "kpiReceivableTurnOver";
 	}
 
@@ -272,7 +277,7 @@ public class BalanceSheetController {
 		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "kttienbinhquan");
-
+		model.addAttribute("tab", "tabKNHD");
 		return "kpiAvgReceivablePeriod";
 	}
 
@@ -318,7 +323,7 @@ public class BalanceSheetController {
 		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "vqhangtonkho_sosach");
-
+		model.addAttribute("tab", "tabKNHD");
 		return "kpiInventoriesTurnOverByDocument";
 	}
 
@@ -364,7 +369,7 @@ public class BalanceSheetController {
 		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "vqhangtonkho_thitruong");
-
+		model.addAttribute("tab", "tabKNHD");
 		return "kpiInventoriesTurnOverByMarket";
 	}
 
@@ -412,7 +417,7 @@ public class BalanceSheetController {
 		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "sntonkhobinhquan_sosach");
-
+		model.addAttribute("tab", "tabKNHD");
 		return "kpiDaysInInventoriesByDocument";
 	}
 
@@ -460,7 +465,7 @@ public class BalanceSheetController {
 		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "sntonkhobinhquan_thitruong");
-
+		model.addAttribute("tab", "tabKNHD");
 		return "kpiDaysInInventoriesByMarket";
 	}
 
@@ -525,7 +530,7 @@ public class BalanceSheetController {
 		model.addAttribute("operatingCycleChartProcessor", operatingCycleChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "chukyhoatdong_sosach");
-
+		model.addAttribute("tab", "tabKNHD");
 		return "kpiOperatingCycleByDocument";
 	}
 
@@ -589,7 +594,7 @@ public class BalanceSheetController {
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "chukyhoatdong_sosach");
 		model.addAttribute("action", "chukyhoatdong_thitruong");
-
+		model.addAttribute("tab", "tabKNHD");
 		return "kpiOperatingCycleByMarket";
 	}
 
@@ -637,7 +642,7 @@ public class BalanceSheetController {
 		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "vqkhoanphaitra");
-
+		model.addAttribute("tab", "tabKNHD");
 		return "kpiPaymentTurnover";
 	}
 
@@ -686,7 +691,7 @@ public class BalanceSheetController {
 		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "kyphaitrabinhquan");
-
+		model.addAttribute("tab", "tabKNHD");
 		return "kpiAvgPaymentPeriod";
 	}
 
@@ -760,7 +765,7 @@ public class BalanceSheetController {
 		model.addAttribute("cashConversionCycleChartProcessor", cashConversionCycleChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "ckluanchuyentien_sosach");
-
+		model.addAttribute("tab", "tabKNHD");
 		return "kpiCashConversionCycleByDocument";
 	}
 
@@ -834,7 +839,7 @@ public class BalanceSheetController {
 		model.addAttribute("cashConversionCycleChartProcessor", cashConversionCycleChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "ckluanchuyentien_thitruong");
-
+		model.addAttribute("tab", "tabKNHD");
 		return "kpiCashConversionCycleByMarket";
 	}
 
@@ -878,7 +883,7 @@ public class BalanceSheetController {
 		model.addAttribute("interestCoverageChartProcessor", interestCoverageChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "knttlaivay");
-
+		model.addAttribute("tab", "tabKNHD");
 		return "kpiInterestCoverage";
 	}
 
@@ -924,7 +929,7 @@ public class BalanceSheetController {
 		model.addAttribute("totalAssetsUtilityChartProcessor", totalAssetsUtilityChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "hssdtongtaisan");
-
+		model.addAttribute("tab", "tabKNSL");
 		return "kpiTotalAssetsUtility";
 	}
 
@@ -970,7 +975,7 @@ public class BalanceSheetController {
 		model.addAttribute("fixedAssetsTurnoverChartProcessor", fixedAssetsTurnoverChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "hssdtaisancodinh");
-
+		model.addAttribute("tab", "tabKNSL");
 		return "kpiFixedAssetsTurnover";
 	}
 
@@ -1016,7 +1021,7 @@ public class BalanceSheetController {
 		model.addAttribute("workingCapitalTurnoverChartProcessor", workingCapitalTurnoverChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "hssdvonluudong");
-
+		model.addAttribute("tab", "tabKNSL");
 		return "kpiWorkingCapitalTurnover";
 	}
 
@@ -1061,7 +1066,7 @@ public class BalanceSheetController {
 		model.addAttribute("grossProfitMarginChartProcessor", grossProfitMarginChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "tysuatloinhuangop");
-
+		model.addAttribute("tab", "tabKNSL");
 		return "kpiGrossProfitMargin";
 	}
 
@@ -1110,7 +1115,7 @@ public class BalanceSheetController {
 		model.addAttribute("netProfitMarginChartProcessor", netProfitMarginChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "tysuatloinhuanrong");
-
+		model.addAttribute("tab", "tabKNSL");
 		return "kpiNetProfitMargin";
 	}
 
@@ -1152,7 +1157,7 @@ public class BalanceSheetController {
 		model.addAttribute("debtRatioChartProcessor", debtRatioChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "hesono");
-
+		model.addAttribute("tab", "tabKNCDN");
 		return "kpiDebtRatio";
 	}
 
@@ -1196,12 +1201,52 @@ public class BalanceSheetController {
 		model.addAttribute("financialLeverageChartProcessor", financialLeverageChartProcessor);
 		model.addAttribute("year", cal.get(Calendar.YEAR));
 		model.addAttribute("action", "donbaytaichinh");
-
+		model.addAttribute("tab", "tabKNCDN");
 		return "kpiFinancialLeverage";
+	}
+
+	@RequestMapping("/bangcandoiketoan")
+	public String balanceAssets(@ModelAttribute("balanceSheetForm") BalanceSheetForm balanceSheetForm, Model model) {
+		// List balance assets:
+		logger.info(balanceSheetForm);
+		if (balanceSheetForm == null)
+			balanceSheetForm = new BalanceSheetForm();
+
+		// Time: Defaul: current year, current month
+		logger.info(balanceSheetForm.getAssetsPeriods());
+		List<Date> assestPeriods = null;
+		if (balanceSheetForm.getAssetsPeriods() == null || balanceSheetForm.getAssetsPeriods().length <= 0) {
+			assestPeriods = new ArrayList<>();
+			assestPeriods.add(Utils.standardDate(new Date()));
+		} else {
+			
+		}
+
+		// Code: Default: All code
+		logger.info(balanceSheetForm.getAssetsCodes());
+
+		// Paging:
+		// Number records of a Page: Default: 25
+		// Page Index: Default: 1
+		// Total records
+		// Total of page
+		
+		Date currentYear = Utils.standardDate(new Date());
+
+		List<BalanceSheet> bss = balanceSheetDAO.listBSsByDate(currentYear);
+		List<String> assetsCodes = balanceSheetDAO.listBSAssetsCodes();
+		List<Date> assetsPeriods = balanceSheetDAO.listBSAssetsPeriods();
+
+		model.addAttribute("bss", bss);
+		model.addAttribute("assetsCodes", assetsCodes);
+		model.addAttribute("assetsPeriods", assetsPeriods);
+		model.addAttribute("tab", "tabBCDKT");
+		return "balanceAssets";
 	}
 
 	@RequestMapping("/capnhat")
 	public String update(Model model) {
+		model.addAttribute("tab", "tabCNDL");
 		return "update";
 	}
 
@@ -1224,11 +1269,13 @@ public class BalanceSheetController {
 				String comment = "Không thể đọc excel file " + file.getName()
 						+ ". Có thể file bị lỗi, không đúng định dạng, hoặc đường truyền chậm, xin mời thử lại.";
 				model.addAttribute("comment", comment);
+				model.addAttribute("tab", "tabCNDL");
 				return "update";
 			}
 		} else {
 			String comment = "Hãy chọn file exel dữ liệu kế toán.";
 			model.addAttribute("comment", comment);
+			model.addAttribute("tab", "tabCNDL");
 			return "update";
 		}
 	}
