@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<mvc:annotation-driven />
+	<mvc:resources mapping="/public/**" location="/public/" />
+	<mvc:default-servlet-handler />
+	<context:component-scan base-package="com.idi.hr" />
+
+	<!-- Config folder to load jsp page for view layer -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/pages/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- Read idifinance.properties properties file -->
+	<bean id="properties"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:hr.properties" />
+		<!-- <property name="ignoreUnresolvablePlaceholders" value="true" /> <property 
+			name="ignoreResourceNotFound" value="true" /> -->
+	</bean>
+
+	<!-- Config database connection -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/idigroup?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="username" value="root" />
+		<property name="password" value="" />
+	</bean>
+	<bean id="jdbcTmpl" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<bean id="employeeDAO" class="com.idi.hr.dao.EmployeeDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+
+	<bean id="jobTitleDAO" class="com.idi.hr.dao.JobTitleDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+
+	<bean id="departmentDAO" class="com.idi.hr.dao.DepartmentDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+</beans>
