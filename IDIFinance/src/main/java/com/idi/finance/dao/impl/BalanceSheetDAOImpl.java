@@ -82,6 +82,50 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		return bss;
 	}
 
+	@Override
+	public List<BalanceSheet> listBSsByDate(Date date) {
+		if (date == null)
+			return null;
+
+		String query = "SELECT * FROM BALANCE_SHEET WHERE YEAR(ASSETS_PERIOD)=?";
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		logger.info("Get list of balance sheet by year ...");
+		logger.info(query);
+		logger.info("Year " + cal.get(Calendar.YEAR));
+
+		Object[] params = { cal.get(Calendar.YEAR) };
+		List<BalanceSheet> bss = jdbcTmpl.query(query, params, new BalanceSheetMapper());
+
+		return bss;
+	}
+
+	@Override
+	public List<String> listBSAssetsCodes() {
+		String query = "SELECT DISTINCT ASSETS_CODE FROM BALANCE_SHEET ORDER BY ASSETS_CODE";
+
+		logger.info("Get list of ASSETS_CODE from balance sheet table ...");
+		logger.info(query);
+
+		List<String> assetsCodes = jdbcTmpl.query(query, new AssetsCodeMapper());
+
+		return assetsCodes;
+	}
+
+	@Override
+	public List<Date> listBSAssetsPeriods() {
+		String query = "SELECT DISTINCT ASSETS_PERIOD FROM BALANCE_SHEET ORDER BY ASSETS_PERIOD";
+
+		logger.info("Get list of ASSETS_PERIOD from balance sheet table ...");
+		logger.info(query);
+
+		List<Date> assetsPeriods = jdbcTmpl.query(query, new AssetsPeriodMapper());
+
+		return assetsPeriods;
+	}
+
 	public class BalanceSheetMapper implements RowMapper<BalanceSheet> {
 		public BalanceSheet mapRow(ResultSet rs, int rowNum) throws SQLException {
 
@@ -101,6 +145,21 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 			bs.setDescription(rs.getString("DESCRIPTION"));
 
 			return bs;
+		}
+	}
+
+	public class AssetsCodeMapper implements RowMapper<String> {
+		public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+			return rs.getString("ASSETS_CODE");
+		}
+	}
+
+	public class AssetsPeriodMapper implements RowMapper<Date> {
+		public Date mapRow(ResultSet rs, int rowNum) throws SQLException {
+			Timestamp assetPeriod = rs.getTimestamp("ASSETS_PERIOD");
+			Date date = new Date(assetPeriod.getTime());
+			return date;
 		}
 	}
 
@@ -156,5 +215,37 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		List<BalanceSheet> srs = jdbcTmpl.query(query, params, new BalanceSheetMapper());
 
 		return srs;
+	}
+
+	@Override
+	public List<BalanceSheet> listSRsByDate(Date date) {
+		if (date == null)
+			return null;
+
+		String query = "SELECT * FROM SALE_RESULT WHERE YEAR(ASSETS_PERIOD)=?";
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		logger.info("Get list of sale result by year ...");
+		logger.info(query);
+		logger.info("Year " + cal.get(Calendar.YEAR));
+
+		Object[] params = { cal.get(Calendar.YEAR) };
+		List<BalanceSheet> srs = jdbcTmpl.query(query, params, new BalanceSheetMapper());
+
+		return srs;
+	}
+
+	@Override
+	public List<String> listSRAssetsCodes() {
+
+		return null;
+	}
+
+	@Override
+	public List<Date> listSRAssetsPeriods() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

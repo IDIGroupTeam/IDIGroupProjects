@@ -82,7 +82,7 @@ public class ExcelProcessor {
 					CellType cellType = cell.getCellTypeEnum();
 					switch (cellType) {
 					case STRING:
-						bs.setDescription(cell.getStringCellValue());
+						bs.setNote(cell.getStringCellValue());
 						break;
 					}
 				}
@@ -243,7 +243,7 @@ public class ExcelProcessor {
 					CellType cellType = cell.getCellTypeEnum();
 					switch (cellType) {
 					case STRING:
-						bs.setDescription(cell.getStringCellValue());
+						bs.setNote(cell.getStringCellValue());
 						break;
 					}
 				}
@@ -359,13 +359,7 @@ public class ExcelProcessor {
 			return null;
 		}
 
-		cal.set(Calendar.DAY_OF_MONTH, 1);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-
-		return cal.getTime();
+		return Utils.standardDate(cal.getTime());
 	}
 
 	private static String parseRule(String name) {

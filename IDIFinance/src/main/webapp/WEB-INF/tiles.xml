@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+	<!-- Base Definition -->
+	<definition name="finance" template="/pages/layouts/main.jsp">
+		<put-attribute name="title" value="Tập đoàn IDI" />
+		<put-attribute name="header" value="/pages/layouts/header.jsp" />
+		<put-attribute name="navigator" value="/pages/layouts/navigator.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="kpilist" value="" />
+		<put-attribute name="footer" value="/pages/layouts/footer.jsp" />
+	</definition>
+
+
+	<!-- Khả năng thanh toán -->
+	<!-- Khả năng thanh toán tức thời -->
+	<definition name="kpiCurrentRatio" extends="finance">
+		<put-attribute name="title" value="Khả năng thanh toán tức thời" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/payment.jsp" />
+		<put-attribute name="body" value="/pages/kpiCurrentRatio.jsp" />
+	</definition>
+	
+	<!-- Khả năng thanh toán nhanh -->
+	<definition name="kpiQuickRatio" extends="finance">
+		<put-attribute name="title" value="Khả năng thanh toán nhanh" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/payment.jsp" />
+		<put-attribute name="body" value="/pages/kpiQuickRatio.jsp" />
+	</definition>
+	
+	<!-- Khả năng thanh toán bằng tiền -->
+	<definition name="kpiCashRatio" extends="finance">
+		<put-attribute name="title" value="Khả năng thanh toán bằng tiền" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/payment.jsp" />
+		<put-attribute name="body" value="/pages/kpiCashRatio.jsp" />
+	</definition>
+	
+	
+	<!-- Khả năng hoạt động -->
+	<!-- Vòng quay khoản phải thu -->
+	<definition name="kpiReceivableTurnOver" extends="finance">
+		<put-attribute name="title" value="Vòng quay khoản phải thu" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/operating.jsp" />
+		<put-attribute name="body" value="/pages/kpiReceivableTurnOver.jsp" />
+	</definition>
+	
+	<!-- Kỳ thu tiền bình quân -->
+	<definition name="kpiAvgReceivablePeriod" extends="finance">
+		<put-attribute name="title" value="Kỳ thu tiền bình quân" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/operating.jsp" />
+		<put-attribute name="body" value="/pages/kpiAvgReceivablePeriod.jsp" />
+	</definition>
+	
+	<!-- Vòng quay hàng tồn kho (chỉ số đo theo năm/quý) theo giá trị sổ sách -->
+	<definition name="kpiInventoriesTurnOverByDocument" extends="finance">
+		<put-attribute name="title" value="Vòng quay hàng tồn kho (chỉ số đo theo năm/quý) theo giá trị sổ sách" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/operating.jsp" />
+		<put-attribute name="body" value="/pages/kpiInventoriesTurnOverByDocument.jsp" />
+	</definition>
+	
+	<!-- Vòng quay hàng tồn kho (chỉ số đo theo năm/quý) theo giá trị thị trường -->
+	<definition name="kpiInventoriesTurnOverByMarket" extends="finance">
+		<put-attribute name="title" value="Vòng quay hàng tồn kho (chỉ số đo theo năm/quý) theo giá trị thị trường" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/operating.jsp" />
+		<put-attribute name="body" value="/pages/kpiInventoriesTurnOverByMarket.jsp" />
+	</definition>
+	
+	<!-- Số ngày tồn kho bình quân theo giá trị sổ sách -->
+	<definition name="kpiDaysInInventoriesByDocument" extends="finance">
+		<put-attribute name="title" value="Số ngày tồn kho bình quân theo giá trị sổ sách" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/operating.jsp" />
+		<put-attribute name="body" value="/pages/kpiDaysInInventoriesByDocument.jsp" />
+	</definition>
+	
+	<!-- Số ngày tồn kho bình quân theo giá trị thị trường -->
+	<definition name="kpiDaysInInventoriesByMarket" extends="finance">
+		<put-attribute name="title" value="Số ngày tồn kho bình quân theo giá trị thị trường" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/operating.jsp" />
+		<put-attribute name="body" value="/pages/kpiDaysInInventoriesByMarket.jsp" />
+	</definition>
+	
+	<!-- Chu kỳ hoạt động của doanh nghiệp theo giá trị sổ sách -->
+	<definition name="kpiOperatingCycleByDocument" extends="finance">
+		<put-attribute name="title" value="Chu kỳ hoạt động của doanh nghiệp theo giá trị sổ sách" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/operating.jsp" />
+		<put-attribute name="body" value="/pages/kpiOperatingCycleByDocument.jsp" />
+	</definition>
+	
+	<!-- Chu kỳ hoạt động của doanh nghiệp theo giá trị thị trường -->
+	<definition name="kpiOperatingCycleByMarket" extends="finance">
+		<put-attribute name="title" value="Chu kỳ hoạt động của doanh nghiệp theo giá trị thị trường" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/operating.jsp" />
+		<put-attribute name="body" value="/pages/kpiOperatingCycleByMarket.jsp" />
+	</definition>
+	
+	<!-- Vòng quay khoản phải trả -->
+	<definition name="kpiPaymentTurnover" extends="finance">
+		<put-attribute name="title" value="Vòng quay khoản phải trả" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/operating.jsp" />
+		<put-attribute name="body" value="/pages/kpiPaymentTurnover.jsp" />
+	</definition>
+	
+	<!-- Kỳ phải trả bình quân -->
+	<definition name="kpiAvgPaymentPeriod" extends="finance">
+		<put-attribute name="title" value="Kỳ phải trả bình quân" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/operating.jsp" />
+		<put-attribute name="body" value="/pages/kpiAvgPaymentPeriod.jsp" />
+	</definition>
+	
+	<!-- Chu kỳ luân chuyển tiền theo giá trị sổ sách -->
+	<definition name="kpiCashConversionCycleByDocument" extends="finance">
+		<put-attribute name="title" value="Chu kỳ luân chuyển tiền theo giá trị sổ sách" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/operating.jsp" />
+		<put-attribute name="body" value="/pages/kpiCashConversionCycleByDocument.jsp" />
+	</definition>
+	
+	<!-- Chu kỳ luân chuyển tiền theo giá trị thị trường -->
+	<definition name="kpiCashConversionCycleByMarket" extends="finance">
+		<put-attribute name="title" value="Chu kỳ luân chuyển tiền theo giá trị thị trường" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/operating.jsp" />
+		<put-attribute name="body" value="/pages/kpiCashConversionCycleByMarket.jsp" />
+	</definition>
+	
+	<!-- Khả năng thanh toán lãi vay -->
+	<definition name="kpiInterestCoverage" extends="finance">
+		<put-attribute name="title" value="Khả năng thanh toán lãi vay" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/operating.jsp" />
+		<put-attribute name="body" value="/pages/kpiInterestCoverage.jsp" />
+	</definition>
+	
+	
+	<!-- Khả năng sinh lời -->
+	<!-- Hiệu suất sử dụng tổng tài sản (Vòng quay tổng tài sản) -->
+	<definition name="kpiTotalAssetsUtility" extends="finance">
+		<put-attribute name="title" value="Hiệu suất sử dụng tổng tài sản (Vòng quay tổng tài sản)" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/profitable.jsp" />
+		<put-attribute name="body" value="/pages/kpiTotalAssetsUtility.jsp" />
+	</definition>
+	
+	<!-- Hiệu suất sử dụng tài sản cố định -->
+	<definition name="kpiFixedAssetsTurnover" extends="finance">
+		<put-attribute name="title" value="Hiệu suất sử dụng tài sản cố định" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/profitable.jsp" />
+		<put-attribute name="body" value="/pages/kpiFixedAssetsTurnover.jsp" />
+	</definition>
+	
+	<!-- Hiệu suất sử dụng trên vòng quay vốn lưu động -->
+	<definition name="kpiWorkingCapitalTurnover" extends="finance">
+		<put-attribute name="title" value="Hiệu suất sử dụng trên vòng quay vốn lưu động" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/profitable.jsp" />
+		<put-attribute name="body" value="/pages/kpiWorkingCapitalTurnover.jsp" />
+	</definition>
+	
+	<!-- Tỷ suất lợi nhuận gộp (Lợi nhuận gộp biên) -->
+	<definition name="kpiGrossProfitMargin" extends="finance">
+		<put-attribute name="title" value="Tỷ suất lợi nhuận gộp (Lợi nhuận gộp biên)" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/profitable.jsp" />
+		<put-attribute name="body" value="/pages/kpiGrossProfitMargin.jsp" />
+	</definition>
+	
+	<!-- Tỷ suất lợi nhuận ròng (Lợi nhuận ròng biên) -->
+	<definition name="kpiNetProfitMargin" extends="finance">
+		<put-attribute name="title" value="Tỷ suất lợi nhuận ròng (Lợi nhuận ròng biên)" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/profitable.jsp" />
+		<put-attribute name="body" value="/pages/kpiNetProfitMargin.jsp" />
+	</definition>
+	
+	
+	<!-- Khả năng cân đối nợ -->
+	<!-- Hệ số nợ (Tỷ số nợ) -->
+	<definition name="kpiDebtRatio" extends="finance">
+		<put-attribute name="title" value="Hệ số nợ (Tỷ số nợ)" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/balancedebt.jsp" />
+		<put-attribute name="body" value="/pages/kpiDebtRatio.jsp" />
+	</definition>
+	
+	<!-- Đòn bẩy tài chính -->
+	<definition name="kpiFinancialLeverage" extends="finance">
+		<put-attribute name="title" value="Đòn bẩy tài chính" />
+		<put-attribute name="kpilist" value="/pages/layouts/kpilist/balancedebt.jsp" />
+		<put-attribute name="body" value="/pages/kpiFinancialLeverage.jsp" />
+	</definition>
+	
+	
+	<!-- Bảng cân đối kế toán -->
+	<definition name="balanceAssets" extends="finance">
+		<put-attribute name="title" value="Bảng cân đối kế toán" />
+		<put-attribute name="kpilist" value="" />
+		<put-attribute name="body" value="/pages/balanceAssets.jsp" />
+	</definition>
+	
+	<!-- Cập nhật dữ liệu -->
+	<definition name="update" extends="finance">
+		<put-attribute name="title" value="Cập nhật dữ liệu" />
+		<put-attribute name="kpilist" value="" />
+		<put-attribute name="body" value="/pages/update.jsp" />
+	</definition>
+</tiles-definitions>

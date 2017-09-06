@@ -1,5 +1,7 @@
 package com.idi.finance.utils;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,5 +25,32 @@ public class Utils {
 			return map;
 		}
 		return null;
+	}
+
+	public static List<Date> convertDateList(List<String> dates) {
+		if (dates == null || dates.size() == 0)
+			return null;
+
+		List<Date> dateRs = new ArrayList<>();
+		Iterator<String> datesIter = dates.iterator();
+		while (datesIter.hasNext()) {
+			String dateStr = (String) datesIter.next();
+			Calendar cal = Calendar.getInstance();
+			
+		}
+		return dateRs;
+	}
+
+	public static Date standardDate(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		return cal.getTime();
 	}
 }
