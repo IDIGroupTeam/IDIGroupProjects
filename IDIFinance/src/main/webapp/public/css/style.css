@@ -8,10 +8,10 @@ body {
 .navbar-default {
 	height: 120px;
 	/* background-color: #2e5589; #99ccff, #4266b2*/
-	background: -webkit-linear-gradient(left top, #2e5589 , #4266b2); 
-    background: -o-linear-gradient(bottom right, #2e5589, #4266b2); 
-    background: -moz-linear-gradient(bottom right, #2e5589, #4266b2);
-	background: linear-gradient(to bottom right, #2e5589 , #4266b2);
+	background: -webkit-linear-gradient(left top, #2e5589, #4266b2);
+	background: -o-linear-gradient(bottom right, #2e5589, #4266b2);
+	background: -moz-linear-gradient(bottom right, #2e5589, #4266b2);
+	background: linear-gradient(to bottom right, #2e5589, #4266b2);
 }
 
 .page-header {
@@ -42,7 +42,7 @@ body {
 	background: linear-gradient(to bottom right, #4266b2 , #99ccff); */
 }
 
-.panel-default>.panel-heading{
+.panel-default>.panel-heading {
 	background-color: #eeeeee;
 }
 
@@ -59,4 +59,11 @@ body {
 
 span.multiselect {
 	cursor: pointer;
+}
+
+div.searchbox {
+	/* height: 200px; */
+	margin: 0px;
+	max-height: 180px;
+	overflow: auto;
 }

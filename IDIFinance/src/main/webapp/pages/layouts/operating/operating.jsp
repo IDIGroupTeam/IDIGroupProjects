@@ -5,7 +5,7 @@
 	<tr>
 		<td align="left" width="40%">
 			<div class="form-group">
-				<label for="sel1">Chỉ số KPI</label> <select id="kpiList"
+				<label for="sel1">Biểu đồ KPI</label> <select id="kpiList"
 					class="form-control">
 					<option value="vqkhoanphaithu">Vòng quay khoản phải thu</option>
 					<option value="kttienbinhquan">Kỳ thu tiền bình quân</option>

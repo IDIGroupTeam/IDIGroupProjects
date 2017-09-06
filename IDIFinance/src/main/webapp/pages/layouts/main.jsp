@@ -68,9 +68,10 @@
 		<div class="row content">
 			<div class="col-sm-2 sidenav" style="padding: 2px;">
 				<tiles:insertAttribute name="navigator" />
+				<tiles:insertAttribute name="search" />
 			</div>
 			<div class="col-sm-10" style="padding: 2px;">
-				<div class="panel with-nav-tabs panel-default">
+				<div class="panel panel-default with-nav-tabs">
 					<div class="panel-heading">
 						<ul class="nav nav-tabs nav-pills nav-justified">
 							<li id="tabKNTT"><a href="kntttucthoi">Khả năng thanh

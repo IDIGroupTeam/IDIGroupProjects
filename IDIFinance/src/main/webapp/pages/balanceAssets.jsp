@@ -58,24 +58,24 @@
 		<thead>
 			<tr>
 				<th>Tài sản</th>
-				<th>Mã số <select id="assetsCodeSelect" name="assetsCodes[]"
+				<th>Mã số <%-- <select id="assetsCodeSelect" name="assetsCodes[]"
 					multiple="multiple">
 						<c:forEach items="${assetsCodes}" var="assetsCode">
 							<option value="${assetsCode}">${assetsCode }</option>
 						</c:forEach>
-				</select>
+				</select> --%>
 				</th>
 				<th>Thuyết minh</th>
 				<th>Số cuối kỳ</th>
 				<th>Số đầu kỳ</th>
 				<th>Mức thay đổi</th>
-				<th>Thời gian <select id="assetsPeriodSelect"
+				<th>Thời gian <%-- <select id="assetsPeriodSelect"
 					name="assetsPeriods[]" multiple="multiple">
 						<c:forEach items="${assetsPeriods}" var="assetsPeriod">
 							<option value="${assetsPeriod}">Tháng <fmt:formatDate value="${assetsPeriod}"
 							pattern="M/yyyy" type="Date" dateStyle="SHORT" /></option>
 						</c:forEach>
-				</select>
+				</select> --%>
 				</th>
 			</tr>
 		</thead>

@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 
 <table width="100%">
 	<tr>
 		<td align="left" width="40%">
 			<div class="form-group">
-				<label for="sel1">Chỉ số KPI</label> <select id="kpiList"
+				<label for="sel1">Biểu đồ KPI</label> <select id="kpiList"
 					class="form-control">
 					<option value="hssdtongtaisan">Hiệu suất sử dụng tổng tài sản (Vòng quay tổng tài sản)</option>
 					<option value="hssdtaisancodinh">Hiệu suất sử dụng tài sản cố định</option>
