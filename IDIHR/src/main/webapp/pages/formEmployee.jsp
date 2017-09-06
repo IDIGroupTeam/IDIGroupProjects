@@ -19,20 +19,34 @@
 	<h4>
 		<b>${formTitle}</b>
 	</h4>
+
+
+
 	<form:form modelAttribute="employeeForm" method="POST"
 		action="insertOrUpdateEmployee">
 		<div class="table table-bordered">
 			<form:hidden path="employeeId" />
+			<table>
+				<tr>
+					<td><form:errors path="fullName" class="error-message" /></td>
+				</tr>
+				<tr>
+					<td><form:errors path="email" class="error-message" /></td>
+				</tr>
+				<tr>
+					<td><form:errors path="gender" class="error-message" /></td>
+				</tr>
+				<tr><td><form:errors path="officalJoinDate" class="error-message" /></td></tr>
+			</table>
 			<table class="table">
 				<tbody>
 					<tr>
 						<td>Mã NV:</td>
 						<td><form:input path="employeeId" size="5" disabled="true"
 								title="Tự động tăng" /></td>
-						<%-- <td><form:errors path="employeeId" class="error-message" /></td> --%>
 
 						<td>Ngày vào cty:</td>
-						<td><form:input path="joinDate" size="10" /></td>
+						<td><form:input path="joinDate" type="date" /></td>
 
 						<td>Lương:</td>
 						<td><form:input path="salary" size="12" /></td>
@@ -40,11 +54,10 @@
 
 					<tr>
 						<td>Họ tên:</td>
-						<td><form:input path="fullName" /></td>
-						<%-- 	<td><form:errors path="fullName" class="error-message" /></td> --%>
+						<td><form:input path="fullName" required="required" /></td>
 
 						<td>Ngày ký HĐLĐ:</td>
-						<td><form:input path="officalJoinDate" size="10" /></td>
+						<td><form:input path="officalJoinDate" type="date" /></td>
 
 						<td>Lương đóng BHXH:</td>
 						<td><form:input path="salarySocicalInsu" size="12" /></td>
@@ -52,8 +65,7 @@
 
 					<tr>
 						<td>Email:</td>
-						<td><form:input path="email" /></td>
-						<%-- <td><form:errors path="email" class="error-message" /></td> --%>
+						<td><form:input path="email" required="required" /></td>
 
 						<td>Chức vụ:</td>
 						<td><form:select path="jobTitle">
@@ -77,16 +89,16 @@
 						<td>Giới tính:</td>
 						<td><form:select path="gender">
 								<form:option value="" label="-Giới tính-" />
-								<form:option value="Nam" label="Nam" />
-								<form:option value="Nữ" label="Nữ" />
+								<form:option value="male" label="Nam" />
+								<form:option value="female" label="Nữ" />
 							</form:select></td>
 
 						<td>T/T hôn nhân:</td>
 						<td><form:select path="maritalStatus">
 								<form:option value="" label="-Hôn nhân-" />
-								<form:option value="Độc thân" label="Độc thân" />
-								<form:option value="Đã lập gia đình" label="Đã lập gia đình" />
-								<form:option value="Góa" label="Góa" />
+								<form:option value="sigle" label="Độc thân" />
+								<form:option value="married" label="Đã lập gia đình" />
+								<form:option value="widowed" label="Góa" />
 							</form:select></td>
 
 						<td>Số thẻ BHYT:</td>
@@ -94,7 +106,7 @@
 					</tr>
 					<tr>
 						<td>Ngày sinh:</td>
-						<td><form:input path="DOB" size="10" /></td>
+						<td><form:input path="DOB" type="date" /></td>
 
 						<td>Trạng thái LĐ:</td>
 						<td><form:select path="workStatus">
@@ -109,7 +121,7 @@
 						<td><form:input path="personalId" size="12" /></td>
 
 						<td>Ngày cấp:</td>
-						<td><form:input path="issueDate" size="10" /></td>
+						<td><form:input path="issueDate" type="date" /></td>
 
 						<td>Quốc tịch:</td>
 						<td><form:input path="nation" size="14" /></td>
@@ -119,14 +131,14 @@
 						<td><form:input path="currentAdress" /></td>
 						<td>Đ/c thường trú:</td>
 						<td><form:input path="permanentAdress" /></td>
-						<td>yyyyy:</td>
+						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td colspan="4" nowrap="nowrap" bgcolor="999999">Liên lạc
 							khẩn cấp:</td>
 						<td bgcolor="#9F81F7">Ngày thôi việc:</td>
-						<td><form:input path="terminationDate" size="10" /></td>
+						<td><form:input path="terminationDate" type="date" /></td>
 					</tr>
 					<tr>
 						<td>Tên người liên lạc:</td>

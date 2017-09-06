@@ -4,7 +4,6 @@
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 <html>
 <head>
-<meta charset="UTF-8">
 <title>Danh sách nhân viên</title>
 </head>
 <body>

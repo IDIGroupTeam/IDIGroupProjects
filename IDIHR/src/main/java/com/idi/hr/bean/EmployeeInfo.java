@@ -4,7 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class EmployeeInfo implements Serializable {
 
@@ -18,17 +19,22 @@ public class EmployeeInfo implements Serializable {
 	private String fullName;
 	private String gender;
 	private String jobTitle;
-	private Date DOB;
+	@DateTimeFormat(pattern = "dd-MMM-yyyy")
+	private String DOB;
 	private String maritalStatus;
 	private String loginAccount;
 	private String personalId;
-	private Date issueDate;
+	@DateTimeFormat(pattern = "dd-MMM-yyyy")
+	private String issueDate;
 	private String department;
 	private String phoneNo;
-	private Date joinDate;
-	private Date officalJoinDate;
+	@DateTimeFormat(pattern = "dd-MMM-yyyy")
+	private String joinDate;
+	@DateTimeFormat(pattern = "dd-MMM-yyyy")
+	private String officalJoinDate;
 	private String email;
-	private Date terminationDate;
+	@DateTimeFormat(pattern = "dd-MMM-yyyy")
+	private String terminationDate;
 	private String reasonforLeave;
 	private String currentAdress;
 	private String permanentAdress;
@@ -50,8 +56,8 @@ public class EmployeeInfo implements Serializable {
 	}
 
 	public EmployeeInfo(int employeeId, String loginAccount, String gender, String fullName, String maritalStatus,
-			String jobTitle, String department, Date DOB, String personalId, Date issueDate, String phoneNo,
-			Date joinDate, Date officalJoinDate, String email, Date terminationDate, String reasonforLeave,
+			String jobTitle, String department, String DOB, String personalId, String issueDate, String phoneNo,
+			String joinDate, String officalJoinDate, String email, String terminationDate, String reasonforLeave,
 			String currentAdress, String permanentAdress, String note, String emerName, String emerPhoneNo,
 			String nation, byte[] image, String workStatus, String bankNo, String bankName, String bankBranch,
 			String salary, String salarySocicalInsu, String socicalInsuNo, String healthInsuNo,
@@ -122,11 +128,11 @@ public class EmployeeInfo implements Serializable {
 		this.jobTitle = jobTitle;
 	}
 
-	public Date getDOB() {
+	public String getDOB() {
 		return DOB;
 	}
 
-	public void setDOB(Date dOB) {
+	public void setDOB(String dOB) {
 		DOB = dOB;
 	}
 
@@ -154,11 +160,11 @@ public class EmployeeInfo implements Serializable {
 		this.personalId = personalId;
 	}
 
-	public Date getIssueDate() {
+	public String getIssueDate() {
 		return issueDate;
 	}
 
-	public void setIssueDate(Date issueDate) {
+	public void setIssueDate(String issueDate) {
 		this.issueDate = issueDate;
 	}
 
@@ -178,19 +184,19 @@ public class EmployeeInfo implements Serializable {
 		this.phoneNo = phoneNo;
 	}
 
-	public Date getJoinDate() {
+	public String getJoinDate() {
 		return joinDate;
 	}
 
-	public void setJoinDate(Date joinDate) {
+	public void setJoinDate(String joinDate) {
 		this.joinDate = joinDate;
 	}
 
-	public Date getOfficalJoinDate() {
+	public String getOfficalJoinDate() {
 		return officalJoinDate;
 	}
 
-	public void setOfficalJoinDate(Date officalJoinDate) {
+	public void setOfficalJoinDate(String officalJoinDate) {
 		this.officalJoinDate = officalJoinDate;
 	}
 
@@ -202,11 +208,11 @@ public class EmployeeInfo implements Serializable {
 		this.email = email;
 	}
 
-	public Date getTerminationDate() {
+	public String getTerminationDate() {
 		return terminationDate;
 	}
 
-	public void setTerminationDate(Date terminationDate) {
+	public void setTerminationDate(String terminationDate) {
 		this.terminationDate = terminationDate;
 	}
 

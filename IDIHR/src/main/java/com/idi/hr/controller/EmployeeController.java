@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +25,8 @@ import com.idi.hr.bean.JobTitle;
 import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.JobTitleDAO;
+import com.idi.hr.from.EmployeeFrom;
+import com.idi.hr.validator.EmployeeValidator;
 
 @Controller
 public class EmployeeController {
@@ -35,7 +40,10 @@ public class EmployeeController {
 
 	@Autowired
 	private DepartmentDAO departmentDAO;
-	
+
+	@Autowired
+	private EmployeeValidator employeeValidator;
+
 	@RequestMapping(value = { "/" }, method = RequestMethod.GET)
 	public String ListEmployees(Model model) {
 		try {
@@ -48,17 +56,35 @@ public class EmployeeController {
 		return "listEmployee";
 	}
 
+	// Set a form validator
+	@InitBinder
+	protected void initBinder(WebDataBinder dataBinder) {
+
+		// Form mục tiêu
+		Object target = dataBinder.getTarget();
+		if (target == null) {
+			return;
+		}
+		System.out.println("Target=" + target);
+
+		if (target.getClass() == EmployeeFrom.class) {
+			dataBinder.setValidator(employeeValidator);
+		}
+	}
+
 	@RequestMapping(value = "/insertOrUpdateEmployee", method = RequestMethod.POST)
-	public String insertOrUpdateEmployee(Model model, @ModelAttribute("employeeForm") EmployeeInfo employeeInfo, BindingResult result,  final RedirectAttributes redirectAttributes) {
+	public String insertOrUpdateEmployee(Model model, @ModelAttribute("employeeForm") @Validated EmployeeInfo employeeInfo,
+			BindingResult result, final RedirectAttributes redirectAttributes) {
 		try {
-		       // Nếu validate có lỗi.
-		     /*  if (result.hasErrors()) {
-		           return this.employeeForm(model, employeeInfo);
-		       }*/
-			
-			 employeeDAO.insertOrUpdateEmployee(employeeInfo);
+			// Nếu validate có lỗi.
+			if (result.hasErrors()) {
+				System.err.println("co loi validate");
+				return this.employeeForm(model, employeeInfo);
+			}
+
+			employeeDAO.insertOrUpdateEmployee(employeeInfo);
 			// Add message to flash scope
-			 redirectAttributes.addFlashAttribute("message", "Insert/Update employee successful");
+			redirectAttributes.addFlashAttribute("message", "Insert/Update employee successful");
 		} catch (Exception e) {
 			log.error(e, e);
 		}
@@ -67,7 +93,7 @@ public class EmployeeController {
 
 	private String employeeForm(Model model, EmployeeInfo employeeInfo) {
 		model.addAttribute("employeeForm", employeeInfo);
-		
+
 		// get list title
 		Map<String, String> titleMap = this.dataForTitles();
 		model.addAttribute("titleMap", titleMap);
@@ -77,7 +103,7 @@ public class EmployeeController {
 		// get works status
 		Map<String, String> workStatusMap = this.workStatusMap();
 		model.addAttribute("workStatusMap", workStatusMap);
-		
+
 		if (employeeInfo.getEmployeeId() > 0) {
 			model.addAttribute("formTitle", "Thêm mới nhân viên");
 		} else {
@@ -109,7 +135,6 @@ public class EmployeeController {
 		return titleMap;
 	}
 
-	
 	private Map<String, String> dataForDepartments() {
 		Map<String, String> departmentMap = new LinkedHashMap<String, String>();
 		try {
@@ -126,44 +151,44 @@ public class EmployeeController {
 		}
 		return departmentMap;
 	}
-	
-	   @RequestMapping("/editEmployee")
-	   public String editEmployee(Model model, @RequestParam("employeeId") String employeeId) {
-		   EmployeeInfo employeeInfo = null;
-	       if (employeeId != null) {
-	    	   employeeInfo = this.employeeDAO.getEmployee(employeeId);
-	       }
-	       if (employeeInfo == null) {
-	           return "redirect:/";
-	       }
-	 
-	       return this.employeeForm(model, employeeInfo);
-	   }
-	
-	   @RequestMapping("/viewEmployee")
-	   public String viewEmployee(Model model, @RequestParam("employeeId") String employeeId) {
-		   EmployeeInfo employeeInfo = null;
-	       if (employeeId != null) {
-	    	   employeeInfo = this.employeeDAO.getEmployee(employeeId);
-	    	   model.addAttribute("employeeForm", employeeInfo);
-	       }
-	       if (employeeInfo == null) {
-	           return "redirect:/";
-	       }
-	 
-	       return "viewEmployee";
-	   }
-	
-	   private Map<String, String> workStatusMap() {
-	       Map<String, String> workStatusMap = new LinkedHashMap<String, String>();
-	       workStatusMap.put("Thử việc", "Thử việc");
-	       workStatusMap.put("Thời vụ", "Thời vụ");
-	       workStatusMap.put("Cộng tác viên", "Cộng tác viên");
-	       workStatusMap.put("Chính thức", "Chính thức");
-	       workStatusMap.put("Nghỉ thai sản", "Nghỉ thai sản");
-	       workStatusMap.put("Nghỉ ốm", "Nghỉ ốm");
-	       workStatusMap.put("Nghỉ không lương", "Nghỉ không lương");
-	       workStatusMap.put("Đã thôi việc", "Đã thôi việc");
-	       return workStatusMap;
-	   }	
+
+	@RequestMapping("/editEmployee")
+	public String editEmployee(Model model, @RequestParam("employeeId") String employeeId) {
+		EmployeeInfo employeeInfo = null;
+		if (employeeId != null) {
+			employeeInfo = this.employeeDAO.getEmployee(employeeId);
+		}
+		if (employeeInfo == null) {
+			return "redirect:/";
+		}
+
+		return this.employeeForm(model, employeeInfo);
+	}
+
+	@RequestMapping("/viewEmployee")
+	public String viewEmployee(Model model, @RequestParam("employeeId") String employeeId) {
+		EmployeeInfo employeeInfo = null;
+		if (employeeId != null) {
+			employeeInfo = this.employeeDAO.getEmployee(employeeId);
+			model.addAttribute("employeeForm", employeeInfo);
+		}
+		if (employeeInfo == null) {
+			return "redirect:/";
+		}
+
+		return "viewEmployee";
+	}
+
+	private Map<String, String> workStatusMap() {
+		Map<String, String> workStatusMap = new LinkedHashMap<String, String>();
+		workStatusMap.put("Thử việc", "Thử việc");
+		workStatusMap.put("Thời vụ", "Thời vụ");
+		workStatusMap.put("Cộng tác viên", "Cộng tác viên");
+		workStatusMap.put("Chính thức", "Chính thức");
+		workStatusMap.put("Nghỉ thai sản", "Nghỉ thai sản");
+		workStatusMap.put("Nghỉ ốm", "Nghỉ ốm");
+		workStatusMap.put("Nghỉ không lương", "Nghỉ không lương");
+		workStatusMap.put("Đã thôi việc", "Đã thôi việc");
+		return workStatusMap;
+	}
 }
