@@ -113,8 +113,8 @@ public class KPIMeasures {
 						currentRatio.setEvaluate(-1);
 					}
 				}
-				currentRatio.setCurrentAsset(currentAsset.getEndValue());
-				currentRatio.setCurrentLiability(currentLiability.getEndValue());
+				// currentRatio.setCurrentAsset(currentAsset.getEndValue());
+				// currentRatio.setCurrentLiability(currentLiability.getEndValue());
 
 				map.put(currentRatio.getPeriod(), currentRatio);
 				logger.info(currentRatio);
