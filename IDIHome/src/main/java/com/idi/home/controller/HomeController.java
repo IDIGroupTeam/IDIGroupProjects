@@ -11,9 +11,13 @@ public class HomeController {
 
 	@RequestMapping(value = { "/", "/home" })
 	public String welcome(Model model) {
+		String strDes =null;
 		logger.info("Inside welcome() method");
-		model.addAttribute("name", "Tập đoàn IDI");
-		model.addAttribute("description", "Xin chào !");
+		model.addAttribute("name", "Phần mềm quản trị IDIGroup");
+		strDes="Xin chào Ngài! \n"
+				+"Phần mềm đang trong giai đoạn xây dựng \n"
+				+"Chúng tôi rất cần sự đóng góp ý kiến xây dựng của Ngài \n" ;
+		model.addAttribute("description", strDes);
 		return "home";
 	}
 
