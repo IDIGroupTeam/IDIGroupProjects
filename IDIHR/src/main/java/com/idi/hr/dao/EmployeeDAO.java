@@ -74,6 +74,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 				// update
 				String sql = hr.getProperty("UPDATE_EMPLOYEE_INFO").toString();
 				log.info("UPDATE_EMPLOYEE_INFO query: " + sql);
+				System.err.println(employeeInfo.getMaritalStatus());
 				Object[] params = new Object[] { employeeInfo.getFullName(),
 						employeeInfo.getGender(), employeeInfo.getJobTitle(), employeeInfo.getWorkStatus(),
 						employeeInfo.getDOB(), employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(),

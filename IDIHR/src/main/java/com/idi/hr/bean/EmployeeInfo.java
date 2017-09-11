@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 public class EmployeeInfo implements Serializable {
 
 	/**
@@ -19,21 +17,16 @@ public class EmployeeInfo implements Serializable {
 	private String fullName;
 	private String gender;
 	private String jobTitle;
-	@DateTimeFormat(pattern = "dd-MMM-yyyy")
 	private String DOB;
 	private String maritalStatus;
 	private String loginAccount;
 	private String personalId;
-	@DateTimeFormat(pattern = "dd-MMM-yyyy")
 	private String issueDate;
 	private String department;
 	private String phoneNo;
-	@DateTimeFormat(pattern = "dd-MMM-yyyy")
 	private String joinDate;
-	@DateTimeFormat(pattern = "dd-MMM-yyyy")
 	private String officalJoinDate;
 	private String email;
-	@DateTimeFormat(pattern = "dd-MMM-yyyy")
 	private String terminationDate;
 	private String reasonforLeave;
 	private String currentAdress;
@@ -70,6 +63,7 @@ public class EmployeeInfo implements Serializable {
 		this.jobTitle = jobTitle;
 		this.department = department;
 		this.DOB = DOB;
+		this.maritalStatus = maritalStatus;
 		this.personalId = personalId;
 		this.issueDate = issueDate;
 		this.phoneNo = phoneNo;

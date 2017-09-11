@@ -7,7 +7,13 @@
 <title>Danh sách nhân viên</title>
 </head>
 <body>
-	<a href="${pageContext.request.contextPath}/insertEmployee"><button>Thêm mới nhân viên</button></a>
+	<div class="tab">
+		<button class="selected"><a href="#" id="tab-0">QL Nhân viên </a> </button></button>
+		<button class="tablinks" onclick="openCity(event, 'Paris')">QL Phòng ban</button>
+		<button class="tablinks" onclick="openCity(event, 'Tokyo')">QL Chức danh</button>
+	</div>
+	<a href="${pageContext.request.contextPath}/insertEmployee"><button>Thêm
+			mới nhân viên</button></a>
 	<br />
 	<div class="table-responsive">
 		<h1>Danh sách nhân viên</h1>
@@ -40,6 +46,9 @@
 				</tr>
 			</c:forEach>
 		</table>
+		<c:if test="${not empty message}">
+			<div class="alert alert-success">${message}</div>
+		</c:if>
 	</div>
 </body>
 </html>

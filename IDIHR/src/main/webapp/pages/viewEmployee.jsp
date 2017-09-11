@@ -73,9 +73,9 @@
 				<tr>
 
 					<td>Ngày sinh:</td>
-					<td></td>
-					<td>Trạng thái LĐ:</td>
 					<td><c:out value="${employeeForm.DOB}" /></td>
+					<td>Trạng thái LĐ:</td>
+					<td><c:out value="${employeeForm.workStatus}" /></td>
 
 					<td>Số đt:</td>
 					<td><c:out value="${employeeForm.phoneNo}" /></td>

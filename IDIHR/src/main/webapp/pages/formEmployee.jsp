@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
@@ -20,8 +20,6 @@
 		<b>${formTitle}</b>
 	</h4>
 
-
-
 	<form:form modelAttribute="employeeForm" method="POST"
 		action="insertOrUpdateEmployee">
 		<div class="table table-bordered">
@@ -36,7 +34,6 @@
 				<tr>
 					<td><form:errors path="gender" class="error-message" /></td>
 				</tr>
-				<tr><td><form:errors path="officalJoinDate" class="error-message" /></td></tr>
 			</table>
 			<table class="table">
 				<tbody>
@@ -53,7 +50,7 @@
 					</tr>
 
 					<tr>
-						<td>Họ tên:</td>
+						<td>Họ tên(*):</td>
 						<td><form:input path="fullName" required="required" /></td>
 
 						<td>Ngày ký HĐLĐ:</td>
@@ -64,7 +61,7 @@
 					</tr>
 
 					<tr>
-						<td>Email:</td>
+						<td>Email(*):</td><!-- can check duplicate  -->
 						<td><form:input path="email" required="required" /></td>
 
 						<td>Chức vụ:</td>
@@ -76,8 +73,8 @@
 						<td><form:input path="percentSocicalInsu" size="6" /></td>
 					</tr>
 					<tr>
-						<td>Account:</td>
-						<td><form:input path="loginAccount" size="10" /></td>
+						<td>Account(*):</td><!-- can check duplicate  -->
+						<td><form:input path="loginAccount" size="10" required="required"/></td>
 						<td>Phòng:</td>
 						<td><form:select path="department">
 								<form:options items="${departmentMap}" />
@@ -86,16 +83,16 @@
 						<td><form:input path="socicalInsuNo" size="12" /></td>
 					</tr>
 					<tr>
-						<td>Giới tính:</td>
+						<td>Giới tính(*):</td>
 						<td><form:select path="gender">
-								<form:option value="" label="-Giới tính-" />
+								<%-- <form:option value="" label="-Giới tính-" /> --%>
 								<form:option value="male" label="Nam" />
 								<form:option value="female" label="Nữ" />
 							</form:select></td>
 
 						<td>T/T hôn nhân:</td>
 						<td><form:select path="maritalStatus">
-								<form:option value="" label="-Hôn nhân-" />
+								<%-- <form:option value="" label="-Hôn nhân-" /> --%>
 								<form:option value="sigle" label="Độc thân" />
 								<form:option value="married" label="Đã lập gia đình" />
 								<form:option value="widowed" label="Góa" />

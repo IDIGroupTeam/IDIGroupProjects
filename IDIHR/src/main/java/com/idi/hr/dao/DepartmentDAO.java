@@ -51,4 +51,67 @@ public class DepartmentDAO extends JdbcDaoSupport {
 
 	}
 
+	/**
+	 * get department by departmentId
+	 * 
+	 * @param departmentId
+	 * @return department object
+	 */
+	public Department getDepartment(String departmentId) {
+
+		String sql = hr.get("GET_DEPARTMENT").toString();
+		log.info("GET_DEPARTMENT query: " + sql);
+		Object[] params = new Object[] { departmentId };
+
+		DepartmentMapper mapper = new DepartmentMapper();
+
+		Department department = jdbcTmpl.queryForObject(sql, params, mapper);
+
+		return department;
+
+	}
+
+	/**
+	 * Insert a department into database
+	 * 
+	 * @param department
+	 */
+	public void insertDepartment(Department department) throws Exception {
+		try {
+
+			log.info("Insert new department ....");
+			String sql = hr.getProperty("INSERT_DEPARTMENT").toString();
+			log.info("INSERT_DEPARTMENT query: " + sql);
+			Object[] params = new Object[] { department.getDepartmentId(), department.getDepartmentName(),
+					department.getDesc() };
+			jdbcTmpl.update(sql, params);
+
+		} catch (Exception e) {
+			log.error(e, e);
+			throw e;
+		}
+	}
+
+	/**
+	 * Update a department into database
+	 * 
+	 * @param department
+	 */
+	public void updateDepartment(Department department) throws Exception {
+		try {
+
+			log.info("Update department " + department.getDepartmentId() + " ....");
+			// update
+			String sql = hr.getProperty("UPDATE_DEPARTMENT").toString();
+			log.info("UPDATE_DEPARTMENT query: " + sql);
+			Object[] params = new Object[] { department.getDepartmentName(), department.getDesc(),
+					department.getDepartmentId() };
+			jdbcTmpl.update(sql, params);
+
+		} catch (Exception e) {
+			log.error(e, e);
+			throw e;
+		}
+	}
+
 }

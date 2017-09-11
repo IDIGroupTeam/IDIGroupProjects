@@ -84,7 +84,7 @@ public class EmployeeController {
 
 			employeeDAO.insertOrUpdateEmployee(employeeInfo);
 			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Insert/Update employee successful");
+			redirectAttributes.addFlashAttribute("message", "Insert/Update employee successful!");
 		} catch (Exception e) {
 			log.error(e, e);
 		}
@@ -105,9 +105,9 @@ public class EmployeeController {
 		model.addAttribute("workStatusMap", workStatusMap);
 
 		if (employeeInfo.getEmployeeId() > 0) {
-			model.addAttribute("formTitle", "Thêm mới nhân viên");
-		} else {
 			model.addAttribute("formTitle", "Sửa thông tin nhân viên");
+		} else {
+			model.addAttribute("formTitle", "Thêm mới nhân viên");
 		}
 		return "formEmployee";
 	}
@@ -181,14 +181,14 @@ public class EmployeeController {
 
 	private Map<String, String> workStatusMap() {
 		Map<String, String> workStatusMap = new LinkedHashMap<String, String>();
-		workStatusMap.put("Thử việc", "Thử việc");
-		workStatusMap.put("Thời vụ", "Thời vụ");
-		workStatusMap.put("Cộng tác viên", "Cộng tác viên");
-		workStatusMap.put("Chính thức", "Chính thức");
-		workStatusMap.put("Nghỉ thai sản", "Nghỉ thai sản");
-		workStatusMap.put("Nghỉ ốm", "Nghỉ ốm");
-		workStatusMap.put("Nghỉ không lương", "Nghỉ không lương");
-		workStatusMap.put("Đã thôi việc", "Đã thôi việc");
+		workStatusMap.put("Thu viec", "Thử việc");
+		workStatusMap.put("Thoi vu", "Thời vụ");
+		workStatusMap.put("Cong tac vien", "Cộng tác viên");
+		workStatusMap.put("Chinh thuc", "Chính thức");
+		workStatusMap.put("Nghi thai san", "Nghỉ thai sản");
+		workStatusMap.put("Nghi om", "Nghỉ ốm");
+		workStatusMap.put("Nghi khong luong", "Nghỉ không lương");
+		workStatusMap.put("Da thoi viec", "Đã thôi việc");
 		return workStatusMap;
 	}
 }
