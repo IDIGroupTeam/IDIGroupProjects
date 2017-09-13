@@ -7,9 +7,11 @@
 <title>Danh sách phòng ban</title>
 </head>
 <body>
-	<a
-		href="${pageContext.request.contextPath}/department/insertDepartment"><button
-			class=".btn-success">Thêm mới phòng ban</button></a>
+<div class="tab">
+  <a href="${pageContext.request.contextPath}/"><button>Quản lý nhân viên</button></a>
+  <a href="${pageContext.request.contextPath}/department/"><button class="btn btn-default">Quản lý phòng ban</button></a>
+  <a href="${pageContext.request.contextPath}/"><button disabled="disabled">Quản lý chức danh</button></a>
+</div>
 	<br />
 	<div class="table-responsive">
 		<h1>Danh sách phòng ban</h1>
@@ -35,6 +37,9 @@
 		<c:if test="${not empty message}">
 			<div class="alert alert-success">${message}</div>
 		</c:if>
+		<a
+			href="${pageContext.request.contextPath}/department/insertDepartment"><button
+				class="btn btn-primary">Thêm mới phòng ban</button></a>
 	</div>
 </body>
 </html>

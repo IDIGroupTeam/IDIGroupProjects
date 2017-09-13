@@ -25,7 +25,6 @@ import com.idi.hr.bean.JobTitle;
 import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.JobTitleDAO;
-import com.idi.hr.from.EmployeeFrom;
 import com.idi.hr.validator.EmployeeValidator;
 
 @Controller
@@ -67,7 +66,7 @@ public class EmployeeController {
 		}
 		System.out.println("Target=" + target);
 
-		if (target.getClass() == EmployeeFrom.class) {
+		if (target.getClass() == EmployeeInfo.class) {
 			dataBinder.setValidator(employeeValidator);
 		}
 	}
@@ -77,11 +76,12 @@ public class EmployeeController {
 			BindingResult result, final RedirectAttributes redirectAttributes) {
 		try {
 			// Nếu validate có lỗi.
-			if (result.hasErrors()) {
-				System.err.println("co loi validate");
-				return this.employeeForm(model, employeeInfo);
+			if(!(employeeInfo.getEmployeeId() > 0)) {
+				if (result.hasErrors()) {
+					//System.err.println("co loi validate");
+					return this.employeeForm(model, employeeInfo);
+				}
 			}
-
 			employeeDAO.insertOrUpdateEmployee(employeeInfo);
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Insert/Update employee successful!");

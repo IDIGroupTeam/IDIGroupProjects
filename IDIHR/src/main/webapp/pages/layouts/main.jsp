@@ -33,7 +33,7 @@
 			<div class="col-sm-9" style="padding: 2px;">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h4>Nhân sự</h4>
+						<h4>Quản Lý Nhân Sự</h4>
 					</div>
 					<div class="panel-body">
 						<div class="panel-body">

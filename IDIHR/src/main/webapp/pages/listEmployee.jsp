@@ -7,13 +7,11 @@
 <title>Danh sách nhân viên</title>
 </head>
 <body>
-	<div class="tab">
-		<button class="selected"><a href="#" id="tab-0">QL Nhân viên </a> </button></button>
-		<button class="tablinks" onclick="openCity(event, 'Paris')">QL Phòng ban</button>
-		<button class="tablinks" onclick="openCity(event, 'Tokyo')">QL Chức danh</button>
-	</div>
-	<a href="${pageContext.request.contextPath}/insertEmployee"><button>Thêm
-			mới nhân viên</button></a>
+<div class="tab">
+  <a href="${pageContext.request.contextPath}/"><button class="btn btn-default">Quản lý nhân viên</button></a>
+  <a href="${pageContext.request.contextPath}/department/"><button>Quản lý phòng ban</button></a>
+  <a href="${pageContext.request.contextPath}/"><button disabled="disabled">Quản lý chức danh</button></a>
+</div>
 	<br />
 	<div class="table-responsive">
 		<h1>Danh sách nhân viên</h1>
@@ -49,6 +47,8 @@
 		<c:if test="${not empty message}">
 			<div class="alert alert-success">${message}</div>
 		</c:if>
+			<a href="${pageContext.request.contextPath}/insertEmployee"><button class="btn btn-primary">Thêm
+			mới nhân viên</button></a>
 	</div>
 </body>
 </html>

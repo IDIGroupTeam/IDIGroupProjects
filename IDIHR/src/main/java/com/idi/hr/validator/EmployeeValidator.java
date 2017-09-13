@@ -1,11 +1,13 @@
 package com.idi.hr.validator;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.idi.hr.from.EmployeeFrom;
+import com.idi.hr.bean.EmployeeInfo;
+import com.idi.hr.dao.EmployeeDAO;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -18,12 +20,14 @@ public class EmployeeValidator implements Validator {
 	// Các class được hỗ trợ Validate
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return clazz == EmployeeFrom.class;
+		return clazz == EmployeeInfo.class;
 	}
-
+	@Autowired
+	private EmployeeDAO employeeDAO;
+	
 	@Override
 	public void validate(Object target, Errors errors) {
-		EmployeeFrom employeeFrom = (EmployeeFrom) target;
+		EmployeeInfo employeeFrom = (EmployeeInfo) target;
 
 		// Kiểm tra các field của EmployeeInfo.
 		// (Xem thêm file property: messages/validator.property)
@@ -32,10 +36,15 @@ public class EmployeeValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "gender", "NotEmpty.employeeForm.gender");
 
 		if (!emailValidator.isValid(employeeFrom.getEmail())) {
-			System.err.println("loi email format");
 			// Error in email field.
 			// Lỗi trường email.
 			errors.rejectValue("email", "Pattern.employeeForm.email");
 		}
+		//kiem tra duplicate account name
+		
+		if(employeeDAO.getAccount(employeeFrom.getLoginAccount()) > 0) {
+			//System.out.println("dupicate login account is existing...");
+			errors.rejectValue("loginAccount", "Pattern.employeeForm.loginAccount");
+		}		
 	}
 }

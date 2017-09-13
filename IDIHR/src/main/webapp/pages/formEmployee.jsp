@@ -16,6 +16,12 @@
 </style>
 </head>
 <body>
+<div class="tab">
+  <a href="${pageContext.request.contextPath}/"><button class="btn btn-default">Quản lý nhân viên</button></a>
+  <a href="${pageContext.request.contextPath}/department/"><button>Quản lý phòng ban</button></a>
+  <a href="${pageContext.request.contextPath}/"><button disabled="disabled">Quản lý chức danh</button></a>
+</div>
+	<br />
 	<h4>
 		<b>${formTitle}</b>
 	</h4>
@@ -33,6 +39,9 @@
 				</tr>
 				<tr>
 					<td><form:errors path="gender" class="error-message" /></td>
+				</tr>
+				<tr>
+					<td><form:errors path="loginAccount" class="error-message" /></td>
 				</tr>
 			</table>
 			<table class="table">

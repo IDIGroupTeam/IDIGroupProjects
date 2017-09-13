@@ -58,6 +58,26 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		return employee;
 
 	}
+	
+	/**
+	 * get employee by employeeId
+	 * 
+	 * @param account
+	 * @return int
+	 *
+	 */
+	public int getAccount(String account) {
+
+		String sql = hr.get("CHECK_ACCOUNT_DUPLICATE").toString();
+		log.info("CHECK_ACCOUNT_DUPLICATE query: " + sql);
+		Object[] params = new Object[] { account };
+		
+		String accountNumber = jdbcTmpl.queryForObject(sql, String.class, params);
+		
+		System.err.println(accountNumber);
+		return Integer.parseInt(accountNumber);
+
+	}
 
 	/**
 	 * Insert or update a employee into database
@@ -74,7 +94,6 @@ public class EmployeeDAO extends JdbcDaoSupport {
 				// update
 				String sql = hr.getProperty("UPDATE_EMPLOYEE_INFO").toString();
 				log.info("UPDATE_EMPLOYEE_INFO query: " + sql);
-				System.err.println(employeeInfo.getMaritalStatus());
 				Object[] params = new Object[] { employeeInfo.getFullName(),
 						employeeInfo.getGender(), employeeInfo.getJobTitle(), employeeInfo.getWorkStatus(),
 						employeeInfo.getDOB(), employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(),

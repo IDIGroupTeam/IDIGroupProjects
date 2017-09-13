@@ -9,7 +9,7 @@
 		<ul class="nav nav-pills nav-stacked">
 			<li><a href="/IDIFinance">Quản lý tài chính</a></li>
 			<li><a id="hr" href="/IDIHR">Quản lý nhân sự</a>			
-				<c:import url="/pages/layouts/subnav_hr.jsp"></c:import>	 		
+				<%-- <c:import url="/pages/layouts/subnav_hr.jsp"></c:import>	 --%> 		
 			</li>
 			<li><a href="#">Quản lý khách hàng</a></li>
 			<li><a href="#">Quản lý kho</a></li>
