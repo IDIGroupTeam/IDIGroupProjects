@@ -157,4 +157,23 @@ public class EmployeeDAO extends JdbcDaoSupport {
 
 	}
 
+	
+	/**
+	 * Get employees from DB
+	 * @param department
+	 * @return List of employee
+	 * @throws Exception
+	 */
+	public List<EmployeeInfo> getEmployeesByDepartment(String department) {
+
+		String sql = hr.getProperty("GET_EMPLOYEES_BY_DEPARTMENT").toString();
+		log.info("GET_EMPLOYEES_BY_DEPARTMENT query: " + sql);
+		Object[] params = new Object[] {department};
+		EmployeeMapper mapper = new EmployeeMapper();
+
+		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);
+
+		return list;
+
+	}
 }

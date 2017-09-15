@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.idi.hr.bean.Department;
+import com.idi.hr.bean.EmployeeInfo;
 import com.idi.hr.dao.DepartmentDAO;
+import com.idi.hr.dao.EmployeeDAO;
 
 @Controller
 public class DepartmentController {
@@ -25,6 +27,9 @@ public class DepartmentController {
 	@Autowired
 	private DepartmentDAO departmentDAO;
 
+	@Autowired
+	private EmployeeDAO employeeDAO;
+	
 	@RequestMapping(value = { "/department/" }, method = RequestMethod.GET)
 	public String ListDepartments(Model model) {
 		try {
@@ -97,5 +102,16 @@ public class DepartmentController {
 
 		return this.departmentForm(model, department);
 	}
-
+	
+	@RequestMapping(value = { "/department/listEmployeeOfDepartment" }, method = RequestMethod.GET)
+	public String listEmployeeOfDepartment(Model model, @RequestParam("departmentId") String departmentId) {
+		try {
+			List<EmployeeInfo> list = employeeDAO.getEmployeesByDepartment(departmentId);
+			model.addAttribute("employees", list);
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return "listEmployee"; //"listEmployeeOfDepartment";
+	}
 }

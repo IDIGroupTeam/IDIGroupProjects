@@ -22,7 +22,7 @@
 				<th>Account</th>
 				<th>Email</th>
 				<th>Chức vụ</th>
-				<!--            <th>Phòng<th> -->
+				<th>Phòng</th>
 				<th>Giới tính</th>
 				<th>Số đt</th>
 				<th>view</th>
@@ -35,12 +35,11 @@
 					<td>${employee.loginAccount}</td>
 					<td>${employee.email}</td>
 					<td>${employee.jobTitle}</td>
+					<td>${employee.department}</td>
 					<td>${employee.gender}</td>
 					<td>${employee.phoneNo}</td>
-					<td><a href="viewEmployee?employeeId=${employee.employeeId}">View</a>
-					</td>
-					<td><a href="editEmployee?employeeId=${employee.employeeId}">Edit</a>
-					</td>
+					<td><a href="viewEmployee?employeeId=${employee.employeeId}">View</a></td>
+					<td><a href="editEmployee?employeeId=${employee.employeeId}">Edit</a></td>
 				</tr>
 			</c:forEach>
 		</table>

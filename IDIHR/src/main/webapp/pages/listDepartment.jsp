@@ -20,7 +20,7 @@
 				<th>Mã phòng</th>
 				<th>Tên phòng</th>
 				<th>Ghi chú</th>
-
+				<th>Danh sách NV của phòng</th>
 				<th>Edit</th>
 			</tr>
 			<c:forEach var="department" items="${departments}">
@@ -28,6 +28,9 @@
 					<td>${department.departmentId}</td>
 					<td>${department.departmentName}</td>
 					<td>${department.desc}</td>
+					<td><a
+						href="listEmployeeOfDepartment?departmentId=${department.departmentId}">Danh sách NV của phòng</a>
+					</td>
 					<td><a
 						href="editDepartment?departmentId=${department.departmentId}">Edit</a>
 					</td>
