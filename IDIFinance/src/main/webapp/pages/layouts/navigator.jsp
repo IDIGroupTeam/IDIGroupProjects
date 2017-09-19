@@ -8,7 +8,7 @@
 	</div>
 	<div class="panel-body">
 		<ul class="nav nav-pills nav-stacked">
-			<li><a href="${url}">Quản lý tài chính</a></li>
+			<li class="active"><a href="${url}">Quản lý tài chính</a></li>
 			<li><a href="/IDIHR">Quản lý Nhân sự</a></li>
 			<li><a href="#">Quản lý khách hàng</a></li>
 			<li><a href="#">Quản lý xuất nhập kho</a></li>

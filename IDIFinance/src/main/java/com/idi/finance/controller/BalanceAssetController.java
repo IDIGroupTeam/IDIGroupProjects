@@ -124,7 +124,7 @@ public class BalanceAssetController {
 		model.addAttribute("kpiGroups", kpiGroups);
 
 		model.addAttribute("tab", "tabCNDL");
-		return "updateDb";
+		return "update";
 	}
 
 	@RequestMapping(value = "/luutrudulieu", method = RequestMethod.POST)
@@ -155,13 +155,13 @@ public class BalanceAssetController {
 						+ ". Có thể file bị lỗi, không đúng định dạng, hoặc đường truyền chậm, xin mời thử lại.";
 				model.addAttribute("comment", comment);
 				model.addAttribute("tab", "tabCNDL");
-				return "updateDb";
+				return "update";
 			}
 		} else {
 			String comment = "Hãy chọn file exel dữ liệu kế toán.";
 			model.addAttribute("comment", comment);
 			model.addAttribute("tab", "tabCNDL");
-			return "updateDb";
+			return "update";
 		}
 	}
 }
