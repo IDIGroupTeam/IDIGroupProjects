@@ -1,7 +1,6 @@
 package com.idi.finance.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.idi.finance.bean.BalanceAssetData;
 import com.idi.finance.bean.BalanceAssetItem;
@@ -36,7 +33,6 @@ import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.form.SearchKpiChartForm;
 import com.idi.finance.utils.Contants;
 import com.idi.finance.utils.ExpressionEval;
-
 
 @Controller
 public class KpiChartController {
@@ -453,8 +449,6 @@ public class KpiChartController {
 		}
 		return exps;
 	}
-
-	
 
 	@RequestMapping("/quanlybieudo")
 	public String chartManagement(Model model) {
