@@ -24,7 +24,7 @@ import com.idi.finance.charts.KpiBarChart;
 import com.idi.finance.charts.KpiChartProcessor;
 import com.idi.finance.charts.KpiLineChart;
 import com.idi.finance.dao.BalanceSheetDAO;
-import com.idi.finance.form.BalanceSheetForm;
+import com.idi.finance.form.BalanceAssetForm;
 import com.idi.finance.kpi.KPIMeasures;
 import com.idi.finance.kpi.NetProfitMargin;
 import com.idi.finance.kpi.OperatingCycle;
@@ -45,10 +45,10 @@ public class BalanceSheetController {
 	@Autowired
 	BalanceSheetDAO balanceSheetDAO;
 
-	@RequestMapping("/")
+	/*@RequestMapping("/")
 	public String finance(Model model) {
 		return "forward:/kntttucthoi";
-	}
+	}*/
 
 	@RequestMapping("/kntttucthoi")
 	public String kpiCurrentRatio(Model model) {
@@ -1206,16 +1206,16 @@ public class BalanceSheetController {
 	}
 
 	@RequestMapping("/bangcandoiketoan")
-	public String balanceAssets(@ModelAttribute("balanceSheetForm") BalanceSheetForm balanceSheetForm, Model model) {
+	public String balanceAssets(@ModelAttribute("balanceSheetForm") BalanceAssetForm balanceSheetForm, Model model) {
 		// List balance assets:
 		logger.info(balanceSheetForm);
 		if (balanceSheetForm == null)
-			balanceSheetForm = new BalanceSheetForm();
+			balanceSheetForm = new BalanceAssetForm();
 
 		// Time: Defaul: current year, current month
-		logger.info(balanceSheetForm.getAssetsPeriods());
+		logger.info(balanceSheetForm.getAssetPeriods());
 		List<Date> assestPeriods = null;
-		if (balanceSheetForm.getAssetsPeriods() == null || balanceSheetForm.getAssetsPeriods().length <= 0) {
+		if (balanceSheetForm.getAssetPeriods() == null || balanceSheetForm.getAssetPeriods().length <= 0) {
 			assestPeriods = new ArrayList<>();
 			assestPeriods.add(Utils.standardDate(new Date()));
 		} else {
@@ -1223,7 +1223,7 @@ public class BalanceSheetController {
 		}
 
 		// Code: Default: All code
-		logger.info(balanceSheetForm.getAssetsCodes());
+		logger.info(balanceSheetForm.getAssetCodes());
 
 		// Paging:
 		// Number records of a Page: Default: 25
