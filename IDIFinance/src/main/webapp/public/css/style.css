@@ -6,7 +6,7 @@ body {
 
 /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
 .navbar-default {
-	height: 120px;
+	height: 110px;
 	/* background-color: #2e5589; #99ccff, #4266b2*/
 	background: -webkit-linear-gradient(left top, #2e5589, #4266b2);
 	background: -o-linear-gradient(bottom right, #2e5589, #4266b2);
@@ -64,6 +64,39 @@ span.multiselect {
 div.searchbox {
 	/* height: 200px; */
 	margin: 0px;
-	max-height: 180px;
+	padding: 0px;
+	max-height: 100px;
 	overflow: auto;
+	max-height: 100px;
+}
+
+div.searchbox .checkbox {
+	
+}
+
+.small-block {
+	font-size: 85%;
+}
+
+.small-block {
+	/* max-width: 500px; */
+	
+}
+
+.small-block table, tr, td {
+	padding: 2px;
+}
+
+.small-block td.limited {
+	max-width: 150px;
+}
+
+.small-block td.good {
+	/* background-color: green; */
+	
+}
+
+.small-block  td.bad {
+	/* background-color: red; */
+	
 }

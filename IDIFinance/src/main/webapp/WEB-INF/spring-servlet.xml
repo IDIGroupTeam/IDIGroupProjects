@@ -9,11 +9,6 @@
 	<mvc:default-servlet-handler />
 	<context:component-scan base-package="com.idi.finance" />
 
-	<!-- Config folder to load jsp page for view layer -->
-	<!-- <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"> 
-		<property name="prefix" value="/pages/" /> <property name="suffix" value=".jsp" 
-		/> </bean> -->
-
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.tiles3.TilesViewResolver">
 	</bean>
@@ -31,8 +26,6 @@
 	<bean id="properties"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location" value="classpath:idifinance.properties" />
-		<!-- <property name="ignoreUnresolvablePlaceholders" value="true" /> -->
-		<!-- <property name="ignoreResourceNotFound" value="true" /> -->
 	</bean>
 
 	<!-- Config for upload file feature -->
@@ -50,8 +43,6 @@
 			value="jdbc:mysql://localhost:3306/idigroup?useUnicode=true&amp;characterEncoding=UTF-8" />
 		<property name="username" value="root" />
 		<property name="password" value="" />
-		<!-- <property name="connectionProperties"> <props> <prop key="useUnicode">yes</prop> 
-			<prop key="characterEncoding">utf8</prop> </props> </property> -->
 	</bean>
 	<bean id="jdbcTmpl" class="org.springframework.jdbc.core.JdbcTemplate">
 		<property name="dataSource" ref="dataSource"></property>
@@ -61,4 +52,7 @@
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
+	<bean id="kpiDAO" class="com.idi.finance.dao.impl.KpiChartDAOImpl">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
 </beans>

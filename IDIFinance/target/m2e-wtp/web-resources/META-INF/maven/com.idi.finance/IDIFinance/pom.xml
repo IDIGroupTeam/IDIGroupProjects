@@ -41,7 +41,6 @@
 			<artifactId>jcommon</artifactId>
 			<version>1.0.16</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/cewolf/cewolf -->
 		<dependency>
 			<groupId>cewolf</groupId>
 			<artifactId>cewolf</artifactId>

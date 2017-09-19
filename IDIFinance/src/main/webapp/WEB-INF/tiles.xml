@@ -3,6 +3,46 @@
 
 <tiles-definitions>
 	<!-- Base Definition -->
+	<definition name="template" template="/pages/template/main.jsp">
+		<put-attribute name="title" value="Tập đoàn IDI" />
+		<put-attribute name="header" value="/pages/template/header.jsp" />
+		<put-attribute name="navigator" value="/pages/template/navigator.jsp" />
+		<put-attribute name="kpilist" value="" />
+		<put-attribute name="search" value="" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/pages/template/footer.jsp" />
+	</definition>
+
+	<definition name="kpiChart" extends="template">
+		<put-attribute name="title" value="Biểu đồ KPI" />
+		<put-attribute name="search" value="/pages/template/search.jsp" />
+		<put-attribute name="body" value="/pages/kpiChart.jsp" />
+	</definition>
+
+	<definition name="balanceAsset" extends="template">
+		<put-attribute name="title" value="Bảng cân đối kế toán" />
+		<put-attribute name="search"
+			value="/pages/template/balanceasset/search.jsp" />
+		<put-attribute name="body" value="/pages/balanceAsset.jsp" />
+	</definition>
+
+	<definition name="updateDb" extends="template">
+		<put-attribute name="title" value="Cập nhật dữ liệu" />
+		<put-attribute name="body" value="/pages/updatedb.jsp" />
+	</definition>
+
+	<definition name="chartManagement" extends="template">
+		<put-attribute name="title" value="Quản lý biểu đồ" />
+		<put-attribute name="body" value="/pages/chartmanagement.jsp" />
+	</definition>
+
+	<definition name="error" extends="template">
+		<put-attribute name="title" value="Lỗi hệ thống" />
+		<put-attribute name="body" value="/pages/error.jsp" />
+	</definition>
+
+
+	<!-- Base Definition -->
 	<definition name="finance" template="/pages/layouts/main.jsp">
 		<put-attribute name="title" value="Tập đoàn IDI" />
 		<put-attribute name="header" value="/pages/layouts/header.jsp" />

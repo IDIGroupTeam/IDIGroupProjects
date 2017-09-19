@@ -21,7 +21,7 @@
 <script src="${url}/public/js/bootstrap.min.js"></script>
 <script src="${url}/public/js/bootstrap-multiselect.js"></script>
 
-<title><tiles:getAsString name="title" /></title>
+<title>Tập đoàn IDI - <tiles:getAsString name="title" /></title>
 <script type="text/javascript">
 	// Shorthand for $( document ).ready()
 	$(function() {
