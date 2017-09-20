@@ -26,13 +26,13 @@ import com.idi.finance.utils.Utils;
 @Controller
 public class BalanceAssetController {
 	private static final Logger logger = Logger.getLogger(BalanceAssetController.class);
-	
+
 	@Autowired
 	BalanceSheetDAO balanceSheetDAO;
 
 	@Autowired
 	KpiChartDAO kpiChartDAO;
-	
+
 	@RequestMapping("/candoiketoan")
 	public String balanceAssets(@ModelAttribute("mainFinanceForm") BalanceAssetForm balanceSheetForm, Model model) {
 		try {
@@ -127,13 +127,18 @@ public class BalanceAssetController {
 		return "update";
 	}
 
+	// @ModelAttribute("mainFinanceForm") BalanceAssetForm balanceSheetForm
+
 	@RequestMapping(value = "/luutrudulieu", method = RequestMethod.POST)
-	public String save(Model model, @RequestParam("file") MultipartFile file) {
+	// public String save(Model model, @RequestParam("file") MultipartFile file) {
+	public String save(Model model, @ModelAttribute("mainFinanceForm") BalanceAssetForm balanceSheetForm) {
 		// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 		List<KpiGroup> kpiGroupsDb = kpiChartDAO.listKpiGroups();
 		model.addAttribute("kpiGroups", kpiGroupsDb);
-
-		if (file != null && file.getSize() > 0) {
+		
+		if (balanceSheetForm != null && balanceSheetForm.getFile() != null
+				&& balanceSheetForm.getFile().getSize() > 0) {
+			MultipartFile file = balanceSheetForm.getFile();
 			logger.info(file.getName() + " - " + file.getSize());
 			try {
 				// Read & insert kpi groups and kpi charts

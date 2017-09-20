@@ -1,14 +1,25 @@
 package com.idi.finance.form;
 
+import java.io.File;
+
+import org.springframework.web.multipart.MultipartFile;
+
 public class BalanceAssetForm {
 	private String[] assetCodes;
 	private String[] assetPeriods;
+
+	private String[] changedAssetCodes;
+	private String[] changedAssetPeriods;
+	private String[] startValues;
+	private String[] endValues;
 
 	private boolean first;
 	private int numberRecordsOfPage;
 	private int pageIndex;
 	private int totalPages;
 	private int totalRecords;
+
+	private MultipartFile file;
 
 	public String[] getAssetCodes() {
 		return assetCodes;
@@ -24,6 +35,38 @@ public class BalanceAssetForm {
 
 	public void setAssetPeriods(String[] assetPeriods) {
 		this.assetPeriods = assetPeriods;
+	}
+
+	public String[] getChangedAssetCodes() {
+		return changedAssetCodes;
+	}
+
+	public void setChangedAssetCodes(String[] changedAssetCodes) {
+		this.changedAssetCodes = changedAssetCodes;
+	}
+
+	public String[] getChangedAssetPeriods() {
+		return changedAssetPeriods;
+	}
+
+	public void setChangedAssetPeriods(String[] changedAssetPeriods) {
+		this.changedAssetPeriods = changedAssetPeriods;
+	}
+
+	public String[] getStartValues() {
+		return startValues;
+	}
+
+	public void setStartValues(String[] startValues) {
+		this.startValues = startValues;
+	}
+
+	public String[] getEndValues() {
+		return endValues;
+	}
+
+	public void setEndValues(String[] endValues) {
+		this.endValues = endValues;
 	}
 
 	public boolean isFirst() {
@@ -65,4 +108,13 @@ public class BalanceAssetForm {
 	public void setTotalRecords(int totalRecords) {
 		this.totalRecords = totalRecords;
 	}
+
+	public MultipartFile getFile() {
+		return file;
+	}
+
+	public void setFile(MultipartFile file) {
+		this.file = file;
+	}
+
 }

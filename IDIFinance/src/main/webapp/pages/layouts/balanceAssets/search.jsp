@@ -18,7 +18,6 @@
 	});
 </script>
 
-<%-- <form:form action="${url}/candoiketoan" class="form-horizontal"> --%>
 <div class="panel panel-default with-nav-tabs">
 	<div class="panel-heading">
 		<h4>Tìm kiếm</h4>
@@ -83,4 +82,3 @@
 			kiếm</button>
 	</div>
 </div>
-<%-- </form:form> --%>

@@ -7,17 +7,10 @@ body {
 /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
 .navbar-default {
 	height: 110px;
-	/* background-color: #2e5589; #99ccff, #4266b2*/
 	background: -webkit-linear-gradient(left top, #2e5589, #4266b2);
 	background: -o-linear-gradient(bottom right, #2e5589, #4266b2);
 	background: -moz-linear-gradient(bottom right, #2e5589, #4266b2);
 	background: linear-gradient(to bottom right, #2e5589, #4266b2);
-}
-
-.page-header {
-	border: none;
-	padding-right: 20px;
-	color: #4266B2;
 }
 
 .row.content {
@@ -57,21 +50,11 @@ body {
 	}
 }
 
-span.multiselect {
-	cursor: pointer;
-}
-
 div.searchbox {
-	/* height: 200px; */
 	margin: 0px;
 	padding: 0px;
 	max-height: 100px;
 	overflow: auto;
-	max-height: 100px;
-}
-
-div.searchbox .checkbox {
-	
 }
 
 .small-block {
@@ -79,7 +62,6 @@ div.searchbox .checkbox {
 }
 
 .small-block {
-	/* max-width: 500px; */
 	
 }
 
@@ -99,4 +81,12 @@ div.searchbox .checkbox {
 .small-block  td.bad {
 	/* background-color: red; */
 	
+}
+
+.login {
+	color: #ffffff;
+}
+
+.login:hover {
+	color: #f0f0f0;
 }

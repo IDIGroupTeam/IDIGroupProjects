@@ -49,6 +49,17 @@
 			$("#totalRecords").val(0);
 			$("#mainFinanceForm").submit();
 		});
+		
+		$("#balanceAssetTbl").Tabledit({
+			editButton: false,
+            removeButton: false,
+            deleteButton: false,
+            hideIdentifier: true,
+			columns: {
+				identifier: [[2, "changedAssetCodes"],[7,"changedAssetPeriods"]],
+				editable: [[4, "startValues"], [5, "endValues"]]
+			}
+		});
 	});
 </script>
 
@@ -152,16 +163,17 @@
 </div>
 
 <i class="pull-right">(*): Đơn vị: VND</i>
-<%-- <form:form action="${url}/candoiketoan" modelAttribute="balanceSheetForm"> --%>
-<table class="table table-bordered table-hover">
+
+<table id="balanceAssetTbl"
+	class="table table-bordered table-hover balance-list">
 	<thead>
 		<tr>
 			<th>STT</th>
 			<th>Tài sản</th>
 			<th>Mã số</th>
 			<th>Thuyết minh</th>
-			<th>Số cuối kỳ (*)</th>
 			<th>Số đầu kỳ (*)</th>
+			<th>Số cuối kỳ (*)</th>
 			<th>Mức thay đổi</th>
 			<th>Thời gian</th>
 		</tr>
@@ -173,12 +185,12 @@
 				<td>${bad.asset.assetName}</td>
 				<td>${bad.asset.assetCode}</td>
 				<td>${bad.asset.note}</td>
-				<td><c:if test="${bad.endValue!=0}">
-						<fmt:formatNumber value="${bad.endValue}" type="NUMBER"
-							maxFractionDigits="1"></fmt:formatNumber>
-					</c:if></td>
 				<td><c:if test="${bad.startValue!=0}">
 						<fmt:formatNumber value="${bad.startValue}" type="NUMBER"
+							maxFractionDigits="1"></fmt:formatNumber>
+					</c:if></td>
+				<td><c:if test="${bad.endValue!=0}">
+						<fmt:formatNumber value="${bad.endValue}" type="NUMBER"
 							maxFractionDigits="1"></fmt:formatNumber>
 					</c:if></td>
 				<td><c:if test="${bad.changedRatio!=0}">
@@ -192,4 +204,3 @@
 		</c:forEach>
 	</tbody>
 </table>
-<%-- </form:form> --%>

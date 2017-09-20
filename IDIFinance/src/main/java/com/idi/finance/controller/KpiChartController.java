@@ -201,6 +201,7 @@ public class KpiChartController {
 							logger.info("VẼ ĐƯỜNG: " + kpiMeasure.getMeasureName());
 							KpiMeasureBarChart barChart = new KpiMeasureBarChart(kpiMeasure);
 							KpiMeasureChartProcessor barProcessor = new KpiMeasureChartProcessor();
+							barProcessor.setThreshold(kpiChart.getThreshold());
 							KpiMeasureLineChart thresholdLine = new KpiMeasureLineChart(kpiMeasure);
 
 							model.addAttribute("barChart" + kpiMeasure.getMeasureId(), barChart);
