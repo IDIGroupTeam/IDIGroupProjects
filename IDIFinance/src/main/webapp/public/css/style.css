@@ -53,7 +53,7 @@ body {
 div.searchbox {
 	margin: 0px;
 	padding: 0px;
-	max-height: 100px;
+	max-height: 150px;
 	overflow: auto;
 }
 
