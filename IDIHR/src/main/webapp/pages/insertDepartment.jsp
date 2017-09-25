@@ -16,37 +16,28 @@
 </style>
 </head>
 <body>
-<div class="tab">
-  <a href="${pageContext.request.contextPath}/"><button>Quản lý nhân viên</button></a>
-  <a href="${pageContext.request.contextPath}/department/"><button class="btn btn-default">Quản lý phòng ban</button></a>
-  <a href="${pageContext.request.contextPath}/"><button disabled="disabled">Quản lý chức danh</button></a>
-</div>
 	<br />
-	<h4>
-		<b>${formTitle}</b>
-	</h4>
-
 	<form:form modelAttribute="departmentForm" method="POST"
 		action="addDepartment">
 		<div class="table table-bordered">	
 			<table class="table">
 				<tbody>
 					<tr>
-						<td>Mã phòng:</td>
+						<td bgcolor="#E6E6E6">Mã phòng:</td>
 						<td><form:input path="departmentId" size="12" required="required"/>	</td>						
 					</tr>
 					<tr>
-						<td>Tên phòng:</td>
+						<td bgcolor="#E6E6E6">Tên phòng:</td>
 						<td><form:input path="departmentName" size="24" required="required"/></td>
 					</tr>	
 					<tr>
-						<td>Ghi chú:</td>
-						<td colspan="5"><form:textarea path="desc" /></td>
+						<td bgcolor="#E6E6E6">Ghi chú:</td>
+						<td colspan="5"><form:textarea path="desc" cols="45"/></td>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
-						<td><input type="submit" value="Submit" /> <a
-							href="${pageContext.request.contextPath}/department/">Cancel</a></td>
+						<td><input type="submit" value="Lưu" /> <a
+							href="${pageContext.request.contextPath}/department/">Thoát</a></td>
 						<td>&nbsp;</td>
 					</tr>
 				</tbody>

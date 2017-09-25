@@ -35,6 +35,7 @@ public class DepartmentController {
 		try {
 			List<Department> list = departmentDAO.getDepartments();
 			model.addAttribute("departments", list);
+			model.addAttribute("formTitle", "Danh sách phòng ban");
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -108,6 +109,7 @@ public class DepartmentController {
 		try {
 			List<EmployeeInfo> list = employeeDAO.getEmployeesByDepartment(departmentId);
 			model.addAttribute("employees", list);
+			model.addAttribute("formTitle", "Danh sách nhân viên phòng " + departmentId);
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();

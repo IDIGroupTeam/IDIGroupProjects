@@ -49,6 +49,7 @@ public class EmployeeController {
 		try {
 			List<EmployeeInfo> list = employeeDAO.getEmployees();
 			model.addAttribute("employees", list);
+			model.addAttribute("formTitle", "Danh sách nhân viên");
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -172,6 +173,7 @@ public class EmployeeController {
 		if (employeeId != null) {
 			employeeInfo = this.employeeDAO.getEmployee(employeeId);
 			model.addAttribute("employeeForm", employeeInfo);
+			model.addAttribute("formTitle", "Thông tin nhân viên");
 		}
 		if (employeeInfo == null) {
 			return "redirect:/";

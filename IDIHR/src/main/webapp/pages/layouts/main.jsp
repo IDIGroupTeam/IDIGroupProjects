@@ -27,18 +27,16 @@
 
 	<div class="container-fluid">
 		<div class="row content">
-			<div class="col-sm-3 sidenav" style="padding: 1px;">
+			<div class="col-sm-2 sidenav" style="padding: 1px;">
 				<%@ include file="navigator.jsp"%>
 			</div>
-			<div class="col-sm-9" style="padding: 2px;">
+			<div class="col-sm-10" style="padding: 1px;" >
 				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h4>Quản Lý Nhân Sự</h4>
+					<div class="panel-heading" >
+						<h5><b>${formTitle}</b></h5>
 					</div>
-					<div class="panel-body">
-						<div class="panel-body">
-							<decorator:body></decorator:body>
-						</div>
+					<div class="panel-body tab-content">
+						<decorator:body></decorator:body>						
 					</div>
 				</div>
 			</div>
@@ -46,6 +44,5 @@
 	</div>
 
 	<%@ include file="footer.jsp"%>
-	<!-- </div> -->
 </body>
 </html>

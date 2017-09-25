@@ -7,21 +7,18 @@
 <title>Danh sách phòng ban</title>
 </head>
 <body>
-<div class="tab">
-  <a href="${pageContext.request.contextPath}/"><button>Quản lý nhân viên</button></a>
-  <a href="${pageContext.request.contextPath}/department/"><button class="btn btn-default">Quản lý phòng ban</button></a>
-  <a href="${pageContext.request.contextPath}/"><button disabled="disabled">Quản lý chức danh</button></a>
-</div>
-	<br />
 	<div class="table-responsive">
-		<h1>Danh sách phòng ban</h1>
-		<table class="table table-striped">
+		<a
+			href="${pageContext.request.contextPath}/department/insertDepartment"><button
+				class="btn btn-primary">Thêm mới phòng ban</button></a>
+		<br/><br/>			
+		<table class="table table-bordered">
 			<tr>
 				<th>Mã phòng</th>
 				<th>Tên phòng</th>
 				<th>Ghi chú</th>
-				<th>Danh sách NV của phòng</th>
-				<th>Edit</th>
+				<th>Danh sách NV theo phòng</th>
+				<th>Sửa thông tin</th>
 			</tr>
 			<c:forEach var="department" items="${departments}">
 				<tr>
@@ -29,10 +26,10 @@
 					<td>${department.departmentName}</td>
 					<td>${department.desc}</td>
 					<td><a
-						href="listEmployeeOfDepartment?departmentId=${department.departmentId}">Danh sách NV của phòng</a>
+						href="listEmployeeOfDepartment?departmentId=${department.departmentId}">Xem</a>
 					</td>
 					<td><a
-						href="editDepartment?departmentId=${department.departmentId}">Edit</a>
+						href="editDepartment?departmentId=${department.departmentId}">Sửa</a>
 					</td>
 				</tr>
 			</c:forEach>
@@ -40,9 +37,6 @@
 		<c:if test="${not empty message}">
 			<div class="alert alert-success">${message}</div>
 		</c:if>
-		<a
-			href="${pageContext.request.contextPath}/department/insertDepartment"><button
-				class="btn btn-primary">Thêm mới phòng ban</button></a>
 	</div>
 </body>
 </html>
