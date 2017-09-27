@@ -8,5 +8,5 @@
 	prefix="cewolf"%>
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 
-
+<h4>${heading}</h4>
 

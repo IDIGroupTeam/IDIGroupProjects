@@ -18,7 +18,7 @@
 	});
 </script>
 
-<h4>Biểu đồ KPI</h4>
+<h4>${heading}</h4>
 <c:forEach items="${kpiGroup.kpiCharts}" var="kpiChart">
 	<c:if test="${kpiChart.kpiMeasures==null }">
 		<div class="text-center">

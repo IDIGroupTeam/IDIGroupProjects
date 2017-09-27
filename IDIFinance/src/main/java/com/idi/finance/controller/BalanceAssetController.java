@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.idi.finance.bean.BalanceAssetData;
@@ -135,10 +134,10 @@ public class BalanceAssetController {
 		// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 		List<KpiGroup> kpiGroupsDb = kpiChartDAO.listKpiGroups();
 		model.addAttribute("kpiGroups", kpiGroupsDb);
-		
-		if (balanceSheetForm != null && balanceSheetForm.getFile() != null
-				&& balanceSheetForm.getFile().getSize() > 0) {
-			MultipartFile file = balanceSheetForm.getFile();
+
+		if (balanceSheetForm != null && balanceSheetForm.getBalanceAssetFile() != null
+				&& balanceSheetForm.getBalanceAssetFile().getSize() > 0) {
+			MultipartFile file = balanceSheetForm.getBalanceAssetFile();
 			logger.info(file.getName() + " - " + file.getSize());
 			try {
 				// Read & insert kpi groups and kpi charts
@@ -158,13 +157,13 @@ public class BalanceAssetController {
 				e.printStackTrace();
 				String comment = "Không thể đọc excel file " + file.getName()
 						+ ". Có thể file bị lỗi, không đúng định dạng, hoặc đường truyền chậm, xin mời thử lại.";
-				model.addAttribute("comment", comment);
+				model.addAttribute("balanceAssetComment", comment);
 				model.addAttribute("tab", "tabCNDL");
 				return "update";
 			}
 		} else {
 			String comment = "Hãy chọn file exel dữ liệu kế toán.";
-			model.addAttribute("comment", comment);
+			model.addAttribute("balanceAssetComment", comment);
 			model.addAttribute("tab", "tabCNDL");
 			return "update";
 		}

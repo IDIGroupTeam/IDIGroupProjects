@@ -1,7 +1,5 @@
 package com.idi.finance.form;
 
-import java.io.File;
-
 import org.springframework.web.multipart.MultipartFile;
 
 public class BalanceAssetForm {
@@ -19,7 +17,8 @@ public class BalanceAssetForm {
 	private int totalPages;
 	private int totalRecords;
 
-	private MultipartFile file;
+	private MultipartFile balanceAssetFile;
+	private MultipartFile taiKhoanFile;
 
 	public String[] getAssetCodes() {
 		return assetCodes;
@@ -109,12 +108,19 @@ public class BalanceAssetForm {
 		this.totalRecords = totalRecords;
 	}
 
-	public MultipartFile getFile() {
-		return file;
+	public MultipartFile getBalanceAssetFile() {
+		return balanceAssetFile;
 	}
 
-	public void setFile(MultipartFile file) {
-		this.file = file;
+	public void setBalanceAssetFile(MultipartFile balanceAssetFile) {
+		this.balanceAssetFile = balanceAssetFile;
 	}
 
+	public MultipartFile getTaiKhoanFile() {
+		return taiKhoanFile;
+	}
+
+	public void setTaiKhoanFile(MultipartFile taiKhoanFile) {
+		this.taiKhoanFile = taiKhoanFile;
+	}
 }

@@ -31,6 +31,7 @@
 		var currentTab = "${tab}";
 		$(".nav-tabs li").removeClass("active");
 		$("#" + currentTab).addClass("active");
+		$("#" + currentTab).parent().parent().addClass("active");
 	});
 </script>
 </head>
@@ -48,16 +49,68 @@
 					<div class="panel panel-default with-nav-tabs">
 						<div class="panel-heading">
 							<ul class="nav nav-tabs nav-pills nav-justified">
-								<c:forEach items="${kpiGroups}" var="kpiGroup">
-									<li id="tab${kpiGroup.groupId}"><a
-										href="${url}/bieudo/${kpiGroup.groupId}">${kpiGroup.groupName}</a></li>
-								</c:forEach>
-								<li id="tabBCDKT"><a href="${url}/candoiketoan">Bảng
-										cân đối kế toán</a></li>
-								<li id="tabCNDL"><a href="${url}/capnhatdulieu">Cập
-										nhật dữ liệu</a></li>
-								<li id="tabQLBD"><a href="${url}/quanlybieudo">Quản lý
-										biểu đồ</a></li>
+								<li class="dropdown"><a class="dropdown-toggle"
+									data-toggle="dropdown" href="#">Biểu đồ KPI<span
+										class="caret"></span>
+								</a>
+									<ul class="dropdown-menu">
+										<c:forEach items="${kpiGroups}" var="kpiGroup">
+											<li id="tab${kpiGroup.groupId}"><a
+												href="${url}/bieudo/${kpiGroup.groupId}">${kpiGroup.groupName}</a></li>
+										</c:forEach>
+										<li id="tabQLBD"><a href="${url}/quanlybieudo">Quản
+												lý biểu đồ</a></li>
+									</ul></li>
+								<li class="dropdown"><a class="dropdown-toggle"
+									data-toggle="dropdown" href="#">Chứng từ kế toán<span
+										class="caret"></span>
+								</a>
+									<ul class="dropdown-menu">
+										<li><a href="#">Phiếu thu</a></li>
+										<li><a href="#">Phiếu chi</a></li>
+										<li><a href="#">Xuất kho</a></li>
+										<li><a href="#">Nhập kho</a></li>
+										<li><a href="#">Bảng lương</a></li>
+										<li><a href="#">Hóa đơn mua bán</a></li>
+									</ul></li>
+								<li class="dropdown"><a class="dropdown-toggle"
+									data-toggle="dropdown" href="#">Sổ kế toán<span
+										class="caret"></span>
+								</a>
+									<ul class="dropdown-menu">
+										<li><a href="#">Nhật ký chung</a></li>
+										<li><a href="#">Sổ cái</a></li>
+										<li><a href="#">Sổ tiền vay</a></li>
+										<li><a href="#">Sổ tài sản cố định</a></li>
+										<li><a href="#">Sổ nguyên vật liệu</a></li>
+										<li><a href="#">Sổ vốn bằng tiền</a></li>
+										<li><a href="#">Quản lý sổ</a></li>
+									</ul></li>
+								<li class="dropdown"><a class="dropdown-toggle"
+									data-toggle="dropdown" href="#">Báo cáo tài chính<span
+										class="caret"></span>
+								</a>
+									<ul class="dropdown-menu">
+										<li id="tabBCDKT"><a href="${url}/candoiketoan">Bảng
+												cân đối kế toán</a></li>
+										<li><a href="#">Bảng cân đối phát sinh</a></li>
+										<li><a href="#">Bảng kết quả SXKD</a></li>
+										<li><a href="#">Bảng lưu chuyển tiền tệ</a></li>
+
+									</ul></li>
+								<li class="dropdown"><a class="dropdown-toggle"
+									data-toggle="dropdown" href="#">Quản trị<span class="caret"></span>
+								</a>
+									<ul class="dropdown-menu">
+										<li id="tabDMTK"><a href="${url}/danhmuctaikhoan">Danh
+												mục tài khoản</a></li>
+
+										<li><a href="#">Danh sách nhà cung cấp</a></li>
+										<li><a href="#">Danh sách khách hàng</a></li>
+
+										<li id="tabCNDL"><a href="${url}/capnhatdulieu">Cập
+												nhật dữ liệu</a></li>
+									</ul></li>
 							</ul>
 						</div>
 						<div class="panel-body tab-content">

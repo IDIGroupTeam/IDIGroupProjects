@@ -55,4 +55,9 @@
 	<bean id="kpiDAO" class="com.idi.finance.dao.impl.KpiChartDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
+	
+	<bean id="taiKhoanDAO" class="com.idi.finance.dao.impl.TaiKhoanDAOImpl">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+	
 </beans>

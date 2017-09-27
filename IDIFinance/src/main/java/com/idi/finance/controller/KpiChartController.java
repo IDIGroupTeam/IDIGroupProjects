@@ -215,6 +215,7 @@ public class KpiChartController {
 			// Dùng cho tạo giao diện
 			model.addAttribute("kpiGroups", kpiGroups);
 			model.addAttribute("kpiGroup", kpiGroup);
+			model.addAttribute("heading", kpiGroup.getGroupName());
 			model.addAttribute("kpiCharts", kpiCharts);
 			model.addAttribute("year", cal.get(Calendar.YEAR));
 
@@ -457,6 +458,7 @@ public class KpiChartController {
 		List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
 
 		model.addAttribute("kpiGroups", kpiGroups);
+		model.addAttribute("heading", "Quản lý biểu đồ KPI");
 		model.addAttribute("tab", "tabQLBD");
 
 		return "chartManagement";

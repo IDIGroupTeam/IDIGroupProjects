@@ -9,22 +9,42 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		$("#mainFinanceForm").attr("action", "${url}/luutrudulieu");
 		$("#mainFinanceForm").attr("method", "POST");
 		$("#mainFinanceForm").attr("enctype", "multipart/form-data");
-		
-		$("#uploadBut").click(function() {
+
+		$("#balanceAssetBut").click(function() {
+			$("#mainFinanceForm").attr("action", "${url}/luutrudulieu");
+			$("#mainFinanceForm").submit();
+		});
+
+		$("#taiKhoanBut").click(function() {
+			$("#mainFinanceForm").attr("action", "${url}/luuTaiKhoan");
 			$("#mainFinanceForm").submit();
 		});
 	});
 </script>
 
-<h4>Chọn file dữ liệu tài chính excel muốn cập nhật</h4>
+<h4>Cập nhật bảng cân đối kế toán, danh sách biểu đồ KPI</h4>
+<span>Chọn file dữ liệu tài chính excel muốn cập nhật</span>
+<br />
 
-<span style="color: red;">${comment}</span>
+<span style="color: red;">${balanceAssetComment}</span>
 <br />
-<input name="file" type="file" />
+<input name="balanceAssetFile" type="file" />
 <br />
-<input id="uploadBut" class="btn btn-info btn-sm" type="submit"
+<input id="balanceAssetBut" class="btn btn-info btn-sm" type="submit"
 	value="Cập nhật" />
+
+<hr>
+
+<h4>Cập nhật danh mục tài khoản</h4>
+<span>Chọn file dữ liệu tài chính excel muốn cập nhật</span>
+<br />
+<span style="color: red;">${taiKhoanComment}</span>
+<br />
+<input name="taiKhoanFile" type="file" />
+<br />
+<input id="taiKhoanBut" class="btn btn-info btn-sm" type="submit"
+	value="Cập nhật" />
+
 

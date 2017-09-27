@@ -23,6 +23,7 @@ import com.idi.finance.bean.BalanceAssetItem;
 import com.idi.finance.bean.BalanceSheet;
 import com.idi.finance.bean.KpiChart;
 import com.idi.finance.bean.KpiGroup;
+import com.idi.finance.bean.TaiKhoan;
 
 public class ExcelProcessor {
 	private static final Logger logger = Logger.getLogger(ExcelProcessor.class);
@@ -752,6 +753,98 @@ public class ExcelProcessor {
 		}
 
 		return bss;
+	}
+
+	public static List<TaiKhoan> docTaiKhoanExcel(InputStream in) throws IOException {
+		List<TaiKhoan> taiKhoanDm = new ArrayList<TaiKhoan>();
+
+		// Reading xls file
+		XSSFWorkbook workbook = new XSSFWorkbook(in);
+
+		// Reading sheet 1
+		XSSFSheet sheet = workbook.getSheetAt(0);
+		logger.info(sheet.getSheetName());
+
+		// Reading each row
+		Iterator<Row> rowIter = sheet.iterator();
+		while (rowIter.hasNext()) {
+			Row row = rowIter.next();
+			if (row.getRowNum() < 3) {
+				continue;
+			}
+
+			TaiKhoan taiKhoan = new TaiKhoan();
+			// Read by shell
+			Iterator<Cell> cellIter = row.iterator();
+			while (cellIter.hasNext()) {
+				Cell cell = cellIter.next();
+				String columnStrIndex = CellReference.convertNumToColString(cell.getColumnIndex());
+
+				// Đọc mã tài khoản cấp 1
+				if (columnStrIndex.equalsIgnoreCase("A")) {
+					CellType cellType = cell.getCellTypeEnum();
+					switch (cellType) {
+					case STRING:
+						String value = cell.getStringCellValue();
+
+						if (value != null && !value.trim().equals("")) {
+							taiKhoan.setMaTk(value.trim());
+						}
+						break;
+					case NUMERIC:
+						Double doubleValue = cell.getNumericCellValue();
+						taiKhoan.setMaTk(doubleValue.intValue() + "");
+						break;
+					}
+				}
+
+				// Đọc mã tài khoản cấp 2
+				if (columnStrIndex.equalsIgnoreCase("B")) {
+					CellType cellType = cell.getCellTypeEnum();
+					switch (cellType) {
+					case STRING:
+						String value = cell.getStringCellValue();
+
+						if (value != null && !value.trim().equals("")) {
+							taiKhoan.setMaTk(value.trim());
+							if (value.length() > 3) {
+								taiKhoan.setMaTkCha(value.substring(0, value.length() - 1));
+							}
+						}
+						break;
+					case NUMERIC:
+						Double doubleValue = cell.getNumericCellValue();
+						taiKhoan.setMaTk(doubleValue.intValue() + "");
+						String maTk = taiKhoan.getMaTk();
+						if (maTk != null) {
+							taiKhoan.setMaTkCha(maTk.substring(0, maTk.length() - 1));
+						}
+						break;
+					}
+				}
+
+				// Đọc tên tài khoản cấp
+				if (columnStrIndex.equalsIgnoreCase("C")) {
+					CellType cellType = cell.getCellTypeEnum();
+					switch (cellType) {
+					case STRING:
+						String value = cell.getStringCellValue();
+
+						if (value != null) {
+							taiKhoan.setTenTk(value.trim());
+						}
+						break;
+					case NUMERIC:
+						taiKhoan.setMaTk(cell.getNumericCellValue() + "");
+						break;
+					}
+				}
+			}
+			logger.info(taiKhoan);
+			taiKhoanDm.add(taiKhoan);
+		}
+
+		return taiKhoanDm;
 	}
 
 	public boolean validateData() {
