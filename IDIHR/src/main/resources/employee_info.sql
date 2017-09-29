@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `employee_info`
 --
 
-CREATE TABLE `employee_info` (
+CREATE TABLE `idigroup`.`employee_info` (
   `EMPLOYEE_ID` bigint(5) NOT NULL,
   `FULL_NAME` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `GENDER` varchar(6) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE `employee_info` (
 -- Dumping data for table `employee_info`
 --
 
-INSERT INTO `employee_info` (`EMPLOYEE_ID`, `FULL_NAME`, `GENDER`, `JOB_TITLE`, `WORK_STATUS`, `DOB`, `MARITAL_STATUS`, `LOGIN_ACCOUNT`, `PERSONAL_ID`, `ISSUE_DATE`, `DEPARTMENT`, `PHONE_NO`, `JOIN_DATE`, `OFFICIAL_JOIN_DATE`, `EMAIL`, `TERMINATION_DATE`, `REASON_FOR_LEAVE`, `CURRENT_ADDRESS`, `PERMANENT_ADDRESS`, `NOTE`, `NATION`, `IMAGE`, `EMER_NAME`, `EMER_PHONE_NO`, `BANK_NO`, `BANK_NAME`, `BANK_BRANCH`, `SALARY`, `SALA_SOCI_INSU`, `SOCIAL_INSU_NO`, `HEALTH_INSU_NO`, `PERCENT_SOCI_INSU`) VALUES
+INSERT INTO `idigroup`.`employee_info` (`EMPLOYEE_ID`, `FULL_NAME`, `GENDER`, `JOB_TITLE`, `WORK_STATUS`, `DOB`, `MARITAL_STATUS`, `LOGIN_ACCOUNT`, `PERSONAL_ID`, `ISSUE_DATE`, `DEPARTMENT`, `PHONE_NO`, `JOIN_DATE`, `OFFICIAL_JOIN_DATE`, `EMAIL`, `TERMINATION_DATE`, `REASON_FOR_LEAVE`, `CURRENT_ADDRESS`, `PERMANENT_ADDRESS`, `NOTE`, `NATION`, `IMAGE`, `EMER_NAME`, `EMER_PHONE_NO`, `BANK_NO`, `BANK_NAME`, `BANK_BRANCH`, `SALARY`, `SALA_SOCI_INSU`, `SOCIAL_INSU_NO`, `HEALTH_INSU_NO`, `PERCENT_SOCI_INSU`) VALUES
 (1, 'Nguyen Van Truong', 'Nam', 'CTV', 'Thá»­ viá»c', NULL, 'Äá»c thÃ¢n', 'truongnv', '01234567890', NULL, 'KT', '0912345678', '2017-01-08', '2017-01-08', 'truongnv.idigroup@gmail.com', NULL, '', 'Hoang Mai-HN', '', '', 'Viet Nam', NULL, '', '', '', '', '', '2.000.000', '0', '22221111', '33334444', ''),
 (2, 'Pham Xuan Tuyen', 'male', 'TP_CNTT', 'Cá»ng tÃ¡c viÃªn', '1990-11-11', 'married', 'tuyenpx', '11111111111', '2011-11-11', 'CNTT', '09999999999', '2017-01-08', '2017-01-08', 'tuyenpx.idigroup@gmail.com', '', '', 'Hoang Mai', 'Hung Yen', 'Edit: Test validate', 'Viet Nam', NULL, '', '', '', '', '', '5.000.000', '0', '22221111', '33334444', '0'),
 (3, 'Tran Dong Hai', 'female', 'CTV', 'Thá»­ viá»c', '1990-11-11', '', 'haitd', '11111111111', '2011-11-11', 'CNTT', '09999999999', '2017-01-08', '2017-01-08', 'haitd.idigroup@gmail.com', '', '', 'Cau giay', 'Thai binh', '', 'Viet Nam', NULL, '', '', '', '', '', '2.000.000', '0', '22221112', '33334445', '0.0'),
@@ -78,7 +78,7 @@ INSERT INTO `employee_info` (`EMPLOYEE_ID`, `FULL_NAME`, `GENDER`, `JOB_TITLE`, 
 --
 -- Indexes for table `employee_info`
 --
-ALTER TABLE `employee_info`
+ALTER TABLE `idigroup`.`employee_info`
   ADD PRIMARY KEY (`EMPLOYEE_ID`);
 
 --
@@ -88,7 +88,7 @@ ALTER TABLE `employee_info`
 --
 -- AUTO_INCREMENT for table `employee_info`
 --
-ALTER TABLE `employee_info`
+ALTER TABLE `idigroup`.`employee_info`
   MODIFY `EMPLOYEE_ID` bigint(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

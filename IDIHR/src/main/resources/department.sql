@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `department`
 --
 
-CREATE TABLE `department` (
+CREATE TABLE `idigroup`.`department` (
   `DEPARTMENT_ID` varchar(12) COLLATE utf8_unicode_ci NOT NULL,
   `DEPARTMENT_NAME` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `DESCRIPTION` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL
@@ -36,7 +36,7 @@ CREATE TABLE `department` (
 -- Dumping data for table `department`
 --
 
-INSERT INTO `department` (`DEPARTMENT_ID`, `DEPARTMENT_NAME`, `DESCRIPTION`) VALUES
+INSERT INTO `idigroup`.`department` (`DEPARTMENT_ID`, `DEPARTMENT_NAME`, `DESCRIPTION`) VALUES
 ('CNTT', 'Công nghệ thông tin', NULL),
 ('KHDT', 'Kế hoạch và đầu tư ', NULL),
 ('KT', 'kế toán', NULL),
@@ -50,7 +50,7 @@ INSERT INTO `department` (`DEPARTMENT_ID`, `DEPARTMENT_NAME`, `DESCRIPTION`) VAL
 --
 -- Indexes for table `department`
 --
-ALTER TABLE `department`
+ALTER TABLE `idigroup`.`department`
   ADD PRIMARY KEY (`DEPARTMENT_ID`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

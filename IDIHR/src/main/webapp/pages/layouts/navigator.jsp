@@ -9,7 +9,7 @@
 		<ul class="nav nav-pills nav-stacked">
 			<li><a class="active" href="/IDIHR">Nhân viên</a></li>
 			<li><a href="/IDIHR/department/">Phòng ban</a></li>
-			<li><a href="#">BHXH</a></li>
+			<li><a href="/IDIHR/insurance/">Bảo hiểm</a></li>
 			<li><a href="#">TNCN</a></li>
 			<li><a href="#">Khen thưởng/Kỷ luật</a></li>
 			<li><a href="#">HĐ lao động</a></li>

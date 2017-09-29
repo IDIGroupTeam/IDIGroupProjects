@@ -57,4 +57,8 @@
 	<bean id="departmentDAO" class="com.idi.hr.dao.DepartmentDAO">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
+	
+	<bean id="insuranceDAO" class="com.idi.hr.dao.InsuranceDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
 </beans>

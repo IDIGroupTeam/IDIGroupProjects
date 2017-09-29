@@ -49,7 +49,7 @@
 					</tr> --%>
 
 					<tr>
-						<td><form:input type="file" accept="image/jpeg" path="image" /></td>
+						<td nowrap="nowrap"><form:input type="file" accept="image/jpeg" path="image" /></td>
 						<td bgcolor="#E6E6E6">Họ tên(*):</td>
 						<td><form:input path="fullName" required="required" /></td>
 						<td bgcolor="#E6E6E6">Số đt:</td>
@@ -131,7 +131,7 @@
 						<td><form:input path="issueDate" type="date" /></td>
 
 
-						<td>Quốc tịch:<form:input path="nation" size="14" /></td>
+						<td>Quốc tịch: <form:input path="nation" size="14" /></td>
 
 					</tr>
 					<tr>
@@ -140,8 +140,8 @@
 
 						<td bgcolor="#E6E6E6">Đ/c thường trú:</td>
 						<td><form:input path="permanentAdress" /></td>
-
-
+						<td></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td colspan="6" nowrap="nowrap" bgcolor="#F6CED8">Liên lạc
@@ -175,7 +175,7 @@
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
-						<td><input type="submit" value="lưu" name="Lưu" /> <a
+						<td><input type="submit" value="Lưu" name="Lưu" /> <a
 							href="${pageContext.request.contextPath}/">Thoát</a></td>
 						<td>&nbsp;</td>
 					</tr>
