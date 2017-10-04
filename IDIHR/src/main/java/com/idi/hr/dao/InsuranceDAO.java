@@ -87,8 +87,8 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			log.info("INSERT_INSURANCE query: " + sql);
 			Object[] params = new Object[] { insurance.getEmployeeId(), insurance.getSocicalInsuNo(),
 					insurance.getSalarySocicalInsu(), insurance.getPercentSInsuC(), insurance.getPercentSInsuE(),
-					insurance.getPayType(), insurance.getSalaryZone(), insurance.getPlace(), insurance.getCompanyPay(),
-					insurance.getStatus(), insurance.gethInsuNo(), insurance.gethInsuPlace(), insurance.getComment() };
+					insurance.getPayType(), insurance.getSalaryZone(), insurance.getPlace(), insurance.getStatus(),
+					insurance.gethInsuNo(), insurance.gethInsuPlace(), insurance.getComment() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -111,9 +111,8 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			log.info("UPDATE_INSURANCE query: " + sql);
 			Object[] params = new Object[] { insurance.getEmployeeId(), insurance.getSalarySocicalInsu(),
 					insurance.getPercentSInsuC(), insurance.getPercentSInsuE(), insurance.getPayType(),
-					insurance.getSalaryZone(), insurance.getPlace(), insurance.getCompanyPay(), insurance.getStatus(),
-					insurance.gethInsuNo(), insurance.gethInsuPlace(), insurance.getComment(),
-					insurance.getSocicalInsuNo() };
+					insurance.getSalaryZone(), insurance.getPlace(), insurance.getStatus(), insurance.gethInsuNo(),
+					insurance.gethInsuPlace(), insurance.getComment(), insurance.getSocicalInsuNo() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -121,22 +120,24 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			throw e;
 		}
 	}
-	
-	//------------------------------process insurance -------------------------//
+
+	// ------------------------------process insurance -------------------------//
 
 	/**
 	 * Get ProcessInsurances from DB
 	 * 
 	 * @return List of ProcessInsurance
+	 * @param Insurance No
 	 * @throws Exception
 	 */
-	public List<ProcessInsurance> getProcessInsurances() {
+	public List<ProcessInsurance> getProcessInsurances(String SocialInsuranceNo) {
 
 		String sql = hr.getProperty("GET_PROCESS_INSURANCES").toString();
 		log.info("GET_PROCESS_INSURANCES query: " + sql);
+		Object[] params = new Object[] { SocialInsuranceNo };
 		ProcessInsuranceMapper mapper = new ProcessInsuranceMapper();
 
-		List<ProcessInsurance> list = jdbcTmpl.query(sql, mapper);
+		List<ProcessInsurance> list = jdbcTmpl.query(sql, params, mapper);
 		return list;
 
 	}
@@ -144,7 +145,7 @@ public class InsuranceDAO extends JdbcDaoSupport {
 	/**
 	 * get ProcessInsurance by Social Insurance No
 	 * 
-	 * @param Insurance No
+	 * @param Insurance No, fromDate
 	 * @return ProcessInsurance object
 	 */
 	public ProcessInsurance getProcessInsurance(String SocialInsuranceNo, String fromDate) {
@@ -173,8 +174,8 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			String sql = hr.getProperty("INSERT_PROCESS_INSURANCE").toString();
 			log.info("INSERT_PROCESS_INSURANCE query: " + sql);
 			Object[] params = new Object[] { processInsurance.getSocicalInsuNo(),
-					processInsurance.getSalarySocicalInsu(), processInsurance.getFromDate(), processInsurance.getToDate(),
-					processInsurance.getComment() };
+					processInsurance.getSalarySocicalInsu(), processInsurance.getCompanyPay(),
+					processInsurance.getFromDate(), processInsurance.getToDate(), processInsurance.getComment() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -195,8 +196,9 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			// update
 			String sql = hr.getProperty("UPDATE_PROCESS_INSURANCE").toString();
 			log.info("UPDATE_PROCESS_INSURANCE query: " + sql);
-			Object[] params = new Object[] { processInsurance.getSalarySocicalInsu(), processInsurance.getToDate(), processInsurance.getComment(),
-					processInsurance.getSocicalInsuNo(), processInsurance.getFromDate()};
+			Object[] params = new Object[] { processInsurance.getSalarySocicalInsu(), processInsurance.getCompanyPay(),
+					processInsurance.getToDate(), processInsurance.getComment(), processInsurance.getSocicalInsuNo(),
+					processInsurance.getFromDate() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -204,11 +206,12 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * Delete a ProcessInsurance from database
 	 * 
-	 * @param socicalInsuNo, fromDate
+	 * @param socicalInsuNo,
+	 *            fromDate
 	 */
 	public void deleteProcessInsurance(String socicalInsuNo, String fromDate) throws Exception {
 		try {
@@ -217,7 +220,7 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			// delete
 			String sql = hr.getProperty("DELETE_PROCESS_INSURANCE").toString();
 			log.info("DELETE_PROCESS_INSURANCE query: " + sql);
-			Object[] params = new Object[] {socicalInsuNo, fromDate};
+			Object[] params = new Object[] { socicalInsuNo, fromDate };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -225,5 +228,5 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			throw e;
 		}
 	}
-	
+
 }

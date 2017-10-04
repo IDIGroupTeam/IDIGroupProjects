@@ -157,7 +157,7 @@ public class InsuranceController {
 			String name = "";
 			name = employeeMap.get(employeeId);
 			model.addAttribute("name", name);
-			List<ProcessInsurance> list = insuranceDAO.getProcessInsurances();
+			List<ProcessInsurance> list = insuranceDAO.getProcessInsurances(socicalInsuNo);
 			model.addAttribute("pInsurances", list);
 			model.addAttribute("formTitle", "Quá trình đóng bảo hiểm của NV ");
 		} catch (Exception e) {

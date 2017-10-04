@@ -36,8 +36,8 @@
 					<td>${employee.department}</td>
 					<td>${employee.gender}</td>
 					<td>${employee.phoneNo}</td>
-					<td><a href="viewEmployee?employeeId=${employee.employeeId}">Xem</a></td>
-					<td><a href="editEmployee?employeeId=${employee.employeeId}">Sửa</a></td>
+					<td><a href="/IDIHR/viewEmployee?employeeId=${employee.employeeId}">Xem</a></td>
+					<td><a href="/IDIHR/editEmployee?employeeId=${employee.employeeId}">Sửa</a></td>
 				</tr>
 			</c:forEach>
 		</table>

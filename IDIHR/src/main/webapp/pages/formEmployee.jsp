@@ -174,10 +174,8 @@
 						<td colspan="5"><form:textarea path="note" cols="100" /></td>
 					</tr>
 					<tr>
-						<td>&nbsp;</td>
-						<td><input type="submit" value="Lưu" name="Lưu" /> <a
-							href="${pageContext.request.contextPath}/">Thoát</a></td>
-						<td>&nbsp;</td>
+						<td><input type="submit" value="Lưu" name="Lưu" />&nbsp; <a
+							href="${pageContext.request.contextPath}/"><button>Quay lại danh sách NV</button></a></td>						
 					</tr>
 				</tbody>
 			</table>

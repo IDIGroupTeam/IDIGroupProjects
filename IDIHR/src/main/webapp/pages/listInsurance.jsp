@@ -18,7 +18,7 @@
 				<th>Mã NV</th>
 				<th>Số sổ BHXH</th>
 				<th>Lương BH</th>
-				<th>Cty đóng BHXH</th>
+				
 				<th>Đóng tại</th>
 				<th>Tình trạng đóng BHXH</th>
 				<th>Số thẻ BHYT</th>
@@ -33,7 +33,7 @@
 					<td>${insurance.employeeId}</td>
 					<td>${insurance.socicalInsuNo}</td>
 					<td>${insurance.salarySocicalInsu}</td>
-					<td>${insurance.companyPay}</td>
+					
 					<td>${insurance.place}</td>
 					<td>${insurance.status}</td>
 					<td>${insurance.hInsuNo}</td>
