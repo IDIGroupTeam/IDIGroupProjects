@@ -13,7 +13,7 @@
 	<br />
 	<div class="table-responsive">
 		
-		<table class="table table-striped" border="1">
+		<table class="table table-striped">
 			<tr>
 				<th>Mã NV</th>
 				<th>Họ tên</th>

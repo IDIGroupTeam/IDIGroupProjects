@@ -69,7 +69,7 @@
 						<td colspan="3"><c:out value="${insuranceForm.comment}" /></td>
 				<tr>		
 				<td></td>			
-					<td align="right"><a href="editInsurence?socicalInsuNo=${insurance.socicalInsuNo}"><button>Sửa</button></a>
+					<td align="right"><a href="editInsurance?socicalInsuNo=${insuranceForm.socicalInsuNo}"><button>Sửa</button></a>
 					 <a href="${pageContext.request.contextPath}/insurance/"><button>Quay lại danh sách</button></a></td>					
 				</tr>
 				</tbody>

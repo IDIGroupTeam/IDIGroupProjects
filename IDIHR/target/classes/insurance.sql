@@ -67,3 +67,18 @@ ALTER TABLE `idigroup`.`INSURANCE`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `idigroup`.`insurance`
+--
+
+CREATE TABLE `idigroup`.`inprocess_insurance` (
+  `SOCIAL_INSU_NO` varchar(12) COLLATE utf8_unicode_ci NOT NULL,
+  `SALA_SOCI_INSU` varchar(12) COLLATE utf8_unicode_ci NOT NULL,
+  `FROM_DATE` varchar(12) COLLATE utf8_unicode_ci NOT NULL,
+  `TO_DATE` varchar(12) COLLATE utf8_unicode_ci NOT NULL,
+  `COMMENT` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
