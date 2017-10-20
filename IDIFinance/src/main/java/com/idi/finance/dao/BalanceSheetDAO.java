@@ -3,8 +3,7 @@ package com.idi.finance.dao;
 import java.util.Date;
 import java.util.List;
 
-import com.idi.finance.bean.BalanceAssetData;
-import com.idi.finance.bean.BalanceSheet;
+import com.idi.finance.bean.cdkt.BalanceAssetData;
 
 public interface BalanceSheetDAO {
 	public void insertOrUpdateBAs(List<BalanceAssetData> bas);
@@ -17,21 +16,13 @@ public interface BalanceSheetDAO {
 
 	public List<BalanceAssetData> listSRssByAssetsCodeAndYear(String assetCode, Date year);
 
-	public void insertOrUpdateBSs(List<BalanceSheet> bss);
+	public void insertOrUpdateCFs(List<BalanceAssetData> srs);
 
-	public List<BalanceSheet> listBSsByAssetsCodeAndYear(String assetsCode, Date year);
-
-	public List<BalanceSheet> listBSsByDate(Date date);
+	public List<BalanceAssetData> listCFssByAssetsCodeAndYear(String assetCode, Date year);
 
 	public List<String> listBSAssetsCodes();
 
 	public List<Date> listBSAssetsPeriods();
-
-	public void insertOrUpdateSR(List<BalanceSheet> srs);
-
-	public List<BalanceSheet> listSRsByAssetsCodeAndYear(String assetsCode, Date year);
-
-	public List<BalanceSheet> listSRsByDate(Date date);
 
 	public List<String> listSRAssetsCodes();
 

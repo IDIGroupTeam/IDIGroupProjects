@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.idi.finance.bean.BalanceAssetData;
-import com.idi.finance.bean.BalanceAssetItem;
-import com.idi.finance.bean.KpiChart;
-import com.idi.finance.bean.KpiGroup;
-import com.idi.finance.bean.KpiMeasure;
+import com.idi.finance.bean.bieudo.KpiChart;
+import com.idi.finance.bean.bieudo.KpiGroup;
+import com.idi.finance.bean.bieudo.KpiMeasure;
+import com.idi.finance.bean.cdkt.BalanceAssetData;
+import com.idi.finance.bean.cdkt.BalanceAssetItem;
 import com.idi.finance.charts.KpiMeasureBarChart;
 import com.idi.finance.charts.KpiMeasureChartProcessor;
 import com.idi.finance.charts.KpiMeasureLineChart;

@@ -15,9 +15,9 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 
-import com.idi.finance.bean.KpiChart;
-import com.idi.finance.bean.KpiGroup;
-import com.idi.finance.bean.KpiMeasure;
+import com.idi.finance.bean.bieudo.KpiChart;
+import com.idi.finance.bean.bieudo.KpiGroup;
+import com.idi.finance.bean.bieudo.KpiMeasure;
 import com.idi.finance.dao.KpiChartDAO;
 
 public class KpiChartDAOImpl implements KpiChartDAO {
@@ -243,7 +243,7 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 			kpiChart.setHomeFlag(rs.getBoolean("HOME_FLAG"));
 			kpiChart.setChartTitle(rs.getString("CHART_TITLE"));
 			kpiChart.setThreshold(rs.getDouble("THRESHOLD"));
-			
+
 			// logger.info(kpiChart);
 
 			return kpiChart;

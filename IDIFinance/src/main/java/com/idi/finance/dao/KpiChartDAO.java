@@ -2,9 +2,9 @@ package com.idi.finance.dao;
 
 import java.util.List;
 
-import com.idi.finance.bean.KpiChart;
-import com.idi.finance.bean.KpiGroup;
-import com.idi.finance.bean.KpiMeasure;
+import com.idi.finance.bean.bieudo.KpiChart;
+import com.idi.finance.bean.bieudo.KpiGroup;
+import com.idi.finance.bean.bieudo.KpiMeasure;
 
 public interface KpiChartDAO {
 	public void insertOrUpdateKpiGroups(List<KpiGroup> kpiGroups);

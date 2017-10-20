@@ -14,9 +14,9 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Week;
 import org.jfree.data.xy.XYDataset;
 
-import de.laures.cewolf.DatasetProduceException;
+import com.idi.finance.bean.bieudo.KpiMeasure;
 
-import com.idi.finance.bean.KpiMeasure;
+import de.laures.cewolf.DatasetProduceException;
 
 public class KpiMeasureBarChart extends KpiMeasureChart {
 	private static final Logger logger = Logger.getLogger(KpiMeasureBarChart.class);

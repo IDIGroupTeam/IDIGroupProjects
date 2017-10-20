@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.idi.finance.bean.BalanceAssetData;
-import com.idi.finance.bean.KpiGroup;
+import com.idi.finance.bean.bieudo.KpiGroup;
+import com.idi.finance.bean.cdkt.BalanceAssetData;
 import com.idi.finance.dao.BalanceSheetDAO;
 import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.form.BalanceAssetForm;
@@ -152,7 +152,11 @@ public class BalanceAssetController {
 				List<BalanceAssetData> srs = ExcelProcessor.readSaleResultSheetExcel(file.getInputStream());
 				balanceSheetDAO.insertOrUpdateSRs(srs);
 
-				return "redirect:/";
+				// Read & insert cash flows data
+				List<BalanceAssetData> cashFlows = ExcelProcessor.readCashFlowsSheetExcel(file.getInputStream());
+				balanceSheetDAO.insertOrUpdateCFs(cashFlows);
+
+				return "redirect:/capnhatdulieu";
 			} catch (Exception e) {
 				e.printStackTrace();
 				String comment = "Không thể đọc excel file " + file.getName()

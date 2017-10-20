@@ -50,7 +50,7 @@
 			$("#mainFinanceForm").submit();
 		});
 		
-		$("#balanceAssetTbl").Tabledit({
+		/* $("#balanceAssetTbl").Tabledit({
 			editButton: false,
             removeButton: false,
             deleteButton: false,
@@ -59,7 +59,7 @@
 				identifier: [[2, "changedAssetCodes"],[7,"changedAssetPeriods"]],
 				editable: [[4, "startValues"], [5, "endValues"]]
 			}
-		});
+		}); */
 	});
 </script>
 

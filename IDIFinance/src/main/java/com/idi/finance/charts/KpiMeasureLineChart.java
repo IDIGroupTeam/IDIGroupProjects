@@ -14,7 +14,7 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Week;
 import org.jfree.data.xy.XYDataset;
 
-import com.idi.finance.bean.KpiMeasure;
+import com.idi.finance.bean.bieudo.KpiMeasure;
 
 import de.laures.cewolf.DatasetProduceException;
 

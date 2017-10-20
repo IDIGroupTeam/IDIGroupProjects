@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.idi.finance.bean.KpiGroup;
-import com.idi.finance.bean.TaiKhoan;
+import com.idi.finance.bean.bieudo.KpiGroup;
+import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BalanceSheetDAO;
 import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
@@ -32,21 +32,20 @@ public class TaiKhoanController {
 	@Autowired
 	TaiKhoanDAO taiKhoanDAO;
 
-	@RequestMapping("/danhmuctaikhoan")
-	public String danhMucTaiKhoan(Model model) {
+	@RequestMapping("/danhsachtaikhoan")
+	public String danhSachTaiKhoan(Model model) {
 		// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 		List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
 		model.addAttribute("kpiGroups", kpiGroups);
 
-		List<TaiKhoan> taiKhoanDm = taiKhoanDAO.listTaiKhoanDm();
-		model.addAttribute("taiKhoanDm", taiKhoanDm);
+		List<LoaiTaiKhoan> taiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+		model.addAttribute("taiKhoanDs", taiKhoanDs);
 
 		model.addAttribute("tab", "tabDMTK");
-		return "danhMucTaiKhoan";
+		return "danhSachTaiKhoan";
 	}
 
 	@RequestMapping(value = "/luuTaiKhoan", method = RequestMethod.POST)
-	// public String save(Model model, @RequestParam("file") MultipartFile file) {
 	public String save(Model model, @ModelAttribute("mainFinanceForm") BalanceAssetForm balanceSheetForm) {
 		// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 		List<KpiGroup> kpiGroupsDb = kpiChartDAO.listKpiGroups();
@@ -58,10 +57,10 @@ public class TaiKhoanController {
 			logger.info(file.getName() + " - " + file.getSize());
 			try {
 				// Đọc và cập nhật danh mục tài khoản
-				List<TaiKhoan> taiKhoanDm = ExcelProcessor.docTaiKhoanExcel(file.getInputStream());
-				taiKhoanDAO.insertOrUpdateTaiKhoanDm(taiKhoanDm);
+				List<LoaiTaiKhoan> taiKhoanDs = ExcelProcessor.docTaiKhoanExcel(file.getInputStream());
+				taiKhoanDAO.insertOrUpdateTaiKhoanDs(taiKhoanDs);
 
-				return "redirect:/danhmuctaikhoan";
+				return "redirect:/danhsachtaikhoan";
 			} catch (Exception e) {
 				e.printStackTrace();
 				String comment = "Không thể đọc excel file " + file.getName()

@@ -18,12 +18,11 @@ import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.idi.finance.bean.BalanceAssetData;
-import com.idi.finance.bean.BalanceAssetItem;
-import com.idi.finance.bean.BalanceSheet;
-import com.idi.finance.bean.KpiChart;
-import com.idi.finance.bean.KpiGroup;
-import com.idi.finance.bean.TaiKhoan;
+import com.idi.finance.bean.bieudo.KpiChart;
+import com.idi.finance.bean.bieudo.KpiGroup;
+import com.idi.finance.bean.cdkt.BalanceAssetData;
+import com.idi.finance.bean.cdkt.BalanceAssetItem;
+import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class ExcelProcessor {
 	private static final Logger logger = Logger.getLogger(ExcelProcessor.class);
@@ -272,166 +271,6 @@ public class ExcelProcessor {
 		return bss;
 	}
 
-	public static List<BalanceSheet> readBalanceSheetExcel(InputStream in) throws IOException {
-		List<BalanceSheet> bss = new ArrayList<BalanceSheet>();
-
-		// Reading xls file
-		XSSFWorkbook workbook = new XSSFWorkbook(in);
-
-		// Reading sheet 35
-		XSSFSheet sheet = workbook.getSheetAt(35);
-		logger.info(sheet.getSheetName());
-
-		// Reading each row
-		Iterator<Row> rowIter = sheet.iterator();
-		while (rowIter.hasNext()) {
-			Row row = rowIter.next();
-			if (row.getRowNum() < 17) {
-				continue;
-			}
-
-			BalanceSheet bs = new BalanceSheet();
-			// Read by shell
-			Iterator<Cell> cellIter = row.iterator();
-			while (cellIter.hasNext()) {
-				Cell cell = cellIter.next();
-				String columnStrIndex = CellReference.convertNumToColString(cell.getColumnIndex());
-
-				// Read name
-				if (columnStrIndex.equalsIgnoreCase("B")) {
-					CellType cellType = cell.getCellTypeEnum();
-					switch (cellType) {
-					case STRING:
-						String name = cell.getStringCellValue();
-						String rule = parseRule(name);
-						name = parseName(name);
-
-						bs.setAssetsName(Utils.format(name));
-						bs.setRule(rule);
-						break;
-					}
-				}
-
-				// Read code
-				if (columnStrIndex.equalsIgnoreCase("G")) {
-					CellType cellType = cell.getCellTypeEnum();
-					switch (cellType) {
-					case NUMERIC:
-						String code = cell.getNumericCellValue() + "";
-						bs.setAssetsCode(code.substring(0, code.indexOf(".")));
-						break;
-					case STRING:
-						bs.setAssetsCode(cell.getStringCellValue());
-						break;
-					}
-				}
-
-				// Read description
-				if (columnStrIndex.equalsIgnoreCase("H")) {
-					CellType cellType = cell.getCellTypeEnum();
-					switch (cellType) {
-					case STRING:
-						bs.setNote(cell.getStringCellValue());
-						break;
-					}
-				}
-
-				// Read end value
-				if (columnStrIndex.equalsIgnoreCase("I")) {
-					CellType cellType = cell.getCellTypeEnum();
-					switch (cellType) {
-					case FORMULA:
-						// Formula
-						FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
-
-						// Get value
-						CellValue value = evaluator.evaluate(cell);
-						CellType cellValueType = value.getCellTypeEnum();
-						switch (cellValueType) {
-						case NUMERIC:
-							bs.setEndValue(value.getNumberValue());
-							break;
-						}
-						break;
-					case NUMERIC:
-						bs.setEndValue(cell.getNumericCellValue());
-						break;
-					}
-				}
-
-				// Read start value
-				if (columnStrIndex.equalsIgnoreCase("J")) {
-					CellType cellType = cell.getCellTypeEnum();
-					switch (cellType) {
-					case FORMULA:
-						// Formula
-						FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
-
-						// Get value
-						CellValue value = evaluator.evaluate(cell);
-						CellType cellValueType = value.getCellTypeEnum();
-						switch (cellValueType) {
-						case NUMERIC:
-							bs.setStartValue(value.getNumberValue());
-							break;
-						}
-						break;
-					case NUMERIC:
-						bs.setStartValue(cell.getNumericCellValue());
-						break;
-					}
-				}
-
-				// Read changed ration
-				if (columnStrIndex.equalsIgnoreCase("M")) {
-					CellType cellType = cell.getCellTypeEnum();
-					switch (cellType) {
-					case FORMULA:
-						// Formula
-						FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
-
-						// Get value
-						CellValue value = evaluator.evaluate(cell);
-						CellType cellValueType = value.getCellTypeEnum();
-						switch (cellValueType) {
-						case NUMERIC:
-							bs.setChangedRatio(value.getNumberValue());
-							break;
-						}
-						break;
-					}
-				}
-
-				// Read period
-				if (columnStrIndex.equalsIgnoreCase("N")) {
-					CellType cellType = cell.getCellTypeEnum();
-					switch (cellType) {
-					case FORMULA:
-						// Formula
-						FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
-
-						// Get value
-						CellValue value = evaluator.evaluate(cell);
-						CellType cellValueType = value.getCellTypeEnum();
-						switch (cellValueType) {
-						case STRING:
-							bs.setAssetsPeriod(getPeriod(value.getStringValue()));
-							break;
-						}
-						break;
-					case STRING:
-						bs.setAssetsPeriod(getPeriod(cell.getStringCellValue()));
-						break;
-					}
-				}
-			}
-
-			bss.add(bs);
-		}
-
-		return bss;
-	}
-
 	public static List<BalanceAssetData> readSaleResultSheetExcel(InputStream in) throws IOException {
 		List<BalanceAssetData> bss = new ArrayList<BalanceAssetData>();
 
@@ -595,14 +434,14 @@ public class ExcelProcessor {
 		return bss;
 	}
 
-	public static List<BalanceSheet> readSaleResultExcel(InputStream in) throws IOException {
-		List<BalanceSheet> bss = new ArrayList<BalanceSheet>();
+	public static List<BalanceAssetData> readCashFlowsSheetExcel(InputStream in) throws IOException {
+		List<BalanceAssetData> bss = new ArrayList<BalanceAssetData>();
 
 		// Reading xls file
 		XSSFWorkbook workbook = new XSSFWorkbook(in);
 
-		// Reading sheet 37
-		XSSFSheet sheet = workbook.getSheetAt(37);
+		// Reading sheet 38
+		XSSFSheet sheet = workbook.getSheetAt(38);
 		logger.info(sheet.getSheetName());
 
 		// Reading each row
@@ -613,7 +452,10 @@ public class ExcelProcessor {
 				continue;
 			}
 
-			BalanceSheet bs = new BalanceSheet();
+			BalanceAssetData bs = new BalanceAssetData();
+			BalanceAssetItem bai = new BalanceAssetItem();
+			bs.setAsset(bai);
+
 			// Read by shell
 			Iterator<Cell> cellIter = row.iterator();
 			while (cellIter.hasNext()) {
@@ -629,8 +471,8 @@ public class ExcelProcessor {
 						String rule = parseRule(name);
 						name = parseName(name);
 
-						bs.setAssetsName(Utils.format(name));
-						bs.setRule(rule);
+						bs.getAsset().setAssetName(Utils.format(name));
+						bs.getAsset().setRule(rule);
 						break;
 					}
 				}
@@ -641,10 +483,10 @@ public class ExcelProcessor {
 					switch (cellType) {
 					case NUMERIC:
 						String code = cell.getNumericCellValue() + "";
-						bs.setAssetsCode(code.substring(0, code.indexOf(".")));
+						bs.getAsset().setAssetCode(code.substring(0, code.indexOf(".")));
 						break;
 					case STRING:
-						bs.setAssetsCode(cell.getStringCellValue());
+						bs.getAsset().setAssetCode(cell.getStringCellValue());
 						break;
 					}
 				}
@@ -654,7 +496,7 @@ public class ExcelProcessor {
 					CellType cellType = cell.getCellTypeEnum();
 					switch (cellType) {
 					case STRING:
-						bs.setNote(cell.getStringCellValue());
+						bs.getAsset().setNote(cell.getStringCellValue());
 						break;
 					}
 				}
@@ -738,25 +580,26 @@ public class ExcelProcessor {
 						CellType cellValueType = value.getCellTypeEnum();
 						switch (cellValueType) {
 						case STRING:
-							bs.setAssetsPeriod(getPeriod(value.getStringValue()));
+							bs.setPeriod(getPeriod(value.getStringValue()));
 							break;
 						}
 						break;
 					case STRING:
-						bs.setAssetsPeriod(getPeriod(cell.getStringCellValue()));
+						bs.setPeriod(getPeriod(cell.getStringCellValue()));
 						break;
 					}
 				}
 			}
 
+			// logger.info(bs);
 			bss.add(bs);
 		}
 
 		return bss;
 	}
 
-	public static List<TaiKhoan> docTaiKhoanExcel(InputStream in) throws IOException {
-		List<TaiKhoan> taiKhoanDm = new ArrayList<TaiKhoan>();
+	public static List<LoaiTaiKhoan> docTaiKhoanExcel(InputStream in) throws IOException {
+		List<LoaiTaiKhoan> taiKhoanDm = new ArrayList<LoaiTaiKhoan>();
 
 		// Reading xls file
 		XSSFWorkbook workbook = new XSSFWorkbook(in);
@@ -773,7 +616,7 @@ public class ExcelProcessor {
 				continue;
 			}
 
-			TaiKhoan taiKhoan = new TaiKhoan();
+			LoaiTaiKhoan taiKhoan = new LoaiTaiKhoan();
 			// Read by shell
 			Iterator<Cell> cellIter = row.iterator();
 			while (cellIter.hasNext()) {
@@ -788,7 +631,8 @@ public class ExcelProcessor {
 						String value = cell.getStringCellValue();
 
 						if (value != null && !value.trim().equals("")) {
-							taiKhoan.setMaTk(value.trim());
+							value = value.trim();
+							taiKhoan.setMaTk(value);
 						}
 						break;
 					case NUMERIC:
@@ -806,7 +650,8 @@ public class ExcelProcessor {
 						String value = cell.getStringCellValue();
 
 						if (value != null && !value.trim().equals("")) {
-							taiKhoan.setMaTk(value.trim());
+							value = value.trim();
+							taiKhoan.setMaTk(value);
 							if (value.length() > 3) {
 								taiKhoan.setMaTkCha(value.substring(0, value.length() - 1));
 							}

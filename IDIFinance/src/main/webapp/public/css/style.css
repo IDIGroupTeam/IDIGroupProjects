@@ -74,13 +74,11 @@ div.searchbox {
 }
 
 .small-block td.good {
-	/* background-color: green; */
-	
+	background-color: green;
 }
 
 .small-block  td.bad {
-	/* background-color: red; */
-	
+	background-color: red;
 }
 
 .login {
@@ -89,4 +87,15 @@ div.searchbox {
 
 .login:hover {
 	color: #f0f0f0;
+}
+
+.error {
+	color: #ff0000;
+	font-style: italic;
+	font-weight: bold;
+	font-size: 90%;
+}
+
+.dinhkhoan tr td {
+	width: 200px;
 }

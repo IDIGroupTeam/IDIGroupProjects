@@ -4,13 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import com.idi.finance.bean.BalanceAssetData;
-import com.idi.finance.bean.BalanceAssetItem;
-import com.idi.finance.bean.BalanceSheet;
 
 public class Utils {
 	public static String format(String str) {
@@ -22,23 +17,6 @@ public class Utils {
 			str = str.substring(0, 1).toUpperCase() + str.substring(1);
 		}
 		return str;
-	}
-
-	public static HashMap<Date, BalanceSheet> convertList2Map(List<BalanceSheet> bss) {
-		if (bss != null) {
-			HashMap<Date, BalanceSheet> map = new HashMap<>();
-
-			Iterator<BalanceSheet> iter = bss.iterator();
-			while (iter.hasNext()) {
-				BalanceSheet bs = iter.next();
-
-				if (bs.getAssetsPeriod() != null) {
-					map.put(bs.getAssetsPeriod(), bs);
-				}
-			}
-			return map;
-		}
-		return null;
 	}
 
 	public static List<Date> convertArray2List(String[] periods) {

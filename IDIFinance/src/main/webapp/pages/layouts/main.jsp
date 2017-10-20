@@ -6,23 +6,27 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="${url}/public/css/bootstrap.min.css" />
 <link rel="stylesheet" href="${url}/public/css/paneltab.css" />
+<link rel="stylesheet" href="${url}/public/css/bootstrap-dialog.min.css" />
 <link rel="stylesheet"
 	href="${url}/public/css/bootstrap-multiselect.css" />
+<link rel="stylesheet" href="${url}/public/css/bootcomplete.css" />
 <link rel="stylesheet" href="${url}/public/css/tabledit.css" />
 <link rel="stylesheet" href="${url}/public/css/style.css" />
 
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="${url}/public/js/jquery.min.js"></script>
 <script src="${url}/public/js/bootstrap.min.js"></script>
+<script src="${url}/public/js/bootstrap-dialog.min.js"></script>
 <script src="${url}/public/js/bootstrap-multiselect.js"></script>
+<script src="${url}/public/js/jquery.bootcomplete.js"></script>
 <script src="${url}/public/js/jquery.tabledit.js"></script>
+<script src="${url}/public/js/script.js"></script>
 
 <title>Tập đoàn IDI - <tiles:getAsString name="title" /></title>
 <script type="text/javascript">
@@ -38,7 +42,7 @@
 <body>
 	<tiles:insertAttribute name="header" />
 	<form:form id="mainFinanceForm" action="" method="GET"
-		modelAttribute="mainFinanceForm">
+		modelAttribute="mainFinanceForm" acceptCharset="UTF-8">
 		<div class="container-fluid">
 			<div class="row content">
 				<div class="col-sm-2 sidenav" style="padding: 2px;">
@@ -66,12 +70,14 @@
 										class="caret"></span>
 								</a>
 									<ul class="dropdown-menu">
-										<li><a href="#">Phiếu thu</a></li>
-										<li><a href="#">Phiếu chi</a></li>
-										<li><a href="#">Xuất kho</a></li>
-										<li><a href="#">Nhập kho</a></li>
-										<li><a href="#">Bảng lương</a></li>
-										<li><a href="#">Hóa đơn mua bán</a></li>
+										<li id="tabCTPT"><a href="${url}/danhsachphieuthu">Phiếu
+												thu</a></li>
+										<li id="tabCTPC"><a href="${url}/danhsachphieuchi">Phiếu
+												chi</a></li>
+										<li id="tabCTBN"><a href="${url}/danhsachbaono">Báo
+												nợ</a></li>
+										<li id="tabCTBC"><a href="${url}/danhsachbaoco">Báo
+												có</a></li>
 									</ul></li>
 								<li class="dropdown"><a class="dropdown-toggle"
 									data-toggle="dropdown" href="#">Sổ kế toán<span
@@ -102,11 +108,14 @@
 									data-toggle="dropdown" href="#">Quản trị<span class="caret"></span>
 								</a>
 									<ul class="dropdown-menu">
-										<li id="tabDMTK"><a href="${url}/danhmuctaikhoan">Danh
-												mục tài khoản</a></li>
+										<li id="tabDSNT"><a href="#">Danh sách ngoại tệ</a></li>
+										<li id="tabDMTK"><a href="${url}/danhsachtaikhoan">Danh
+												sách tài khoản</a></li>
 
-										<li><a href="#">Danh sách nhà cung cấp</a></li>
-										<li><a href="#">Danh sách khách hàng</a></li>
+										<li id="tabDSNCC"><a href="${url}/danhsachnhacungcap">Danh
+												sách nhà cung cấp</a></li>
+										<li id="tabDSKH"><a href="${url}/danhsachkhachhang">Danh
+												sách khách hàng</a></li>
 
 										<li id="tabCNDL"><a href="${url}/capnhatdulieu">Cập
 												nhật dữ liệu</a></li>
