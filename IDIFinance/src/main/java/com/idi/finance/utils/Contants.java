@@ -20,8 +20,8 @@ public class Contants {
 	private static final int PIE_CHART = 4;
 
 	// Hằng số nghiệp vụ kế toán
-	public static final int NO = 1;
-	public static final int CO = 2;
+	public static final int NO = 0;
+	public static final int CO = 1;
 
 	// Hằng số cho phần chứng từ: Phiếu thu, chi, báo có, báo nợ
 	public static final String CHUNG_TU_TT_PHIEU_THU = "TT_PT";

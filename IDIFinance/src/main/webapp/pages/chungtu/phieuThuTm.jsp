@@ -1,3 +1,4 @@
+<%@page import="com.idi.finance.utils.Contants"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
@@ -26,7 +27,7 @@
 		var autocomplete = $('#doiTuong\\.tenDt').bootcomplete({
 			url : url,
 			minLength : 1,
-			idFieldName : "doiTuong.maDt",
+			idFieldName : "doiTuong\\.maDt",
 			preprocess : function(json) {
 				var jsonTmpl = new Array(json.length);
 				if (loaiDt == 1) {
@@ -297,7 +298,7 @@
 			<c:forEach items="${mainFinanceForm.taiKhoanDs}" var="taiKhoan"
 				varStatus="status">
 				<c:choose>
-					<c:when test="${taiKhoan.ghiNo == 0}">
+					<c:when test="${taiKhoan.ghiNo == Contants.NO}">
 						<tr id="${status.index}">
 							<td><form:select cssClass="form-control"
 									path="taiKhoanDs[${status.index}].taiKhoan.maTk"
@@ -308,14 +309,17 @@
 							<td><form:input cssClass="form-control"
 									path="taiKhoanDs[${status.index}].soTien" placeholder="0.0" />
 							</td>
-							<td><form:errors path="taiKhoanDs[${status.index}].soTien"
+							<td><form:errors
+									path="taiKhoanDs[${status.index}].taiKhoan.maTk"
+									cssClass="error" /><br />
+							<form:errors path="taiKhoanDs[${status.index}].soTien"
 									cssClass="error" /></td>
 							<td></td>
 							<td></td>
 							<td></td>
 						</tr>
 					</c:when>
-					<c:when test="${taiKhoan.ghiNo == 1}">
+					<c:when test="${taiKhoan.ghiNo == Contants.CO}">
 						<tr id="${status.index}">
 							<td></td>
 							<td></td>
@@ -330,7 +334,10 @@
 							<td><form:input cssClass="form-control"
 									path="taiKhoanDs[${status.index}].soTien" placeholder="0.0" />
 							</td>
-							<td><form:errors path="taiKhoanDs[${status.index}].soTien"
+							<td><form:errors
+									path="taiKhoanDs[${status.index}].taiKhoan.maTk"
+									cssClass="error" /><br />
+							<form:errors path="taiKhoanDs[${status.index}].soTien"
 									cssClass="error" /></td>
 						</tr>
 					</c:when>

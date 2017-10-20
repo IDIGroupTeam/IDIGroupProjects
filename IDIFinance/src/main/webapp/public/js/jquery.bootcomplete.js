@@ -116,7 +116,7 @@
                 }
             }
             
-            var id=$(that).prev('input[name="' + settings.idFieldName + '"]').val();
+            var id=$('input[name="' + settings.idFieldName + '"]').val();
             $.each( jsonData, function(i, j) {
             	if(j.id==id){
             		selectedData=j;

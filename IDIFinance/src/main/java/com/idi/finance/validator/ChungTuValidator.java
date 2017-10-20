@@ -1,11 +1,16 @@
 package com.idi.finance.validator;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import com.idi.finance.bean.chungtu.ChungTu;
+import com.idi.finance.bean.chungtu.TaiKhoan;
+import com.idi.finance.utils.Contants;
 
 public class ChungTuValidator implements Validator {
 	private static final Logger logger = Logger.getLogger(ChungTuValidator.class);
@@ -29,7 +34,30 @@ public class ChungTuValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "soTien.soTien", "NotEmpty.chungTu.soTien.soTien");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lyDo", "NotEmpty.chungTu.lyDo");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "soTien.tien.banRa", "NotEmpty.chungTu.soTien.tien.banRa");
-		
-		
+
+		// Kiểm tra dữ liệu phần định khoản
+		List<TaiKhoan> taiKhoanDs = chungTu.getTaiKhoanDs();
+		boolean coTkCo = false;
+		double noSoTien = 0;
+		double coSoTien = 0;
+
+		Iterator<TaiKhoan> iter = taiKhoanDs.iterator();
+		while (iter.hasNext()) {
+			TaiKhoan taiKhoan = iter.next();
+			if (taiKhoan.getGhiNo() == Contants.NO) {
+				noSoTien += taiKhoan.getSoTien();
+			} else if (taiKhoan.getGhiNo() == Contants.CO && !taiKhoan.getTaiKhoan().getMaTk().equals("0")) {
+				coTkCo = true;
+				coSoTien += taiKhoan.getSoTien();
+			}
+		}
+
+		if (!coTkCo) {
+			errors.rejectValue("taiKhoanDs[1].taiKhoan.maTk", "NotEmpty.taiKhoanDs[1].taiKhoan.maTk");
+		} else {
+			if (noSoTien != coSoTien) {
+				errors.rejectValue("taiKhoanDs[0].taiKhoan.maTk", "NotEmpty.taiKhoanDs[0].taiKhoan.maTk");
+			}
+		}
 	}
 }
