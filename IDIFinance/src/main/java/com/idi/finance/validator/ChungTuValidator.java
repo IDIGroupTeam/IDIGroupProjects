@@ -31,9 +31,15 @@ public class ChungTuValidator implements Validator {
 		ChungTu chungTu = (ChungTu) target;
 
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "doiTuong.tenDt", "NotEmpty.chungTu.doiTuong.tenDt");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "soTien.soTien", "NotEmpty.chungTu.soTien.soTien");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lyDo", "NotEmpty.chungTu.lyDo");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "soTien.tien.banRa", "NotEmpty.chungTu.soTien.tien.banRa");
+
+		if (chungTu.getSoTien().getSoTien() == 0 && errors.getFieldError("soTien.soTien") == null) {
+			errors.rejectValue("soTien.soTien", "NotEmptyOrEqual0.chungTu.soTien.soTien");
+		}
+
+		if (chungTu.getSoTien().getTien().getBanRa() == 0) {
+			errors.rejectValue("soTien.tien.banRa", "NotEmptyOrEqual0.chungTu.soTien.tien.banRa");
+		}
 
 		// Kiểm tra dữ liệu phần định khoản
 		List<TaiKhoan> taiKhoanDs = chungTu.getTaiKhoanDs();
@@ -44,6 +50,7 @@ public class ChungTuValidator implements Validator {
 		Iterator<TaiKhoan> iter = taiKhoanDs.iterator();
 		while (iter.hasNext()) {
 			TaiKhoan taiKhoan = iter.next();
+
 			if (taiKhoan.getGhiNo() == Contants.NO) {
 				noSoTien += taiKhoan.getSoTien();
 			} else if (taiKhoan.getGhiNo() == Contants.CO && !taiKhoan.getTaiKhoan().getMaTk().equals("0")) {
@@ -55,8 +62,11 @@ public class ChungTuValidator implements Validator {
 		if (!coTkCo) {
 			errors.rejectValue("taiKhoanDs[1].taiKhoan.maTk", "NotEmpty.taiKhoanDs[1].taiKhoan.maTk");
 		} else {
-			if (noSoTien != coSoTien) {
-				errors.rejectValue("taiKhoanDs[0].taiKhoan.maTk", "NotEmpty.taiKhoanDs[0].taiKhoan.maTk");
+			if (chungTu.getSoTien().getSoTien() != noSoTien) {
+				errors.rejectValue("soTien.soTien", "NotEqual.chungTu.soTien.soTien");
+				errors.rejectValue("taiKhoanDs[0].soTien", "NotEqual.taiKhoanDs[0].soTien");
+			} else if (noSoTien != coSoTien) {
+				errors.rejectValue("taiKhoanDs[0].soTien", "NotEmpty.taiKhoanDs[0].soTien");
 			}
 		}
 	}

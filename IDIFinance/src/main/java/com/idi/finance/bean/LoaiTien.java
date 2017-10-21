@@ -7,7 +7,7 @@ public class LoaiTien {
 	private String tenLt;
 	private double muaTM;
 	private double muaCk;
-	private double banRa = 1.0;
+	private double banRa = 1;
 
 	public String getMaLt() {
 		return maLt;

@@ -152,11 +152,6 @@ public class ChungTuController {
 			taiKhoan.setGhiNo(1);
 			chungTu.themTaiKhoan(taiKhoan);
 
-			// Tài khoản khác, ghi có
-			taiKhoan = new TaiKhoan();
-			taiKhoan.setGhiNo(1);
-			chungTu.themTaiKhoan(taiKhoan);
-
 			return chuanBiFormPhieuThu(model, chungTu);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -168,7 +163,6 @@ public class ChungTuController {
 	public String luuTaoMoiPhieuThu(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu, BindingResult result,
 			Model model) {
 		try {
-			logger.info(result.getErrorCount());
 			if (result.hasErrors()) {
 				return chuanBiFormPhieuThu(model, chungTu);
 			}

@@ -208,11 +208,14 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 			Iterator<TaiKhoan> iter = chungTu.getTaiKhoanDs().iterator();
 			while (iter.hasNext()) {
 				TaiKhoan taiKhoan = iter.next();
-				
+
 				try {
-					logger.info("Thêm vào bảng chứng từ tài khoản "+taiKhoan);
-					jdbcTmpl.update(themChungTuTaiKhoan, chungTu.getMaCt(), taiKhoan.getTaiKhoan().getMaTk(),
-							taiKhoan.getSoTien(), taiKhoan.getGhiNo());
+					if (!taiKhoan.getTaiKhoan().getMaTk().equals("0")) {
+						logger.info("Thêm vào bảng chứng từ tài khoản " + taiKhoan);
+						jdbcTmpl.update(themChungTuTaiKhoan, chungTu.getMaCt(), taiKhoan.getTaiKhoan().getMaTk(),
+								taiKhoan.getSoTien(), taiKhoan.getGhiNo());
+					}
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

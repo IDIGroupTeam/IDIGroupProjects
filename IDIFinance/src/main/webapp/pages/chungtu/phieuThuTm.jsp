@@ -146,6 +146,42 @@
 					.getElementById("soTien.soTien").value;
 		}
 
+		$("#themTkCo").click(function() {
+			var currentTr = $(this).parent().parent();
+			var prevTr = $(currentTr).prev();
+			var prevId = $(prevTr).prop("id");
+			var newId = ++prevId;
+			--prevId;
+
+			var newTr = "<tr>" + $(prevTr).html() + "</tr>";
+			var pat = new RegExp("\\[" + prevId + "\\]", "g");
+			var pat1 = new RegExp("Ds" + prevId, "g");
+			newTr = newTr.replace(pat, "[" + newId + "]");
+			newTr = newTr.replace(pat1, "Ds" + newId);
+
+			$(newTr).insertBefore($(currentTr)).prop("id", newId);
+
+			$("#taiKhoanDs" + newId + "\\.taiKhoan\\.maTk").val("0");
+			$("#taiKhoanDs" + newId + "\\.soTien").val("0.0");
+			$("#taiKhoanDs" + newId + "\\.soTien").prop("placeholder", "0.0");
+
+			$("#xoaTkCo").removeClass("disabled");
+		});
+
+		$("#xoaTkCo").click(function() {
+			var removedTr = $(this).parent().parent().prev();
+			var id = $(removedTr).prop("id");
+			$(removedTr).remove();
+
+			if (id == 2) {
+				$("#xoaTkCo").addClass("disabled");
+			}
+		});
+
+		var soTk = ${mainFinanceForm.taiKhoanDs.size()};
+		if (soTk > 2) {
+			$("#xoaTkCo").removeClass("disabled");
+		}
 	});
 </script>
 
@@ -309,10 +345,7 @@
 							<td><form:input cssClass="form-control"
 									path="taiKhoanDs[${status.index}].soTien" placeholder="0.0" />
 							</td>
-							<td><form:errors
-									path="taiKhoanDs[${status.index}].taiKhoan.maTk"
-									cssClass="error" /><br />
-							<form:errors path="taiKhoanDs[${status.index}].soTien"
+							<td><form:errors path="taiKhoanDs[${status.index}].soTien"
 									cssClass="error" /></td>
 							<td></td>
 							<td></td>
@@ -336,13 +369,25 @@
 							</td>
 							<td><form:errors
 									path="taiKhoanDs[${status.index}].taiKhoan.maTk"
-									cssClass="error" /><br />
-							<form:errors path="taiKhoanDs[${status.index}].soTien"
-									cssClass="error" /></td>
+									cssClass="error" /> <form:errors
+									path="taiKhoanDs[${status.index}].soTien" cssClass="error" /></td>
 						</tr>
 					</c:when>
 				</c:choose>
 			</c:forEach>
+			<tr>
+				<td colspan="6">
+					<button id="themTkCo" type="button" class="btn btn-info btn-sm"
+						title="Thêm tài khoản có">
+						<span class="glyphicon glyphicon-plus"></span> Thêm
+					</button>
+					<button id="xoaTkCo" type="button"
+						class="btn btn-info btn-sm disabled"
+						title="Xóa tài khoản có cuối cùng">
+						<span class="glyphicon glyphicon-plus"></span> Xóa
+					</button>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 </div>
