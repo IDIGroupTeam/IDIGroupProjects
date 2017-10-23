@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.idi.hr.bean.EmployeeInfo;
 import com.idi.hr.bean.Insurance;
+import com.idi.hr.bean.ProcessInsurance;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.InsuranceDAO;
 
@@ -51,7 +52,8 @@ public class InsuranceController {
 			for (int i = 0; i < list.size(); i++) {
 				employee = (EmployeeInfo) list.get(i);
 				Integer id = employee.getEmployeeId();
-				employeeMap.put(id.toString(), employee.getFullName() + ": " + employee.getDepartment());
+				employeeMap.put(id.toString(),
+						"Ma NV " + id + ", " + employee.getFullName() + ", phòng " + employee.getDepartment());
 			}
 
 		} catch (Exception e) {
@@ -127,9 +129,9 @@ public class InsuranceController {
 
 		return "viewInsurance";
 	}
-	
+
 	@RequestMapping("/insurance/editInsurance")
-	public String editSocialInsurance(Model model, @RequestParam("socicalInsuNo") String socicalInsuNo ) {
+	public String editSocialInsurance(Model model, @RequestParam("socicalInsuNo") String socicalInsuNo) {
 		Insurance insurance = null;
 		if (socicalInsuNo != null) {
 			insurance = this.insuranceDAO.getInsurance(socicalInsuNo);
@@ -140,4 +142,122 @@ public class InsuranceController {
 
 		return this.insuranceForm(model, insurance);
 	}
+
+	// -------------------------------- Quá trình đóng BHXH
+	// ----------------------------//
+
+	@RequestMapping(value = { "/insurance/listProcessInsurance" }, method = RequestMethod.GET)
+	public String listProcessInsurance(Model model, @RequestParam("socicalInsuNo") String socicalInsuNo,
+			@RequestParam("employeeId") String employeeId) {
+		try {
+			model.addAttribute("socicalInsuNo", socicalInsuNo);
+			model.addAttribute("employeeId", employeeId);
+			// Get employee info for insurance
+			Map<String, String> employeeMap = this.employees();
+			String name = "";
+			name = employeeMap.get(employeeId);
+			model.addAttribute("name", name);
+			List<ProcessInsurance> list = insuranceDAO.getProcessInsurances(socicalInsuNo);
+			model.addAttribute("pInsurances", list);
+			model.addAttribute("formTitle", "Quá trình đóng bảo hiểm của NV ");
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return "listProcessInsurance";
+	}
+
+	@RequestMapping("/processInsurance/insertProcessInsuranceForm")
+	public String insertProcessInsuranceForm(Model model, @RequestParam("socicalInsuNo") String socicalInsuNo,
+			@RequestParam("employeeId") String employeeId, ProcessInsurance processInsurance) {
+		return this.processInsuranceForm(model, processInsurance, socicalInsuNo, employeeId);
+	}
+
+	private String processInsuranceForm(Model model, ProcessInsurance processInsurance, String socicalInsuNo,
+			String employeeId) {
+		model.addAttribute("pInsuranceForm", processInsurance);
+		model.addAttribute("socicalInsuNo", socicalInsuNo);
+		// Get employee info for insurance
+		Map<String, String> employeeMap = this.employees();
+		String name = "";
+		name = employeeMap.get(employeeId);
+		model.addAttribute("name", name);
+		model.addAttribute("employeeId", employeeId);
+		String actionform = "";
+		if (processInsurance.getFromDate() != null) {
+			model.addAttribute("formTitle", "Sửa thông tin quá trình đóng BHXH của NV");
+			actionform = "editProcessInsurance";
+		} else {
+			model.addAttribute("formTitle", "Thêm thông tin quá trình đóng BHXH của NV");
+			actionform = "insertProcessInsurance";
+		}
+		System.out.println(actionform);
+		return actionform;
+	}
+
+	@RequestMapping(value = "/processInsurance/insertProcessInsurance", method = RequestMethod.POST)
+	public String insertProcessInsurance(Model model,
+			@ModelAttribute("pInsuranceForm") @Validated ProcessInsurance pInsurance,
+			@RequestParam("employeeId") String employeeId, final RedirectAttributes redirectAttributes) {
+		// can check from date >= ngay vao cty < ngay hien tai
+		// to date < ngay hien tai
+		try {
+			insuranceDAO.insertProcessInsurance(pInsurance);
+			// Add message to flash scope
+			redirectAttributes.addFlashAttribute("message", "Thêm thông tin quá trình đóng BHXH thành công!");
+
+		} catch (Exception e) {
+			log.error(e, e);
+		}
+		return "redirect:/insurance/listProcessInsurance?socicalInsuNo=" + pInsurance.getSocicalInsuNo()
+				+ "&employeeId=" + employeeId;// this.listProcessInsurance(model, pInsurance.getSocicalInsuNo(),
+												// employeeId);
+	}
+
+	@RequestMapping("/processInsurance/editProcessInsuranceForm")
+	public String editProcessInsuranceForm(Model model, @RequestParam("socicalInsuNo") String socicalInsuNo,
+			@RequestParam("employeeId") String employeeId, ProcessInsurance processInsurance) {
+		// System.out.println(processInsurance.getFromDate());
+		if (processInsurance.getFromDate() != null) {
+			processInsurance = insuranceDAO.getProcessInsurance(socicalInsuNo, processInsurance.getFromDate());
+		} else {
+			return "redirect:/insurance/listProcessInsurance?socicalInsuNo=" + socicalInsuNo + "&employeeId="
+					+ employeeId;
+		}
+		return this.processInsuranceForm(model, processInsurance, socicalInsuNo, employeeId);
+	}
+
+	@RequestMapping(value = "/processInsurance/updateProcessInsurance", method = RequestMethod.POST)
+	public String updateProcessInsurance(Model model,
+			@ModelAttribute("pInsuranceForm") @Validated ProcessInsurance pInsurance,
+			@RequestParam("employeeId") String employeeId, final RedirectAttributes redirectAttributes) {
+		// can check from date >= ngay vao cty < ngay hien tai
+		// to date < ngay hien tai
+		try {
+			insuranceDAO.updateProcessInsurance(pInsurance);
+			// Add message to flash scope
+			redirectAttributes.addFlashAttribute("message", "Sửa thông tin quá trình đóng BHXH thành công!");
+
+		} catch (Exception e) {
+			log.error(e, e);
+		}
+		return "redirect:/insurance/listProcessInsurance?socicalInsuNo=" + pInsurance.getSocicalInsuNo()
+				+ "&employeeId=" + employeeId;// this.listProcessInsurance(model, pInsurance.getSocicalInsuNo(),
+												// employeeId);
+	}
+	
+	@RequestMapping(value = "/processInsurance/deleteProcessInsurance")
+	public String deleteProcessInsurance(Model model, @RequestParam("socicalInsuNo") String socicalInsuNo,
+			@RequestParam("employeeId") String employeeId, @RequestParam("fromDate") String fromDate,
+			final RedirectAttributes redirectAttributes) {
+		try {
+			insuranceDAO.deleteProcessInsurance(socicalInsuNo, fromDate);
+			// Add message to flash scope
+			redirectAttributes.addFlashAttribute("message", "Xóa thông tin quá trình đóng BHXH thành công!");
+		} catch (Exception e) {
+			log.error(e, e);
+		}
+		return "redirect:/insurance/listProcessInsurance?socicalInsuNo=" + socicalInsuNo + "&employeeId=" + employeeId;
+	}
+
 }

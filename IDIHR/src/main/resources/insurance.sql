@@ -35,8 +35,7 @@ CREATE TABLE `idigroup`.`insurance` (
   `PERCENT_SOCI_INSU_C` varchar(6) COLLATE utf8_unicode_ci NOT NULL,
   `PERCENT_SOCI_INSU_E` varchar(6) COLLATE utf8_unicode_ci NOT NULL,
   `PLACE` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `COMMENT` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `COMPANY_PAY` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `COMMENT` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL, 
   `STATUS` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `HEALTH_INSU_NO` varchar(12) COLLATE utf8_unicode_ci NOT NULL,
   `HEALTH_INSU_PLACE` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
@@ -48,9 +47,9 @@ CREATE TABLE `idigroup`.`insurance` (
 -- Dumping data for table `insurance`
 --
 
-INSERT INTO `idigroup`.`INSURANCE` (`EMPLOYEE_ID`, `SOCIAL_INSU_NO`, `SALA_SOCI_INSU`, `PERCENT_SOCI_INSU_C`, `PERCENT_SOCI_INSU_E`, `PLACE`, `COMMENT`, `COMPANY_PAY`, `STATUS`, `HEALTH_INSU_NO`, `HEALTH_INSU_PLACE`, `SALARY_ZONE`, `PAY_TYPE`) VALUES
-(1, '222221112222', '5.000.000', '16', '9', 'BH Quan Tay Ho', 'Ghi chu o day', 'IDI', 'Dang nop', '123321123321', 'BV Thanh Nhan, HN', 'Vung 1: 300000', 'Theo quy'),
-(2, '222221112223', '5.000.000', '16', '9', 'BH Quan Tay Ho', '', 'IDI', 'Dang nghi thai san', '123321123322', 'BV Thanh Nhan, HN', 'Vung 1: 300000', 'Theo thang');
+INSERT INTO `idigroup`.`INSURANCE` (`EMPLOYEE_ID`, `SOCIAL_INSU_NO`, `SALA_SOCI_INSU`, `PERCENT_SOCI_INSU_C`, `PERCENT_SOCI_INSU_E`, `PLACE`, `COMMENT`, `STATUS`, `HEALTH_INSU_NO`, `HEALTH_INSU_PLACE`, `SALARY_ZONE`, `PAY_TYPE`) VALUES
+(1, '222221112222', '5.000.000', '16', '9', 'BH Quan Tay Ho', 'Ghi chu o day', 'Dang nop', '123321123321', 'BV Thanh Nhan, HN', 'Vung 1: 300000', 'Theo quy'),
+(2, '222221112223', '5.000.000', '16', '9', 'BH Quan Tay Ho', '', 'Dang nghi thai san', '123321123322', 'BV Thanh Nhan, HN', 'Vung 1: 300000', 'Theo thang');
 
 --
 -- Indexes for dumped tables
@@ -67,3 +66,19 @@ ALTER TABLE `idigroup`.`INSURANCE`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `idigroup`.`insurance`
+--
+
+CREATE TABLE `idigroup`.`process_insurance` (
+  `SOCIAL_INSU_NO` varchar(12) COLLATE utf8_unicode_ci NOT NULL,
+  `SALA_SOCI_INSU` varchar(12) COLLATE utf8_unicode_ci NOT NULL,
+  `COMPANY_PAY` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `FROM_DATE` varchar(12) COLLATE utf8_unicode_ci NOT NULL,
+  `TO_DATE` varchar(12) COLLATE utf8_unicode_ci NOT NULL,
+  `COMMENT` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+

@@ -17,7 +17,6 @@ public class Insurance implements Serializable {
 	private String payType;
 	private String salaryZone;
 	private String place; 
-	private String companyPay;
 	private String status;
 	private String hInsuNo;
 	private String hInsuPlace;	
@@ -28,7 +27,7 @@ public class Insurance implements Serializable {
 	}
 
 	public Insurance(int employeeId, String socicalInsuNo, String salarySocicalInsu, String percentSInsuC, String percentSInsuE,
-			String payType, String salaryZone, String place, String companyPay, String status, String hInsuNo, String hInsuPlace, String comment) {
+			String payType, String salaryZone, String place, String status, String hInsuNo, String hInsuPlace, String comment) {
 
 		this.employeeId = employeeId;		
 		this.socicalInsuNo = socicalInsuNo;
@@ -38,7 +37,7 @@ public class Insurance implements Serializable {
 		this.payType = payType;
 		this.salaryZone = salaryZone;
 		this.place = place;
-		this.companyPay = companyPay;
+		
 		this.status = status;
 		this.hInsuNo = hInsuNo;
 		this.hInsuPlace = hInsuPlace;	
@@ -107,14 +106,6 @@ public class Insurance implements Serializable {
 
 	public void setSalaryZone(String salaryZone) {
 		this.salaryZone = salaryZone;
-	}
-
-	public String getCompanyPay() {
-		return companyPay;
-	}
-
-	public void setCompanyPay(String companyPay) {
-		this.companyPay = companyPay;
 	}
 
 	public String getStatus() {

@@ -99,7 +99,7 @@
 					<td><a
 						href="editEmployee?employeeId=${employeeForm.employeeId}"><button>Sửa
 								thông tin</button></a> <a href="${pageContext.request.contextPath}/"><button>Quay
-								lại danh sách</button></a></td>
+								lại danh sách NV</button></a></td>
 					<td>&nbsp;</td>
 				</tr>
 			</tbody>
