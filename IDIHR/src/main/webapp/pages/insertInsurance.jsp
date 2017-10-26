@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Tập đoàn IDI - Quản lý phòng ban</title>
+<title>Tập đoàn IDI - Quản lý BH</title>
 <style>
 .error-message {
 	color: red;

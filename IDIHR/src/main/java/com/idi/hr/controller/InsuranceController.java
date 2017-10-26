@@ -143,8 +143,7 @@ public class InsuranceController {
 		return this.insuranceForm(model, insurance);
 	}
 
-	// -------------------------------- Quá trình đóng BHXH
-	// ----------------------------//
+	// ------ Quá trình đóng BHXH   --------//
 
 	@RequestMapping(value = { "/insurance/listProcessInsurance" }, method = RequestMethod.GET)
 	public String listProcessInsurance(Model model, @RequestParam("socicalInsuNo") String socicalInsuNo,
