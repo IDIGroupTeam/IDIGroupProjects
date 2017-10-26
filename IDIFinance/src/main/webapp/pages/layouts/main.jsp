@@ -84,12 +84,14 @@
 										class="caret"></span>
 								</a>
 									<ul class="dropdown-menu">
-										<li><a href="#">Nhật ký chung</a></li>
-										<li><a href="#">Sổ cái</a></li>
-										<li><a href="#">Sổ tiền vay</a></li>
-										<li><a href="#">Sổ tài sản cố định</a></li>
-										<li><a href="#">Sổ nguyên vật liệu</a></li>
-										<li><a href="#">Sổ vốn bằng tiền</a></li>
+										<li id="tabSKTNKC"><a href="${url}/soketoan/nhatkychung">Nhật
+												ký chung</a></li>
+										<li id="tabSKTSC"><a href="${url}/soketoan/socai">Sổ
+												cái</a></li>
+										<li id="tabSKTSTM"><a href="${url}/soketoan/sotienmat">Sổ
+												tiền mặt</a></li>
+										<li id="tabSKTSCN"><a href="${url}/soketoan/socongno">Sổ
+												công nợ</a></li>
 										<li><a href="#">Quản lý sổ</a></li>
 									</ul></li>
 								<li class="dropdown"><a class="dropdown-toggle"

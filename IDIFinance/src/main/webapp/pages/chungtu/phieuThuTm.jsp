@@ -1,4 +1,5 @@
-<%@page import="com.idi.finance.utils.Contants"%>
+<%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
+<%@page import="com.idi.finance.bean.chungtu.DoiTuong"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
@@ -73,6 +74,7 @@
 
 		// Thay đổi url cho autocomplete
 		$('#doiTuong\\.loaiDt').change(function() {
+			cleanForm();
 			loaiDt = this.value;
 			if (loaiDt == 1) {
 				url = "${url}/chungtu/nhanvien/";
@@ -81,11 +83,27 @@
 			} else if (loaiDt == 3) {
 				url = "${url}/chungtu/nhacungcap/";
 			} else {
+				// Là khách vãng lai, chỉ cần điền họ và tên người nộp tiền
+				$("#doiTuong\\.maDt").val("1");
+				$("#doiTuong\\.tenDt").val("Khách vãng lai");
+
+				$("#doiTuong\\.nguoiNop").val("Khách vãng lai");
 				url = "";
 			}
 
 			autocomplete.changeUrl(url);
 		});
+
+		function cleanForm() {
+			$("#doiTuong\\.maDt").val("0");
+			$("#doiTuong\\.tenDt").val("");
+			$("#doiTuong\\.maThue").val("");
+			$("#doiTuong\\.diaChi").val("");
+			$("#doiTuong\\.nguoiNop").val("");
+			//$("#soTien\\.soTien").val("0.0");
+			//$("#lyDo").val("");
+			//$("#kemTheo").val("0");
+		}
 
 		// Khởi tạo danh sách các loại tiền
 		var loaiTienDsStr = "${loaiTienDs}";
@@ -142,44 +160,75 @@
 					.getElementById("soTien.giaTri").value
 					+ " VND";
 
-			document.getElementById("taiKhoanDs0.soTien").value = document
+			document.getElementById("taiKhoanNoDs0.soTien").value = document
 					.getElementById("soTien.soTien").value;
 		}
 
-		$("#themTkCo").click(function() {
-			var currentTr = $(this).parent().parent();
-			var prevTr = $(currentTr).prev();
-			var prevId = $(prevTr).prop("id");
-			var newId = ++prevId;
-			--prevId;
+		// Khi tỷ giá thay đổi, quy đổi ra tiền Việt Nam Đồng
+		document.getElementById("soTien.tien.banRa").onchange = function() {
+			loaiTien.banRa = $.trim(document
+					.getElementById("soTien.tien.banRa").value);
+			for (i = 0; i < loaiTienDs.length; i++) {
+				if (loaiTienDs[i].maLt == loaiTien.maLt) {
+					loaiTienDs[i].banRa = loaiTien.banRa;
+					break;
+				}
+			}
 
-			var newTr = "<tr>" + $(prevTr).html() + "</tr>";
-			var pat = new RegExp("\\[" + prevId + "\\]", "g");
-			var pat1 = new RegExp("Ds" + prevId, "g");
-			newTr = newTr.replace(pat, "[" + newId + "]");
-			newTr = newTr.replace(pat1, "Ds" + newId);
+			var soTien = $.trim(document.getElementById("soTien.soTien").value);
+			document.getElementById("soTien.giaTri").value = soTien
+					* loaiTien.banRa;
+			document.getElementById("soTien.giaTriTxt").innerHTML = document
+					.getElementById("soTien.giaTri").value
+					+ " VND";
+			document.getElementById("taiKhoanNoDs0.soTien").value = document
+					.getElementById("soTien.soTien").value;
+		}
 
-			$(newTr).insertBefore($(currentTr)).prop("id", newId);
+		$("#themTkCo").click(
+				function() {
+					var currentTr = $(this).parent().parent();
+					var prevTr = $(currentTr).prev();
+					var prevId = $(prevTr).prop("id");
+					var newId = ++prevId;
+					--prevId;
 
-			$("#taiKhoanDs" + newId + "\\.taiKhoan\\.maTk").val("0");
-			$("#taiKhoanDs" + newId + "\\.soTien").val("0.0");
-			$("#taiKhoanDs" + newId + "\\.soTien").prop("placeholder", "0.0");
+					var newTr = "<tr>" + $(prevTr).html() + "</tr>";
+					var pat = new RegExp("\\[" + prevId + "\\]", "g");
+					var pat1 = new RegExp("Ds" + prevId, "g");
+					newTr = newTr.replace(pat, "[" + newId + "]");
+					newTr = newTr.replace(pat1, "Ds" + newId);
 
-			$("#xoaTkCo").removeClass("disabled");
-		});
+					$(newTr).insertBefore($(currentTr)).prop("id", newId);
+
+					$("#taiKhoanCoDs" + newId + "\\.taiKhoan\\.maTk").val("0");
+					$("#taiKhoanCoDs" + newId + "\\.soTien").val("0.0");
+					$("#taiKhoanCoDs" + newId + "\\.soTien").prop("placeholder", "0.0");
+					$("#taiKhoanCoDs" + newId + "\\.lyDo").val("");
+					$("#taiKhoanCoDs" + newId + "\\.lyDo").prop("placeholder", "Lý do");
+					$("#taiKhoanCoDs" + newId + "\\.soTien\\.errors").remove();
+					$("#taiKhoanCoDs" + newId + "\\.taiKhoan\\.maTk\\.errors").remove();
+					
+					$("#taiKhoanNoDs" + newId + "\\.taiKhoan\\.maTk").remove();
+					$("#taiKhoanNoDs" + newId + "\\.ghiNo").remove();
+					$("#taiKhoanNoDs" + newId + "\\.soTien").remove();
+					$("#taiKhoanNoDs" + newId + "\\.soTien\\.errors").remove();
+
+					$("#xoaTkCo").removeClass("disabled");
+				});
 
 		$("#xoaTkCo").click(function() {
 			var removedTr = $(this).parent().parent().prev();
 			var id = $(removedTr).prop("id");
 			$(removedTr).remove();
 
-			if (id == 2) {
+			if (id == 1) {
 				$("#xoaTkCo").addClass("disabled");
 			}
 		});
 
-		var soTk = ${mainFinanceForm.taiKhoanDs.size()};
-		if (soTk > 2) {
+		soDongTk = '${mainFinanceForm.soTkLonNhat}';
+		if (soDongTk > 1) {
 			$("#xoaTkCo").removeClass("disabled");
 		}
 	});
@@ -187,6 +236,7 @@
 
 <h4>PHIẾU THU</h4>
 <hr />
+<form:hidden path="loaiCt" />
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="soCt">Số phiếu thu
 		dự kiến:</label>
@@ -211,11 +261,20 @@
 	<div class="col-sm-4">
 		<form:select path="doiTuong.loaiDt" cssClass="form-control"
 			placeholder="Loại đối tượng">
-			<form:option value="1" label="Nhân viên"></form:option>
-			<form:option value="2" label="Khách hàng"></form:option>
-			<form:option value="3" label="Nhà cung cấp"></form:option>
-			<form:option value="4" label="Khách vãng lai"></form:option>
+			<form:option value="${DoiTuong.NHAN_VIEN}" label="Nhân viên"></form:option>
+			<form:option value="${DoiTuong.KHACH_HANG}" label="Khách hàng"></form:option>
+			<form:option value="${DoiTuong.NHA_CUNG_CAP}" label="Nhà cung cấp"></form:option>
+			<form:option value="${DoiTuong.KHACH_VANG_LAI}"
+				label="Khách vãng lai"></form:option>
 		</form:select>
+	</div>
+
+	<label class="control-label col-sm-2" for=ngayHt>Ngày hạch
+		toán:</label>
+	<div class="col-sm-4">
+		<fmt:formatDate value="${mainFinanceForm.ngayHt}" pattern="dd/M/yyyy"
+			type="Date" dateStyle="SHORT" />
+		<form:hidden path="ngayHt" />
 	</div>
 </div>
 
@@ -279,7 +338,10 @@
 		tiền:</label>
 	<div class="col-sm-4">
 		<form:hidden path="soTien.giaTri" />
-		<p id="soTien.giaTriTxt">${mainFinanceForm.soTien.giaTri}</p>
+		<p id="soTien.giaTriTxt">
+			<fmt:formatNumber value="${mainFinanceForm.soTien.giaTri}"></fmt:formatNumber>
+			&nbsp;VND
+		</p>
 		(<i>Chuyển thành tiền Việt Nam Đồng</i>)
 	</div>
 
@@ -319,7 +381,7 @@
 		<thead>
 			<tr>
 				<th class="text-center" colspan="3">Nợ</th>
-				<th class="text-center" colspan="3">Có</th>
+				<th class="text-center" colspan="4">Có</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -329,61 +391,61 @@
 				<th class="text-center"><b>Ghi chú</b></th>
 				<th class="text-center"><b>Tài khoản</b></th>
 				<th class="text-center"><b>Giá trị</b></th>
+				<th class="text-center"><b>Lý do</b></th>
 				<th class="text-center"><b>Ghi chú</b></th>
 			</tr>
-			<c:forEach items="${mainFinanceForm.taiKhoanDs}" var="taiKhoan"
+			<c:forEach begin="0" end="${mainFinanceForm.soTkLonNhat-1}"
 				varStatus="status">
-				<c:choose>
-					<c:when test="${taiKhoan.ghiNo == Contants.NO}">
-						<tr id="${status.index}">
+				<tr id="${status.index}">
+					<!-- Phần ghi Nợ -->
+					<c:choose>
+						<c:when
+							test="${status.index < mainFinanceForm.taiKhoanNoDs.size()}">
 							<td><form:select cssClass="form-control"
-									path="taiKhoanDs[${status.index}].taiKhoan.maTk"
+									path="taiKhoanNoDs[${status.index}].taiKhoan.maTk"
 									multiple="false">
 									<form:options items="${loaiTaiKhoanTmDs}" itemValue="maTk"
 										itemLabel="maTenTk" />
-								</form:select> <form:hidden path="taiKhoanDs[${status.index}].ghiNo" /></td>
+								</form:select> <form:hidden path="taiKhoanNoDs[${status.index}].ghiNo" /></td>
 							<td><form:input cssClass="form-control"
-									path="taiKhoanDs[${status.index}].soTien" placeholder="0.0" />
-							</td>
-							<td><form:errors path="taiKhoanDs[${status.index}].soTien"
+									path="taiKhoanNoDs[${status.index}].soTien" placeholder="0.0" /></td>
+							<td><form:errors path="taiKhoanNoDs[${status.index}].soTien"
 									cssClass="error" /></td>
+						</c:when>
+						<c:otherwise>
 							<td></td>
 							<td></td>
 							<td></td>
-						</tr>
-					</c:when>
-					<c:when test="${taiKhoan.ghiNo == Contants.CO}">
-						<tr id="${status.index}">
-							<td></td>
-							<td></td>
-							<td></td>
-							<td><form:select cssClass="form-control"
-									path="taiKhoanDs[${status.index}].taiKhoan.maTk"
-									multiple="false">
-									<form:option value="0">Tài khoản</form:option>
-									<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
-										itemLabel="maTenTk" />
-								</form:select> <form:hidden path="taiKhoanDs[${status.index}].ghiNo" /></td>
-							<td><form:input cssClass="form-control"
-									path="taiKhoanDs[${status.index}].soTien" placeholder="0.0" />
-							</td>
-							<td><form:errors
-									path="taiKhoanDs[${status.index}].taiKhoan.maTk"
-									cssClass="error" /> <form:errors
-									path="taiKhoanDs[${status.index}].soTien" cssClass="error" /></td>
-						</tr>
-					</c:when>
-				</c:choose>
+						</c:otherwise>
+					</c:choose>
+
+					<!-- Phần ghi Có -->
+					<td><form:select cssClass="form-control"
+							path="taiKhoanCoDs[${status.index}].taiKhoan.maTk"
+							multiple="false">
+							<form:option value="0">Tài khoản</form:option>
+							<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
+								itemLabel="maTenTk" />
+						</form:select> <form:hidden path="taiKhoanCoDs[${status.index}].ghiNo" /></td>
+					<td><form:input cssClass="form-control"
+							path="taiKhoanCoDs[${status.index}].soTien" placeholder="0.0" /></td>
+					<td><form:input cssClass="form-control"
+							path="taiKhoanCoDs[${status.index}].lyDo" placeholder="Lý do" /></td>
+					<td><form:errors
+							path="taiKhoanCoDs[${status.index}].taiKhoan.maTk"
+							cssClass="error" /> <form:errors
+							path="taiKhoanCoDs[${status.index}].soTien" cssClass="error" /></td>
+				</tr>
 			</c:forEach>
 			<tr>
-				<td colspan="6">
+				<td colspan="7">
 					<button id="themTkCo" type="button" class="btn btn-info btn-sm"
-						title="Thêm tài khoản có">
+						title="Thêm tài khoản ghi có">
 						<span class="glyphicon glyphicon-plus"></span> Thêm
 					</button>
 					<button id="xoaTkCo" type="button"
 						class="btn btn-info btn-sm disabled"
-						title="Xóa tài khoản có cuối cùng">
+						title="Xóa tài khoản ghi có cuối cùng">
 						<span class="glyphicon glyphicon-plus"></span> Xóa
 					</button>
 				</td>
@@ -399,5 +461,3 @@
 			mới</button>
 	</div>
 </div>
-
-

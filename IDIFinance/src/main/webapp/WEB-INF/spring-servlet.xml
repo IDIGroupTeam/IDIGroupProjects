@@ -87,4 +87,9 @@
 	<bean id="nhanVienDAO" class="com.idi.finance.dao.impl.NhanVienDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
+	
+	<bean id="soKeToanDAO" class="com.idi.finance.dao.impl.SoKeToanDAOImpl">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+	
 </beans>

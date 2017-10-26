@@ -20,7 +20,7 @@
 							BootstrapDialog
 									.confirm({
 										title : 'Xác nhận',
-										message : 'Bạn muốn xóa phiếu thu này không ?<br/><b>Số phiếu thu:</b> ${chungTu.soCt}<br /> <b>Ngày lập:</b> '
+										message : 'Bạn muốn xóa phiếu chi này không ?<br/><b>Số phiếu chi:</b> ${chungTu.soCt}<br /> <b>Ngày lập:</b> '
 												+ ngayLap
 												+ ' <br /> <b>Lý do:</b> ${chungTu.lyDo}',
 										type : 'type-info',
@@ -44,14 +44,14 @@
 	});
 </script>
 
-<h4>PHIẾU THU</h4>
+<h4>PHIẾU CHI</h4>
 <hr />
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="soCt">Số phiếu thu:</label>
+	<label class="control-label col-sm-2" for="soCt">Số phiếu chi:</label>
 	<div class="col-sm-4">${chungTu.soCt}</div>
 
 	<label class="control-label col-sm-2" for=ngayLap>Ngày lập
-		phiếu thu:</label>
+		phiếu chi:</label>
 	<div class="col-sm-4">
 		<span id="ngayLap"><fmt:formatDate value="${chungTu.ngayLap}"
 				pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" /></span>
@@ -89,7 +89,7 @@
 
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="doiTuong.tenDt">Đối
-		tượng nộp:</label>
+		tượng nhận:</label>
 	<div class="col-sm-4">${chungTu.doiTuong.tenDt}</div>
 
 	<label class="control-label col-sm-2" for="doiTuong.maThue">Mã
@@ -103,7 +103,7 @@
 	<div class="col-sm-4">${chungTu.doiTuong.diaChi}</div>
 
 	<label class="control-label col-sm-2" for="doiTuong.nguoiNop">Người
-		nộp: </label>
+		nhận: </label>
 	<div class="col-sm-4">${chungTu.doiTuong.nguoiNop}</div>
 </div>
 
@@ -151,27 +151,34 @@
 		class="table table-bordered table-hover text-center dinhkhoan">
 		<thead>
 			<tr>
-				<th class="text-center" colspan="2">Nợ</th>
-				<th class="text-center" colspan="3">Có</th>
+				<th class="text-center" colspan="3">Nợ</th>
+				<th class="text-center" colspan="2">Có</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
 				<th class="text-center"><b>Tài khoản</b></th>
 				<th class="text-center"><b>Giá trị</b></th>
+				<th class="text-center"><b>Lý do</b></th>
 				<th class="text-center"><b>Tài khoản</b></th>
 				<th class="text-center"><b>Giá trị</b></th>
-				<th class="text-center"><b>Lý do</b></th>
 			</tr>
 			<c:forEach begin="0" end="${chungTu.soTkLonNhat-1}"
 				varStatus="status">
 				<tr id="${status.index}">
 					<!-- Phần ghi Nợ -->
+					<td>${chungTu.taiKhoanNoDs[status.index].taiKhoan.maTk}-${chungTu.taiKhoanNoDs[status.index].taiKhoan.tenTk}</td>
+					<td><fmt:formatNumber
+							value="${chungTu.taiKhoanNoDs[status.index].soTien}"
+							maxFractionDigits="2"></fmt:formatNumber></td>
+					<td>${chungTu.taiKhoanNoDs[status.index].lyDo}</td>
+
+					<!-- Phần ghi Có -->
 					<c:choose>
-						<c:when test="${status.index < chungTu.taiKhoanNoDs.size()}">
-							<td>${chungTu.taiKhoanNoDs[status.index].taiKhoan.maTk}-${chungTu.taiKhoanNoDs[status.index].taiKhoan.tenTk}</td>
+						<c:when test="${status.index < chungTu.taiKhoanCoDs.size()}">
+							<td>${chungTu.taiKhoanCoDs[status.index].taiKhoan.maTk}-${chungTu.taiKhoanCoDs[status.index].taiKhoan.tenTk}</td>
 							<td><fmt:formatNumber
-									value="${chungTu.taiKhoanNoDs[status.index].soTien}"
+									value="${chungTu.taiKhoanCoDs[status.index].soTien}"
 									maxFractionDigits="2"></fmt:formatNumber></td>
 						</c:when>
 						<c:otherwise>
@@ -179,13 +186,6 @@
 							<td></td>
 						</c:otherwise>
 					</c:choose>
-
-					<!-- Phần ghi Có -->
-					<td>${chungTu.taiKhoanCoDs[status.index].taiKhoan.maTk}-${chungTu.taiKhoanCoDs[status.index].taiKhoan.tenTk}</td>
-					<td><fmt:formatNumber
-							value="${chungTu.taiKhoanCoDs[status.index].soTien}"
-							maxFractionDigits="2"></fmt:formatNumber></td>
-					<td>${chungTu.taiKhoanCoDs[status.index].lyDo}</td>
 				</tr>
 			</c:forEach>
 		</tbody>
@@ -194,10 +194,12 @@
 
 <div class="row form-group">
 	<div class="col-sm-4">
-		<a href="${url}/danhsachphieuthu" class="btn btn-info btn-sm">Danh
-			sách phiếu thu</a> <a id="xoaNut"
-			href="${url}/xoaphieuthu/${chungTu.maCt}" class="btn btn-info btn-sm">Xóa</a>
-		<a href="${url}/suaphieuthu/${chungTu.maCt}"
+		<a href="${url}/danhsachphieuchi" class="btn btn-info btn-sm">Danh
+			sách phiếu chi</a> <a id="xoaNut"
+			href="${url}/xoaphieuchi/${chungTu.maCt}" class="btn btn-info btn-sm">Xóa</a>
+		<a href="${url}/suaphieuchi/${chungTu.maCt}"
 			class="btn btn-info btn-sm">Sửa</a>
 	</div>
 </div>
+
+

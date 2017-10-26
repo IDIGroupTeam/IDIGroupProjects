@@ -14,7 +14,7 @@ import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.TaiKhoanDAO;
 
 public class TaiKhoanDAOImpl implements TaiKhoanDAO {
-	private static final Logger logger = Logger.getLogger(KpiChartDAOImpl.class);
+	private static final Logger logger = Logger.getLogger(TaiKhoanDAOImpl.class);
 
 	@Value("${DANH_SACH_TAI_KHOAN_THEO_CAP1}")
 	private String DANH_SACH_TAI_KHOAN_THEO_CAP1;

@@ -9,13 +9,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.idi.finance.bean.NhaCungCap;
 import com.idi.finance.bean.NhanVien;
 import com.idi.finance.dao.NhanVienDAO;
-import com.idi.finance.dao.impl.NhaCungCapDAOImpl.NhaCungCapMapper;
 
 public class NhanVienDAOImpl implements NhanVienDAO {
-	private static final Logger logger = Logger.getLogger(NhanVienDAO.class);
+	private static final Logger logger = Logger.getLogger(NhanVienDAOImpl.class);
 
 	@Value("${DANH_SACH_NHAN_VIEN_THEO_MA_HOAC_TEN}")
 	private String DANH_SACH_NHAN_VIEN_THEO_MA_HOAC_TEN;

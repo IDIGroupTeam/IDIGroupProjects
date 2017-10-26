@@ -1,6 +1,11 @@
 package com.idi.finance.bean.chungtu;
 
 public class DoiTuong {
+	public static final int NHAN_VIEN = 1;
+	public static final int KHACH_HANG = 2;
+	public static final int NHA_CUNG_CAP = 3;
+	public static final int KHACH_VANG_LAI = 4;
+
 	private int maDt;
 	private int loaiDt;
 	private String tenDt;
@@ -68,7 +73,7 @@ public class DoiTuong {
 
 	@Override
 	public String toString() {
-		String out = maDt + "  " + tenDt;
+		String out = maDt + "  " + tenDt + " " + loaiDt;
 		return out;
 	}
 

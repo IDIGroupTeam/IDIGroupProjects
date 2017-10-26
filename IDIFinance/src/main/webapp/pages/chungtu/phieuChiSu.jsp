@@ -13,7 +13,7 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		$("#mainFinanceForm").attr("action", "${url}/luutaomoiphieuthu");
+		$("#mainFinanceForm").attr("action", "${url}/luutaomoiphieuchi");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		$("#submitBt").click(function() {
@@ -160,7 +160,7 @@
 					.getElementById("soTien.giaTri").value
 					+ " VND";
 
-			document.getElementById("taiKhoanNoDs0.soTien").value = document
+			document.getElementById("taiKhoanCoDs0.soTien").value = document
 					.getElementById("soTien.soTien").value;
 		}
 
@@ -181,49 +181,52 @@
 			document.getElementById("soTien.giaTriTxt").innerHTML = document
 					.getElementById("soTien.giaTri").value
 					+ " VND";
-			document.getElementById("taiKhoanNoDs0.soTien").value = document
+			document.getElementById("taiKhoanCoDs0.soTien").value = document
 					.getElementById("soTien.soTien").value;
 		}
 
-		$("#themTkCo").click(function() {
-			var currentTr = $(this).parent().parent();
-			var prevTr = $(currentTr).prev();
-			var prevId = $(prevTr).prop("id");
-			var newId = ++prevId;
-			--prevId;
+		$("#themTkNo").click(
+				function() {
+					var currentTr = $(this).parent().parent();
+					var prevTr = $(currentTr).prev();
+					var prevId = $(prevTr).prop("id");
+					var newId = ++prevId;
+					--prevId;
 
-			var newTr = "<tr>" + $(prevTr).html() + "</tr>";
-			var pat = new RegExp("\\[" + prevId + "\\]", "g");
-			var pat1 = new RegExp("Ds" + prevId, "g");
-			newTr = newTr.replace(pat, "[" + newId + "]");
-			newTr = newTr.replace(pat1, "Ds" + newId);
+					var newTr = "<tr>" + $(prevTr).html() + "</tr>";
+					var pat = new RegExp("\\[" + prevId + "\\]", "g");
+					var pat1 = new RegExp("Ds" + prevId, "g");
+					newTr = newTr.replace(pat, "[" + newId + "]");
+					newTr = newTr.replace(pat1, "Ds" + newId);
 
-			$(newTr).insertBefore($(currentTr)).prop("id", newId);
+					$(newTr).insertBefore($(currentTr)).prop("id", newId);
 
-			$("#taiKhoanCoDs" + newId + "\\.taiKhoan\\.maTk").val("0");
-			$("#taiKhoanCoDs" + newId + "\\.soTien").val("0.0");
-			$("#taiKhoanCoDs" + newId + "\\.soTien").prop("placeholder", "0.0");
-			$("#taiKhoanCoDs" + newId + "\\.lyDo").val("");
-			$("#taiKhoanCoDs" + newId + "\\.lyDo").prop("placeholder", "Lý do");
-			$("#taiKhoanCoDs" + newId + "\\.soTien\\.errors").remove();
-			$("#taiKhoanCoDs" + newId + "\\.taiKhoan\\.maTk\\.errors").remove();
-			
-			$("#taiKhoanNoDs" + newId + "\\.taiKhoan\\.maTk").remove();
-			$("#taiKhoanNoDs" + newId + "\\.ghiNo").remove();
-			$("#taiKhoanNoDs" + newId + "\\.soTien").remove();
-			$("#taiKhoanNoDs" + newId + "\\.soTien\\.errors").remove();
-			
+					$("#taiKhoanNoDs" + newId + "\\.taiKhoan\\.maTk").val("0");
+					$("#taiKhoanNoDs" + newId + "\\.soTien").val("0.0");
+					$("#taiKhoanNoDs" + newId + "\\.soTien").prop(
+							"placeholder", "0.0");
+					$("#taiKhoanNoDs" + newId + "\\.lyDo").val("");
+					$("#taiKhoanNoDs" + newId + "\\.lyDo").prop("placeholder",
+							"Lý do");
+					$("#taiKhoanNoDs" + newId + "\\.soTien\\.errors").remove();
+					$("#taiKhoanNoDs" + newId + "\\.taiKhoan\\.maTk\\.errors")
+							.remove();
 
-			$("#xoaTkCo").removeClass("disabled");
-		});
+					$("#taiKhoanCoDs" + newId + "\\.taiKhoan\\.maTk").remove();
+					$("#taiKhoanCoDs" + newId + "\\.ghiNo").remove();
+					$("#taiKhoanCoDs" + newId + "\\.soTien").remove();
+					$("#taiKhoanCoDs" + newId + "\\.soTien\\.errors").remove();
 
-		$("#xoaTkCo").click(function() {
+					$("#xoaTkNo").removeClass("disabled");
+				});
+
+		$("#xoaTkNo").click(function() {
 			var removedTr = $(this).parent().parent().prev();
 			var id = $(removedTr).prop("id");
 			$(removedTr).remove();
 
 			if (id == 1) {
-				$("#xoaTkCo").addClass("disabled");
+				$("#xoaTkNo").addClass("disabled");
 			}
 		});
 
@@ -234,19 +237,19 @@
 	});
 </script>
 
-<h4>PHIẾU THU</h4>
+<h4>PHIẾU CHI</h4>
 <hr />
 <form:hidden path="maCt" />
 <form:hidden path="loaiCt" />
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="soCt">Số phiếu thu:</label>
+	<label class="control-label col-sm-2" for="soCt">Số phiếu chi:</label>
 	<div class="col-sm-4">
 		${mainFinanceForm.soCt}
 		<form:hidden path="soCt" />
 	</div>
 
 	<label class="control-label col-sm-2" for=ngayLap>Ngày lập
-		phiếu thu:</label>
+		phiếu chi:</label>
 	<div class="col-sm-4">
 		<fmt:formatDate value="${mainFinanceForm.ngayLap}" pattern="dd/M/yyyy"
 			type="Date" dateStyle="SHORT" />
@@ -339,8 +342,8 @@
 	<div class="col-sm-4">
 		<form:hidden path="soTien.giaTri" />
 		<p id="soTien.giaTriTxt">
-			<fmt:formatNumber value="${mainFinanceForm.soTien.giaTri}"
-				maxFractionDigits="2"></fmt:formatNumber>
+			<fmt:formatNumber value="${mainFinanceForm.soTien.giaTri}"></fmt:formatNumber>
+			&nbsp;VND
 		</p>
 		(<i>Chuyển thành tiền Việt Nam Đồng</i>)
 	</div>
@@ -380,36 +383,54 @@
 		class="table table-bordered table-hover text-center dinhkhoan">
 		<thead>
 			<tr>
-				<th class="text-center" colspan="3">Nợ</th>
-				<th class="text-center" colspan="4">Có</th>
+				<th class="text-center" colspan="4">Nợ</th>
+				<th class="text-center" colspan="3">Có</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
 				<th class="text-center"><b>Tài khoản</b></th>
 				<th class="text-center"><b>Giá trị</b></th>
+				<th class="text-center"><b>Lý do</b></th>
 				<th class="text-center"><b>Ghi chú</b></th>
 				<th class="text-center"><b>Tài khoản</b></th>
 				<th class="text-center"><b>Giá trị</b></th>
-				<th class="text-center"><b>Lý do</b></th>
 				<th class="text-center"><b>Ghi chú</b></th>
 			</tr>
+
 			<c:forEach begin="0" end="${mainFinanceForm.soTkLonNhat-1}"
 				varStatus="status">
 				<tr id="${status.index}">
 					<!-- Phần ghi Nợ -->
+					<td><form:select cssClass="form-control"
+							path="taiKhoanNoDs[${status.index}].taiKhoan.maTk"
+							multiple="false">
+							<form:option value="0">Tài khoản</form:option>
+							<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
+								itemLabel="maTenTk" />
+						</form:select> <form:hidden path="taiKhoanNoDs[${status.index}].ghiNo" /></td>
+					<td><form:input cssClass="form-control"
+							path="taiKhoanNoDs[${status.index}].soTien" placeholder="0.0" /></td>
+					<td><form:input cssClass="form-control"
+							path="taiKhoanNoDs[${status.index}].lyDo" placeholder="Lý do" /></td>
+					<td><form:errors
+							path="taiKhoanNoDs[${status.index}].taiKhoan.maTk"
+							cssClass="error" /> <form:errors
+							path="taiKhoanNoDs[${status.index}].soTien" cssClass="error" /></td>
+
+					<!-- Phần ghi Có -->
 					<c:choose>
 						<c:when
-							test="${status.index < mainFinanceForm.taiKhoanNoDs.size()}">
+							test="${status.index < mainFinanceForm.taiKhoanCoDs.size()}">
 							<td><form:select cssClass="form-control"
-									path="taiKhoanNoDs[${status.index}].taiKhoan.maTk"
+									path="taiKhoanCoDs[${status.index}].taiKhoan.maTk"
 									multiple="false">
 									<form:options items="${loaiTaiKhoanTmDs}" itemValue="maTk"
 										itemLabel="maTenTk" />
-								</form:select> <form:hidden path="taiKhoanNoDs[${status.index}].ghiNo" /></td>
+								</form:select> <form:hidden path="taiKhoanCoDs[${status.index}].ghiNo" /></td>
 							<td><form:input cssClass="form-control"
-									path="taiKhoanNoDs[${status.index}].soTien" placeholder="0.0" /></td>
-							<td><form:errors path="taiKhoanNoDs[${status.index}].soTien"
+									path="taiKhoanCoDs[${status.index}].soTien" placeholder="0.0" /></td>
+							<td><form:errors path="taiKhoanCoDs[${status.index}].soTien"
 									cssClass="error" /></td>
 						</c:when>
 						<c:otherwise>
@@ -418,34 +439,17 @@
 							<td></td>
 						</c:otherwise>
 					</c:choose>
-
-					<!-- Phần ghi Có -->
-					<td><form:select cssClass="form-control"
-							path="taiKhoanCoDs[${status.index}].taiKhoan.maTk"
-							multiple="false">
-							<form:option value="0">Tài khoản</form:option>
-							<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
-								itemLabel="maTenTk" />
-						</form:select> <form:hidden path="taiKhoanCoDs[${status.index}].ghiNo" /></td>
-					<td><form:input cssClass="form-control"
-							path="taiKhoanCoDs[${status.index}].soTien" placeholder="0.0" /></td>
-					<td><form:input cssClass="form-control"
-							path="taiKhoanCoDs[${status.index}].lyDo" placeholder="Lý do" /></td>
-					<td><form:errors
-							path="taiKhoanCoDs[${status.index}].taiKhoan.maTk"
-							cssClass="error" /> <form:errors
-							path="taiKhoanCoDs[${status.index}].soTien" cssClass="error" /></td>
 				</tr>
 			</c:forEach>
 			<tr>
 				<td colspan="6">
-					<button id="themTkCo" type="button" class="btn btn-info btn-sm"
-						title="Thêm tài khoản ghi có">
+					<button id="themTkNo" type="button" class="btn btn-info btn-sm"
+						title="Thêm tài khoản ghi nợ">
 						<span class="glyphicon glyphicon-plus"></span> Thêm
 					</button>
-					<button id="xoaTkCo" type="button"
+					<button id="xoaTkNo" type="button"
 						class="btn btn-info btn-sm disabled"
-						title="Xóa tài khoản ghi có cuối cùng">
+						title="Xóa tài khoản ghi nợ cuối cùng">
 						<span class="glyphicon glyphicon-plus"></span> Xóa
 					</button>
 				</td>
@@ -456,8 +460,7 @@
 
 <div class="row form-group">
 	<div class="col-sm-2">
-		<a href="${url}/xemphieuthu/${mainFinanceForm.maCt}"
-			class="btn btn-info btn-sm">Hủy</a>
+		<a href="${url}/danhsachphieuchi" class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu
 			thay đổi</button>
 	</div>

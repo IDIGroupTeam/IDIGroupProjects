@@ -5,16 +5,26 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
+
 public class ChungTu {
+	// Hằng số cho phần chứng từ: Phiếu thu, chi, báo có, báo nợ
+	public static final String CHUNG_TU_PHIEU_THU = "PT";
+	public static final String CHUNG_TU_PHIEU_CHI = "PC";
+	public static final String CHUNG_TU_BAO_NO = "BN";
+	public static final String CHUNG_TU_BAO_CO = "BC";
+
 	private int maCt;
 	private int soCt;
 	private String loaiCt;
 	private Date ngayLap;
+	private Date ngayHt;
 	private String lyDo;
 	private Tien soTien;
 	private int kemTheo;
 	private DoiTuong doiTuong;
-	private List<TaiKhoan> taiKhoanDs;
+	private List<TaiKhoan> taiKhoanNoDs;
+	private List<TaiKhoan> taiKhoanCoDs;
 
 	public int getMaCt() {
 		return maCt;
@@ -46,6 +56,14 @@ public class ChungTu {
 
 	public void setNgayLap(Date ngayLap) {
 		this.ngayLap = ngayLap;
+	}
+
+	public Date getNgayHt() {
+		return ngayHt;
+	}
+
+	public void setNgayHt(Date ngayHt) {
+		this.ngayHt = ngayHt;
 	}
 
 	public String getLyDo() {
@@ -80,24 +98,25 @@ public class ChungTu {
 		this.doiTuong = doiTuong;
 	}
 
-	public List<TaiKhoan> getTaiKhoanDs() {
-		return taiKhoanDs;
-	}
-
-	public void setTaiKhoanDs(List<TaiKhoan> taiKhoanDs) {
-		this.taiKhoanDs = taiKhoanDs;
-	}
-
 	public void themTaiKhoan(TaiKhoan taiKhoan) {
 		if (taiKhoan == null) {
 			return;
 		}
 
-		if (taiKhoanDs == null)
-			taiKhoanDs = new ArrayList<>();
+		if (taiKhoan.getGhiNo() == LoaiTaiKhoan.NO) {
+			if (taiKhoanNoDs == null)
+				taiKhoanNoDs = new ArrayList<>();
 
-		if (!taiKhoanDs.contains(taiKhoan)) {
-			taiKhoanDs.add(taiKhoan);
+			if (!taiKhoanNoDs.contains(taiKhoan)) {
+				taiKhoanNoDs.add(taiKhoan);
+			}
+		} else if (taiKhoan.getGhiNo() == LoaiTaiKhoan.CO) {
+			if (taiKhoanCoDs == null)
+				taiKhoanCoDs = new ArrayList<>();
+
+			if (!taiKhoanCoDs.contains(taiKhoan)) {
+				taiKhoanCoDs.add(taiKhoan);
+			}
 		}
 	}
 
@@ -106,21 +125,62 @@ public class ChungTu {
 			return;
 		}
 
-		if (this.taiKhoanDs == null)
-			this.taiKhoanDs = new ArrayList<>();
-
 		Iterator<TaiKhoan> iter = taiKhoanDs.iterator();
 		while (iter.hasNext()) {
 			TaiKhoan taiKhoan = iter.next();
-			if (!this.taiKhoanDs.contains(taiKhoan)) {
-				this.taiKhoanDs.add(taiKhoan);
+			themTaiKhoan(taiKhoan);
+		}
+	}
+
+	public List<TaiKhoan> getTaiKhoanDs() {
+		List<TaiKhoan> taiKhoanDs = new ArrayList<>();
+		if (taiKhoanNoDs != null) {
+			taiKhoanDs.addAll(taiKhoanNoDs);
+		}
+		if (taiKhoanCoDs != null) {
+			taiKhoanDs.addAll(taiKhoanCoDs);
+		}
+
+		return taiKhoanDs;
+	}
+
+	public List<TaiKhoan> getTaiKhoanNoDs() {
+		return taiKhoanNoDs;
+	}
+
+	public void setTaiKhoanNoDs(List<TaiKhoan> taiKhoanNoDs) {
+		this.taiKhoanNoDs = taiKhoanNoDs;
+	}
+
+	public List<TaiKhoan> getTaiKhoanCoDs() {
+		return taiKhoanCoDs;
+	}
+
+	public void setTaiKhoanCoDs(List<TaiKhoan> taiKhoanCoDs) {
+		this.taiKhoanCoDs = taiKhoanCoDs;
+	}
+
+	public int getSoTkLonNhat() {
+		int soTkLonNhat = 0;
+
+		if (taiKhoanNoDs == null) {
+			if (taiKhoanCoDs != null) {
+				soTkLonNhat = taiKhoanCoDs.size();
+			}
+		} else {
+			if (taiKhoanCoDs == null) {
+				soTkLonNhat = taiKhoanNoDs.size();
+			} else {
+				soTkLonNhat = taiKhoanNoDs.size() > taiKhoanCoDs.size() ? taiKhoanNoDs.size() : taiKhoanCoDs.size();
 			}
 		}
+
+		return soTkLonNhat;
 	}
 
 	@Override
 	public String toString() {
-		String out = maCt + "  " + loaiCt + " " + soCt + " " + ngayLap;
+		String out = maCt + " " + loaiCt + " " + soCt;
 		return out;
 	}
 

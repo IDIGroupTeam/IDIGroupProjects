@@ -32,17 +32,17 @@
 		<put-attribute name="title" value="Danh sách phiếu thu" />
 		<put-attribute name="body" value="/pages/chungtu/phieuThuDs.jsp" />
 	</definition>
-		
+
 	<definition name="xemPhieuThu" extends="layouts">
 		<put-attribute name="title" value="Chi tiết phiếu thu" />
 		<put-attribute name="body" value="/pages/chungtu/phieuThuXm.jsp" />
 	</definition>
-	
+
 	<definition name="suaPhieuThu" extends="layouts">
 		<put-attribute name="title" value="Sửa phiếu thu" />
 		<put-attribute name="body" value="/pages/chungtu/phieuThuSu.jsp" />
 	</definition>
-	
+
 	<definition name="taoMoiPhieuThu" extends="layouts">
 		<put-attribute name="title" value="Tạo mới phiếu thu" />
 		<put-attribute name="body" value="/pages/chungtu/phieuThuTm.jsp" />
@@ -51,6 +51,16 @@
 	<definition name="danhSachPhieuChi" extends="layouts">
 		<put-attribute name="title" value="Danh sách phiếu chi" />
 		<put-attribute name="body" value="/pages/chungtu/phieuChiDs.jsp" />
+	</definition>
+
+	<definition name="xemPhieuChi" extends="layouts">
+		<put-attribute name="title" value="Chi tiết phiếu chi" />
+		<put-attribute name="body" value="/pages/chungtu/phieuChiXm.jsp" />
+	</definition>
+
+	<definition name="suaPhieuChi" extends="layouts">
+		<put-attribute name="title" value="Sửa phiếu chi" />
+		<put-attribute name="body" value="/pages/chungtu/phieuChiSu.jsp" />
 	</definition>
 
 	<definition name="taoMoiPhieuChi" extends="layouts">
@@ -78,6 +88,29 @@
 		<put-attribute name="body" value="/pages/chungtu/baoCoTm.jsp" />
 	</definition>
 	<!-- Kết thúc Tab chứng từ -->
+
+
+	<!-- Bắt đầu Tab sổ kế toán -->
+	<definition name="sktNhatKyChung" extends="layouts">
+		<put-attribute name="title" value="Sổ nhật ký chung" />
+		<put-attribute name="body" value="/pages/soketoan/sktNhatKyChung.jsp" />
+	</definition>
+	
+	<definition name="sktSoCai" extends="layouts">
+		<put-attribute name="title" value="Sổ cái" />
+		<put-attribute name="body" value="/pages/soketoan/sktSoCai.jsp" />
+	</definition>
+	
+	<definition name="sktSoTienMat" extends="layouts">
+		<put-attribute name="title" value="Sổ tiền mặt" />
+		<put-attribute name="body" value="/pages/soketoan/sktSoTienMat.jsp" />
+	</definition>
+	
+	<definition name="sktSoCongNo" extends="layouts">
+		<put-attribute name="title" value="Sổ chi tiết công nợ" />
+		<put-attribute name="body" value="/pages/soketoan/sktSoCongNo.jsp" />
+	</definition>
+	<!-- Kết thúc Tab sổ kế toán -->
 
 
 	<!-- Bắt đầu Tab báo cáo tài chính -->

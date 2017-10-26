@@ -2,11 +2,16 @@ package com.idi.finance.bean;
 
 import java.text.DecimalFormat;
 
+import org.springframework.format.annotation.NumberFormat;
+
 public class LoaiTien {
 	private String maLt;
 	private String tenLt;
+	@NumberFormat(pattern = "#")
 	private double muaTM;
+	@NumberFormat(pattern = "#")
 	private double muaCk;
+	@NumberFormat(pattern = "#")
 	private double banRa = 1;
 
 	public String getMaLt() {

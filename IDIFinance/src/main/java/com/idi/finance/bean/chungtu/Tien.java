@@ -1,10 +1,14 @@
 package com.idi.finance.bean.chungtu;
 
+import org.springframework.format.annotation.NumberFormat;
+
 import com.idi.finance.bean.LoaiTien;
 
 public class Tien {
 	private LoaiTien tien;
+	@NumberFormat(pattern = "#")
 	private double soTien;
+	@NumberFormat(pattern = "#")
 	private double giaTri;
 
 	public LoaiTien getTien() {
