@@ -8,9 +8,12 @@
 	</div>
 	<div class="panel-body">
 		<ul class="nav nav-pills nav-stacked">
-			<li><a href="/IDIFinance">Tài chính</a></li>
-			<li><a href="/IDIHR">Nhân sự</a></li>
-			<li><a href="#">Kinh doanh</a></li>
+			<li><a href="/IDIFinance">Quản lý Tài chính & Kế toán</a></li>
+			<li><a href="/IDIHR">Quan lý Nhân sự</a></li>
+			<li><a href="/IDIHome/pages/Thongbao.jsp">Quản lý Khách hàng</a></li>
+			<li> <a href="/IDIHome/pages/Thongbao.jsp">Quản lý Kho</a></li>
+			<li><a href="/IDIHome/pages/Thongbao.jsp">Quản lý Nguồn vốn</a></li>
+			<li><a href="/IDIHome/pages/ListDocuments.jsp">Download Tài liệu</a></li>
 		</ul>
 	</div>
 </div>
