@@ -5,7 +5,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 <body>
-	<h1>Name : ${name}</h1>
-	<h1>Description : ${description}</h1>
+	<p align="center"><b><u><h1> ${name}</h1></u></b></p>
+	<h2><i> ${description}</i></h2>
+	
+	<h3><a href="C:\home\idi\documents\BaoCao _PhongCNTTTuan41.pdf">Download Tailieu1 </a> </h3>
 </body>
 </html>
