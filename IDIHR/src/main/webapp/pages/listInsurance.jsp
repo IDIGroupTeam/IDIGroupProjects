@@ -13,17 +13,19 @@
 	<br />
 	<div class="table-responsive">
 		
-		<table class="table table-striped" border="1">
+		<table class="table table-striped">
 			<tr>
 				<th>Mã NV</th>
 				<th>Số sổ BHXH</th>
 				<th>Lương BH</th>
-				<th>Cty đóng BHXH</th>
+				
 				<th>Đóng tại</th>
 				<th>Tình trạng đóng BHXH</th>
 				<th>Số thẻ BHYT</th>
 				<th>Nơi ĐK khám bệnh</th>
+				<th>Quá trình đóng BH</th>
 				<th>Xem chi tiết</th>
+				
 				<th>Sửa</th>
 			</tr>
 			<c:forEach var="insurance" items="${insurances}">
@@ -31,12 +33,13 @@
 					<td>${insurance.employeeId}</td>
 					<td>${insurance.socicalInsuNo}</td>
 					<td>${insurance.salarySocicalInsu}</td>
-					<td>${insurance.companyPay}</td>
+					
 					<td>${insurance.place}</td>
 					<td>${insurance.status}</td>
 					<td>${insurance.hInsuNo}</td>
 					<td>${insurance.place}</td>
-					<td><a href="viewInsurance?socicalInsuNo=${insurance.socicalInsuNo}">Xem</a></td>
+					<td><a href="viewInsurance?socicalInsuNo=${insurance.socicalInsuNo}">Xem chi tiết</a></td>
+					<td><a href="listProcessInsurance?socicalInsuNo=${insurance.socicalInsuNo}&employeeId=${insurance.employeeId}">Quá trình đóng</a></td>
 					<td><a href="editInsurance?socicalInsuNo=${insurance.socicalInsuNo}">Sửa</a></td>
 				</tr>
 			</c:forEach>

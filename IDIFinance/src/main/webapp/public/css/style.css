@@ -6,18 +6,11 @@ body {
 
 /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
 .navbar-default {
-	height: 120px;
-	/* background-color: #2e5589; #99ccff, #4266b2*/
+	height: 110px;
 	background: -webkit-linear-gradient(left top, #2e5589, #4266b2);
 	background: -o-linear-gradient(bottom right, #2e5589, #4266b2);
 	background: -moz-linear-gradient(bottom right, #2e5589, #4266b2);
 	background: linear-gradient(to bottom right, #2e5589, #4266b2);
-}
-
-.page-header {
-	border: none;
-	padding-right: 20px;
-	color: #4266B2;
 }
 
 .row.content {
@@ -57,13 +50,52 @@ body {
 	}
 }
 
-span.multiselect {
-	cursor: pointer;
+div.searchbox {
+	margin: 0px;
+	padding: 0px;
+	max-height: 150px;
+	overflow: auto;
 }
 
-div.searchbox {
-	/* height: 200px; */
-	margin: 0px;
-	max-height: 180px;
-	overflow: auto;
+.small-block {
+	font-size: 85%;
+}
+
+.small-block {
+	
+}
+
+.small-block table, tr, td {
+	padding: 2px;
+}
+
+.small-block td.limited {
+	max-width: 150px;
+}
+
+.small-block td.good {
+	background-color: green;
+}
+
+.small-block  td.bad {
+	background-color: red;
+}
+
+.login {
+	color: #ffffff;
+}
+
+.login:hover {
+	color: #f0f0f0;
+}
+
+.error {
+	color: #ff0000;
+	font-style: italic;
+	font-weight: bold;
+	font-size: 90%;
+}
+
+.dinhkhoan tr td {
+	width: 200px;
 }

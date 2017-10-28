@@ -102,7 +102,7 @@ public class PropertiesManager extends Properties {
 
 			if (fileExists) {
 				logger.info("Properties file exist load it from: " + propPath + propertiesFileName);
-				is = new FileInputStream(propPath + "/" + propertiesFileName);
+				is = new FileInputStream(propPath + "\\" + propertiesFileName);
 			} else {
 				// Otherwise, use resource as stream.
 				is = this.getClass().getResourceAsStream(propPath + propertiesFileName);

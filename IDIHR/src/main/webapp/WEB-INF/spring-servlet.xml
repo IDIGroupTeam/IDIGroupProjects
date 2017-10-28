@@ -37,10 +37,9 @@
 		<property name="username" value="root" />
 		<property name="password" value="" />
 	</bean>
-	
-<!-- 	<bean id="multipartResolver"
-		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-	</bean> -->
+
+	<!-- <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> 
+		</bean> -->
 
 	<bean id="jdbcTmpl" class="org.springframework.jdbc.core.JdbcTemplate">
 		<property name="dataSource" ref="dataSource"></property>
@@ -57,8 +56,12 @@
 	<bean id="departmentDAO" class="com.idi.hr.dao.DepartmentDAO">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
-	
+
 	<bean id="insuranceDAO" class="com.idi.hr.dao.InsuranceDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+
+	<bean id="workHistoryDAO" class="com.idi.hr.dao.WorkHistoryDAO">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 </beans>

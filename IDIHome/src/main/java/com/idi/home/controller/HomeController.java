@@ -14,9 +14,10 @@ public class HomeController {
 		String strDes =null;
 		logger.info("Inside welcome() method");
 		model.addAttribute("name", "Phần mềm quản trị IDIGroup");
-		strDes="Xin chào Ngài! \n"
+		strDes="Xin chào Bạn! \n"
 				+"Phần mềm đang trong giai đoạn xây dựng \n"
-				+"Chúng tôi rất cần sự đóng góp ý kiến xây dựng của Ngài \n" ;
+				+"Chúng tôi rất cần sự đóng góp ý kiến xây dựng của bạn \n"
+				+"Bạn có thể trải nghiệm tại các Module Nhân sự, Module Tài chính & Kế toán";
 		model.addAttribute("description", strDes);
 		return "home";
 	}

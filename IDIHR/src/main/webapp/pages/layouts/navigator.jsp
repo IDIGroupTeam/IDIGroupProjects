@@ -13,7 +13,7 @@
 			<li><a href="#">TNCN</a></li>
 			<li><a href="#">Khen thưởng/Kỷ luật</a></li>
 			<li><a href="#">HĐ lao động</a></li>
-			<li><a href="#">Lịch sử công tác</a></li>
+			<li><a href="/IDIHR/workHistory/">Lịch sử công tác</a></li>
 			<li><a href="#">TK Ngân hàng</a></li>
 		</ul>
 	</div>
