@@ -31,8 +31,9 @@ public class ChungTuValidator implements Validator {
 		ChungTu chungTu = (ChungTu) target;
 
 		if (chungTu.getLoaiCt() != null) {
-			if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_PHIEU_THU)) {
-				// Validate cho phần phiếu thu
+			if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_PHIEU_THU)
+					|| chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_BAO_CO)) {
+				// Validate cho phần phiếu thu hoặc báo có
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "doiTuong.tenDt", "NotEmpty.chungTu.doiTuong.tenDt");
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lyDo", "NotEmpty.chungTu.lyDo");
 
@@ -108,8 +109,9 @@ public class ChungTuValidator implements Validator {
 				if (coTrungLapTkCo) {
 					errors.rejectValue("taiKhoanCoDs[0].taiKhoan.maTk", "Duplicate.taiKhoanCoDs[0].taiKhoan.maTk");
 				}
-			} else if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_PHIEU_CHI)) {
-				// Validate cho phần phiếu chi
+			} else if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_PHIEU_CHI)
+					|| chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_BAO_NO)) {
+				// Validate cho phần phiếu chi hoặc báo nợ
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "doiTuong.tenDt", "NotEmpty.chungTu.doiTuong.tenDt");
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lyDo", "NotEmpty.chungTu.lyDo");
 
@@ -186,6 +188,5 @@ public class ChungTuValidator implements Validator {
 				}
 			}
 		}
-
 	}
 }

@@ -74,10 +74,10 @@
 												thu</a></li>
 										<li id="tabCTPC"><a href="${url}/danhsachphieuchi">Phiếu
 												chi</a></li>
-										<li id="tabCTBN"><a href="${url}/danhsachbaono">Báo
-												nợ</a></li>
 										<li id="tabCTBC"><a href="${url}/danhsachbaoco">Báo
 												có</a></li>
+										<li id="tabCTBN"><a href="${url}/danhsachbaono">Báo
+												nợ</a></li>
 									</ul></li>
 								<li class="dropdown"><a class="dropdown-toggle"
 									data-toggle="dropdown" href="#">Sổ kế toán<span
@@ -92,7 +92,8 @@
 												tiền mặt</a></li>
 										<li id="tabSKTSCN"><a href="${url}/soketoan/socongno">Sổ
 												công nợ</a></li>
-										<li><a href="#">Quản lý sổ</a></li>
+										<li id="tabSKTSTGNH"><a
+											href="${url}/soketoan/sotienguinganhang">Sổ tiền gửi</a></li>
 									</ul></li>
 								<li class="dropdown"><a class="dropdown-toggle"
 									data-toggle="dropdown" href="#">Báo cáo tài chính<span

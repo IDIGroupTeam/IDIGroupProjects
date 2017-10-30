@@ -239,10 +239,10 @@
 
 <h4>BÁO CÓ</h4>
 <hr />
+<form:hidden path="maCt" />
 <form:hidden path="loaiCt" />
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="soCt">Số báo có dự
-		kiến:</label>
+	<label class="control-label col-sm-2" for="soCt">Số báo có:</label>
 	<div class="col-sm-4">
 		${mainFinanceForm.soCt}
 		<form:hidden path="soCt" />
@@ -342,8 +342,8 @@
 	<div class="col-sm-4">
 		<form:hidden path="soTien.giaTri" />
 		<p id="soTien.giaTriTxt">
-			<fmt:formatNumber value="${mainFinanceForm.soTien.giaTri}"></fmt:formatNumber>
-			&nbsp;VND
+			<fmt:formatNumber value="${mainFinanceForm.soTien.giaTri}"
+				maxFractionDigits="2"></fmt:formatNumber>
 		</p>
 		(<i>Chuyển thành tiền Việt Nam Đồng</i>)
 	</div>
@@ -441,7 +441,7 @@
 				</tr>
 			</c:forEach>
 			<tr>
-				<td colspan="7">
+				<td colspan="6">
 					<button id="themTkCo" type="button" class="btn btn-info btn-sm"
 						title="Thêm tài khoản ghi có">
 						<span class="glyphicon glyphicon-plus"></span> Thêm
@@ -459,8 +459,9 @@
 
 <div class="row form-group">
 	<div class="col-sm-2">
-		<a href="${url}/danhsachbaoco" class="btn btn-info btn-sm">Hủy</a>
-		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Tạo
-			mới</button>
+		<a href="${url}/xembaoco/${mainFinanceForm.maCt}"
+			class="btn btn-info btn-sm">Hủy</a>
+		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu
+			thay đổi</button>
 	</div>
 </div>
