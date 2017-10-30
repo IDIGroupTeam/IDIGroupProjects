@@ -16,9 +16,4 @@ public class HomeController {
 		model.addAttribute("description", "Xin chào !");
 		return "home";
 	}
-
-	@RequestMapping(value = "/login")
-	public String login(Model model) {
-		return "login";
-	}
 }
