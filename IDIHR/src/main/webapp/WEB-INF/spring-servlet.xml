@@ -64,4 +64,9 @@
 	<bean id="workHistoryDAO" class="com.idi.hr.dao.WorkHistoryDAO">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
+	
+	<bean id="timekeepingDAO" class="com.idi.hr.dao.TimekeepingDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+	
 </beans>

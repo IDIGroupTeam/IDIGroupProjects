@@ -11,34 +11,64 @@ public class Timekeeping implements Serializable{
 	private static final long serialVersionUID = -8997072752578722467L;
 
 	private int employeeId;
+	private String employeeName;
+	private String joinDate;
+	
 	private Date date;
-	private String comeLeave;
+	//private String comeLeave;
 	private String leaveType;
 	private String overtimeType;
-	private int notTimekeeping;
-	private String timeValue;
+	private int notTimekeeping;//ko cham cong
+	private String overTimeValue;
+	//private String onBussiness;//di cong tac
+	//private String study;//di hoc
 	private String comment;
 	
 	//----- for report -----// 
 	//count for month
 	private String seniority;//tham nien
-	private String leaveAppoved; //nghi co phep
-	private String leaveUnAppoved;// nghi khong phep
-	private String leaveWithoutPay;// nghi khong luong
-	private String notTimekeepingCount;// so lan khong cham cong
+	private String leaveAppoved; //nghi co phep//
+	private String leaveUnAppoved;// nghi khong phep//
+	private String leaveWithoutPay;// nghi khong luong//
+	//private String notTimekeepingCount;// so lan khong cham cong
 	private String comeLateM;// den muon sang
 	private String leaveSoonM;//ve som sang
 	private String comeLateA;// den muon chieu
 	private String leaveSoonA;//ve som chieu
 	//count for year
-	private String quataLeave;//tong so ngay phep cua nam
+	private String quataLeave;//tong so ngay phep cua nam -> TINH THEO CONG THUC
 	private String restQuata;// tong so ngay phep con tu nam truoc
 	private String leaveUsed;// so ngay phep da su dung trong nam
-	private String leaveCanUse;//so ngay phep con lai trong nam
+	private String leaveRemain;//so ngay phep con lai trong nam
 	//
-	private String employeeName;
-	private String joinDate;
-	
+		
+	public Timekeeping() {}
+
+	public Timekeeping(int employeeId, String employeeName, String joinDate, Date date, String leaveType,
+			String overtimeType, int notTimekeeping, String overTimeValue, String comment,// String seniority,
+			String comeLateM, String leaveSoonM, String comeLateA, String leaveSoonA, String quataLeave,
+			String restQuata, String leaveUsed, String leaveRemain) {
+
+		this.employeeId = employeeId;
+		this.employeeName = employeeName;
+		this.joinDate = joinDate;
+		this.date = date;
+		this.leaveType = leaveType;
+		this.overtimeType = overtimeType;
+		this.notTimekeeping = notTimekeeping;
+		this.overTimeValue = overTimeValue;
+		this.comment = comment;
+		
+		this.seniority = seniority;
+		this.comeLateM = comeLateM;
+		this.leaveSoonM = leaveSoonM;
+		this.comeLateA = comeLateA;
+		this.leaveSoonA = leaveSoonA;
+		this.quataLeave = quataLeave;
+		this.restQuata = restQuata;
+		this.leaveUsed = leaveUsed;
+		this.leaveRemain = leaveRemain;
+	}
 	
 	public int getEmployeeId() {
 		return employeeId;
@@ -52,12 +82,12 @@ public class Timekeeping implements Serializable{
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	public String getComeLeave() {
+/*	public String getComeLeave() {
 		return comeLeave;
 	}
 	public void setComeLeave(String comeLeave) {
 		this.comeLeave = comeLeave;
-	}
+	}*/
 	public String getLeaveType() {
 		return leaveType;
 	}
@@ -76,11 +106,11 @@ public class Timekeeping implements Serializable{
 	public void setNotTimekeeping(int notTimekeeping) {
 		this.notTimekeeping = notTimekeeping;
 	}
-	public String getTimeValue() {
-		return timeValue;
+	public String getOverTimeValue() {
+		return overTimeValue;
 	}
-	public void setTimeValue(String timeValue) {
-		this.timeValue = timeValue;
+	public void setOverTimeValue(String overTimeValue) {
+		this.overTimeValue = overTimeValue;
 	}
 	public String getComment() {
 		return comment;
@@ -112,12 +142,12 @@ public class Timekeeping implements Serializable{
 	public void setLeaveWithoutPay(String leaveWithoutPay) {
 		this.leaveWithoutPay = leaveWithoutPay;
 	}
-	public String getNotTimekeepingCount() {
+/*	public String getNotTimekeepingCount() {
 		return notTimekeepingCount;
 	}
 	public void setNotTimekeepingCount(String notTimekeepingCount) {
 		this.notTimekeepingCount = notTimekeepingCount;
-	}
+	}*/
 	public String getComeLateM() {
 		return comeLateM;
 	}
@@ -160,11 +190,11 @@ public class Timekeeping implements Serializable{
 	public void setLeaveUsed(String leaveUsed) {
 		this.leaveUsed = leaveUsed;
 	}
-	public String getLeaveCanUse() {
-		return leaveCanUse;
+	public String getLeaveRemain() {
+		return leaveRemain;
 	}
-	public void setLeaveCanUse(String leaveCanUse) {
-		this.leaveCanUse = leaveCanUse;
+	public void setLeaveRemain(String leaveRemain) {
+		this.leaveRemain = leaveRemain;
 	}
 	public String getEmployeeName() {
 		return employeeName;

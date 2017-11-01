@@ -96,7 +96,7 @@
 					<tr>
 						<td>&nbsp;</td>
 						<td align="right"><input type="submit" value="Lưu" /> <a
-							href="${pageContext.request.contextPath}/insurance/">Thoát</a></td>
+							href="${pageContext.request.contextPath}/insurance/"><button>Thoát</button></a></td>
 						<td>&nbsp;</td>
 					</tr>
 				</tbody>
