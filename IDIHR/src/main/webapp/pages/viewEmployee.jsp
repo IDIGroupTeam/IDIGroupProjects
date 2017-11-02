@@ -16,125 +16,90 @@
 </style>
 </head>
 <body>
-	<h4>
-		<b>Thông tin nhân viên</b>
-	</h4>
+	<br />
 	<div class="table table-bordered">
 		<table class="table">
 			<tbody>
 				<tr>
-					<td>Mã NV:</td>
-					<td><c:out value="${employeeForm.employeeId}" /></td>
-
-					<td>Ngày vào cty:</td>
-					<td><c:out value="${employeeForm.joinDate}" /></td>
-
-					<td>Lương:</td>
-					<td><c:out value="${employeeForm.salary}" /></td>
-				</tr>
-
-				<tr>
-					<td>Họ tên:</td>
+					<td>Mã nhân viên: <c:out value="${employeeForm.employeeId}" /></td>
+					<td bgcolor="#E6E6E6">Họ tên:</td>
 					<td><c:out value="${employeeForm.fullName}" /></td>
-
-					<td>Ngày ký HĐLĐ:</td>
-					<td><c:out value="${employeeForm.officalJoinDate}" /></td>
-
-					<td>Lương đóng BHXH:</td>
-					<td><c:out value="${employeeForm.salarySocicalInsu}" /></td>
-				</tr>
-
-				<tr>
-					<td>Email:</td>
-					<td><c:out value="${employeeForm.email}" /></td>
-
-					<td>Chức vụ:</td>
-					<td><c:out value="${employeeForm.jobTitle}" /></td>
-
-					<td>Tỉ lệ đóng BHXH:</td>
-					<td><c:out value="${employeeForm.percentSocicalInsu}" /></td>
-				</tr>
-				<tr>
-					<td>Ngày sinh:</td>
-					<td><c:out value="${employeeForm.DOB}" /></td>
-					<td>Phòng:</td>
-					<td><c:out value="${employeeForm.department}" /></td>
-					<td>Số sổ BHXH:</td>
-					<td><c:out value="${employeeForm.socicalInsuNo}" /></td>
-				</tr>
-				<tr>
-					<td>Giới tính:</td>
-					<td><c:out value="${employeeForm.gender}" /></td>
-
-					<td>T/T hôn nhân:</td>
-					<td><c:out value="${employeeForm.maritalStatus}" /></td>
-
-					<td>Số thẻ BHYT:</td>
-					<td><c:out value="${employeeForm.healthInsuNo}" /></td>
-				</tr>
-				<tr>
-					<td>Quốc tịch:</td>
-					<td><c:out value="${employeeForm.nation}" /></td>
-
-					<td>Trạng thái LĐ:</td>
-					<td><c:out value="${employeeForm.workStatus}" /></td>
-
-					<td>Số đt:</td>
+					<td bgcolor="#E6E6E6">Số đt:</td>
 					<td><c:out value="${employeeForm.phoneNo}" /></td>
 				</tr>
+
 				<tr>
-					<td>CMND/CCCD:</td>
+					<td rowspan="4"><img
+						src="D://IBM_ADMIN//Pictures//Pics//TruongNV.jpg" width="125px"
+						height="150px"></td>
+					<td bgcolor="#E6E6E6">Email:</td>
+					<td><c:out value="${employeeForm.email}" /></td>
+
+					<td bgcolor="#E6E6E6">T/T hôn nhân:</td>
+					<td><c:out value="${employeeForm.maritalStatus}" /></td>
+				</tr>
+				<tr>
+					<td bgcolor="#E6E6E6">Account(*):</td>
+					<td><c:out value="${employeeForm.loginAccount}" /></td>
+					<td bgcolor="#E6E6E6">Trạng thái LĐ:</td>
+					<td><c:out value="${employeeForm.workStatus}" /></td>
+				</tr>
+				<tr>
+					<td bgcolor="#E6E6E6">Giới tính:</td>
+					<td><c:out value="${employeeForm.gender}" /></td>
+					<td bgcolor="#E6E6E6">Chức vụ:</td>
+					<td><c:out value="${employeeForm.jobTitle}" /></td>
+				</tr>
+				<tr>
+					<td bgcolor="#E6E6E6">Ngày sinh:</td>
+					<td><c:out value="${employeeForm.DOB}" /></td>
+					<td bgcolor="#E6E6E6">Phòng:</td>
+					<td><c:out value="${employeeForm.department}" /></td>
+
+
+				</tr>
+				<tr>
+					<td bgcolor="#E6E6E6">CMND/CCCD/passportNo:</td>
 					<td><c:out value="${employeeForm.personalId}" /></td>
 
-					<td>Ngày cấp:</td>
+					<td bgcolor="#E6E6E6">Ngày cấp:</td>
 					<td><c:out value="${employeeForm.issueDate}" /></td>
 
-					<td>xxxx:</td>
-					<td></td>
+
+					<td>Quốc tịch: <c:out value="${employeeForm.nation}" /></td>
+
 				</tr>
 				<tr>
-					<td>Đ/c hiện tại:</td>
+					<td bgcolor="#E6E6E6">Đ/c hiện tại:</td>
 					<td><c:out value="${employeeForm.currentAdress}" /></td>
-					<td>Đ/c thường trú:</td>
+
+					<td bgcolor="#E6E6E6">Đ/c thường trú:</td>
 					<td><c:out value="${employeeForm.permanentAdress}" /></td>
-					<td>yyyyy:</td>
+					<td></td>
 					<td></td>
 				</tr>
 				<tr>
-					<td colspan="4" nowrap="nowrap" bgcolor="999999">Liên lạc khẩn
-						cấp:</td>
-					<td bgcolor="#9F81F7">Ngày thôi việc:</td>
-					<td><c:out value="${employeeForm.terminationDate}" /></td>
+					<td colspan="6" nowrap="nowrap" bgcolor="#F6CED8">Liên lạc
+						khẩn cấp:</td>
 				</tr>
 				<tr>
-					<td>Tên người liên lạc:</td>
+					<td bgcolor="#FBEFF2">Tên người liên lạc:</td>
 					<td><c:out value="${employeeForm.emerName}" /></td>
-					<td>Số đt:</td>
+					<td bgcolor="#FBEFF2">Số đt:</td>
 					<td><c:out value="${employeeForm.emerPhoneNo}" /></td>
-					<td bgcolor="#9F81F7">Lý do thôi việc:</td>
-					<td><c:out value="${employeeForm.reasonforLeave}" /></td>
+
 				</tr>
+
 				<tr>
-					<td colspan="6" nowrap="nowrap" bgcolor="999999">Tài khoản
-						ngân hàng</td>
-				</tr>
-				<tr>
-					<td>Tên NH:</td>
-					<td><c:out value="${employeeForm.bankName}" /></td>
-					<td>Số TK:</td>
-					<td><c:out value="${employeeForm.bankNo}" /></td>
-					<td>Chi nhánh:</td>
-					<td><c:out value="${employeeForm.bankBranch}" /></td>
-				</tr>
-				<tr>
-					<td>Ghi chú:</td>
+					<td bgcolor="#FBEFF2">Ghi chú:</td>
 					<td colspan="5"><c:out value="${employeeForm.note}" /></td>
 				</tr>
 				<tr>
-					<td>&nbsp;</td><td>&nbsp;</td>
-					<td><a href="editEmployee?employeeId=${employeeForm.employeeId}">Edit</a>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<a href="${pageContext.request.contextPath}/">List</a></td>
+					<td>&nbsp;</td>
+					<td><a
+						href="editEmployee?employeeId=${employeeForm.employeeId}"><button>Sửa
+								thông tin</button></a> <a href="${pageContext.request.contextPath}/"><button>Quay
+								lại danh sách NV</button></a></td>
 					<td>&nbsp;</td>
 				</tr>
 			</tbody>

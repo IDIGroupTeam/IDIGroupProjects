@@ -16,7 +16,7 @@ import com.idi.hr.mapper.EmployeeMapper;
 
 public class EmployeeDAO extends JdbcDaoSupport {
 
-	private static final Logger log = Logger.getLogger("EmployeeDAO.class");
+	private static final Logger log = Logger.getLogger(EmployeeDAO.class.getName());
 
 	private JdbcTemplate jdbcTmpl;
 
@@ -58,6 +58,26 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		return employee;
 
 	}
+	
+	/**
+	 * get employee by employeeId
+	 * 
+	 * @param account
+	 * @return int
+	 *
+	 */
+	public int getAccount(String account) {
+
+		String sql = hr.get("CHECK_ACCOUNT_DUPLICATE").toString();
+		log.info("CHECK_ACCOUNT_DUPLICATE query: " + sql);
+		Object[] params = new Object[] { account };
+		
+		String accountNumber = jdbcTmpl.queryForObject(sql, String.class, params);
+		
+		System.err.println(accountNumber);
+		return Integer.parseInt(accountNumber);
+
+	}
 
 	/**
 	 * Insert or update a employee into database
@@ -70,7 +90,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	 */
 	public void insertOrUpdateEmployee(EmployeeInfo employeeInfo) throws Exception {
 		try {
-			if (employeeInfo.getEmployeeId() != null) {
+			if (employeeInfo.getEmployeeId() > 0) {
 				// update
 				String sql = hr.getProperty("UPDATE_EMPLOYEE_INFO").toString();
 				log.info("UPDATE_EMPLOYEE_INFO query: " + sql);
@@ -91,7 +111,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 				// insert
 				String sql = hr.getProperty("INSERT_EMPLOYEE_INFO").toString();
 				log.info("INSERT_EMPLOYEE_INFO query: " + sql);
-				Object[] params = new Object[] { employeeInfo.getEmployeeId(), employeeInfo.getFullName(),
+				Object[] params = new Object[] { employeeInfo.getFullName(),
 						employeeInfo.getGender(), employeeInfo.getJobTitle(), employeeInfo.getWorkStatus(),
 						employeeInfo.getDOB(), employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(),
 						employeeInfo.getPersonalId(), employeeInfo.getIssueDate(), employeeInfo.getDepartment(),
@@ -113,6 +133,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 
 		} catch (Exception e) {
 			log.error(e, e);
+			throw e;
 
 		}
 	}
@@ -136,4 +157,23 @@ public class EmployeeDAO extends JdbcDaoSupport {
 
 	}
 
+	
+	/**
+	 * Get employees from DB
+	 * @param department
+	 * @return List of employee
+	 * @throws Exception
+	 */
+	public List<EmployeeInfo> getEmployeesByDepartment(String department) {
+
+		String sql = hr.getProperty("GET_EMPLOYEES_BY_DEPARTMENT").toString();
+		log.info("GET_EMPLOYEES_BY_DEPARTMENT query: " + sql);
+		Object[] params = new Object[] {department};
+		EmployeeMapper mapper = new EmployeeMapper();
+
+		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);
+
+		return list;
+
+	}
 }

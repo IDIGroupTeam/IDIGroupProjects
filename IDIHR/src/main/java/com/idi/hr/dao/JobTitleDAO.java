@@ -15,7 +15,7 @@ import com.idi.hr.mapper.JobTitleMapper;
 
 public class JobTitleDAO extends JdbcDaoSupport {
 
-	private static final Logger log = Logger.getLogger("TitleDAO.class");
+	private static final Logger log = Logger.getLogger(JobTitleDAO.class.getName());
 
 	private JdbcTemplate jdbcTmpl;
 
@@ -47,7 +47,6 @@ public class JobTitleDAO extends JdbcDaoSupport {
 		JobTitleMapper mapper = new JobTitleMapper();
 
 		List<JobTitle> list = jdbcTmpl.query(sql, mapper);
-		System.err.println(list.size());
 		return list;
 
 	}
