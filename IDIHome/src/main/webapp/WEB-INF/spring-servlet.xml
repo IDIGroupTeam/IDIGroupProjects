@@ -9,19 +9,32 @@
 	<mvc:default-servlet-handler />
 	<context:component-scan base-package="com.idi.home" />
 
-	<!-- Config folder to load jsp page for view layer -->
-	<bean
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/pages/" />
-		<property name="suffix" value=".jsp" />
+	<!-- Config folder to load jsp page for view layer with apache tiles -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.tiles3.TilesViewResolver">
+	</bean>
+
+	<bean id="tilesConfigurer"
+		class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/tiles.xml</value>
+			</list>
+		</property>
 	</bean>
 
 	<!-- Read idihome.properties properties file -->
 	<bean id="properties"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location" value="classpath:idihome.properties" />
-		<!-- <property name="ignoreUnresolvablePlaceholders" value="true" /> -->
-		<!-- <property name="ignoreResourceNotFound" value="true" /> -->
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="ignoreResourceNotFound" value="true" />
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages/validator" />
+		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
 
 	<!-- Config database connection -->
