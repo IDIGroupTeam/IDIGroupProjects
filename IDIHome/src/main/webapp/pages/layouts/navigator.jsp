@@ -13,7 +13,7 @@
 			<li><a href="/IDICRM">Quản lý Khách hàng</a></li>
 			<li> <a href="${url}/thongbao">Quản lý Rượu -Bia</a></li>
 			<li><a href="${url}/thongbao">Quản lý Nguồn vốn</a></li>
-			<li><a href="${url}/listTailieu">Các tài liệu của IDIGroup </a></li>
+			<li><a href="${url}/listTailieu">Tài liệu của IDIGroup </a></li>
 		</ul>
 	</div>
 </div>

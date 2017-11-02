@@ -2,15 +2,33 @@
 	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
-
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<a class="navbar-brand" href="${url}"><img height="80px"
 				src="${url}/public/images/IDI-logo.png" /></a>
 		</div>
-		<div class="page-header text-center">
-			<h2>${mainTitle}</h2>
-		</div>
+
+		<ul class="nav navbar-nav navbar-right">
+			<li><a href="/IDIHome">Home</a></li>
+			<li><a href="#news">News</a></li>
+			<li><a href="#contact">Contact</a></li>
+			<li><a href="#about">About</a></li>
+			<li><a href="#" class="login"><span
+					class="glyphicon glyphicon-log-out"></span> Đăng Xuất </a></li>
+		</ul>
+		<div class="topnav navbar-right" id="myTopnav"></div>
+
 	</div>
+
+	<form class="navbar-form navbar-right">
+		<div class="input-group">
+			<input type="text" class="form-control" placeholder="Tìm kiếm">
+			<div class="input-group-btn">
+				<button class="btn btn-default" type="submit">
+					<i class="glyphicon glyphicon-search"></i>
+				</button>
+			</div>
+		</div>
+	</form>
 </nav>
