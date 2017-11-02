@@ -1,24 +1,34 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="${url}/public/css/bootstrap.min.css" />
 <link rel="stylesheet" href="${url}/public/css/paneltab.css" />
-<link rel="stylesheet"	href="${url}/public/css/bootstrap-multiselect.css" />
+<link rel="stylesheet" href="${url}/public/css/bootstrap-dialog.min.css" />
+<link rel="stylesheet"
+	href="${url}/public/css/bootstrap-multiselect.css" />
+<link rel="stylesheet" href="${url}/public/css/bootcomplete.css" />
+<link rel="stylesheet" href="${url}/public/css/tabledit.css" />
 <link rel="stylesheet" href="${url}/public/css/style.css" />
 
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="${url}/public/js/jquery.min.js"></script>
 <script src="${url}/public/js/bootstrap.min.js"></script>
+<script src="${url}/public/js/bootstrap-dialog.min.js"></script>
 <script src="${url}/public/js/bootstrap-multiselect.js"></script>
-<title> This is a test page</title>
+<script src="${url}/public/js/jquery.bootcomplete.js"></script>
+<script src="${url}/public/js/jquery.tabledit.js"></script>
+<script src="${url}/public/js/script.js"></script>
+
+<title>Tập đoàn IDI - <tiles:getAsString name="title" /></title>
 <script type="text/javascript">
 	// Shorthand for $( document ).ready()
 	$(function() {
@@ -30,7 +40,7 @@
 </script>
 </head>
 <body>
-     <tiles:insertAttribute name="header" />
+	<tiles:insertAttribute name="header" />
 	<form:form id="mainFinanceForm" action="" method="GET"
 		modelAttribute="mainFinanceForm" acceptCharset="UTF-8">
 		<div class="container-fluid">

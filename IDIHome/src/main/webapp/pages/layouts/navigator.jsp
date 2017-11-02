@@ -9,17 +9,11 @@
 	<div class="panel-body">
 		<ul class="nav nav-pills nav-stacked">
 			<li><a href="/IDIFinance">Quản lý Tài chính & Kế toán</a></li>
-			<li><a href="/IDIHR">Quan lý Nhân sự</a></li>
+			<li><a href="/IDIHR">Quản lý Nhân sự</a></li>
 			<li><a href="/IDICRM">Quản lý Khách hàng</a></li>
-			<li> <a href="/IDIHome/pages/Thongbao.jsp">Quản lý Kho</a></li>
-			<li><a href="/IDIHome/pages/Thongbao.jsp">Quản lý Nguồn vốn</a></li>
-			<li><a href="/IDIHome/pages/ListDocuments.jsp">Download Tài liệu</a></li>
+			<li> <a href="${url}/thongbao">Quản lý Rượu -Bia</a></li>
+			<li><a href="${url}/thongbao">Quản lý Nguồn vốn</a></li>
+			<li><a href="${url}/listTailieu">Các tài liệu của IDIGroup </a></li>
 		</ul>
 	</div>
-</div>
-<div>
-</br>
-</br>
-</br>
-</br></br>
 </div>

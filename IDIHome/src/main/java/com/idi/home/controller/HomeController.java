@@ -1,7 +1,5 @@
 package com.idi.home.controller;
 
-import java.util.Locale;
-
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,15 +20,14 @@ public class HomeController {
 		model.addAttribute("description", strDes);
 		return "home";
 	}
-
 	@RequestMapping(value = "/thongbao")
 	public String thongbao(Model model) {
 		return "thongbao";
 	}
 
-	@RequestMapping(value = "/listVanban")
+	@RequestMapping(value = "/listTailieu")
 	public String listVanban(Model model) {
-		return "listVanban";
+		return "listTailieu";
 	}
 
 	@RequestMapping(value = "/listPicture")
@@ -42,12 +39,4 @@ public class HomeController {
 	public String listAudioVideo(Model model) {
 		return "listAudioVideo";
 	}
-
-	// public String home(Locale locale, Model model)
-	@RequestMapping(value = "/quychedautu")
-	// public @ResponseBody String quychedautu(Model model) {
-	public String quychedautu(Locale locale, Model model) {
-		return "quychedautu";
-	}
-
 }

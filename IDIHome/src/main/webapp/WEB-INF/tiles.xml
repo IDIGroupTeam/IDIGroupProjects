@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+	<!-- Base Definition -->
+	<definition name="layouts" template="/pages/layouts/main.jsp">
+		<put-attribute name="title" value="Tập đoàn IDI" />
+		<put-attribute name="header" value="/pages/layouts/header.jsp" />
+		<put-attribute name="navigator" value="/pages/layouts/navigator.jsp" />
+		<put-attribute name="search" value="" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/pages/layouts/footer.jsp" />
+	</definition>
+	
+	<definition name="home" extends="layouts">
+		<put-attribute name="title" value="Trang chủ" />
+		<put-attribute name="body" value="/pages/home.jsp" />
+	</definition>
+	<definition name="thongbao" extends="layouts">
+		<put-attribute name="title" value="Trang chủ" />
+		<put-attribute name="body" value="/pages/thongbao.jsp" />
+	</definition>
+	<definition name="listTailieu" extends="layouts">
+		<put-attribute name="title" value="Các tài liệu của IDIGroup" />
+		<put-attribute name="body" value="/pages/listTailieu.jsp" />
+	</definition>
+
+</tiles-definitions>
