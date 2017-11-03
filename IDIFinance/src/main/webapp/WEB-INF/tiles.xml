@@ -28,6 +28,7 @@
 
 
 	<!-- Bắt đầu Tab chứng từ -->
+	<!-- Phiếu thu -->
 	<definition name="danhSachPhieuThu" extends="layouts">
 		<put-attribute name="title" value="Danh sách phiếu thu" />
 		<put-attribute name="body" value="/pages/chungtu/phieuThuDs.jsp" />
@@ -48,6 +49,7 @@
 		<put-attribute name="body" value="/pages/chungtu/phieuThuTm.jsp" />
 	</definition>
 
+	<!-- Phiếu chi -->
 	<definition name="danhSachPhieuChi" extends="layouts">
 		<put-attribute name="title" value="Danh sách phiếu chi" />
 		<put-attribute name="body" value="/pages/chungtu/phieuChiDs.jsp" />
@@ -68,24 +70,46 @@
 		<put-attribute name="body" value="/pages/chungtu/phieuChiTm.jsp" />
 	</definition>
 
-	<definition name="danhSachBaoNo" extends="layouts">
-		<put-attribute name="title" value="Danh sách báo nợ" />
-		<put-attribute name="body" value="/pages/chungtu/baoNoDs.jsp" />
-	</definition>
-
-	<definition name="taoMoiBaoNo" extends="layouts">
-		<put-attribute name="title" value="Tạo mới báo nợ" />
-		<put-attribute name="body" value="/pages/chungtu/baoNoTm.jsp" />
-	</definition>
-
+	<!-- Báo có -->
 	<definition name="danhSachBaoCo" extends="layouts">
 		<put-attribute name="title" value="Danh sách báo có" />
 		<put-attribute name="body" value="/pages/chungtu/baoCoDs.jsp" />
 	</definition>
 
+	<definition name="xemBaoCo" extends="layouts">
+		<put-attribute name="title" value="Chi tiết báo có" />
+		<put-attribute name="body" value="/pages/chungtu/baoCoXm.jsp" />
+	</definition>
+
+	<definition name="suaBaoCo" extends="layouts">
+		<put-attribute name="title" value="Sửa báo có" />
+		<put-attribute name="body" value="/pages/chungtu/baoCoSu.jsp" />
+	</definition>
+
 	<definition name="taoMoiBaoCo" extends="layouts">
 		<put-attribute name="title" value="Tạo mới báo có" />
 		<put-attribute name="body" value="/pages/chungtu/baoCoTm.jsp" />
+	</definition>
+
+	<!-- Báo nợ -->
+	<definition name="danhSachBaoNo" extends="layouts">
+		<put-attribute name="title" value="Danh sách báo nợ" />
+		<put-attribute name="body" value="/pages/chungtu/baoNoDs.jsp" />
+	</definition>
+
+	<definition name="xemBaoNo" extends="layouts">
+		<put-attribute name="title" value="Chi tiết báo nợ" />
+		<put-attribute name="body" value="/pages/chungtu/baoNoXm.jsp" />
+	</definition>
+
+	<definition name="suaBaoNo" extends="layouts">
+		<put-attribute name="title" value="Sửa báo nợ" />
+		<put-attribute name="body" value="/pages/chungtu/baoNoSu.jsp" />
+	</definition>
+
+	<definition name="taoMoiBaoNo" extends="layouts">
+		<put-attribute name="title" value="Tạo mới báo nợ" />
+		<put-attribute name="body" value="/pages/chungtu/baoNoTm.jsp" />
 	</definition>
 	<!-- Kết thúc Tab chứng từ -->
 
@@ -95,20 +119,26 @@
 		<put-attribute name="title" value="Sổ nhật ký chung" />
 		<put-attribute name="body" value="/pages/soketoan/sktNhatKyChung.jsp" />
 	</definition>
-	
+
 	<definition name="sktSoCai" extends="layouts">
 		<put-attribute name="title" value="Sổ cái" />
 		<put-attribute name="body" value="/pages/soketoan/sktSoCai.jsp" />
 	</definition>
-	
+
 	<definition name="sktSoTienMat" extends="layouts">
 		<put-attribute name="title" value="Sổ tiền mặt" />
 		<put-attribute name="body" value="/pages/soketoan/sktSoTienMat.jsp" />
 	</definition>
-	
+
 	<definition name="sktSoCongNo" extends="layouts">
 		<put-attribute name="title" value="Sổ chi tiết công nợ" />
 		<put-attribute name="body" value="/pages/soketoan/sktSoCongNo.jsp" />
+	</definition>
+
+	<definition name="sktSoTienGuiNganHang" extends="layouts">
+		<put-attribute name="title" value="Sổ tiền gửi ngân hàng" />
+		<put-attribute name="body"
+			value="/pages/soketoan/sktSoTienGuiNganHang.jsp" />
 	</definition>
 	<!-- Kết thúc Tab sổ kế toán -->
 

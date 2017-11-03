@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.idi.finance.bean.bieudo.KpiGroup;
 import com.idi.finance.bean.chungtu.ChungTu;
+import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.ChungTuDAO;
 import com.idi.finance.dao.KhachHangDAO;
@@ -98,8 +99,10 @@ public class SoKeToanController {
 			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
 			model.addAttribute("kpiGroups", kpiGroups);
 
-			List<ChungTu> chungTuDs = soKeToanDAO.danhSachChungTuTheoLoaiTaiKhoan(LoaiTaiKhoan.TIEN_MAT);
-			model.addAttribute("chungTuDs", chungTuDs);
+			String taiKhoan = LoaiTaiKhoan.TIEN_MAT;
+			List<NghiepVuKeToan> nghiepVuKeToanDs = soKeToanDAO.danhSachNghiepVuKeToanTheoLoaiTaiKhoan(taiKhoan);
+			model.addAttribute("taiKhoan", taiKhoan);
+			model.addAttribute("nghiepVuKeToanDs", nghiepVuKeToanDs);
 
 			model.addAttribute("tab", "tabSKTSTM");
 			return "sktSoTienMat";
@@ -120,6 +123,26 @@ public class SoKeToanController {
 
 			model.addAttribute("tab", "tabSKTSCN");
 			return "sktSoCongNo";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+	
+	@RequestMapping("/soketoan/sotienguinganhang")
+	public String sktSoTienGuiNganHang(Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
+			model.addAttribute("kpiGroups", kpiGroups);
+
+			String taiKhoan = LoaiTaiKhoan.TIEN_GUI_NGAN_HANG;
+			List<NghiepVuKeToan> nghiepVuKeToanDs = soKeToanDAO.danhSachNghiepVuKeToanTheoLoaiTaiKhoan(taiKhoan);
+			model.addAttribute("taiKhoan", taiKhoan);
+			model.addAttribute("nghiepVuKeToanDs", nghiepVuKeToanDs);
+
+			model.addAttribute("tab", "tabSKTSTGNH");
+			return "sktSoTienGuiNganHang";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";

@@ -270,7 +270,7 @@ public class ChungTuController {
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_CHI);
 			if (chungTu == null) {
-				return "redirect:/danhsachphieuthu";
+				return "redirect:/danhsachphieuchi";
 			}
 			model.addAttribute("chungTu", chungTu);
 
@@ -291,7 +291,7 @@ public class ChungTuController {
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_CHI);
 			if (chungTu == null) {
-				return "redirect:/danhsachphieuthu";
+				return "redirect:/danhsachphieuchi";
 			}
 
 			return chuanBiFormPhieuChi(model, chungTu);
@@ -407,40 +407,6 @@ public class ChungTuController {
 		}
 	}
 
-	@RequestMapping("/danhsachbaono")
-	public String danhSachBaoNo(Model model) {
-		try {
-			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
-
-			// Lấy danh sách phiếu chi
-			List<ChungTu> baoNoDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_BAO_NO);
-			model.addAttribute("baoNoDs", baoNoDs);
-
-			model.addAttribute("tab", "tabCTBN");
-			return "danhSachBaoNo";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "error";
-		}
-	}
-
-	@RequestMapping("/taomoibaono")
-	public String taoMoiBaoNo(Model model) {
-		try {
-			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
-
-			model.addAttribute("tab", "tabCTBN");
-			return "taoMoiBaoNo";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "error";
-		}
-	}
-
 	@RequestMapping("/danhsachbaoco")
 	public String danhSachBaoCo(Model model) {
 		try {
@@ -460,6 +426,46 @@ public class ChungTuController {
 		}
 	}
 
+	@RequestMapping("/xembaoco/{id}")
+	public String xemBaoCo(@PathVariable("id") int maCt, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
+			model.addAttribute("kpiGroups", kpiGroups);
+
+			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_CO);
+			if (chungTu == null) {
+				return "redirect:/danhsachbaoco";
+			}
+			model.addAttribute("chungTu", chungTu);
+
+			model.addAttribute("tab", "tabCTBC");
+			return "xemBaoCo";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/suabaoco/{id}")
+	public String suaBaoCo(@PathVariable("id") int maCt, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
+			model.addAttribute("kpiGroups", kpiGroups);
+
+			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_CO);
+			if (chungTu == null) {
+				return "redirect:/danhsachbaoco";
+			}
+
+			return chuanBiFormBaoCo(model, chungTu);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
 	@RequestMapping("/taomoibaoco")
 	public String taoMoiBaoCo(Model model) {
 		try {
@@ -467,8 +473,266 @@ public class ChungTuController {
 			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
 			model.addAttribute("kpiGroups", kpiGroups);
 
+			ChungTu chungTu = new ChungTu();
+			chungTu.setLoaiCt(ChungTu.CHUNG_TU_BAO_CO);
+
+			// Lấy số báo có của năm hiện tại
+			int soBaoCo = chungTuDAO.demSoChungTuTheoLoaiCtVaNam(ChungTu.CHUNG_TU_BAO_CO, new Date());
+			soBaoCo++;
+			chungTu.setSoCt(soBaoCo);
+
+			Date ngayLap = new Date();
+			chungTu.setNgayLap(ngayLap);
+			chungTu.setNgayHt(ngayLap);
+
+			// Tài khoản tiềm gửi ngân hàng, ghi nợ
+			TaiKhoan taiKhoan = new TaiKhoan();
+			taiKhoan.setChungTu(chungTu);
+			taiKhoan.setGhiNo(0);
+			chungTu.themTaiKhoan(taiKhoan);
+
+			// Tài khoản khác, ghi có
+			taiKhoan = new TaiKhoan();
+			taiKhoan.setChungTu(chungTu);
+			taiKhoan.setGhiNo(1);
+			chungTu.themTaiKhoan(taiKhoan);
+
+			return chuanBiFormBaoCo(model, chungTu);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/luutaomoibaoco", method = RequestMethod.POST)
+	public String luuTaoMoiBaoCo(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu, BindingResult result,
+			Model model) {
+		try {
+			if (result.hasErrors()) {
+				return chuanBiFormBaoCo(model, chungTu);
+			}
+
+			logger.info("Lưu chứng từ: " + chungTu);
+
+			chungTu.setLoaiCt(ChungTu.CHUNG_TU_BAO_CO);
+
+			if (chungTu.getMaCt() > 0) {
+				chungTuDAO.capNhatChungTu(chungTu);
+			} else {
+				chungTuDAO.themChungTu(chungTu);
+			}
+
+			return "redirect:/danhsachbaoco";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	private String chuanBiFormBaoCo(Model model, ChungTu chungTu) {
+		try {
+			model.addAttribute("mainFinanceForm", chungTu);
+
+			// Lấy danh sách các loại tiền
+			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
+			model.addAttribute("loaiTienDs", loaiTienDs);
+
+			// Lấy danh sách tài khoản tiền gửi ngân hàng, dùng cho bên nợ
+			List<LoaiTaiKhoan> loaiTaiKhoanTgnhDs = taiKhoanDAO
+					.danhSachTaiKhoanTheoCap1(LoaiTaiKhoan.TIEN_GUI_NGAN_HANG);
+			model.addAttribute("loaiTaiKhoanTgnhDs", loaiTaiKhoanTgnhDs);
+
+			// Lấy danh sách tài khoản, dùng cho bên có
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
+
 			model.addAttribute("tab", "tabCTBC");
-			return "taoMoiBaoCo";
+			if (chungTu.getMaCt() > 0) {
+				// Đây là trường hợp sửa CT
+				return "suaBaoCo";
+			} else {
+				// Đây là trường hợp tạo mới CT
+				return "taoMoiBaoCo";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/xoabaoco/{id}")
+	public String xoaBaoCo(@PathVariable("id") int maCt, Model model) {
+		try {
+			// Xóa phiếu thu có MA_CT là maCt, LOAI_CT là ChungTu.CHUNG_TU_BAO_CO
+			chungTuDAO.xoaChungTu(maCt, ChungTu.CHUNG_TU_BAO_CO);
+
+			return "redirect:/danhsachbaoco";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/danhsachbaono")
+	public String danhSachBaoNo(Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
+			model.addAttribute("kpiGroups", kpiGroups);
+
+			// Lấy danh sách phiếu chi
+			List<ChungTu> baoNoDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_BAO_NO);
+			model.addAttribute("baoNoDs", baoNoDs);
+
+			model.addAttribute("tab", "tabCTBN");
+			return "danhSachBaoNo";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/xembaono/{id}")
+	public String xemBaoNo(@PathVariable("id") int maCt, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
+			model.addAttribute("kpiGroups", kpiGroups);
+
+			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_NO);
+			if (chungTu == null) {
+				return "redirect:/danhsachbaono";
+			}
+			model.addAttribute("chungTu", chungTu);
+
+			model.addAttribute("tab", "tabCTBN");
+			return "xemBaoNo";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/suabaono/{id}")
+	public String suaBaoNo(@PathVariable("id") int maCt, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
+			model.addAttribute("kpiGroups", kpiGroups);
+
+			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_NO);
+			if (chungTu == null) {
+				return "redirect:/danhsachbaono";
+			}
+
+			return chuanBiFormBaoNo(model, chungTu);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/taomoibaono")
+	public String taoMoiBaoNo(Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
+			model.addAttribute("kpiGroups", kpiGroups);
+
+			ChungTu chungTu = new ChungTu();
+			chungTu.setLoaiCt(ChungTu.CHUNG_TU_BAO_NO);
+
+			// Lấy số phiếu thu của năm hiện tại
+			int soBaoNo = chungTuDAO.demSoChungTuTheoLoaiCtVaNam(ChungTu.CHUNG_TU_BAO_NO, new Date());
+			soBaoNo++;
+
+			chungTu.setSoCt(soBaoNo);
+			Date ngayLap = new Date();
+			chungTu.setNgayLap(ngayLap);
+			chungTu.setNgayHt(ngayLap);
+
+			// Tài khoản khác, ghi nợ
+			TaiKhoan taiKhoan = new TaiKhoan();
+			taiKhoan.setChungTu(chungTu);
+			taiKhoan.setGhiNo(1);
+			chungTu.themTaiKhoan(taiKhoan);
+
+			// Tài khoản tiềm gửi ngân hàng, ghi có
+			taiKhoan = new TaiKhoan();
+			taiKhoan.setChungTu(chungTu);
+			taiKhoan.setGhiNo(0);
+			chungTu.themTaiKhoan(taiKhoan);
+
+			return chuanBiFormBaoNo(model, chungTu);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/luutaomoibaono", method = RequestMethod.POST)
+	public String luuTaoMoiBaoNo(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu, BindingResult result,
+			Model model) {
+		try {
+			if (result.hasErrors()) {
+				return chuanBiFormBaoNo(model, chungTu);
+			}
+
+			logger.info("Lưu chứng từ: " + chungTu);
+
+			chungTu.setLoaiCt(ChungTu.CHUNG_TU_BAO_NO);
+
+			if (chungTu.getMaCt() > 0) {
+				chungTuDAO.capNhatChungTu(chungTu);
+			} else {
+				chungTuDAO.themChungTu(chungTu);
+			}
+
+			return "redirect:/danhsachbaono";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	private String chuanBiFormBaoNo(Model model, ChungTu chungTu) {
+		try {
+			model.addAttribute("mainFinanceForm", chungTu);
+
+			// Lấy danh sách các loại tiền
+			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
+			model.addAttribute("loaiTienDs", loaiTienDs);
+
+			// Lấy danh sách tài khoản tiền gửi ngân hàng, dùng cho bên có
+			List<LoaiTaiKhoan> loaiTaiKhoanTgnhDs = taiKhoanDAO
+					.danhSachTaiKhoanTheoCap1(LoaiTaiKhoan.TIEN_GUI_NGAN_HANG);
+			model.addAttribute("loaiTaiKhoanTgnhDs", loaiTaiKhoanTgnhDs);
+
+			// Lấy danh sách tài khoản, dùng cho bên nợ
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
+
+			model.addAttribute("tab", "tabCTBN");
+			if (chungTu.getMaCt() > 0) {
+				// Đây là trường hợp sửa CT
+				return "suaBaoNo";
+			} else {
+				// Đây là trường hợp tạo mới CT
+				return "taoMoiBaoNo";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/xoabaono/{id}")
+	public String xoaBaoNo(@PathVariable("id") int maCt, Model model) {
+		try {
+			// Xóa phiếu thu có MA_CT là maCt, LOAI_CT là ChungTu.CHUNG_TU_BAO_NO
+			chungTuDAO.xoaChungTu(maCt, ChungTu.CHUNG_TU_BAO_NO);
+
+			return "redirect:/danhsachbaono";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";

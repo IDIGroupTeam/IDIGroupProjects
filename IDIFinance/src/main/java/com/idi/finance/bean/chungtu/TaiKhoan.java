@@ -54,7 +54,7 @@ public class TaiKhoan {
 
 	@Override
 	public String toString() {
-		String out = chungTu + " - " + taiKhoan + " - " + ghiNo;
+		String out = chungTu + " - " + taiKhoan + " - " + ghiNo + " " + lyDo;
 		return out;
 	}
 

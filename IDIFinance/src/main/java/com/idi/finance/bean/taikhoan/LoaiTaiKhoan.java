@@ -3,8 +3,10 @@ package com.idi.finance.bean.taikhoan;
 public class LoaiTaiKhoan {
 	public static final int NO = 0;
 	public static final int CO = 1;
-	
+
 	public static final String TIEN_MAT = "111";
+	public static final String TIEN_GUI_NGAN_HANG = "112";
+
 	private String maTk;
 	private String tenTk;
 	private String maTenTk;

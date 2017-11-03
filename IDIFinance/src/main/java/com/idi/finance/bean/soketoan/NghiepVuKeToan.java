@@ -1,93 +1,19 @@
 package com.idi.finance.bean.soketoan;
 
-import java.util.Date;
-
-import com.idi.finance.bean.chungtu.DoiTuong;
+import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.TaiKhoan;
-import com.idi.finance.bean.chungtu.Tien;
 
 public class NghiepVuKeToan {
-	private int maCt;
-	private int soCt;
-	private String loaiCt;
-	private Date ngayLap;
-	private String lyDo;
-	private Tien soTien;
-	private int kemTheo;
-	private DoiTuong doiTuong;
-	private TaiKhoan taiKhoanCo;
+	private ChungTu chungTu;
 	private TaiKhoan taiKhoanNo;
+	private TaiKhoan taiKhoanCo;
 
-	public int getMaCt() {
-		return maCt;
+	public ChungTu getChungTu() {
+		return chungTu;
 	}
 
-	public void setMaCt(int maCt) {
-		this.maCt = maCt;
-	}
-
-	public int getSoCt() {
-		return soCt;
-	}
-
-	public void setSoCt(int soCt) {
-		this.soCt = soCt;
-	}
-
-	public String getLoaiCt() {
-		return loaiCt;
-	}
-
-	public void setLoaiCt(String loaiCt) {
-		this.loaiCt = loaiCt;
-	}
-
-	public Date getNgayLap() {
-		return ngayLap;
-	}
-
-	public void setNgayLap(Date ngayLap) {
-		this.ngayLap = ngayLap;
-	}
-
-	public String getLyDo() {
-		return lyDo;
-	}
-
-	public void setLyDo(String lyDo) {
-		this.lyDo = lyDo;
-	}
-
-	public Tien getSoTien() {
-		return soTien;
-	}
-
-	public void setSoTien(Tien soTien) {
-		this.soTien = soTien;
-	}
-
-	public int getKemTheo() {
-		return kemTheo;
-	}
-
-	public void setKemTheo(int kemTheo) {
-		this.kemTheo = kemTheo;
-	}
-
-	public DoiTuong getDoiTuong() {
-		return doiTuong;
-	}
-
-	public void setDoiTuong(DoiTuong doiTuong) {
-		this.doiTuong = doiTuong;
-	}
-
-	public TaiKhoan getTaiKhoanCo() {
-		return taiKhoanCo;
-	}
-
-	public void setTaiKhoanCo(TaiKhoan taiKhoanCo) {
-		this.taiKhoanCo = taiKhoanCo;
+	public void setChungTu(ChungTu chungTu) {
+		this.chungTu = chungTu;
 	}
 
 	public TaiKhoan getTaiKhoanNo() {
@@ -98,9 +24,17 @@ public class NghiepVuKeToan {
 		this.taiKhoanNo = taiKhoanNo;
 	}
 
+	public TaiKhoan getTaiKhoanCo() {
+		return taiKhoanCo;
+	}
+
+	public void setTaiKhoanCo(TaiKhoan taiKhoanCo) {
+		this.taiKhoanCo = taiKhoanCo;
+	}
+
 	@Override
 	public String toString() {
-		String out = maCt + "  " + loaiCt + " " + soCt + " " + ngayLap;
+		String out = chungTu + "  " + taiKhoanNo + " " + taiKhoanCo;
 		return out;
 	}
 
@@ -116,19 +50,30 @@ public class NghiepVuKeToan {
 
 		NghiepVuKeToan item = (NghiepVuKeToan) obj;
 		try {
-			if (maCt != item.getMaCt())
+			if (chungTu == null) {
+				if (item.getChungTu() != null)
+					return false;
+			} else if (item.getChungTu() == null) {
 				return false;
-
-			if (soCt != item.getSoCt()) {
+			} else if (!chungTu.equals(item.getChungTu())) {
 				return false;
 			}
 
-			if (loaiCt == null) {
-				if (item.getLoaiCt() != null)
+			if (taiKhoanNo == null) {
+				if (item.getTaiKhoanNo() != null)
 					return false;
-			} else if (item.getLoaiCt() == null) {
+			} else if (item.getTaiKhoanNo() == null) {
 				return false;
-			} else if (!loaiCt.trim().equals(item.getLoaiCt().trim())) {
+			} else if (!taiKhoanNo.equals(item.getTaiKhoanNo())) {
+				return false;
+			}
+
+			if (taiKhoanCo == null) {
+				if (item.getTaiKhoanCo() != null)
+					return false;
+			} else if (item.getTaiKhoanCo() == null) {
+				return false;
+			} else if (!taiKhoanCo.equals(item.getTaiKhoanCo())) {
 				return false;
 			}
 		} catch (Exception e) {

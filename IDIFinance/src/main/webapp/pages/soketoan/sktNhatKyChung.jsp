@@ -91,7 +91,7 @@
 					<td rowspan="${chungTu.soTkLonNhat+1}">${chungTu.doiTuong.diaChi}</td>
 				</tr>
 				<c:choose>
-					<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU}">
+					<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU || chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
 						<c:choose>
 							<c:when test="${chungTu.soTkLonNhat>0}">
 								<c:forEach begin="0" end="${chungTu.soTkLonNhat-1}"
@@ -108,7 +108,7 @@
 							</c:when>
 						</c:choose>
 					</c:when>
-					<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI}">
+					<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI || chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
 						<c:choose>
 							<c:when test="${chungTu.soTkLonNhat>0}">
 								<c:forEach begin="0" end="${chungTu.soTkLonNhat-1}"

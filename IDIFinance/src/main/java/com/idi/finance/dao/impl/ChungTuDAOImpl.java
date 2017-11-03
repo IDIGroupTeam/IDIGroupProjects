@@ -342,6 +342,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 					// Nếu chưa có thì thêm vào
 					// if (count == 0) {
+					logger.info("hi: " + taiKhoan.getTaiKhoan());
 					jdbcTmpl.update(themChungTuTaiKhoan, chungTu.getMaCt(), taiKhoan.getTaiKhoan().getMaTk(),
 							taiKhoan.getSoTien(), taiKhoan.getGhiNo(), taiKhoan.getLyDo());
 					// }

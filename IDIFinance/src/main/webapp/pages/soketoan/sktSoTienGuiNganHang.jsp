@@ -18,7 +18,7 @@
 
 <h4>Sổ tiền mặt</h4>
 <p>
-	<i>Tài khoản tiền mặt 111, 1111 ... </i>
+	<i>Tài khoản tiền gửi ngân hàng 112, 1121 ... </i>
 </p>
 
 <div class="pull-right">
@@ -62,7 +62,7 @@
 					<td>${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</td>
 					<c:choose>
 						<c:when
-							test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU}">
+							test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
 							<td>${nghiepVuKeToan.taiKhoanCo.lyDo}</td>
 							<td>${nghiepVuKeToan.taiKhoanCo.taiKhoan.maTk}</td>
 							<td><fmt:formatNumber
@@ -72,7 +72,7 @@
 							<td></td>
 						</c:when>
 						<c:when
-							test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI}">
+							test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
 							<td>${nghiepVuKeToan.taiKhoanNo.lyDo}</td>
 							<td>${nghiepVuKeToan.taiKhoanNo.taiKhoan.maTk}</td>
 							<td></td>
