@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.idi.finance.bean.bieudo.KpiGroup;
@@ -24,6 +25,8 @@ import com.idi.finance.dao.NhaCungCapDAO;
 import com.idi.finance.dao.NhanVienDAO;
 import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
+import com.idi.finance.form.TkSoKeToanForm;
+import com.idi.finance.utils.Utils;
 
 @Controller
 public class SoKeToanController {
@@ -57,15 +60,32 @@ public class SoKeToanController {
 	}
 
 	@RequestMapping("/soketoan/nhatkychung")
-	public String sktNhatKyChung(Model model) {
+	public String sktNhatKyChung(@ModelAttribute("mainFinanceForm") TkSoKeToanForm form, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
 			model.addAttribute("kpiGroups", kpiGroups);
 
+			Date homNay = new Date();
+			// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của
+			// tháng hiện tại
+			if (form.getDau() == null) {
+				form.setDau(Utils.getStartDateOfMonth(homNay));
+			}
+
+			if (form.getCuoi() == null) {
+				form.setCuoi(Utils.getEndDateOfMonth(homNay));
+			}
+
+			// Nếu không có đầu vào loại chứng từ thì lấy tất cả các chứng từ
+			if (form.getLoaiCts() == null || form.getLoaiCts().size() == 0) {
+				form.themLoaiCt(ChungTu.TAT_CA);
+			}
+
 			// Lấy danh sách tất cả chứng từ
-			List<ChungTu> chungTuDs = soKeToanDAO.danhSachChungTu();
+			List<ChungTu> chungTuDs = soKeToanDAO.danhSachChungTu(form.getDau(), form.getCuoi(), form.getLoaiCts());
 			model.addAttribute("chungTuDs", chungTuDs);
+			model.addAttribute("mainFinanceForm", form);
 
 			model.addAttribute("tab", "tabSKTNKC");
 			return "sktNhatKyChung";
@@ -76,13 +96,42 @@ public class SoKeToanController {
 	}
 
 	@RequestMapping("/soketoan/socai")
-	public String sktSoCai(Model model) {
+	public String sktSoCai(@ModelAttribute("mainFinanceForm") TkSoKeToanForm form, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
 			model.addAttribute("kpiGroups", kpiGroups);
 
-			// Lấy danh sách phiếu thu
+			Date homNay = new Date();
+			// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của
+			// tháng hiện tại
+			if (form.getDau() == null) {
+				form.setDau(Utils.getStartDateOfMonth(homNay));
+			}
+
+			if (form.getCuoi() == null) {
+				form.setCuoi(Utils.getEndDateOfMonth(homNay));
+			}
+
+			// Nếu không có đầu vào loại chứng từ thì lấy tất cả các chứng từ
+			if (form.getLoaiCts() == null || form.getLoaiCts().size() == 0) {
+				form.themLoaiCt(ChungTu.TAT_CA);
+			}
+
+			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định là 111
+			if (form.getTaiKhoan() == null) {
+				form.setTaiKhoan(LoaiTaiKhoan.TIEN_MAT);
+			}
+
+			// Lấy danh sách tài khoản
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
+
+			// Lấy danh sách các nghiệp vụ kế toán theo điều kiện
+			List<NghiepVuKeToan> nghiepVuKeToanDs = soKeToanDAO.danhSachNghiepVuKeToanTheoLoaiTaiKhoan(
+					form.getTaiKhoan(), form.getDau(), form.getCuoi(), form.getLoaiCts());
+			model.addAttribute("nghiepVuKeToanDs", nghiepVuKeToanDs);
+			model.addAttribute("mainFinanceForm", form);
 
 			model.addAttribute("tab", "tabSKTSC");
 			return "sktSoCai";
@@ -128,7 +177,7 @@ public class SoKeToanController {
 			return "error";
 		}
 	}
-	
+
 	@RequestMapping("/soketoan/sotienguinganhang")
 	public String sktSoTienGuiNganHang(Model model) {
 		try {

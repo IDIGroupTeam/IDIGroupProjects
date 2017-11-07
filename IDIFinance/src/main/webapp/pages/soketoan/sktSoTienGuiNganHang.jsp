@@ -16,7 +16,7 @@
 	});
 </script>
 
-<h4>Sổ tiền mặt</h4>
+<h4>Sổ tiền gửi ngân hàng</h4>
 <p>
 	<i>Tài khoản tiền gửi ngân hàng 112, 1121 ... </i>
 </p>

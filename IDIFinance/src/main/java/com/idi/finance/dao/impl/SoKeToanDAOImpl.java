@@ -3,6 +3,7 @@ package com.idi.finance.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -28,11 +29,17 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 	@Value("${DANH_SACH_CHUNG_TU_NHAT_KY_CHUNG}")
 	private String DANH_SACH_CHUNG_TU_NHAT_KY_CHUNG;
 
+	@Value("${DANH_SACH_CHUNG_TU_NHAT_KY_CHUNG_THEO_DIEU_KIEN}")
+	private String DANH_SACH_CHUNG_TU_NHAT_KY_CHUNG_THEO_DIEU_KIEN;
+
 	@Value("${DANH_SACH_CHUNG_TU_THEO_MA_TAI_KHOAN}")
 	private String DANH_SACH_CHUNG_TU_THEO_MA_TAI_KHOAN;
 
 	@Value("${DANH_SACH_NGHIEP_VU_KE_TOAN_THEO_MA_TAI_KHOAN}")
 	private String DANH_SACH_NGHIEP_VU_KE_TOAN_THEO_MA_TAI_KHOAN;
+
+	@Value("${DANH_SACH_NGHIEP_VU_KE_TOAN_THEO_DIEU_KIEN}")
+	private String DANH_SACH_NGHIEP_VU_KE_TOAN_THEO_DIEU_KIEN;
 
 	private JdbcTemplate jdbcTmpl;
 
@@ -52,6 +59,61 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		logger.info(query);
 
 		List<ChungTu> chungTuDs = jdbcTmpl.query(query, new ChungTuMapper());
+
+		// Gộp chứng từ trùng nhau nhưng có tài khoản ảnh hường khác nhau
+		List<ChungTu> ketQua = null;
+		if (chungTuDs != null) {
+			ketQua = new ArrayList<>();
+			Iterator<ChungTu> iter = chungTuDs.iterator();
+			while (iter.hasNext()) {
+				ChungTu chungTu = iter.next();
+
+				int pos = ketQua.indexOf(chungTu);
+				if (pos > -1) {
+					ChungTu chungTuTmpl = ketQua.get(pos);
+					chungTuTmpl.themTaiKhoan(chungTu.getTaiKhoanDs());
+				} else {
+					ketQua.add(chungTu);
+				}
+			}
+		}
+
+		return ketQua;
+	}
+
+	@Override
+	public List<ChungTu> danhSachChungTu(Date dau, Date cuoi, List<String> loaiCts) {
+		String query = DANH_SACH_CHUNG_TU_NHAT_KY_CHUNG_THEO_DIEU_KIEN;
+
+		if (loaiCts.contains(ChungTu.TAT_CA)) {
+			query = query.replaceAll("\\$DIEU_KIEN_LOAI_CT\\$", "");
+			logger.info("Danh sách tất cả chứng từ ...");
+		} else {
+			logger.info("Danh sách tất cả chứng từ loại " + loaiCts + " ...");
+
+			String dieuKien = "";
+			Iterator<String> iter = loaiCts.iterator();
+			while (iter.hasNext()) {
+				String loaiCt = iter.next();
+				dieuKien += "'" + loaiCt.trim() + "',";
+			}
+			if (!dieuKien.equals("")) {
+				dieuKien = dieuKien.substring(0, dieuKien.length() - 1);
+			}
+			dieuKien = " AND CT.LOAI_CT IN (" + dieuKien + ")";
+
+			query = query.replaceAll("\\$DIEU_KIEN_LOAI_CT\\$", dieuKien);
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		String batDau = sdf.format(dau);
+		String ketThuc = sdf.format(cuoi);
+
+		logger.info("Từ " + batDau + " đến " + ketThuc);
+		logger.info(query);
+
+		Object[] objs = { batDau, ketThuc, batDau, ketThuc, batDau, ketThuc };
+		List<ChungTu> chungTuDs = jdbcTmpl.query(query, objs, new ChungTuMapper());
 
 		// Gộp chứng từ trùng nhau nhưng có tài khoản ảnh hường khác nhau
 		List<ChungTu> ketQua = null;
@@ -172,6 +234,46 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		return nghiepVuKeToanDs;
 	}
 
+	@Override
+	public List<NghiepVuKeToan> danhSachNghiepVuKeToanTheoLoaiTaiKhoan(String maTk, Date dau, Date cuoi,
+			List<String> loaiCts) {
+		String query = DANH_SACH_NGHIEP_VU_KE_TOAN_THEO_DIEU_KIEN;
+
+		logger.info("Danh sách nghiệp vụ kế toán theo loại tài khoản: '" + maTk + "' ...");
+		if (loaiCts.contains(ChungTu.TAT_CA)) {
+			query = query.replaceAll("\\$DIEU_KIEN_LOAI_CT\\$", "");
+			logger.info("Của tất cả các loại chứng từ ...");
+		} else {
+			logger.info("Của các loại chứng từ " + loaiCts + " ...");
+
+			String dieuKien = "";
+			Iterator<String> iter = loaiCts.iterator();
+			while (iter.hasNext()) {
+				String loaiCt = iter.next();
+				dieuKien += "'" + loaiCt.trim() + "',";
+			}
+			if (!dieuKien.equals("")) {
+				dieuKien = dieuKien.substring(0, dieuKien.length() - 1);
+			}
+			dieuKien = " AND CT.LOAI_CT IN (" + dieuKien + ")";
+
+			query = query.replaceAll("\\$DIEU_KIEN_LOAI_CT\\$", dieuKien);
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		String batDau = sdf.format(dau);
+		String ketThuc = sdf.format(cuoi);
+
+		logger.info("Từ " + batDau + " đến " + ketThuc);
+
+		query = query.replaceAll("\\$MA_TK\\$", maTk);
+		logger.info(query);
+
+		Object[] objs = { batDau, ketThuc, batDau, ketThuc, batDau, ketThuc };
+		List<NghiepVuKeToan> nghiepVuKeToanDs = jdbcTmpl.query(query, objs, new NghiepVuKeToanMapper());
+		return nghiepVuKeToanDs;
+	}
+
 	public class NghiepVuKeToanMapper implements RowMapper<NghiepVuKeToan> {
 		public NghiepVuKeToan mapRow(ResultSet rs, int rowNum) throws SQLException {
 			try {
@@ -242,4 +344,5 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 			}
 		}
 	}
+
 }

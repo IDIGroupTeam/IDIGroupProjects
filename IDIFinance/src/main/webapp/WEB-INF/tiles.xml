@@ -117,16 +117,19 @@
 	<!-- Bắt đầu Tab sổ kế toán -->
 	<definition name="sktNhatKyChung" extends="layouts">
 		<put-attribute name="title" value="Sổ nhật ký chung" />
+		<put-attribute name="search" value="/pages/soketoan/sktNhatKyChungTk.jsp" />
 		<put-attribute name="body" value="/pages/soketoan/sktNhatKyChung.jsp" />
 	</definition>
 
 	<definition name="sktSoCai" extends="layouts">
 		<put-attribute name="title" value="Sổ cái" />
+		<put-attribute name="search" value="/pages/soketoan/sktSoCaiTk.jsp" />
 		<put-attribute name="body" value="/pages/soketoan/sktSoCai.jsp" />
 	</definition>
 
 	<definition name="sktSoTienMat" extends="layouts">
 		<put-attribute name="title" value="Sổ tiền mặt" />
+		<!-- <put-attribute name="search" value="/pages/soketoan/sktSoTienMatTk.jsp" /> -->
 		<put-attribute name="body" value="/pages/soketoan/sktSoTienMat.jsp" />
 	</definition>
 
@@ -137,6 +140,7 @@
 
 	<definition name="sktSoTienGuiNganHang" extends="layouts">
 		<put-attribute name="title" value="Sổ tiền gửi ngân hàng" />
+		<!-- <put-attribute name="search" value="/pages/soketoan/sktSoTienGuiNganHangTk.jsp" /> -->
 		<put-attribute name="body"
 			value="/pages/soketoan/sktSoTienGuiNganHang.jsp" />
 	</definition>

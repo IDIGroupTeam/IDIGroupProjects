@@ -19,7 +19,10 @@
 <h4>Sổ nhật ký chung</h4>
 
 <p>
-	<i>Danh sách tất cả các loại chứng từ sắp xếp theo thời gian ...</i>
+	<i>Từ <fmt:formatDate value="${mainFinanceForm.dau}"
+			pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" /> đến <fmt:formatDate
+			value="${mainFinanceForm.cuoi}" pattern="dd/M/yyyy" type="Date"
+			dateStyle="SHORT" /></i>
 </p>
 
 <div class="pull-right">
@@ -60,11 +63,13 @@
 						style="width: 50px;">${chungTu.loaiCt}${chungTu.soCt}</td>
 					<td>${chungTu.lyDo}</td>
 					<c:choose>
-						<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU}">
+						<c:when
+							test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU || chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
 							<td>${chungTu.taiKhoanNoDs[0].taiKhoan.maTk}</td>
 							<td></td>
 						</c:when>
-						<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI}">
+						<c:when
+							test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI || chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
 							<td></td>
 							<td>${chungTu.taiKhoanCoDs[0].taiKhoan.maTk}</td>
 						</c:when>
@@ -91,7 +96,8 @@
 					<td rowspan="${chungTu.soTkLonNhat+1}">${chungTu.doiTuong.diaChi}</td>
 				</tr>
 				<c:choose>
-					<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU || chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
+					<c:when
+						test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU || chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
 						<c:choose>
 							<c:when test="${chungTu.soTkLonNhat>0}">
 								<c:forEach begin="0" end="${chungTu.soTkLonNhat-1}"
@@ -108,7 +114,8 @@
 							</c:when>
 						</c:choose>
 					</c:when>
-					<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI || chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
+					<c:when
+						test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI || chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
 						<c:choose>
 							<c:when test="${chungTu.soTkLonNhat>0}">
 								<c:forEach begin="0" end="${chungTu.soTkLonNhat-1}"

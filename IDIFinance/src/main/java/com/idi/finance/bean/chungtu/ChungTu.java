@@ -9,6 +9,7 @@ import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class ChungTu {
 	// Hằng số cho phần chứng từ: Phiếu thu, chi, báo có, báo nợ
+	public static final String TAT_CA = "TAT_CA";
 	public static final String CHUNG_TU_PHIEU_THU = "PT";
 	public static final String CHUNG_TU_PHIEU_CHI = "PC";
 	public static final String CHUNG_TU_BAO_NO = "BN";

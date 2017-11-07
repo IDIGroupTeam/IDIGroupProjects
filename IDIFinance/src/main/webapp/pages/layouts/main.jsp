@@ -18,6 +18,8 @@
 	href="${url}/public/css/bootstrap-multiselect.css" />
 <link rel="stylesheet" href="${url}/public/css/bootcomplete.css" />
 <link rel="stylesheet" href="${url}/public/css/tabledit.css" />
+<link rel="stylesheet"
+	href="${url}/public/css/bootstrap-datetimepicker.min.css" />
 <link rel="stylesheet" href="${url}/public/css/style.css" />
 
 <script src="${url}/public/js/jquery.min.js"></script>
@@ -26,6 +28,8 @@
 <script src="${url}/public/js/bootstrap-multiselect.js"></script>
 <script src="${url}/public/js/jquery.bootcomplete.js"></script>
 <script src="${url}/public/js/jquery.tabledit.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
 <script src="${url}/public/js/script.js"></script>
 
 <title>Tập đoàn IDI - <tiles:getAsString name="title" /></title>
@@ -112,6 +116,8 @@
 								</a>
 									<ul class="dropdown-menu">
 										<li id="tabDSNT"><a href="#">Danh sách ngoại tệ</a></li>
+										<li id="tabDSBCDKT"><a href="${url}/danhsachtaikhoan">Danh
+												sách BCDKT</a></li>
 										<li id="tabDMTK"><a href="${url}/danhsachtaikhoan">Danh
 												sách tài khoản</a></li>
 

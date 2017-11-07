@@ -7,7 +7,7 @@
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 
 <form:form action="${url}/bieudo/${kpiGroup.groupId}"
-	modelAttribute="SearchKpiChartForm" method="POST">
+	modelAttribute="TkKpiChartForm" method="POST">
 	<div class="panel panel-default with-nav-tabs">
 		<div class="panel-heading">
 			<h4>Chọn biểu đồ KPI</h4>

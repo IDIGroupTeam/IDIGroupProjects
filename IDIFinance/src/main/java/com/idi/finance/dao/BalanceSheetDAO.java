@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.idi.finance.bean.cdkt.BalanceAssetData;
+import com.idi.finance.bean.cdkt.BalanceAssetItem;
 
 public interface BalanceSheetDAO {
 	public void insertOrUpdateBAs(List<BalanceAssetData> bas);
@@ -27,4 +28,6 @@ public interface BalanceSheetDAO {
 	public List<String> listSRAssetsCodes();
 
 	public List<Date> listSRAssetsPeriods();
+	
+	public List<BalanceAssetItem> listBAIs();
 }

@@ -23,8 +23,8 @@ import com.idi.finance.utils.ExcelProcessor;
 import com.idi.finance.utils.Utils;
 
 @Controller
-public class BalanceAssetController {
-	private static final Logger logger = Logger.getLogger(BalanceAssetController.class);
+public class BalanceSheetController {
+	private static final Logger logger = Logger.getLogger(BalanceSheetController.class);
 
 	@Autowired
 	BalanceSheetDAO balanceSheetDAO;

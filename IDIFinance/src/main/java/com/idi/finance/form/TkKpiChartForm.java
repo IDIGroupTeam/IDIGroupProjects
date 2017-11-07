@@ -1,6 +1,6 @@
 package com.idi.finance.form;
 
-public class SearchKpiChartForm {
+public class TkKpiChartForm {
 	private Integer[] kipCharts;
 
 	public Integer[] getKipCharts() {

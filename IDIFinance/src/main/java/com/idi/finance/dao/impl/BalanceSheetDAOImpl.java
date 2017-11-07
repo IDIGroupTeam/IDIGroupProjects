@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -24,6 +25,9 @@ import com.idi.finance.dao.BalanceSheetDAO;
  */
 public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	private static final Logger logger = Logger.getLogger(BalanceSheetDAOImpl.class);
+
+	@Value("${DANH_SACH_BCDKT}")
+	private String DANH_SACH_BCDKT;
 
 	private JdbcTemplate jdbcTmpl;
 
@@ -405,14 +409,31 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 
 	@Override
 	public List<String> listSRAssetsCodes() {
-
 		return null;
 	}
 
 	@Override
 	public List<Date> listSRAssetsPeriods() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public List<BalanceAssetItem> listBAIs() {
+		String query = DANH_SACH_BCDKT;
+
+		logger.info("Get list balance sheet item from BALANCE_ASSET_ITEM table ...");
+		logger.info(query);
+
+		List<BalanceAssetItem> bais = jdbcTmpl.query(query, new BalanceAssetItemMapper());
+
+		return bais;
+	}
+
+	public class BalanceAssetItemMapper implements RowMapper<BalanceAssetItem> {
+		public BalanceAssetItem mapRow(ResultSet rs, int rowNum) throws SQLException {
+			BalanceAssetItem bai = new BalanceAssetItem();
+			
+			return bai;
+		}
+	}
 }

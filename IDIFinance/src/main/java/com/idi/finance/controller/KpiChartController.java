@@ -30,7 +30,7 @@ import com.idi.finance.charts.KpiMeasureChartProcessor;
 import com.idi.finance.charts.KpiMeasureLineChart;
 import com.idi.finance.dao.BalanceSheetDAO;
 import com.idi.finance.dao.KpiChartDAO;
-import com.idi.finance.form.SearchKpiChartForm;
+import com.idi.finance.form.TkKpiChartForm;
 import com.idi.finance.utils.Contants;
 import com.idi.finance.utils.ExpressionEval;
 
@@ -52,7 +52,7 @@ public class KpiChartController {
 	}
 
 	@RequestMapping(value = "/bieudo/{id}", method = { RequestMethod.GET, RequestMethod.POST })
-	public String kpiChart(@ModelAttribute("SearchKpiChartForm") SearchKpiChartForm form,
+	public String kpiChart(@ModelAttribute("TkKpiChartForm") TkKpiChartForm form,
 			@PathVariable("id") int groupId, Model model) {
 		try {
 			// Khởi tạo nhóm mặc định theo giá trị biến client truyền đến
