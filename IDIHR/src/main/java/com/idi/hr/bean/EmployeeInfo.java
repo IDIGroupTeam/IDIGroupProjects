@@ -1,8 +1,6 @@
 package com.idi.hr.bean;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.File;
 import java.io.Serializable;
 
 public class EmployeeInfo implements Serializable {
@@ -33,12 +31,12 @@ public class EmployeeInfo implements Serializable {
 	private String permanentAdress;
 	private String note;
 	private String nation;
-	private byte[] image;
+	private File image;
 	private String workStatus;
 	private String bankNo;
 	private String bankName;
 	private String bankBranch;
-	private String salary;
+	private String imagePath;
 	private String salarySocicalInsu;
 	private String socicalInsuNo;
 	private String healthInsuNo;
@@ -52,8 +50,8 @@ public class EmployeeInfo implements Serializable {
 			String jobTitle, String department, String DOB, String personalId, String issueDate, String phoneNo,
 			String joinDate, String officalJoinDate, String email, String terminationDate, String reasonforLeave,
 			String currentAdress, String permanentAdress, String note, String emerName, String emerPhoneNo,
-			String nation, byte[] image, String workStatus, String bankNo, String bankName, String bankBranch,
-			String salary, String salarySocicalInsu, String socicalInsuNo, String healthInsuNo,
+			String nation, String workStatus, String bankNo, String bankName, String bankBranch,
+			String imagePath, String salarySocicalInsu, String socicalInsuNo, String healthInsuNo,
 			String percentSocicalInsu) {
 
 		this.employeeId = employeeId;
@@ -78,12 +76,12 @@ public class EmployeeInfo implements Serializable {
 		this.emerName = emerName;
 		this.emerPhoneNo = emerPhoneNo;
 		this.nation = nation;
-		this.image = image;
+		//this.image = image;
 		this.workStatus = workStatus;
 		this.bankNo = bankNo;
 		this.bankName = bankName;
 		this.bankBranch = bankBranch;
-		this.salary = salary;
+		this.imagePath = imagePath;
 		this.salarySocicalInsu = salarySocicalInsu;
 		this.socicalInsuNo = socicalInsuNo;
 		this.healthInsuNo = healthInsuNo;
@@ -250,7 +248,7 @@ public class EmployeeInfo implements Serializable {
 		this.workStatus = workStatus;
 	}
 
-	public byte[] getImage() {
+	public File getImage() {
 		return image;
 	}
 
@@ -302,12 +300,12 @@ public class EmployeeInfo implements Serializable {
 		this.bankBranch = bankBranch;
 	}
 
-	public String getSalary() {
-		return salary;
+	public String getImagePath() {
+		return imagePath;
 	}
 
-	public void setSalary(String salary) {
-		this.salary = salary;
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 
 	public String getSalarySocicalInsu() {
@@ -342,11 +340,11 @@ public class EmployeeInfo implements Serializable {
 		this.percentSocicalInsu = percentSocicalInsu;
 	}
 
-	public void setImage(byte[] image) {
+	public void setImage(File image) {
 		this.image = image;
 	}
 
-	public void setImage(InputStream input) {
+	/*	public void setImage(InputStream input) {
 		try {
 			if (input != null) {
 				ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
@@ -358,8 +356,7 @@ public class EmployeeInfo implements Serializable {
 				input.close();
 				image = byteStream.toByteArray();
 			}
-		} catch (IOException e) {
-		}
-	}
+		} catch (IOException e) {}
+	}*/
 
 }

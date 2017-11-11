@@ -74,7 +74,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		
 		String accountNumber = jdbcTmpl.queryForObject(sql, String.class, params);
 		
-		System.err.println(accountNumber);
+		//System.err.println(accountNumber);
 		return Integer.parseInt(accountNumber);
 
 	}
@@ -103,7 +103,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 						employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
 						employeeInfo.getNation(), employeeInfo.getImage(), employeeInfo.getEmerName(),
 						employeeInfo.getEmerPhoneNo(), employeeInfo.getBankNo(), employeeInfo.getBankName(),
-						employeeInfo.getBankBranch(), employeeInfo.getSalary(), employeeInfo.getSalarySocicalInsu(),
+						employeeInfo.getBankBranch(), employeeInfo.getImagePath(), employeeInfo.getSalarySocicalInsu(),
 						employeeInfo.getSocicalInsuNo(), employeeInfo.getHealthInsuNo(),
 						employeeInfo.getPercentSocicalInsu(), employeeInfo.getEmployeeId()};
 				jdbcTmpl.update(sql, params);
@@ -120,7 +120,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 						employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
 						employeeInfo.getNation(), employeeInfo.getImage(), employeeInfo.getEmerName(),
 						employeeInfo.getEmerPhoneNo(), employeeInfo.getBankNo(), employeeInfo.getBankName(),
-						employeeInfo.getBankBranch(), employeeInfo.getSalary(), employeeInfo.getSalarySocicalInsu(),
+						employeeInfo.getBankBranch(), employeeInfo.getImagePath(), employeeInfo.getSalarySocicalInsu(),
 						employeeInfo.getSocicalInsuNo(), employeeInfo.getHealthInsuNo(),
 						employeeInfo.getPercentSocicalInsu() };
 				jdbcTmpl.update(sql, params);

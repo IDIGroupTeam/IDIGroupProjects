@@ -1,8 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="UTF-8"%>
+<%@page import="com.idi.hr.controller.EmployeeController"%>
+<%@page import="com.idi.hr.controller.BaseController"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -14,10 +16,15 @@
 	font-style: italic;
 }
 </style>
+
+<%
+   String baseURL = (String) request.getAttribute(BaseController.PARAM_BASE_URL);
+%>
+
 </head>
 <body>
 	<form:form modelAttribute="employeeForm" method="POST"
-		action="insertOrUpdateEmployee">
+		action="insertOrUpdateEmployee" enctype="multipart/form-data">
 		<div class="table table-bordered">
 			<form:hidden path="employeeId" />
 			<table>
@@ -66,9 +73,14 @@
 					</tr>
 
 					<tr>
-						<td rowspan="4"><img
-							src="D://IBM_ADMIN//Pictures//Pics//TruongNV.jpg" width="125px"
-							height="150px"></TD>
+						<td rowspan="4">
+						<c:if test="${ not empty employeeForm.imagePath}" >
+							<img src="${employeeForm.imagePath}" height="170px" width="145px" />
+						</c:if>
+						<c:if test="${ empty employeeForm.imagePath}">
+							<img src="/IDIHR/public/images/avatar.gif" height="170px" width="145px"/>
+						</c:if>						
+						</td>
 						<td bgcolor="#E6E6E6">Email(*):</td>
 						<!-- can check duplicate  -->
 						<td><form:input path="email" required="required" /></td>
@@ -129,9 +141,8 @@
 
 						<td bgcolor="#E6E6E6">Ngày cấp:</td>
 						<td><form:input path="issueDate" type="date" /></td>
-
-
-						<td>Quốc tịch: <form:input path="nation" size="14" /></td>
+						
+						<td>Quốc tịch: <form:input path="nation" size="12" /></td>
 
 					</tr>
 					<tr>
@@ -174,8 +185,10 @@
 						<td colspan="5"><form:textarea path="note" cols="100" /></td>
 					</tr>
 					<tr>
-						<td><input type="submit" value="Lưu" name="Lưu" />&nbsp; <a
-							href="${pageContext.request.contextPath}/"><button>Quay lại danh sách NV</button></a></td>						
+						<td>&nbsp;</td>
+						<td nowrap="nowrap"><input type="submit" value="Lưu" name="Lưu" /> &nbsp;<a
+							href="${pageContext.request.contextPath}/"><button> Quay lại danh sách NV</button></a></td>	
+						<td>&nbsp;</td>					
 					</tr>
 				</tbody>
 			</table>
