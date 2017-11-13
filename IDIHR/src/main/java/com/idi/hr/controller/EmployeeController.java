@@ -75,7 +75,7 @@ public class EmployeeController {// extends BaseController {
 		if (target == null) {
 			return;
 		}
-		// System.out.println("Target=" + target);
+		//System.out.println("Target=" + target);
 
 		if (target.getClass() == EmployeeInfo.class) {
 			dataBinder.setValidator(employeeValidator);
@@ -90,15 +90,14 @@ public class EmployeeController {// extends BaseController {
 			// Nếu validate có lỗi.
 			if (!(employeeInfo.getEmployeeId() > 0)) {
 				if (result.hasErrors()) {
-					// System.err.println("co loi validate");
+					//System.err.println("co loi validate");
 					return this.employeeForm(model, employeeInfo);
 				}
 			}
 			String pathInfo = "";
 
-			// String latestUploadPhoto = "";
 			String rootPath = request.getSession().getServletContext().getRealPath("/");
-			// System.err.println(rootPath);
+			//System.err.println("rootPath: " + rootPath);
 			File dir = new File(rootPath + File.separator + "employeeImage");
 			if (!dir.exists()) {
 				dir.mkdirs();
@@ -117,13 +116,14 @@ public class EmployeeController {// extends BaseController {
 					while ((i = is.read()) != -1) {
 						stream.write(i);
 					}
-					stream.flush();
+					stream.flush();			
+
 				}
 				employeeInfo.setImagePath(pathInfo);
 			} catch (IOException e) {
 				log.error("Error : " + e.getMessage());
 			}
-
+			
 			employeeDAO.insertOrUpdateEmployee(employeeInfo);
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Insert/Update employee successful!");

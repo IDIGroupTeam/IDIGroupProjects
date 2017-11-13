@@ -1,6 +1,5 @@
 package com.idi.hr.bean;
 
-import java.io.File;
 import java.io.Serializable;
 
 public class EmployeeInfo implements Serializable {
@@ -31,7 +30,7 @@ public class EmployeeInfo implements Serializable {
 	private String permanentAdress;
 	private String note;
 	private String nation;
-	private File image;
+	//private File image;
 	private String workStatus;
 	private String bankNo;
 	private String bankName;
@@ -248,9 +247,9 @@ public class EmployeeInfo implements Serializable {
 		this.workStatus = workStatus;
 	}
 
-	public File getImage() {
+/*	public File getImage() {
 		return image;
-	}
+	}*/
 
 	public String getEmerName() {
 		return emerName;
@@ -340,9 +339,9 @@ public class EmployeeInfo implements Serializable {
 		this.percentSocicalInsu = percentSocicalInsu;
 	}
 
-	public void setImage(File image) {
+/*	public void setImage(File image) {
 		this.image = image;
-	}
+	}*/
 
 	/*	public void setImage(InputStream input) {
 		try {

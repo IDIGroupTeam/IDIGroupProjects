@@ -1,5 +1,3 @@
-<%@page import="com.idi.hr.controller.EmployeeController"%>
-<%@page import="com.idi.hr.controller.BaseController"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -16,10 +14,6 @@
 	font-style: italic;
 }
 </style>
-
-<%
-   String baseURL = (String) request.getAttribute(BaseController.PARAM_BASE_URL);
-%>
 
 </head>
 <body>
@@ -40,6 +34,7 @@
 				<tr>
 					<td><form:errors path="loginAccount" class="error-message" /></td>
 				</tr>
+
 			</table>
 			<table class="table">
 				<tbody>
@@ -56,7 +51,7 @@
 					</tr> --%>
 
 					<tr>
-						<td nowrap="nowrap"><form:input type="file" accept="image/jpeg" path="image" /></td>
+						<td nowrap="nowrap"><input type="file" accept="image/jpeg" name="image" /></td>
 						<td bgcolor="#E6E6E6">Họ tên(*):</td>
 						<td><form:input path="fullName" required="required" /></td>
 						<td bgcolor="#E6E6E6">Số đt:</td>
