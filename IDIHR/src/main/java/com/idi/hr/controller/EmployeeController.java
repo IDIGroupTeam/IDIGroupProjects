@@ -107,23 +107,23 @@ public class EmployeeController {// extends BaseController {
 			// latestUploadPhoto = image.getOriginalFilename();
 			pathInfo = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath()
 					+ "/employeeImage/" + image.getOriginalFilename();
-
-			// write uploaded image to disk
-			try {
-				try (InputStream is = image.getInputStream();
-						BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile))) {
-					int i;
-					while ((i = is.read()) != -1) {
-						stream.write(i);
+			if(serverFile.exists() && serverFile.isFile()) {
+				// write uploaded image to disk
+				try {
+					try (InputStream is = image.getInputStream();
+							BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile))) {
+						int i;
+						while ((i = is.read()) != -1) {
+							stream.write(i);
+						}
+						stream.flush();			
+	
 					}
-					stream.flush();			
-
+					employeeInfo.setImagePath(pathInfo);
+				} catch (IOException e) {
+					log.error("Error : " + e.getMessage());
 				}
-				employeeInfo.setImagePath(pathInfo);
-			} catch (IOException e) {
-				log.error("Error : " + e.getMessage());
 			}
-			
 			employeeDAO.insertOrUpdateEmployee(employeeInfo);
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Insert/Update employee successful!");
@@ -212,7 +212,7 @@ public class EmployeeController {// extends BaseController {
 		EmployeeInfo employeeInfo = null;
 		if (employeeId != null) {
 			employeeInfo = this.employeeDAO.getEmployee(employeeId);
-			System.err.println(employeeInfo.getImagePath());
+			//System.err.println(employeeInfo.getImagePath());
 			model.addAttribute("employeeForm", employeeInfo);
 			model.addAttribute("formTitle", "Thông tin nhân viên");
 

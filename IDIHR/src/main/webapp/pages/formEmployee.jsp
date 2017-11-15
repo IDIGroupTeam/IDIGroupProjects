@@ -69,6 +69,7 @@
 
 					<tr>
 						<td rowspan="4">
+						<form:hidden path="imagePath"/>
 						<c:if test="${ not empty employeeForm.imagePath}" >
 							<img src="${employeeForm.imagePath}" height="170px" width="145px" />
 						</c:if>
