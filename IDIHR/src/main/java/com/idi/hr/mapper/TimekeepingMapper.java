@@ -1,6 +1,5 @@
 package com.idi.hr.mapper;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -14,26 +13,19 @@ public class TimekeepingMapper implements RowMapper<Timekeeping> {
 
 		int employeeId = rs.getInt("EMPLOYEE_ID");
 		String employeeName = rs.getString("FULL_NAME");
-		String joinDate = rs.getString("JOIN_DATE");
-		Date date = rs.getDate("DATE");
-		String leaveType = rs.getString("LEAVE_TYPE");
-		String overtimeType = rs.getString("OVERTIME_TYPE");
-		int notTimekeeping = rs.getInt("NOT_TIMEKEEPING");
-		String overTimeValue = rs.getString("OVETIME_VALUE");
+		String date = rs.getString("DATE");
+		String timeIn = rs.getString("TIME_IN");
+		String timeOut = rs.getString("TIME_OUT");
 		String comment = rs.getString("COMMENT");
+		String department = rs.getString("DEPARTMENT");
+		String title = rs.getString("JOB_TITLE");
 		String comeLateM = rs.getString("COME_LATE_M");
 		String leaveSoonM = rs.getString("LEAVE_SOON_M");
 		String comeLateA = rs.getString("COME_LATE_A");
 		String leaveSoonA = rs.getString("LEAVE_SOON_A");
-		String quataLeave = rs.getString("QUATA_LEAVE");
-		String restQuata = rs.getString("REST_QUATA");
-		String leaveUsed = rs.getString("LEAVE_USED");
-		String leaveRemain = rs.getString("LEAVE_REMAIN");
-		
-		return new Timekeeping(employeeId, employeeName, joinDate, date, leaveType,
-				overtimeType, notTimekeeping, overTimeValue, comment, //String seniority,
-				comeLateM, leaveSoonM, comeLateA, leaveSoonA, quataLeave,
-				restQuata, leaveUsed, leaveRemain);
+
+		return new Timekeeping(employeeId, employeeName, date, timeIn, timeOut, comment, department, title, comeLateM,
+				leaveSoonM, comeLateA, leaveSoonA);
 	}
 
 }

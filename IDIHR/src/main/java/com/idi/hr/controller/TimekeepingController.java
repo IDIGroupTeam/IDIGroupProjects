@@ -1,7 +1,6 @@
 package com.idi.hr.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,18 +14,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.idi.hr.bean.Department;
 import com.idi.hr.bean.EmployeeInfo;
-import com.idi.hr.bean.JobTitle;
+import com.idi.hr.bean.LeaveInfo;
+import com.idi.hr.bean.LeaveType;
 import com.idi.hr.bean.Timekeeping;
-import com.idi.hr.bean.WorkHistory;
-import com.idi.hr.dao.DepartmentDAO;
+import com.idi.hr.common.ExcelProcessor;
 import com.idi.hr.dao.EmployeeDAO;
-import com.idi.hr.dao.JobTitleDAO;
+import com.idi.hr.dao.LeaveDAO;
 import com.idi.hr.dao.TimekeepingDAO;
-import com.idi.hr.dao.WorkHistoryDAO;
 
 @Controller
 public class TimekeepingController {
@@ -34,31 +32,123 @@ public class TimekeepingController {
 
 	@Autowired
 	private TimekeepingDAO timekeepingDAO;
-
+	
+	@Autowired
+	private LeaveDAO leaveDAO;
+	
 	@Autowired
 	private EmployeeDAO employeeDAO;
 	
-	@Autowired
-	private JobTitleDAO jobTitleDAO;
+	ExcelProcessor xp = new ExcelProcessor();
+	
+	@RequestMapping(value = "/timekeeping/updateData", method = RequestMethod.POST)
+	public String updateData(Model model, @RequestParam("timeKeepingFile") MultipartFile timeKeepingFile) {
+		System.err.println("import excel file");
+		System.err.println(timeKeepingFile.getName());
+		Timekeeping timekeeping = new Timekeeping();
+		model.addAttribute("timekeepingForm", timekeeping);
+		if (timeKeepingFile != null && timeKeepingFile.getSize() > 0) {
+			log.info(timeKeepingFile.getName() + " - " + timeKeepingFile.getSize());
+			try {
+				// Read & insert timekeeping data
+				List<Timekeeping> timekeepings = xp.loadTimekeepingDataFromExcel(timeKeepingFile.getInputStream());
+				timekeepingDAO.insertOrUpdate(timekeepings);
 
-	@Autowired
-	private DepartmentDAO departmentDAO;
-
+				List<Timekeeping> list = timekeepingDAO.getTimekeepings();
+				model.addAttribute("timekeepings", list);
+				model.addAttribute("formTitle", "Dữ liệu chấm công");
+				
+				return "formTimekeeping";
+			} catch (Exception e) {
+				e.printStackTrace();
+				String comment = "Không thể đọc excel file " + timeKeepingFile.getName()
+						+ ". Có thể file bị lỗi, không đúng định dạng, hoặc đường truyền chậm, xin mời thử lại...";
+				model.addAttribute("comment", comment);
+				//model.addAttribute("tab", "tabCNDL");
+				return "formTimekeeping";
+			}
+		} else {
+			String comment = "Hãy chọn file excel dữ liệu chấm công.";
+			model.addAttribute("comment", comment);
+			List<Timekeeping> list = timekeepingDAO.getTimekeepings();
+			model.addAttribute("timekeepings", list);
+			model.addAttribute("formTitle", "Dữ liệu chấm công");
+			return "formTimekeeping";
+		}		
+	}
 	
 	@RequestMapping(value = { "/timekeeping/" }, method = RequestMethod.GET)
 	public String listForTimekeeping(Model model, Timekeeping timekeeping) {
 		try {
-			System.out.println("list by employee");
+			//System.out.println("list by employee");
 			List<Timekeeping> list = timekeepingDAO.getTimekeepings();
 			model.addAttribute("timekeepings", list);
-			model.addAttribute("formTitle", "Danh sách chấm công");
+			model.addAttribute("timekeepingForm", timekeeping);
+			model.addAttribute("formTitle", "Dữ liệu chấm công");
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
 		}
-		return this.timekeepingForm(model, timekeeping);
+		return "formTimekeeping";
 	}
-	/*
+	
+	@RequestMapping(value = { "/timekeeping/leaveInfo" }, method = RequestMethod.GET)
+	public String listleaveInfo(Model model, LeaveInfo LeaveInfo) {
+		try {
+			List<LeaveInfo> list = leaveDAO.getLeaves();
+			model.addAttribute("leaveInfos", list);
+			//model.addAttribute("leaveInfoForm", LeaveInfo);
+			model.addAttribute("formTitle", "Dữ liệu ngày nghỉ");
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return "listLeaveInfo";
+	}
+	
+	@RequestMapping(value = "/timekeeping/insertLeaveInfo", method = RequestMethod.POST)
+	public String insertLeaveInfo(Model model, @ModelAttribute("leaveInfoForm") @Validated LeaveInfo leaveInfo,
+			final RedirectAttributes redirectAttributes) {
+		try {
+			leaveDAO.insertLeaveInfo(leaveInfo);
+			// Add message to flash scope
+			redirectAttributes.addFlashAttribute("message", "Thêm thông tin ngày nghỉ thành công!");
+
+		} catch (Exception e) {
+			log.error(e, e);
+		}
+		return "redirect:/timekeeping/leaveInfo";
+	}
+	
+	@RequestMapping(value= "/timekeeping/addLeaveInfo")
+	public String addLeaveInfo(Model model, LeaveInfo leaveInfo) {
+		model.addAttribute("formTitle", "Thêm dữ liệu chấm công");
+		// get list employee id
+		Map<String, String> employeeMap = this.employees();
+		model.addAttribute("employeeMap", employeeMap);
+		
+		// get list leave type
+		Map<String, String> leaveTypeMap = this.leaveTypes();
+		model.addAttribute("leaveTypeMap", leaveTypeMap);
+		
+		model.addAttribute("leaveInfoForm", leaveInfo);
+		
+		return "addLeaveInfo";
+	}
+	
+	@RequestMapping(value= "/timekeeping/deleteLeaveInfo")
+	public String deleteLeaveInfo(Model model,@RequestParam("employeeId") int employeeId,  @RequestParam("date") Date date,
+			@RequestParam("leaveType") String leaveType, final RedirectAttributes redirectAttributes) {
+		try {
+			leaveDAO.deleteLeaveInfo(employeeId, date, leaveType);
+			// Add message to flash scope
+			redirectAttributes.addFlashAttribute("message", "Xóa thông tin ngày nghỉ thành công!");
+		} catch (Exception e) {
+			log.error(e, e);
+		}
+		return "redirect:/timekeeping/leaveInfo";
+	}	
+	
 	private Map<String, String> employees() {
 		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
 		try {
@@ -77,127 +167,22 @@ public class TimekeepingController {
 		}
 		return employeeMap;
 	}
-
-	private Map<String, String> dataForTitles() {
-		Map<String, String> titleMap = new LinkedHashMap<String, String>();
+	
+	private Map<String, String> leaveTypes() {
+		Map<String, String> leaveTypeMap = new LinkedHashMap<String, String>();
 		try {
-			List<JobTitle> list = jobTitleDAO.getJobTitles();
-			JobTitle jobTitle = new JobTitle();
+			List<LeaveType> list = leaveDAO.getLeaveTypes();
+			LeaveType leaveType = new LeaveType();
 			for (int i = 0; i < list.size(); i++) {
-				jobTitle = (JobTitle) list.get(i);
-				titleMap.put(jobTitle.getTitleId(), jobTitle.getTitleName());
+				leaveType = (LeaveType) list.get(i);
+				String leaveId = leaveType.getLeaveId();
+				leaveTypeMap.put(leaveId, leaveType.getLeaveName());
 			}
 
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
 		}
-		return titleMap;
+		return leaveTypeMap;
 	}
-
-	private Map<String, String> dataForDepartments() {
-		Map<String, String> departmentMap = new LinkedHashMap<String, String>();
-		try {
-			List<Department> list = departmentDAO.getDepartments();
-			Department department = new Department();
-			for (int i = 0; i < list.size(); i++) {
-				department = (Department) list.get(i);
-				departmentMap.put(department.getDepartmentId(), department.getDepartmentName());
-			}
-
-		} catch (Exception e) {
-			log.error(e, e);
-			e.printStackTrace();
-		}
-		return departmentMap;
-	}
-	
-	@RequestMapping(value = "/workHistory/insertWorkHistory", method = RequestMethod.POST)
-	public String insertWorkHistory(Model model, @ModelAttribute("workHistoryForm") @Validated WorkHistory workHistory,
-			final RedirectAttributes redirectAttributes) {
-		try {
-			workHistoryDAO.insertWorkHistory(workHistory);
-			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Thêm thông tin lịch sử công tác thành công!");
-
-		} catch (Exception e) {
-			log.error(e, e);
-		}
-		return "redirect:/workHistory/";
-	}
-
-	@RequestMapping(value = "/workHistory/updateWorkHistory", method = RequestMethod.POST)
-	public String updateWorkHistory(Model model, @ModelAttribute("workHistoryForm") @Validated WorkHistory workHistory,
-			final RedirectAttributes redirectAttributes) {
-		try {
-			workHistoryDAO.updateWorkHistory(workHistory);
-			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin lịch sử công tác thành công!");
-
-		} catch (Exception e) {
-			log.error(e, e);
-		}
-		return "redirect:/workHistory/";
-	}
-*/
-	private String timekeepingForm(Model model,  Timekeeping timekeeping) {
-		model.addAttribute("timekeepingForm", timekeeping);
-		// get list employee id
-		model.addAttribute("formTitle", "Chấm công ");
-//		actionform = "insertTimekeeping";
-	//	}
-		return "formTimekeeping";
-	}
-/*
-	@RequestMapping("/timekeeping/addTimekeeping")
-	public String addWorkHistory(Model model) {		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-		String date = simpleDateFormat.format(new Date());
-		System.out.println(date);
-		Timekeeping timekeeping = new Timekeeping();
-		return this.timekeepingForm(model, timekeeping);
-	}
-
-	@RequestMapping("/workHistory/viewWorkHistory")
-	public String viewWorkHistory(Model model, @RequestParam("employeeId") int employeeId,  @RequestParam("fromDate") String fromDate) {
-		WorkHistory workHistory = null;
-		if (employeeId > 0 && fromDate != null) {
-			workHistory = this.workHistoryDAO.getWorkHistory(employeeId, fromDate);
-			model.addAttribute("workHistoryForm", workHistory);
-			model.addAttribute("formTitle", "Thông tin lịch sử công tác");
-		}
-		if (workHistory == null) {
-			return "redirect:/workHistory/";
-		}
-
-		return "viewWorkHistory";
-	}
-
-	@RequestMapping("/workHistory/editWorkHistory")
-	public String editWorkHistory(Model model, @RequestParam("employeeId") int employeeId,  @RequestParam("fromDate") String fromDate) {
-		Timekeeping timekeeping = null;
-		if (employeeId > 0 && fromDate != null) {
-			timekeeping = null; //this.workHistoryDAO.getWorkHistory(employeeId, fromDate);
-		}
-		if (timekeeping == null) {
-			return "redirect:/workHistory/";
-		}
-
-		return this.timekeepingForm(model, timekeeping);
-	}
-
-	
-	@RequestMapping(value = "/workHistory/deleteWorkHistory")
-	public String deleteWorkHistory(Model model, @RequestParam("employeeId") int employeeId,  @RequestParam("fromDate") String fromDate,
-			final RedirectAttributes redirectAttributes) {
-		try {
-			workHistoryDAO.deleteWorkHistory(employeeId, fromDate);
-			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Xóa thông tin lịch sử công tác thành công!");
-		} catch (Exception e) {
-			log.error(e, e);
-		}
-		return "redirect:/workHistory/";
-	}*/
-
 }
