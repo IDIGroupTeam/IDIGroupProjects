@@ -72,12 +72,42 @@
 					<td>${timekeeping.department}</td>
 					<td>${timekeeping.title}</td>
 					<td>${timekeeping.date}</td>
-					<td>${timekeeping.timeIn}</td>
-					<td>${timekeeping.timeOut}</td>
-					<td bgcolor="#F5F6CE">${timekeeping.comeLateM}</td>
-					<td bgcolor="#F5F6CE">${timekeeping.comeLateA}</td>
-					<td bgcolor="#F5F6CE">${timekeeping.leaveSoonM}</td>
-					<td bgcolor="#F5F6CE">${timekeeping.leaveSoonA}</td>
+					<c:if test="${not empty timekeeping.timeIn}">
+						<td>${timekeeping.timeIn}</td>
+					</c:if>
+					<c:if test="${empty timekeeping.timeIn}">
+						<td bgcolor="EDC7D0">${timekeeping.timeIn}</td>
+					</c:if>
+					<c:if test="${not empty timekeeping.timeOut}">
+						<td>${timekeeping.timeOut}</td>
+					</c:if>
+					<c:if test="${empty timekeeping.timeOut}">
+						<td bgcolor="EDC7D0">${timekeeping.timeOut}</td>
+					</c:if>
+					<c:if test="${not empty timekeeping.comeLateM}">
+						<td bgcolor="#F5F6CE">${timekeeping.comeLateM}</td>
+					</c:if>
+					<c:if test="${empty timekeeping.comeLateM}">
+						<td>${timekeeping.comeLateM}</td>
+					</c:if>
+					<c:if test="${not empty timekeeping.comeLateA}">
+						<td bgcolor="#F5F6CE">${timekeeping.comeLateA}</td>
+					</c:if>
+					<c:if test="${empty timekeeping.comeLateA}">
+						<td>${timekeeping.comeLateA}</td>
+					</c:if>
+					<c:if test="${not empty timekeeping.leaveSoonM}">
+						<td bgcolor="#F5F6CE">${timekeeping.leaveSoonM}</td>
+					</c:if>
+					<c:if test="${empty timekeeping.leaveSoonM}">
+						<td>${timekeeping.leaveSoonM}</td>
+					</c:if>
+					<c:if test="${not empty timekeeping.leaveSoonA}">
+						<td bgcolor="#F5F6CE">${timekeeping.leaveSoonA}</td>
+					</c:if>
+					<c:if test="${empty timekeeping.leaveSoonA}">
+						<td>${timekeeping.leaveSoonA}</td>
+					</c:if>					
 				</tr>
 			</c:forEach>
 		</table>
