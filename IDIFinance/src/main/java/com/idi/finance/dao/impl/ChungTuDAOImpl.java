@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -125,13 +124,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				chungTu.setLoaiCt(rs.getString("LOAI_CT"));
 				chungTu.setLyDo(rs.getString("LY_DO"));
 				chungTu.setKemTheo(rs.getInt("KEM_THEO"));
-
-				// Timestamp ngayLapTs = rs.getTimestamp("NGAY_LAP");
-				// Date ngayLap = new Date(ngayLapTs.getTime());
 				chungTu.setNgayLap(rs.getDate("NGAY_LAP"));
-
-				// Timestamp ngayHtTs = rs.getTimestamp("NGAY_HT");
-				// Date ngayHt = new Date(ngayHtTs.getTime());
 				chungTu.setNgayHt(rs.getDate("NGAY_HT"));
 
 				LoaiTien loaiTien = new LoaiTien();
@@ -211,13 +204,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				chungTu.setLoaiCt(rs.getString("LOAI_CT"));
 				chungTu.setLyDo(rs.getString("LY_DO"));
 				chungTu.setKemTheo(rs.getInt("KEM_THEO"));
-
-				// Timestamp ngayLapTs = rs.getTimestamp("NGAY_LAP");
-				// Date ngayLap = new Date(ngayLapTs.getTime());
 				chungTu.setNgayLap(rs.getDate("NGAY_LAP"));
-
-				// Timestamp ngayHtTs = rs.getTimestamp("NGAY_HT");
-				// Date ngayHt = new Date(ngayHtTs.getTime());
 				chungTu.setNgayHt(rs.getDate("NGAY_HT"));
 
 				LoaiTien loaiTien = new LoaiTien();

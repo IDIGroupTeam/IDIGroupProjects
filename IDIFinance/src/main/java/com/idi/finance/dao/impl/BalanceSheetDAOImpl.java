@@ -2,7 +2,6 @@ package com.idi.finance.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -72,7 +71,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 
 		String updateBadsQry = "UPDATE BALANCE_ASSET_DATA SET START_VALUE=?, END_VALUE=?, CHANGED_RATIO=?, DESCRIPTION=? WHERE ASSET_CODE=? AND PERIOD=? AND PERIOD_TYPE=?";
 		String insertBadsQry = "INSERT INTO BALANCE_ASSET_DATA (ASSET_CODE, PERIOD_TYPE, PERIOD, START_VALUE, END_VALUE, CHANGED_RATIO, DESCRIPTION) VALUES(?, ?, ?, ?, ?, ?, ?)";
-		logger.info("insertOrUpdateBA: " + bad);
+		
 		// Update to BALANCE_ASSET_DATA
 		int count = 0;
 		try {
@@ -268,8 +267,6 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 
 			BalanceAssetData bad = new BalanceAssetData();
 			bad.setAsset(bai);
-			// Timestamp period = rs.getTimestamp("PERIOD");
-			// Date date = new Date(period.getTime());
 			bad.setPeriod(rs.getDate("PERIOD"));
 			bad.setStartValue(rs.getDouble("START_VALUE"));
 			bad.setEndValue(rs.getDouble("END_VALUE"));
@@ -480,8 +477,6 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 
 	public class AssetsPeriodMapper implements RowMapper<Date> {
 		public Date mapRow(ResultSet rs, int rowNum) throws SQLException {
-			// Timestamp assetPeriod = rs.getTimestamp("PERIOD");
-			// Date date = new Date(assetPeriod.getTime());
 			return rs.getDate("PERIOD");
 		}
 	}
