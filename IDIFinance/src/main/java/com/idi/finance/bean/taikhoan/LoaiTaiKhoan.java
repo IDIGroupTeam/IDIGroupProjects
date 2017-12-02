@@ -1,7 +1,7 @@
 package com.idi.finance.bean.taikhoan;
 
 public class LoaiTaiKhoan {
-	public static final int NO = 0;
+	public static final int NO = -1;
 	public static final int CO = 1;
 
 	public static final String TIEN_MAT = "111";
@@ -12,6 +12,7 @@ public class LoaiTaiKhoan {
 	private String maTenTk;
 	private String maTkCha;
 	private int soDu;
+	private int soDuGiaTri;
 
 	public String getMaTk() {
 		return maTk;
@@ -53,9 +54,17 @@ public class LoaiTaiKhoan {
 		this.soDu = soDu;
 	}
 
+	public int getSoDuGiaTri() {
+		return soDuGiaTri;
+	}
+
+	public void setSoDuGiaTri(int soDuGiaTri) {
+		this.soDuGiaTri = soDuGiaTri;
+	}
+
 	@Override
 	public String toString() {
-		String out = maTk;
+		String out = maTk + " " + tenTk;
 		return out;
 	}
 

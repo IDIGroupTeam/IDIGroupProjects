@@ -1,3 +1,4 @@
+<%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
@@ -14,37 +15,42 @@
 </script>
 
 <h4>Danh mục tài khoản kế toán</h4>
-
-<table class="table table-bordered table-hover">
-	<thead>
-		<tr>
-			<th>STT</th>
-			<th>Mã tài khoản (Cấp 1)</th>
-			<th>Mã tài khoản (Cấp 2)</th>
-			<th>Mã tài khoản (Cấp 3)</th>
-			<th>Tên tài khoản</th>
-			<!-- <th>Số dư</th> -->
-		</tr>
-	</thead>
-	<tbody>
-		<c:forEach items="${taiKhoanDs}" var="taiKhoan" varStatus="status">
+<div class="table-responsive">
+	<table class="table table-bordered table-hover">
+		<thead>
 			<tr>
+				<!-- <th>STT</th> -->
+				<th>Mã tài khoản (Cấp 1)</th>
+				<th>Mã tài khoản (Cấp 2)</th>
+				<th>Mã tài khoản (Cấp 3)</th>
+				<th>Tên tài khoản</th>
+				<th>Số dư</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach items="${taiKhoanDs}" var="taiKhoan" varStatus="status">
+				<tr>
 
-				<td>${status.index+1}</td>
-				<td><c:if test="${fn:length(taiKhoan.maTk) <= 3}"><b>${taiKhoan.maTk}</b></c:if></td>
-				<td><c:if test="${fn:length(taiKhoan.maTk)==4}">${taiKhoan.maTk}</c:if></td>
-				<td><c:if test="${fn:length(taiKhoan.maTk)>4}">${taiKhoan.maTk}</c:if></td>
-				<td><c:choose>
-						<c:when test="${fn:length(taiKhoan.maTk) <= 3}">
-							<b>${taiKhoan.tenTk}</b>
-						</c:when>
-						<c:otherwise>
+					<%-- <td>${status.index+1}</td> --%>
+					<td><c:if test="${fn:length(taiKhoan.maTk) <= 3}">
+							<b>${taiKhoan.maTk}</b>
+						</c:if></td>
+					<td><c:if test="${fn:length(taiKhoan.maTk)==4}">${taiKhoan.maTk}</c:if></td>
+					<td><c:if test="${fn:length(taiKhoan.maTk)>4}">${taiKhoan.maTk}</c:if></td>
+					<td><c:choose>
+							<c:when test="${fn:length(taiKhoan.maTk) <= 3}">
+								<b>${taiKhoan.tenTk}</b>
+							</c:when>
+							<c:otherwise>
 							${taiKhoan.tenTk}
 						</c:otherwise>
-					</c:choose></td>
-				<%-- <td>${taiKhoan.soDu}</td> --%>
-			</tr>
-		</c:forEach>
-	</tbody>
-</table>
-
+						</c:choose></td>
+					<td><c:choose>
+							<c:when test="${taiKhoan.soDu==LoaiTaiKhoan.NO}">Nợ</c:when>
+							<c:otherwise>Có</c:otherwise>
+						</c:choose></td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+</div>

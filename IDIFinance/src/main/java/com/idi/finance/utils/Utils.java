@@ -1,11 +1,15 @@
 package com.idi.finance.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+
+import com.idi.finance.bean.cdkt.BalanceAssetData;
 
 public class Utils {
 	public static String format(String str) {
@@ -26,9 +30,9 @@ public class Utils {
 		List<Date> results = new ArrayList<>();
 		for (int i = 0; i < periods.length; i++) {
 			try {
-				SimpleDateFormat format = new SimpleDateFormat("M/yyyy");
+				SimpleDateFormat format = new SimpleDateFormat("dd/M/yyyy");
 				Date period = format.parse(periods[i]);
-				results.add(Utils.standardDate(period));
+				results.add(Utils.getStartDateOfMonth(period));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -45,14 +49,14 @@ public class Utils {
 		Iterator<Date> iter = periods.iterator();
 		while (iter.hasNext()) {
 			Date date = iter.next();
-			SimpleDateFormat format = new SimpleDateFormat("M/yyyy");
+			SimpleDateFormat format = new SimpleDateFormat("dd/M/yyyy");
 			results[i] = format.format(date);
 			i++;
 		}
 		return results;
 	}
 
-	public static Date standardDate(Date date) {
+	public static Date getStartDateOfMonth(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 
@@ -65,12 +69,42 @@ public class Utils {
 		return cal.getTime();
 	}
 
-	public static Date getStartDateOfMonth(Date date) {
+	public static Date getEndDateOfMonth(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 
-		int day = Calendar.getInstance().getActualMinimum(Calendar.DAY_OF_MONTH);
-		cal.set(Calendar.DAY_OF_MONTH, day);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		cal.add(Calendar.MONTH, 1);
+
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		cal.add(Calendar.MILLISECOND, -1);
+
+		return cal.getTime();
+	}
+
+	public static Date getStartPeriod(Date date, int periodType) {
+		Calendar cal = Calendar.getInstance(Locale.FRANCE);
+		cal.setTime(date);
+
+		if (periodType == BalanceAssetData.PERIOD_TYPE_WEEK) {
+			cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+		} else if (periodType == BalanceAssetData.PERIOD_TYPE_MONTH) {
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+		} else if (periodType == BalanceAssetData.PERIOD_TYPE_QUARTER) {
+			int month = Math.round(cal.get(Calendar.MONTH) / 3) * 3;
+			cal.set(Calendar.MONTH, month);
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+		} else if (periodType == BalanceAssetData.PERIOD_TYPE_YEAR) {
+			cal.set(Calendar.MONTH, 0);
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+		} else {
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+		}
+
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
@@ -79,12 +113,64 @@ public class Utils {
 		return cal.getTime();
 	}
 
-	public static Date getEndDateOfMonth(Date date) {
-		Calendar cal = Calendar.getInstance();
+	public static Date getEndPeriod(Date date, int periodType) {
+		Calendar cal = Calendar.getInstance(Locale.FRANCE);
 		cal.setTime(date);
 
-		int day = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH);
-		cal.set(Calendar.DAY_OF_MONTH, day);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		if (periodType == BalanceAssetData.PERIOD_TYPE_WEEK) {
+			cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+			cal.add(Calendar.WEEK_OF_YEAR, 1);
+			cal.add(Calendar.MILLISECOND, -1);
+		} else if (periodType == BalanceAssetData.PERIOD_TYPE_MONTH) {
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+			cal.add(Calendar.MONTH, 1);
+			cal.add(Calendar.MILLISECOND, -1);
+		} else if (periodType == BalanceAssetData.PERIOD_TYPE_QUARTER) {
+			int month = Math.round(cal.get(Calendar.MONTH) / 3) * 3;
+			cal.set(Calendar.MONTH, month + 3);
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+			cal.add(Calendar.MILLISECOND, -1);
+		} else if (periodType == BalanceAssetData.PERIOD_TYPE_YEAR) {
+			cal.set(Calendar.MONTH, 0);
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+			cal.add(Calendar.YEAR, 1);
+			cal.add(Calendar.MILLISECOND, -1);
+		} else {
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+			cal.add(Calendar.MONTH, 1);
+			cal.add(Calendar.MILLISECOND, -1);
+		}
+
+		return cal.getTime();
+	}
+
+	public static Date nextPeriod(Date date, int periodType) {
+		date = getEndPeriod(date, periodType);
+		Calendar cal = Calendar.getInstance(Locale.FRANCE);
+		cal.setTime(date);
+		cal.add(Calendar.DATE, 1);
+
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		return cal.getTime();
+	}
+
+	public static Date prevPeriod(Date date, int periodType) {
+		date = getStartPeriod(date, periodType);
+		Calendar cal = Calendar.getInstance(Locale.FRANCE);
+		cal.setTime(date);
+		cal.add(Calendar.DATE, -1);
+		date = getStartPeriod(cal.getTime(), periodType);
+		cal.setTime(date);
+
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);

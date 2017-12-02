@@ -33,6 +33,7 @@ import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.form.TkKpiChartForm;
 import com.idi.finance.utils.Contants;
 import com.idi.finance.utils.ExpressionEval;
+import com.idi.finance.utils.Utils;
 
 @Controller
 public class KpiChartController {
@@ -52,8 +53,8 @@ public class KpiChartController {
 	}
 
 	@RequestMapping(value = "/bieudo/{id}", method = { RequestMethod.GET, RequestMethod.POST })
-	public String kpiChart(@ModelAttribute("TkKpiChartForm") TkKpiChartForm form,
-			@PathVariable("id") int groupId, Model model) {
+	public String kpiChart(@ModelAttribute("TkKpiChartForm") TkKpiChartForm form, @PathVariable("id") int groupId,
+			Model model) {
 		try {
 			// Khởi tạo nhóm mặc định theo giá trị biến client truyền đến
 			if (groupId != 0) {
@@ -64,6 +65,7 @@ public class KpiChartController {
 			}
 
 			Date currentYear = new Date();
+			currentYear = Utils.getStartDateOfMonth(currentYear);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(currentYear);
 
@@ -87,7 +89,7 @@ public class KpiChartController {
 
 			// Chọn ra danh sách biển đồ sẽ được hiển thị lên trang theo hai cách
 			// Cách một: theo giá trị mặc định cấu hình trong db hoặc ở đâu đó
-			// Cách hai: theo giá trị lấy từ biến do client truyền đến
+			// Cách hai: theo giá trị lấy từ biến do người dùng truyền đến
 			if (form != null && kpiCharts != null) {
 				if (form.getKipCharts() == null) {
 					// Lần đầu tiên, khi người dùng chưa chọn chart nào,
@@ -120,7 +122,7 @@ public class KpiChartController {
 						Iterator<KpiMeasure> iter1 = kpiChart.getKpiMeasures().iterator();
 						while (iter1.hasNext()) {
 							KpiMeasure kpiMeasure = iter1.next();
-							kpiMeasure = calculateKpiMeasure(kpiMeasure, currentYear);
+							kpiMeasure = calculateKpiMeasure(kpiMeasure, currentYear, form.getPeriodType());
 
 							// Gộp kpis và operands của từng kpis vào biểu đồ chung, những cái có rồi sẽ
 							// không được đưa vào danh sách chung của biểu đồ nữa
@@ -234,7 +236,7 @@ public class KpiChartController {
 	 * @param currentYear
 	 * @return
 	 */
-	private KpiMeasure calculateKpiMeasure(KpiMeasure kpiMeasure, Date currentYear) {
+	private KpiMeasure calculateKpiMeasure(KpiMeasure kpiMeasure, Date currentYear, int periodType) {
 		if (kpiMeasure == null || kpiMeasure.getExpression() == null || currentYear == null)
 			return null;
 
@@ -259,7 +261,7 @@ public class KpiChartController {
 				if (partOperands[0].equals(Contants.BS)) {
 					// Toán hạng này lấy từ bảng dữ liệu BALANCE_ASSET_DATA/BALANCE_ASSET_ITEM
 					// Lấy dữ liệu từ BALANCE_ASSET_DATA/BALANCE_ASSET_ITEM
-					bads = balanceSheetDAO.listBAsByAssetsCodeAndYear(partOperands[1], currentYear);
+					bads = balanceSheetDAO.listBAsByAssetsCodeAndYear(partOperands[1], currentYear, periodType);
 
 					if (partOperands[2].equals(Contants.DK)) {
 						HashMap<Date, Double> tmpls = new HashMap<>();
@@ -315,7 +317,7 @@ public class KpiChartController {
 				} else if (partOperands[0].equals(Contants.SR)) {
 					// Toán hạng này lấy từ bảng dữ liệu SALE_RESULT_DATA/SALE_RESULT_ITEM
 					// Lấy dữ liệu từ SALE_RESULT_DATA/SALE_RESULT_ITEM
-					bads = balanceSheetDAO.listSRssByAssetsCodeAndYear(partOperands[1], currentYear);
+					bads = balanceSheetDAO.listSRssByAssetsCodeAndYear(partOperands[1], currentYear, periodType);
 
 					if (partOperands[2].equals(Contants.DK)) {
 						HashMap<Date, Double> tmpls = new HashMap<>();
@@ -371,7 +373,7 @@ public class KpiChartController {
 				} else if (partOperands[0].equals(Contants.KPI)) {
 					// Toán hạng này lấy dữ liệu từ một chỉ số KPI khác, nên ta tính kpi đó trước
 					KpiMeasure kpiMeasureTmpl = kpiChartDAO.listKpiMeasureById(partOperands[1]);
-					kpiMeasureTmpl = calculateKpiMeasure(kpiMeasureTmpl, currentYear);
+					kpiMeasureTmpl = calculateKpiMeasure(kpiMeasureTmpl, currentYear, periodType);
 					kpiMeasure.addKpis(kpiMeasureTmpl, kpiMeasureTmpl.getValues());
 
 					Iterator<Date> iter = kpiMeasureTmpl.getValues().keySet().iterator();

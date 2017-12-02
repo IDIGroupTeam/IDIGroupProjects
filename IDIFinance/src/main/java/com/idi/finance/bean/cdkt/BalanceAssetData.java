@@ -1,14 +1,25 @@
 package com.idi.finance.bean.cdkt;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 public class BalanceAssetData {
+	public static final int PERIOD_TYPE_WEEK = 0;
+	public static final int PERIOD_TYPE_MONTH = 1;
+	public static final int PERIOD_TYPE_QUARTER = 2;
+	public static final int PERIOD_TYPE_YEAR = 3;
+
 	private BalanceAssetItem asset;
+	private int periodType = 1;
 	private Date period;
 	private double startValue;
 	private double endValue;
 	private double changedRatio;
 	private String description;
+
+	private List<BalanceAssetData> childs;
 
 	public BalanceAssetItem getAsset() {
 		return asset;
@@ -16,6 +27,14 @@ public class BalanceAssetData {
 
 	public void setAsset(BalanceAssetItem asset) {
 		this.asset = asset;
+	}
+
+	public int getPeriodType() {
+		return periodType;
+	}
+
+	public void setPeriodType(int periodType) {
+		this.periodType = periodType;
 	}
 
 	public Date getPeriod() {
@@ -58,10 +77,38 @@ public class BalanceAssetData {
 		this.description = description;
 	}
 
+	public List<BalanceAssetData> getChilds() {
+		return childs;
+	}
+
+	public void addChild(BalanceAssetData bad) {
+		if (bad == null)
+			return;
+
+		if (childs == null)
+			childs = new ArrayList<>();
+
+		if (!childs.contains(bad))
+			childs.add(bad);
+	}
+
+	public void addChild(List<BalanceAssetData> bads) {
+		if (bads == null)
+			return;
+
+		Iterator<BalanceAssetData> iter = bads.iterator();
+		while (iter.hasNext()) {
+			addChild(iter.next());
+		}
+	}
+
+	public void setChilds(List<BalanceAssetData> childs) {
+		this.childs = childs;
+	}
+
 	@Override
 	public String toString() {
-//		String out = asset + "  " + period + " " + startValue + " " + endValue + " " + changedRatio;
-		String out = asset + "  " + period;
+		String out = asset + "  " + periodType + " " + period + " " + endValue;
 		return out;
 	}
 
@@ -83,6 +130,10 @@ public class BalanceAssetData {
 			} else if (item.getAsset() == null) {
 				return false;
 			} else if (!asset.equals(item.getAsset())) {
+				return false;
+			}
+
+			if (periodType != item.getPeriodType()) {
 				return false;
 			}
 

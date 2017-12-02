@@ -1,3 +1,4 @@
+<%@page import="com.idi.finance.bean.cdkt.BalanceAssetData"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -11,7 +12,7 @@
 	// Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		$("#mainFinanceForm").attr("action", "${url}/candoiketoan");
+		$("#mainFinanceForm").attr("action", "${url}/cdkt/candoiketoan");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		$("button[id^=page]").each(function(i, el) {
@@ -49,17 +50,6 @@
 			$("#totalRecords").val(0);
 			$("#mainFinanceForm").submit();
 		});
-		
-		/* $("#balanceAssetTbl").Tabledit({
-			editButton: false,
-            removeButton: false,
-            deleteButton: false,
-            hideIdentifier: true,
-			columns: {
-				identifier: [[2, "changedAssetCodes"],[7,"changedAssetPeriods"]],
-				editable: [[4, "startValues"], [5, "endValues"]]
-			}
-		}); */
 	});
 </script>
 
@@ -162,45 +152,58 @@
 	</table>
 </div>
 
-<i class="pull-right">(*): Đơn vị: VND</i>
+<i class="pull-right">(**): Một kỳ: <c:choose>
+		<c:when
+			test="${mainFinanceForm.periodType==BalanceAssetData.PERIOD_TYPE_WEEK}">Tuần</c:when>
+		<c:when
+			test="${mainFinanceForm.periodType==BalanceAssetData.PERIOD_TYPE_MONTH}">Tháng</c:when>
+		<c:when
+			test="${mainFinanceForm.periodType==BalanceAssetData.PERIOD_TYPE_QUARTER}">Quý</c:when>
+		<c:when
+			test="${mainFinanceForm.periodType==BalanceAssetData.PERIOD_TYPE_YEAR}">Năm</c:when>
+		<c:otherwise>Tháng</c:otherwise>
+	</c:choose>
+</i>
 
-<table id="balanceAssetTbl"
-	class="table table-bordered table-hover balance-list">
-	<thead>
-		<tr>
-			<th>STT</th>
-			<th>Tài sản</th>
-			<th>Mã số</th>
-			<th>Thuyết minh</th>
-			<th>Số đầu kỳ (*)</th>
-			<th>Số cuối kỳ (*)</th>
-			<th>Mức thay đổi</th>
-			<th>Thời gian</th>
-		</tr>
-	</thead>
-	<tbody>
-		<c:forEach items="${bads}" var="bad" varStatus="status">
+<i class="pull-right">(*): Đơn vị: VND.&nbsp;&nbsp;&nbsp;&nbsp;</i>
+<div class="table-responsive">
+	<table id="balanceAssetTbl"
+		class="table table-bordered table-hover balance-list">
+		<thead>
 			<tr>
-				<td>${(pageIndex-1)*numberRecordsOfPage+status.index+1}</td>
-				<td>${bad.asset.assetName}</td>
-				<td>${bad.asset.assetCode}</td>
-				<td>${bad.asset.note}</td>
-				<td><c:if test="${bad.startValue!=0}">
-						<fmt:formatNumber value="${bad.startValue}" type="NUMBER"
-							maxFractionDigits="1"></fmt:formatNumber>
-					</c:if></td>
-				<td><c:if test="${bad.endValue!=0}">
-						<fmt:formatNumber value="${bad.endValue}" type="NUMBER"
-							maxFractionDigits="1"></fmt:formatNumber>
-					</c:if></td>
-				<td><c:if test="${bad.changedRatio!=0}">
-						<fmt:formatNumber value="${bad.changedRatio}" type="PERCENT"
-							maxFractionDigits="1" maxIntegerDigits="3"></fmt:formatNumber>
-					</c:if></td>
-				<td>Tháng <fmt:formatDate value="${bad.period}"
-						pattern="M/yyyy" type="Date" dateStyle="SHORT" />
-				</td>
+				<th>STT</th>
+				<th>Tài sản</th>
+				<th>Mã số</th>
+				<th>Thuyết minh</th>
+				<th>Số đầu kỳ (*)</th>
+				<th>Số cuối kỳ (*)</th>
+				<th>Mức thay đổi</th>
+				<th>Thời gian (**)</th>
 			</tr>
-		</c:forEach>
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			<c:forEach items="${bads}" var="bad" varStatus="status">
+				<tr>
+					<td>${(pageIndex-1)*numberRecordsOfPage+status.index+1}</td>
+					<td>${bad.asset.assetName}</td>
+					<td>${bad.asset.assetCode}</td>
+					<td>${bad.asset.note}</td>
+					<td><c:if test="${bad.startValue!=0}">
+							<fmt:formatNumber value="${bad.startValue}" type="NUMBER"
+								maxFractionDigits="1"></fmt:formatNumber>
+						</c:if></td>
+					<td><c:if test="${bad.endValue!=0}">
+							<fmt:formatNumber value="${bad.endValue}" type="NUMBER"
+								maxFractionDigits="1"></fmt:formatNumber>
+						</c:if></td>
+					<td><c:if test="${bad.changedRatio!=0}">
+							<fmt:formatNumber value="${bad.changedRatio}" type="PERCENT"
+								maxFractionDigits="1" maxIntegerDigits="3"></fmt:formatNumber>
+						</c:if></td>
+					<td><fmt:formatDate value="${bad.period}" pattern="dd/M/yyyy"
+							type="Date" dateStyle="SHORT" /></td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+</div>

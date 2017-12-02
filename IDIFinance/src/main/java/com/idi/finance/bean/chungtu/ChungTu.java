@@ -14,6 +14,7 @@ public class ChungTu {
 	public static final String CHUNG_TU_PHIEU_CHI = "PC";
 	public static final String CHUNG_TU_BAO_NO = "BN";
 	public static final String CHUNG_TU_BAO_CO = "BC";
+	public static final String CHUNG_TU_KT_TH = "KTTH";
 
 	private int maCt;
 	private int soCt;

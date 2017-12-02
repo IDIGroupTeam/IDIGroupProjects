@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.idi.finance.bean.LoaiTien;
+import com.idi.finance.bean.cdkt.BalanceAssetItem;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.DoiTuong;
 import com.idi.finance.bean.chungtu.TaiKhoan;
@@ -40,6 +41,9 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 	@Value("${DANH_SACH_NGHIEP_VU_KE_TOAN_THEO_DIEU_KIEN}")
 	private String DANH_SACH_NGHIEP_VU_KE_TOAN_THEO_DIEU_KIEN;
+
+	@Value("${DANH_SACH_TKKT_THEO_DIEU_KIEN}")
+	private String DANH_SACH_TKKT_THEO_DIEU_KIEN;
 
 	private JdbcTemplate jdbcTmpl;
 
@@ -177,13 +181,13 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				chungTu.setLyDo(rs.getString("LY_DO"));
 				chungTu.setKemTheo(rs.getInt("KEM_THEO"));
 
-				Timestamp ngayLapTs = rs.getTimestamp("NGAY_LAP");
-				Date ngayLap = new Date(ngayLapTs.getTime());
-				chungTu.setNgayLap(ngayLap);
+				// Timestamp ngayLapTs = rs.getTimestamp("NGAY_LAP");
+				// Date ngayLap = new Date(ngayLapTs.getTime());
+				chungTu.setNgayLap(rs.getDate("NGAY_LAP"));
 
-				Timestamp ngayHtTs = rs.getTimestamp("NGAY_HT");
-				Date ngayHt = new Date(ngayHtTs.getTime());
-				chungTu.setNgayHt(ngayHt);
+				// Timestamp ngayHtTs = rs.getTimestamp("NGAY_HT");
+				// Date ngayHt = new Date(ngayHtTs.getTime());
+				chungTu.setNgayHt(rs.getDate("NGAY_HT"));
 
 				LoaiTien loaiTien = new LoaiTien();
 				loaiTien.setMaLt(rs.getString("LOAI_TIEN"));
@@ -284,13 +288,13 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				chungTu.setLyDo(rs.getString("LY_DO"));
 				chungTu.setKemTheo(rs.getInt("KEM_THEO"));
 
-				Timestamp ngayLapTs = rs.getTimestamp("NGAY_LAP");
-				Date ngayLap = new Date(ngayLapTs.getTime());
-				chungTu.setNgayLap(ngayLap);
+				// Timestamp ngayLapTs = rs.getTimestamp("NGAY_LAP");
+				// Date ngayLap = new Date(ngayLapTs.getTime());
+				chungTu.setNgayLap(rs.getDate("NGAY_LAP"));
 
-				Timestamp ngayHtTs = rs.getTimestamp("NGAY_HT");
-				Date ngayHt = new Date(ngayHtTs.getTime());
-				chungTu.setNgayHt(ngayHt);
+				// Timestamp ngayHtTs = rs.getTimestamp("NGAY_HT");
+				// Date ngayHt = new Date(ngayHtTs.getTime());
+				chungTu.setNgayHt(rs.getDate("NGAY_HT"));
 
 				LoaiTien loaiTien = new LoaiTien();
 				loaiTien.setMaLt(rs.getString("LOAI_TIEN"));
@@ -345,4 +349,71 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		}
 	}
 
+	@Override
+	public List<TaiKhoan> danhSachTaiKhoanKeToanTheoLoaiTaiKhoan(String maTk, int soDu, Date dau, Date cuoi) {
+		String query = DANH_SACH_TKKT_THEO_DIEU_KIEN;
+
+		logger.info("Danh sách tài khoản kế toán theo loại tài khoản: '" + maTk + "' ...");
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		String batDau = sdf.format(dau);
+		String ketThuc = sdf.format(cuoi);
+		logger.info("Từ " + batDau + " đến " + ketThuc);
+
+		query = query.replaceAll("\\$MA_TK\\$", maTk);
+		logger.info(query);
+
+		Object[] objs = { batDau, ketThuc, soDu };
+		List<TaiKhoan> taiKhoanDs = jdbcTmpl.query(query, objs, new TaiKhoanMapper());
+		return taiKhoanDs;
+	}
+
+	public class TaiKhoanMapper implements RowMapper<TaiKhoan> {
+		public TaiKhoan mapRow(ResultSet rs, int rowNum) throws SQLException {
+			try {
+				ChungTu chungTu = new ChungTu();
+				chungTu.setMaCt(rs.getInt("MA_CT"));
+				chungTu.setSoCt(rs.getInt("SO_CT"));
+				chungTu.setLoaiCt(rs.getString("LOAI_CT"));
+				chungTu.setLyDo(rs.getString("LY_DO"));
+				chungTu.setKemTheo(rs.getInt("KEM_THEO"));
+
+				// Timestamp ngayLapTs = rs.getTimestamp("NGAY_LAP");
+				// Date ngayLap = new Date(ngayLapTs.getTime());
+				chungTu.setNgayLap(rs.getDate("NGAY_LAP"));
+
+				// Timestamp ngayHtTs = rs.getTimestamp("NGAY_HT");
+				// Date ngayHt = new Date(ngayHtTs.getTime());
+				chungTu.setNgayHt(rs.getDate("NGAY_HT"));
+
+				LoaiTien loaiTien = new LoaiTien();
+				loaiTien.setMaLt(rs.getString("LOAI_TIEN"));
+				loaiTien.setTenLt(rs.getString("TEN_NT"));
+				loaiTien.setBanRa(rs.getDouble("TY_GIA"));
+				Tien tien = new Tien();
+				tien.setTien(loaiTien);
+				tien.setSoTien(rs.getDouble("TONG_SO_TIEN"));
+				tien.setGiaTri(loaiTien.getBanRa() * tien.getSoTien());
+				chungTu.setSoTien(tien);
+
+				TaiKhoan taiKhoan = new TaiKhoan();
+				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
+				loaiTaiKhoan.setTenTk(rs.getString("TEN_TK"));
+				taiKhoan.setTaiKhoan(loaiTaiKhoan);
+				BalanceAssetItem bai = new BalanceAssetItem();
+				bai.setAssetCode(rs.getString("ASSET_CODE"));
+				taiKhoan.setBai(bai);
+				taiKhoan.setSoTien(rs.getDouble("SO_TIEN"));
+				taiKhoan.setGhiNo(rs.getInt("SO_DU"));
+				taiKhoan.setLyDo(rs.getString("LY_DO"));
+				chungTu.themTaiKhoan(taiKhoan);
+				taiKhoan.setChungTu(chungTu);
+
+				return taiKhoan;
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	}
 }

@@ -2,6 +2,7 @@ package com.idi.finance.bean.chungtu;
 
 import org.springframework.format.annotation.NumberFormat;
 
+import com.idi.finance.bean.cdkt.BalanceAssetItem;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class TaiKhoan {
@@ -11,6 +12,7 @@ public class TaiKhoan {
 	private double soTien;
 	private int ghiNo;
 	private String lyDo;
+	private BalanceAssetItem bai;
 
 	public ChungTu getChungTu() {
 		return chungTu;
@@ -50,6 +52,14 @@ public class TaiKhoan {
 
 	public void setLyDo(String lyDo) {
 		this.lyDo = lyDo;
+	}
+
+	public BalanceAssetItem getBai() {
+		return bai;
+	}
+
+	public void setBai(BalanceAssetItem bai) {
+		this.bai = bai;
 	}
 
 	@Override

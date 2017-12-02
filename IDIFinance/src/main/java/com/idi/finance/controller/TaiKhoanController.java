@@ -32,7 +32,7 @@ public class TaiKhoanController {
 	@Autowired
 	TaiKhoanDAO taiKhoanDAO;
 
-	@RequestMapping("/danhsachtaikhoan")
+	@RequestMapping("/tk/danhsachtaikhoan")
 	public String danhSachTaiKhoan(Model model) {
 		// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 		List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
@@ -45,7 +45,7 @@ public class TaiKhoanController {
 		return "danhSachTaiKhoan";
 	}
 
-	@RequestMapping(value = "/luuTaiKhoan", method = RequestMethod.POST)
+	@RequestMapping(value = "/tk/luuTaiKhoan", method = RequestMethod.POST)
 	public String save(Model model, @ModelAttribute("mainFinanceForm") BalanceAssetForm balanceSheetForm) {
 		// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 		List<KpiGroup> kpiGroupsDb = kpiChartDAO.listKpiGroups();
@@ -60,7 +60,7 @@ public class TaiKhoanController {
 				List<LoaiTaiKhoan> taiKhoanDs = ExcelProcessor.docTaiKhoanExcel(file.getInputStream());
 				taiKhoanDAO.insertOrUpdateTaiKhoanDs(taiKhoanDs);
 
-				return "redirect:/danhsachtaikhoan";
+				return "redirect:/tk/danhsachtaikhoan";
 			} catch (Exception e) {
 				e.printStackTrace();
 				String comment = "Không thể đọc excel file " + file.getName()

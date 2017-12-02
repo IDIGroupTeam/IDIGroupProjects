@@ -376,8 +376,7 @@
 	</div>
 </div>
 
-
-<div class="row form-group">
+<div class="table-responsive row form-group">
 	<label class="control-label col-sm-2">Định khoản</label>
 	<table id="taiKhoanTbl"
 		class="table table-bordered table-hover text-center dinhkhoan">

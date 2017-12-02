@@ -41,7 +41,6 @@ public class ExpressionEval {
 	public static String formatExpression(String expression) {
 		if (expression != null) {
 			String[] operators = { "+", "-", "*", "/", "%", "(", ")", "[", "]", "{", "}" };
-			// expression = expression.replaceAll("", " ");
 			for (int i = 0; i < operators.length; i++) {
 				expression = expression.replace(operators[i], " " + operators[i] + " ");
 			}
@@ -63,7 +62,7 @@ public class ExpressionEval {
 	private static String inFix2PostFix(String expression) {
 		// Chuẩn hóa biểu thức trung tố
 		expression = formatExpression(expression);
-		//logger.info("Biểu thức trung tố: " + expression);
+		// logger.info("Biểu thức trung tố: " + expression);
 
 		// Chuyển biểu thức trung tố thành hậu tố.
 		if (expression != null) {
@@ -130,7 +129,7 @@ public class ExpressionEval {
 
 		// Chuẩn hóa biểu thức hậu tố
 		postFixExp = formatExpression(postFixExp);
-		//logger.info("Biểu thức hậu tố: " + postFixExp);
+		// logger.info("Biểu thức hậu tố: " + postFixExp);
 
 		// Tính giá trị biểu thức hậu tố.
 		if (postFixExp != null) {
@@ -176,7 +175,13 @@ public class ExpressionEval {
 					stack.push(tmp);
 				} else {
 					// Nếu là toán hạng thì đẩy vào stack, sau này lôi ra tính toán sau
-					stack.push(new Double(exps[i]));
+					try {
+						Double operandValue = new Double(exps[i]);
+						stack.push(operandValue);
+					} catch (Exception e) {
+						// Vì một lý do nào đó dữ liệu bị thiếu thì coi như bằng 0.0
+						stack.push(new Double(0));
+					}
 				}
 			}
 

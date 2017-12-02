@@ -23,30 +23,32 @@
 <br />
 <br />
 
-<table class="table table-bordered table-hover">
-	<thead>
-		<tr>
-			<!-- <th>STT</th> -->
-			<th>Mã</th>
-			<th>Tên nhà cung cấp</th>
-			<th>Mã số thuế</th>
-			<th>Đại chỉ</th>
-			<th>Số điện thoại</th>
-			<!-- <th>Email</th> -->
-		</tr>
-	</thead>
-	<tbody>
-		<c:forEach items="${nhaCungCapDs}" var="nhaCungCap" varStatus="status">
+<div class="table-responsive">
+	<table class="table table-bordered table-hover">
+		<thead>
 			<tr>
-				<%-- <td>${status.index+1}</td> --%>
-				<td>${nhaCungCap.maNcc}</td>
-				<td><a href="${url}/xemnhacungcap/${nhaCungCap.maNcc}">${nhaCungCap.tenNcc}</a></td>
-				<td>${nhaCungCap.maThue}</td>
-				<td>${nhaCungCap.diaChi}</td>
-				<td>${nhaCungCap.sdt}</td>
-				<%-- <td>${nhaCungCap.email}</td> --%>
+				<!-- <th>STT</th> -->
+				<th>Mã</th>
+				<th>Tên nhà cung cấp</th>
+				<th>Mã số thuế</th>
+				<th>Đại chỉ</th>
+				<th>Số điện thoại</th>
+				<!-- <th>Email</th> -->
 			</tr>
-		</c:forEach>
-	</tbody>
-</table>
-
+		</thead>
+		<tbody>
+			<c:forEach items="${nhaCungCapDs}" var="nhaCungCap"
+				varStatus="status">
+				<tr>
+					<%-- <td>${status.index+1}</td> --%>
+					<td>${nhaCungCap.maNcc}</td>
+					<td><a href="${url}/xemnhacungcap/${nhaCungCap.maNcc}">${nhaCungCap.tenNcc}</a></td>
+					<td>${nhaCungCap.maThue}</td>
+					<td>${nhaCungCap.diaChi}</td>
+					<td>${nhaCungCap.sdt}</td>
+					<%-- <td>${nhaCungCap.email}</td> --%>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+</div>

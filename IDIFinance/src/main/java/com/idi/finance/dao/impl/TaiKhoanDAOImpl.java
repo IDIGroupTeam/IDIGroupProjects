@@ -64,7 +64,7 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 
 	@Override
 	public List<LoaiTaiKhoan> danhSachTaiKhoan() {
-		String query = "SELECT * FROM TAI_KHOAN_DANH_MUC";
+		String query = "SELECT * FROM TAI_KHOAN_DANH_MUC ORDER BY MA_TK";
 
 		logger.info("Lấy danh mục tài khoản kế toán từ bảng TAI_KHOAN_DANH_MUC ...");
 		logger.info(query);

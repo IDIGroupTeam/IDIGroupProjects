@@ -82,6 +82,8 @@
 												có</a></li>
 										<li id="tabCTBN"><a href="${url}/danhsachbaono">Báo
 												nợ</a></li>
+										<li id="tabCTKTTH"><a href="${url}/danhsachktth">Kế
+												toán tổng hợp</a></li>
 									</ul></li>
 								<li class="dropdown"><a class="dropdown-toggle"
 									data-toggle="dropdown" href="#">Sổ kế toán<span
@@ -104,7 +106,7 @@
 										class="caret"></span>
 								</a>
 									<ul class="dropdown-menu">
-										<li id="tabBCDKT"><a href="${url}/candoiketoan">Bảng
+										<li id="tabBCDKT"><a href="${url}/cdkt/candoiketoan">Bảng
 												cân đối kế toán</a></li>
 										<li><a href="#">Bảng cân đối phát sinh</a></li>
 										<li><a href="#">Bảng kết quả SXKD</a></li>
@@ -116,9 +118,9 @@
 								</a>
 									<ul class="dropdown-menu">
 										<li id="tabDSNT"><a href="#">Danh sách ngoại tệ</a></li>
-										<li id="tabDSBCDKT"><a href="${url}/danhsachtaikhoan">Danh
-												sách BCDKT</a></li>
-										<li id="tabDMTK"><a href="${url}/danhsachtaikhoan">Danh
+										<li id="tabDSBCDKT"><a
+											href="${url}/cdkt/danhsachtaikhoan">Danh sách BCDKT</a></li>
+										<li id="tabDMTK"><a href="${url}/tk/danhsachtaikhoan">Danh
 												sách tài khoản</a></li>
 
 										<li id="tabDSNCC"><a href="${url}/danhsachnhacungcap">Danh
@@ -126,7 +128,7 @@
 										<li id="tabDSKH"><a href="${url}/danhsachkhachhang">Danh
 												sách khách hàng</a></li>
 
-										<li id="tabCNDL"><a href="${url}/capnhatdulieu">Cập
+										<li id="tabCNDL"><a href="${url}/cdkt/capnhatdulieu">Cập
 												nhật dữ liệu</a></li>
 									</ul></li>
 							</ul>
