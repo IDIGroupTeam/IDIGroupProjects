@@ -2,7 +2,6 @@ package com.idi.finance.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -180,13 +179,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				chungTu.setLoaiCt(rs.getString("LOAI_CT"));
 				chungTu.setLyDo(rs.getString("LY_DO"));
 				chungTu.setKemTheo(rs.getInt("KEM_THEO"));
-
-				// Timestamp ngayLapTs = rs.getTimestamp("NGAY_LAP");
-				// Date ngayLap = new Date(ngayLapTs.getTime());
 				chungTu.setNgayLap(rs.getDate("NGAY_LAP"));
-
-				// Timestamp ngayHtTs = rs.getTimestamp("NGAY_HT");
-				// Date ngayHt = new Date(ngayHtTs.getTime());
 				chungTu.setNgayHt(rs.getDate("NGAY_HT"));
 
 				LoaiTien loaiTien = new LoaiTien();
@@ -287,13 +280,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				chungTu.setLoaiCt(rs.getString("LOAI_CT"));
 				chungTu.setLyDo(rs.getString("LY_DO"));
 				chungTu.setKemTheo(rs.getInt("KEM_THEO"));
-
-				// Timestamp ngayLapTs = rs.getTimestamp("NGAY_LAP");
-				// Date ngayLap = new Date(ngayLapTs.getTime());
 				chungTu.setNgayLap(rs.getDate("NGAY_LAP"));
-
-				// Timestamp ngayHtTs = rs.getTimestamp("NGAY_HT");
-				// Date ngayHt = new Date(ngayHtTs.getTime());
 				chungTu.setNgayHt(rs.getDate("NGAY_HT"));
 
 				LoaiTien loaiTien = new LoaiTien();
@@ -377,13 +364,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				chungTu.setLoaiCt(rs.getString("LOAI_CT"));
 				chungTu.setLyDo(rs.getString("LY_DO"));
 				chungTu.setKemTheo(rs.getInt("KEM_THEO"));
-
-				// Timestamp ngayLapTs = rs.getTimestamp("NGAY_LAP");
-				// Date ngayLap = new Date(ngayLapTs.getTime());
 				chungTu.setNgayLap(rs.getDate("NGAY_LAP"));
-
-				// Timestamp ngayHtTs = rs.getTimestamp("NGAY_HT");
-				// Date ngayHt = new Date(ngayHtTs.getTime());
 				chungTu.setNgayHt(rs.getDate("NGAY_HT"));
 
 				LoaiTien loaiTien = new LoaiTien();
