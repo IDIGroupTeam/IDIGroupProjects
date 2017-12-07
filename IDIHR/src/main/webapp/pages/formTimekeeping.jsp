@@ -18,11 +18,11 @@
 		//	int timeInAfternoon = Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON"));
 		//	int timeOutAfternoon = Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON"));
 	%>
-	<a href="${pageContext.request.contextPath}/timekeeping/leaveInfo">
-		<button class="btn btn-primary">Chấm công phát sinh</button>
+	<a href="${url}/timekeeping/leaveInfo">
+		<button class="btn btn-lg btn-primary btn-sm">Chấm công phát sinh</button>
 	</a> &nbsp;
-	<a href="${pageContext.request.contextPath}/timekeeping/report">
-		<button class="btn btn-primary">Xuất báo cáo</button>
+	<a href="${url}/timekeeping/prepareGenerateLeaveReport">
+		<button class="btn btn-lg btn-primary btn-sm">Xuất báo cáo</button>
 	</a>
 	<br />
 	<br />
@@ -31,9 +31,9 @@
 		<table class="table">
 			<tr>
 				<td><b><i>Cập nhật dữ liệu chấm công từ file excel:</i></b></td>
-				<td align="left"><input class="btn btn-primary"
+				<td align="left"><input class="btn btn-lg btn-primary btn-sm"
 					name="timeKeepingFile" type="file" /></td>
-				<td align="left"><input class="btn btn-primary" type="submit"
+				<td align="left"><input class="btn btn-lg btn-primary btn-sm" type="submit"
 					value="Cập nhật" /></td>
 				<td></td>
 				<td></td>

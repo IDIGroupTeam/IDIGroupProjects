@@ -64,4 +64,13 @@ public class Utils {
 
 		return cal.getTime();
 	}
+	
+	public static int monthsBetween(final Date s1, final Date s2) {
+	    final Calendar d1 = Calendar.getInstance();
+	    d1.setTime(s1);
+	    final Calendar d2 = Calendar.getInstance();
+	    d2.setTime(s2);
+	    int diff = (d2.get(Calendar.YEAR) - d1.get(Calendar.YEAR)) * 12 + d2.get(Calendar.MONTH) - d1.get(Calendar.MONTH);
+	    return diff;
+	}
 }

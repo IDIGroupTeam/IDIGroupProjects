@@ -7,8 +7,8 @@
 <title>Thông tin ngày nghỉ, công tác, làm thêm ...</title>
 </head>
 <body>
-	<a href="${pageContext.request.contextPath}/timekeeping/addLeaveInfo"><button
-			class="btn btn-primary">Thêm mới </button></a>
+	<a href="${url}/timekeeping/addLeaveInfo"><button class="btn btn-lg btn-primary btn-sm">Thêm mới </button></a>
+	<a href="${url}/timekeeping/"><button class="btn btn-lg btn-primary btn-sm"> Quay lại thông tin chấm công</button></a>
 	<br />
 	<br />
 	<div class="table-responsive">

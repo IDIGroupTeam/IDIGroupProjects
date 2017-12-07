@@ -2,6 +2,7 @@ package com.idi.hr.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -13,7 +14,7 @@ public class TimekeepingMapper implements RowMapper<Timekeeping> {
 
 		int employeeId = rs.getInt("EMPLOYEE_ID");
 		String employeeName = rs.getString("FULL_NAME");
-		String date = rs.getString("DATE");
+		Date date = rs.getDate("DATE");
 		String timeIn = rs.getString("TIME_IN");
 		String timeOut = rs.getString("TIME_OUT");
 		String comment = rs.getString("COMMENT");

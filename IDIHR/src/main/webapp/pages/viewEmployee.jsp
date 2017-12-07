@@ -64,9 +64,13 @@
 					<td><c:out value="${employeeForm.DOB}" /></td>
 					<td bgcolor="#E6E6E6">Phòng:</td>
 					<td><c:out value="${employeeForm.department}" /></td>
-
-
 				</tr>
+				<tr>
+						<td bgcolor="#E6E6E6">Ngày vào cty:</td>
+						<td><c:out value="${employeeForm.joinDate}" /></td>
+						<td bgcolor="#E6E6E6">Ngày ký HĐLĐ:</td>
+						<td><c:out value="${employeeForm.officalJoinDate}" /></td>
+					</tr>
 				<tr>
 					<td bgcolor="#E6E6E6">CMND/CCCD/passportNo:</td>
 					<td><c:out value="${employeeForm.personalId}" /></td>

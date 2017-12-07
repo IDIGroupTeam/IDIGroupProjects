@@ -107,8 +107,9 @@ public class EmployeeController {// extends BaseController {
 			// latestUploadPhoto = image.getOriginalFilename();
 			pathInfo = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath()
 					+ "/employeeImage/" + image.getOriginalFilename();
-			if(serverFile.exists() && serverFile.isFile()) {
+			if(!image.isEmpty()) {
 				// write uploaded image to disk
+				//System.err.println("saving image file");
 				try {
 					try (InputStream is = image.getInputStream();
 							BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile))) {
@@ -132,7 +133,13 @@ public class EmployeeController {// extends BaseController {
 		}
 		return "redirect:/";
 	}
-
+	
+	/**
+	 * 
+	 * @param model
+	 * @param employeeInfo
+	 * @return
+	 */
 	private String employeeForm(Model model, EmployeeInfo employeeInfo) {
 		model.addAttribute("employeeForm", employeeInfo);
 

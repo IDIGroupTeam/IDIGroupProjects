@@ -15,7 +15,7 @@ public class LeaveInfoMapper implements RowMapper<LeaveInfo> {
 		int employeeId = rs.getInt("EMPLOYEE_ID");
 		Date date = rs.getDate("DATE");
 		String leaveType = rs.getString("LEAVE_TYPE");
-		String timeValue = rs.getString("TIME_VALUE");
+		int timeValue = rs.getInt("TIME_VALUE");
 		String comment = rs.getString("COMMENT");
 		
 		String employeeName = rs.getString("FULL_NAME");

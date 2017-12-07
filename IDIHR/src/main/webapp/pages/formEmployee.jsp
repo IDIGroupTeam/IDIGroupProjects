@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
@@ -51,32 +52,31 @@
 					</tr> --%>
 
 					<tr>
-						<td nowrap="nowrap"><input type="file" accept="image/jpeg" name="image" /></td>
+						<td nowrap="nowrap"><input type="file" accept="image/jpeg"
+							name="image" /></td>
 						<td bgcolor="#E6E6E6">Họ tên(*):</td>
 						<td><form:input path="fullName" required="required" /></td>
 						<td bgcolor="#E6E6E6">Số đt:</td>
-						<td><form:input path="phoneNo" size="11" /></td>
+						<td><form:input path="phoneNo" type="tel" /></td>
 
 
 
 
-						<%-- 					<td>Ngày ký HĐLĐ:</td>
-						<td><form:input path="officalJoinDate" type="date" /></td> --%>
+						<%-- 					 --%>
 
 						<%-- 						<td>Lương đóng BHXH:</td>
 						<td><form:input path="salarySocicalInsu" size="12" /></td> --%>
 					</tr>
 
 					<tr>
-						<td rowspan="4">
-						<form:hidden path="imagePath"/>
-						<c:if test="${ not empty employeeForm.imagePath}" >
-							<img src="${employeeForm.imagePath}" height="170px" width="145px" />
-						</c:if>
-						<c:if test="${ empty employeeForm.imagePath}">
-							<img src="/IDIHR/public/images/avatar.gif" height="170px" width="145px"/>
-						</c:if>						
-						</td>
+						<td rowspan="4"><form:hidden path="imagePath" /> <c:if
+								test="${ not empty employeeForm.imagePath}">
+								<img src="${employeeForm.imagePath}" height="170px"
+									width="145px" />
+							</c:if> <c:if test="${ empty employeeForm.imagePath}">
+								<img src="/IDIHR/public/images/avatar.gif" height="170px"
+									width="145px" />
+							</c:if></td>
 						<td bgcolor="#E6E6E6">Email(*):</td>
 						<!-- can check duplicate  -->
 						<td><form:input path="email" required="required" /></td>
@@ -132,12 +132,18 @@
 
 					</tr>
 					<tr>
+						<td bgcolor="#E6E6E6">Ngày vào cty:</td>
+						<td><form:input path="joinDate" type="date" /></td>
+						<td bgcolor="#E6E6E6">Ngày ký HĐLĐ:</td>
+						<td><form:input path="officalJoinDate" type="date" /></td>
+					</tr>
+					<tr>
 						<td bgcolor="#E6E6E6">CMND/CCCD/passportNo:</td>
 						<td><form:input path="personalId" size="12" /></td>
 
 						<td bgcolor="#E6E6E6">Ngày cấp:</td>
 						<td><form:input path="issueDate" type="date" /></td>
-						
+
 						<td>Quốc tịch: <form:input path="nation" size="12" /></td>
 
 					</tr>
@@ -180,15 +186,14 @@
 						<td bgcolor="#FBEFF2">Ghi chú:</td>
 						<td colspan="5"><form:textarea path="note" cols="100" /></td>
 					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td nowrap="nowrap"><input type="submit" value="Lưu" name="Lưu" /> &nbsp;<a
-							href="${pageContext.request.contextPath}/"><button> Quay lại danh sách NV</button></a></td>	
-						<td>&nbsp;</td>					
-					</tr>
 				</tbody>
 			</table>
 		</div>
+		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" name="Lưu" />
 	</form:form>
+	<br/>
+	<a href="${pageContext.request.contextPath}/"><button
+			class="btn btn-lg btn-primary btn-sm">Quay lại danh sách NV</button></a>
+
 </body>
 </html>

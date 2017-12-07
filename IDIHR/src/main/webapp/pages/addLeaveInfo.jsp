@@ -42,8 +42,8 @@
 							</form:select>
 						</td>	
 					<tr>	
-						<td bgcolor="#FBEFF2">Điền số giờ nếu cần:</td>					
-						<td><form:input path="timeValue" size="2" /></td>
+						<td bgcolor="#FBEFF2">Điền số giờ nếu cần (Làm thêm giờ):</td>					
+						<td><form:input path="timeValue" size="1" type="number" min="0" max="24"/> (Mặc định cả ngày = 8h, nửa ngày = 4h)</td>
 					</tr>
 					<tr>
 						<td bgcolor="#FBEFF2">Ghi chú:</td>
@@ -55,9 +55,9 @@
 					<tr/>
 				</tbody>
 			</table>
-			<input type="submit" value="Lưu" /> 			
+			<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" /> 			
 		</div>
 	</form:form>
-	<a href="${pageContext.request.contextPath}/timekeeping/leaveInfo/"><button>Xem dữ liệu chấm công</button></a>
+	<a href="${pageContext.request.contextPath}/timekeeping/leaveInfo/"><button class="btn btn-lg btn-primary btn-sm">Xem dữ liệu chấm công</button></a>
 </body>
 </html>

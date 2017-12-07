@@ -2,6 +2,7 @@ package com.idi.hr.bean;
 
 import java.io.Serializable;
 //import java.sql.Date;
+import java.util.Date;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +19,7 @@ public class Timekeeping implements Serializable {
 	private String title;
 	private String timeIn;
 	private String timeOut;
-	private String date;
+	private Date date;
 	private String comment;
 
 	private String comeLateM;// den muon sang
@@ -32,7 +33,7 @@ public class Timekeeping implements Serializable {
 	public Timekeeping() {
 	}
 
-	public Timekeeping(int employeeId, String employeeName, String date, String timeIn, String timeOut,
+	public Timekeeping(int employeeId, String employeeName, Date date, String timeIn, String timeOut,
 			String comment, String department, String title, String comeLateM, String leaveSoonM, String comeLateA,
 			String leaveSoonA) {
 
@@ -75,11 +76,11 @@ public class Timekeeping implements Serializable {
 		this.employeeId = employeeId;
 	}
 
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

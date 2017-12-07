@@ -1,5 +1,6 @@
 package com.idi.hr.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -60,7 +61,7 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	 *            Date, timeIn
 	 * @return Timekeeping object
 	 */
-	public Timekeeping getTimekeeping(int employeeId, String date, String timeIn) {
+	public Timekeeping getTimekeeping(int employeeId, Date date, String timeIn) {
 
 		String sql = hr.get("GET_TIMEKEEPING").toString();
 		log.info("GET_TIMEKEEPING query: " + sql);
@@ -157,5 +158,40 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 			log.error(e, e);
 			throw e;
 		}
+	}
+	
+	/**
+	 * get time keeping for report, come late, leave soon
+	 * 
+	 * @param year
+	 * @param month
+	 * @param employeeId
+	 * @param leaveType
+	 * @return
+	 * @throws Exception
+	 */
+	public String getTimekeepingReport(String year, String month, int employeeId, String leaveType) throws Exception {
+		String countNumber = "";
+		String sqlCL = hr.getProperty("GET_TIMEKEEPING_COME_LATE_FOR_REPORT").toString();
+		String sqlLS = hr.getProperty("GET_TIMEKEEPING_LEAVE_SOON_FOR_REPORT").toString();
+		String sql="";
+		if(leaveType.equalsIgnoreCase("DM"))
+			sql = sqlCL;
+		else if(leaveType.equalsIgnoreCase("VS"))
+			sql = sqlLS;
+		if (month != null && month.length() > 0)
+			sql = sql + " AND MONTH(DATE) = '" + month + "' ";
+
+		if (year != null && year.length() > 0)
+			sql = sql + " AND YEAR(DATE) = '" + year + "' ";		
+
+		log.info("GET_TIMEKEEPING_FOR_REPORT query: " + sql);
+
+		Object[] params = new Object[] { employeeId };
+		countNumber = jdbcTmpl.queryForObject(sql, String.class, params);
+		
+		System.err.println(leaveType+":"+countNumber);
+		
+		return countNumber;
 	}
 }
