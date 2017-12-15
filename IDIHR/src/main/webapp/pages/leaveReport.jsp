@@ -10,26 +10,26 @@
 	<a href="${url}/timekeeping/prepareGenerateLeaveReport"><button
 			class="btn btn-primary btn-sm">Xuất lại báo cáo</button></a>
 	<a href="${url}/timekeeping/"><button
-			class="btn btn-primary btn-sm">Quay lại thông tin chấm công</button></a>	
+			class="btn btn-primary btn-sm">Quay lại thông tin chấm công</button></a>
 	<a href="${url}/timekeeping/leaveInfo"><button
-			class="btn btn-primary btn-sm">Quay lại chấm công phát sinh</button></a>				
+			class="btn btn-primary btn-sm">Quay lại chấm công phát sinh</button></a>
 	<br />
 	<br />
 	<div class="table-responsive">
-				<table class="table table-bordered">
-			<tr bgcolor="#D8D8D8">
-				<th>Mã NV</th>
-				<th>Tên NV</th>
+		<table class="table table-bordered">
+			<tr bgcolor=B5CBCE>
+				<th nowrap="nowrap">Mã NV</th>
+				<th>Tên nhân viên</th>
 				<th>Ngày vào</th>
 				<th>Phòng</th>
-				<th>Thâm niên</th>		
-				
+				<th>Thâm niên</th>
+
 				<!-- dynamic generate begin  -->
-				<c:forEach var="leaveType" items="${leaveInfos}">
-					<th>${leaveType.key}</th>
+				<c:forEach var="leaveTypeName" items="${leaveForReport}">
+					<th>${leaveTypeName.value}</th>
 				</c:forEach>
 				<!-- dynamic generate end -->
-				
+
 				<th>Phép còn năm trước</th>
 				<th>Phép năm nay</th>
 				<th>Phép đã sử dụng</th>
@@ -42,13 +42,18 @@
 					<td nowrap="nowrap">${leaveReport.joinDate}</td>
 					<td nowrap="nowrap">${leaveReport.department}</td>
 					<td>${leaveReport.seniority}</td>
-					
-				<!-- dynamic generate begin  -->
-				<c:forEach var="leaveTypes" items="${leaveReport.leaveTypes}">
-					<td>${leaveTypes.value}</td>
-				</c:forEach>
-				<!-- dynamic generate end -->				
-					
+
+					<!-- dynamic generate begin  -->
+					<c:forEach var="leaveTypes" items="${leaveReport.leaveTypes}">
+						<c:if test="${leaveTypes.value !='0'}">
+							<td>${leaveTypes.value}</td>
+						</c:if>
+						<c:if test="${leaveTypes.value == '0'}">
+							<td></td>
+						</c:if>
+					</c:forEach>
+					<!-- dynamic generate end -->
+
 					<td bgcolor="#F5F6CE">${leaveReport.restQuata}</td>
 					<td bgcolor="#F5F6CE">${leaveReport.quataLeave}</td>
 					<td bgcolor="#F5F6CE">${leaveReport.leaveUsed}</td>

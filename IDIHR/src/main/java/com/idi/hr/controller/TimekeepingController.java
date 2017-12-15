@@ -132,9 +132,9 @@ public class TimekeepingController {
 			model.addAttribute("employeeMap", employeeMap);
 
 			// get list leave type
-			Map<String, String> leaveTypeMap = this.leaveTypes();
+			Map<String, String> leaveTypeMap = this.leaveTypesForReport();
 			model.addAttribute("leaveTypeMap", leaveTypeMap);
-
+			
 			model.addAttribute("formTitle", "Tùy chọn dữ liệu cần cho báo cáo");
 		} catch (Exception e) {
 			log.error(e, e);
@@ -152,7 +152,7 @@ public class TimekeepingController {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = new Date();
 			String currentDate = dateFormat.format(date);
-			System.err.println(currentDate);
+			//System.err.println(currentDate);
 			String year = leaveReport.getYearReport();
 			String month = leaveReport.getMonthReport();
 			int employeeId = leaveReport.getEmployeeId();
@@ -171,7 +171,7 @@ public class TimekeepingController {
 				String joinDate = employee.getJoinDate();
 				leaveForGenReport.setJoinDate(joinDate);
 				int seniority = Utils.monthsBetween(dateFormat.parse(joinDate), dateFormat.parse(currentDate));
-				System.err.println("tham nien " + seniority);
+				//System.err.println("tham nien " + seniority);
 				leaveForGenReport.setSeniority(String.valueOf(seniority));
 
 				// tinh so ngay phep
@@ -184,30 +184,57 @@ public class TimekeepingController {
 
 				if (seniority >= 108)
 					quataLeave = 15;
-				System.err.println(quataLeave);
+				//System.err.println(quataLeave);
 				leaveForGenReport.setQuataLeave(String.valueOf(quataLeave));
 
 				// tinh toan de lay gia tri va gen thong tin leave info theo cac chi so dc nguoi
 				// dung lua chon
 				Map<String, String> leaveInfos = new LinkedHashMap<String, String>();
+				Map<String, String> leaveForReport = new LinkedHashMap<String, String>();
 				StringTokenizer st = new StringTokenizer(leaveReport.getLeaveTypeReport(), ",");
 				while (st.hasMoreTokens()) {
 					String lT = st.nextToken();
+					//String lTSum = "";
 					String lTV = "";
 					if (lT.equalsIgnoreCase("VS") || lT.equalsIgnoreCase("DM")) {
 						lTV = timekeepingDAO.getTimekeepingReport(year, month, id, lT);
+						//System.err.println("leave type: " + lT);
+						if(lT.equalsIgnoreCase("VS")) 
+							leaveForReport.put(lT, "Về sớm");
+						else
+							leaveForReport.put(lT, "Đi muộn");
+						
 					} else {
-						lTV = leaveDAO.getLeaveReport(year, month, id, lT);
-						System.err.println(lT + ":" + id + " value: " + lTV);
-					}
+						if(lT.startsWith("LT") || lT.startsWith("KCC")|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
+							lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
+						}else {
+							if(leaveDAO.getLeaveReport(year, month, id, lT) > 0) 
+								lTV = Float.toString((float)leaveDAO.getLeaveReport(year, month, id, lT)/8);								
+						}
+						
+						//Get name to gen report (<th>)
+						//if(!lT.endsWith("2")) {
+						//	System.err.println("leave type: " + lT);
+							String leaveTypeName = leaveDAO.getLeaveType(lT);
+							leaveForReport.put(lT, leaveTypeName);
+						//}else if(lT.endsWith("2")) {
+						//	lTSum = lT.substring(0, lT.length() - 1 );
+						//}
+						
+						/*if(lTSum.equalsIgnoreCase(lT)) {
+							
+						}*/
+						
+					}						
+					
 					leaveInfos.put(lT, lTV);
 				}
+				model.addAttribute("leaveForReport", leaveForReport);
 				
 				//Tinh toan so ngay phep da su dung va so ngay phep con lai
 				double leaveUsed = getLeaveUsed(year, id);
 				leaveForGenReport.setLeaveUsed(String.valueOf(leaveUsed));
-				leaveForGenReport.setLeaveRemain(String.valueOf(quataLeave - leaveUsed));
-				
+							
 				//Tinh so ngay nghi con lai cua nam truoc 
 				if(Integer.valueOf(year) - 1 <= 2016)
 					leaveForGenReport.setRestQuata("0");
@@ -233,6 +260,7 @@ public class TimekeepingController {
 					double leaveUsedLastYear = getLeaveUsed(String.valueOf(lastYear), id);
 					leaveForGenReport.setRestQuata(String.valueOf(quataLeaveLastYear - leaveUsedLastYear));
 				}
+				leaveForGenReport.setLeaveRemain(String.valueOf((quataLeave + Integer.valueOf(leaveForGenReport.getRestQuata())) - leaveUsed));
 				//
 				
 				leaveForGenReport.setLeaveTypes(leaveInfos);
@@ -276,23 +304,51 @@ public class TimekeepingController {
 					// tinh toan de lay gia tri va gen thong tin leave info theo cac chi so dc nguoi
 					// dung lua chon
 					Map<String, String> leaveInfos = new LinkedHashMap<String, String>();
+					Map<String, String> leaveForReport = new LinkedHashMap<String, String>();
 					StringTokenizer st = new StringTokenizer(leaveReport.getLeaveTypeReport(), ",");
 					while (st.hasMoreTokens()) {
 						String lT = st.nextToken();
+						//String lTSum = "";
 						String lTV = "";
 						if (lT.equalsIgnoreCase("VS") || lT.equalsIgnoreCase("DM")) {
 							lTV = timekeepingDAO.getTimekeepingReport(year, month, id, lT);
+							//System.err.println("leave type: " + lT);
+							if(lT.equalsIgnoreCase("VS")) 
+								leaveForReport.put(lT, "Về sớm");
+							else
+								leaveForReport.put(lT, "Đi muộn");
+							
 						} else {
-							lTV = leaveDAO.getLeaveReport(year, month, id, lT);
-							System.err.println(lT + ":" + id + " value: " + lTV);
-						}
+							if(lT.startsWith("LT") || lT.startsWith("KCC")|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
+								lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
+							}else {
+								if(leaveDAO.getLeaveReport(year, month, id, lT) > 0) 
+									lTV = Float.toString((float)leaveDAO.getLeaveReport(year, month, id, lT)/8);								
+							}
+							
+							//Get name to gen report (<th>)
+							//if(!lT.endsWith("2")) {
+							//	System.err.println("leave type: " + lT);
+								String leaveTypeName = leaveDAO.getLeaveType(lT);
+								leaveForReport.put(lT, leaveTypeName);
+							//}else if(lT.endsWith("2")) {
+							//	lTSum = lT.substring(0, lT.length() - 1 );
+							//}
+							
+							//if(lTSum.equalsIgnoreCase(lT)) {
+								
+							//}
+							
+						}						
+						
 						leaveInfos.put(lT, lTV);
 					}
+					model.addAttribute("leaveForReport", leaveForReport);
 					
 					//Tinh toan so ngay phep da su dung va so ngay phep con lai
 					double leaveUsed = getLeaveUsed(year, id);
 					leaveForGenReport.setLeaveUsed(String.valueOf(leaveUsed));
-					leaveForGenReport.setLeaveRemain(String.valueOf(quataLeave - leaveUsed));
+					//leaveForGenReport.setLeaveRemain(String.valueOf(quataLeave - leaveUsed));
 					
 					//Tinh so ngay nghi con lai cua nam truoc 
 					if(Integer.valueOf(year) - 1 <= 2016)
@@ -319,6 +375,7 @@ public class TimekeepingController {
 						double leaveUsedLastYear = getLeaveUsed(String.valueOf(lastYear), id);
 						leaveForGenReport.setRestQuata(String.valueOf(quataLeaveLastYear - leaveUsedLastYear));
 					}
+					leaveForGenReport.setLeaveRemain(String.valueOf((quataLeave + Integer.valueOf(leaveForGenReport.getRestQuata())) - leaveUsed));
 					//
 					
 					model.addAttribute("leaveInfos", leaveInfos);
@@ -346,7 +403,7 @@ public class TimekeepingController {
 					int seniority = 0;
 					if(joinDate != null && joinDate.length() > 0)
 						seniority = Utils.monthsBetween(dateFormat.parse(joinDate), dateFormat.parse(currentDate));
-					System.err.println("tham nien " + seniority);
+					//System.err.println("tham nien " + seniority);
 					leaveForGenReport.setSeniority(String.valueOf(seniority));
 
 					// tinh so ngay phep
@@ -359,7 +416,7 @@ public class TimekeepingController {
 
 					if (seniority >= 108)
 						quataLeave = 15;
-					System.err.println(quataLeave);
+					//System.err.println(quataLeave);
 					leaveForGenReport.setQuataLeave(String.valueOf(quataLeave));
 
 					// tinh toan de lay gia tri va gen thong tin leave info theo cac chi so dc nguoi
@@ -369,23 +426,44 @@ public class TimekeepingController {
 					StringTokenizer st = new StringTokenizer(leaveReport.getLeaveTypeReport(), ",");
 					while (st.hasMoreTokens()) {
 						String lT = st.nextToken();
+						//String lTSum = "";
 						String lTV = "";
 						if (lT.equalsIgnoreCase("VS") || lT.equalsIgnoreCase("DM")) {
 							lTV = timekeepingDAO.getTimekeepingReport(year, month, id, lT);
-						} else {
-							lTV = leaveDAO.getLeaveReport(year, month, id, lT);
-							System.err.println(lT + ":" + id + " value: " + lTV);
+							//System.err.println("leave type: " + lT);
+							if(lT.equalsIgnoreCase("VS")) 
+								leaveForReport.put(lT, "Về sớm");
+							else
+								leaveForReport.put(lT, "Đi muộn");
 							
-							if(!lT.endsWith("2")) {
-								System.err.println("leave type: " + lT);
+						} else {
+							if(lT.startsWith("LT") || lT.startsWith("KCC")|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
+								lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
+							}else {
+								if(leaveDAO.getLeaveReport(year, month, id, lT) > 0) 
+									lTV = Float.toString((float)leaveDAO.getLeaveReport(year, month, id, lT)/8);								
+							}
+							
+							//System.err.println(lT + ":" + id + " value: " + lTV);
+							
+							//Get name to gen report (<th>)
+							//if(!lT.endsWith("2")) {
+							//	System.err.println("leave type: " + lT);
 								String leaveTypeName = leaveDAO.getLeaveType(lT);
 								leaveForReport.put(lT, leaveTypeName);
-							}
+							//}else if(lT.endsWith("2")) {
+							//	lTSum = lT.substring(0, lT.length() - 1 );
+							//}
+							
+							//if(lTSum.equalsIgnoreCase(lT)) {
+								
+							//}
+							
 						}						
 						
 						leaveInfos.put(lT, lTV);
 					}
-					
+					model.addAttribute("leaveForReport", leaveForReport);
 					//Tinh toan so ngay phep da su dung va so ngay phep con lai
 /*					int leaveFUsed = Integer.valueOf(leaveDAO.getLeaveTakenF(year, id));
 					System.out.println("F "+leaveFUsed);
@@ -400,7 +478,7 @@ public class TimekeepingController {
 					
 					double leaveUsed = getLeaveUsed(year, id);
 					leaveForGenReport.setLeaveUsed(String.valueOf(leaveUsed));
-					leaveForGenReport.setLeaveRemain(String.valueOf(quataLeave - leaveUsed));
+					//leaveForGenReport.setLeaveRemain(String.valueOf(quataLeave - leaveUsed));
 					
 					//Tinh so ngay nghi con lai cua nam truoc 
 					if(Integer.valueOf(year) - 1 <= 2016)
@@ -427,7 +505,9 @@ public class TimekeepingController {
 						double leaveUsedLastYear = getLeaveUsed(String.valueOf(lastYear), id);
 						leaveForGenReport.setRestQuata(String.valueOf(quataLeaveLastYear - leaveUsedLastYear));
 					}
+					leaveForGenReport.setLeaveRemain(String.valueOf((quataLeave + Integer.valueOf(leaveForGenReport.getRestQuata())) - leaveUsed));
 					//
+					
 					model.addAttribute("leaveInfos", leaveInfos);
 					leaveForGenReport.setLeaveTypes(leaveInfos);
 					System.out.println("leave info size: " + leaveInfos.size());
@@ -436,7 +516,7 @@ public class TimekeepingController {
 			}
 
 			model.addAttribute("leaveReports", list);
-			model.addAttribute("formTitle", "Báo cáo dữ liệu chuyên cần");
+			model.addAttribute("formTitle", "Thống kê dữ liệu chuyên cần");
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -525,6 +605,25 @@ public class TimekeepingController {
 		return leaveTypeMap;
 	}
 
+	private Map<String, String> leaveTypesForReport() {
+		Map<String, String> leaveTypeMap = new LinkedHashMap<String, String>();
+		try {
+			List<LeaveType> list = leaveDAO.getLeaveTypes();
+			LeaveType leaveType = new LeaveType();
+			for (int i = 0; i < list.size(); i++) {
+				leaveType = (LeaveType) list.get(i);
+				String leaveId = leaveType.getLeaveId();
+				if(!leaveId.endsWith("2"))
+					leaveTypeMap.put(leaveId, leaveType.getLeaveName());
+			}
+
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return leaveTypeMap;
+	}
+	
 	private Map<String, String> dataForDepartments() {
 		Map<String, String> departmentMap = new LinkedHashMap<String, String>();
 		try {

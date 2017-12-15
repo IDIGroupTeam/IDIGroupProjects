@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 07, 2017 at 11:25 AM
+-- Generation Time: Dec 15, 2017 at 11:20 AM
 -- Server version: 10.1.13-MariaDB
 -- PHP Version: 5.6.20
 
@@ -90,12 +90,12 @@ CREATE TABLE `idigroup`.`employee_info` (
 --
 
 INSERT INTO `idigroup`.`employee_info` (`EMPLOYEE_ID`, `FULL_NAME`, `GENDER`, `JOB_TITLE`, `WORK_STATUS`, `DOB`, `MARITAL_STATUS`, `LOGIN_ACCOUNT`, `PERSONAL_ID`, `ISSUE_DATE`, `DEPARTMENT`, `PHONE_NO`, `JOIN_DATE`, `OFFICIAL_JOIN_DATE`, `EMAIL`, `TERMINATION_DATE`, `REASON_FOR_LEAVE`, `CURRENT_ADDRESS`, `PERMANENT_ADDRESS`, `NOTE`, `NATION`, `IMAGE`, `EMER_NAME`, `EMER_PHONE_NO`, `BANK_NO`, `BANK_NAME`, `BANK_BRANCH`, `IMAGE_PATH`, `SALA_SOCI_INSU`, `SOCIAL_INSU_NO`, `HEALTH_INSU_NO`, `PERCENT_SOCI_INSU`) VALUES
-(1, 'Nguyễn Văn Trượng', 'male', 'CTV', 'Cong tac vien', '', 'married', 'truongnv', '01234567890', '2017-11-02', 'CNTT', '0912345678', '2017-08-01', '', 'truongnv.idigroup@gmail.com', NULL, NULL, 'Hoang Mai-HN', 'Hoang Mai', '', 'Viet Nam', NULL, 'Mai Thi Vo', '0911111111', NULL, NULL, NULL, 'http://localhost:8080/IDIHR/employeeImage/Chrysanthemum.jpg', NULL, NULL, NULL, NULL),
+(1, 'Nguyễn Văn Trượng', 'male', 'CTV', 'Cong tac vien', '1982-10-30', 'married', 'truongnv', '01234567890', '2017-11-02', 'CNTT', '0912345678', '2017-08-01', '', 'truongnv.idigroup@gmail.com', NULL, NULL, 'Hoang Mai-HN', 'Hoang Mai', '', 'Viet Nam', NULL, 'Mai Thi Vo', '0911111111', NULL, NULL, NULL, 'http://localhost:8080/IDIHR/employeeImage/Chrysanthemum.jpg', NULL, NULL, NULL, NULL),
 (2, 'Pham Xuan Tuyen', 'male', 'TP', 'Thu viec', '1990-11-11', 'married', 'tuyenpx', '11111111111', '2011-11-11', 'CNTT', '09999999999', '2012-11-11', '', 'tuyenpx.idigroup@gmail.com', NULL, NULL, 'Hoang Mai', 'Hung Yen', 'Edit: Test validate', 'Viet Nam', 0x646f776e6c6f6164202831292e6a7067, '', '', NULL, NULL, NULL, 'http://localhost:8080/IDIHR/employeeImage/Jellyfish.jpg', NULL, NULL, NULL, NULL),
 (3, 'Tran Dong Hai', 'female', 'CTV', 'Cong tac vien', '1990-11-11', 'sigle', 'haitd', '11111111111', '2011-11-11', 'CNTT', '09999999321', '2013-11-11', '', 'haitd.idigroup@gmail.com', NULL, NULL, 'Cau giay', 'Thai binh', 'test upload image', 'Viet Nam', NULL, '', '', NULL, NULL, NULL, 'http://localhost:8080/IDIHR/employeeImage/Penguins.jpg', NULL, NULL, NULL, NULL),
 (4, 'Nguyen Van Anh', 'female', 'NV', 'Thu viec', '1992-08-06', 'sigle', 'anhnv', '11111111111', '2016-05-01', 'KT', '09999999234', '2014-11-11', '', 'anv.idigroup@gmail.com', NULL, NULL, 'Cau giay', 'Hoang mai', '', 'Viet Nam', 0x50656e6775696e732e6a7067, '', '', NULL, NULL, NULL, 'http://localhost:8080/IDIHR/employeeImage/Tulips.jpg', NULL, NULL, NULL, NULL),
 (5, 'Pham Thi My Le', 'female', 'NV', 'Chinh thuc', '1988-12-30', 'sigle', 'leptm', '', '', 'KT', '09777777777', '2015-11-11', NULL, 'leptm.idigroup@gmail.com', NULL, NULL, '', '', '', '', NULL, '', '', NULL, NULL, NULL, 'http://localhost:8080/IDIHR/employeeImage/Koala.jpg', NULL, NULL, NULL, NULL),
-(6, 'Nguyen Van A', 'male', 'NV', 'Thu viec', '', 'widowed', 'anv', '', '', 'HC', '', '2016-11-11', '', 'a.nv.idigroup@gmail.com', NULL, NULL, '', '', '', '', '', '', '', NULL, NULL, NULL, 'http://localhost:8080/IDIHR/employeeImage/Penguins.jpg', NULL, NULL, NULL, NULL),
+(6, 'Nguyen Van A', 'male', 'NV', 'Thu viec', '1984-12-08', 'widowed', 'anv', '', '', 'HC', '0988123125', '2016-11-11', '', 'a.nv.idigroup@gmail.com', NULL, NULL, '', '', '', '', '', '', '', NULL, NULL, NULL, 'http://localhost:8080/IDIHR/employeeImage/Penguins.jpg', NULL, NULL, NULL, NULL),
 (7, 'Pham Thi Tuyen', 'male', 'CTV', 'Thu viec', '1979-01-01', 'sigle', 'tuyenpt', '', '', 'CNTT', '', '2017-11-11', '', 'tuyenpt.idigroup@gmail.com', NULL, NULL, '', '', '', '', NULL, '', '', NULL, NULL, NULL, 'http://localhost:8080/IDIHR/employeeImage/Desert.jpg', NULL, NULL, NULL, NULL),
 (8, 'Nguyen Van B', 'male', 'CTV', 'Thu viec', '', 'sigle', 'bnv', '', '', 'CNTT', '', '2016-10-11', '', 'bnv.idigroup@gmail.com', NULL, NULL, '', '', '', '', NULL, '', '', NULL, NULL, NULL, 'http://localhost:8080/IDIHR/employeeImage/Jellyfish.jpg', NULL, NULL, NULL, NULL),
 (9, 'Nguyen Thi Hai', 'female', 'NV', 'Chinh thuc', '1981-01-01', 'married', 'haint', '123456789012', '2015-01-01', 'HC', '0988123123', '2017-01-11', '', 'haint@gmail.com', NULL, NULL, 'HN', 'Hoang Mai', 'xxx', 'VN', NULL, 'Mai Thi Vo', '0911111111', NULL, NULL, NULL, 'http://localhost:8080/IDIHR/employeeImage/Hydrangeas.jpg', NULL, NULL, NULL, NULL);
@@ -173,17 +173,19 @@ CREATE TABLE `idigroup`.`leave_info` (
 --
 
 INSERT INTO `idigroup`.`leave_info` (`EMPLOYEE_ID`, `DATE`, `LEAVE_TYPE`, `TIME_VALUE`, `COMMENT`) VALUES
-(1, '2017-11-16', 'O2', 4, ''),
+(1, '2017-11-16', 'O', 4, ''),
 (1, '2017-11-22', 'LTNT', 3, 'Làm thêm 3h ngày thường'),
 (1, '2017-12-04', 'NP', 8, ''),
-(1, '2017-12-05', 'NP2', 4, ''),
+(1, '2017-12-05', 'NP', 4, ''),
+(1, '2017-12-12', 'NP', 4, 'Nghi phep nua ngay'),
+(1, '2017-12-14', 'CT', 4, 'cong tac nua ngay'),
 (2, '2016-11-03', 'NP', 8, ''),
 (2, '2017-10-21', 'NKL', 8, ''),
 (2, '2017-11-22', 'KCC', 1, ''),
-(2, '2017-12-05', 'CT2', 4, ''),
+(2, '2017-12-05', 'CT', 4, ''),
 (2, '2017-12-05', 'NP', 8, ''),
 (3, '2017-10-01', 'CT', 8, ''),
-(3, '2017-11-16', 'CT2', 4, ''),
+(3, '2017-11-16', 'CT', 4, ''),
 (4, '2017-11-10', 'NP', 8, '');
 
 -- --------------------------------------------------------

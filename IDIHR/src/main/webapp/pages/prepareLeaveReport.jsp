@@ -45,6 +45,7 @@
 					</form:select></td>
 				<td bgcolor="#FAFAFA">Chọn tháng:</td>
 				<td><form:select path="monthReport">
+						<form:option value="" label="Cả năm" />
 						<form:option value="1" label="Tháng 1" />
 						<form:option value="2" label="Tháng 2" />
 						<form:option value="3" label="Tháng 3" />
@@ -56,8 +57,7 @@
 						<form:option value="9" label="Tháng 9" />
 						<form:option value="10" label="Tháng 10" />
 						<form:option value="11" label="Tháng 11" />
-						<form:option value="12" label="Tháng 12" />
-						<form:option value="" label="Cả năm" />
+						<form:option value="12" label="Tháng 12" />						
 					</form:select></td>
 			</tr>
 			<tr>
@@ -75,7 +75,7 @@
 			<tr>
 				<td bgcolor="#FAFAFA">Lựa chọn các thông tin cần báo cáo</td>
 				<td colspan="3"><form:select path="leaveTypeReport"
-						multiple="multiple" size="15">
+						multiple="multiple" size="12">
 						<form:option value="DM" label="Đi muộn"></form:option>
 						<form:option value="VS" label="Về sớm"></form:option>
 						<form:options items="${leaveTypeMap}" />

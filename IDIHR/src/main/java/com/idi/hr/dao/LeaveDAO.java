@@ -164,13 +164,15 @@ public class LeaveDAO extends JdbcDaoSupport {
 			log.info("Insert new LeaveInfo ....");
 			String sql = hr.getProperty("INSERT_LEAVE_INFO").toString();
 			log.info("INSERT_LEAVE_INFO query: " + sql);
-			if (leaveInfo.getLeaveType().endsWith("2"))
+			String leaveType = leaveInfo.getLeaveType();
+			if (leaveType.endsWith("2")) {
 				leaveInfo.setTimeValue(4);
-			else if (leaveInfo.getLeaveType().equalsIgnoreCase("KCC"))
+				leaveType = leaveType.substring(0, leaveType.length() - 1);
+			} else if (leaveType.equalsIgnoreCase("KCC"))
 				leaveInfo.setTimeValue(1);
 			else
 				leaveInfo.setTimeValue(8);
-			Object[] params = new Object[] { leaveInfo.getEmployeeId(), leaveInfo.getDate(), leaveInfo.getLeaveType(),
+			Object[] params = new Object[] { leaveInfo.getEmployeeId(), leaveInfo.getDate(), leaveType,
 					leaveInfo.getTimeValue(), leaveInfo.getComment() };
 			jdbcTmpl.update(sql, params);
 
@@ -214,8 +216,8 @@ public class LeaveDAO extends JdbcDaoSupport {
 	 * @throws Exception
 	 */
 
-	public String getLeaveReport(String year, String month, int employeeId, String leaveType) throws Exception {
-		String countNumber = "";
+	public int getLeaveReport(String year, String month, int employeeId, String leaveType) throws Exception {
+		int countNumber = 0;
 		String sql = hr.getProperty("GET_LEAVE_INFO_FOR_REPORT").toString();
 		if (month != null && month.length() > 0)
 			sql = sql + " AND MONTH(DATE) = '" + month + "' ";
@@ -226,9 +228,11 @@ public class LeaveDAO extends JdbcDaoSupport {
 		log.info("GET_LEAVE_INFO_FOR_REPORT query: " + sql);
 
 		Object[] params = new Object[] { employeeId, leaveType };
-
-		countNumber = jdbcTmpl.queryForObject(sql, String.class, params);
-		System.err.println(leaveType + ": " + countNumber);
+		if (jdbcTmpl.queryForObject(sql, Integer.class, params) != null)
+			countNumber = jdbcTmpl.queryForObject(sql, Integer.class, params);
+		else
+			countNumber = 0;
+		System.err.println("leaveType:" + leaveType + ", " + countNumber);
 
 		return countNumber;
 	}

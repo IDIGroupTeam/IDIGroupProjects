@@ -128,12 +128,10 @@
 						<td><form:select path="department">
 								<form:options items="${departmentMap}" />
 							</form:select></td>
-
-
 					</tr>
 					<tr>
-						<td bgcolor="#E6E6E6">Ngày vào cty:</td>
-						<td><form:input path="joinDate" type="date" /></td>
+						<td bgcolor="#E6E6E6">Ngày vào cty(*):</td>
+						<td><form:input path="joinDate" type="date" required="required"/></td>
 						<td bgcolor="#E6E6E6">Ngày ký HĐLĐ:</td>
 						<td><form:input path="officalJoinDate" type="date" /></td>
 					</tr>

@@ -40,7 +40,8 @@ public class EmployeeInfo implements Serializable {
 	private String socicalInsuNo;
 	private String healthInsuNo;
 	private String percentSocicalInsu;
-
+	private int seniority;
+	
 	public EmployeeInfo() {
 
 	}
@@ -85,6 +86,14 @@ public class EmployeeInfo implements Serializable {
 		this.socicalInsuNo = socicalInsuNo;
 		this.healthInsuNo = healthInsuNo;
 		this.percentSocicalInsu = percentSocicalInsu;
+	}
+
+	public int getSeniority() {
+		return seniority;
+	}
+
+	public void setSeniority(int seniority) {
+		this.seniority = seniority;
 	}
 
 	public int getEmployeeId() {

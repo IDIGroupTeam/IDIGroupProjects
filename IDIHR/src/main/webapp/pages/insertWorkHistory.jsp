@@ -63,13 +63,13 @@
 						<td colspan="4"><form:textarea path="appraise" cols="64" maxlength="64"/></td>
 					<tr>
 						<td>&nbsp;</td>
-						<td align="right"><input type="submit" value="Lưu" /> <a
-							href="${pageContext.request.contextPath}/workHistory/"><button>Thoát</button></a></td>
+						<td align="right"><input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" /> </td>
 						<td>&nbsp;</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 	</form:form>
+	<a href="${pageContext.request.contextPath}/workHistory/"><button class="btn btn-primary btn-sm">Thoát</button></a>
 </body>
 </html>

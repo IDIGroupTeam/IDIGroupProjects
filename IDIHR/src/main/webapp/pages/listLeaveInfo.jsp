@@ -5,6 +5,23 @@
 <html>
 <head>
 <title>Thông tin ngày nghỉ, công tác, làm thêm ...</title>
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #E8E3E3;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #E8E3E3;
+}
+</style>
 </head>
 <body>
 	<a href="${url}/timekeeping/addLeaveInfo"><button class="btn btn-lg btn-primary btn-sm">Thêm mới </button></a>

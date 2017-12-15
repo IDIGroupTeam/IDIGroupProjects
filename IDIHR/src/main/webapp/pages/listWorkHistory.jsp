@@ -5,10 +5,27 @@
 <html>
 <head>
 <title>Lịch sử công tác của nhân viên</title>
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #E8E3E3;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #E8E3E3;
+}
+</style>
 </head>
 <body>
 	<a href="${pageContext.request.contextPath}/workHistory/addWorkHistory"><button
-			class="btn btn-primary">Thêm mới </button></a>
+			class="btn btn-primary btn-sm">Thêm mới </button></a>
 	<br />
 	<br />
 	<div class="table-responsive">

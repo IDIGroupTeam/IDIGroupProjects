@@ -110,8 +110,8 @@
 				<tr>
 					<td>&nbsp;</td>
 					<td><a
-						href="editEmployee?employeeId=${employeeForm.employeeId}"><button>Sửa
-								thông tin</button></a> <a href="${pageContext.request.contextPath}/"><button>Quay
+						href="editEmployee?employeeId=${employeeForm.employeeId}"><button class="btn btn-lg btn-primary btn-sm">Sửa
+								thông tin</button></a> <a href="${pageContext.request.contextPath}/"><button class="btn btn-lg btn-primary btn-sm">Quay
 								lại danh sách NV</button></a></td>
 					<td>&nbsp;</td>
 				</tr>

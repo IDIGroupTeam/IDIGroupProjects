@@ -78,6 +78,24 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		return Integer.parseInt(accountNumber);
 
 	}
+	
+	/**
+	 * countMemberByWorkStatus
+	 * @param workstatus
+	 * @return
+	 */
+	public int countMemberByWorkStatus(String workstatus) {
+
+		String sql = hr.get("COUNT_MEMBER_BY_WORK_STATUS").toString();
+		log.info("COUNT_MEMBER_BY_WORK_STATUS query: " + sql);
+		Object[] params = new Object[] { workstatus };
+		
+		String numberEmployee = jdbcTmpl.queryForObject(sql, String.class, params);
+		
+		//System.err.println(accountNumber);
+		return Integer.parseInt(numberEmployee);
+
+	}
 
 	/**
 	 * Insert or update a employee into database
@@ -151,6 +169,25 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		String sql = hr.getProperty("GET_EMPLOYEES").toString();
 		log.info("GET_EMPLOYEES query: " + sql);
 		Object[] params = new Object[] {};
+		EmployeeMapper mapper = new EmployeeMapper();
+
+		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);
+
+		return list;
+
+	}
+	
+	/**
+	 * Get employees have birthday of quarter from DB
+	 * 
+	 * @return List of employee
+	 * @throws Exception
+	 */
+	public List<EmployeeInfo> getEmployeesBith(int quarter) {
+
+		String sql = hr.getProperty("GET_MEMBER_QUARTER_BIRTHDAY").toString();
+		log.info("GET_MEMBER_QUARTER_BIRTHDAY query: " + sql);
+		Object[] params = new Object[] {quarter};
 		EmployeeMapper mapper = new EmployeeMapper();
 
 		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);

@@ -5,10 +5,31 @@
 <html>
 <head>
 <title>Danh sách nhân viên</title>
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #E8E3E3;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #E8E3E3;
+}
+</style>
 </head>
 <body>
-	<a href="${pageContext.request.contextPath}/insertEmployee"><button
-			class="btn btn-primary">Thêm mới nhân viên</button></a>
+	<a href="${url}/insertEmployee"><button
+			class="btn btn-primary btn-sm">Thêm mới nhân viên</button></a>
+	<a href="${url}/listEmployeeBirth?quarter=${quarter}"><button
+			class="btn btn-primary btn-sm">Danh sách nhân viên sinh nhật quý</button></a>		
+	<a href="${url}/workStatusReport"><button
+			class="btn btn-primary btn-sm">Thống kê trạng thái LĐ</button></a>				
 	<br />
 	<br />
 	<div class="table-responsive">

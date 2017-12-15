@@ -1,5 +1,7 @@
 package com.idi.hr.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +11,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,9 +35,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.idi.hr.bean.Department;
 import com.idi.hr.bean.EmployeeInfo;
 import com.idi.hr.bean.JobTitle;
+import com.idi.hr.common.Utils;
 import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.JobTitleDAO;
+import com.idi.hr.form.Birth;
 import com.idi.hr.validator.EmployeeValidator;
 
 @Controller
@@ -54,10 +60,15 @@ public class EmployeeController {// extends BaseController {
 	private EmployeeValidator employeeValidator;
 
 	@RequestMapping(value = { "/" }, method = RequestMethod.GET)
-	public String ListEmployees(Model model) {
+	public String listEmployees(Model model) {
 		try {
 			List<EmployeeInfo> list = employeeDAO.getEmployees();
 			model.addAttribute("employees", list);
+			
+			Date date = new Date();
+			int currentQuarter = date.getMonth()/3 + 1;
+			
+			model.addAttribute("quarter", currentQuarter);
 			model.addAttribute("formTitle", "Danh sách nhân viên");
 		} catch (Exception e) {
 			log.error(e, e);
@@ -65,7 +76,51 @@ public class EmployeeController {// extends BaseController {
 		}
 		return "listEmployee";
 	}
+	
+	@RequestMapping(value = "/listEmployeeBirth", method = RequestMethod.GET)
+	public String listEmployeeBirth(Model model, @RequestParam("quarter") int quarter, @ModelAttribute("bithForm") Birth bith, final RedirectAttributes redirectAttributes) {
+		try {
+			System.err.println(bith.getQuarter());
+			List<EmployeeInfo> list = employeeDAO.getEmployeesBith(quarter);
+			if(list.size() < 1)
+				redirectAttributes.addFlashAttribute("message", "Không có nhân viên nào SN quý " + bith.getQuarter());
+			List<EmployeeInfo> listEmployee = new ArrayList<EmployeeInfo>();
+			for(int i=0; i<list.size(); i++) {
+				EmployeeInfo employee = new EmployeeInfo();
+				employee = list.get(i);
+				
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = new Date();
+				String currentDate = dateFormat.format(date);
+				String joinDate = employee.getJoinDate();
+				int seniority = Utils.monthsBetween(dateFormat.parse(joinDate), dateFormat.parse(currentDate));
+				employee.setSeniority(seniority);
+				/*System.err.println("tham nien " + seniority);*/
+				listEmployee.add(employee);
+			}
+			model.addAttribute("employees", listEmployee);
+			model.addAttribute("formTitle", "Danh sách nhân viên sinh nhật quý " + bith.getQuarter());
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return "listEmployeeBirth";
+	}
 
+	@RequestMapping(value = "/workStatusReport", method = RequestMethod.GET)
+	public String workStatusReport(Model model) {
+		Map<String, String> items = workStatusMap();
+		Map<String, Integer> memberWorkStatus = new LinkedHashMap<String, Integer>();
+		for (Map.Entry<String, String> entry : items.entrySet()) {
+			System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());			
+			memberWorkStatus.put(entry.getValue(), employeeDAO.countMemberByWorkStatus(entry.getKey()));
+		}
+		model.addAttribute("formTitle", "Thống kê số lượng nhân viên theo trạng thái lao động");
+		model.addAttribute("memberWorkStatus", memberWorkStatus);
+		return "reportEmployeeByWorkStatus";
+	}
+	
+	
 	// Set a form validator
 	@InitBinder
 	protected void initBinder(WebDataBinder dataBinder) {

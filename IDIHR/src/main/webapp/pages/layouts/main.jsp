@@ -22,6 +22,7 @@
 
 </head>
 <body>
+	<div class="table-responsive">
 	<!-- <div class="container"> -->
 	<%@ include file="header.jsp"%>
 
@@ -44,5 +45,6 @@
 	</div>
 
 	<%@ include file="footer.jsp"%>
+	</div>
 </body>
 </html>
