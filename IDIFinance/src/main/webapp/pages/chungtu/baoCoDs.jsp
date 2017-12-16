@@ -34,7 +34,7 @@
 			<tr>
 				<th class="text-center" colspan="2">Báo có</th>
 				<th class="text-center" rowspan="2">Lý do</th>
-				<th class="text-center" rowspan="2">Số tiền (*)</th>
+				<th class="text-center" rowspan="2">Tổng số tiền (*)</th>
 				<th class="text-center" rowspan="2">Đối tượng nộp</th>
 				<th class="text-center" rowspan="2">Địa chỉ</th>
 				<th class="text-center" rowspan="2">Mã số thuế</th>
@@ -53,7 +53,7 @@
 							dateStyle="SHORT" /></td>
 					<td class="text-center" style="width: 50px;">${baoCo.loaiCt}${baoCo.soCt}</td>
 					<td><a href="${url}/xembaoco/${baoCo.maCt}">${baoCo.lyDo}</a></td>
-					<td><fmt:formatNumber value="${baoCo.soTien.giaTri}"
+					<td align="right"><fmt:formatNumber value="${baoCo.soTien.giaTri}"
 							maxFractionDigits="2"></fmt:formatNumber></td>
 					<td><c:choose>
 							<c:when

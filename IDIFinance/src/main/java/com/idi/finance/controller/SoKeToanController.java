@@ -1,8 +1,13 @@
 package com.idi.finance.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +19,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.idi.finance.bean.KyKeToan;
 import com.idi.finance.bean.bieudo.KpiGroup;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
@@ -106,11 +112,15 @@ public class SoKeToanController {
 			// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của
 			// tháng hiện tại
 			if (form.getDau() == null) {
-				form.setDau(Utils.getStartDateOfMonth(homNay));
+				form.setDau(Utils.getStartPeriod(homNay, form.getLoaiKy()));
+			} else {
+				form.setDau(Utils.getStartPeriod(form.getDau(), form.getLoaiKy()));
 			}
 
 			if (form.getCuoi() == null) {
-				form.setCuoi(Utils.getEndDateOfMonth(homNay));
+				form.setCuoi(Utils.getEndPeriod(homNay, form.getLoaiKy()));
+			} else {
+				form.setCuoi(Utils.getEndPeriod(form.getCuoi(), form.getLoaiKy()));
 			}
 
 			// Nếu không có đầu vào loại chứng từ thì lấy tất cả các chứng từ
@@ -127,10 +137,67 @@ public class SoKeToanController {
 			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
-			// Lấy danh sách các nghiệp vụ kế toán theo điều kiện
-			List<NghiepVuKeToan> nghiepVuKeToanDs = soKeToanDAO.danhSachNghiepVuKeToanTheoLoaiTaiKhoan(
-					form.getTaiKhoan(), form.getDau(), form.getCuoi(), form.getLoaiCts());
-			model.addAttribute("nghiepVuKeToanDs", nghiepVuKeToanDs);
+			// Lấy danh sách các nghiệp vụ kế toán theo tài khoản, loại chứng từ, và từng kỳ
+			logger.info("Tính sổ cái tài khoản: " + form.getTaiKhoan());
+			double soDuDau = 0;
+			double noPhatSinh = 0;
+			double coPhatSinh = 0;
+			double soDuCuoi = 0;
+			List<KyKeToan> kyKeToanDs = new ArrayList<>();
+			KyKeToan kyKt = new KyKeToan(form.getDau(), form.getLoaiKy());
+			while (!kyKt.getCuoi().after(form.getCuoi())) {
+				kyKt.setNghiepVuKeToanDs(soKeToanDAO.danhSachNghiepVuKeToanTheoLoaiTaiKhoan(form.getTaiKhoan(),
+						kyKt.getDau(), kyKt.getCuoi(), form.getLoaiCts()));
+				logger.info("Kỳ: " + kyKt);
+
+				Date cuoiKyTruoc = Utils.prevPeriod(kyKt).getCuoi();
+
+				// Lấy tổng nợ đầu kỳ
+				double noDauKy = soKeToanDAO.tongPhatSinh(form.getTaiKhoan(), LoaiTaiKhoan.NO, null, cuoiKyTruoc);
+
+				// Lấy tổng có đầu kỳ
+				double coDauKy = soKeToanDAO.tongPhatSinh(form.getTaiKhoan(), LoaiTaiKhoan.CO, null, cuoiKyTruoc);
+
+				// Tính ra số dư đầu kỳ
+				double soDuDauKy = noDauKy - coDauKy;
+				soDuDau += soDuDauKy;
+
+				// Tính phát sinh nợ trong kỳ
+				double noPhatSinhKy = soKeToanDAO.tongPhatSinh(form.getTaiKhoan(), LoaiTaiKhoan.NO, kyKt.getDau(),
+						kyKt.getCuoi());
+				noPhatSinh += noPhatSinhKy;
+
+				// Tính phát sinh có trong kỳ
+				double coPhatSinhKy = soKeToanDAO.tongPhatSinh(form.getTaiKhoan(), LoaiTaiKhoan.CO, kyKt.getDau(),
+						kyKt.getCuoi());
+				coPhatSinh += coPhatSinhKy;
+
+				// Tính ra phát sinh trong kỳ
+				double phatSinhTrongKy = noPhatSinhKy - coPhatSinhKy;
+
+				// Tính ra số dư cuối kỳ
+				double soDuCuoiKy = phatSinhTrongKy + soDuDauKy;
+
+				kyKt.setSoDuDauKy(soDuDauKy);
+				kyKt.setTongNoPhatSinh(noPhatSinhKy);
+				kyKt.setTongCoPhatSinh(coPhatSinhKy);
+				kyKt.setSoDuCuoiKy(soDuCuoiKy);
+				logger.info("Số dư đầu kỳ: " + soDuDauKy + ". Nợ phát sinh kỳ: " + noPhatSinhKy + ". Có phát sinh kỳ: "
+						+ coPhatSinhKy + ". Số dư cuối kỳ: " + soDuCuoiKy);
+
+				kyKeToanDs.add(kyKt);
+				kyKt = Utils.nextPeriod(kyKt);
+				logger.info(kyKt.getCuoi() + " " + form.getCuoi());
+			}
+
+			soDuCuoi = soDuDau + noPhatSinh - coPhatSinh;
+
+			model.addAttribute("soDuDau", soDuDau);
+			model.addAttribute("noPhatSinh", noPhatSinh);
+			model.addAttribute("coPhatSinh", coPhatSinh);
+			model.addAttribute("soDuCuoi", soDuCuoi);
+
+			model.addAttribute("kyKeToanDs", kyKeToanDs);
 			model.addAttribute("mainFinanceForm", form);
 
 			model.addAttribute("tab", "tabSKTSC");

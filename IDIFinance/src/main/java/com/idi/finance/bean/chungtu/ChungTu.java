@@ -5,9 +5,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import com.idi.finance.bean.LoaiTien;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class ChungTu {
+	private static final Logger logger = Logger.getLogger(ChungTu.class);
 	// Hằng số cho phần chứng từ: Phiếu thu, chi, báo có, báo nợ
 	public static final String TAT_CA = "TAT_CA";
 	public static final String CHUNG_TU_PHIEU_THU = "PT";
@@ -21,8 +25,9 @@ public class ChungTu {
 	private String loaiCt;
 	private Date ngayLap;
 	private Date ngayHt;
+	private LoaiTien loaiTien = new LoaiTien();
+	private Tien soTien = new Tien();
 	private String lyDo;
-	private Tien soTien;
 	private int kemTheo;
 	private DoiTuong doiTuong;
 	private List<TaiKhoan> taiKhoanNoDs;
@@ -68,12 +73,12 @@ public class ChungTu {
 		this.ngayHt = ngayHt;
 	}
 
-	public String getLyDo() {
-		return lyDo;
+	public LoaiTien getLoaiTien() {
+		return loaiTien;
 	}
 
-	public void setLyDo(String lyDo) {
-		this.lyDo = lyDo;
+	public void setLoaiTien(LoaiTien loaiTien) {
+		this.loaiTien = loaiTien;
 	}
 
 	public Tien getSoTien() {
@@ -82,6 +87,14 @@ public class ChungTu {
 
 	public void setSoTien(Tien soTien) {
 		this.soTien = soTien;
+	}
+
+	public String getLyDo() {
+		return lyDo;
+	}
+
+	public void setLyDo(String lyDo) {
+		this.lyDo = lyDo;
 	}
 
 	public int getKemTheo() {
@@ -105,14 +118,16 @@ public class ChungTu {
 			return;
 		}
 
-		if (taiKhoan.getGhiNo() == LoaiTaiKhoan.NO) {
+		if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
 			if (taiKhoanNoDs == null)
 				taiKhoanNoDs = new ArrayList<>();
 
 			if (!taiKhoanNoDs.contains(taiKhoan)) {
 				taiKhoanNoDs.add(taiKhoan);
+				soTien.setGiaTri(soTien.getGiaTri()
+						+ taiKhoan.getSoTien().getSoTien() * taiKhoan.getSoTien().getLoaiTien().getBanRa());
 			}
-		} else if (taiKhoan.getGhiNo() == LoaiTaiKhoan.CO) {
+		} else if (taiKhoan.getSoDu() == LoaiTaiKhoan.CO) {
 			if (taiKhoanCoDs == null)
 				taiKhoanCoDs = new ArrayList<>();
 
@@ -120,6 +135,7 @@ public class ChungTu {
 				taiKhoanCoDs.add(taiKhoan);
 			}
 		}
+
 	}
 
 	public void themTaiKhoan(List<TaiKhoan> taiKhoanDs) {
@@ -178,6 +194,28 @@ public class ChungTu {
 		}
 
 		return soTkLonNhat;
+	}
+
+	public int getSoDongNkc() {
+		int soDongNkc = 1;
+
+		if (loaiCt.equals(CHUNG_TU_KT_TH)) {
+			if (taiKhoanNoDs == null) {
+				if (taiKhoanCoDs != null) {
+					soDongNkc += taiKhoanCoDs.size();
+				}
+			} else {
+				if (taiKhoanCoDs == null) {
+					soDongNkc += taiKhoanNoDs.size();
+				} else {
+					soDongNkc += taiKhoanNoDs.size() + taiKhoanCoDs.size();
+				}
+			}
+		} else {
+			soDongNkc += getSoTkLonNhat();
+		}
+
+		return soDongNkc;
 	}
 
 	@Override

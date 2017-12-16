@@ -5,12 +5,18 @@ import java.text.DecimalFormat;
 import org.springframework.format.annotation.NumberFormat;
 
 public class LoaiTien {
-	private String maLt;
-	private String tenLt;
+	public static final String VND = "VND";
+	public static final String VND_TEN = "Việt Nam Đồng";
+	
+	public static final String VANG = "VANG";
+	public static final String VANG_TEN = "Vàng bạc, đá quý";
+
+	private String maLt = VND;
+	private String tenLt = VND_TEN;
 	@NumberFormat(pattern = "#")
-	private double muaTM;
+	private double muaTM = 1;
 	@NumberFormat(pattern = "#")
-	private double muaCk;
+	private double muaCk = 1;
 	@NumberFormat(pattern = "#")
 	private double banRa = 1;
 
@@ -59,5 +65,32 @@ public class LoaiTien {
 		DecimalFormat decimalFormat = new DecimalFormat("#");
 		String out = maLt + " - " + tenLt + " - " + decimalFormat.format(banRa);
 		return out;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+
+		if (!(obj instanceof LoaiTien)) {
+			return false;
+		}
+
+		LoaiTien item = (LoaiTien) obj;
+		try {
+			if (maLt == null) {
+				if (item.getMaLt() != null)
+					return false;
+			} else if (item.getMaLt() == null) {
+				return false;
+			} else if (!maLt.equals(item.getMaLt())) {
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+
+		return true;
 	}
 }

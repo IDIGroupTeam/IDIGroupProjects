@@ -6,11 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class BalanceAssetData {
-	public static final int PERIOD_TYPE_WEEK = 0;
-	public static final int PERIOD_TYPE_MONTH = 1;
-	public static final int PERIOD_TYPE_QUARTER = 2;
-	public static final int PERIOD_TYPE_YEAR = 3;
-
 	private BalanceAssetItem asset;
 	private int periodType = 1;
 	private Date period;

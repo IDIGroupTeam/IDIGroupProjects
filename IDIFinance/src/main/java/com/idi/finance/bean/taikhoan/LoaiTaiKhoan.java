@@ -5,7 +5,14 @@ public class LoaiTaiKhoan {
 	public static final int CO = 1;
 
 	public static final String TIEN_MAT = "111";
+	public static final String TIEN_MAT_VN = "1111";
+	public static final String TIEN_MAT_NT = "1112";
+	public static final String TIEN_MAT_VANG = "1113";
 	public static final String TIEN_GUI_NGAN_HANG = "112";
+	public static final String TIEN_GUI_NGAN_HANG_VN = "1121";
+	public static final String TIEN_GUI_NGAN_HANG_NT = "1122";
+	public static final String TIEN_GUI_NGAN_HANG_VANG = "1123";
+	public static final String TIEN_DANG_CHUYEN_NT = "1132";
 
 	private String maTk;
 	private String tenTk;

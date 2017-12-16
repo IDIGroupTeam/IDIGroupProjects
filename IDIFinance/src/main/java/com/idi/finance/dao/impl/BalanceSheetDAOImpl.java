@@ -71,7 +71,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 
 		String updateBadsQry = "UPDATE BALANCE_ASSET_DATA SET START_VALUE=?, END_VALUE=?, CHANGED_RATIO=?, DESCRIPTION=? WHERE ASSET_CODE=? AND PERIOD=? AND PERIOD_TYPE=?";
 		String insertBadsQry = "INSERT INTO BALANCE_ASSET_DATA (ASSET_CODE, PERIOD_TYPE, PERIOD, START_VALUE, END_VALUE, CHANGED_RATIO, DESCRIPTION) VALUES(?, ?, ?, ?, ?, ?, ?)";
-		
+
 		// Update to BALANCE_ASSET_DATA
 		int count = 0;
 		try {
@@ -645,10 +645,10 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 				TaiKhoan taiKhoan = iter.next();
 				logger.info("Cập nhật cân đối kế toán vào bảng CHUNG_TU_TAI_KHOAN: ASSET_CODE: "
 						+ taiKhoan.getBai().getAssetCode() + ". MA_CT: " + taiKhoan.getChungTu().getMaCt() + ". MA_TK: "
-						+ taiKhoan.getTaiKhoan().getMaTk() + ". SO_DU: " + taiKhoan.getGhiNo());
+						+ taiKhoan.getLoaiTaiKhoan().getMaTk() + ". SO_DU: " + taiKhoan.getSoDu());
 				try {
 					jdbcTmpl.update(query, taiKhoan.getBai().getAssetCode(), taiKhoan.getChungTu().getMaCt(),
-							taiKhoan.getTaiKhoan().getMaTk(), taiKhoan.getGhiNo());
+							taiKhoan.getLoaiTaiKhoan().getMaTk(), taiKhoan.getSoDu());
 				} catch (Exception e) {
 					logger.info("LỖI CẬP NHẬT: " + e.getMessage());
 				}

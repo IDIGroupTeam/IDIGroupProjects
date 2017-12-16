@@ -1,14 +1,29 @@
 package com.idi.finance.controller;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -28,6 +43,7 @@ import com.idi.finance.bean.bieudo.KpiGroup;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.TaiKhoan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
+import com.idi.finance.dao.BaoCaoDAO;
 import com.idi.finance.dao.ChungTuDAO;
 import com.idi.finance.dao.KhachHangDAO;
 import com.idi.finance.dao.KpiChartDAO;
@@ -35,6 +51,12 @@ import com.idi.finance.dao.NhaCungCapDAO;
 import com.idi.finance.dao.NhanVienDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.validator.ChungTuValidator;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 @Controller
 public class ChungTuController {
@@ -57,6 +79,9 @@ public class ChungTuController {
 
 	@Autowired
 	NhanVienDAO nhanVienDAO;
+
+	@Autowired
+	BaoCaoDAO baoCaoDAO;
 
 	@Autowired
 	private ChungTuValidator chungTuValidator;
@@ -117,6 +142,26 @@ public class ChungTuController {
 		}
 	}
 
+	@RequestMapping(value = "/pdfphieuthu/{id}", method = RequestMethod.GET)
+	public void pdfPhieuThu(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
+			Model model) {
+		try {
+			JasperReport jasperReport = getCompiledFile("PhieuThu", req);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, maCt);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@RequestMapping("/suaphieuthu/{id}")
 	public String suaPhieuThu(@PathVariable("id") int maCt, Model model) {
 		try {
@@ -158,13 +203,13 @@ public class ChungTuController {
 			// Tài khoản tiềm mặt, ghi nợ
 			TaiKhoan taiKhoan = new TaiKhoan();
 			taiKhoan.setChungTu(chungTu);
-			taiKhoan.setGhiNo(LoaiTaiKhoan.NO);
+			taiKhoan.setSoDu(LoaiTaiKhoan.NO);
 			chungTu.themTaiKhoan(taiKhoan);
 
 			// Tài khoản khác, ghi có
 			taiKhoan = new TaiKhoan();
 			taiKhoan.setChungTu(chungTu);
-			taiKhoan.setGhiNo(LoaiTaiKhoan.CO);
+			taiKhoan.setSoDu(LoaiTaiKhoan.CO);
 			chungTu.themTaiKhoan(taiKhoan);
 
 			return chuanBiFormPhieuThu(model, chungTu);
@@ -283,6 +328,26 @@ public class ChungTuController {
 		}
 	}
 
+	@RequestMapping(value = "/pdfphieuchi/{id}", method = RequestMethod.GET)
+	public void pdfPhieuChi(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
+			Model model) {
+		try {
+			JasperReport jasperReport = getCompiledFile("PhieuChi", req);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, maCt);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@RequestMapping("/suaphieuchi/{id}")
 	public String suaPhieuChi(@PathVariable("id") int maCt, Model model) {
 		try {
@@ -324,13 +389,13 @@ public class ChungTuController {
 			// Tài khoản khác, ghi nợ
 			TaiKhoan taiKhoan = new TaiKhoan();
 			taiKhoan.setChungTu(chungTu);
-			taiKhoan.setGhiNo(LoaiTaiKhoan.NO);
+			taiKhoan.setSoDu(LoaiTaiKhoan.NO);
 			chungTu.themTaiKhoan(taiKhoan);
 
 			// Tài khoản tiềm mặt, ghi có
 			taiKhoan = new TaiKhoan();
 			taiKhoan.setChungTu(chungTu);
-			taiKhoan.setGhiNo(LoaiTaiKhoan.CO);
+			taiKhoan.setSoDu(LoaiTaiKhoan.CO);
 			chungTu.themTaiKhoan(taiKhoan);
 
 			return chuanBiFormPhieuChi(model, chungTu);
@@ -448,6 +513,26 @@ public class ChungTuController {
 			return "error";
 		}
 	}
+	
+	@RequestMapping(value = "/pdfbaoco/{id}", method = RequestMethod.GET)
+	public void pdfBaoCo(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
+			Model model) {
+		try {
+			JasperReport jasperReport = getCompiledFile("BaoCo", req);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, maCt);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@RequestMapping("/suabaoco/{id}")
 	public String suaBaoCo(@PathVariable("id") int maCt, Model model) {
@@ -490,13 +575,13 @@ public class ChungTuController {
 			// Tài khoản tiềm gửi ngân hàng, ghi nợ
 			TaiKhoan taiKhoan = new TaiKhoan();
 			taiKhoan.setChungTu(chungTu);
-			taiKhoan.setGhiNo(LoaiTaiKhoan.NO);
+			taiKhoan.setSoDu(LoaiTaiKhoan.NO);
 			chungTu.themTaiKhoan(taiKhoan);
 
 			// Tài khoản khác, ghi có
 			taiKhoan = new TaiKhoan();
 			taiKhoan.setChungTu(chungTu);
-			taiKhoan.setGhiNo(LoaiTaiKhoan.CO);
+			taiKhoan.setSoDu(LoaiTaiKhoan.CO);
 			chungTu.themTaiKhoan(taiKhoan);
 
 			return chuanBiFormBaoCo(model, chungTu);
@@ -616,6 +701,26 @@ public class ChungTuController {
 		}
 	}
 
+	@RequestMapping(value = "/pdfbaono/{id}", method = RequestMethod.GET)
+	public void pdfBaoNo(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
+			Model model) {
+		try {
+			JasperReport jasperReport = getCompiledFile("BaoNo", req);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, maCt);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@RequestMapping("/suabaono/{id}")
 	public String suaBaoNo(@PathVariable("id") int maCt, Model model) {
 		try {
@@ -657,13 +762,13 @@ public class ChungTuController {
 			// Tài khoản khác, ghi nợ
 			TaiKhoan taiKhoan = new TaiKhoan();
 			taiKhoan.setChungTu(chungTu);
-			taiKhoan.setGhiNo(LoaiTaiKhoan.NO);
+			taiKhoan.setSoDu(LoaiTaiKhoan.NO);
 			chungTu.themTaiKhoan(taiKhoan);
 
 			// Tài khoản tiềm gửi ngân hàng, ghi có
 			taiKhoan = new TaiKhoan();
 			taiKhoan.setChungTu(chungTu);
-			taiKhoan.setGhiNo(LoaiTaiKhoan.CO);
+			taiKhoan.setSoDu(LoaiTaiKhoan.CO);
 			chungTu.themTaiKhoan(taiKhoan);
 
 			return chuanBiFormBaoNo(model, chungTu);
@@ -751,7 +856,7 @@ public class ChungTuController {
 			model.addAttribute("kpiGroups", kpiGroups);
 
 			// Lấy danh sách phiếu chi
-			List<ChungTu> keToanTongHopDs = chungTuDAO.danhSachChungTuTheoLoaiCtRutGon(ChungTu.CHUNG_TU_KT_TH);
+			List<ChungTu> keToanTongHopDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_KT_TH);
 			model.addAttribute("keToanTongHopDs", keToanTongHopDs);
 
 			model.addAttribute("tab", "tabCTKTTH");
@@ -780,6 +885,26 @@ public class ChungTuController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
+		}
+	}
+	
+	@RequestMapping(value = "/pdfktth/{id}", method = RequestMethod.GET)
+	public void pdfKeToanTongHop(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
+			Model model) {
+		try {
+			JasperReport jasperReport = getCompiledFile("KeToanTongHop", req);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, maCt);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -824,13 +949,13 @@ public class ChungTuController {
 			// Tài khoản khác, ghi nợ
 			TaiKhoan taiKhoan = new TaiKhoan();
 			taiKhoan.setChungTu(chungTu);
-			taiKhoan.setGhiNo(LoaiTaiKhoan.NO);
+			taiKhoan.setSoDu(LoaiTaiKhoan.NO);
 			chungTu.themTaiKhoan(taiKhoan);
 
 			// Tài khoản tiềm gửi ngân hàng, ghi có
 			taiKhoan = new TaiKhoan();
 			taiKhoan.setChungTu(chungTu);
-			taiKhoan.setGhiNo(LoaiTaiKhoan.CO);
+			taiKhoan.setSoDu(LoaiTaiKhoan.CO);
 			chungTu.themTaiKhoan(taiKhoan);
 
 			return chuanBiFormKeToanTongHop(model, chungTu);
@@ -853,10 +978,10 @@ public class ChungTuController {
 			chungTu.setLoaiCt(ChungTu.CHUNG_TU_KT_TH);
 
 			if (chungTu.getMaCt() > 0) {
-				chungTuDAO.capNhatChungTuRutGon(chungTu);
+				chungTuDAO.capNhatChungTu(chungTu);
 				return "redirect:/xemktth/" + chungTu.getMaCt();
 			} else {
-				chungTuDAO.themChungTuRutGon(chungTu);
+				chungTuDAO.themChungTu(chungTu);
 			}
 
 			return "redirect:/danhsachktth";
@@ -922,5 +1047,19 @@ public class ChungTuController {
 	public @ResponseBody List<NhaCungCap> danhSachNhaCungCap(@RequestParam("query") String maHoacTen) {
 		List<NhaCungCap> nhaCungCapDs = nhaCungCapDAO.layNhaCungCapTheoMaHoacTen(maHoacTen);
 		return nhaCungCapDs;
+	}
+
+	private JasperReport getCompiledFile(String fileName, HttpServletRequest req) throws JRException {
+		String jrxml = req.getSession().getServletContext().getRealPath("/baocao/chungtu/" + fileName + ".jrxml");
+		String jasper = req.getSession().getServletContext().getRealPath("/baocao/chungtu/" + fileName + ".jasper");
+
+		logger.info("Path " + jasper);
+		File reportFile = new File(jasper);
+		// If compiled file is not found, then compile XML template
+		if (!reportFile.exists()) {
+			JasperCompileManager.compileReportToFile(jrxml, jasper);
+		}
+		JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(reportFile.getPath());
+		return jasperReport;
 	}
 }

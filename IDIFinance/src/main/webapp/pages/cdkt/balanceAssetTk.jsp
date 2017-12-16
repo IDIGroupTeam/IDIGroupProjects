@@ -1,4 +1,4 @@
-<%@page import="com.idi.finance.bean.cdkt.BalanceAssetData"%>
+<%@page import="com.idi.finance.bean.KyKeToan"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -20,7 +20,6 @@
 		$("#updateBSBut").click(function() {
 			$("#mainFinanceForm").attr("action", "${url}/cdkt/hachtoan");
 			$("#mainFinanceForm").attr("method", "POST");
-
 			$("#mainFinanceForm").submit();
 		});
 	});
@@ -36,11 +35,11 @@
 		<div class="form-group">
 			<label for="periodType">Kỳ</label>
 			<form:select path="periodType" multiple="false"
-				class="form-control smallform" cssStyle="width: 180px;">
-				<form:option value="${BalanceAssetData.PERIOD_TYPE_WEEK}">Tuần</form:option>
-				<form:option value="${BalanceAssetData.PERIOD_TYPE_MONTH}">Tháng</form:option>
-				<form:option value="${BalanceAssetData.PERIOD_TYPE_QUARTER}">Quý</form:option>
-				<form:option value="${BalanceAssetData.PERIOD_TYPE_YEAR}">Năm</form:option>
+				class="form-control pull-right" cssStyle="width: 180px;">
+				<form:option value="${KyKeToan.WEEK}">Tuần</form:option>
+				<form:option value="${KyKeToan.MONTH}">Tháng</form:option>
+				<form:option value="${KyKeToan.QUARTER}">Quý</form:option>
+				<form:option value="${KyKeToan.YEAR}">Năm</form:option>
 			</form:select>
 		</div>
 
@@ -109,20 +108,9 @@
 	<div class="panel-body">
 		<form:hidden id="first" path="first" />
 
-		<%-- <div class="form-group">
-			<label for="ky">Kỳ</label>
-			<form:select id="ky" path="ky" multiple="false"
-				class="form-control smallform">
-				<form:option value="${BalanceAssetData.PERIOD_TYPE_WEEK}">Tuần</form:option>
-				<form:option value="${BalanceAssetData.PERIOD_TYPE_MONTH}">Tháng</form:option>
-				<form:option value="${BalanceAssetData.PERIOD_TYPE_QUARTER}">Quý</form:option>
-				<form:option value="${BalanceAssetData.PERIOD_TYPE_YEAR}">Năm</form:option>
-			</form:select>
-		</div> --%>
-
 		<div class="form-group">
 			<label for="dau">Từ:</label>
-			<div class="input-group date datetime smallform">
+			<div class="input-group date datetime smallform pull-right">
 				<form:input path="dau" class="form-control" readonly="true" />
 				<span class="input-group-addon"><span
 					class="glyphicon glyphicon-calendar"></span></span>
@@ -131,7 +119,7 @@
 
 		<div class="form-group">
 			<label for="cuoi">Đến:</label>
-			<div class="input-group date datetime smallform">
+			<div class="input-group date datetime smallform pull-right">
 				<form:input path="cuoi" class="form-control" readonly="true" />
 				<span class="input-group-addon"><span
 					class="glyphicon glyphicon-calendar"></span></span>

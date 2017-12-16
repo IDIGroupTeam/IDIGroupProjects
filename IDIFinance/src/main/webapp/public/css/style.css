@@ -101,7 +101,10 @@ div.searchbox {
 }
 
 .smallform {
-	float: right;
 	position: relative;
 	width: 170px;
+}
+
+.heading4 {
+	font-size: 18px;
 }

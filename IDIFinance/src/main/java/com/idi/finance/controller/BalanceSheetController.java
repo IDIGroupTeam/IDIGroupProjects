@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.idi.finance.bean.KyKeToan;
 import com.idi.finance.bean.bieudo.KpiGroup;
 import com.idi.finance.bean.cdkt.BalanceAssetData;
 import com.idi.finance.bean.cdkt.BalanceAssetItem;
@@ -206,10 +207,10 @@ public class BalanceSheetController {
 					+ " - " + form.getCuoi());
 			HashMap<Integer, String> kyDs = new HashMap<>();
 
-			kyDs.put(BalanceAssetData.PERIOD_TYPE_WEEK, "Tuần");
-			kyDs.put(BalanceAssetData.PERIOD_TYPE_MONTH, "Tháng");
-			kyDs.put(BalanceAssetData.PERIOD_TYPE_QUARTER, "Quý");
-			kyDs.put(BalanceAssetData.PERIOD_TYPE_YEAR, "Năm");
+			kyDs.put(KyKeToan.WEEK, "Tuần");
+			kyDs.put(KyKeToan.MONTH, "Tháng");
+			kyDs.put(KyKeToan.QUARTER, "Quý");
+			kyDs.put(KyKeToan.YEAR, "Năm");
 
 			Iterator<Integer> kyIter = kyDs.keySet().iterator();
 			while (kyIter.hasNext()) {

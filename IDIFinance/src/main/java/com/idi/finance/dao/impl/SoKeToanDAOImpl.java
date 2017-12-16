@@ -26,20 +26,17 @@ import com.idi.finance.dao.SoKeToanDAO;
 public class SoKeToanDAOImpl implements SoKeToanDAO {
 	private static final Logger logger = Logger.getLogger(SoKeToanDAOImpl.class);
 
-	@Value("${DANH_SACH_CHUNG_TU_NHAT_KY_CHUNG}")
-	private String DANH_SACH_CHUNG_TU_NHAT_KY_CHUNG;
-
 	@Value("${DANH_SACH_CHUNG_TU_NHAT_KY_CHUNG_THEO_DIEU_KIEN}")
 	private String DANH_SACH_CHUNG_TU_NHAT_KY_CHUNG_THEO_DIEU_KIEN;
-
-	@Value("${DANH_SACH_CHUNG_TU_THEO_MA_TAI_KHOAN}")
-	private String DANH_SACH_CHUNG_TU_THEO_MA_TAI_KHOAN;
 
 	@Value("${DANH_SACH_NGHIEP_VU_KE_TOAN_THEO_MA_TAI_KHOAN}")
 	private String DANH_SACH_NGHIEP_VU_KE_TOAN_THEO_MA_TAI_KHOAN;
 
 	@Value("${DANH_SACH_NGHIEP_VU_KE_TOAN_THEO_DIEU_KIEN}")
 	private String DANH_SACH_NGHIEP_VU_KE_TOAN_THEO_DIEU_KIEN;
+
+	@Value("${TONG_PHAT_SINH}")
+	private String TONG_PHAT_SINH;
 
 	@Value("${DANH_SACH_TKKT_THEO_DIEU_KIEN}")
 	private String DANH_SACH_TKKT_THEO_DIEU_KIEN;
@@ -52,36 +49,6 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 	public void setJdbcTmpl(JdbcTemplate jdbcTmpl) {
 		this.jdbcTmpl = jdbcTmpl;
-	}
-
-	@Override
-	public List<ChungTu> danhSachChungTu() {
-		String query = DANH_SACH_CHUNG_TU_NHAT_KY_CHUNG;
-
-		logger.info("Danh sách tất cả chứng từ ...");
-		logger.info(query);
-
-		List<ChungTu> chungTuDs = jdbcTmpl.query(query, new ChungTuMapper());
-
-		// Gộp chứng từ trùng nhau nhưng có tài khoản ảnh hường khác nhau
-		List<ChungTu> ketQua = null;
-		if (chungTuDs != null) {
-			ketQua = new ArrayList<>();
-			Iterator<ChungTu> iter = chungTuDs.iterator();
-			while (iter.hasNext()) {
-				ChungTu chungTu = iter.next();
-
-				int pos = ketQua.indexOf(chungTu);
-				if (pos > -1) {
-					ChungTu chungTuTmpl = ketQua.get(pos);
-					chungTuTmpl.themTaiKhoan(chungTu.getTaiKhoanDs());
-				} else {
-					ketQua.add(chungTu);
-				}
-			}
-		}
-
-		return ketQua;
 	}
 
 	@Override
@@ -139,37 +106,6 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		return ketQua;
 	}
 
-	@Override
-	public List<ChungTu> danhSachChungTuTheoLoaiTaiKhoan(String maTk) {
-		String query = DANH_SACH_CHUNG_TU_THEO_MA_TAI_KHOAN;
-
-		logger.info("Danh sách chứng từ theo loại tài khoản: '" + maTk + "' ...");
-		logger.info(query);
-
-		Object[] objs = { maTk, maTk, maTk };
-		List<ChungTu> chungTuDs = jdbcTmpl.query(query, objs, new ChungTuMapper());
-
-		// Gộp chứng từ trùng nhau nhưng có tài khoản ảnh hường khác nhau
-		List<ChungTu> ketQua = null;
-		if (chungTuDs != null) {
-			ketQua = new ArrayList<>();
-			Iterator<ChungTu> iter = chungTuDs.iterator();
-			while (iter.hasNext()) {
-				ChungTu chungTu = iter.next();
-
-				int pos = ketQua.indexOf(chungTu);
-				if (pos > -1) {
-					ChungTu chungTuTmpl = ketQua.get(pos);
-					chungTuTmpl.themTaiKhoan(chungTu.getTaiKhoanDs());
-				} else {
-					ketQua.add(chungTu);
-				}
-			}
-		}
-
-		return ketQua;
-	}
-
 	public class ChungTuMapper implements RowMapper<ChungTu> {
 		public ChungTu mapRow(ResultSet rs, int rowNum) throws SQLException {
 			try {
@@ -182,16 +118,6 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				chungTu.setNgayLap(rs.getDate("NGAY_LAP"));
 				chungTu.setNgayHt(rs.getDate("NGAY_HT"));
 
-				LoaiTien loaiTien = new LoaiTien();
-				loaiTien.setMaLt(rs.getString("LOAI_TIEN"));
-				loaiTien.setTenLt(rs.getString("TEN_NT"));
-				loaiTien.setBanRa(rs.getDouble("TY_GIA"));
-				Tien tien = new Tien();
-				tien.setTien(loaiTien);
-				tien.setSoTien(rs.getDouble("TONG_SO_TIEN"));
-				tien.setGiaTri(loaiTien.getBanRa() * tien.getSoTien());
-				chungTu.setSoTien(tien);
-
 				DoiTuong doiTuong = new DoiTuong();
 				doiTuong.setMaDt(rs.getInt("MA_DT"));
 				doiTuong.setTenDt(rs.getString("TEN_DT"));
@@ -201,14 +127,33 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				doiTuong.setNguoiNop(rs.getString("NGUOI_NOP"));
 				chungTu.setDoiTuong(doiTuong);
 
+				LoaiTien loaiTien = new LoaiTien();
+				loaiTien.setMaLt(rs.getString("LOAI_TIEN"));
+				loaiTien.setTenLt(rs.getString("TEN_NT"));
+				loaiTien.setBanRa(rs.getDouble("TY_GIA"));
+				chungTu.setLoaiTien(loaiTien);
+
 				TaiKhoan taiKhoan = new TaiKhoan();
+				taiKhoan.setSoDu(rs.getInt("SO_DU"));
+				taiKhoan.setLyDo(rs.getString("TK_LY_DO"));
+
 				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
 				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
 				loaiTaiKhoan.setTenTk(rs.getString("TEN_TK"));
-				taiKhoan.setTaiKhoan(loaiTaiKhoan);
-				taiKhoan.setSoTien(rs.getDouble("SO_TIEN"));
-				taiKhoan.setGhiNo(rs.getInt("SO_DU"));
-				taiKhoan.setLyDo(rs.getString("TK_LY_DO"));
+				taiKhoan.setLoaiTaiKhoan(loaiTaiKhoan);
+
+				Tien tien = new Tien();
+				tien.setSoTien(rs.getDouble("SO_TIEN"));
+				// if (loaiTaiKhoan.getMaTk().equals(LoaiTaiKhoan.TIEN_MAT_NT)
+				// || loaiTaiKhoan.getMaTk().equals(LoaiTaiKhoan.TIEN_GUI_NGAN_HANG_NT)
+				// || loaiTaiKhoan.getMaTk().equals(LoaiTaiKhoan.TIEN_DANG_CHUYEN_NT)
+				// || loaiTaiKhoan.getMaTk().equals(LoaiTaiKhoan.TIEN_MAT_VANG)
+				// || loaiTaiKhoan.getMaTk().equals(LoaiTaiKhoan.TIEN_GUI_NGAN_HANG_VANG)) {
+				tien.setLoaiTien(loaiTien);
+				// }
+				tien.setGiaTri(tien.getLoaiTien().getBanRa() * tien.getSoTien());
+				taiKhoan.setSoTien(tien);
+
 				chungTu.themTaiKhoan(taiKhoan);
 				taiKhoan.setChungTu(chungTu);
 
@@ -216,6 +161,37 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 			} catch (Exception e) {
 				return null;
 			}
+		}
+	}
+
+	@Override
+	public double tongPhatSinh(String maTk, int soDu, Date dau, Date cuoi) {
+		String query = TONG_PHAT_SINH;
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+
+		if (dau != null) {
+			String batDau = sdf.format(dau);
+			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "AND CT.NGAY_HT >= '" + batDau + "'");
+		} else {
+			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "");
+		}
+
+		if (cuoi != null) {
+			String ketThuc = sdf.format(cuoi);
+			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "AND CT.NGAY_HT <= '" + ketThuc + "'");
+		} else {
+			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "");
+		}
+
+		logger.info("Tổng phát sinh tài khoản " + maTk + ". Số dư " + soDu + ". Từ " + dau + " đến " + cuoi);
+		logger.info(query);
+
+		try {
+			Object[] objs = { maTk, soDu };
+			return jdbcTmpl.queryForObject(query, objs, Double.class);
+		} catch (Exception e) {
+			return 0;
 		}
 	}
 
@@ -287,11 +263,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				loaiTien.setMaLt(rs.getString("LOAI_TIEN"));
 				loaiTien.setTenLt(rs.getString("TEN_NT"));
 				loaiTien.setBanRa(rs.getDouble("TY_GIA"));
-				Tien tien = new Tien();
-				tien.setTien(loaiTien);
-				tien.setSoTien(rs.getDouble("TONG_SO_TIEN"));
-				tien.setGiaTri(loaiTien.getBanRa() * tien.getSoTien());
-				chungTu.setSoTien(tien);
+				chungTu.setLoaiTien(loaiTien);
 
 				DoiTuong doiTuong = new DoiTuong();
 				doiTuong.setMaDt(rs.getInt("MA_DT"));
@@ -303,24 +275,38 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				chungTu.setDoiTuong(doiTuong);
 
 				TaiKhoan taiKhoanNo = new TaiKhoan();
+				taiKhoanNo.setSoDu(LoaiTaiKhoan.NO);
+				taiKhoanNo.setLyDo(rs.getString("LY_DO_NO"));
+
 				LoaiTaiKhoan loaiTaiKhoanNo = new LoaiTaiKhoan();
 				loaiTaiKhoanNo.setMaTk(rs.getString("MA_TK_NO"));
 				loaiTaiKhoanNo.setTenTk(rs.getString("TEN_TK_NO"));
-				taiKhoanNo.setTaiKhoan(loaiTaiKhoanNo);
-				taiKhoanNo.setSoTien(rs.getDouble("SO_TIEN_NO"));
-				taiKhoanNo.setGhiNo(LoaiTaiKhoan.NO);
-				taiKhoanNo.setLyDo(rs.getString("LY_DO_NO"));
+				taiKhoanNo.setLoaiTaiKhoan(loaiTaiKhoanNo);
+
+				Tien tienNo = new Tien();
+				tienNo.setSoTien(rs.getDouble("SO_TIEN_NO"));
+				tienNo.setLoaiTien(loaiTien);
+				tienNo.setGiaTri(tienNo.getLoaiTien().getBanRa() * tienNo.getSoTien());
+				taiKhoanNo.setSoTien(tienNo);
+
 				chungTu.themTaiKhoan(taiKhoanNo);
 				taiKhoanNo.setChungTu(chungTu);
 
 				TaiKhoan taiKhoanCo = new TaiKhoan();
+				taiKhoanCo.setSoDu(LoaiTaiKhoan.CO);
+				taiKhoanCo.setLyDo(rs.getString("LY_DO_CO"));
+
 				LoaiTaiKhoan loaiTaiKhoanCo = new LoaiTaiKhoan();
 				loaiTaiKhoanCo.setMaTk(rs.getString("MA_TK_CO"));
 				loaiTaiKhoanCo.setTenTk(rs.getString("TEN_TK_CO"));
-				taiKhoanCo.setTaiKhoan(loaiTaiKhoanCo);
-				taiKhoanCo.setSoTien(rs.getDouble("SO_TIEN_CO"));
-				taiKhoanCo.setGhiNo(LoaiTaiKhoan.CO);
-				taiKhoanCo.setLyDo(rs.getString("LY_DO_CO"));
+				taiKhoanCo.setLoaiTaiKhoan(loaiTaiKhoanCo);
+
+				Tien tienCo = new Tien();
+				tienCo.setSoTien(rs.getDouble("SO_TIEN_CO"));
+				tienCo.setLoaiTien(loaiTien);
+				tienCo.setGiaTri(tienCo.getLoaiTien().getBanRa() * tienCo.getSoTien());
+				taiKhoanCo.setSoTien(tienCo);
+
 				chungTu.themTaiKhoan(taiKhoanCo);
 				taiKhoanCo.setChungTu(chungTu);
 
@@ -371,23 +357,27 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				loaiTien.setMaLt(rs.getString("LOAI_TIEN"));
 				loaiTien.setTenLt(rs.getString("TEN_NT"));
 				loaiTien.setBanRa(rs.getDouble("TY_GIA"));
-				Tien tien = new Tien();
-				tien.setTien(loaiTien);
-				tien.setSoTien(rs.getDouble("TONG_SO_TIEN"));
-				tien.setGiaTri(loaiTien.getBanRa() * tien.getSoTien());
-				chungTu.setSoTien(tien);
+				chungTu.setLoaiTien(loaiTien);
 
 				TaiKhoan taiKhoan = new TaiKhoan();
+				taiKhoan.setSoDu(rs.getInt("SO_DU"));
+				taiKhoan.setLyDo(rs.getString("LY_DO"));
+
 				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
 				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
 				loaiTaiKhoan.setTenTk(rs.getString("TEN_TK"));
-				taiKhoan.setTaiKhoan(loaiTaiKhoan);
+				taiKhoan.setLoaiTaiKhoan(loaiTaiKhoan);
+
 				BalanceAssetItem bai = new BalanceAssetItem();
 				bai.setAssetCode(rs.getString("ASSET_CODE"));
 				taiKhoan.setBai(bai);
-				taiKhoan.setSoTien(rs.getDouble("SO_TIEN"));
-				taiKhoan.setGhiNo(rs.getInt("SO_DU"));
-				taiKhoan.setLyDo(rs.getString("LY_DO"));
+
+				Tien tien = new Tien();
+				tien.setSoTien(rs.getDouble("SO_TIEN"));
+				tien.setLoaiTien(loaiTien);
+				tien.setGiaTri(tien.getLoaiTien().getBanRa() * tien.getSoTien());
+				taiKhoan.setSoTien(tien);
+
 				chungTu.themTaiKhoan(taiKhoan);
 				taiKhoan.setChungTu(chungTu);
 

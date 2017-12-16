@@ -9,8 +9,6 @@ import com.idi.finance.bean.chungtu.ChungTu;
 public interface ChungTuDAO {
 	public List<ChungTu> danhSachChungTuTheoLoaiCt(String loaiCt);
 
-	public List<ChungTu> danhSachChungTuTheoLoaiCtRutGon(String loaiCt);
-
 	public ChungTu layChungTu(int maCt);
 
 	public ChungTu layChungTu(int maCt, String loaiCt);
@@ -18,12 +16,8 @@ public interface ChungTuDAO {
 	public List<LoaiTien> danhSachLoaiTien();
 
 	public void themChungTu(ChungTu chungTu);
-	
-	public void themChungTuRutGon(ChungTu chungTu);
 
 	public void capNhatChungTu(ChungTu chungTu);
-	
-	public void capNhatChungTuRutGon(ChungTu chungTu);
 
 	public int demSoChungTuTheoLoaiCtVaNam(String loaiCt, Date nam);
 

@@ -1,3 +1,4 @@
+<%@page import="com.idi.finance.bean.KyKeToan"%>
 <%@page import="com.idi.finance.bean.chungtu.ChungTu"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
@@ -24,8 +25,8 @@
 	</div>
 	<div class="panel-body">
 		<div class="form-group">
-			<label for="taiKhoan">Chứng từ:</label>
-			<div class="input-group date smallform">
+			<label for="taiKhoan">Tài khoản:</label>
+			<div class="input-group date smallform pull-right">
 				<form:select id="taiKhoan" path="taiKhoan" multiple="false"
 					class="form-control">
 					<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
@@ -35,19 +36,19 @@
 		</div>
 
 		<div class="form-group">
-			<label for="loaiCts">Chứng từ:</label>
-			<form:select id="loaiCts" path="loaiCts" multiple="multiple"
-				class="form-control">
-				<form:option value="${ChungTu.CHUNG_TU_PHIEU_THU}">Phiếu thu</form:option>
-				<form:option value="${ChungTu.CHUNG_TU_PHIEU_CHI}">Phiếu chi</form:option>
-				<form:option value="${ChungTu.CHUNG_TU_BAO_NO}">Báo nợ</form:option>
-				<form:option value="${ChungTu.CHUNG_TU_BAO_CO}">Báo co</form:option>
+			<label for="loaiKy">Kỳ:</label>
+			<form:select path="loaiKy" multiple="false"
+				class="form-control smallform pull-right">
+				<form:option value="${KyKeToan.WEEK}">Tuần</form:option>
+				<form:option value="${KyKeToan.MONTH}">Tháng</form:option>
+				<form:option value="${KyKeToan.QUARTER}">Quý</form:option>
+				<form:option value="${KyKeToan.YEAR}">Năm</form:option>
 			</form:select>
 		</div>
 
 		<div class="form-group">
 			<label for="dau">Từ:</label>
-			<div class="input-group date datetime smallform">
+			<div class="input-group date datetime smallform pull-right">
 				<form:input path="dau" class="form-control" readonly="true" />
 				<span class="input-group-addon"><span
 					class="glyphicon glyphicon-calendar"></span></span>
@@ -56,7 +57,7 @@
 
 		<div class="form-group">
 			<label for="cuoi">Đến:</label>
-			<div class="input-group date datetime smallform">
+			<div class="input-group date datetime smallform pull-right">
 				<form:input path="cuoi" class="form-control" readonly="true" />
 				<span class="input-group-addon"><span
 					class="glyphicon glyphicon-calendar"></span></span>

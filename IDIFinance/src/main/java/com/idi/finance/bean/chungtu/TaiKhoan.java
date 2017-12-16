@@ -1,16 +1,13 @@
 package com.idi.finance.bean.chungtu;
 
-import org.springframework.format.annotation.NumberFormat;
-
 import com.idi.finance.bean.cdkt.BalanceAssetItem;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class TaiKhoan {
 	private ChungTu chungTu;
-	private LoaiTaiKhoan taiKhoan;
-	@NumberFormat(pattern = "#")
-	private double soTien;
-	private int ghiNo;
+	private LoaiTaiKhoan loaiTaiKhoan;
+	private Tien soTien = new Tien();
+	private int soDu = -1;
 	private String lyDo;
 	private BalanceAssetItem bai;
 
@@ -22,28 +19,28 @@ public class TaiKhoan {
 		this.chungTu = chungTu;
 	}
 
-	public LoaiTaiKhoan getTaiKhoan() {
-		return taiKhoan;
+	public LoaiTaiKhoan getLoaiTaiKhoan() {
+		return loaiTaiKhoan;
 	}
 
-	public void setTaiKhoan(LoaiTaiKhoan taiKhoan) {
-		this.taiKhoan = taiKhoan;
+	public void setLoaiTaiKhoan(LoaiTaiKhoan loaiTaiKhoan) {
+		this.loaiTaiKhoan = loaiTaiKhoan;
 	}
 
-	public double getSoTien() {
+	public Tien getSoTien() {
 		return soTien;
 	}
 
-	public void setSoTien(double soTien) {
+	public void setSoTien(Tien soTien) {
 		this.soTien = soTien;
 	}
 
-	public int getGhiNo() {
-		return ghiNo;
+	public int getSoDu() {
+		return soDu;
 	}
 
-	public void setGhiNo(int ghiNo) {
-		this.ghiNo = ghiNo;
+	public void setSoDu(int soDu) {
+		this.soDu = soDu;
 	}
 
 	public String getLyDo() {
@@ -64,7 +61,7 @@ public class TaiKhoan {
 
 	@Override
 	public String toString() {
-		String out = chungTu + " - " + taiKhoan + " - " + ghiNo + " " + lyDo;
+		String out = chungTu + " - " + loaiTaiKhoan + " - " + soDu + " " + lyDo;
 		return out;
 	}
 
@@ -89,16 +86,16 @@ public class TaiKhoan {
 				return false;
 			}
 
-			if (taiKhoan == null) {
-				if (item.getTaiKhoan() != null)
+			if (loaiTaiKhoan == null) {
+				if (item.getLoaiTaiKhoan() != null)
 					return false;
-			} else if (item.getTaiKhoan() == null) {
+			} else if (item.getLoaiTaiKhoan() == null) {
 				return false;
-			} else if (!taiKhoan.equals(item.getTaiKhoan())) {
+			} else if (!loaiTaiKhoan.equals(item.getLoaiTaiKhoan())) {
 				return false;
 			}
 
-			if (ghiNo != item.getGhiNo())
+			if (soDu != item.getSoDu())
 				return false;
 		} catch (Exception e) {
 			return false;

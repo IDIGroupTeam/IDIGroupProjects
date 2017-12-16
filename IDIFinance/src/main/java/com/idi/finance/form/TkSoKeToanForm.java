@@ -4,11 +4,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.idi.finance.bean.KyKeToan;
+
 public class TkSoKeToanForm {
+	private int loaiKy = KyKeToan.MONTH;
 	private String taiKhoan;
 	private Date dau;
 	private Date cuoi;
 	private List<String> loaiCts;
+
+	public int getLoaiKy() {
+		return loaiKy;
+	}
+
+	public void setLoaiKy(int loaiKy) {
+		this.loaiKy = loaiKy;
+	}
 
 	public String getTaiKhoan() {
 		return taiKhoan;

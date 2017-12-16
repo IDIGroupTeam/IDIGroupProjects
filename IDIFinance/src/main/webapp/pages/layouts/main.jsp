@@ -30,6 +30,9 @@
 <script src="${url}/public/js/jquery.tabledit.js"></script>
 <script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
 <script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
+<script src="${url}/public/js/jquery.formatCurrency-1.4.0.js"></script>
+<script src="${url}/public/js/jquery.formatCurrency.vi-VN.js"></script>
+<script src="${url}/public/js/accounting.min.js"></script>
 <script src="${url}/public/js/script.js"></script>
 
 <title>Tập đoàn IDI - <tiles:getAsString name="title" /></title>
@@ -94,12 +97,9 @@
 												ký chung</a></li>
 										<li id="tabSKTSC"><a href="${url}/soketoan/socai">Sổ
 												cái</a></li>
-										<li id="tabSKTSTM"><a href="${url}/soketoan/sotienmat">Sổ
-												tiền mặt</a></li>
-										<li id="tabSKTSCN"><a href="${url}/soketoan/socongno">Sổ
-												công nợ</a></li>
-										<li id="tabSKTSTGNH"><a
-											href="${url}/soketoan/sotienguinganhang">Sổ tiền gửi</a></li>
+										<%-- <li id="tabSKTSTM"><a href="${url}/soketoan/sotienmat">Sổ tiền mặt</a></li> --%>
+										<%-- <li id="tabSKTSCN"><a href="${url}/soketoan/socongno">Sổ công nợ</a></li> --%>
+										<%-- <li id="tabSKTSTGNH"><a href="${url}/soketoan/sotienguinganhang">Sổ tiền gửi</a></li> --%>
 									</ul></li>
 								<li class="dropdown"><a class="dropdown-toggle"
 									data-toggle="dropdown" href="#">Báo cáo tài chính<span

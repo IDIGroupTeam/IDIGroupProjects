@@ -92,5 +92,9 @@
 	<bean id="soKeToanDAO" class="com.idi.finance.dao.impl.SoKeToanDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
+	
+	<bean id="baoCaoDAO" class="com.idi.finance.dao.impl.BaoCaoDAOImpl">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
 
 </beans>

@@ -44,20 +44,29 @@
 	});
 </script>
 
-<h4>BÁO NỢ</h4>
+<div>
+	<span class="pull-left heading4">BÁO NỢ</span>
+	<div class="btn-group btn-group-sm pull-right">
+		<a href="${url}/pdfbaono/${chungTu.maCt}"
+			class="btn btn-info btn-sm"> <span
+			class="glyphicon glyphicon-download"></span> Xuất
+		</a>
+	</div>
+</div>
+<br />
 <hr />
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="soCt">Số báo nợ:</label>
-	<div class="col-sm-4">${chungTu.soCt}</div>
 
-	<label class="control-label col-sm-2" for=ngayLap>Ngày lập báo
-		nợ:</label>
+<div class="row form-group">
+	<label class="control-label col-sm-2" for="soCt">Số báo cáo:</label>
+	<div class="col-sm-4">${chungTu.loaiCt}${chungTu.soCt}</div>
+
+	<label class="control-label col-sm-2" for=ngayLap>Ngày lập
+		phiếu chi:</label>
 	<div class="col-sm-4">
 		<span id="ngayLap"><fmt:formatDate value="${chungTu.ngayLap}"
 				pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" /></span>
 	</div>
 </div>
-
 
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="doiTuong.loaiDt">Loại
@@ -108,16 +117,25 @@
 </div>
 
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="soTien.soTien">Số
-		tiền:</label>
-	<div class="col-sm-4">
-		<fmt:formatNumber value="${chungTu.soTien.soTien}"
-			maxFractionDigits="2"></fmt:formatNumber>
-	</div>
+	<label class="control-label col-sm-2" for="lyDo">Lý do:</label>
+	<div class="col-sm-4">${chungTu.lyDo}</div>
 
-	<label class="control-label col-sm-2" for="soTien.tien.maLt">Loại
-		tiền</label>
-	<div class="col-sm-4">${chungTu.soTien.tien.tenLt}</div>
+	<label class="control-label col-sm-2" for="kemTheo">Kèm theo <br />số
+		chứng từ gốc:
+	</label>
+	<div class="col-sm-4">${chungTu.kemTheo}</div>
+</div>
+
+<div class="row form-group">
+	<label class="control-label col-sm-2" for="lyDo">Loại tiền:</label>
+	<div class="col-sm-4">${chungTu.loaiTien.tenLt}</div>
+
+	<label class="control-label col-sm-2" for="kemTheo">Tỷ giá </label>
+	<div class="col-sm-4">
+		<fmt:formatNumber value="${chungTu.loaiTien.banRa}"
+			maxFractionDigits="2"></fmt:formatNumber>
+		VND
+	</div>
 </div>
 
 <div class="row form-group">
@@ -128,22 +146,7 @@
 			maxFractionDigits="2"></fmt:formatNumber>
 		VND
 	</div>
-
-	<label class="control-label col-sm-2" for="soTien.tien.banRa">Tỷ
-		giá:</label>
-	<div class="col-sm-4">${chungTu.soTien.tien.banRa}&nbsp;VND</div>
 </div>
-
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="lyDo">Lý do:</label>
-	<div class="col-sm-4">${chungTu.lyDo}</div>
-
-	<label class="control-label col-sm-2" for="kemTheo">Kèm theo <br />số
-		chứng từ gốc:
-	</label>
-	<div class="col-sm-4">${chungTu.kemTheo}</div>
-</div>
-
 
 <div class="table-responsive row form-group">
 	<label class="control-label col-sm-2">Định khoản</label>
@@ -167,19 +170,21 @@
 				varStatus="status">
 				<tr id="${status.index}">
 					<!-- Phần ghi Nợ -->
-					<td>${chungTu.taiKhoanNoDs[status.index].taiKhoan.maTk}-${chungTu.taiKhoanNoDs[status.index].taiKhoan.tenTk}</td>
+					<td>${chungTu.taiKhoanNoDs[status.index].loaiTaiKhoan.maTk}-${chungTu.taiKhoanNoDs[status.index].loaiTaiKhoan.tenTk}</td>
 					<td><fmt:formatNumber
-							value="${chungTu.taiKhoanNoDs[status.index].soTien}"
-							maxFractionDigits="2"></fmt:formatNumber></td>
+							value="${chungTu.taiKhoanNoDs[status.index].soTien.soTien}"
+							maxFractionDigits="2"></fmt:formatNumber>
+						${chungTu.taiKhoanNoDs[status.index].soTien.loaiTien.maLt}</td>
 					<td>${chungTu.taiKhoanNoDs[status.index].lyDo}</td>
 
 					<!-- Phần ghi Có -->
 					<c:choose>
 						<c:when test="${status.index < chungTu.taiKhoanCoDs.size()}">
-							<td>${chungTu.taiKhoanCoDs[status.index].taiKhoan.maTk}-${chungTu.taiKhoanCoDs[status.index].taiKhoan.tenTk}</td>
+							<td>${chungTu.taiKhoanCoDs[status.index].loaiTaiKhoan.maTk}-${chungTu.taiKhoanCoDs[status.index].loaiTaiKhoan.tenTk}</td>
 							<td><fmt:formatNumber
-									value="${chungTu.taiKhoanCoDs[status.index].soTien}"
-									maxFractionDigits="2"></fmt:formatNumber></td>
+									value="${chungTu.taiKhoanCoDs[status.index].soTien.soTien}"
+									maxFractionDigits="2"></fmt:formatNumber>
+								${chungTu.taiKhoanCoDs[status.index].soTien.loaiTien.maLt}</td>
 						</c:when>
 						<c:otherwise>
 							<td></td>

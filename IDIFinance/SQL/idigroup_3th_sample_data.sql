@@ -1836,14 +1836,14 @@ INSERT INTO `nha_cung_cap` (`MA_NCC`, `TEN_NCC`, `MA_THUE`, `DIA_CHI`, `EMAIL`, 
 (1, 'Công ty TNHH một thành viên Bò sữa Việt Nam', '123456789', 'Gia Lâm, Hà Nội', 'trandonghai1981@yahoo.com', '0962541719', 'https://www.vinamilk.com.vn/vi'),
 (2, 'Công ty cổ phần Đông Dương', '', 'Số 10, Võng Thị, Tây Hồ, Hà Nội', 'trandonghai104@ymail.com', '123456789', '');
 
-INSERT INTO `chung_tu` (`MA_CT`, `SO_CT`, `LOAI_CT`, `NGAY_LAP`, `NGAY_HT`, `LY_DO`, `SO_TIEN`, `LOAI_TIEN`, `TY_GIA`, `KEM_THEO`, `MA_DT`, `LOAI_DT`, `NGUOI_NOP`) VALUES
-(1, 1, 'PT', '2017-12-02', '2017-12-02', 'Trả tiền mua bia', 10000000, 'VND', 1, 1, 1, 1, 'Nguyen Van Truong'),
-(2, 2, 'PT', '2017-12-02', '2017-12-02', 'Trả tiền thuê  du thuyền', 10000000, 'VND', 1, 0, 2, 1, 'Pham Xuan Tuyen'),
-(3, 1, 'PC', '2017-12-02', '2017-12-02', 'Chi mua máy tính cho designer', 40000000, 'VND', 1, 0, 2, 1, 'Pham Xuan Tuyen'),
-(4, 2, 'PC', '2017-12-02', '2017-12-02', 'Mua linux server', 30000000, 'VND', 1, 0, 3, 1, 'Tran Dong Hai'),
-(5, 1, 'BC', '2017-12-02', '2017-12-02', 'Tiền bán và cho thuê thiết bị tầu biển', 80000000, 'VND', 1, 0, 1, 1, 'Nguyen Van Truong'),
-(6, 1, 'BN', '2017-12-02', '2017-12-02', 'Tiền mua thức ăn cho cá', 20000000, 'VND', 1, 0, 2, 1, 'Pham Xuan Tuyen'),
-(7, 1, 'KTTH', '2017-12-02', '2017-12-02', 'Thanh toán tiền đi công tác Thái Nguyên cho anh Tuyến', NULL, 'VND', 1, 1, NULL, NULL, NULL);
+INSERT INTO `chung_tu` (`MA_CT`, `SO_CT`, `LOAI_CT`, `NGAY_LAP`, `NGAY_HT`, `LY_DO`, `LOAI_TIEN`, `TY_GIA`, `KEM_THEO`, `MA_DT`, `LOAI_DT`, `NGUOI_NOP`) VALUES
+(1, 1, 'PT', '2017-12-02', '2017-12-02', 'Trả tiền mua bia', 'VND', 1, 1, 1, 1, 'Nguyen Van Truong'),
+(2, 2, 'PT', '2017-12-02', '2017-12-02', 'Trả tiền thuê  du thuyền', 'VND', 1, 0, 2, 1, 'Pham Xuan Tuyen'),
+(3, 1, 'PC', '2017-12-02', '2017-12-02', 'Chi mua máy tính cho designer', 'VND', 1, 0, 2, 1, 'Pham Xuan Tuyen'),
+(4, 2, 'PC', '2017-12-02', '2017-12-02', 'Mua linux server', 'VND', 1, 0, 3, 1, 'Tran Dong Hai'),
+(5, 1, 'BC', '2017-12-02', '2017-12-02', 'Tiền bán và cho thuê thiết bị tầu biển', 'VND', 1, 0, 1, 1, 'Nguyen Van Truong'),
+(6, 1, 'BN', '2017-12-02', '2017-12-02', 'Tiền mua thức ăn cho cá', 'VND', 1, 0, 2, 1, 'Pham Xuan Tuyen'),
+(7, 1, 'KTTH', '2017-12-02', '2017-12-02', 'Thanh toán tiền đi công tác Thái Nguyên cho anh Tuyến', 'VND', 1, 1, NULL, NULL, NULL);
 
 INSERT INTO `chung_tu_tai_khoan` (`MA_CT`, `MA_TK`, `SO_TIEN`, `SO_DU`, `LY_DO`, `ASSET_CODE`) VALUES
 (1, '111', 10000000, -1, NULL, NULL),

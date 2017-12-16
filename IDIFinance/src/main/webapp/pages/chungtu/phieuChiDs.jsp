@@ -35,7 +35,7 @@
 			<tr>
 				<th class="text-center" colspan="2">Phiếu chi</th>
 				<th class="text-center" rowspan="2">Lý do</th>
-				<th class="text-center" rowspan="2">Số tiền (*)</th>
+				<th class="text-center" rowspan="2">Tổng số tiền (*)</th>
 				<th class="text-center" rowspan="2">Đối tượng nhận</th>
 				<th class="text-center" rowspan="2">Địa chỉ</th>
 				<th class="text-center" rowspan="2">Mã số thuế</th>
@@ -54,7 +54,7 @@
 							dateStyle="SHORT" /></td>
 					<td class="text-center" style="width: 50px;">${phieuChi.loaiCt}${phieuChi.soCt}</td>
 					<td><a href="${url}/xemphieuchi/${phieuChi.maCt}">${phieuChi.lyDo}</a></td>
-					<td><fmt:formatNumber value="${phieuChi.soTien.giaTri}"
+					<td align="right"><fmt:formatNumber value="${phieuChi.soTien.giaTri}"
 							maxFractionDigits="2"></fmt:formatNumber></td>
 					<td><c:choose>
 							<c:when

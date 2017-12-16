@@ -30,13 +30,14 @@
 				<form:option value="${ChungTu.CHUNG_TU_PHIEU_THU}">Phiếu thu</form:option>
 				<form:option value="${ChungTu.CHUNG_TU_PHIEU_CHI}">Phiếu chi</form:option>
 				<form:option value="${ChungTu.CHUNG_TU_BAO_NO}">Báo nợ</form:option>
-				<form:option value="${ChungTu.CHUNG_TU_BAO_CO}">Báo co</form:option>
+				<form:option value="${ChungTu.CHUNG_TU_BAO_CO}">Báo có</form:option>
+				<form:option value="${ChungTu.CHUNG_TU_KT_TH}">Phiếu kế toán tổng hợp</form:option>
 			</form:select>
 		</div>
 
 		<div class="form-group">
 			<label for="dau">Từ:</label>
-			<div class="input-group date datetime smallform">
+			<div class="input-group date datetime smallform pull-right">
 				<form:input path="dau" class="form-control" readonly="true" />
 				<span class="input-group-addon"><span
 					class="glyphicon glyphicon-calendar"></span></span>
@@ -45,7 +46,7 @@
 
 		<div class="form-group">
 			<label for="cuoi">Đến:</label>
-			<div class="input-group date datetime smallform">
+			<div class="input-group date datetime smallform pull-right">
 				<form:input path="cuoi" class="form-control" readonly="true" />
 				<span class="input-group-addon"><span
 					class="glyphicon glyphicon-calendar"></span></span>
