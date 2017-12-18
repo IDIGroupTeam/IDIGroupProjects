@@ -63,18 +63,18 @@
 							pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" /></td>
 					<td>${taiKhoan.chungTu.loaiCt}${taiKhoan.chungTu.soCt}</td>
 					<td>${taiKhoan.lyDo}</td>
-					<td>${taiKhoan.taiKhoan.maTk}</td>
+					<td>${taiKhoan.loaiTaiKhoan.maTk}</td>
 					<c:choose>
 						<c:when test="${taiKhoan.soDu==LoaiTaiKhoan.NO}">
 							<td><fmt:formatNumber
-									value="${taiKhoan.soTien*taiKhoan.chungTu.soTien.tien.banRa}"
+									value="${taiKhoan.soTien.soTien*taiKhoan.chungTu.loaiTien.banRa}"
 									maxFractionDigits="2"></fmt:formatNumber></td>
 							<td></td>
 						</c:when>
 						<c:when test="${taiKhoan.soDu==LoaiTaiKhoan.CO}">
 							<td></td>
 							<td><fmt:formatNumber
-									value="${taiKhoan.soTien*taiKhoan.chungTu.soTien.tien.banRa}"
+									value="${taiKhoan.soTien.soTien*taiKhoan.chungTu.loaiTien.banRa}"
 									maxFractionDigits="2"></fmt:formatNumber></td>
 						</c:when>
 						<c:otherwise>
@@ -86,10 +86,10 @@
 							path="taiKhoanDs[${status.index}].bai.assetCode"
 							class="form-control">
 							<form:option value=""></form:option>
-							<form:options items="${cdktMap[taiKhoan.taiKhoan.maTk]}"
+							<form:options items="${cdktMap[taiKhoan.loaiTaiKhoan.maTk]}"
 								itemLabel="assetCodeName" itemValue="assetCode" />
 						</form:select> <form:hidden path="taiKhoanDs[${status.index}].chungTu.maCt" />
-						<form:hidden path="taiKhoanDs[${status.index}].taiKhoan.maTk" />
+						<form:hidden path="taiKhoanDs[${status.index}].loaiTaiKhoan.maTk" />
 						<form:hidden path="taiKhoanDs[${status.index}].soDu" /></td>
 				</tr>
 			</c:forEach>

@@ -128,8 +128,8 @@
 										<li id="tabDSKH"><a href="${url}/danhsachkhachhang">Danh
 												sách khách hàng</a></li>
 
-										<li id="tabCNDL"><a href="${url}/cdkt/capnhatdulieu">Cập
-												nhật dữ liệu</a></li>
+										<%-- <li id="tabCNDL"><a href="${url}/cdkt/capnhatdulieu">Cập
+												nhật dữ liệu</a></li> --%>
 									</ul></li>
 							</ul>
 						</div>

@@ -93,11 +93,11 @@
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
-									<a href="${url}/xembaoco/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									<a href="${url}/xembaono/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
-									<a href="${url}/xembaono/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									<a href="${url}/xembaoco/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH}">
