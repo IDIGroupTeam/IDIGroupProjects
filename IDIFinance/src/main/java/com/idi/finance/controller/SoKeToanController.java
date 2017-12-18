@@ -137,30 +137,39 @@ public class SoKeToanController {
 			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
-			// Lấy danh sách các nghiệp vụ kế toán theo tài khoản, loại chứng từ, và từng kỳ
 			logger.info("Tính sổ cái tài khoản: " + form.getTaiKhoan());
+			// Lấy danh sách các nghiệp vụ kế toán theo tài khoản, loại chứng từ, và từng kỳ
+			List<KyKeToan> kyKeToanDs = new ArrayList<>();
+			logger.info("Loại kỳ: " + form.getLoaiKy());
+			KyKeToan kyKt = new KyKeToan(form.getDau(), form.getLoaiKy());
+			
 			double soDuDau = 0;
+			double soDuCuoi = 0;
 			double noPhatSinh = 0;
 			double coPhatSinh = 0;
-			double soDuCuoi = 0;
-			List<KyKeToan> kyKeToanDs = new ArrayList<>();
-			KyKeToan kyKt = new KyKeToan(form.getDau(), form.getLoaiKy());
+			
+			Date cuoiKyTruoc = Utils.prevPeriod(kyKt).getCuoi();
+			
+			// Lấy tổng nợ đầu kỳ
+			double noDauKy = soKeToanDAO.tongPhatSinh(form.getTaiKhoan(), LoaiTaiKhoan.NO, null, cuoiKyTruoc);
+
+			// Lấy tổng có đầu kỳ
+			double coDauKy = soKeToanDAO.tongPhatSinh(form.getTaiKhoan(), LoaiTaiKhoan.CO, null, cuoiKyTruoc);
+
+			// Tính ra số dư đầu kỳ
+			double soDuDauKy = noDauKy - coDauKy;
+			soDuDau = soDuDauKy;
+
 			while (!kyKt.getCuoi().after(form.getCuoi())) {
-				kyKt.setNghiepVuKeToanDs(soKeToanDAO.danhSachNghiepVuKeToanTheoLoaiTaiKhoan(form.getTaiKhoan(),
-						kyKt.getDau(), kyKt.getCuoi(), form.getLoaiCts()));
 				logger.info("Kỳ: " + kyKt);
 
-				Date cuoiKyTruoc = Utils.prevPeriod(kyKt).getCuoi();
+				// Lấy nghiệp vụ kế toán được ghi từ phiếu thu, phiếu chi, báo nợ, báo có
+				kyKt.setNghiepVuKeToanDs(soKeToanDAO.danhSachNghiepVuKeToanTheoLoaiTaiKhoan(form.getTaiKhoan(),
+						kyKt.getDau(), kyKt.getCuoi(), form.getLoaiCts()));
 
-				// Lấy tổng nợ đầu kỳ
-				double noDauKy = soKeToanDAO.tongPhatSinh(form.getTaiKhoan(), LoaiTaiKhoan.NO, null, cuoiKyTruoc);
-
-				// Lấy tổng có đầu kỳ
-				double coDauKy = soKeToanDAO.tongPhatSinh(form.getTaiKhoan(), LoaiTaiKhoan.CO, null, cuoiKyTruoc);
-
-				// Tính ra số dư đầu kỳ
-				double soDuDauKy = noDauKy - coDauKy;
-				soDuDau += soDuDauKy;
+				// Lấy nghiệp vụ kế toán được ghi từ phiếu kế toán tổng hợp
+				kyKt.themNghiepVuKeToan(soKeToanDAO.danhSachNghiepVuKeToanTheoLoaiTaiKhoan(form.getTaiKhoan(),
+						kyKt.getDau(), kyKt.getCuoi()));
 
 				// Tính phát sinh nợ trong kỳ
 				double noPhatSinhKy = soKeToanDAO.tongPhatSinh(form.getTaiKhoan(), LoaiTaiKhoan.NO, kyKt.getDau(),
@@ -172,11 +181,8 @@ public class SoKeToanController {
 						kyKt.getCuoi());
 				coPhatSinh += coPhatSinhKy;
 
-				// Tính ra phát sinh trong kỳ
-				double phatSinhTrongKy = noPhatSinhKy - coPhatSinhKy;
-
 				// Tính ra số dư cuối kỳ
-				double soDuCuoiKy = phatSinhTrongKy + soDuDauKy;
+				double soDuCuoiKy = noPhatSinhKy - coPhatSinhKy + soDuDauKy;
 
 				kyKt.setSoDuDauKy(soDuDauKy);
 				kyKt.setTongNoPhatSinh(noPhatSinhKy);
@@ -187,7 +193,7 @@ public class SoKeToanController {
 
 				kyKeToanDs.add(kyKt);
 				kyKt = Utils.nextPeriod(kyKt);
-				logger.info(kyKt.getCuoi() + " " + form.getCuoi());
+				soDuDauKy = soDuCuoiKy;
 			}
 
 			soDuCuoi = soDuDau + noPhatSinh - coPhatSinh;

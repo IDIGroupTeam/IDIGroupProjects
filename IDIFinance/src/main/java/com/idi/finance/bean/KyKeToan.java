@@ -1,6 +1,10 @@
 package com.idi.finance.bean;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
@@ -33,13 +37,15 @@ public class KyKeToan {
 	}
 
 	public KyKeToan(Date date) {
+		loai = MONTH;
 		dau = Utils.getStartPeriod(date, loai);
 		cuoi = Utils.getEndPeriod(date, loai);
 	}
 
 	public KyKeToan(Date date, int loai) {
-		dau = Utils.getStartPeriod(date, loai);
-		cuoi = Utils.getEndPeriod(date, loai);
+		this.loai = loai;
+		dau = Utils.getStartPeriod(date, this.loai);
+		cuoi = Utils.getEndPeriod(date, this.loai);
 	}
 
 	public LoaiTaiKhoan getLoaiTaiKhoan() {
@@ -114,9 +120,39 @@ public class KyKeToan {
 		this.nghiepVuKeToanDs = nghiepVuKeToanDs;
 	}
 
+	public void themNghiepVuKeToan(NghiepVuKeToan nghiepVuKeToan) {
+		if (nghiepVuKeToan == null) {
+			return;
+		}
+
+		if (nghiepVuKeToanDs == null) {
+			nghiepVuKeToanDs = new ArrayList<>();
+		}
+
+		if (!nghiepVuKeToanDs.contains(nghiepVuKeToan)) {
+			nghiepVuKeToanDs.add(nghiepVuKeToan);
+			Collections.sort(nghiepVuKeToanDs);
+		}
+	}
+
+	public void themNghiepVuKeToan(List<NghiepVuKeToan> nghiepVuKeToanDs) {
+		if (nghiepVuKeToanDs == null) {
+			return;
+		}
+
+		Iterator<NghiepVuKeToan> iter = nghiepVuKeToanDs.iterator();
+		while (iter.hasNext()) {
+			themNghiepVuKeToan(iter.next());
+		}
+	}
+
 	@Override
 	public String toString() {
-		String out = loai + "  " + dau + " " + cuoi;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		String batDau = sdf.format(dau);
+		String ketThuc = sdf.format(cuoi);
+
+		String out = loai + "  " + batDau + " " + ketThuc;
 		return out;
 	}
 

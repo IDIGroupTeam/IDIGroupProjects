@@ -35,6 +35,9 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 	@Value("${DANH_SACH_NGHIEP_VU_KE_TOAN_THEO_DIEU_KIEN}")
 	private String DANH_SACH_NGHIEP_VU_KE_TOAN_THEO_DIEU_KIEN;
 
+	@Value("${DANH_SACH_NGHIEP_VU_KE_TOAN_KTTH_THEO_DIEU_KIEN}")
+	private String DANH_SACH_NGHIEP_VU_KE_TOAN_KTTH_THEO_DIEU_KIEN;
+
 	@Value("${TONG_PHAT_SINH}")
 	private String TONG_PHAT_SINH;
 
@@ -314,6 +317,88 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				nghiepVuKeToan.setChungTu(chungTu);
 				nghiepVuKeToan.setTaiKhoanNo(taiKhoanNo);
 				nghiepVuKeToan.setTaiKhoanCo(taiKhoanCo);
+
+				return nghiepVuKeToan;
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	}
+
+	@Override
+	public List<NghiepVuKeToan> danhSachNghiepVuKeToanTheoLoaiTaiKhoan(String maTk, Date dau, Date cuoi) {
+		String query = DANH_SACH_NGHIEP_VU_KE_TOAN_KTTH_THEO_DIEU_KIEN;
+
+		logger.info("Danh sách nghiệp vụ kế toán theo của phiếu kế toán tổng hợp ...");
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		String batDau = sdf.format(dau);
+		String ketThuc = sdf.format(cuoi);
+
+		logger.info("Từ " + batDau + " đến " + ketThuc);
+
+		query = query.replaceAll("\\$MA_TK\\$", maTk);
+		logger.info(query);
+
+		Object[] objs = { batDau, ketThuc, batDau, ketThuc, batDau, ketThuc };
+		List<NghiepVuKeToan> nghiepVuKeToanDs = jdbcTmpl.query(query, objs, new NghiepVuKeToanKtthMapper());
+		return nghiepVuKeToanDs;
+	}
+
+	public class NghiepVuKeToanKtthMapper implements RowMapper<NghiepVuKeToan> {
+		public NghiepVuKeToan mapRow(ResultSet rs, int rowNum) throws SQLException {
+			try {
+				ChungTu chungTu = new ChungTu();
+				chungTu.setMaCt(rs.getInt("MA_CT"));
+				chungTu.setSoCt(rs.getInt("SO_CT"));
+				chungTu.setLoaiCt(rs.getString("LOAI_CT"));
+				chungTu.setLyDo(rs.getString("LY_DO"));
+				chungTu.setKemTheo(rs.getInt("KEM_THEO"));
+				chungTu.setNgayLap(rs.getDate("NGAY_LAP"));
+				chungTu.setNgayHt(rs.getDate("NGAY_HT"));
+
+				LoaiTien loaiTien = new LoaiTien();
+				loaiTien.setMaLt(rs.getString("LOAI_TIEN"));
+				loaiTien.setTenLt(rs.getString("TEN_NT"));
+				loaiTien.setBanRa(rs.getDouble("TY_GIA"));
+				chungTu.setLoaiTien(loaiTien);
+
+				DoiTuong doiTuong = new DoiTuong();
+				doiTuong.setMaDt(rs.getInt("MA_DT"));
+				doiTuong.setTenDt(rs.getString("TEN_DT"));
+				doiTuong.setLoaiDt(rs.getInt("LOAI_DT"));
+				doiTuong.setDiaChi(rs.getString("DIA_CHI"));
+				doiTuong.setMaThue(rs.getString("MA_THUE"));
+				doiTuong.setNguoiNop(rs.getString("NGUOI_NOP"));
+				chungTu.setDoiTuong(doiTuong);
+
+				TaiKhoan taiKhoan = new TaiKhoan();
+				taiKhoan.setSoDu(rs.getInt("SO_DU"));
+				taiKhoan.setLyDo(rs.getString("LY_DO"));
+
+				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
+				loaiTaiKhoan.setTenTk(rs.getString("TEN_TK"));
+				taiKhoan.setLoaiTaiKhoan(loaiTaiKhoan);
+
+				Tien tien = new Tien();
+				tien.setSoTien(rs.getDouble("SO_TIEN"));
+				tien.setLoaiTien(loaiTien);
+				tien.setGiaTri(tien.getLoaiTien().getBanRa() * tien.getSoTien());
+				taiKhoan.setSoTien(tien);
+
+				chungTu.themTaiKhoan(taiKhoan);
+				taiKhoan.setChungTu(chungTu);
+
+				NghiepVuKeToan nghiepVuKeToan = new NghiepVuKeToan();
+				nghiepVuKeToan.setChungTu(chungTu);
+				if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
+					nghiepVuKeToan.setTaiKhoanNo(taiKhoan);
+					nghiepVuKeToan.setTaiKhoanCo(null);
+				} else {
+					nghiepVuKeToan.setTaiKhoanNo(null);
+					nghiepVuKeToan.setTaiKhoanCo(taiKhoan);
+				}
 
 				return nghiepVuKeToan;
 			} catch (Exception e) {

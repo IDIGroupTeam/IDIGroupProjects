@@ -71,7 +71,7 @@
 				<tr>
 					<td></td>
 					<td></td>
-					<td><b>Số dư đầu kỳ</b></td>
+					<td><i>Số dư đầu kỳ</i></td>
 					<td></td>
 					<td align="right"><fmt:formatNumber
 							value="${kyKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
@@ -126,12 +126,28 @@
 										type="NUMBER"></fmt:formatNumber></td>
 								<td></td>
 							</c:when>
-							<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH}">
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
+							<c:when
+								test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH}">
+								<c:choose>
+									<c:when test="${not empty nghiepVuKeToan.taiKhoanNo}">
+										<td>${nghiepVuKeToan.taiKhoanNo.lyDo}</td>
+										<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
+										<td align="right"><fmt:formatNumber
+												value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+												type="NUMBER"></fmt:formatNumber></td>
+										<td></td>
+										<td></td>
+									</c:when>
+									<c:otherwise>
+										<td>${nghiepVuKeToan.taiKhoanCo.lyDo}</td>
+										<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
+										<td></td>
+										<td align="right"><fmt:formatNumber
+												value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+												type="NUMBER"></fmt:formatNumber></td>
+										<td></td>
+									</c:otherwise>
+								</c:choose>
 							</c:when>
 							<c:otherwise>
 								<td></td>
@@ -146,7 +162,7 @@
 				<tr>
 					<td></td>
 					<td></td>
-					<td><b>Tổng phát sinh trong kỳ</b></td>
+					<td><i>Tổng phát sinh trong kỳ</i></td>
 					<td></td>
 					<td align="right"><fmt:formatNumber
 							value="${kyKeToan.tongNoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
@@ -157,7 +173,7 @@
 				<tr>
 					<td></td>
 					<td></td>
-					<td><b>Số dư cuối kỳ</b></td>
+					<td><i>Số dư cuối kỳ</i></td>
 					<td></td>
 					<td align="right"><fmt:formatNumber
 							value="${kyKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
