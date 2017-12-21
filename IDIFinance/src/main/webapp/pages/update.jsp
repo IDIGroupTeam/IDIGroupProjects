@@ -18,7 +18,7 @@
 		});
 
 		$("#taiKhoanBut").click(function() {
-			$("#mainFinanceForm").attr("action", "${url}/tk/luuTaiKhoan");
+			$("#mainFinanceForm").attr("action", "${url}/taikhoan/luu");
 			$("#mainFinanceForm").submit();
 		});
 	});

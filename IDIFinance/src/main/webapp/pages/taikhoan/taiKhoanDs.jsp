@@ -7,14 +7,45 @@
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 
 <script type="text/javascript">
+	function xacNhanXoaTaiKhoan(maTk){
+		BootstrapDialog.confirm({
+			title : 'Xác nhận',
+			message : 'Bạn muốn xóa tài khoản này không ?<br/>Mã tài khoản: '+maTk,
+			type : 'type-info',
+			closable : true,
+			draggable : true,
+			btnCancelLabel : 'Không',
+			btnOKLabel : 'Có',
+			callback : function(result) {
+				if (result) {
+					$("#mainFinanceForm").attr(
+							"action", "${url}/taikhoan/xoa/"+maTk);
+					$("#mainFinanceForm").attr(
+							"method", "GET");
+					$("#mainFinanceForm").submit();
+				}
+			}
+		});
+	
+		return false;
+	}
+	
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-
+		
 	});
 </script>
 
 <h4>Danh mục tài khoản kế toán</h4>
+<div class="pull-right">
+	<a href="${url}/taikhoan/taomoi" class="btn btn-info btn-sm"> <span
+		class="glyphicon glyphicon-plus"></span> Tạo mới
+	</a>
+</div>
+<br />
+<br />
+
 <div class="table-responsive">
 	<table class="table table-bordered table-hover">
 		<thead>
@@ -25,6 +56,7 @@
 				<th>Mã tài khoản (Cấp 3)</th>
 				<th>Tên tài khoản</th>
 				<th>Số dư</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -49,6 +81,14 @@
 							<c:when test="${taiKhoan.soDu==LoaiTaiKhoan.NO}">Nợ</c:when>
 							<c:otherwise>Có</c:otherwise>
 						</c:choose></td>
+					<td><div class="btn-group btn-group-sm">
+							<a href="${url}/taikhoan/sua/${taiKhoan.maTk}" class="btn"
+								title="Sửa"> <span class="glyphicon glyphicon-edit"></span>
+							</a><a href="${url}/taikhoan/xoa/${taiKhoan.maTk}" class="btn"
+								title="Sửa" onclick="return xacNhanXoaTaiKhoan(${taiKhoan.maTk});">
+								<span class="glyphicon glyphicon-remove"></span>
+							</a>
+						</div></td>
 				</tr>
 			</c:forEach>
 		</tbody>

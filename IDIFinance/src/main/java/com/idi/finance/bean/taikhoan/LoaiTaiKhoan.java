@@ -20,6 +20,8 @@ public class LoaiTaiKhoan {
 	private String maTkCha;
 	private int soDu;
 	private int soDuGiaTri;
+	private LoaiTaiKhoan taiKhoanCha;
+	private boolean isNew = false;
 
 	public String getMaTk() {
 		return maTk;
@@ -69,9 +71,25 @@ public class LoaiTaiKhoan {
 		this.soDuGiaTri = soDuGiaTri;
 	}
 
+	public LoaiTaiKhoan getTaiKhoanCha() {
+		return taiKhoanCha;
+	}
+
+	public void setTaiKhoanCha(LoaiTaiKhoan taiKhoanCha) {
+		this.taiKhoanCha = taiKhoanCha;
+	}
+
+	public boolean isNew() {
+		return isNew;
+	}
+
+	public void setNew(boolean isNew) {
+		this.isNew = isNew;
+	}
+
 	@Override
 	public String toString() {
-		String out = maTk + " " + tenTk;
+		String out = maTk + " " + tenTk + " " + maTkCha + " " + soDu;
 		return out;
 	}
 

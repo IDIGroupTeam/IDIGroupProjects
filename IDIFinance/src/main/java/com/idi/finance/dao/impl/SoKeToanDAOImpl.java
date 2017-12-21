@@ -187,12 +187,16 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "");
 		}
 
+		query = query.replaceAll("\\$MA_TK\\$", maTk);
+
 		logger.info("Tổng phát sinh tài khoản " + maTk + ". Số dư " + soDu + ". Từ " + dau + " đến " + cuoi);
 		logger.info(query);
 
 		try {
-			Object[] objs = { maTk, soDu };
-			return jdbcTmpl.queryForObject(query, objs, Double.class);
+			Object[] objs = { soDu };
+			double result = jdbcTmpl.queryForObject(query, objs, Double.class);
+			// logger.info("Phát sinh: " + result);
+			return result;
 		} catch (Exception e) {
 			return 0;
 		}

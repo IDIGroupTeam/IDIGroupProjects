@@ -2,12 +2,8 @@ package com.idi.finance.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,16 +136,15 @@ public class SoKeToanController {
 			logger.info("Tính sổ cái tài khoản: " + form.getTaiKhoan());
 			// Lấy danh sách các nghiệp vụ kế toán theo tài khoản, loại chứng từ, và từng kỳ
 			List<KyKeToan> kyKeToanDs = new ArrayList<>();
-			logger.info("Loại kỳ: " + form.getLoaiKy());
 			KyKeToan kyKt = new KyKeToan(form.getDau(), form.getLoaiKy());
-			
+
 			double soDuDau = 0;
 			double soDuCuoi = 0;
 			double noPhatSinh = 0;
 			double coPhatSinh = 0;
-			
+
 			Date cuoiKyTruoc = Utils.prevPeriod(kyKt).getCuoi();
-			
+
 			// Lấy tổng nợ đầu kỳ
 			double noDauKy = soKeToanDAO.tongPhatSinh(form.getTaiKhoan(), LoaiTaiKhoan.NO, null, cuoiKyTruoc);
 

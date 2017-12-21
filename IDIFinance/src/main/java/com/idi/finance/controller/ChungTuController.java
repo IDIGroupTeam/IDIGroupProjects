@@ -1,17 +1,9 @@
 package com.idi.finance.controller;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletOutputStream;
@@ -23,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -55,7 +46,6 @@ import com.idi.finance.validator.ChungTuValidator;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.util.JRLoader;
 
 @Controller
@@ -513,10 +503,9 @@ public class ChungTuController {
 			return "error";
 		}
 	}
-	
+
 	@RequestMapping(value = "/pdfbaoco/{id}", method = RequestMethod.GET)
-	public void pdfBaoCo(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
-			Model model) {
+	public void pdfBaoCo(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt, Model model) {
 		try {
 			JasperReport jasperReport = getCompiledFile("BaoCo", req);
 			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, maCt);
@@ -702,8 +691,7 @@ public class ChungTuController {
 	}
 
 	@RequestMapping(value = "/pdfbaono/{id}", method = RequestMethod.GET)
-	public void pdfBaoNo(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
-			Model model) {
+	public void pdfBaoNo(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt, Model model) {
 		try {
 			JasperReport jasperReport = getCompiledFile("BaoNo", req);
 			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, maCt);
@@ -720,7 +708,7 @@ public class ChungTuController {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@RequestMapping("/suabaono/{id}")
 	public String suaBaoNo(@PathVariable("id") int maCt, Model model) {
 		try {
@@ -887,7 +875,7 @@ public class ChungTuController {
 			return "error";
 		}
 	}
-	
+
 	@RequestMapping(value = "/pdfktth/{id}", method = RequestMethod.GET)
 	public void pdfKeToanTongHop(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
 			Model model) {

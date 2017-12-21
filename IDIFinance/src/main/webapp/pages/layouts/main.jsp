@@ -114,13 +114,24 @@
 
 									</ul></li>
 								<li class="dropdown"><a class="dropdown-toggle"
+									data-toggle="dropdown" href="#">Nghiệp vụ<span
+										class="caret"></span>
+								</a>
+									<ul class="dropdown-menu">
+										<li id="tabDSNV"><a
+											href="${url}/congviec/nghiepvu/danhsach">Quản lý nghiệp
+												vụ</a></li>
+										<li id="tabDSLV"><a
+											href="${url}/congviec/linhvuc/danhsach">Lĩnh vực</a></li>
+									</ul></li>
+								<li class="dropdown"><a class="dropdown-toggle"
 									data-toggle="dropdown" href="#">Quản trị<span class="caret"></span>
 								</a>
 									<ul class="dropdown-menu">
 										<li id="tabDSNT"><a href="#">Danh sách ngoại tệ</a></li>
 										<li id="tabDSBCDKT"><a
 											href="${url}/cdkt/danhsachtaikhoan">Danh sách BCDKT</a></li>
-										<li id="tabDMTK"><a href="${url}/tk/danhsachtaikhoan">Danh
+										<li id="tabDMTK"><a href="${url}/taikhoan/danhsach">Danh
 												sách tài khoản</a></li>
 
 										<li id="tabDSNCC"><a href="${url}/danhsachnhacungcap">Danh

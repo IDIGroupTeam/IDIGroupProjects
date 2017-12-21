@@ -40,6 +40,8 @@
 	<bean id="khachHangValidator" class="com.idi.finance.validator.KhachHangValidator" />
 	<bean id="nhaCungCapValidator" class="com.idi.finance.validator.NhaCungCapValidator" />
 	<bean id="chungTuValidator" class="com.idi.finance.validator.ChungTuValidator" />
+	<bean id="loaiTaiKhoanValidator" class="com.idi.finance.validator.LoaiTaiKhoanValidator" />
+	<bean id="nghiepVuValidator" class="com.idi.finance.validator.NghiepVuValidator" />
 
 	<!-- Config for upload file feature -->
 	<bean id="multipartResolver"
@@ -92,8 +94,12 @@
 	<bean id="soKeToanDAO" class="com.idi.finance.dao.impl.SoKeToanDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
-	
+
 	<bean id="baoCaoDAO" class="com.idi.finance.dao.impl.BaoCaoDAOImpl">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+
+	<bean id="congViecDAO" class="com.idi.finance.dao.impl.CongViecDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
