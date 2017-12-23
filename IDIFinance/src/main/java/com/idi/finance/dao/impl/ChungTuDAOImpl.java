@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -116,24 +115,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				chungTu.setLoaiCt(rs.getString("LOAI_CT"));
 				chungTu.setLyDo(rs.getString("LY_DO"));
 				chungTu.setKemTheo(rs.getInt("KEM_THEO"));
-
-				Timestamp ngayLapTs = rs.getTimestamp("NGAY_LAP");
-				Date ngayLap = new Date(ngayLapTs.getTime());
-				chungTu.setNgayLap(ngayLap);
-
-				Timestamp ngayHtTs = rs.getTimestamp("NGAY_HT");
-				Date ngayHt = new Date(ngayHtTs.getTime());
-				chungTu.setNgayHt(ngayHt);
-
-				LoaiTien loaiTien = new LoaiTien();
-				loaiTien.setMaLt(rs.getString("LOAI_TIEN"));
-				loaiTien.setTenLt(rs.getString("TEN_NT"));
-				loaiTien.setBanRa(rs.getDouble("TY_GIA"));
-				Tien tien = new Tien();
-				tien.setTien(loaiTien);
-				tien.setSoTien(rs.getDouble("TONG_SO_TIEN"));
-				tien.setGiaTri(loaiTien.getBanRa() * tien.getSoTien());
-				chungTu.setSoTien(tien);
+				chungTu.setNgayLap(rs.getDate("NGAY_LAP"));
+				chungTu.setNgayHt(rs.getDate("NGAY_HT"));
 
 				DoiTuong doiTuong = new DoiTuong();
 				doiTuong.setMaDt(rs.getInt("MA_DT"));
@@ -144,14 +127,33 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				doiTuong.setNguoiNop(rs.getString("NGUOI_NOP"));
 				chungTu.setDoiTuong(doiTuong);
 
+				LoaiTien loaiTien = new LoaiTien();
+				loaiTien.setMaLt(rs.getString("LOAI_TIEN"));
+				loaiTien.setTenLt(rs.getString("TEN_NT"));
+				loaiTien.setBanRa(rs.getDouble("TY_GIA"));
+				chungTu.setLoaiTien(loaiTien);
+
 				TaiKhoan taiKhoan = new TaiKhoan();
+				taiKhoan.setSoDu(rs.getInt("SO_DU"));
+				taiKhoan.setLyDo(rs.getString("TK_LY_DO"));
+
 				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
 				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
 				loaiTaiKhoan.setTenTk(rs.getString("TEN_TK"));
-				taiKhoan.setTaiKhoan(loaiTaiKhoan);
-				taiKhoan.setSoTien(rs.getDouble("SO_TIEN"));
-				taiKhoan.setGhiNo(rs.getInt("SO_DU"));
-				taiKhoan.setLyDo(rs.getString("TK_LY_DO"));
+				taiKhoan.setLoaiTaiKhoan(loaiTaiKhoan);
+
+				Tien tien = new Tien();
+				tien.setSoTien(rs.getDouble("SO_TIEN"));
+				// if (loaiTaiKhoan.getMaTk().equals(LoaiTaiKhoan.TIEN_MAT_NT)
+				// || loaiTaiKhoan.getMaTk().equals(LoaiTaiKhoan.TIEN_GUI_NGAN_HANG_NT)
+				// || loaiTaiKhoan.getMaTk().equals(LoaiTaiKhoan.TIEN_DANG_CHUYEN_NT)
+				// || loaiTaiKhoan.getMaTk().equals(LoaiTaiKhoan.TIEN_MAT_VANG)
+				// || loaiTaiKhoan.getMaTk().equals(LoaiTaiKhoan.TIEN_GUI_NGAN_HANG_VANG)) {
+				tien.setLoaiTien(loaiTien);
+				// }
+				tien.setGiaTri(tien.getLoaiTien().getBanRa() * tien.getSoTien());
+				taiKhoan.setSoTien(tien);
+
 				chungTu.themTaiKhoan(taiKhoan);
 				taiKhoan.setChungTu(chungTu);
 
@@ -274,13 +276,12 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					java.sql.Date ngayHt = new java.sql.Date(chungTu.getNgayHt().getTime());
 					stt.setDate(4, ngayHt);
 					stt.setString(5, chungTu.getLyDo());
-					stt.setDouble(6, chungTu.getSoTien().getSoTien());
-					stt.setString(7, chungTu.getSoTien().getTien().getMaLt());
-					stt.setDouble(8, chungTu.getSoTien().getTien().getBanRa());
-					stt.setInt(9, chungTu.getKemTheo());
-					stt.setInt(10, chungTu.getDoiTuong().getMaDt());
-					stt.setInt(11, chungTu.getDoiTuong().getLoaiDt());
-					stt.setString(12, chungTu.getDoiTuong().getNguoiNop());
+					stt.setString(6, chungTu.getLoaiTien().getMaLt());
+					stt.setDouble(7, chungTu.getLoaiTien().getBanRa());
+					stt.setInt(8, chungTu.getKemTheo());
+					stt.setInt(9, chungTu.getDoiTuong().getMaDt());
+					stt.setInt(10, chungTu.getDoiTuong().getLoaiDt());
+					stt.setString(11, chungTu.getDoiTuong().getNguoiNop());
 
 					return stt;
 				}
@@ -293,10 +294,10 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				TaiKhoan taiKhoan = iter.next();
 
 				try {
-					if (!taiKhoan.getTaiKhoan().getMaTk().equals("0")) {
+					if (!taiKhoan.getLoaiTaiKhoan().getMaTk().equals("0")) {
 						logger.info("Thêm vào bảng chứng từ tài khoản " + taiKhoan);
-						jdbcTmpl.update(themChungTuTaiKhoan, chungTu.getMaCt(), taiKhoan.getTaiKhoan().getMaTk(),
-								taiKhoan.getSoTien(), taiKhoan.getGhiNo(), taiKhoan.getLyDo());
+						jdbcTmpl.update(themChungTuTaiKhoan, chungTu.getMaCt(), taiKhoan.getLoaiTaiKhoan().getMaTk(),
+								taiKhoan.getSoTien().getSoTien(), taiKhoan.getSoDu(), taiKhoan.getLyDo());
 					}
 
 				} catch (Exception e) {
@@ -312,17 +313,15 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 	@Override
 	public void capNhatChungTu(ChungTu chungTu) {
 		String capNhatChungTu = CAP_NHAT_CHUNG_TU;
-		// String capNhatChungTuTaiKhoan = CAP_NHAT_CHUNG_TU_TAI_KHOAN;
 		String themChungTuTaiKhoan = THEM_CHUNG_TU_TAI_KHOAN;
 		String xoaChungTuTk = XOA_CHUNG_TU_TAI_KHOAN;
 
 		try {
 			// Cập nhật chứng từ
 			jdbcTmpl.update(capNhatChungTu, chungTu.getSoCt(), chungTu.getLoaiCt(), chungTu.getNgayLap(),
-					chungTu.getNgayHt(), chungTu.getLyDo(), chungTu.getSoTien().getSoTien(),
-					chungTu.getSoTien().getTien().getMaLt(), chungTu.getSoTien().getTien().getBanRa(),
-					chungTu.getKemTheo(), chungTu.getDoiTuong().getMaDt(), chungTu.getDoiTuong().getLoaiDt(),
-					chungTu.getDoiTuong().getNguoiNop(), chungTu.getMaCt());
+					chungTu.getNgayHt(), chungTu.getLyDo(), chungTu.getLoaiTien().getMaLt(),
+					chungTu.getLoaiTien().getBanRa(), chungTu.getKemTheo(), chungTu.getDoiTuong().getMaDt(),
+					chungTu.getDoiTuong().getLoaiDt(), chungTu.getDoiTuong().getNguoiNop(), chungTu.getMaCt());
 
 			// Cập nhật (hoặc thêm mới) chứng từ tài khoản
 			if (chungTu.getTaiKhoanDs() != null && chungTu.getTaiKhoanDs().size() > 0) {
@@ -334,18 +333,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				while (iter.hasNext()) {
 					TaiKhoan taiKhoan = iter.next();
 
-					/*
-					 * int count = jdbcTmpl.update(capNhatChungTuTaiKhoan, taiKhoan.getSoTien(),
-					 * taiKhoan.getGhiNo(), taiKhoan.getLyDo(), chungTu.getMaCt(),
-					 * taiKhoan.getTaiKhoan().getMaTk());
-					 */
-
-					// Nếu chưa có thì thêm vào
-					// if (count == 0) {
-					logger.info("hi: " + taiKhoan.getTaiKhoan());
-					jdbcTmpl.update(themChungTuTaiKhoan, chungTu.getMaCt(), taiKhoan.getTaiKhoan().getMaTk(),
-							taiKhoan.getSoTien(), taiKhoan.getGhiNo(), taiKhoan.getLyDo());
-					// }
+					jdbcTmpl.update(themChungTuTaiKhoan, chungTu.getMaCt(), taiKhoan.getLoaiTaiKhoan().getMaTk(),
+							taiKhoan.getSoTien().getSoTien(), taiKhoan.getSoDu(), taiKhoan.getLyDo());
 				}
 			}
 
@@ -381,4 +370,5 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 		jdbcTmpl.update(xoaChungTuTk, maCt);
 		logger.info("Xóa chứng từ có MA_CT = " + maCt);
 	}
+
 }

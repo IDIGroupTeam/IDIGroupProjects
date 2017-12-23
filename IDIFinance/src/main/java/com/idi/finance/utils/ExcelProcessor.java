@@ -163,6 +163,16 @@ public class ExcelProcessor {
 						bs.getAsset().setAssetCode(cell.getStringCellValue());
 						break;
 					}
+
+					if (bs.getAsset().getAssetCode() != null) {
+						if (bs.getAsset().getAssetCode().substring(0, 1).equals("1")
+								|| bs.getAsset().getAssetCode().substring(0, 1).equals("2")) {
+							bs.getAsset().setSoDu(-1);
+						} else if (bs.getAsset().getAssetCode().substring(0, 1).equals("3")
+								|| bs.getAsset().getAssetCode().substring(0, 1).equals("4")) {
+							bs.getAsset().setSoDu(1);
+						}
+					}
 				}
 
 				// Read description
@@ -326,6 +336,8 @@ public class ExcelProcessor {
 						bs.getAsset().setAssetCode(cell.getStringCellValue());
 						break;
 					}
+
+					// Set soDu here, it depend on assetCode
 				}
 
 				// Read description
@@ -489,6 +501,8 @@ public class ExcelProcessor {
 						bs.getAsset().setAssetCode(cell.getStringCellValue());
 						break;
 					}
+
+					// Set soDu here, it depend on assetCode
 				}
 
 				// Read description
@@ -699,7 +713,7 @@ public class ExcelProcessor {
 	private static Date getPeriod(String month) {
 		Calendar cal = Calendar.getInstance();
 		try {
-			month = month.substring(5).trim();
+			month = month.trim().substring(5).trim();
 			int monthNum = Integer.parseInt(month) - 1;
 			cal.set(Calendar.MONTH, monthNum);
 		} catch (Exception e) {
@@ -707,7 +721,7 @@ public class ExcelProcessor {
 			return null;
 		}
 
-		return Utils.standardDate(cal.getTime());
+		return Utils.getStartDateOfMonth(cal.getTime());
 	}
 
 	private static String parseRule(String name) {

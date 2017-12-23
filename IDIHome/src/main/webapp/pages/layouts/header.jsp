@@ -19,17 +19,10 @@
 					class="glyphicon glyphicon-log-out"></span> Đăng Xuất </a></li>
 		</ul>
 		<div class="topnav navbar-right" id="myTopnav"></div>
-
+       
 	</div>
-
-	<form class="navbar-form navbar-right">
-		<div class="input-group">
-			<input type="text" class="form-control" placeholder="Tìm kiếm">
-			<div class="input-group-btn">
-				<button class="btn btn-default" type="submit">
-					<i class="glyphicon glyphicon-search"></i>
-				</button>
-			</div>
-		</div>
-	</form>
+  <form class="form-inline navbar-right" action="#">
+    <input class="form-control mr-sm-2" type="text" placeholder="Xin điền thông tin " >
+    <button class="btn btn-success" type="submit">Tìm kiếm</button>
+  </form>
 </nav>

@@ -74,8 +74,26 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		
 		String accountNumber = jdbcTmpl.queryForObject(sql, String.class, params);
 		
-		System.err.println(accountNumber);
+		//System.err.println(accountNumber);
 		return Integer.parseInt(accountNumber);
+
+	}
+	
+	/**
+	 * countMemberByWorkStatus
+	 * @param workstatus
+	 * @return
+	 */
+	public int countMemberByWorkStatus(String workstatus) {
+
+		String sql = hr.get("COUNT_MEMBER_BY_WORK_STATUS").toString();
+		log.info("COUNT_MEMBER_BY_WORK_STATUS query: " + sql);
+		Object[] params = new Object[] { workstatus };
+		
+		String numberEmployee = jdbcTmpl.queryForObject(sql, String.class, params);
+		
+		//System.err.println(accountNumber);
+		return Integer.parseInt(numberEmployee);
 
 	}
 
@@ -101,9 +119,10 @@ public class EmployeeDAO extends JdbcDaoSupport {
 						employeeInfo.getPhoneNo(), employeeInfo.getJoinDate(), employeeInfo.getOfficalJoinDate(),
 						employeeInfo.getEmail(), employeeInfo.getTerminationDate(), employeeInfo.getReasonforLeave(),
 						employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
-						employeeInfo.getNation(), employeeInfo.getImage(), employeeInfo.getEmerName(),
+						employeeInfo.getNation(),// employeeInfo.getImage(), 
+						employeeInfo.getEmerName(),
 						employeeInfo.getEmerPhoneNo(), employeeInfo.getBankNo(), employeeInfo.getBankName(),
-						employeeInfo.getBankBranch(), employeeInfo.getSalary(), employeeInfo.getSalarySocicalInsu(),
+						employeeInfo.getBankBranch(), employeeInfo.getImagePath(), employeeInfo.getSalarySocicalInsu(),
 						employeeInfo.getSocicalInsuNo(), employeeInfo.getHealthInsuNo(),
 						employeeInfo.getPercentSocicalInsu(), employeeInfo.getEmployeeId()};
 				jdbcTmpl.update(sql, params);
@@ -118,9 +137,10 @@ public class EmployeeDAO extends JdbcDaoSupport {
 						employeeInfo.getPhoneNo(), employeeInfo.getJoinDate(), employeeInfo.getOfficalJoinDate(),
 						employeeInfo.getEmail(), employeeInfo.getTerminationDate(), employeeInfo.getReasonforLeave(),
 						employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
-						employeeInfo.getNation(), employeeInfo.getImage(), employeeInfo.getEmerName(),
+						employeeInfo.getNation(),// employeeInfo.getImage(), 
+						employeeInfo.getEmerName(),
 						employeeInfo.getEmerPhoneNo(), employeeInfo.getBankNo(), employeeInfo.getBankName(),
-						employeeInfo.getBankBranch(), employeeInfo.getSalary(), employeeInfo.getSalarySocicalInsu(),
+						employeeInfo.getBankBranch(), employeeInfo.getImagePath(), employeeInfo.getSalarySocicalInsu(),
 						employeeInfo.getSocicalInsuNo(), employeeInfo.getHealthInsuNo(),
 						employeeInfo.getPercentSocicalInsu() };
 				jdbcTmpl.update(sql, params);
@@ -149,6 +169,25 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		String sql = hr.getProperty("GET_EMPLOYEES").toString();
 		log.info("GET_EMPLOYEES query: " + sql);
 		Object[] params = new Object[] {};
+		EmployeeMapper mapper = new EmployeeMapper();
+
+		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);
+
+		return list;
+
+	}
+	
+	/**
+	 * Get employees have birthday of quarter from DB
+	 * 
+	 * @return List of employee
+	 * @throws Exception
+	 */
+	public List<EmployeeInfo> getEmployeesBith(int quarter) {
+
+		String sql = hr.getProperty("GET_MEMBER_QUARTER_BIRTHDAY").toString();
+		log.info("GET_MEMBER_QUARTER_BIRTHDAY query: " + sql);
+		Object[] params = new Object[] {quarter};
 		EmployeeMapper mapper = new EmployeeMapper();
 
 		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);

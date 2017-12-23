@@ -18,6 +18,8 @@
 	href="${url}/public/css/bootstrap-multiselect.css" />
 <link rel="stylesheet" href="${url}/public/css/bootcomplete.css" />
 <link rel="stylesheet" href="${url}/public/css/tabledit.css" />
+<link rel="stylesheet"
+	href="${url}/public/css/bootstrap-datetimepicker.min.css" />
 <link rel="stylesheet" href="${url}/public/css/style.css" />
 
 <script src="${url}/public/js/jquery.min.js"></script>
@@ -26,6 +28,11 @@
 <script src="${url}/public/js/bootstrap-multiselect.js"></script>
 <script src="${url}/public/js/jquery.bootcomplete.js"></script>
 <script src="${url}/public/js/jquery.tabledit.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
+<script src="${url}/public/js/jquery.formatCurrency-1.4.0.js"></script>
+<script src="${url}/public/js/jquery.formatCurrency.vi-VN.js"></script>
+<script src="${url}/public/js/accounting.min.js"></script>
 <script src="${url}/public/js/script.js"></script>
 
 <title>Tập đoàn IDI - <tiles:getAsString name="title" /></title>
@@ -78,6 +85,8 @@
 												có</a></li>
 										<li id="tabCTBN"><a href="${url}/danhsachbaono">Báo
 												nợ</a></li>
+										<li id="tabCTKTTH"><a href="${url}/danhsachktth">Kế
+												toán tổng hợp</a></li>
 									</ul></li>
 								<li class="dropdown"><a class="dropdown-toggle"
 									data-toggle="dropdown" href="#">Sổ kế toán<span
@@ -88,19 +97,16 @@
 												ký chung</a></li>
 										<li id="tabSKTSC"><a href="${url}/soketoan/socai">Sổ
 												cái</a></li>
-										<li id="tabSKTSTM"><a href="${url}/soketoan/sotienmat">Sổ
-												tiền mặt</a></li>
-										<li id="tabSKTSCN"><a href="${url}/soketoan/socongno">Sổ
-												công nợ</a></li>
-										<li id="tabSKTSTGNH"><a
-											href="${url}/soketoan/sotienguinganhang">Sổ tiền gửi</a></li>
+										<%-- <li id="tabSKTSTM"><a href="${url}/soketoan/sotienmat">Sổ tiền mặt</a></li> --%>
+										<%-- <li id="tabSKTSCN"><a href="${url}/soketoan/socongno">Sổ công nợ</a></li> --%>
+										<%-- <li id="tabSKTSTGNH"><a href="${url}/soketoan/sotienguinganhang">Sổ tiền gửi</a></li> --%>
 									</ul></li>
 								<li class="dropdown"><a class="dropdown-toggle"
 									data-toggle="dropdown" href="#">Báo cáo tài chính<span
 										class="caret"></span>
 								</a>
 									<ul class="dropdown-menu">
-										<li id="tabBCDKT"><a href="${url}/candoiketoan">Bảng
+										<li id="tabBCDKT"><a href="${url}/cdkt/candoiketoan">Bảng
 												cân đối kế toán</a></li>
 										<li><a href="#">Bảng cân đối phát sinh</a></li>
 										<li><a href="#">Bảng kết quả SXKD</a></li>
@@ -108,11 +114,24 @@
 
 									</ul></li>
 								<li class="dropdown"><a class="dropdown-toggle"
+									data-toggle="dropdown" href="#">Nghiệp vụ<span
+										class="caret"></span>
+								</a>
+									<ul class="dropdown-menu">
+										<li id="tabDSNV"><a
+											href="${url}/congviec/nghiepvu/danhsach">Quản lý nghiệp
+												vụ</a></li>
+										<li id="tabDSLV"><a
+											href="${url}/congviec/linhvuc/danhsach">Lĩnh vực</a></li>
+									</ul></li>
+								<li class="dropdown"><a class="dropdown-toggle"
 									data-toggle="dropdown" href="#">Quản trị<span class="caret"></span>
 								</a>
 									<ul class="dropdown-menu">
 										<li id="tabDSNT"><a href="#">Danh sách ngoại tệ</a></li>
-										<li id="tabDMTK"><a href="${url}/danhsachtaikhoan">Danh
+										<li id="tabDSBCDKT"><a
+											href="${url}/cdkt/danhsachtaikhoan">Danh sách BCDKT</a></li>
+										<li id="tabDMTK"><a href="${url}/taikhoan/danhsach">Danh
 												sách tài khoản</a></li>
 
 										<li id="tabDSNCC"><a href="${url}/danhsachnhacungcap">Danh
@@ -120,8 +139,8 @@
 										<li id="tabDSKH"><a href="${url}/danhsachkhachhang">Danh
 												sách khách hàng</a></li>
 
-										<li id="tabCNDL"><a href="${url}/capnhatdulieu">Cập
-												nhật dữ liệu</a></li>
+										<%-- <li id="tabCNDL"><a href="${url}/cdkt/capnhatdulieu">Cập
+												nhật dữ liệu</a></li> --%>
 									</ul></li>
 							</ul>
 						</div>

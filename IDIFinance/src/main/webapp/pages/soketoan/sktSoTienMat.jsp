@@ -25,7 +25,7 @@
 	<i>(*): Mặc định là tiền VND</i>
 </div>
 
-<div class="row">
+<div class="table-responsive">
 	<table class="table table-bordered table-hover">
 		<thead>
 			<tr>

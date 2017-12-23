@@ -23,30 +23,31 @@
 <br />
 <br />
 
-<table class="table table-bordered table-hover">
-	<thead>
-		<tr>
-			<!-- <th>STT</th> -->
-			<th>Mã</th>
-			<th>Tên khách hàng</th>
-			<th>Mã số thuế</th>
-			<th>Đại chỉ</th>
-			<th>Số điện thoại</th>
-			<!-- <th>Email</th> -->
-		</tr>
-	</thead>
-	<tbody>
-		<c:forEach items="${khachhangDs}" var="khachhang" varStatus="status">
+<div class="table-responsive">
+	<table class="table table-bordered table-hover">
+		<thead>
 			<tr>
-				<%-- <td>${status.index+1}</td> --%>
-				<td>${khachhang.maKh}</td>
-				<td><a href="${url}/xemkhachhang/${khachhang.maKh}">${khachhang.tenKh}</a></td>
-				<td>${khachhang.maThue}</td>
-				<td>${khachhang.diaChi}</td>
-				<td>${khachhang.sdt}</td>
-				<%-- <td>${khachhang.email}</td> --%>
+				<!-- <th>STT</th> -->
+				<th>Mã</th>
+				<th>Tên khách hàng</th>
+				<th>Mã số thuế</th>
+				<th>Đại chỉ</th>
+				<th>Số điện thoại</th>
+				<!-- <th>Email</th> -->
 			</tr>
-		</c:forEach>
-	</tbody>
-</table>
-
+		</thead>
+		<tbody>
+			<c:forEach items="${khachhangDs}" var="khachhang" varStatus="status">
+				<tr>
+					<%-- <td>${status.index+1}</td> --%>
+					<td>${khachhang.maKh}</td>
+					<td><a href="${url}/xemkhachhang/${khachhang.maKh}">${khachhang.tenKh}</a></td>
+					<td>${khachhang.maThue}</td>
+					<td>${khachhang.diaChi}</td>
+					<td>${khachhang.sdt}</td>
+					<%-- <td>${khachhang.email}</td> --%>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+</div>

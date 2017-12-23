@@ -13,21 +13,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="${url}/public/css/bootstrap.min.css" />
 <link rel="stylesheet" href="${url}/public/css/paneltab.css" />
-<link rel="stylesheet" href="${url}/public/css/bootstrap-dialog.min.css" />
-<link rel="stylesheet"
-	href="${url}/public/css/bootstrap-multiselect.css" />
-<link rel="stylesheet" href="${url}/public/css/bootcomplete.css" />
-<link rel="stylesheet" href="${url}/public/css/tabledit.css" />
+<link rel="stylesheet"	href="${url}/public/css/bootstrap-multiselect.css" />
 <link rel="stylesheet" href="${url}/public/css/style.css" />
 
-<script src="${url}/public/js/jquery.min.js"></script>
-<script src="${url}/public/js/bootstrap.min.js"></script>
-<script src="${url}/public/js/bootstrap-dialog.min.js"></script>
-<script src="${url}/public/js/bootstrap-multiselect.js"></script>
-<script src="${url}/public/js/jquery.bootcomplete.js"></script>
-<script src="${url}/public/js/jquery.tabledit.js"></script>
-<script src="${url}/public/js/script.js"></script>
 
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="${url}/public/js/bootstrap.min.js"></script>
+<script src="${url}/public/js/bootstrap-multiselect.js"></script>
 <title>Tập đoàn IDI - <tiles:getAsString name="title" /></title>
 <script type="text/javascript">
 	// Shorthand for $( document ).ready()

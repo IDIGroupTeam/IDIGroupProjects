@@ -1,5 +1,6 @@
 package com.idi.hr.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -14,7 +15,6 @@ import com.idi.hr.bean.Timekeeping;
 import com.idi.hr.bean.WorkHistory;
 import com.idi.hr.common.PropertiesManager;
 import com.idi.hr.mapper.TimekeepingMapper;
-import com.idi.hr.mapper.WorkHistoryMapper;
 
 public class TimekeepingDAO extends JdbcDaoSupport {
 
@@ -45,8 +45,8 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	 */
 	public List<Timekeeping> getTimekeepings() {
 
-		String sql = hr.getProperty("GET_TIMEKEEPING").toString();
-		log.info("GET_TIMEKEEPING query: " + sql);
+		String sql = hr.getProperty("GET_TIMEKEEPING_INFO").toString();
+		log.info("GET_TIMEKEEPING_INFO query: " + sql);
 		TimekeepingMapper mapper = new TimekeepingMapper();
 
 		List<Timekeeping> list = jdbcTmpl.query(sql, mapper);
@@ -55,63 +55,58 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	}
 
 	/**
-	 * get WorkHistory by employee id
+	 * get Timekeeping by employee id
 	 * 
-	 * @param employee
-	 *            id
-	 * @return WorkHistory object
+	 * @param employeeid,
+	 *            Date, timeIn
+	 * @return Timekeeping object
 	 */
-	public List<WorkHistory> getWorkHistorys(int employeeId) {
+	public Timekeeping getTimekeeping(int employeeId, Date date, String timeIn) {
 
-		String sql = hr.get("GET_WORK_HISTORY_BY_EMPLOYEE").toString();
-		log.info("GET_WORK_HISTORY_BY_EMPLOYEE query: " + sql);
-		Object[] params = new Object[] { employeeId };
+		String sql = hr.get("GET_TIMEKEEPING").toString();
+		log.info("GET_TIMEKEEPING query: " + sql);
+		Object[] params = new Object[] { employeeId, date, timeIn };
 
-		WorkHistoryMapper mapper = new WorkHistoryMapper();
+		TimekeepingMapper mapper = new TimekeepingMapper();
 
-		List<WorkHistory> list = jdbcTmpl.query(sql, params, mapper);
-		return list;
+		Timekeeping timekeeping = jdbcTmpl.queryForObject(sql, params, mapper);
+
+		return timekeeping;
 
 	}
 
 	/**
-	 * get WorkHistory by employee id
+	 * Insert a Timekeeping into database
 	 * 
-	 * @param employee
-	 *            id, fromDate
-	 * @return WorkHistory object
+	 * @param timekeepings
 	 */
-	public WorkHistory getWorkHistory(int employeeId, String fromDate) {
-
-		String sql = hr.get("GET_WORK_HISTORY").toString();
-		log.info("GET_WORK_HISTORY query: " + sql);
-		Object[] params = new Object[] { employeeId, fromDate };
-
-		WorkHistoryMapper mapper = new WorkHistoryMapper();
-
-		WorkHistory workHistory = jdbcTmpl.queryForObject(sql, params, mapper);
-
-		return workHistory;
-
-	}
-
-	/**
-	 * Insert a WorkHistory into database
-	 * 
-	 * @param WorkHistory
-	 */
-	public void insertWorkHistory(WorkHistory workHistory) throws Exception {
+	public void insertOrUpdate(List<Timekeeping> timekeepings) throws Exception {
 		try {
+			log.info("Cập nhật thông tin chấm công ....");
+			String sql = hr.getProperty("INSERT_TIMEKEEPING").toString();
+			log.info("INSERT_TIMEKEEPING query: " + sql);
+			System.err.println(timekeepings.size());
+			for (int i = 0; i < timekeepings.size(); i++) {
+				Timekeeping timekeepingDTO = new Timekeeping();
+				timekeepingDTO = timekeepings.get(i);
+				try {
+					Timekeeping timekeeping = getTimekeeping(timekeepingDTO.getEmployeeId(), timekeepingDTO.getDate(),
+							timekeepingDTO.getTimeIn());					
+					if (timekeeping != null) {
+						log.info("The record for employeeId=" + timekeepingDTO.getEmployeeId() + ", date="
+								+ timekeepingDTO.getDate() + ", check in time=" + timekeepingDTO.getTimeIn()
+								+ " is existing, do not insert ...");
+					}
+				} catch (Exception e) {
+					System.err.println("insert Ma NV: " + timekeepingDTO.getEmployeeId() + "|" + timekeepingDTO.getDate() + "|" + timekeepingDTO.getTimeIn());
+					Object[] params = new Object[] { timekeepingDTO.getEmployeeId(), timekeepingDTO.getDate(),
+							timekeepingDTO.getTimeIn(), timekeepingDTO.getTimeOut(), timekeepingDTO.getComeLateM(),
+							timekeepingDTO.getLeaveSoonM(), timekeepingDTO.getComeLateA(),
+							timekeepingDTO.getLeaveSoonA(), timekeepingDTO.getComment() };
+					jdbcTmpl.update(sql, params);
+				}
 
-			log.info("Thêm mới thông tin lịch sử làm việc ....");
-			String sql = hr.getProperty("INSERT_WORK_HISTORY").toString();
-			log.info("INSERT_WORK_HISTORY query: " + sql);
-			Object[] params = new Object[] { workHistory.getEmployeeId(), workHistory.getFromDate(),
-					workHistory.getToDate(), workHistory.getTitle(), workHistory.getDepartment(),
-					workHistory.getCompany(), workHistory.getSalary(), workHistory.getAchievement(),
-					workHistory.getAppraise() };
-			jdbcTmpl.update(sql, params);
-
+			}
 		} catch (Exception e) {
 			log.error(e, e);
 			throw e;
@@ -146,7 +141,8 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	/**
 	 * Delete a WorkHistory from database
 	 * 
-	 * @param employeeId, fromDate
+	 * @param employeeId,
+	 *            fromDate
 	 */
 	public void deleteWorkHistory(int employeeId, String fromDate) throws Exception {
 		try {
@@ -163,5 +159,39 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 			throw e;
 		}
 	}
+	
+	/**
+	 * get time keeping for report, come late, leave soon
+	 * 
+	 * @param year
+	 * @param month
+	 * @param employeeId
+	 * @param leaveType
+	 * @return
+	 * @throws Exception
+	 */
+	public String getTimekeepingReport(String year, String month, int employeeId, String leaveType) throws Exception {
+		String countNumber = "";
+		String sqlCL = hr.getProperty("GET_TIMEKEEPING_COME_LATE_FOR_REPORT").toString();
+		String sqlLS = hr.getProperty("GET_TIMEKEEPING_LEAVE_SOON_FOR_REPORT").toString();
+		String sql="";
+		if(leaveType.equalsIgnoreCase("DM"))
+			sql = sqlCL;
+		else if(leaveType.equalsIgnoreCase("VS"))
+			sql = sqlLS;
+		if (month != null && month.length() > 0)
+			sql = sql + " AND MONTH(DATE) = '" + month + "' ";
 
+		if (year != null && year.length() > 0)
+			sql = sql + " AND YEAR(DATE) = '" + year + "' ";		
+
+		log.info("GET_TIMEKEEPING_FOR_REPORT query: " + sql);
+
+		Object[] params = new Object[] { employeeId };
+		countNumber = jdbcTmpl.queryForObject(sql, String.class, params);
+		
+		System.err.println(leaveType+":"+countNumber);
+		
+		return countNumber;
+	}
 }

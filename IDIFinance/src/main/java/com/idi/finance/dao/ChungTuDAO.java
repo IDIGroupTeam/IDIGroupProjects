@@ -10,7 +10,7 @@ public interface ChungTuDAO {
 	public List<ChungTu> danhSachChungTuTheoLoaiCt(String loaiCt);
 
 	public ChungTu layChungTu(int maCt);
-	
+
 	public ChungTu layChungTu(int maCt, String loaiCt);
 
 	public List<LoaiTien> danhSachLoaiTien();
@@ -22,6 +22,6 @@ public interface ChungTuDAO {
 	public int demSoChungTuTheoLoaiCtVaNam(String loaiCt, Date nam);
 
 	public void xoaChungTu(int maCt);
-	
+
 	public void xoaChungTu(int maCt, String loaiCt);
 }

@@ -5,12 +5,29 @@
 <html>
 <head>
 <title>Danh sách phòng ban</title>
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #E8E3E3;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #E8E3E3;
+}
+</style>
 </head>
 <body>
 	<div class="table-responsive">
 		<a
-			href="${pageContext.request.contextPath}/department/insertDepartment"><button
-				class="btn btn-primary">Thêm mới phòng ban</button></a>
+			href="${url}/department/insertDepartment"><button
+				class="btn btn-primary btn-sm">Thêm mới phòng ban</button></a>
 		<br/><br/>			
 		<table class="table table-bordered">
 			<tr>

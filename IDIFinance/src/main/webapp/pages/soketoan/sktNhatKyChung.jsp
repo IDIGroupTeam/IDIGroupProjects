@@ -19,14 +19,17 @@
 <h4>Sổ nhật ký chung</h4>
 
 <p>
-	<i>Danh sách tất cả các loại chứng từ sắp xếp theo thời gian ...</i>
+	<i>Từ <fmt:formatDate value="${mainFinanceForm.dau}"
+			pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" /> đến <fmt:formatDate
+			value="${mainFinanceForm.cuoi}" pattern="dd/M/yyyy" type="Date"
+			dateStyle="SHORT" /></i>
 </p>
 
 <div class="pull-right">
 	<i>(*): Mặc định là tiền VND</i>
 </div>
 
-<div class="row">
+<div class="table-responsive">
 	<table class="table table-bordered table-hover">
 		<thead>
 			<tr>
@@ -52,35 +55,54 @@
 		<tbody>
 			<c:forEach items="${chungTuDs}" var="chungTu" varStatus="status">
 				<tr>
-					<td rowspan="${chungTu.soTkLonNhat+1}" class="text-center"
-						style="width: 100px;"><fmt:formatDate
+					<td rowspan="${chungTu.soDongNkc}" class="text-center"
+						style="width: 90px;"><fmt:formatDate
 							value="${chungTu.ngayHt}" pattern="dd/M/yyyy" type="Date"
 							dateStyle="SHORT" /></td>
-					<td rowspan="${chungTu.soTkLonNhat+1}" class="text-center"
-						style="width: 50px;">${chungTu.loaiCt}${chungTu.soCt}</td>
-					<td>${chungTu.lyDo}</td>
+					<td rowspan="${chungTu.soDongNkc}" class="text-center"
+						style="width: 50px;"><c:choose>
+							<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU}">
+								<a href="${url}/xemphieuthu/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
+							</c:when>
+							<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI}">
+								<a href="${url}/xemphieuchi/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
+							</c:when>
+							<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
+								<a href="${url}/xembaoco/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
+							</c:when>
+							<c:when test="${ chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
+								<a href="${url}/xembaono/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
+							</c:when>
+							<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH}">
+								<a href="${url}/xemktth/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
+							</c:when>
+							<c:otherwise>${chungTu.loaiCt}${chungTu.soCt}</c:otherwise>
+						</c:choose></td>
+					<td style="color: blue;">${chungTu.lyDo}</td>
 					<c:choose>
-						<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU}">
-							<td>${chungTu.taiKhoanNoDs[0].taiKhoan.maTk}</td>
+						<c:when
+							test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU || chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
+							<td>${chungTu.taiKhoanNoDs[0].loaiTaiKhoan.maTk}</td>
 							<td></td>
 						</c:when>
-						<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI}">
+						<c:when
+							test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI || chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
 							<td></td>
-							<td>${chungTu.taiKhoanCoDs[0].taiKhoan.maTk}</td>
+							<td>${chungTu.taiKhoanCoDs[0].loaiTaiKhoan.maTk}</td>
 						</c:when>
 						<c:otherwise>
 							<td></td>
 							<td></td>
 						</c:otherwise>
 					</c:choose>
-					<td><fmt:formatNumber value="${chungTu.soTien.giaTri}"
-							maxFractionDigits="2"></fmt:formatNumber></td>
-					<td rowspan="${chungTu.soTkLonNhat+1}"></td>
-					<td rowspan="${chungTu.soTkLonNhat+1}">${chungTu.doiTuong.maDt}</td>
-					<td rowspan="${chungTu.soTkLonNhat+1}"><fmt:formatDate
+					<td align="right" style="color: blue;"><fmt:formatNumber
+							value="${chungTu.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
+					<td rowspan="${chungTu.soDongNkc}"></td>
+					<td rowspan="${chungTu.soDongNkc}">${chungTu.doiTuong.maDt}</td>
+					<td rowspan="${chungTu.soDongNkc}"><fmt:formatDate
 							value="${chungTu.ngayLap}" pattern="dd/M/yyyy" type="Date"
 							dateStyle="SHORT" /></td>
-					<td rowspan="${chungTu.soTkLonNhat+1}"><c:choose>
+					<td rowspan="${chungTu.soDongNkc}"><c:choose>
 							<c:when
 								test="${chungTu.doiTuong.loaiDt == DoiTuong.KHACH_VANG_LAI}">
 								${chungTu.doiTuong.nguoiNop}
@@ -88,10 +110,11 @@
 							<c:otherwise>${chungTu.doiTuong.tenDt}
 							</c:otherwise>
 						</c:choose></td>
-					<td rowspan="${chungTu.soTkLonNhat+1}">${chungTu.doiTuong.diaChi}</td>
+					<td rowspan="${chungTu.soDongNkc}">${chungTu.doiTuong.diaChi}</td>
 				</tr>
 				<c:choose>
-					<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU || chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
+					<c:when
+						test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU || chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
 						<c:choose>
 							<c:when test="${chungTu.soTkLonNhat>0}">
 								<c:forEach begin="0" end="${chungTu.soTkLonNhat-1}"
@@ -99,31 +122,56 @@
 									<tr>
 										<td align="right">${chungTu.taiKhoanCoDs[status.index].lyDo}</td>
 										<td></td>
-										<td>${chungTu.taiKhoanCoDs[status.index].taiKhoan.maTk}</td>
-										<td><fmt:formatNumber
-												value="${chungTu.taiKhoanCoDs[status.index].soTien}"
+										<td>${chungTu.taiKhoanCoDs[status.index].loaiTaiKhoan.maTk}</td>
+										<td align="right"><fmt:formatNumber
+												value="${chungTu.taiKhoanCoDs[status.index].soTien.soTien*chungTu.loaiTien.banRa}"
 												maxFractionDigits="2"></fmt:formatNumber></td>
 									</tr>
 								</c:forEach>
 							</c:when>
 						</c:choose>
 					</c:when>
-					<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI || chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
+					<c:when
+						test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI || chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
 						<c:choose>
 							<c:when test="${chungTu.soTkLonNhat>0}">
 								<c:forEach begin="0" end="${chungTu.soTkLonNhat-1}"
 									varStatus="status">
 									<tr>
 										<td align="right">${chungTu.taiKhoanNoDs[status.index].lyDo}</td>
-										<td>${chungTu.taiKhoanNoDs[status.index].taiKhoan.maTk}</td>
+										<td>${chungTu.taiKhoanNoDs[status.index].loaiTaiKhoan.maTk}</td>
 										<td></td>
-										<td><fmt:formatNumber
-												value="${chungTu.taiKhoanNoDs[status.index].soTien}"
+										<td align="right"><fmt:formatNumber
+												value="${chungTu.taiKhoanNoDs[status.index].soTien.soTien*chungTu.loaiTien.banRa}"
 												maxFractionDigits="2"></fmt:formatNumber></td>
 									</tr>
 								</c:forEach>
 							</c:when>
 						</c:choose>
+					</c:when>
+					<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH}">
+						<c:forEach begin="0" end="${chungTu.taiKhoanNoDs.size()-1}"
+							varStatus="status">
+							<tr>
+								<td align="right">${chungTu.taiKhoanNoDs[status.index].lyDo}</td>
+								<td>${chungTu.taiKhoanNoDs[status.index].loaiTaiKhoan.maTk}</td>
+								<td></td>
+								<td align="right"><fmt:formatNumber
+										value="${chungTu.taiKhoanNoDs[status.index].soTien.soTien*chungTu.loaiTien.banRa}"
+										maxFractionDigits="2"></fmt:formatNumber></td>
+							</tr>
+						</c:forEach>
+						<c:forEach begin="0" end="${chungTu.taiKhoanCoDs.size()-1}"
+							varStatus="status">
+							<tr>
+								<td align="right">${chungTu.taiKhoanCoDs[status.index].lyDo}</td>
+								<td></td>
+								<td>${chungTu.taiKhoanCoDs[status.index].loaiTaiKhoan.maTk}</td>
+								<td align="right"><fmt:formatNumber
+										value="${chungTu.taiKhoanCoDs[status.index].soTien.soTien*chungTu.loaiTien.banRa}"
+										maxFractionDigits="2"></fmt:formatNumber></td>
+							</tr>
+						</c:forEach>
 					</c:when>
 				</c:choose>
 			</c:forEach>

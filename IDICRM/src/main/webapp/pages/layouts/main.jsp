@@ -9,10 +9,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="${url}/public/css/bootstrap.min.css" />
-<link rel="stylesheet" href="${url}/public/css/paneltab.css" />
-<link rel="stylesheet"	href="${url}/public/css/bootstrap-multiselect.css" />
-<link rel="stylesheet" href="${url}/public/css/style.css" />
+<link rel="stylesheet" href="${url}/public/css/bootstrap.min.css" />  
+<!-- <link rel="stylesheet" href="${url}/public/css/paneltab.css" /> -->
+<!--<link rel="stylesheet"	href="${url}/public/css/bootstrap-multiselect.css" /> -->
+<link rel="stylesheet" href="${url}/public/css/style.css" /> 
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -31,8 +31,8 @@
 </head>
 <body>
      <tiles:insertAttribute name="header" />
-	<form:form id="mainFinanceForm" action="" method="GET"
-		modelAttribute="mainFinanceForm" acceptCharset="UTF-8">
+	<form:form id="mainCRMForm" action="" method="GET"
+		modelAttribute="mainCRMForm" acceptCharset="UTF-8">
 		<div class="container-fluid">
 			<div class="row content">
 				<div class="col-sm-2 sidenav" style="padding: 2px;">

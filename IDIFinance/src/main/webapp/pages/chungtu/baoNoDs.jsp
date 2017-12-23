@@ -29,13 +29,13 @@
 <br />
 <br />
 
-<div class="row">
+<div class="table-responsive">
 	<table class="table table-bordered table-hover">
 		<thead>
 			<tr>
 				<th class="text-center" colspan="2">Báo nợ</th>
 				<th class="text-center" rowspan="2">Lý do</th>
-				<th class="text-center" rowspan="2">Số tiền (*)</th>
+				<th class="text-center" rowspan="2">Tổng số tiền (*)</th>
 				<th class="text-center" rowspan="2">Đối tượng nhận</th>
 				<th class="text-center" rowspan="2">Địa chỉ</th>
 				<th class="text-center" rowspan="2">Mã số thuế</th>
@@ -54,7 +54,7 @@
 							dateStyle="SHORT" /></td>
 					<td class="text-center" style="width: 50px;">${baoNo.loaiCt}${baoNo.soCt}</td>
 					<td><a href="${url}/xembaono/${baoNo.maCt}">${baoNo.lyDo}</a></td>
-					<td><fmt:formatNumber value="${baoNo.soTien.giaTri}"
+					<td align="right"><fmt:formatNumber value="${baoNo.soTien.giaTri}"
 							maxFractionDigits="2"></fmt:formatNumber></td>
 					<td><c:choose>
 							<c:when

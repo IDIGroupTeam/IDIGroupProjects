@@ -1,12 +1,22 @@
 package com.idi.finance.bean.soketoan;
 
+import com.idi.finance.bean.KyKeToan;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.TaiKhoan;
 
-public class NghiepVuKeToan {
+public class NghiepVuKeToan implements Comparable<NghiepVuKeToan> {
+	private KyKeToan ky;
 	private ChungTu chungTu;
 	private TaiKhoan taiKhoanNo;
 	private TaiKhoan taiKhoanCo;
+
+	public KyKeToan getKy() {
+		return ky;
+	}
+
+	public void setKy(KyKeToan ky) {
+		this.ky = ky;
+	}
 
 	public ChungTu getChungTu() {
 		return chungTu;
@@ -30,6 +40,47 @@ public class NghiepVuKeToan {
 
 	public void setTaiKhoanCo(TaiKhoan taiKhoanCo) {
 		this.taiKhoanCo = taiKhoanCo;
+	}
+
+	@Override
+	public int compareTo(NghiepVuKeToan nvkt) {
+		if (nvkt == null) {
+			return 1;
+		}
+
+		if (nvkt.getChungTu() == null) {
+			if (chungTu == null)
+				return 0;
+
+			return 1;
+		}
+
+		if (nvkt.getChungTu().getNgayHt() == null) {
+			if (chungTu == null)
+				return -1;
+
+			if (chungTu.getNgayHt() == null)
+				return 0;
+
+			return 1;
+		}
+
+		if (chungTu == null || chungTu.getNgayHt() == null)
+			return -1;
+
+		int ngayHtRs = chungTu.getNgayHt().compareTo(nvkt.getChungTu().getNgayHt());
+
+		if (ngayHtRs == 0) {
+			if (chungTu.getMaCt() > nvkt.getChungTu().getMaCt()) {
+				return 1;
+			} else if (chungTu.getMaCt() == nvkt.getChungTu().getMaCt()) {
+				return 0;
+			} else {
+				return -1;
+			}
+		} else {
+			return ngayHtRs;
+		}
 	}
 
 	@Override

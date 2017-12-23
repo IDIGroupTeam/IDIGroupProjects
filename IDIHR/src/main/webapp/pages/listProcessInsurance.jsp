@@ -5,21 +5,38 @@
 <html>
 <head>
 <title>Quá trình đóng BHXH của nhân viên</title>
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #E8E3E3;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #E8E3E3;
+}
+</style>
 </head>
 <body>
 	<a
 		href="${pageContext.request.contextPath}/processInsurance/insertProcessInsuranceForm?socicalInsuNo=${socicalInsuNo}&employeeId=${employeeId}"><button
-			class="btn btn-primary">Thêm mới</button></a>
+			class="btn btn-primary btn-sm">Thêm mới</button></a>
 	<br />
 	<br />
 	<div class="table-responsive">
 		<table class="table">
 			<tr>
-				<td bgcolor="#E6E6E6">Nhân viên:</td>
+				<td bgcolor="DDC5C5">Nhân viên:</td>
 				<td><c:out value="${name}" /></td>
 			</tr>
 			<tr>
-				<td bgcolor="#E6E6E6">Số sổ BHXH:</td>
+				<td bgcolor="DDC5C5">Số sổ BHXH:</td>
 				<td><c:out value="${socicalInsuNo}" /></td>
 			</tr>
 		</table>
@@ -62,7 +79,7 @@
 		<c:if test="${not empty message}">
 			<div class="alert alert-success">${message}</div>
 		</c:if>
-		<a href="${pageContext.request.contextPath}/insurance/"><button>Quay lại danh sách đóng BH</button></a>
+		<a href="${pageContext.request.contextPath}/insurance/"><button class="btn btn-primary btn-sm">Quay lại danh sách đóng BH</button></a>
 	</div>
 </body>
 </html>

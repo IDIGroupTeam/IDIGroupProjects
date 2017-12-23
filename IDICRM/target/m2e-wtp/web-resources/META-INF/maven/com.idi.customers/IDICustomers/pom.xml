@@ -6,8 +6,8 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <groupId>com.idi.customers</groupId>
-  <artifactId>IDICustomers</artifactId>
+  <artifactId>IDICRM</artifactId>
   <packaging>war</packaging>
-  <name>IDICustomers Webapps</name>
+  <name>IDICRM Webapps</name>
   <url>http://maven.apache.org</url>
 </project>

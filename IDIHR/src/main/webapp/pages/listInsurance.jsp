@@ -5,6 +5,23 @@
 <html>
 <head>
 <title>Danh sách BH của nhân viên</title>
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #E8E3E3;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #E8E3E3;
+}
+</style>
 </head>
 <body>
 	<a href="${pageContext.request.contextPath}/insurance/insertInsurance"><button

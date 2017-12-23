@@ -15,14 +15,13 @@
 	<!-- Bắt đầu Tab biểu đồ KPI -->
 	<definition name="kpiChart" extends="layouts">
 		<put-attribute name="title" value="Biểu đồ KPI" />
-		<put-attribute name="search"
-			value="/pages/layouts/kpiCharts/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiChart.jsp" />
+		<put-attribute name="search" value="/pages/bieudo/kpiChartTk.jsp" />
+		<put-attribute name="body" value="/pages/bieudo/kpiChart.jsp" />
 	</definition>
 
 	<definition name="chartManagement" extends="layouts">
 		<put-attribute name="title" value="Quản lý biểu đồ" />
-		<put-attribute name="body" value="/pages/chartManagement.jsp" />
+		<put-attribute name="body" value="/pages/bieudo/chartManagement.jsp" />
 	</definition>
 	<!-- Kết thúc Tab biểu đồ KPI -->
 
@@ -111,22 +110,48 @@
 		<put-attribute name="title" value="Tạo mới báo nợ" />
 		<put-attribute name="body" value="/pages/chungtu/baoNoTm.jsp" />
 	</definition>
+
+	<!-- Kế toán tổng hợp -->
+	<definition name="danhSachKeToanTongHop" extends="layouts">
+		<put-attribute name="title" value="Danh sách kế toán tổng hợp" />
+		<put-attribute name="body" value="/pages/chungtu/keToanTongHopDs.jsp" />
+	</definition>
+
+	<definition name="xemKeToanTongHop" extends="layouts">
+		<put-attribute name="title" value="Chi tiết kế toán tổng hợp" />
+		<put-attribute name="body" value="/pages/chungtu/keToanTongHopXm.jsp" />
+	</definition>
+
+	<definition name="suaKeToanTongHop" extends="layouts">
+		<put-attribute name="title" value="Sửa kế toán tổng hợp" />
+		<put-attribute name="body" value="/pages/chungtu/keToanTongHopSu.jsp" />
+	</definition>
+
+	<definition name="taoMoiKeToanTongHop" extends="layouts">
+		<put-attribute name="title" value="Tạo mới kế toán tổng hợp" />
+		<put-attribute name="body" value="/pages/chungtu/keToanTongHopTm.jsp" />
+	</definition>
 	<!-- Kết thúc Tab chứng từ -->
 
 
 	<!-- Bắt đầu Tab sổ kế toán -->
 	<definition name="sktNhatKyChung" extends="layouts">
 		<put-attribute name="title" value="Sổ nhật ký chung" />
+		<put-attribute name="search"
+			value="/pages/soketoan/sktNhatKyChungTk.jsp" />
 		<put-attribute name="body" value="/pages/soketoan/sktNhatKyChung.jsp" />
 	</definition>
 
 	<definition name="sktSoCai" extends="layouts">
 		<put-attribute name="title" value="Sổ cái" />
+		<put-attribute name="search" value="/pages/soketoan/sktSoCaiTk.jsp" />
 		<put-attribute name="body" value="/pages/soketoan/sktSoCai.jsp" />
 	</definition>
 
 	<definition name="sktSoTienMat" extends="layouts">
 		<put-attribute name="title" value="Sổ tiền mặt" />
+		<!-- <put-attribute name="search" value="/pages/soketoan/sktSoTienMatTk.jsp" 
+			/> -->
 		<put-attribute name="body" value="/pages/soketoan/sktSoTienMat.jsp" />
 	</definition>
 
@@ -137,6 +162,8 @@
 
 	<definition name="sktSoTienGuiNganHang" extends="layouts">
 		<put-attribute name="title" value="Sổ tiền gửi ngân hàng" />
+		<!-- <put-attribute name="search" value="/pages/soketoan/sktSoTienGuiNganHangTk.jsp" 
+			/> -->
 		<put-attribute name="body"
 			value="/pages/soketoan/sktSoTienGuiNganHang.jsp" />
 	</definition>
@@ -146,17 +173,76 @@
 	<!-- Bắt đầu Tab báo cáo tài chính -->
 	<definition name="balanceAsset" extends="layouts">
 		<put-attribute name="title" value="Bảng cân đối kế toán" />
-		<put-attribute name="search"
-			value="/pages/layouts/balanceAssets/search.jsp" />
-		<put-attribute name="body" value="/pages/balanceAsset.jsp" />
+		<put-attribute name="search" value="/pages/cdkt/balanceAssetTk.jsp" />
+		<put-attribute name="body" value="/pages/cdkt/balanceAsset.jsp" />
+	</definition>
+
+	<definition name="balanceSheetCodes" extends="layouts">
+		<put-attribute name="title" value="Danh sách tài khoản kết toán" />
+		<put-attribute name="body" value="/pages/cdkt/balanceSheetCodes.jsp" />
+	</definition>
+
+	<definition name="hachToan" extends="layouts">
+		<put-attribute name="title"
+			value="Cập nhật bảng cân đối kế toán - Hạch toán" />
+		<put-attribute name="body" value="/pages/cdkt/hachToan.jsp" />
 	</definition>
 	<!-- Kết thúc Tab báo cáo tài chính -->
 
+	<!-- Bắt đầu Tab công việc -->
+	<!-- Quản lý lĩnh vực -->
+	<definition name="danhSachLinhVuc" extends="layouts">
+		<put-attribute name="title" value="Danh sách lĩnh vực" />
+		<put-attribute name="body" value="/pages/congviec/linhVucDs.jsp" />
+	</definition>
+
+	<definition name="taoMoiLinhVuc" extends="layouts">
+		<put-attribute name="title" value="Tạo mới lĩnh vực" />
+		<put-attribute name="body" value="/pages/congviec/linhVucTm.jsp" />
+	</definition>
+
+	<definition name="suaLoaiLinhVuc" extends="layouts">
+		<put-attribute name="title" value="Sửa lĩnh vực" />
+		<put-attribute name="body" value="/pages/congviec/linhVucSu.jsp" />
+	</definition>
+
+	<!-- Quản lý nghiệp vụ -->
+	<definition name="danhSachNghiepVu" extends="layouts">
+		<put-attribute name="title" value="Danh sách nghiệp vụ" />
+		<put-attribute name="body" value="/pages/congviec/nghiepVuDs.jsp" />
+	</definition>
+	
+	<definition name="xemNghiepVu" extends="layouts">
+		<put-attribute name="title" value="Xem nghiệp vụ" />
+		<put-attribute name="body" value="/pages/congviec/nghiepVuXm.jsp" />
+	</definition>
+
+	<definition name="taoMoiNghiepVu" extends="layouts">
+		<put-attribute name="title" value="Tạo mới nghiệp vụ" />
+		<put-attribute name="body" value="/pages/congviec/nghiepVuTm.jsp" />
+	</definition>
+
+	<definition name="suaNghiepVu" extends="layouts">
+		<put-attribute name="title" value="Sửa nghiệp vụ" />
+		<put-attribute name="body" value="/pages/congviec/nghiepVuSu.jsp" />
+	</definition>
+	<!-- Kết thúc Tab công việc -->
 
 	<!-- Bắt đầu Tab quản trị -->
+	<!-- Quản lý tài khoản kế toán -->
 	<definition name="danhSachTaiKhoan" extends="layouts">
 		<put-attribute name="title" value="Danh mục tài khoản kế toán" />
-		<put-attribute name="body" value="/pages/taiKhoanDs.jsp" />
+		<put-attribute name="body" value="/pages/taikhoan/taiKhoanDs.jsp" />
+	</definition>
+
+	<definition name="taoMoiLoaiTaiKhoan" extends="layouts">
+		<put-attribute name="title" value="Tạo mới tài khoản kế toán" />
+		<put-attribute name="body" value="/pages/taikhoan/taiKhoanTm.jsp" />
+	</definition>
+
+	<definition name="suaLoaiTaiKhoan" extends="layouts">
+		<put-attribute name="title" value="Sửa tài khoản kế toán" />
+		<put-attribute name="body" value="/pages/taikhoan/taiKhoanSu.jsp" />
 	</definition>
 
 	<definition name="danhSachKhachHang" extends="layouts">

@@ -44,11 +44,21 @@
 	});
 </script>
 
-<h4>PHIẾU THU</h4>
+<div>
+	<span class="pull-left heading4">PHIẾU THU</span>
+	<div class="btn-group btn-group-sm pull-right">
+		<a href="${url}/pdfphieuthu/${chungTu.maCt}"
+			class="btn btn-info btn-sm"> <span
+			class="glyphicon glyphicon-download"></span> Xuất
+		</a>
+	</div>
+</div>
+<br />
 <hr />
+
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="soCt">Số phiếu thu:</label>
-	<div class="col-sm-4">${chungTu.soCt}</div>
+	<div class="col-sm-4">${chungTu.loaiCt}${chungTu.soCt}</div>
 
 	<label class="control-label col-sm-2" for=ngayLap>Ngày lập
 		phiếu thu:</label>
@@ -108,16 +118,25 @@
 </div>
 
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="soTien.soTien">Số
-		tiền:</label>
-	<div class="col-sm-4">
-		<fmt:formatNumber value="${chungTu.soTien.soTien}"
-			maxFractionDigits="2"></fmt:formatNumber>
-	</div>
+	<label class="control-label col-sm-2" for="lyDo">Lý do:</label>
+	<div class="col-sm-4">${chungTu.lyDo}</div>
 
-	<label class="control-label col-sm-2" for="soTien.tien.maLt">Loại
-		tiền</label>
-	<div class="col-sm-4">${chungTu.soTien.tien.tenLt}</div>
+	<label class="control-label col-sm-2" for="kemTheo">Kèm theo <br />số
+		chứng từ gốc:
+	</label>
+	<div class="col-sm-4">${chungTu.kemTheo}</div>
+</div>
+
+<div class="row form-group">
+	<label class="control-label col-sm-2" for="lyDo">Loại tiền:</label>
+	<div class="col-sm-4">${chungTu.loaiTien.tenLt}</div>
+
+	<label class="control-label col-sm-2" for="kemTheo">Tỷ giá </label>
+	<div class="col-sm-4">
+		<fmt:formatNumber value="${chungTu.loaiTien.banRa}"
+			maxFractionDigits="2"></fmt:formatNumber>
+		VND
+	</div>
 </div>
 
 <div class="row form-group">
@@ -128,24 +147,9 @@
 			maxFractionDigits="2"></fmt:formatNumber>
 		VND
 	</div>
-
-	<label class="control-label col-sm-2" for="soTien.tien.banRa">Tỷ
-		giá:</label>
-	<div class="col-sm-4">${chungTu.soTien.tien.banRa}&nbsp;VND</div>
 </div>
 
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="lyDo">Lý do:</label>
-	<div class="col-sm-4">${chungTu.lyDo}</div>
-
-	<label class="control-label col-sm-2" for="kemTheo">Kèm theo <br />số
-		chứng từ gốc:
-	</label>
-	<div class="col-sm-4">${chungTu.kemTheo}</div>
-</div>
-
-
-<div class="row form-group">
+<div class="table-responsive row form-group">
 	<label class="control-label col-sm-2">Định khoản</label>
 	<table id="taiKhoanTbl"
 		class="table table-bordered table-hover text-center dinhkhoan">
@@ -169,10 +173,11 @@
 					<!-- Phần ghi Nợ -->
 					<c:choose>
 						<c:when test="${status.index < chungTu.taiKhoanNoDs.size()}">
-							<td>${chungTu.taiKhoanNoDs[status.index].taiKhoan.maTk}-${chungTu.taiKhoanNoDs[status.index].taiKhoan.tenTk}</td>
+							<td>${chungTu.taiKhoanNoDs[status.index].loaiTaiKhoan.maTk}-${chungTu.taiKhoanNoDs[status.index].loaiTaiKhoan.tenTk}</td>
 							<td><fmt:formatNumber
-									value="${chungTu.taiKhoanNoDs[status.index].soTien}"
-									maxFractionDigits="2"></fmt:formatNumber></td>
+									value="${chungTu.taiKhoanNoDs[status.index].soTien.soTien}"
+									maxFractionDigits="2"></fmt:formatNumber>
+								${chungTu.taiKhoanNoDs[status.index].soTien.loaiTien.maLt}</td>
 						</c:when>
 						<c:otherwise>
 							<td></td>
@@ -181,10 +186,11 @@
 					</c:choose>
 
 					<!-- Phần ghi Có -->
-					<td>${chungTu.taiKhoanCoDs[status.index].taiKhoan.maTk}-${chungTu.taiKhoanCoDs[status.index].taiKhoan.tenTk}</td>
+					<td>${chungTu.taiKhoanCoDs[status.index].loaiTaiKhoan.maTk}-${chungTu.taiKhoanCoDs[status.index].loaiTaiKhoan.tenTk}</td>
 					<td><fmt:formatNumber
-							value="${chungTu.taiKhoanCoDs[status.index].soTien}"
-							maxFractionDigits="2"></fmt:formatNumber></td>
+							value="${chungTu.taiKhoanCoDs[status.index].soTien.soTien}"
+							maxFractionDigits="2"></fmt:formatNumber>
+						${chungTu.taiKhoanCoDs[status.index].soTien.loaiTien.maLt}</td>
 					<td>${chungTu.taiKhoanCoDs[status.index].lyDo}</td>
 				</tr>
 			</c:forEach>
