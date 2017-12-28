@@ -61,7 +61,7 @@ public class TimekeepingController {
 		Timekeeping timekeeping = new Timekeeping();
 		model.addAttribute("timekeepingForm", timekeeping);
 		if (timeKeepingFile != null && timeKeepingFile.getSize() > 0) {
-			log.info(timeKeepingFile.getName() + " - " + timeKeepingFile.getSize());
+			log.info(timeKeepingFile.getOriginalFilename() + " - " + timeKeepingFile.getSize());
 			try {
 				// Read & insert time keeping data
 				List<Timekeeping> timekeepings = xp.loadTimekeepingDataFromExcel(timeKeepingFile.getInputStream());
@@ -74,7 +74,7 @@ public class TimekeepingController {
 				return "formTimekeeping";
 			} catch (Exception e) {
 				e.printStackTrace();
-				String comment = "Không thể đọc excel file " + timeKeepingFile.getName()
+				String comment = "Không thể đọc excel file " + timeKeepingFile.getOriginalFilename()
 						+ ". Có thể file bị lỗi, không đúng định dạng, hoặc đường truyền chậm, xin mời thử lại...";
 				model.addAttribute("comment", comment);
 				// model.addAttribute("tab", "tabCNDL");
@@ -236,7 +236,7 @@ public class TimekeepingController {
 				leaveForGenReport.setLeaveUsed(String.valueOf(leaveUsed));
 							
 				//Tinh so ngay nghi con lai cua nam truoc 
-				if(Integer.valueOf(year) - 1 <= 2016)
+/*				if(Integer.valueOf(year) - 1 <= 2016)
 					leaveForGenReport.setRestQuata("0");
 				else {
 					int lastYear = Integer.valueOf(year) -1;
@@ -260,9 +260,10 @@ public class TimekeepingController {
 					double leaveUsedLastYear = getLeaveUsed(String.valueOf(lastYear), id);
 					leaveForGenReport.setRestQuata(String.valueOf(quataLeaveLastYear - leaveUsedLastYear));
 				}
-				leaveForGenReport.setLeaveRemain(String.valueOf((quataLeave + Integer.valueOf(leaveForGenReport.getRestQuata())) - leaveUsed));
+				}*/	
+				leaveForGenReport.setLeaveRemain(String.valueOf(quataLeave - leaveUsed));
 				//
-				
+					
 				leaveForGenReport.setLeaveTypes(leaveInfos);
 				model.addAttribute("leaveInfos", leaveInfos);
 				System.out.println("leave info size: " + leaveInfos.size());
@@ -350,7 +351,7 @@ public class TimekeepingController {
 					leaveForGenReport.setLeaveUsed(String.valueOf(leaveUsed));
 					//leaveForGenReport.setLeaveRemain(String.valueOf(quataLeave - leaveUsed));
 					
-					//Tinh so ngay nghi con lai cua nam truoc 
+/*					//Tinh so ngay nghi con lai cua nam truoc 
 					if(Integer.valueOf(year) - 1 <= 2016)
 						leaveForGenReport.setRestQuata("0");
 					else {
@@ -374,10 +375,10 @@ public class TimekeepingController {
 						
 						double leaveUsedLastYear = getLeaveUsed(String.valueOf(lastYear), id);
 						leaveForGenReport.setRestQuata(String.valueOf(quataLeaveLastYear - leaveUsedLastYear));
-					}
-					leaveForGenReport.setLeaveRemain(String.valueOf((quataLeave + Integer.valueOf(leaveForGenReport.getRestQuata())) - leaveUsed));
+					}*/	
+					leaveForGenReport.setLeaveRemain(String.valueOf(quataLeave - leaveUsed));
 					//
-					
+				
 					model.addAttribute("leaveInfos", leaveInfos);
 					leaveForGenReport.setLeaveTypes(leaveInfos);
 					System.out.println("leave info size: " + leaveInfos.size());
@@ -480,7 +481,7 @@ public class TimekeepingController {
 					leaveForGenReport.setLeaveUsed(String.valueOf(leaveUsed));
 					//leaveForGenReport.setLeaveRemain(String.valueOf(quataLeave - leaveUsed));
 					
-					//Tinh so ngay nghi con lai cua nam truoc 
+/*					//Tinh so ngay nghi con lai cua nam truoc 
 					if(Integer.valueOf(year) - 1 <= 2016)
 						leaveForGenReport.setRestQuata("0");
 					else {
@@ -504,10 +505,10 @@ public class TimekeepingController {
 						
 						double leaveUsedLastYear = getLeaveUsed(String.valueOf(lastYear), id);
 						leaveForGenReport.setRestQuata(String.valueOf(quataLeaveLastYear - leaveUsedLastYear));
-					}
-					leaveForGenReport.setLeaveRemain(String.valueOf((quataLeave + Integer.valueOf(leaveForGenReport.getRestQuata())) - leaveUsed));
+					}*/	
+					leaveForGenReport.setLeaveRemain(String.valueOf(quataLeave - leaveUsed));
 					//
-					
+				
 					model.addAttribute("leaveInfos", leaveInfos);
 					leaveForGenReport.setLeaveTypes(leaveInfos);
 					System.out.println("leave info size: " + leaveInfos.size());

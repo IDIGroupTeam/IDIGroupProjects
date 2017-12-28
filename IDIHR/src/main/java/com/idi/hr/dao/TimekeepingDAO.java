@@ -76,6 +76,25 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	}
 
 	/**
+	 * CheckTimekeepingExisting
+	 * @param employeeId
+	 * @param date
+	 * @param timeIn
+	 * @return
+	 */
+	public String checkTimekeepingExisting(int employeeId, Date date, String timeIn) {
+
+		String sql = hr.get("CHECK_EXISTING_TIMEKEEPING").toString();
+		log.info("CHECK_EXISTING_TIMEKEEPING query: " + sql);
+		Object[] params = new Object[] { employeeId, date, timeIn };
+
+		String existing = jdbcTmpl.queryForObject(sql, String.class, params);
+		
+		return existing;
+
+	}
+	
+	/**
 	 * Insert a Timekeeping into database
 	 * 
 	 * @param timekeepings
@@ -90,20 +109,22 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 				Timekeeping timekeepingDTO = new Timekeeping();
 				timekeepingDTO = timekeepings.get(i);
 				try {
-					Timekeeping timekeeping = getTimekeeping(timekeepingDTO.getEmployeeId(), timekeepingDTO.getDate(),
+					String timekeepingExist = checkTimekeepingExisting(timekeepingDTO.getEmployeeId(), timekeepingDTO.getDate(),
 							timekeepingDTO.getTimeIn());					
-					if (timekeeping != null) {
+					if (Integer.parseInt(timekeepingExist) > 0) {
 						log.info("The record for employeeId=" + timekeepingDTO.getEmployeeId() + ", date="
 								+ timekeepingDTO.getDate() + ", check in time=" + timekeepingDTO.getTimeIn()
 								+ " is existing, do not insert ...");
+					}else {
+						System.err.println("insert Ma NV: " + timekeepingDTO.getEmployeeId() + "|" + timekeepingDTO.getDate() + "|" + timekeepingDTO.getTimeIn());
+						Object[] params = new Object[] { timekeepingDTO.getEmployeeId(), timekeepingDTO.getDate(),
+								timekeepingDTO.getTimeIn(), timekeepingDTO.getTimeOut(), timekeepingDTO.getComeLateM(),
+								timekeepingDTO.getLeaveSoonM(), timekeepingDTO.getComeLateA(),
+								timekeepingDTO.getLeaveSoonA(), timekeepingDTO.getComment() };
+						jdbcTmpl.update(sql, params);
 					}
 				} catch (Exception e) {
-					System.err.println("insert Ma NV: " + timekeepingDTO.getEmployeeId() + "|" + timekeepingDTO.getDate() + "|" + timekeepingDTO.getTimeIn());
-					Object[] params = new Object[] { timekeepingDTO.getEmployeeId(), timekeepingDTO.getDate(),
-							timekeepingDTO.getTimeIn(), timekeepingDTO.getTimeOut(), timekeepingDTO.getComeLateM(),
-							timekeepingDTO.getLeaveSoonM(), timekeepingDTO.getComeLateA(),
-							timekeepingDTO.getLeaveSoonA(), timekeepingDTO.getComment() };
-					jdbcTmpl.update(sql, params);
+					e.printStackTrace();
 				}
 
 			}
@@ -182,15 +203,15 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 		if (month != null && month.length() > 0)
 			sql = sql + " AND MONTH(DATE) = '" + month + "' ";
 
-		if (year != null && year.length() > 0)
-			sql = sql + " AND YEAR(DATE) = '" + year + "' ";		
+		if (employeeId > 0)
+			sql = sql + " AND EMPLOYEE_ID = " + employeeId + " ";		
 
 		log.info("GET_TIMEKEEPING_FOR_REPORT query: " + sql);
 
-		Object[] params = new Object[] { employeeId };
+		Object[] params = new Object[] { year };
 		countNumber = jdbcTmpl.queryForObject(sql, String.class, params);
 		
-		System.err.println(leaveType+":"+countNumber);
+		System.err.println(leaveType + ": " + countNumber);
 		
 		return countNumber;
 	}
