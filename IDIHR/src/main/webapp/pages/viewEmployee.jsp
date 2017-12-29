@@ -5,7 +5,8 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <title>Tập đoàn IDI - Xem thông tin nhân viên</title>
 <style>
 .error-message {
@@ -29,9 +30,17 @@
 				</tr>
 
 				<tr>
-					<td rowspan="4"><img
-						src="D://IBM_ADMIN//Pictures//Pics//TruongNV.jpg" width="125px"
-						height="150px"></td>
+					<td rowspan="4">
+<%-- 					<%if (latestPhotoUpload != null && !"".equals(latestPhotoUpload)) {%>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <img src="<%=baseURL%>/img/<%=latestPhotoUpload%>" class="col-md-12"/>
+                            </div>
+                        </div>
+                        <%}%> --%>
+					<img src="<c:out value="${employeeForm.imagePath}"/>" alt="profile image" width="125px" height="150px"/>
+					</td>
+<!-- 					<img src="D://IBM_ADMIN//Pictures//Pics//TruongNV.jpg" width="125px" height="150px"></td> -->
 					<td bgcolor="#E6E6E6">Email:</td>
 					<td><c:out value="${employeeForm.email}" /></td>
 
@@ -55,9 +64,13 @@
 					<td><c:out value="${employeeForm.DOB}" /></td>
 					<td bgcolor="#E6E6E6">Phòng:</td>
 					<td><c:out value="${employeeForm.department}" /></td>
-
-
 				</tr>
+				<tr>
+						<td bgcolor="#E6E6E6">Ngày vào cty:</td>
+						<td><c:out value="${employeeForm.joinDate}" /></td>
+						<td bgcolor="#E6E6E6">Ngày ký HĐLĐ:</td>
+						<td><c:out value="${employeeForm.officalJoinDate}" /></td>
+					</tr>
 				<tr>
 					<td bgcolor="#E6E6E6">CMND/CCCD/passportNo:</td>
 					<td><c:out value="${employeeForm.personalId}" /></td>
@@ -97,8 +110,8 @@
 				<tr>
 					<td>&nbsp;</td>
 					<td><a
-						href="editEmployee?employeeId=${employeeForm.employeeId}"><button>Sửa
-								thông tin</button></a> <a href="${pageContext.request.contextPath}/"><button>Quay
+						href="editEmployee?employeeId=${employeeForm.employeeId}"><button class="btn btn-lg btn-primary btn-sm">Sửa
+								thông tin</button></a> <a href="${pageContext.request.contextPath}/"><button class="btn btn-lg btn-primary btn-sm">Quay
 								lại danh sách NV</button></a></td>
 					<td>&nbsp;</td>
 				</tr>

@@ -6,9 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class HomeController {
-	private static final Logger logger = Logger.getLogger(HomeController.class);
+public class CRMController {
+	private static final Logger logger = Logger.getLogger(CRMController.class);
 
+	
 	@RequestMapping(value = { "/", "/home" })
 	public String welcome(Model model) {
 		String strDes =null;

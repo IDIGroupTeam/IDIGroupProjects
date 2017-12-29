@@ -99,3 +99,12 @@ div.searchbox {
 .dinhkhoan tr td {
 	width: 200px;
 }
+
+.smallform {
+	position: relative;
+	width: 170px;
+}
+
+.heading4 {
+	font-size: 18px;
+}

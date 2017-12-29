@@ -9,5 +9,6 @@
     <h1> Quản lý Khách hàng</h1>
 	<h1><p align="center"><u><b>${name}</b></u></p><br></h1>
 	<h2><i>${description}</i></h2>
+	<h3>Thông tin về khách hàng</h3>
 </body>
 </html>

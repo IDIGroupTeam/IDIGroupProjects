@@ -11,6 +11,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="${url}/public/css/bootstrap.min.css" />
 <link rel="stylesheet" href="${url}/public/css/paneltab.css" />
 <link rel="stylesheet" href="${url}/public/css/bootstrap-dialog.min.css" />
@@ -41,8 +42,8 @@
 </head>
 <body>
 	<tiles:insertAttribute name="header" />
-	<form:form id="mainFinanceForm" action="" method="GET"
-		modelAttribute="mainFinanceForm" acceptCharset="UTF-8">
+	<form:form id="mainIDIHomeForm" action="" method="GET"
+		modelAttribute="mainIDIHomeForm" acceptCharset="UTF-8">
 		<div class="container-fluid">
 			<div class="row content">
 				<div class="col-sm-2 sidenav" style="padding: 2px;">

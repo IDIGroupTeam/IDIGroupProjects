@@ -1,9 +1,24 @@
 package com.idi.hr.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.PieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
+import org.jfree.util.Rotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,18 +44,67 @@ public class DepartmentController {
 
 	@Autowired
 	private EmployeeDAO employeeDAO;
-	
+
 	@RequestMapping(value = { "/department/" }, method = RequestMethod.GET)
-	public String ListDepartments(Model model) {
+	public String ListDepartments(Model model, HttpServletResponse response,  HttpServletRequest request) {
 		try {
 			List<Department> list = departmentDAO.getDepartments();
-			model.addAttribute("departments", list);
+
+			// tinh so luong nhan vien theo phong ban
+			// drawPieChart
+			response.setContentType("image/png");
+			DefaultPieDataset dpd = new DefaultPieDataset();
+			//
+			List<Department> listD = new ArrayList<Department>();
+			for (int i = 0; i < list.size(); i++) {
+				Department dept = new Department();
+				dept = list.get(i);
+				String deptId = dept.getDepartmentId();
+				int deptSize = employeeDAO.getEmployeesByDepartment(deptId).size();
+				dept.setNumberOfMember(deptSize);
+				listD.add(dept);
+				//
+				dpd.setValue(dept.getDepartmentName(), deptSize);
+			}
+
+			JFreeChart chart = createChart(dpd, "Biểu đồ tỷ lệ lao động theo phòng ban");
+			try {
+
+				String rootPath = request.getSession().getServletContext().getRealPath("/");
+				File dir = new File(rootPath + "charts/");
+				if (!dir.exists()) {
+					dir.mkdirs();
+				}
+
+				File file = new File(dir + "/departmentChart.png");
+				// System.err.println(dir);
+				ChartUtilities.saveChartAsJPEG(file, chart, 750, 400);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+			
+			model.addAttribute("departments", listD);
 			model.addAttribute("formTitle", "Danh sách phòng ban");
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
 		}
 		return "listDepartment";
+	}
+
+	private JFreeChart createChart(PieDataset pdSet, String chartTitle) {
+
+		JFreeChart chart = ChartFactory.createPieChart3D(chartTitle, pdSet, true, true, true);
+		PiePlot3D plot = (PiePlot3D) chart.getPlot();
+		PieSectionLabelGenerator generator = new StandardPieSectionLabelGenerator("{0}: {2}", new DecimalFormat("0"), new DecimalFormat("0.00%"));
+		plot.setLabelGenerator(generator);
+		//plot.setIgnoreZeroValues(true);
+		//plot.setCircular(true);
+		plot.setStartAngle(290);
+		plot.setDirection(Rotation.CLOCKWISE);
+		plot.setForegroundAlpha(0.5f);
+
+		return chart;
 	}
 
 	@RequestMapping(value = "/department/addDepartment", method = RequestMethod.POST)
@@ -103,7 +167,7 @@ public class DepartmentController {
 
 		return this.departmentForm(model, department);
 	}
-	
+
 	@RequestMapping(value = { "/department/listEmployeeOfDepartment" }, method = RequestMethod.GET)
 	public String listEmployeeOfDepartment(Model model, @RequestParam("departmentId") String departmentId) {
 		try {
@@ -114,6 +178,6 @@ public class DepartmentController {
 			log.error(e, e);
 			e.printStackTrace();
 		}
-		return "listEmployee"; //"listEmployeeOfDepartment";
+		return "listEmployee"; // "listEmployeeOfDepartment";
 	}
 }

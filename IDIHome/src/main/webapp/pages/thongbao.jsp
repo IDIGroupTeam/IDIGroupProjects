@@ -8,13 +8,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
   <script src="/IDIHome/public/js/jquery.min.js"></script>
-<script src="/IDIHome/public/js/bootstrap.min.js"></script>
-<!-- <script src="${url}/public/js/bootstrap-dialog.min.js"></script>
-<script src="${url}/public/js/bootstrap-multiselect.js"></script>
-<script src="${url}/public/js/jquery.bootcomplete.js"></script>
-<script src="${url}/public/js/jquery.tabledit.js"></script>
-<script src="${url}/public/js/script.js"></script>  -->
-<!--   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  -->
+ <script src="/IDIHome/public/js/bootstrap.min.js"></script>
 <title>Thông báo</title>
 </head>
 <body>

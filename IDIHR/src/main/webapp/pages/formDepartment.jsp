@@ -36,7 +36,7 @@
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
-						<td><input type="submit" value="Lưu" name="Lưu"/> <a
+						<td><input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" name="Lưu"/> <a
 							href="${pageContext.request.contextPath}/department/">Thoát</a></td>
 						<td>&nbsp;</td>
 					</tr>

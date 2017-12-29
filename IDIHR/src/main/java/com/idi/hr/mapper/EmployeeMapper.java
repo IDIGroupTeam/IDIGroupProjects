@@ -31,27 +31,25 @@ public class EmployeeMapper implements RowMapper<EmployeeInfo> {
 		String currentAdress = rs.getString("CURRENT_ADDRESS");
 		String permanentAdress = rs.getString("PERMANENT_ADDRESS");
 		String note = rs.getString("NOTE");
-		
+
 		String emerName = rs.getString("EMER_NAME");
 		String emerPhoneNo = rs.getString("EMER_PHONE_NO");
 		String nation = rs.getString("NATION");
-		byte[] image = rs.getBytes("IMAGE");
+
 		String workStatus = rs.getString("WORK_STATUS");
 		String bankNo = rs.getString("BANK_NO");
 		String bankName = rs.getString("BANK_NAME");
 		String bankBranch = rs.getString("BANK_BRANCH");
-		String salary = rs.getString("SALARY");
+		String imagePath = rs.getString("IMAGE_PATH");
 		String salarySocicalInsu = rs.getString("SALA_SOCI_INSU");
 		String socicalInsuNo = rs.getString("SOCIAL_INSU_NO");
 		String healthInsuNo = rs.getString("HEALTH_INSU_NO");
 		String percentSocicalInsu = rs.getString("PERCENT_SOCI_INSU");
 
-		return new EmployeeInfo(employeeId, loginAccount, gender, fullName, maritalStatus,
-				jobTitle, department, DOB, personalId, issueDate, phoneNo,
-				joinDate, officalJoinDate, email, terminationDate, reasonforLeave,
-				currentAdress, permanentAdress, note, emerName, emerPhoneNo,
-				nation, image, workStatus, bankNo, bankName, bankBranch,
-				salary, salarySocicalInsu, socicalInsuNo, healthInsuNo, percentSocicalInsu);
+		return new EmployeeInfo(employeeId, loginAccount, gender, fullName, maritalStatus, jobTitle, department, DOB,
+				personalId, issueDate, phoneNo, joinDate, officalJoinDate, email, terminationDate, reasonforLeave,
+				currentAdress, permanentAdress, note, emerName, emerPhoneNo, nation, workStatus, bankNo, bankName,
+				bankBranch, imagePath, salarySocicalInsu, socicalInsuNo, healthInsuNo, percentSocicalInsu);
 
 	}
 }

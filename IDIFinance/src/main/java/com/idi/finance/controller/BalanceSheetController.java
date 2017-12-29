@@ -1,37 +1,38 @@
 package com.idi.finance.controller;
 
-import java.util.Calendar;
-import java.util.Comparator;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.idi.finance.bean.BalanceSheet;
-import com.idi.finance.charts.KpiBarChart;
-import com.idi.finance.charts.KpiChartProcessor;
-import com.idi.finance.charts.KpiLineChart;
+import com.idi.finance.bean.KyKeToan;
+import com.idi.finance.bean.bieudo.KpiGroup;
+import com.idi.finance.bean.cdkt.BalanceAssetData;
+import com.idi.finance.bean.cdkt.BalanceAssetItem;
+import com.idi.finance.bean.chungtu.ChungTu;
+import com.idi.finance.bean.chungtu.TaiKhoan;
+import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BalanceSheetDAO;
-import com.idi.finance.kpi.KPIMeasures;
-import com.idi.finance.kpi.OperatingCycle;
-import com.idi.finance.kpi.QuickRatio;
-import com.idi.finance.kpi.ReceivableTurnover;
-import com.idi.finance.kpi.CashConversionCycle;
-import com.idi.finance.kpi.CashRatio;
-import com.idi.finance.kpi.CurrentRatio;
-import com.idi.finance.kpi.DebtRatio;
-import com.idi.finance.kpi.FinancialLeverage;
+import com.idi.finance.dao.KpiChartDAO;
+import com.idi.finance.dao.SoKeToanDAO;
+import com.idi.finance.form.BalanceAssetForm;
 import com.idi.finance.utils.ExcelProcessor;
+import com.idi.finance.utils.Utils;
 
 @Controller
 public class BalanceSheetController {
@@ -40,1190 +41,353 @@ public class BalanceSheetController {
 	@Autowired
 	BalanceSheetDAO balanceSheetDAO;
 
-	@RequestMapping("/")
-	public String finance(Model model) {
-		return "forward:/kntttucthoi";
+	@Autowired
+	KpiChartDAO kpiChartDAO;
+
+	@Autowired
+	SoKeToanDAO soKeToanDAO;
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 	}
 
-	@RequestMapping("/kntttucthoi")
-	public String kpiCurrentRatio(Model model) {
-		// Vẽ biểu đồ Khả năng thanh toán tức thời theo tất cả các kỳ (tháng) trong năm
-		// Với từng kỳ, lấy tài sản ngắn hạn (100) chia cho nợ ngắn hạn (310)
+	@RequestMapping("/cdkt/candoiketoan")
+	public String balanceAssets(@ModelAttribute("mainFinanceForm") BalanceAssetForm balanceSheetForm, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
+			model.addAttribute("kpiGroups", kpiGroups);
 
-		// Get list current assets and current liabilites for all period in a year
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-		List<BalanceSheet> currentAssets = balanceSheetDAO.listBSsByAssetsCodeAndYear("100", currentYear);
-		logger.info("currentAssets " + currentAssets.size());
-		List<BalanceSheet> currentLiabilities = balanceSheetDAO.listBSsByAssetsCodeAndYear("310", currentYear);
-		logger.info("currentLiabilities " + currentLiabilities.size());
+			// List balance assets:
+			if (balanceSheetForm == null)
+				balanceSheetForm = new BalanceAssetForm();
 
-		// Calculate list of current ratios
-		double threshold = 1.0;
-		HashMap<Date, CurrentRatio> currentRatios = KPIMeasures.currentRatio(currentAssets, currentLiabilities,
-				threshold);
+			// Time: Defaul: current year, current month
+			Date currentYear = Utils.getStartDateOfMonth(new Date());
+			List<Date> selectedAssetPeriods = null;
+			if (balanceSheetForm.getAssetPeriods() != null) {
+				selectedAssetPeriods = Utils.convertArray2List(balanceSheetForm.getAssetPeriods());
+			} else if (!balanceSheetForm.isFirst()) {
+				// Đây là lần đầu vào tab, không phải do ấn nút form tìm kiếm,
+				// sẽ lấy dữ liệu tháng hiện tại
+				selectedAssetPeriods = new ArrayList<>();
+				selectedAssetPeriods.add(currentYear);
+				balanceSheetForm.setFirst(true);
 
-		// Start drawing charts:
-		KpiBarChart currentRatioBarChart = new KpiBarChart(currentRatios);
-		KpiLineChart currentRatioLineChart = new KpiLineChart(currentRatios, threshold);
-		KpiChartProcessor currentRatioChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of current ratios by period (month)
-		SortedMap<Date, CurrentRatio> sortedCurrentRatios = new TreeMap<Date, CurrentRatio>(new Comparator<Date>() {
-			@Override
-			public int compare(Date date1, Date date2) {
-				return date1.compareTo(date2);
+				// Chuyển tháng từ List Date sang Array String
+				balanceSheetForm.setAssetPeriods(Utils.convertList2Array(selectedAssetPeriods));
 			}
-		});
-		sortedCurrentRatios.putAll(currentRatios);
 
-		model.addAttribute("currentRatios", sortedCurrentRatios);
-		model.addAttribute("currentRatioBarChart", currentRatioBarChart);
-		model.addAttribute("currentRatioLineChart", currentRatioLineChart);
-		model.addAttribute("currentRatioChartProcessor", currentRatioChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "kntttucthoi");
-
-		return "kpiCurrentRatio";
-	}
-
-	@RequestMapping("/knttnhanh")
-	public String kpiQuickRation(Model model) {
-		// Vẽ biểu đồ Khả năng thanh toán nhanh theo tất cả các kỳ (tháng) trong năm
-		// Với từng kỳ, lấy tài sản ngắn hạn (100) trừ hàng tồn kho (140),
-		// tất cả chia cho nợ ngắn hạn (310)
-
-		// Get list current assets, inventories and current liabilites for all period in
-		// a year
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-		List<BalanceSheet> currentAssets = balanceSheetDAO.listBSsByAssetsCodeAndYear("100", currentYear);
-		logger.info("currentAssets " + currentAssets.size());
-		List<BalanceSheet> inventories = balanceSheetDAO.listBSsByAssetsCodeAndYear("140", currentYear);
-		logger.info("inventories " + inventories.size());
-		List<BalanceSheet> currentLiabilities = balanceSheetDAO.listBSsByAssetsCodeAndYear("310", currentYear);
-		logger.info("currentLiabilities " + currentLiabilities.size());
-
-		// Calculate list of quick ratios
-		double threshold = 0.0;
-		HashMap<Date, QuickRatio> quickRatios = KPIMeasures.quickRatio(currentAssets, inventories, currentLiabilities,
-				threshold);
-
-		// Start drawing charts:
-		KpiBarChart quickRatioBarChart = new KpiBarChart(quickRatios);
-		KpiLineChart quickRatioLineChart = new KpiLineChart(quickRatios, threshold);
-		KpiChartProcessor quickRatioChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of quick ratios by period (month)
-		SortedMap<Date, QuickRatio> sortedQuickRatios = new TreeMap<Date, QuickRatio>(new Comparator<Date>() {
-			@Override
-			public int compare(Date date1, Date date2) {
-				return date1.compareTo(date2);
+			// AssetCode
+			List<String> selectedAssetCodes = null;
+			if (balanceSheetForm.getAssetCodes() != null) {
+				selectedAssetCodes = Arrays.asList(balanceSheetForm.getAssetCodes());
 			}
-		});
-		sortedQuickRatios.putAll(quickRatios);
 
-		model.addAttribute("quickRatios", sortedQuickRatios);
-		model.addAttribute("quickRatioBarChart", quickRatioBarChart);
-		model.addAttribute("quickRatioLineChart", quickRatioLineChart);
-		model.addAttribute("quickRatioChartProcessor", quickRatioChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "knttnhanh");
+			List<BalanceAssetData> bads = balanceSheetDAO.listBAsByAssetCodesAndDates(selectedAssetCodes,
+					selectedAssetPeriods, balanceSheetForm.getPeriodType());
+			List<String> assetCodes = balanceSheetDAO.listBSAssetsCodes();
+			List<Date> assetPeriods = balanceSheetDAO.listBSAssetsPeriods(balanceSheetForm.getPeriodType());
 
-		return "kpiQuickRatio";
-	}
-
-	@RequestMapping("/knttbangtien")
-	public String kpiCashRation(Model model) {
-		// Vẽ biểu đồ Khả năng thanh bằng tiền theo tất cả các kỳ (tháng) trong năm.
-		// Với từng kỳ, lấy tiền & tương đương tiền (110) chia cho nợ ngắn hạn (310)
-
-		// Get list of cashes & equivalents and current liabilites for all period in a
-		// year
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-		List<BalanceSheet> cashEquivalents = balanceSheetDAO.listBSsByAssetsCodeAndYear("110", currentYear);
-		logger.info("cashEquivalents " + cashEquivalents.size());
-		List<BalanceSheet> currentLiabilities = balanceSheetDAO.listBSsByAssetsCodeAndYear("310", currentYear);
-		logger.info("currentLiabilities " + currentLiabilities.size());
-
-		// Calculate list of cash ratios
-		double threshold = 0.1;
-		HashMap<Date, CashRatio> cashRatios = KPIMeasures.cashRatio(cashEquivalents, currentLiabilities, threshold);
-
-		// Start drawing charts:
-		KpiBarChart cashRatioBarChart = new KpiBarChart(cashRatios);
-		KpiLineChart cashRatioLineChart = new KpiLineChart(cashRatios, threshold);
-		KpiChartProcessor cashRatioChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of cash ratios by period (month)
-		SortedMap<Date, CashRatio> sortedCashRatios = new TreeMap<Date, CashRatio>(new Comparator<Date>() {
-			@Override
-			public int compare(Date date1, Date date2) {
-				return date1.compareTo(date2);
+			// Paging:
+			// Number records of a Page: Default: 25
+			// Page Index: Default: 1
+			// Total records
+			// Total of page
+			if (balanceSheetForm.getNumberRecordsOfPage() == 0) {
+				balanceSheetForm.setNumberRecordsOfPage(25);
 			}
-		});
-		sortedCashRatios.putAll(cashRatios);
+			int numberRecordsOfPage = balanceSheetForm.getNumberRecordsOfPage();
 
-		model.addAttribute("cashRatios", sortedCashRatios);
-		model.addAttribute("cashRatioBarChart", cashRatioBarChart);
-		model.addAttribute("cashRatioLineChart", cashRatioLineChart);
-		model.addAttribute("cashRatioChartProcessor", cashRatioChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "knttbangtien");
-
-		return "kpiCashRatio";
-	}
-
-	@RequestMapping("/vqkhoanphaithu")
-	public String kpiReceivableTurnOver(Model model) {
-		// Vẽ biểu đồ vòng quay khoản phải thu theo tất cả các kỳ (tháng) trong năm. Với
-		// từng kỳ, lấy doanh thu thuần (10) chia phải thu bình quân (phải thu đầu kỳ
-		// bình quân với phải thu cuối kỳ - (130 + 210))
-
-		// Get list of receivables & total operating revenues for all period in a year
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-		List<BalanceSheet> totalOperatingRevenues = balanceSheetDAO.listSRsByAssetsCodeAndYear("10", currentYear);
-		logger.info("totalOperatingRevenues " + totalOperatingRevenues.size());
-		List<BalanceSheet> shortReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("130", currentYear);
-		logger.info("shortReceivables " + shortReceivables.size());
-		List<BalanceSheet> longReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("210", currentYear);
-		logger.info("longReceivables " + longReceivables.size());
-
-		// Calculate list of receivable turnovers
-		double threshold = 1.0;
-		HashMap<Date, ReceivableTurnover> receivableTurnovers = KPIMeasures.receivableTurnover(totalOperatingRevenues,
-				shortReceivables, longReceivables, threshold);
-
-		// Start drawing charts:
-		KpiBarChart receivableTurnoverBarChart = new KpiBarChart(receivableTurnovers);
-		KpiLineChart receivableTurnoverLineChart = new KpiLineChart(receivableTurnovers, threshold);
-		KpiChartProcessor receivableTurnoverChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of receivable turnovers by period (month)
-		SortedMap<Date, ReceivableTurnover> sortedReceivableTurnovers = new TreeMap<Date, ReceivableTurnover>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedReceivableTurnovers.putAll(receivableTurnovers);
-
-		model.addAttribute("receivableTurnovers", sortedReceivableTurnovers);
-		model.addAttribute("receivableTurnoverBarChart", receivableTurnoverBarChart);
-		model.addAttribute("receivableTurnoverLineChart", receivableTurnoverLineChart);
-		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "vqkhoanphaithu");
-
-		return "kpiReceivableTurnOver";
-	}
-
-	// Chức năng này tương tự vqkhoanphaithu, nên dùng lại code của vqkhoanphaithu
-	@RequestMapping("/kttienbinhquan")
-	public String kpiAvgReceivablePeriod(Model model) {
-		// Vẽ biểu đồ kỳ thu tiền bình quân theo tất cả các kỳ (tháng) trong năm. Với
-		// từng kỳ, lấy doanh thu thuần (10) chia phải thu bình quân (phải thu đầu kỳ
-		// bình quân với phải thu cuối kỳ - (130+210)), sau đó lấy 365 số ngày trong năm
-		// (trong kỳ bình quân) chia cho giá trị nhận được.
-
-		// Get list of receivables & total operating revenues for all period in a year
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-		List<BalanceSheet> totalOperatingRevenues = balanceSheetDAO.listSRsByAssetsCodeAndYear("10", currentYear);
-		logger.info("totalOperatingRevenues " + totalOperatingRevenues.size());
-		List<BalanceSheet> shortReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("130", currentYear);
-		logger.info("shortReceivables " + shortReceivables.size());
-		List<BalanceSheet> longReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("210", currentYear);
-		logger.info("longReceivables " + longReceivables.size());
-
-		// Calculate list of receivable turnovers
-		double threshold = 1.0;
-		int numberOfPeriods = 365;
-		HashMap<Date, ReceivableTurnover> receivableTurnovers = KPIMeasures.avgReceivablePeriod(totalOperatingRevenues,
-				shortReceivables, longReceivables, threshold, numberOfPeriods);
-
-		// Start drawing charts:
-		KpiBarChart receivableTurnoverBarChart = new KpiBarChart(receivableTurnovers);
-		KpiLineChart receivableTurnoverLineChart = new KpiLineChart(receivableTurnovers, threshold);
-		KpiChartProcessor receivableTurnoverChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of receivable turnovers by period (month)
-		SortedMap<Date, ReceivableTurnover> sortedReceivableTurnovers = new TreeMap<Date, ReceivableTurnover>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedReceivableTurnovers.putAll(receivableTurnovers);
-
-		model.addAttribute("receivableTurnovers", sortedReceivableTurnovers);
-		model.addAttribute("receivableTurnoverBarChart", receivableTurnoverBarChart);
-		model.addAttribute("receivableTurnoverLineChart", receivableTurnoverLineChart);
-		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "kttienbinhquan");
-
-		return "kpiAvgReceivablePeriod";
-	}
-
-	// Chức năng này tương tự vqkhoanphaithu, nên dùng lại code của vqkhoanphaithu
-	@RequestMapping("/vqhangtonkho_sosach")
-	public String kpiInventoriesTurnOverByDocument(Model model) {
-		// Vẽ biểu đồ vòng quay hàng tồn kho theo sổ sách theo tất cả các kỳ (tháng)
-		// trong năm. Với từng kỳ, lấy giá vốn hàng bán (11) chia hàng tồn kho bình quân
-		// (hàng tồn kho đầu kỳ bình quân với hàng tồn kho cuối kỳ - 140)
-
-		// Get list of cost of goods solds & inventories for all period in a year
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-		List<BalanceSheet> costOfSolds = balanceSheetDAO.listSRsByAssetsCodeAndYear("11", currentYear);
-		logger.info("Cost of good solds " + costOfSolds.size());
-		List<BalanceSheet> inventories = balanceSheetDAO.listBSsByAssetsCodeAndYear("140", currentYear);
-		logger.info("inventories " + inventories.size());
-
-		// Calculate list of inventories turnovers
-		double threshold = 1.0;
-		HashMap<Date, ReceivableTurnover> receivableTurnovers = KPIMeasures.receivableTurnover(costOfSolds, inventories,
-				threshold);
-
-		// Start drawing charts:
-		KpiBarChart receivableTurnoverBarChart = new KpiBarChart(receivableTurnovers);
-		KpiLineChart receivableTurnoverLineChart = new KpiLineChart(receivableTurnovers, threshold);
-		KpiChartProcessor receivableTurnoverChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of receivable turnovers by period (month)
-		SortedMap<Date, ReceivableTurnover> sortedReceivableTurnovers = new TreeMap<Date, ReceivableTurnover>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedReceivableTurnovers.putAll(receivableTurnovers);
-
-		model.addAttribute("receivableTurnovers", sortedReceivableTurnovers);
-		model.addAttribute("receivableTurnoverBarChart", receivableTurnoverBarChart);
-		model.addAttribute("receivableTurnoverLineChart", receivableTurnoverLineChart);
-		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "vqhangtonkho_sosach");
-
-		return "kpiInventoriesTurnOverByDocument";
-	}
-
-	// Chức năng này tương tự vqkhoanphaithu, nên dùng lại code của vqkhoanphaithu
-	@RequestMapping("/vqhangtonkho_thitruong")
-	public String kpiInventoriesTurnOverByMarket(Model model) {
-		// Vẽ biểu đồ vòng quay hàng tồn kho theo giá thị trường theo tất cả các kỳ
-		// (tháng) trong năm. Với từng kỳ, lấy doanh thu thuần (10) chia hàng tồn kho
-		// bình quân (hàng tồn kho đầu kỳ bình quân với hàng tồn kho cuối kỳ - 140)
-
-		// Get list of cost of goods solds & inventories for all period in a year
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-		List<BalanceSheet> totalOperatingRevenues = balanceSheetDAO.listSRsByAssetsCodeAndYear("10", currentYear);
-		logger.info("totalOperatingRevenues " + totalOperatingRevenues.size());
-		List<BalanceSheet> inventories = balanceSheetDAO.listBSsByAssetsCodeAndYear("140", currentYear);
-		logger.info("inventories " + inventories.size());
-
-		// Calculate list of inventories turnovers
-		double threshold = 1.0;
-		HashMap<Date, ReceivableTurnover> receivableTurnovers = KPIMeasures.receivableTurnover(totalOperatingRevenues,
-				inventories, threshold);
-
-		// Start drawing charts:
-		KpiBarChart receivableTurnoverBarChart = new KpiBarChart(receivableTurnovers);
-		KpiLineChart receivableTurnoverLineChart = new KpiLineChart(receivableTurnovers, threshold);
-		KpiChartProcessor receivableTurnoverChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of receivable turnovers by period (month)
-		SortedMap<Date, ReceivableTurnover> sortedReceivableTurnovers = new TreeMap<Date, ReceivableTurnover>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedReceivableTurnovers.putAll(receivableTurnovers);
-
-		model.addAttribute("receivableTurnovers", sortedReceivableTurnovers);
-		model.addAttribute("receivableTurnoverBarChart", receivableTurnoverBarChart);
-		model.addAttribute("receivableTurnoverLineChart", receivableTurnoverLineChart);
-		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "vqhangtonkho_thitruong");
-
-		return "kpiInventoriesTurnOverByMarket";
-	}
-
-	// Chức năng này tương tự kttienbinhquan, nên dùng lại code của kttienbinhquan
-	@RequestMapping("/sntonkhobinhquan_sosach")
-	public String kpiDaysInInventoriesByDocument(Model model) {
-		// Vẽ biểu đồ số ngày tồn kho bình quân theo sổ sách theo tất cả các kỳ (tháng)
-		// trong năm. Với từng kỳ, lấy giá vốn hàng bán (11) chia hàng tồn kho bình quân
-		// (hàng tồn kho đầu kỳ bình quân với hàng tồn kho cuối kỳ - 140), lấy 365 (số
-		// ngày trong năm-kỳ) chia cho kết quả thu được.
-
-		// // Get list of cost of goods solds & inventories for all period in a year
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-		List<BalanceSheet> costOfSolds = balanceSheetDAO.listSRsByAssetsCodeAndYear("11", currentYear);
-		logger.info("Cost of good solds " + costOfSolds.size());
-		List<BalanceSheet> inventories = balanceSheetDAO.listBSsByAssetsCodeAndYear("140", currentYear);
-		logger.info("inventories " + inventories.size());
-
-		// Calculate list of inventories turnovers
-		double threshold = 1.0;
-		int numberOfPeriods = 365;
-		HashMap<Date, ReceivableTurnover> receivableTurnovers = KPIMeasures.avgReceivablePeriod(costOfSolds,
-				inventories, threshold, numberOfPeriods);
-
-		// Start drawing charts:
-		KpiBarChart receivableTurnoverBarChart = new KpiBarChart(receivableTurnovers);
-		KpiLineChart receivableTurnoverLineChart = new KpiLineChart(receivableTurnovers, threshold);
-		KpiChartProcessor receivableTurnoverChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of receivable turnovers by period (month)
-		SortedMap<Date, ReceivableTurnover> sortedReceivableTurnovers = new TreeMap<Date, ReceivableTurnover>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedReceivableTurnovers.putAll(receivableTurnovers);
-
-		model.addAttribute("receivableTurnovers", sortedReceivableTurnovers);
-		model.addAttribute("receivableTurnoverBarChart", receivableTurnoverBarChart);
-		model.addAttribute("receivableTurnoverLineChart", receivableTurnoverLineChart);
-		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "sntonkhobinhquan_sosach");
-
-		return "kpiDaysInInventoriesByDocument";
-	}
-
-	// Chức năng này tương tự kttienbinhquan, nên dùng lại code của kttienbinhquan
-	@RequestMapping("/sntonkhobinhquan_thitruong")
-	public String kpiDaysInInventoriesByMarket(Model model) {
-		// Vẽ biểu đồ số ngày tồn kho bình quân theo giá thị trường theo tất cả các kỳ
-		// (tháng) trong năm. Với từng kỳ, lấy doanh thu thuần (10) chia hàng tồn kho
-		// bình quân (hàng tồn kho đầu kỳ bình quân với hàng tồn kho cuối kỳ - 140), lấy
-		// 365 (số ngày trong năm-kỳ) chia cho kết quả thu được.
-
-		// // Get list of cost of goods solds & inventories for all period in a year
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-		List<BalanceSheet> costOfSolds = balanceSheetDAO.listSRsByAssetsCodeAndYear("10", currentYear);
-		logger.info("Cost of good solds " + costOfSolds.size());
-		List<BalanceSheet> inventories = balanceSheetDAO.listBSsByAssetsCodeAndYear("140", currentYear);
-		logger.info("inventories " + inventories.size());
-
-		// Calculate list of inventories turnovers
-		double threshold = 1.0;
-		int numberOfPeriods = 365;
-		HashMap<Date, ReceivableTurnover> receivableTurnovers = KPIMeasures.avgReceivablePeriod(costOfSolds,
-				inventories, threshold, numberOfPeriods);
-
-		// Start drawing charts:
-		KpiBarChart receivableTurnoverBarChart = new KpiBarChart(receivableTurnovers);
-		KpiLineChart receivableTurnoverLineChart = new KpiLineChart(receivableTurnovers, threshold);
-		KpiChartProcessor receivableTurnoverChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of receivable turnovers by period (month)
-		SortedMap<Date, ReceivableTurnover> sortedReceivableTurnovers = new TreeMap<Date, ReceivableTurnover>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedReceivableTurnovers.putAll(receivableTurnovers);
-
-		model.addAttribute("receivableTurnovers", sortedReceivableTurnovers);
-		model.addAttribute("receivableTurnoverBarChart", receivableTurnoverBarChart);
-		model.addAttribute("receivableTurnoverLineChart", receivableTurnoverLineChart);
-		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "sntonkhobinhquan_thitruong");
-
-		return "kpiDaysInInventoriesByMarket";
-	}
-
-	// Chức năng này tương tự kttienbinhquan, nên dùng lại code của kttienbinhquan
-	@RequestMapping("/chukyhoatdong_sosach")
-	public String kpiOperatingCycleByDocument(Model model) {
-		// Vẽ biểu đồ chu kỳ hoạt động của doanh nghiệp theo giá trị sổ sách theo tất cả
-		// các kỳ (tháng) trong năm. Với từng kỳ, lấy kỳ thu tiền bình quân cộng số ngày
-		// tồn kho bình quân theo giá trị sổ sách: (2 chỉ số đã tính ở các đồ thị trên)
-		// 365*(Start 130 + End 130)/(2*(10)) + 365* (Start 140 + End 140)/(2*(11))
-
-		// Get list of receivables & total operating revenues for all period in a year
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-		double threshold = 1.0;
-		int numberOfPeriods = 365;
-
-		List<BalanceSheet> totalOperatingRevenues = balanceSheetDAO.listSRsByAssetsCodeAndYear("10", currentYear);
-		logger.info("totalOperatingRevenues " + totalOperatingRevenues.size());
-		List<BalanceSheet> shortReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("130", currentYear);
-		logger.info("shortReceivables " + shortReceivables.size());
-		List<BalanceSheet> longReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("210", currentYear);
-		logger.info("longReceivables " + longReceivables.size());
-
-		// Get list of cost of goods solds & inventories for all period in a year
-		List<BalanceSheet> costOfSolds = balanceSheetDAO.listSRsByAssetsCodeAndYear("11", currentYear);
-		logger.info("Cost of good solds " + costOfSolds.size());
-		List<BalanceSheet> inventories = balanceSheetDAO.listBSsByAssetsCodeAndYear("140", currentYear);
-		logger.info("inventories " + inventories.size());
-
-		// Kỳ thu tiền bình quân
-		HashMap<Date, ReceivableTurnover> receivableTurnovers = KPIMeasures.avgReceivablePeriod(totalOperatingRevenues,
-				shortReceivables, longReceivables, threshold, numberOfPeriods);
-
-		// Số ngày tồn kho bình quân theo giá trị sổ sách
-		HashMap<Date, ReceivableTurnover> dayInInventories = KPIMeasures.avgReceivablePeriod(costOfSolds, inventories,
-				threshold, numberOfPeriods);
-
-		// Chu kỳ hoạt động của doanh nghiệp theo giá trị sổ sách
-		HashMap<Date, OperatingCycle> operatingCycles = KPIMeasures.operatingCycle(receivableTurnovers,
-				dayInInventories, threshold);
-
-		// Start drawing charts:
-		KpiBarChart operatingCycleBarChart = new KpiBarChart(operatingCycles);
-		KpiLineChart operatingCycleLineChart = new KpiLineChart(operatingCycles, threshold);
-		KpiChartProcessor operatingCycleChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of operating cycles by period (month)
-		SortedMap<Date, OperatingCycle> sortedOperatingCycles = new TreeMap<Date, OperatingCycle>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedOperatingCycles.putAll(operatingCycles);
-
-		model.addAttribute("operatingCycles", sortedOperatingCycles);
-		model.addAttribute("operatingCycleBarChart", operatingCycleBarChart);
-		model.addAttribute("operatingCycleLineChart", operatingCycleLineChart);
-		model.addAttribute("operatingCycleChartProcessor", operatingCycleChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "chukyhoatdong_sosach");
-
-		return "kpiOperatingCycleByDocument";
-	}
-
-	// Chức năng này tương tự kttienbinhquan, nên dùng lại code của kttienbinhquan
-	@RequestMapping("/chukyhoatdong_thitruong")
-	public String kpiOperatingCycleByMarket(Model model) {
-		// Vẽ biểu đồ chu kỳ hoạt động của doanh nghiệp theo giá trị thị trường theo
-		// các kỳ (tháng) trong năm. Với từng kỳ, lấy kỳ thu tiền bình quân cộng số ngày
-		// tồn kho bình quân theo giá thị trường: (2 chỉ số đã tính ở các đồ thị trên)
-		// 365*(Start 130 + End 130)/(2*(10)) + 365* (Start 140 + End 140)/(2*(10))
-
-		// Get list of receivables & total operating revenues for all period in a year
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-		double threshold = 1.0;
-		int numberOfPeriods = 365;
-
-		List<BalanceSheet> totalOperatingRevenues = balanceSheetDAO.listSRsByAssetsCodeAndYear("10", currentYear);
-		logger.info("totalOperatingRevenues " + totalOperatingRevenues.size());
-		List<BalanceSheet> shortReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("130", currentYear);
-		logger.info("shortReceivables " + shortReceivables.size());
-		List<BalanceSheet> longReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("210", currentYear);
-		logger.info("longReceivables " + longReceivables.size());
-
-		// Get list of inventories for all period in a year
-		List<BalanceSheet> inventories = balanceSheetDAO.listBSsByAssetsCodeAndYear("140", currentYear);
-		logger.info("inventories " + inventories.size());
-
-		// Kỳ thu tiền bình quân
-		HashMap<Date, ReceivableTurnover> receivableTurnovers = KPIMeasures.avgReceivablePeriod(totalOperatingRevenues,
-				shortReceivables, longReceivables, threshold, numberOfPeriods);
-
-		// Số ngày tồn kho bình quân theo giá trị thị trường
-		HashMap<Date, ReceivableTurnover> dayInInventories = KPIMeasures.avgReceivablePeriod(totalOperatingRevenues,
-				inventories, threshold, numberOfPeriods);
-
-		// Chu kỳ hoạt động của doanh nghiệp theo giá trị sổ sách
-		HashMap<Date, OperatingCycle> operatingCycles = KPIMeasures.operatingCycle(receivableTurnovers,
-				dayInInventories, threshold);
-
-		// Start drawing charts:
-		KpiBarChart operatingCycleBarChart = new KpiBarChart(operatingCycles);
-		KpiLineChart operatingCycleLineChart = new KpiLineChart(operatingCycles, threshold);
-		KpiChartProcessor operatingCycleChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of operating cycles by period (month)
-		SortedMap<Date, OperatingCycle> sortedOperatingCycles = new TreeMap<Date, OperatingCycle>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedOperatingCycles.putAll(operatingCycles);
-
-		model.addAttribute("operatingCycles", sortedOperatingCycles);
-		model.addAttribute("operatingCycleBarChart", operatingCycleBarChart);
-		model.addAttribute("operatingCycleLineChart", operatingCycleLineChart);
-		model.addAttribute("operatingCycleChartProcessor", operatingCycleChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "chukyhoatdong_sosach");
-		model.addAttribute("action", "chukyhoatdong_thitruong");
-
-		return "kpiOperatingCycleByMarket";
-	}
-
-	// Chức năng này tương tự vqkhoanphaithu, nên dùng lại code của vqkhoanphaithu
-	@RequestMapping("/vqkhoanphaitra")
-	public String kpiPaymentTurnover(Model model) {
-		// Vẽ biểu đồ Vòng quay khoản phải trả theo các kỳ (tháng) trong năm. Với từng
-		// kỳ, lấy giá vốn hàng bán (11) chia phải trả bình quân của phải trả đầu kỳ và
-		// cuối kỳ (310).
-
-		// Get list of receivables & total operating revenues for all period in a year
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-		List<BalanceSheet> totalOperatingRevenues = balanceSheetDAO.listSRsByAssetsCodeAndYear("11", currentYear);
-		logger.info("totalOperatingRevenues " + totalOperatingRevenues.size());
-		List<BalanceSheet> shortReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("310", currentYear);
-		logger.info("shortReceivables " + shortReceivables.size());
-		List<BalanceSheet> longReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("330", currentYear);
-		logger.info("longReceivables " + longReceivables.size());
-
-		// Calculate list of receivable turnovers
-		double threshold = 1.0;
-		HashMap<Date, ReceivableTurnover> receivableTurnovers = KPIMeasures.receivableTurnover(totalOperatingRevenues,
-				shortReceivables, longReceivables, threshold);
-
-		// Start drawing charts:
-		KpiBarChart receivableTurnoverBarChart = new KpiBarChart(receivableTurnovers);
-		KpiLineChart receivableTurnoverLineChart = new KpiLineChart(receivableTurnovers, threshold);
-		KpiChartProcessor receivableTurnoverChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of receivable turnovers by period (month)
-		SortedMap<Date, ReceivableTurnover> sortedReceivableTurnovers = new TreeMap<Date, ReceivableTurnover>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedReceivableTurnovers.putAll(receivableTurnovers);
-
-		model.addAttribute("receivableTurnovers", sortedReceivableTurnovers);
-		model.addAttribute("receivableTurnoverBarChart", receivableTurnoverBarChart);
-		model.addAttribute("receivableTurnoverLineChart", receivableTurnoverLineChart);
-		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "vqkhoanphaitra");
-
-		return "kpiPaymentTurnover";
-	}
-
-	// Chức năng này tương tự kttienbinhquan, nên dùng lại code của kttienbinhquan
-	@RequestMapping("/kyphaitrabinhquan")
-	public String kpiAvgPaymentPeriod(Model model) {
-		// Vẽ biểu đồ kỳ phải trả bình quân theo các kỳ (tháng) trong năm. Với từng
-		// kỳ, lấy giá vốn hàng bán (11) chia phải trả bình quân của phải trả đầu kỳ và
-		// cuối kỳ (310), sau đó lấy 365 (số ngày trong năm - kỳ) chia cho giá trị đó
-
-		// Get list of receivables & total operating revenues for all period in a year
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-		List<BalanceSheet> totalOperatingRevenues = balanceSheetDAO.listSRsByAssetsCodeAndYear("11", currentYear);
-		logger.info("totalOperatingRevenues " + totalOperatingRevenues.size());
-		List<BalanceSheet> shortReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("310", currentYear);
-		logger.info("shortReceivables " + shortReceivables.size());
-		List<BalanceSheet> longReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("330", currentYear);
-		logger.info("longReceivables " + longReceivables.size());
-
-		// Calculate list of receivable turnovers
-		double threshold = 1.0;
-		int numberOfPeriods = 365;
-		HashMap<Date, ReceivableTurnover> receivableTurnovers = KPIMeasures.avgReceivablePeriod(totalOperatingRevenues,
-				shortReceivables, longReceivables, threshold, numberOfPeriods);
-
-		// Start drawing charts:
-		KpiBarChart receivableTurnoverBarChart = new KpiBarChart(receivableTurnovers);
-		KpiLineChart receivableTurnoverLineChart = new KpiLineChart(receivableTurnovers, threshold);
-		KpiChartProcessor receivableTurnoverChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of receivable turnovers by period (month)
-		SortedMap<Date, ReceivableTurnover> sortedReceivableTurnovers = new TreeMap<Date, ReceivableTurnover>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedReceivableTurnovers.putAll(receivableTurnovers);
-
-		model.addAttribute("receivableTurnovers", sortedReceivableTurnovers);
-		model.addAttribute("receivableTurnoverBarChart", receivableTurnoverBarChart);
-		model.addAttribute("receivableTurnoverLineChart", receivableTurnoverLineChart);
-		model.addAttribute("receivableTurnoverChartProcessor", receivableTurnoverChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "kyphaitrabinhquan");
-
-		return "kpiAvgPaymentPeriod";
-	}
-
-	@RequestMapping("/ckluanchuyentien_sosach")
-	public String kpiCashConversionCycleByDocument(Model model) {
-		// Vẽ biểu đồ chu kỳ luân chuyển tiền theo giá trị sổ sách theo các kỳ (tháng)
-		// trong năm. Với từng kỳ, lấy Chu kỳ hoạt động của doanh nghiệp theo giá trị sổ
-		// sách chia cho Kỳ phải trả bình quân (Những giá trị này được tính trước đó)
-
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-
-		double threshold = 1.0;
-		int numberOfPeriods = 365;
-
-		logger.info("Kỳ thu tiền bình quân:");
-		List<BalanceSheet> totalOperatingRevenues = balanceSheetDAO.listSRsByAssetsCodeAndYear("10", currentYear);
-		logger.info("Doanh thu thuần (10) " + totalOperatingRevenues.size());
-		List<BalanceSheet> shortReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("130", currentYear);
-		logger.info("Khoản phải thu ngắn hạn (130) " + shortReceivables.size());
-		List<BalanceSheet> longReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("210", currentYear);
-		logger.info("Khoản phải thu dài hạn (210) " + longReceivables.size());
-		HashMap<Date, ReceivableTurnover> receivableTurnovers = KPIMeasures.avgReceivablePeriod(totalOperatingRevenues,
-				shortReceivables, longReceivables, threshold, numberOfPeriods);
-
-		logger.info("Số ngày tồn kho bình quân theo giá trị sổ sách:");
-		List<BalanceSheet> costOfSolds = balanceSheetDAO.listSRsByAssetsCodeAndYear("11", currentYear);
-		logger.info("Giá vốn hàng bán (11) " + costOfSolds.size());
-		List<BalanceSheet> inventories = balanceSheetDAO.listBSsByAssetsCodeAndYear("140", currentYear);
-		logger.info("Hàng tồn kho (140) " + inventories.size());
-		HashMap<Date, ReceivableTurnover> dayInInventories = KPIMeasures.avgReceivablePeriod(costOfSolds, inventories,
-				threshold, numberOfPeriods);
-
-		logger.info("Chu kỳ hoạt động của doanh nghiệp theo giá trị sổ sách:");
-		HashMap<Date, OperatingCycle> operatingCycles = KPIMeasures.operatingCycle(receivableTurnovers,
-				dayInInventories, threshold);
-
-		logger.info("Tính kỳ phải trả bình quân:");
-		totalOperatingRevenues = balanceSheetDAO.listSRsByAssetsCodeAndYear("11", currentYear);
-		logger.info("Giá vốn hàng bán (11) " + totalOperatingRevenues.size());
-		shortReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("310", currentYear);
-		logger.info("Nợ ngắn hạn (310) " + shortReceivables.size());
-		longReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("330", currentYear);
-		logger.info("Nợ dài hạn (330) " + longReceivables.size());
-		HashMap<Date, ReceivableTurnover> avgPaymentPeriods = KPIMeasures.avgReceivablePeriod(totalOperatingRevenues,
-				shortReceivables, longReceivables, threshold, numberOfPeriods);
-
-		logger.info("Tính chu kỳ luân chuyển tiền theo sổ sách:");
-		HashMap<Date, CashConversionCycle> cashConversionCycles = KPIMeasures.cashConversionCycle(operatingCycles,
-				avgPaymentPeriods, threshold);
-
-		// Start drawing charts:
-		KpiBarChart cashConversionCycleBarChart = new KpiBarChart(cashConversionCycles);
-		KpiLineChart cashConversionCycleLineChart = new KpiLineChart(cashConversionCycles, threshold);
-		KpiChartProcessor cashConversionCycleChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of receivable turnovers by period (month)
-		SortedMap<Date, CashConversionCycle> sortedcashConversionCycles = new TreeMap<Date, CashConversionCycle>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedcashConversionCycles.putAll(cashConversionCycles);
-
-		model.addAttribute("cashConversionCycles", sortedcashConversionCycles);
-		model.addAttribute("cashConversionCycleBarChart", cashConversionCycleBarChart);
-		model.addAttribute("cashConversionCycleLineChart", cashConversionCycleLineChart);
-		model.addAttribute("cashConversionCycleChartProcessor", cashConversionCycleChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "ckluanchuyentien_sosach");
-
-		return "kpiCashConversionCycleByDocument";
-	}
-
-	@RequestMapping("/ckluanchuyentien_thitruong")
-	public String kpiCashConversionCycleByMarket(Model model) {
-		// Vẽ biểu đồ chu kỳ luân chuyển tiền theo giá trị thị trường theo các kỳ
-		// (tháng) trong năm. Với từng kỳ, lấy Chu kỳ hoạt động của doanh nghiệp theo
-		// giá trị thị trường chia cho Kỳ phải trả bình quân (Những giá trị này được
-		// tính trước đó)
-
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-
-		double threshold = 1.0;
-		int numberOfPeriods = 365;
-
-		logger.info("Kỳ thu tiền bình quân:");
-		List<BalanceSheet> totalOperatingRevenues = balanceSheetDAO.listSRsByAssetsCodeAndYear("10", currentYear);
-		logger.info("Doanh thu thuần (10) " + totalOperatingRevenues.size());
-		List<BalanceSheet> shortReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("130", currentYear);
-		logger.info("Khoản phải thu ngắn hạn (130) " + shortReceivables.size());
-		List<BalanceSheet> longReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("210", currentYear);
-		logger.info("Khoản phải thu dài hạn (210) " + longReceivables.size());
-		HashMap<Date, ReceivableTurnover> receivableTurnovers = KPIMeasures.avgReceivablePeriod(totalOperatingRevenues,
-				shortReceivables, longReceivables, threshold, numberOfPeriods);
-
-		logger.info("Số ngày tồn kho bình quân theo giá trị thị trường:");
-		logger.info("Doanh thu thuần (10) " + totalOperatingRevenues.size());
-		List<BalanceSheet> inventories = balanceSheetDAO.listBSsByAssetsCodeAndYear("140", currentYear);
-		logger.info("Hàng tồn kho (140) " + inventories.size());
-		HashMap<Date, ReceivableTurnover> dayInInventories = KPIMeasures.avgReceivablePeriod(totalOperatingRevenues,
-				inventories, threshold, numberOfPeriods);
-
-		logger.info("Chu kỳ hoạt động của doanh nghiệp theo giá trị thị trường:");
-		HashMap<Date, OperatingCycle> operatingCycles = KPIMeasures.operatingCycle(receivableTurnovers,
-				dayInInventories, threshold);
-
-		logger.info("Tính kỳ phải trả bình quân:");
-		totalOperatingRevenues = balanceSheetDAO.listSRsByAssetsCodeAndYear("11", currentYear);
-		logger.info("Giá vốn hàng bán (11) " + totalOperatingRevenues.size());
-		shortReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("310", currentYear);
-		logger.info("Nợ ngắn hạn (310) " + shortReceivables.size());
-		longReceivables = balanceSheetDAO.listBSsByAssetsCodeAndYear("330", currentYear);
-		logger.info("Nợ dài hạn (330) " + longReceivables.size());
-		HashMap<Date, ReceivableTurnover> avgPaymentPeriods = KPIMeasures.avgReceivablePeriod(totalOperatingRevenues,
-				shortReceivables, longReceivables, threshold, numberOfPeriods);
-
-		logger.info("Tính chu kỳ luân chuyển tiền theo sổ sách:");
-		HashMap<Date, CashConversionCycle> cashConversionCycles = KPIMeasures.cashConversionCycle(operatingCycles,
-				avgPaymentPeriods, threshold);
-
-		// Start drawing charts:
-		KpiBarChart cashConversionCycleBarChart = new KpiBarChart(cashConversionCycles);
-		KpiLineChart cashConversionCycleLineChart = new KpiLineChart(cashConversionCycles, threshold);
-		KpiChartProcessor cashConversionCycleChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of receivable turnovers by period (month)
-		SortedMap<Date, CashConversionCycle> sortedcashConversionCycles = new TreeMap<Date, CashConversionCycle>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedcashConversionCycles.putAll(cashConversionCycles);
-
-		model.addAttribute("cashConversionCycles", sortedcashConversionCycles);
-		model.addAttribute("cashConversionCycleBarChart", cashConversionCycleBarChart);
-		model.addAttribute("cashConversionCycleLineChart", cashConversionCycleLineChart);
-		model.addAttribute("cashConversionCycleChartProcessor", cashConversionCycleChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "ckluanchuyentien_thitruong");
-
-		return "kpiCashConversionCycleByMarket";
-	}
-
-	// Sử dụng hàm kpi của currentRatio vì tương tự nhau
-	@RequestMapping("/knttlaivay")
-	public String kpiInterestCoverage(Model model) {
-		// Vẽ biểu đồ khả năng thanh toán lãi vay theo các kỳ (tháng) trong năm. Với
-		// từng kỳ, lấy tổng lợi nhuận trước thuế (50) chia chi phí lãi vay (23).
-
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-
-		double threshold = 1.0;
-
-		logger.info("Khả năng thanh toán lãi vay:");
-		List<BalanceSheet> profits = balanceSheetDAO.listSRsByAssetsCodeAndYear("50", currentYear);
-		logger.info("Tổng lợi nhuận trước thuế (50) " + profits.size());
-		List<BalanceSheet> fees = balanceSheetDAO.listSRsByAssetsCodeAndYear("23", currentYear);
-		logger.info("Chi phí lãi vay (23) " + fees.size());
-
-		HashMap<Date, CurrentRatio> interestCoverages = KPIMeasures.currentRatio(profits, fees, threshold);
-
-		// Start drawing charts:
-		KpiBarChart interestCoverageBarChart = new KpiBarChart(interestCoverages);
-		KpiLineChart interestCoverageLineChart = new KpiLineChart(interestCoverages, threshold);
-		KpiChartProcessor interestCoverageChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of Interest Coverages by period (month)
-		SortedMap<Date, CurrentRatio> sortedInterestCoverages = new TreeMap<Date, CurrentRatio>(new Comparator<Date>() {
-			@Override
-			public int compare(Date date1, Date date2) {
-				return date1.compareTo(date2);
+			if (balanceSheetForm.getPageIndex() == 0) {
+				balanceSheetForm.setPageIndex(1);
 			}
-		});
-		sortedInterestCoverages.putAll(interestCoverages);
+			int pageIndex = balanceSheetForm.getPageIndex();
+			balanceSheetForm.setPageIndex(pageIndex);
 
-		model.addAttribute("interestCoverages", sortedInterestCoverages);
-		model.addAttribute("interestCoverageBarChart", interestCoverageBarChart);
-		model.addAttribute("interestCoverageLineChart", interestCoverageLineChart);
-		model.addAttribute("interestCoverageChartProcessor", interestCoverageChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "knttlaivay");
+			int totalRecords = bads == null ? 0 : bads.size();
+			balanceSheetForm.setTotalRecords(totalRecords);
 
-		return "kpiInterestCoverage";
-	}
+			int totalPages = totalRecords % numberRecordsOfPage > 0 ? totalRecords / numberRecordsOfPage + 1
+					: totalRecords / numberRecordsOfPage;
+			balanceSheetForm.setTotalPages(totalPages);
 
-	@RequestMapping("/hssdtongtaisan")
-	public String kpiTotalAssetsUtility(Model model) {
-		// Vẽ biểu đồ Hiệu suất sử dụng tổng tài sản (Vòng quay tổng tài sản) theo các
-		// kỳ (tháng) trong năm. Với từng kỳ, lấy doanh thu thuần (10), chia trung bình
-		// tổng tài sản (tổng tài sản đầu kỳ và cuối kỳ - 270)
-
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-
-		double threshold = 1.0;
-
-		logger.info("Hiệu suất sử dụng tổng tài sản (Vòng quay tổng tài sản):");
-		List<BalanceSheet> totalOperatingRevenues = balanceSheetDAO.listSRsByAssetsCodeAndYear("10", currentYear);
-		logger.info("Doanh thu thuần (10) " + totalOperatingRevenues.size());
-		List<BalanceSheet> totalAssets = balanceSheetDAO.listBSsByAssetsCodeAndYear("270", currentYear);
-		logger.info("Tổng tài sản (270) " + totalAssets.size());
-
-		HashMap<Date, ReceivableTurnover> totalAssetsUtilities = KPIMeasures.receivableTurnover(totalOperatingRevenues,
-				totalAssets, threshold);
-
-		// Start drawing charts:
-		KpiBarChart totalAssetsUtilityBarChart = new KpiBarChart(totalAssetsUtilities);
-		KpiLineChart totalAssetsUtilityLineChart = new KpiLineChart(totalAssetsUtilities, threshold);
-		KpiChartProcessor totalAssetsUtilityChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of receivable turnovers by period (month)
-		SortedMap<Date, ReceivableTurnover> sortedtotalAssetsUtilities = new TreeMap<Date, ReceivableTurnover>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedtotalAssetsUtilities.putAll(totalAssetsUtilities);
-
-		model.addAttribute("totalAssetsUtilities", sortedtotalAssetsUtilities);
-		model.addAttribute("totalAssetsUtilityBarChart", totalAssetsUtilityBarChart);
-		model.addAttribute("totalAssetsUtilityLineChart", totalAssetsUtilityLineChart);
-		model.addAttribute("totalAssetsUtilityChartProcessor", totalAssetsUtilityChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "hssdtongtaisan");
-
-		return "kpiTotalAssetsUtility";
-	}
-
-	@RequestMapping("/hssdtaisancodinh")
-	public String kpiFixedAssetsTurnover(Model model) {
-		// Vẽ biểu đồ Hiệu suất sử dụng tài sản cố định theo kỳ (tháng) trong năm. Với
-		// từng kỳ, lấy doanh thu thuần (10), chia trung bình tài sản cố định (tài sản
-		// cố định đầu kỳ và cuối kỳ - 220)
-
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-
-		double threshold = 1.0;
-
-		logger.info("Hiệu suất sử dụng tài sản cố định:");
-		List<BalanceSheet> totalOperatingRevenues = balanceSheetDAO.listSRsByAssetsCodeAndYear("10", currentYear);
-		logger.info("Doanh thu thuần (10) " + totalOperatingRevenues.size());
-		List<BalanceSheet> fixedAssets = balanceSheetDAO.listBSsByAssetsCodeAndYear("220", currentYear);
-		logger.info("Tài sản cố định (220) " + fixedAssets.size());
-
-		HashMap<Date, ReceivableTurnover> fixedAssetsTurnovers = KPIMeasures.receivableTurnover(totalOperatingRevenues,
-				fixedAssets, threshold);
-
-		// Start drawing charts:
-		KpiBarChart fixedAssetsTurnoverBarChart = new KpiBarChart(fixedAssetsTurnovers);
-		KpiLineChart fixedAssetsTurnoverLineChart = new KpiLineChart(fixedAssetsTurnovers, threshold);
-		KpiChartProcessor fixedAssetsTurnoverChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of receivable turnovers by period (month)
-		SortedMap<Date, ReceivableTurnover> sortedFixedAssetsTurnovers = new TreeMap<Date, ReceivableTurnover>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedFixedAssetsTurnovers.putAll(fixedAssetsTurnovers);
-
-		model.addAttribute("fixedAssetsTurnovers", sortedFixedAssetsTurnovers);
-		model.addAttribute("fixedAssetsTurnoverBarChart", fixedAssetsTurnoverBarChart);
-		model.addAttribute("fixedAssetsTurnoverLineChart", fixedAssetsTurnoverLineChart);
-		model.addAttribute("fixedAssetsTurnoverChartProcessor", fixedAssetsTurnoverChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "hssdtaisancodinh");
-
-		return "kpiFixedAssetsTurnover";
-	}
-
-	@RequestMapping("/hssdvonluudong")
-	public String kpiWorkingCapitalTurnover(Model model) {
-		// Vẽ biểu đồ Hiệu suất sử dụng trên vòng quay vốn lưu động theo kỳ (tháng)
-		// trong năm. Với từng kỳ, lấy doanh thu thuần (10), chia trung bình tài sản
-		// ngắn hạn (tài sản ngắn hạn đầu kỳ và cuối kỳ - 100)
-
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-
-		double threshold = 1.0;
-
-		logger.info("Hiệu suất sử dụng trên vòng quay vốn lưu động:");
-		List<BalanceSheet> totalOperatingRevenues = balanceSheetDAO.listSRsByAssetsCodeAndYear("10", currentYear);
-		logger.info("Doanh thu thuần (10) " + totalOperatingRevenues.size());
-		List<BalanceSheet> shorttermAssets = balanceSheetDAO.listBSsByAssetsCodeAndYear("100", currentYear);
-		logger.info("Tài sản ngắn hạn (100) " + shorttermAssets.size());
-
-		HashMap<Date, ReceivableTurnover> workingCapitalTurnovers = KPIMeasures
-				.receivableTurnover(totalOperatingRevenues, shorttermAssets, threshold);
-
-		// Start drawing charts:
-		KpiBarChart workingCapitalTurnoverBarChart = new KpiBarChart(workingCapitalTurnovers);
-		KpiLineChart workingCapitalTurnoverLineChart = new KpiLineChart(workingCapitalTurnovers, threshold);
-		KpiChartProcessor workingCapitalTurnoverChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of receivable turnovers by period (month)
-		SortedMap<Date, ReceivableTurnover> sortedWorkingCapitalTurnovers = new TreeMap<Date, ReceivableTurnover>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedWorkingCapitalTurnovers.putAll(workingCapitalTurnovers);
-
-		model.addAttribute("workingCapitalTurnovers", sortedWorkingCapitalTurnovers);
-		model.addAttribute("workingCapitalTurnoverBarChart", workingCapitalTurnoverBarChart);
-		model.addAttribute("workingCapitalTurnoverLineChart", workingCapitalTurnoverLineChart);
-		model.addAttribute("workingCapitalTurnoverChartProcessor", workingCapitalTurnoverChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "hssdvonluudong");
-
-		return "kpiWorkingCapitalTurnover";
-	}
-
-	// Sử dụng hàm kpi của currentRatio vì tương tự nhau
-	@RequestMapping("/tysuatloinhuangop")
-	public String kpiGrossProfitMargin(Model model) {
-		// Vẽ biểu đồ Tỷ suất lợi nhuận gộp theo các kỳ (tháng) trong năm. Với
-		// từng kỳ, lấy lợi nhuận gộp (20) chia doanh thu thuần (10).
-
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-
-		double threshold = 0.5;
-
-		logger.info("Tỷ suất lợi nhuận gộp (Lợi nhuận gộp biên):");
-		List<BalanceSheet> grossProfits = balanceSheetDAO.listSRsByAssetsCodeAndYear("20", currentYear);
-		logger.info("Lợi nhuận gộp (20) " + grossProfits.size());
-		List<BalanceSheet> netComes = balanceSheetDAO.listSRsByAssetsCodeAndYear("10", currentYear);
-		logger.info("Doanh thu thuần (10) " + netComes.size());
-
-		HashMap<Date, CurrentRatio> grossProfitMargins = KPIMeasures.currentRatio(grossProfits, netComes, threshold);
-
-		// Start drawing charts:
-		KpiBarChart grossProfitMarginBarChart = new KpiBarChart(grossProfitMargins);
-		KpiLineChart grossProfitMarginLineChart = new KpiLineChart(grossProfitMargins, threshold);
-		KpiChartProcessor grossProfitMarginChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of Interest Coverages by period (month)
-		SortedMap<Date, CurrentRatio> sortedGrossProfitMargins = new TreeMap<Date, CurrentRatio>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
-					}
-				});
-		sortedGrossProfitMargins.putAll(grossProfitMargins);
-
-		model.addAttribute("grossProfitMargins", sortedGrossProfitMargins);
-		model.addAttribute("grossProfitMarginBarChart", grossProfitMarginBarChart);
-		model.addAttribute("grossProfitMarginLineChart", grossProfitMarginLineChart);
-		model.addAttribute("grossProfitMarginChartProcessor", grossProfitMarginChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "tysuatloinhuangop");
-
-		return "kpiGrossProfitMargin";
-	}
-
-	// Sử dụng hàm kpi của currentRatio vì tương tự nhau
-	@RequestMapping("/tysuatloinhuanrong")
-	public String kpiNetProfitMargin(Model model) {
-		// Vẽ biểu đồ Tỷ suất lợi nhuận ròng theo các kỳ (tháng) trong năm. Với
-		// từng kỳ, lấy lợi nhuận sau thuế (60) chia doanh thu (01).
-
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-
-		double threshold = 1.0;
-
-		logger.info("Tỷ suất lợi nhuận ròng (Lợi nhuận ròng biên):");
-		List<BalanceSheet> grossProfits = balanceSheetDAO.listSRsByAssetsCodeAndYear("60", currentYear);
-		logger.info("Lợi nhuận gộp (60) " + grossProfits.size());
-		List<BalanceSheet> netComes = balanceSheetDAO.listSRsByAssetsCodeAndYear("01", currentYear);
-		logger.info("Doanh thu thuần (01) " + netComes.size());
-
-		HashMap<Date, CurrentRatio> netProfitMargins = KPIMeasures.currentRatio(grossProfits, netComes, threshold);
-
-		// Start drawing charts:
-		KpiBarChart netProfitMarginBarChart = new KpiBarChart(netProfitMargins);
-		KpiLineChart netProfitMarginLineChart = new KpiLineChart(netProfitMargins, threshold);
-		KpiChartProcessor netProfitMarginChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of Interest Coverages by period (month)
-		SortedMap<Date, CurrentRatio> sortedNetProfitMargins = new TreeMap<Date, CurrentRatio>(new Comparator<Date>() {
-			@Override
-			public int compare(Date date1, Date date2) {
-				return date1.compareTo(date2);
+			List<BalanceAssetData> pagingBads = new ArrayList<>();
+			int max = pageIndex * numberRecordsOfPage < bads.size() ? pageIndex * numberRecordsOfPage : bads.size();
+			for (int i = (pageIndex - 1) * numberRecordsOfPage; i < max; i++) {
+				pagingBads.add(bads.get(i));
 			}
-		});
-		sortedNetProfitMargins.putAll(netProfitMargins);
 
-		model.addAttribute("netProfitMargins", sortedNetProfitMargins);
-		model.addAttribute("netProfitMarginBarChart", netProfitMarginBarChart);
-		model.addAttribute("netProfitMarginLineChart", netProfitMarginLineChart);
-		model.addAttribute("netProfitMarginChartProcessor", netProfitMarginChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "tysuatloinhuanrong");
-
-		return "kpiNetProfitMargin";
-	}
-
-	@RequestMapping("/hesono")
-	public String kpiDebtRatio(Model model) {
-		// Vẽ biểu đồ Hệ số nợ theo tất cả các kỳ (tháng) trong năm
-		// Với từng kỳ, lấy tổng số nợ (300) chia cho tổng tài sản (270)
-
-		// Get list of total debts and total assets for all period in a year
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-		List<BalanceSheet> totalDebts = balanceSheetDAO.listBSsByAssetsCodeAndYear("300", currentYear);
-		logger.info("totalDebt " + totalDebts.size());
-		List<BalanceSheet> totalAssets = balanceSheetDAO.listBSsByAssetsCodeAndYear("270", currentYear);
-		logger.info("totalAssets " + totalAssets.size());
-
-		// Calculate list of debt ratios
-		double threshold = 0.0;
-		HashMap<Date, DebtRatio> debtRatios = KPIMeasures.debtRatio(totalDebts, totalAssets, threshold);
-
-		// Start drawing charts:
-		KpiBarChart debtRatioBarChart = new KpiBarChart(debtRatios);
-		KpiLineChart debtRatioLineChart = new KpiLineChart(debtRatios, threshold);
-		KpiChartProcessor debtRatioChartProcessor = new KpiChartProcessor();
-
-		// Sorting list of debt ratios by period (month)
-		SortedMap<Date, DebtRatio> sortedDebtRatios = new TreeMap<Date, DebtRatio>(new Comparator<Date>() {
-			@Override
-			public int compare(Date date1, Date date2) {
-				return date1.compareTo(date2);
+			Date homNay = new Date();
+			// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của
+			// tháng hiện tại
+			if (balanceSheetForm.getDau() == null) {
+				balanceSheetForm.setDau(Utils.getStartDateOfMonth(homNay));
 			}
-		});
-		sortedDebtRatios.putAll(debtRatios);
 
-		model.addAttribute("debtRatios", sortedDebtRatios);
-		model.addAttribute("debtRatioBarChart", debtRatioBarChart);
-		model.addAttribute("debtRatioLineChart", debtRatioLineChart);
-		model.addAttribute("debtRatioChartProcessor", debtRatioChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "hesono");
+			if (balanceSheetForm.getCuoi() == null) {
+				balanceSheetForm.setCuoi(Utils.getEndDateOfMonth(homNay));
+			}
 
-		return "kpiDebtRatio";
+			model.addAttribute("pageIndex", pageIndex);
+			model.addAttribute("numberRecordsOfPage", numberRecordsOfPage);
+			model.addAttribute("totalPages", totalPages);
+			model.addAttribute("totalRecords", totalRecords);
+
+			model.addAttribute("bads", pagingBads);
+			model.addAttribute("assetCodes", assetCodes);
+			model.addAttribute("assetPeriods", assetPeriods);
+			model.addAttribute("tab", "tabBCDKT");
+
+			return "balanceAsset";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
 	}
 
-	@RequestMapping("/donbaytaichinh")
-	public String kpiFinancialLeverage(Model model) {
-		// Vẽ biểu đồ đòn bẩy tài chính theo tất cả các kỳ (tháng) trong năm
-		// Với từng kỳ, lấy tổng tài sản (270) chia cho vốn chủ sở hữu (400)
+	@RequestMapping("/cdkt/hachtoan")
+	public String hachToan(@ModelAttribute("mainFinanceForm") BalanceAssetForm form, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
+			model.addAttribute("kpiGroups", kpiGroups);
 
-		// Get list of total assets and total equities for all period in a year
-		Date currentYear = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentYear);
-		List<BalanceSheet> totalAssets = balanceSheetDAO.listBSsByAssetsCodeAndYear("270", currentYear);
-		logger.info("totalAssets " + totalAssets.size());
-		List<BalanceSheet> totalEquities = balanceSheetDAO.listBSsByAssetsCodeAndYear("400", currentYear);
-		logger.info("totalEquities " + totalEquities.size());
+			// Lấy danh sách tài khoản kt có thể thuộc hai chỉ tiêu CDKT trở lên
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = balanceSheetDAO.danhSachTkktThuocNhieuChiTieu();
 
-		// Calculate list of financial leverages
-		double threshold = 0.0;
-		HashMap<Date, FinancialLeverage> financialLeverages = KPIMeasures.financialLeverage(totalAssets, totalEquities,
-				threshold);
+			// cho kế toán hạch toán
+			List<TaiKhoan> taiKhoanDs = new ArrayList<>();
+			HashMap<String, List<BalanceAssetItem>> cdktMap = new HashMap<>();
 
-		// Start drawing charts:
-		KpiBarChart financialLeverageBarChart = new KpiBarChart(financialLeverages);
-		KpiLineChart financialLeverageLineChart = new KpiLineChart(financialLeverages, threshold);
-		KpiChartProcessor financialLeverageChartProcessor = new KpiChartProcessor();
+			Iterator<LoaiTaiKhoan> iter = loaiTaiKhoanDs.iterator();
+			while (iter.hasNext()) {
+				LoaiTaiKhoan loaiTaiKhoan = iter.next();
 
-		// Sorting list of financial leverages by period (month)
-		SortedMap<Date, FinancialLeverage> sortedFinancialLeverages = new TreeMap<Date, FinancialLeverage>(
-				new Comparator<Date>() {
-					@Override
-					public int compare(Date date1, Date date2) {
-						return date1.compareTo(date2);
+				// Lấy danh sách các tiêu chí CĐKT có nguồn dữ liệu lấy từ các tài khoản trên
+				List<BalanceAssetItem> cdktDs = balanceSheetDAO.danhSachCdktTheoTkkt(loaiTaiKhoan.getMaTk(),
+						loaiTaiKhoan.getSoDuGiaTri());
+				if (loaiTaiKhoan != null && cdktDs != null) {
+					cdktMap.put(loaiTaiKhoan.getMaTk(), cdktDs);
+				}
+
+				// Tìm ra các nghiệp vụ kế toán liên quan đến các tài khoản đó để hiển thị ra
+				List<String> loaiCts = new ArrayList<>();
+				loaiCts.add(ChungTu.TAT_CA);
+				List<TaiKhoan> nvktDs = soKeToanDAO.danhSachTaiKhoanKeToanTheoLoaiTaiKhoan(loaiTaiKhoan.getMaTk(),
+						loaiTaiKhoan.getSoDuGiaTri(), form.getDau(), form.getCuoi());
+
+				taiKhoanDs.addAll(nvktDs);
+			}
+
+			form.setTaiKhoanDs(taiKhoanDs);
+			model.addAttribute("mainFinanceForm", form);
+			model.addAttribute("cdktMap", cdktMap);
+			model.addAttribute("tab", "tabBCDKT");
+
+			return "hachToan";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/cdkt/capnhatcandoiketoan")
+	public String updateBS(@ModelAttribute("mainFinanceForm") BalanceAssetForm form, Model model) {
+		try {
+			logger.info("Cập nhật dữ liệu hạch toán trước đó");
+			balanceSheetDAO.capNhatCanDoiKeToan(form.getTaiKhoanDs());
+
+			logger.info("Lấy danh sách các chỉ tiêu CDKT");
+			List<BalanceAssetItem> bais = balanceSheetDAO.listBais();
+
+			logger.info("Cập nhật các chi tiêu CĐKT cho tất cả các loại kỳ trong khoảng thời gian: " + form.getDau()
+					+ " - " + form.getCuoi());
+			HashMap<Integer, String> kyDs = new HashMap<>();
+
+			kyDs.put(KyKeToan.WEEK, "Tuần");
+			kyDs.put(KyKeToan.MONTH, "Tháng");
+			kyDs.put(KyKeToan.QUARTER, "Quý");
+			kyDs.put(KyKeToan.YEAR, "Năm");
+
+			Iterator<Integer> kyIter = kyDs.keySet().iterator();
+			while (kyIter.hasNext()) {
+				Integer ky = kyIter.next();
+				logger.info("Cập nhật chi tiêu CĐKT cho loại kỳ: " + kyDs.get(ky));
+				try {
+					Date dauKy = Utils.getStartPeriod(form.getDau(), ky);
+					Date cuoiKy = Utils.getEndPeriod(form.getCuoi(), ky);
+					Date buocNhay = dauKy;
+
+					while (buocNhay.before(cuoiKy)) {
+						Date cuoi = Utils.getEndPeriod(buocNhay, ky);
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+						String batDau = sdf.format(buocNhay);
+						String ketThuc = sdf.format(cuoi);
+
+						logger.info("Kỳ " + batDau + " => " + ketThuc);
+
+						logger.info("Xây dựng cây BalanceAssetData từ cây BalanceAssetItem");
+						List<BalanceAssetData> bads = new ArrayList<>();
+						Iterator<BalanceAssetItem> baiIter = bais.iterator();
+						while (baiIter.hasNext()) {
+							BalanceAssetItem bai = baiIter.next();
+							BalanceAssetData bad = createBad(bai, ky, buocNhay);
+							bads.add(bad);
+						}
+
+						logger.info("Tính giá trị cây BalanceAssetData theo từng kỳ, sau đó cập nhật vào CSDL");
+						Iterator<BalanceAssetData> badIter = bads.iterator();
+						while (badIter.hasNext()) {
+							BalanceAssetData bad = badIter.next();
+							bad = calCulcateBs(bad);
+						}
+
+						buocNhay = Utils.nextPeriod(buocNhay, ky);
 					}
-				});
-		sortedFinancialLeverages.putAll(financialLeverages);
+				} catch (Exception e) {
+					// e.printStackTrace();
+				}
+			}
 
-		model.addAttribute("financialLeverages", sortedFinancialLeverages);
-		model.addAttribute("financialLeverageBarChart", financialLeverageBarChart);
-		model.addAttribute("financialLeverageLineChart", financialLeverageLineChart);
-		model.addAttribute("financialLeverageChartProcessor", financialLeverageChartProcessor);
-		model.addAttribute("year", cal.get(Calendar.YEAR));
-		model.addAttribute("action", "donbaytaichinh");
-
-		return "kpiFinancialLeverage";
+			return "redirect:/cdkt/candoiketoan";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
 	}
 
-	@RequestMapping("/capnhat")
+	private BalanceAssetData createBad(BalanceAssetItem bai, int periodType, Date period) {
+		if (bai == null)
+			return null;
+
+		BalanceAssetData bad = new BalanceAssetData();
+		bad.setAsset(bai);
+		bad.setPeriodType(periodType);
+		bad.setPeriod(period);
+
+		if (bai.getChilds() != null) {
+			Iterator<BalanceAssetItem> iter = bai.getChilds().iterator();
+			while (iter.hasNext()) {
+				BalanceAssetItem childBai = iter.next();
+				BalanceAssetData childBad = createBad(childBai, periodType, period);
+				bad.addChild(childBad);
+			}
+		}
+
+		return bad;
+	}
+
+	private BalanceAssetData calCulcateBs(BalanceAssetData bad) {
+		if (bad == null)
+			return null;
+
+		try {
+			// Lấy giá trị kỳ trước làm giá trị đầu kỳ
+			bad = balanceSheetDAO.getPeriodEndValue(bad);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// Tính giá trị cuối kỳ
+		if (bad.getChilds() != null && bad.getChilds().size() > 0) {
+			Iterator<BalanceAssetData> iter = bad.getChilds().iterator();
+			while (iter.hasNext()) {
+				BalanceAssetData childBad = iter.next();
+				childBad = calCulcateBs(childBad);
+				bad.setEndValue(bad.getEndValue() + childBad.getEndValue());
+			}
+		} else {
+			// Kết nối CSDL để tính giá trị cuối kỳ của chỉ tiêu cân đối kế toán theo các
+			// tài khoản kế toán với công thức xác định trước cho từng loại chỉ tiêu
+			try {
+				bad = balanceSheetDAO.calculateBs(bad);
+			} catch (Exception e) {
+				// logger.error("LỖI: " + e.getMessage());
+			}
+		}
+
+		// logger.info("Chỉ tiêu cân đối kế toán " + bad.getAsset().getAssetCode() + ":
+		// " + bad.getEndValue());
+
+		// Cập nhật vào cơ sở dữ liệu
+		balanceSheetDAO.insertOrUpdateBA(bad);
+
+		return bad;
+	}
+
+	@RequestMapping("/cdkt/capnhatdulieu")
 	public String update(Model model) {
+		// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+		List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
+		model.addAttribute("kpiGroups", kpiGroups);
+
+		model.addAttribute("tab", "tabCNDL");
 		return "update";
 	}
 
-	@RequestMapping(value = "/luutru", method = RequestMethod.POST)
-	public String save(Model model, @RequestParam("file") MultipartFile file) {
-		if (file != null && file.getSize() > 0) {
+	@RequestMapping(value = "/cdkt/luutrudulieu", method = RequestMethod.POST)
+	// public String save(Model model, @RequestParam("file") MultipartFile file) {
+	public String save(Model model, @ModelAttribute("mainFinanceForm") BalanceAssetForm balanceSheetForm) {
+		// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+		List<KpiGroup> kpiGroupsDb = kpiChartDAO.listKpiGroups();
+		model.addAttribute("kpiGroups", kpiGroupsDb);
+
+		if (balanceSheetForm != null && balanceSheetForm.getBalanceAssetFile() != null
+				&& balanceSheetForm.getBalanceAssetFile().getSize() > 0) {
+			MultipartFile file = balanceSheetForm.getBalanceAssetFile();
 			logger.info(file.getName() + " - " + file.getSize());
 			try {
+				// Read & insert kpi groups and kpi charts
+				List<KpiGroup> kpiGroups = ExcelProcessor.readKpiMeasuresSheet(file.getInputStream());
+				// kpiChartDAO.insertOrUpdateKpiGroups(kpiGroups);
+
 				// Read & insert balance sheet data
-				List<BalanceSheet> bss = ExcelProcessor.readBalanceSheetExcel(file.getInputStream());
-				balanceSheetDAO.insertOrUpdateBSs(bss);
+				List<BalanceAssetData> bas = ExcelProcessor.readBalanceAssetSheetExcel(file.getInputStream());
+				// balanceSheetDAO.insertOrUpdateBAs(bas);
 
 				// Read & insert sale result data
-				List<BalanceSheet> saleResults = ExcelProcessor.readSaleResultExcel(file.getInputStream());
-				balanceSheetDAO.insertOrUpdateSR(saleResults);
+				List<BalanceAssetData> srs = ExcelProcessor.readSaleResultSheetExcel(file.getInputStream());
+				// balanceSheetDAO.insertOrUpdateSRs(srs);
 
-				return "redirect:/";
+				// Read & insert cash flows data
+				List<BalanceAssetData> cashFlows = ExcelProcessor.readCashFlowsSheetExcel(file.getInputStream());
+				// balanceSheetDAO.insertOrUpdateCFs(cashFlows);
+
+				return "redirect:/cdkt/capnhatdulieu";
 			} catch (Exception e) {
 				e.printStackTrace();
 				String comment = "Không thể đọc excel file " + file.getName()
 						+ ". Có thể file bị lỗi, không đúng định dạng, hoặc đường truyền chậm, xin mời thử lại.";
-				model.addAttribute("comment", comment);
+				model.addAttribute("balanceAssetComment", comment);
+				model.addAttribute("tab", "tabCNDL");
 				return "update";
 			}
 		} else {
 			String comment = "Hãy chọn file exel dữ liệu kế toán.";
-			model.addAttribute("comment", comment);
+			model.addAttribute("balanceAssetComment", comment);
+			model.addAttribute("tab", "tabCNDL");
 			return "update";
+		}
+	}
+
+	@RequestMapping("/cdkt/danhsachtaikhoan")
+	public String balanceSheetCodes(Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
+			model.addAttribute("kpiGroups", kpiGroups);
+
+			List<BalanceAssetItem> bais = balanceSheetDAO.listBais();
+			model.addAttribute("bais", bais);
+			model.addAttribute("tab", "tabDSBCDKT");
+
+			return "balanceSheetCodes";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
 		}
 	}
 }

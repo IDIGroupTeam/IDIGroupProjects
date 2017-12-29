@@ -16,6 +16,7 @@
 			<li><a href="#">Khen thưởng/Kỷ luật</a></li>
 			<li><a href="#">HĐ lao động</a></li>			
 			<li><a href="#">TK Ngân hàng</a></li>
+			<li><a href="/IDIHR/KPI/">Báo cáo thống kê</a></li>
 		</ul>
 	</div>
 </div>

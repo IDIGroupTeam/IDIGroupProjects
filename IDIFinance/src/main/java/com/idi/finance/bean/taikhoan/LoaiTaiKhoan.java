@@ -1,17 +1,27 @@
 package com.idi.finance.bean.taikhoan;
 
 public class LoaiTaiKhoan {
-	public static final int NO = 0;
+	public static final int NO = -1;
 	public static final int CO = 1;
 
 	public static final String TIEN_MAT = "111";
+	public static final String TIEN_MAT_VN = "1111";
+	public static final String TIEN_MAT_NT = "1112";
+	public static final String TIEN_MAT_VANG = "1113";
 	public static final String TIEN_GUI_NGAN_HANG = "112";
+	public static final String TIEN_GUI_NGAN_HANG_VN = "1121";
+	public static final String TIEN_GUI_NGAN_HANG_NT = "1122";
+	public static final String TIEN_GUI_NGAN_HANG_VANG = "1123";
+	public static final String TIEN_DANG_CHUYEN_NT = "1132";
 
 	private String maTk;
 	private String tenTk;
 	private String maTenTk;
 	private String maTkCha;
 	private int soDu;
+	private int soDuGiaTri;
+	private LoaiTaiKhoan taiKhoanCha;
+	private boolean isNew = false;
 
 	public String getMaTk() {
 		return maTk;
@@ -53,9 +63,33 @@ public class LoaiTaiKhoan {
 		this.soDu = soDu;
 	}
 
+	public int getSoDuGiaTri() {
+		return soDuGiaTri;
+	}
+
+	public void setSoDuGiaTri(int soDuGiaTri) {
+		this.soDuGiaTri = soDuGiaTri;
+	}
+
+	public LoaiTaiKhoan getTaiKhoanCha() {
+		return taiKhoanCha;
+	}
+
+	public void setTaiKhoanCha(LoaiTaiKhoan taiKhoanCha) {
+		this.taiKhoanCha = taiKhoanCha;
+	}
+
+	public boolean isNew() {
+		return isNew;
+	}
+
+	public void setNew(boolean isNew) {
+		this.isNew = isNew;
+	}
+
 	@Override
 	public String toString() {
-		String out = maTk;
+		String out = maTk + " " + tenTk + " " + maTkCha + " " + soDu;
 		return out;
 	}
 
