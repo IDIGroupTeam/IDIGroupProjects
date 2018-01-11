@@ -26,6 +26,8 @@
     <div id="cacthongbao" class="collapse">
 			<li><a href="#" >Thong bao so 1 </a> </li>
 			<li><a href="#" >Thong bao so 2 </a></li>
+		    <li><a href="/IDICRM/public/documents/Chức năng nhiệm vụ của phòng Kinh doanh cty EBC.pdf">Chức năng nhiệm vụ của phòng Kinh doanh cty EBC</a> </li>
+           
 	 </div>
 	 	
 
