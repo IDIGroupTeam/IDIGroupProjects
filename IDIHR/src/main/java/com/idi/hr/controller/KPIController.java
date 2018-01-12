@@ -81,6 +81,7 @@ public class KPIController {
 			model.addAttribute("leaveTypeMap", leaveTypeMap);
 
 			model.addAttribute("formTitle", "Tùy chọn dữ liệu cần cho báo cáo");
+			model.addAttribute("chart", "/charts/workStatusChart.png");
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -94,8 +95,7 @@ public class KPIController {
 			final RedirectAttributes redirectAttributes) {
 		try {
 			// ArrayList<LeaveReport> list = new ArrayList<>();
-			//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			
+			//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");			
 			
 			Date date = new Date();// your date
 			//String currentDate = dateFormat.format(date);
@@ -103,6 +103,7 @@ public class KPIController {
 			cal.setTime(date);			
 			
 			String year = leaveReport.getYearReport();
+			System.err.println("year: " + year);
 			String month = leaveReport.getMonthReport();
 			int employeeId = leaveReport.getEmployeeId();
 			String typeReport = leaveReport.getLeaveTypeReport();
@@ -166,8 +167,10 @@ public class KPIController {
 				if (month.isEmpty()) {
 					System.err.println("ve bieu do di muon khong chon thang " + cal.get(Calendar.YEAR) +"|" + Integer.parseInt(year));
 					int maxMonth = 12;
-					if (Integer.parseInt(year) == cal.get(Calendar.YEAR)) {
-						maxMonth = cal.get(Calendar.MONTH) + 1;
+					if (Integer.parseInt(year) <= cal.get(Calendar.YEAR)) {
+						if(Integer.parseInt(year) == cal.get(Calendar.YEAR)) //chi check voi nm hien tai
+							maxMonth = cal.get(Calendar.MONTH) + 1;
+						//voi nhung nam truoc thi = 12
 						System.err.println("ve bieu do di muon, thang hien tail " + maxMonth);
 						for (int i = 1; i <= maxMonth; i++) {							
 							values.put("Tháng " + i, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year, String.valueOf(i), employeeId, typeReport)));
@@ -202,30 +205,25 @@ public class KPIController {
 					ex.printStackTrace();
 				}
 				return "reportByKPI";
-/*				
-			} else if (typeReport.equalsIgnoreCase("VS")) {
-			} else if (typeReport.equalsIgnoreCase("VS")) {				
-			} else if (typeReport.equalsIgnoreCase("VS")) {
-			} else if (typeReport.equalsIgnoreCase("VS")) {
-			} else if (typeReport.equalsIgnoreCase("VS")) {
-			} else if (typeReport.equalsIgnoreCase("VS")) {	
-			} else if (typeReport.equalsIgnoreCase("VS")) {
-				*/	
 			} else if (typeReport.equalsIgnoreCase("VS")) {
 				model.addAttribute("formTitle", "Biểu đồ thông kê số lần về sớm ");
 				Map<String, Integer> values = new LinkedHashMap<String, Integer>();
 				System.err.println("ve bieu do ve som " + month);
 				if (month.isEmpty()) {
-					System.err.println("ve bieu do ve som khong chon thang " + cal.get(Calendar.YEAR) +"|" + Integer.parseInt(year));
+					System.err.println("ve bieu do ve som khong chon thang cua nam hien tai" + cal.get(Calendar.YEAR) +"|" + Integer.parseInt(year));
 					int maxMonth = 12;
-					if (Integer.parseInt(year) == cal.get(Calendar.YEAR)) {
-						maxMonth = cal.get(Calendar.MONTH) + 1;
+					if (Integer.parseInt(year) <= cal.get(Calendar.YEAR)) {
+						if(Integer.parseInt(year) == cal.get(Calendar.YEAR)) //chi check voi nm hien tai
+							maxMonth = cal.get(Calendar.MONTH) + 1;
+						//voi nhung nam truoc thi = 12
 						System.err.println("ve bieu do ve som, thang hien tail " + maxMonth);
 						for (int i = 1; i <= maxMonth; i++) {							
 							values.put("Tháng " + i, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year, String.valueOf(i), employeeId, typeReport)));
 							System.err.println("ve bieu do ve som " + month);
 						}
-					}						
+					}else {
+						model.addAttribute("message", "Vui lòng chọn thời gian báo cáo thích hợp ...");
+					}
 				} else {
 					System.err.println("ve bieu do ve som thang" + month);
 					values.put("Tháng " + month, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year, month, employeeId, typeReport)));
@@ -274,8 +272,8 @@ public class KPIController {
 				DefaultPieDataset dpd = new DefaultPieDataset();
 				for (Map.Entry<String, String> entry : items.entrySet()) {
 					// System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());
-					dpd.setValue(entry.getValue() + " ("
-							+ employeeDAO.countMemberByWorkStatus(entry.getKey(), department) + ")",
+					dpd.setValue(entry.getValue() + ":"
+							+ employeeDAO.countMemberByWorkStatus(entry.getKey(), department),
 							employeeDAO.countMemberByWorkStatus(entry.getKey(), department));
 				}
 				JFreeChart chart = null;
@@ -291,8 +289,8 @@ public class KPIController {
 						dir.mkdirs();
 					}
 
-					File file = new File(dir + "/workStartChart.png");
-					model.addAttribute("chart", "/charts/workStartChart.png");
+					File file = new File(dir + "/workStatusChart.png");
+					model.addAttribute("chart", "/charts/workStatusChart.png");
 					ChartUtilities.saveChartAsJPEG(file, chart, 750, 400);
 				} catch (IOException ex) {
 					ex.printStackTrace();
@@ -311,8 +309,11 @@ public class KPIController {
 				if (month.isEmpty()) {
 					System.err.println("ve bieu do ve som khong chon thang " + cal.get(Calendar.YEAR) +"|" + Integer.parseInt(year));
 					int maxMonth = 12;
-					if (Integer.parseInt(year) == cal.get(Calendar.YEAR)) {
-						maxMonth = cal.get(Calendar.MONTH) + 1;
+					if (Integer.parseInt(year) <= cal.get(Calendar.YEAR)) {
+						if(Integer.parseInt(year) == cal.get(Calendar.YEAR)) //chi check voi nm hien tai
+							maxMonth = cal.get(Calendar.MONTH) + 1;
+						//voi nhung nam truoc thi = 12
+						
 						//System.err.println("ve bieu do ve som, thang hien tail " + maxMonth);
 						for (int i = 1; i <= maxMonth; i++) {	
 							if(typeReport.startsWith("LT") || typeReport.startsWith("KCC")) { //|| leaveDAO.getLeaveReport(year,  String.valueOf(i), employeeId, typeReport) == 0) {
@@ -330,20 +331,24 @@ public class KPIController {
 					//neu muon co the ve them thang nien truoc va thang nien sau trong th chi chon 1 thang cu the, neu thang <12, thang = 12 chi 1 thang nien truoc
 					System.err.println("ve bieu do ve "+ typeReport + month);
 					if(typeReport.startsWith("LT") || typeReport.startsWith("KCC") || leaveDAO.getLeaveReport(year, month, employeeId, typeReport) == 0) {
-						if(Integer.parseInt(month) < 12) {
+						if(Integer.parseInt(month) < 12 && Integer.parseInt(month) > 1) {
 							values.put("Tháng " + (Integer.parseInt(month) - 1), (float)leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) - 1)), employeeId, typeReport));
 							values.put("Tháng " + month, (float)leaveDAO.getLeaveReport(year, month, employeeId, typeReport));
 							values.put("Tháng " +  (Integer.parseInt(month) + 1), (float)leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) + 1)), employeeId, typeReport));
+						}else if(Integer.parseInt(month) == 1){
+							values.put("Tháng " + month, (float)leaveDAO.getLeaveReport(year, month, employeeId, typeReport));
 						}else {
 							values.put("Tháng " + (Integer.parseInt(month) - 1), (float)leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) - 1)), employeeId, typeReport));
 							values.put("Tháng " + month, (float)leaveDAO.getLeaveReport(year, month, employeeId, typeReport));							
 						}
 					}else {
 						if(leaveDAO.getLeaveReport(year, month, employeeId, typeReport) > 0) {
-							if(Integer.parseInt(month) < 12) {
+							if(Integer.parseInt(month) < 12 && Integer.parseInt(month) > 1) {
 								values.put("Tháng " + (Integer.parseInt(month) - 1), (float)leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) - 1)), employeeId, typeReport)/8);
 								values.put("Tháng " + month, (float)leaveDAO.getLeaveReport(year, month, employeeId, typeReport)/8);
 								values.put("Tháng " +  (Integer.parseInt(month) + 1), (float)leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) + 1)), employeeId, typeReport)/8);
+							}else if(Integer.parseInt(month) == 1){
+								values.put("Tháng " + month, (float)leaveDAO.getLeaveReport(year, month, employeeId, typeReport));
 							}else {
 								values.put("Tháng " + (Integer.parseInt(month) - 1), (float)leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) - 1)), employeeId, typeReport)/8);
 								values.put("Tháng " + month, (float)leaveDAO.getLeaveReport(year, month, employeeId, typeReport)/8);							
@@ -416,7 +421,7 @@ public class KPIController {
 	private Map<String, String> leaveTypesForReport() {
 		Map<String, String> leaveTypeMap = new LinkedHashMap<String, String>();
 		try {
-			List<LeaveType> list = leaveDAO.getLeaveTypes();
+			List<LeaveType> list = leaveDAO.getLeaveTypesForReport();
 			LeaveType leaveType = new LeaveType();
 			for (int i = 0; i < list.size(); i++) {
 				leaveType = (LeaveType) list.get(i);
@@ -453,7 +458,7 @@ public class KPIController {
 		JFreeChart chart = ChartFactory.createPieChart3D(chartTitle, pdSet, true, true, false);
 		PiePlot3D plot = (PiePlot3D) chart.getPlot();
 		PieSectionLabelGenerator generator = new StandardPieSectionLabelGenerator("{0}({2})", new DecimalFormat("0"),
-				new DecimalFormat("0.0%"));
+				new DecimalFormat("0%"));
 		plot.setLabelGenerator(generator);
 		plot.setStartAngle(290);
 		plot.setDirection(Rotation.CLOCKWISE);
@@ -477,7 +482,7 @@ public class KPIController {
 		
 		for (Map.Entry<String, Integer> entry : values.entrySet()) {
 			System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());
-			dataset.addValue(entry.getValue(), entry.getKey(), "" );
+			dataset.addValue(entry.getValue(), entry.getKey(), "");
 		}
 		return dataset;
 	}

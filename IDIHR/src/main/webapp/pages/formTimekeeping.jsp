@@ -19,13 +19,29 @@
 		//	int timeOutAfternoon = Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON"));
 	%>
 	<a href="${url}/timekeeping/leaveInfo">
-		<button class="btn btn-lg btn-primary btn-sm">Chấm công phát sinh</button>
+		<button class="btn btn-lg btn-primary btn-sm">Chấm công phát
+			sinh</button>
 	</a> &nbsp;
 	<a href="${url}/timekeeping/prepareGenerateLeaveReport">
 		<button class="btn btn-lg btn-primary btn-sm">Xuất báo cáo</button>
 	</a>
 	<br />
 	<br />
+	<form:form action="listByDate" modelAttribute="leaveInfoForm"
+		method="GET">
+		<table class="table">
+			<tr>
+				<td><b><i>Chọn ngày khác(*)</i></b></td>
+				<td align="center"><form:input path="date" type="date"
+						required="required" /></td>
+				<td><input class="btn btn-lg btn-primary btn-sm" type="submit"
+					value="Cập nhật lại danh sách" /></td>
+			</tr>
+		</table>
+		<c:if test="${not empty message}">
+			<div class="alert alert-success">${message}</div>
+		</c:if>
+	</form:form>
 	<form:form action="updateData" modelAttribute="timekeepingForm"
 		method="POST" enctype="multipart/form-data">
 		<table class="table">
@@ -33,8 +49,8 @@
 				<td><b><i>Cập nhật dữ liệu chấm công từ file excel:</i></b></td>
 				<td align="left"><input class="btn btn-lg btn-primary btn-sm"
 					name="timeKeepingFile" type="file" /></td>
-				<td align="left"><input class="btn btn-lg btn-primary btn-sm" type="submit"
-					value="Cập nhật" /></td>
+				<td align="left"><input class="btn btn-lg btn-primary btn-sm"
+					type="submit" value="Cập nhật" /></td>
 				<td></td>
 				<td></td>
 				<td></td>
@@ -51,8 +67,41 @@
 			<div class="alert alert-info">${comment}</div>
 		</c:if>
 		<br />
+		<div class="table-responsive">
+			<b style="color: blue;">Chấm công phát sinh</b>
+			<table class="table table-bordered">
+				<tr>
+					<th>Mã NV</th>
+					<th>Họ tên</th>
+					<th>Bộ phận</th>
+					<th>Chức vụ</th>
+					<th>Ngày</th>
+					<th>Loại</th>
+					<th>Số giờ/lần</th>
+					<th>Ghi chú</th>
+				</tr>
+				<c:forEach var="leaveInfo" items="${leaveInfos}">
+					<tr style="font-size: 10">
+						<td>${leaveInfo.employeeId}</td>
+						<td>${leaveInfo.employeeName}</td>
+						<td>${leaveInfo.department}</td>
+						<td>${leaveInfo.title}</td>
+						<td>${leaveInfo.date}</td>
+						<c:if test="${leaveInfo.timeValue == 4}">
+							<td>${leaveInfo.leaveName} nửa ngày</td>
+						</c:if>
+						<c:if test="${leaveInfo.timeValue != '4'}">
+							<td>${leaveInfo.leaveName}</td>
+						</c:if>
+						<td>${leaveInfo.timeValue}</td>
+						<td>${leaveInfo.comment}</td>
+					</tr>
+				</c:forEach>
+			</table>
+		</div>
+		<b style="color:blue;">Dữ liệu từ máy chấm công</b>
 		<table class="table table-bordered">
-			<tr bgcolor="#D8D8D8">
+			<tr>
 				<th>Mã NV</th>
 				<th>Họ tên</th>
 				<th>Bộ phận</th>
@@ -60,10 +109,11 @@
 				<th>Ngày</th>
 				<th>Giờ vào</th>
 				<th>Giờ ra</th>
-				<th>Đến muộn sáng</th>
-				<th>Đến muộn chiều</th>
-				<th>Về sớm sáng</th>
-				<th>Về sớm chiều</th>
+				<th>ĐM sáng</th>
+				<th>ĐM chiều</th>
+				<th>VS sáng</th>
+				<th>VS chiều</th>
+				<th>Ghi chú</th>
 			</tr>
 			<c:forEach var="timekeeping" items="${timekeepings}">
 				<tr style="font-size: 10">
@@ -107,7 +157,8 @@
 					</c:if>
 					<c:if test="${empty timekeeping.leaveSoonA}">
 						<td>${timekeeping.leaveSoonA}</td>
-					</c:if>					
+					</c:if>
+					<td>${timekeeping.comment}</td>
 				</tr>
 			</c:forEach>
 		</table>

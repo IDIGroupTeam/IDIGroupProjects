@@ -140,7 +140,7 @@ public class EmployeeController {// extends BaseController {
 		DefaultPieDataset dpd = new DefaultPieDataset();
 		for (Map.Entry<String, String> entry : items.entrySet()) {
 			System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());
-			dpd.setValue(entry.getValue(), employeeDAO.countMemberByWorkStatus(entry.getKey(), "all"));
+			dpd.setValue(entry.getValue() + ":" + employeeDAO.countMemberByWorkStatus(entry.getKey(),"all"), employeeDAO.countMemberByWorkStatus(entry.getKey(), "all"));
 		}
 		JFreeChart chart = createChart(dpd, "Biểu đồ trạng thái LĐ");
 
@@ -154,7 +154,7 @@ public class EmployeeController {// extends BaseController {
 
 			File file = new File(dir + "/workStartChart.png");
 			//System.err.println(dir);
-			ChartUtilities.saveChartAsJPEG(file, chart, 650, 350);
+			ChartUtilities.saveChartAsJPEG(file, chart, 750, 400);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
@@ -197,7 +197,7 @@ public class EmployeeController {// extends BaseController {
 
 		JFreeChart chart = ChartFactory.createPieChart3D(chartTitle, pdSet, true, true, false);
 		PiePlot3D plot = (PiePlot3D)chart.getPlot();
-		PieSectionLabelGenerator generator = new StandardPieSectionLabelGenerator("{0}: {2}", new DecimalFormat("0"), new DecimalFormat("0.00%"));
+		PieSectionLabelGenerator generator = new StandardPieSectionLabelGenerator("{0} ({2})", new DecimalFormat("0"), new DecimalFormat("0%"));
 		plot.setLabelGenerator(generator);
 		plot.setStartAngle(290);
 		plot.setDirection(Rotation.CLOCKWISE);

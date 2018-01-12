@@ -15,7 +15,7 @@ public class LeaveInfo implements Serializable {
 	private String leaveType;
 	private int timeValue;
 	private String comment;
-
+	private String leaveName;// = rs.getString("LEAVE_NAME");
 	private String employeeName;
 	private String department;
 	private String title;
@@ -24,7 +24,7 @@ public class LeaveInfo implements Serializable {
 	}
 
 	public LeaveInfo(int employeeId, Date date, String leaveType, int timeValue, String comment, String employeeName,
-			String department, String title) {
+			String department, String title, String leaveName) {
 
 		this.employeeId = employeeId;
 		this.date = date;
@@ -34,6 +34,7 @@ public class LeaveInfo implements Serializable {
 		this.employeeName = employeeName;
 		this.department = department;
 		this.title = title;
+		this.leaveName = leaveName;
 	}
 
 	public int getEmployeeId() {
@@ -58,6 +59,14 @@ public class LeaveInfo implements Serializable {
 
 	public void setLeaveType(String leaveType) {
 		this.leaveType = leaveType;
+	}
+
+	public String getLeaveName() {
+		return leaveName;
+	}
+
+	public void setLeaveName(String leaveName) {
+		this.leaveName = leaveName;
 	}
 
 	public int getTimeValue() {

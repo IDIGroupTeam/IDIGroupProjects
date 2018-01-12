@@ -30,7 +30,7 @@ tr:nth-child(even) {
 			method="GET">
 			<table class="table">
 				<tr>
-					<td><b><i>Chọn quý khác:</i></b></td>
+					<td><b><i>Chọn quý khác</i></b></td>
 					<td align="center"><form:select path="quarter">
 							<%-- <form:option value="" label="-Chon quý-" /> --%>
 							<form:option value="1" label="Quý 1" />

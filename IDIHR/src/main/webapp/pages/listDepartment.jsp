@@ -5,23 +5,7 @@
 <html>
 <head>
 <title>Danh sách phòng ban</title>
-<style>
-table {
-	font-family: arial, sans-serif;
-	border-collapse: collapse;
-	width: 100%;
-}
 
-td, th {
-	border: 1px solid #E8E3E3;
-	text-align: left;
-	padding: 8px;
-}
-
-tr:nth-child(even) {
-	background-color: #E8E3E3;
-}
-</style>
 </head>
 <body>
 	<div class="table-responsive">
@@ -51,8 +35,8 @@ tr:nth-child(even) {
 			</c:forEach>
 		</table>
 		<table align="center">
-			<tr>
-				<td><img src="${url}/charts/departmentChart.png" alt="charts"
+			<tr align="center">
+				<td align="center"><img align="middle" src="${url}/charts/departmentChart.png" alt="charts"
 					width="750" height="400" /></td>
 			</tr>
 

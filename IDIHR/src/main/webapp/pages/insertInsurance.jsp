@@ -91,14 +91,12 @@
 						<td bgcolor="#FBEFF2">Ghi chú:</td>
 						<td colspan="3"><form:textarea path="comment" cols="64" /></td>
 					<tr>
-						<td>&nbsp;</td>
-						<td align="right"><input type="submit" value="Lưu" /> <a
-							href="${pageContext.request.contextPath}/insurance/"><button>Thoát</button></a></td>
-						<td>&nbsp;</td>
+						<td align="left"><input class="btn btn-primary btn-sm" type="submit" value="Lưu" /></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 	</form:form>
+	 <a href="${pageContext.request.contextPath}/insurance/"><button class="btn btn-primary btn-sm">Thoát</button></a>
 </body>
 </html>
