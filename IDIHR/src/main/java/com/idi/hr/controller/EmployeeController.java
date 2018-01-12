@@ -152,7 +152,8 @@ public class EmployeeController {// extends BaseController {
 				dir.mkdirs();
 			}
 
-			File file = new File(dir + "/workStartChart.png");
+			File file = new File(dir + "/workStatusChart.png");
+			model.addAttribute("chart", "/charts/workStatusChart.png");
 			//System.err.println(dir);
 			ChartUtilities.saveChartAsJPEG(file, chart, 750, 400);
 		} catch (IOException ex) {
