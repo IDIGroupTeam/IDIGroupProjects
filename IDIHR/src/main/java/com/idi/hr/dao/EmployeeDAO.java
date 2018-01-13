@@ -84,9 +84,12 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	 * @param workstatus
 	 * @return
 	 */
-	public int countMemberByWorkStatus(String workstatus) {
+	public int countMemberByWorkStatus(String workstatus, String department) {
 
 		String sql = hr.get("COUNT_MEMBER_BY_WORK_STATUS").toString();
+		if(!department.equalsIgnoreCase("all")) {
+			sql = sql + "AND DEPARTMENT IN ('" + department +"')";
+		}
 		log.info("COUNT_MEMBER_BY_WORK_STATUS query: " + sql);
 		Object[] params = new Object[] { workstatus };
 		
@@ -183,7 +186,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	 * @return List of employee
 	 * @throws Exception
 	 */
-	public List<EmployeeInfo> getEmployeesBith(int quarter) {
+	public List<EmployeeInfo> getEmployeesBirth(int quarter) {
 
 		String sql = hr.getProperty("GET_MEMBER_QUARTER_BIRTHDAY").toString();
 		log.info("GET_MEMBER_QUARTER_BIRTHDAY query: " + sql);

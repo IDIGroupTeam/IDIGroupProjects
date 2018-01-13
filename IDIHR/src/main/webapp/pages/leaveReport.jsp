@@ -30,7 +30,7 @@
 				</c:forEach>
 				<!-- dynamic generate end -->
 
-				<th>Phép còn năm trước</th>
+				<!-- <th>Phép còn năm trước</th> -->
 				<th>Phép năm nay</th>
 				<th>Phép đã sử dụng</th>
 				<th>Phép còn lại</th>
@@ -54,7 +54,7 @@
 					</c:forEach>
 					<!-- dynamic generate end -->
 
-					<td bgcolor="#F5F6CE">${leaveReport.restQuata}</td>
+				<%-- 	<td bgcolor="#F5F6CE">${leaveReport.restQuata}</td> --%>
 					<td bgcolor="#F5F6CE">${leaveReport.quataLeave}</td>
 					<td bgcolor="#F5F6CE">${leaveReport.leaveUsed}</td>
 					<td bgcolor="#F5F6CE">${leaveReport.leaveRemain}</td>

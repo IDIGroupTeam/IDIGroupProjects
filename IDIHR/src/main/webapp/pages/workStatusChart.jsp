@@ -27,37 +27,26 @@ tr:nth-child(even) {
 <body>
 	<div class="table-responsive">
 		<a href="${pageContext.request.contextPath}/"><button
-				class="btn btn-lg btn-primary btn-sm">Quay lại danh sách NV</button></a> <br /> <br />
-		<table>
+				class="btn btn-lg btn-primary btn-sm">Quay lại danh sách NV</button></a><br />
+		<br />
+		<table class="table table-striped">
 			<tr>
-				<td width="40%">
-					<table height="352">
-						<tr>
-							<th>Trạng thái LĐ</th>
-							<th align="center">Số nhân viên</th>
-						</tr>
-						<c:forEach var="memberWorkStatus" items="${memberWorkStatus}">
-							<tr>
-								<td>${memberWorkStatus.key}</td>
-								<td align="center">${memberWorkStatus.value}</td>
-							</tr>
-						</c:forEach>
-					</table>
-				</td>
-				<td width="60%">
-					<table>
-<!-- 						<tr>
-							<th>Biểu đồ</th>
-						</tr> -->
-						<tr>
-							<td><img src="${url}/charts/workStartChart.png" alt="charts"
-								width="650" height="350" />
-							</td>
-						</tr>
-					</table>
-				</td>
+				<th>Trạng thái LĐ</th>
+				<th>Số nhân viên</th>
 			</tr>
-		</table>		
+			<tr>
+			<%String rootPath = request.getSession().getServletContext().getRealPath("/"); %>
+				<td rowspan="2"><img src="${rootPath}"+ workStartChart.png>"
+					alt="profile image" width="125px" height="" /></td>
+			</tr>
+			<%-- <c:forEach var="memberWorkStatus" items="${memberWorkStatus}">
+				<tr>
+					<td>${memberWorkStatus.key}</td>
+					<td>${memberWorkStatus.value}</td>
+				</tr>
+			</c:forEach> --%>
+		</table>
+
 	</div>
 </body>
 </html>

@@ -11,6 +11,7 @@ public class Department implements Serializable {
 	
 	private String departmentId;
 	private String departmentName;
+	private int numberOfMember; 
 	private String desc;
 	
 	public Department() {
@@ -23,6 +24,15 @@ public class Department implements Serializable {
 		this.desc = description;		
 	}
 	
+	
+	public int getNumberOfMember() {
+		return numberOfMember;
+	}
+
+	public void setNumberOfMember(int numberOfMember) {
+		this.numberOfMember = numberOfMember;
+	}
+
 	public String getDepartmentId() {
 		return departmentId;
 	}
