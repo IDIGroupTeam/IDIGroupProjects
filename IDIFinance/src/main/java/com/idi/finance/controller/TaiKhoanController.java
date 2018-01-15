@@ -1,5 +1,6 @@
 package com.idi.finance.controller;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -62,6 +63,12 @@ public class TaiKhoanController {
 
 		List<LoaiTaiKhoan> taiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
 		model.addAttribute("taiKhoanDs", taiKhoanDs);
+
+		Iterator<LoaiTaiKhoan> iter = taiKhoanDs.iterator();
+		while (iter.hasNext()) {
+			LoaiTaiKhoan loaiTaiKhoan = iter.next();
+			
+		}
 
 		model.addAttribute("tab", "tabDMTK");
 		return "danhSachTaiKhoan";

@@ -26,13 +26,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.idi.finance.bean.KhachHang;
 import com.idi.finance.bean.LoaiTien;
-import com.idi.finance.bean.NhaCungCap;
 import com.idi.finance.bean.NhanVien;
 import com.idi.finance.bean.bieudo.KpiGroup;
 import com.idi.finance.bean.chungtu.ChungTu;
+import com.idi.finance.bean.chungtu.DoiTuong;
 import com.idi.finance.bean.chungtu.TaiKhoan;
+import com.idi.finance.bean.doitac.KhachHang;
+import com.idi.finance.bean.doitac.NhaCungCap;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BaoCaoDAO;
 import com.idi.finance.dao.ChungTuDAO;
@@ -843,7 +844,7 @@ public class ChungTuController {
 			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
 			model.addAttribute("kpiGroups", kpiGroups);
 
-			// Lấy danh sách phiếu chi
+			// Lấy danh sách phiếu kế toán tổng hợp
 			List<ChungTu> keToanTongHopDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_KT_TH);
 			model.addAttribute("keToanTongHopDs", keToanTongHopDs);
 
@@ -1012,6 +1013,119 @@ public class ChungTuController {
 			chungTuDAO.xoaChungTu(maCt, ChungTu.CHUNG_TU_KT_TH);
 
 			return "redirect:/danhsachktth";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/danhsachbtkc")
+	public String danhSachButToanKetChuyen(Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
+			model.addAttribute("kpiGroups", kpiGroups);
+
+			// Lấy danh sách bút toán kết chuyển
+			List<ChungTu> butToanKetChuyenDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_BT_KC);
+			model.addAttribute("butToanKetChuyenDs", butToanKetChuyenDs);
+
+			model.addAttribute("tab", "tabBTKC");
+			return "danhSachButToanKetChuyen";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/taomoibtkc")
+	public String taoMoiButToanKetChuyen(Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
+			model.addAttribute("kpiGroups", kpiGroups);
+
+			ChungTu chungTu = new ChungTu();
+			chungTu.setLoaiCt(ChungTu.CHUNG_TU_BT_KC);
+
+			// Lấy số phiếu thu của năm hiện tại
+			int soButToanKetChuyen = chungTuDAO.demSoChungTuTheoLoaiCtVaNam(ChungTu.CHUNG_TU_BT_KC, new Date());
+			soButToanKetChuyen++;
+
+			chungTu.setSoCt(soButToanKetChuyen);
+			Date ngayLap = new Date();
+			chungTu.setNgayLap(ngayLap);
+			chungTu.setNgayHt(ngayLap);
+
+			// Tài khoản khác, ghi nợ
+			TaiKhoan taiKhoan = new TaiKhoan();
+			taiKhoan.setChungTu(chungTu);
+			taiKhoan.setSoDu(LoaiTaiKhoan.NO);
+			chungTu.themTaiKhoan(taiKhoan);
+
+			// Tài khoản tiềm gửi ngân hàng, ghi có
+			taiKhoan = new TaiKhoan();
+			taiKhoan.setChungTu(chungTu);
+			taiKhoan.setSoDu(LoaiTaiKhoan.CO);
+			chungTu.themTaiKhoan(taiKhoan);
+
+			DoiTuong doiTuong = new DoiTuong();
+			doiTuong.setLoaiDt(DoiTuong.NHAN_VIEN);
+			chungTu.setDoiTuong(doiTuong);
+
+			return chuanBiFormButToanKetChuyen(model, chungTu);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/luutaomoibtkc", method = RequestMethod.POST)
+	public String luuTaoMoiButToanKetChuyen(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu,
+			BindingResult result, Model model) {
+		try {
+			if (result.hasErrors()) {
+				return chuanBiFormButToanKetChuyen(model, chungTu);
+			}
+
+			logger.info("Lưu bút toán kết chuyển: " + chungTu);
+
+			chungTu.setLoaiCt(ChungTu.CHUNG_TU_BT_KC);
+
+			if (chungTu.getMaCt() > 0) {
+				chungTuDAO.capNhatChungTu(chungTu);
+				return "redirect:/xembtkc/" + chungTu.getMaCt();
+			} else {
+				chungTuDAO.themChungTu(chungTu);
+			}
+
+			return "redirect:/danhsachbtkc";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	private String chuanBiFormButToanKetChuyen(Model model, ChungTu chungTu) {
+		try {
+			model.addAttribute("mainFinanceForm", chungTu);
+
+			// Lấy danh sách các loại tiền
+			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
+			model.addAttribute("loaiTienDs", loaiTienDs);
+
+			// Lấy danh sách tài khoản, dùng cho bên nợ & có
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
+
+			model.addAttribute("tab", "tabBTKC");
+			if (chungTu.getMaCt() > 0) {
+				// Đây là trường hợp sửa bút toán
+				return "suaButToanKetChuyen";
+			} else {
+				// Đây là trường hợp tạo mới bút toán
+				return "taoMoiButToanKetChuyen";
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";

@@ -2,7 +2,7 @@ package com.idi.finance.dao;
 
 import java.util.List;
 
-import com.idi.finance.bean.KhachHang;
+import com.idi.finance.bean.doitac.KhachHang;
 
 public interface KhachHangDAO {
 	public List<KhachHang> danhSachKhachHang();

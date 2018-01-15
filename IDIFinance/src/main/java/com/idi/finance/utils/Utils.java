@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import com.idi.finance.bean.KyKeToan;
+import com.idi.finance.bean.cdkt.KyKeToanCon;
 
 public class Utils {
 	public static String format(String str) {
@@ -89,15 +89,15 @@ public class Utils {
 		Calendar cal = Calendar.getInstance(Locale.FRANCE);
 		cal.setTime(date);
 
-		if (periodType == KyKeToan.WEEK) {
+		if (periodType == KyKeToanCon.WEEK) {
 			cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-		} else if (periodType == KyKeToan.MONTH) {
+		} else if (periodType == KyKeToanCon.MONTH) {
 			cal.set(Calendar.DAY_OF_MONTH, 1);
-		} else if (periodType == KyKeToan.QUARTER) {
+		} else if (periodType == KyKeToanCon.QUARTER) {
 			int month = Math.round(cal.get(Calendar.MONTH) / 3) * 3;
 			cal.set(Calendar.MONTH, month);
 			cal.set(Calendar.DAY_OF_MONTH, 1);
-		} else if (periodType == KyKeToan.YEAR) {
+		} else if (periodType == KyKeToanCon.YEAR) {
 			cal.set(Calendar.MONTH, 0);
 			cal.set(Calendar.DAY_OF_MONTH, 1);
 		} else {
@@ -121,20 +121,20 @@ public class Utils {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 
-		if (periodType == KyKeToan.WEEK) {
+		if (periodType == KyKeToanCon.WEEK) {
 			cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
 			cal.add(Calendar.WEEK_OF_YEAR, 1);
 			cal.add(Calendar.MILLISECOND, -1);
-		} else if (periodType == KyKeToan.MONTH) {
+		} else if (periodType == KyKeToanCon.MONTH) {
 			cal.set(Calendar.DAY_OF_MONTH, 1);
 			cal.add(Calendar.MONTH, 1);
 			cal.add(Calendar.MILLISECOND, -1);
-		} else if (periodType == KyKeToan.QUARTER) {
+		} else if (periodType == KyKeToanCon.QUARTER) {
 			int month = Math.round(cal.get(Calendar.MONTH) / 3) * 3;
 			cal.set(Calendar.MONTH, month + 3);
 			cal.set(Calendar.DAY_OF_MONTH, 1);
 			cal.add(Calendar.MILLISECOND, -1);
-		} else if (periodType == KyKeToan.YEAR) {
+		} else if (periodType == KyKeToanCon.YEAR) {
 			cal.set(Calendar.MONTH, 0);
 			cal.set(Calendar.DAY_OF_MONTH, 1);
 			cal.add(Calendar.YEAR, 1);
@@ -162,8 +162,11 @@ public class Utils {
 		return cal.getTime();
 	}
 
-	public static KyKeToan nextPeriod(KyKeToan ky) {
-		KyKeToan nextPeriod = new KyKeToan();
+	public static KyKeToanCon nextPeriod(KyKeToanCon ky) {
+		if (ky == null || ky.getDau() == null)
+			return null;
+
+		KyKeToanCon nextPeriod = new KyKeToanCon();
 		nextPeriod.setLoai(ky.getLoai());
 		nextPeriod.setDau(nextPeriod(ky.getDau(), ky.getLoai()));
 		nextPeriod.setCuoi(getEndPeriod(nextPeriod.getDau(), nextPeriod.getLoai()));
@@ -186,8 +189,11 @@ public class Utils {
 		return cal.getTime();
 	}
 
-	public static KyKeToan prevPeriod(KyKeToan ky) {
-		KyKeToan prevPeriod = new KyKeToan();
+	public static KyKeToanCon prevPeriod(KyKeToanCon ky) {
+		if (ky == null || ky.getDau() == null)
+			return null;
+
+		KyKeToanCon prevPeriod = new KyKeToanCon();
 		prevPeriod.setLoai(ky.getLoai());
 		prevPeriod.setDau(prevPeriod(ky.getDau(), ky.getLoai()));
 		prevPeriod.setCuoi(getEndPeriod(prevPeriod.getDau(), prevPeriod.getLoai()));

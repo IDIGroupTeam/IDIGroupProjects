@@ -1,22 +1,12 @@
 package com.idi.finance.bean.soketoan;
 
-import com.idi.finance.bean.KyKeToan;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.TaiKhoan;
 
 public class NghiepVuKeToan implements Comparable<NghiepVuKeToan> {
-	private KyKeToan ky;
 	private ChungTu chungTu;
 	private TaiKhoan taiKhoanNo;
 	private TaiKhoan taiKhoanCo;
-
-	public KyKeToan getKy() {
-		return ky;
-	}
-
-	public void setKy(KyKeToan ky) {
-		this.ky = ky;
-	}
 
 	public ChungTu getChungTu() {
 		return chungTu;

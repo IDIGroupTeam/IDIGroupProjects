@@ -17,7 +17,7 @@
 
 <h4>Danh mục phiếu kế toán tổng hợp</h4>
 <p>
-	<i>Ghi nợ vào các tài khoản tiền mặt: 111, 1111, ...</i>
+	<i></i>
 </p>
 
 <div class="pull-right">
@@ -55,8 +55,8 @@
 							dateStyle="SHORT" /></td>
 					<td class="text-center" style="width: 50px;">${keToanTongHop.loaiCt}${keToanTongHop.soCt}</td>
 					<td><a href="${url}/xemktth/${keToanTongHop.maCt}">${keToanTongHop.lyDo}</a></td>
-					<td align="right"><fmt:formatNumber value="${keToanTongHop.soTien.giaTri}"
-							maxFractionDigits="2"></fmt:formatNumber></td>
+					<td align="right"><fmt:formatNumber
+							value="${keToanTongHop.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
 					<td><c:choose>
 							<c:when
 								test="${keToanTongHop.doiTuong.loaiDt == DoiTuong.KHACH_VANG_LAI}">

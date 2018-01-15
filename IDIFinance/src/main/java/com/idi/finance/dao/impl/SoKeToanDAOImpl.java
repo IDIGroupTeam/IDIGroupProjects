@@ -169,13 +169,17 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 	@Override
 	public double tongPhatSinh(String maTk, int soDu, Date dau, Date cuoi) {
+		if (maTk == null || maTk.trim().equals("")) {
+			return 0;
+		}
+
 		String query = TONG_PHAT_SINH;
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
 
 		if (dau != null) {
 			String batDau = sdf.format(dau);
-			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "AND CT.NGAY_HT >= '" + batDau + "'");
+			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "AND CT.NGAY_HT >= '" + batDau + "'"); 
 		} else {
 			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "");
 		}
@@ -189,8 +193,9 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 		query = query.replaceAll("\\$MA_TK\\$", maTk);
 
-		logger.info("Tổng phát sinh tài khoản " + maTk + ". Số dư " + soDu + ". Từ " + dau + " đến " + cuoi);
-		logger.info(query);
+		// logger.info("Tổng phát sinh tài khoản " + maTk + ". Số dư " + soDu + ". Từ "
+		// + dau + " đến " + cuoi);
+		// logger.info(query);
 
 		try {
 			Object[] objs = { soDu };

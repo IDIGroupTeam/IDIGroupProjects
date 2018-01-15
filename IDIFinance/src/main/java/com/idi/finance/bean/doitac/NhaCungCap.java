@@ -1,28 +1,28 @@
-package com.idi.finance.bean;
+package com.idi.finance.bean.doitac;
 
-public class KhachHang {
-	private int maKh;
-	private String tenKh;
+public class NhaCungCap {
+	private int maNcc;
+	private String tenNcc;
 	private String diaChi;
 	private String maThue;
 	private String email;
 	private String sdt;
 	private String webSite;
 
-	public int getMaKh() {
-		return maKh;
+	public int getMaNcc() {
+		return maNcc;
 	}
 
-	public void setMaKh(int maKh) {
-		this.maKh = maKh;
+	public void setMaNcc(int maNcc) {
+		this.maNcc = maNcc;
 	}
 
-	public String getTenKh() {
-		return tenKh;
+	public String getTenNcc() {
+		return tenNcc;
 	}
 
-	public void setTenKh(String tenKh) {
-		this.tenKh = tenKh;
+	public void setTenNcc(String tenNcc) {
+		this.tenNcc = tenNcc;
 	}
 
 	public String getDiaChi() {
@@ -67,7 +67,7 @@ public class KhachHang {
 
 	@Override
 	public String toString() {
-		String out = maKh + "  " + tenKh;
+		String out = maNcc + "  " + tenNcc;
 		return out;
 	}
 
@@ -77,22 +77,22 @@ public class KhachHang {
 			return false;
 		}
 
-		if (!(obj instanceof KhachHang)) {
+		if (!(obj instanceof NhaCungCap)) {
 			return false;
 		}
 
-		KhachHang item = (KhachHang) obj;
+		NhaCungCap item = (NhaCungCap) obj;
 		try {
-			if (maKh != item.getMaKh()) {
+			if (maNcc != item.getMaNcc()) {
 				return false;
 			}
 
-			if (tenKh == null) {
-				if (item.getTenKh() != null)
+			if (tenNcc == null) {
+				if (item.getTenNcc() != null)
 					return false;
-			} else if (item.getTenKh() == null) {
+			} else if (item.getTenNcc() == null) {
 				return false;
-			} else if (!tenKh.trim().equals(item.getTenKh().trim())) {
+			} else if (!tenNcc.trim().equals(item.getTenNcc().trim())) {
 				return false;
 			}
 		} catch (Exception e) {

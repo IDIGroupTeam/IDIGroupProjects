@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.idi.finance.bean.NhaCungCap;
+import com.idi.finance.bean.doitac.NhaCungCap;
 import com.idi.finance.dao.NhaCungCapDAO;
 
 public class NhaCungCapDAOImpl implements NhaCungCapDAO {
