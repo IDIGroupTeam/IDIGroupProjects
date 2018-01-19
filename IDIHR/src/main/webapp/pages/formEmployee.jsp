@@ -20,21 +20,22 @@
 <body>
 	<form:form modelAttribute="employeeForm" method="POST"
 		action="insertOrUpdateEmployee" enctype="multipart/form-data">
+		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" name="Lưu" /><br/><br/>
 		<div class="table table-bordered">
 			<form:hidden path="employeeId" />
 			<table>
 				<tr>
 					<td><form:errors path="fullName" class="error-message" /></td>
 				</tr>
-				<tr>
+				<%-- <tr>
 					<td><form:errors path="email" class="error-message" /></td>
-				</tr>
+				</tr> --%>
 				<tr>
 					<td><form:errors path="gender" class="error-message" /></td>
 				</tr>
-				<tr>
+				<%-- <tr>
 					<td><form:errors path="loginAccount" class="error-message" /></td>
-				</tr>
+				</tr> --%>
 
 			</table>
 			<table class="table">
@@ -55,7 +56,7 @@
 						<td nowrap="nowrap"><input type="file" accept="image/jpeg"
 							name="image" /></td>
 						<td bgcolor="#E6E6E6">Họ tên(*):</td>
-						<td><form:input path="fullName" required="required" /></td>
+						<td><form:input path="fullName" required="required" maxlength="64"/></td>
 						<td bgcolor="#E6E6E6">Số đt:</td>
 						<td><form:input path="phoneNo" type="tel" /></td>
 
@@ -77,9 +78,9 @@
 								<img src="/IDIHR/public/images/avatar.gif" height="170px"
 									width="145px" />
 							</c:if></td>
-						<td bgcolor="#E6E6E6">Email(*):</td>
+						<td bgcolor="#E6E6E6">Email:</td>
 						<!-- can check duplicate  -->
-						<td><form:input path="email" required="required" /></td>
+						<td><form:input path="email" maxlength="45"/></td>
 
 						<td bgcolor="#E6E6E6">T/T hôn nhân:</td>
 						<td><form:select path="maritalStatus">
@@ -94,10 +95,9 @@
 						<td><form:input path="percentSocicalInsu" size="6" /></td> --%>
 					</tr>
 					<tr>
-						<td bgcolor="#E6E6E6">Account(*):</td>
+						<td bgcolor="#E6E6E6">Account:</td>
 						<!-- can check duplicate  -->
-						<td><form:input path="loginAccount" size="10"
-								required="required" /></td>
+						<td><form:input path="loginAccount" size="10" maxlength="45"/></td>
 						<td bgcolor="#E6E6E6">Trạng thái LĐ:</td>
 						<td><form:select path="workStatus">
 								<form:options items="${workStatusMap}" />
@@ -116,10 +116,6 @@
 						<td><form:select path="jobTitle">
 								<form:options items="${titleMap}" />
 							</form:select></td>
-
-
-						<%-- 						<td>Số thẻ BHYT:</td>
-						<td><form:input path="healthInsuNo" size="12" /></td> --%>
 					</tr>
 					<tr>
 						<td bgcolor="#E6E6E6">Ngày sinh:</td>
@@ -142,17 +138,16 @@
 						<td bgcolor="#E6E6E6">Ngày cấp:</td>
 						<td><form:input path="issueDate" type="date" /></td>
 
-						<td>Quốc tịch: <form:input path="nation" size="12" /></td>
+						<td>Nơi cấp: <form:input path="issuePlace" size="12" maxlength="12"/></td>
 
 					</tr>
 					<tr>
 						<td bgcolor="#E6E6E6">Đ/c hiện tại:</td>
-						<td><form:input path="currentAdress" /></td>
+						<td><form:input path="currentAdress" maxlength="255"/></td>
 
 						<td bgcolor="#E6E6E6">Đ/c thường trú:</td>
 						<td><form:input path="permanentAdress" /></td>
-						<td></td>
-						<td></td>
+						<td>Quốc tịch: <form:input path="nation" size="12" maxlength="255"/></td>
 					</tr>
 					<tr>
 						<td colspan="6" nowrap="nowrap" bgcolor="#F6CED8">Liên lạc
@@ -162,9 +157,9 @@
 					</tr>
 					<tr>
 						<td bgcolor="#FBEFF2">Tên người liên lạc:</td>
-						<td><form:input path="emerName" /></td>
+						<td><form:input path="emerName" maxlength="32"/></td>
 						<td bgcolor="#FBEFF2">Số đt:</td>
-						<td><form:input path="emerPhoneNo" size="12" /></td>
+						<td><form:input path="emerPhoneNo" size="12" maxlength="20"/></td>
 						<%-- 						<td bgcolor="#9F81F7">Lý do thôi việc:</td>
 						<td><form:input path="reasonforLeave" /></td> --%>
 					</tr>
@@ -187,7 +182,7 @@
 				</tbody>
 			</table>
 		</div>
-		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" name="Lưu" />
+		
 	</form:form>
 	<br/>
 	<a href="${pageContext.request.contextPath}/"><button

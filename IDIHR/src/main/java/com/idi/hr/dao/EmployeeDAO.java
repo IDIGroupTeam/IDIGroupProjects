@@ -118,7 +118,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 				Object[] params = new Object[] { employeeInfo.getFullName(),
 						employeeInfo.getGender(), employeeInfo.getJobTitle(), employeeInfo.getWorkStatus(),
 						employeeInfo.getDOB(), employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(),
-						employeeInfo.getPersonalId(), employeeInfo.getIssueDate(), employeeInfo.getDepartment(),
+						employeeInfo.getPersonalId(), employeeInfo.getIssueDate(), employeeInfo.getIssuePlace(), employeeInfo.getDepartment(),
 						employeeInfo.getPhoneNo(), employeeInfo.getJoinDate(), employeeInfo.getOfficalJoinDate(),
 						employeeInfo.getEmail(), employeeInfo.getTerminationDate(), employeeInfo.getReasonforLeave(),
 						employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
@@ -136,7 +136,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 				Object[] params = new Object[] { employeeInfo.getFullName(),
 						employeeInfo.getGender(), employeeInfo.getJobTitle(), employeeInfo.getWorkStatus(),
 						employeeInfo.getDOB(), employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(),
-						employeeInfo.getPersonalId(), employeeInfo.getIssueDate(), employeeInfo.getDepartment(),
+						employeeInfo.getPersonalId(), employeeInfo.getIssueDate(), employeeInfo.getIssuePlace(), employeeInfo.getDepartment(),
 						employeeInfo.getPhoneNo(), employeeInfo.getJoinDate(), employeeInfo.getOfficalJoinDate(),
 						employeeInfo.getEmail(), employeeInfo.getTerminationDate(), employeeInfo.getReasonforLeave(),
 						employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
@@ -198,7 +198,6 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		return list;
 
 	}
-
 	
 	/**
 	 * Get employees from DB
@@ -211,6 +210,25 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		String sql = hr.getProperty("GET_EMPLOYEES_BY_DEPARTMENT").toString();
 		log.info("GET_EMPLOYEES_BY_DEPARTMENT query: " + sql);
 		Object[] params = new Object[] {department};
+		EmployeeMapper mapper = new EmployeeMapper();
+
+		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);
+
+		return list;
+	}
+	
+	/**
+	 * Get employees from DB
+	 * @param search value
+	 * @return List of employee
+	 * @throws Exception
+	 */
+	public List<EmployeeInfo> getEmployeesBySearch(String value) {
+
+		String sql = hr.getProperty("GET_EMPLOYEE_BY_SEARCH").toString();
+		log.info("GET_EMPLOYEE_BY_SEARCH query: " + sql);
+		value = "%" + value + "%";
+		Object[] params = new Object[] {value, value, value, value, value, value};
 		EmployeeMapper mapper = new EmployeeMapper();
 
 		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);

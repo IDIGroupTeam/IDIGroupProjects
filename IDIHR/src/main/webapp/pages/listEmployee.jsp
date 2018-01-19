@@ -1,5 +1,6 @@
 <%@page language="java" contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 <html>
@@ -32,6 +33,19 @@ tr:nth-child(even) {
 			class="btn btn-primary btn-sm">Thống kê trạng thái LĐ</button></a>				
 	<br />
 	<br />
+	<form:form action="listEmployeeSearch" modelAttribute="employeeForm" method="GET">
+	<table class="table">
+		<tr>
+			<td style="color: purple;"><i>Nhập thông tin nhân viên muốn tìm kiếm: Tên/Email/Account/Mã NV/Mã phòng/Mã chức vụ </i></td>
+			<td align="center">
+				<form:input path="searchValue" required="required"/>
+			</td>
+			<td>
+				<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Tìm" />
+			</td>			
+		</tr>
+	</table>
+	</form:form>
 	<div class="table-responsive">
 		
 		<table class="table table-striped">

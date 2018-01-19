@@ -22,6 +22,7 @@ public class EmployeeMapper implements RowMapper<EmployeeInfo> {
 		String DOB = rs.getString("DOB");
 		String personalId = rs.getString("PERSONAL_ID");
 		String issueDate = rs.getString("ISSUE_DATE");
+		String issuePlace = rs.getString("ISSUE_PLACE");				
 		String phoneNo = rs.getString("PHONE_NO");
 		String joinDate = rs.getString("JOIN_DATE");
 		String officalJoinDate = rs.getString("OFFICIAL_JOIN_DATE");
@@ -47,7 +48,7 @@ public class EmployeeMapper implements RowMapper<EmployeeInfo> {
 		String percentSocicalInsu = rs.getString("PERCENT_SOCI_INSU");
 
 		return new EmployeeInfo(employeeId, loginAccount, gender, fullName, maritalStatus, jobTitle, department, DOB,
-				personalId, issueDate, phoneNo, joinDate, officalJoinDate, email, terminationDate, reasonforLeave,
+				personalId, issueDate, issuePlace, phoneNo, joinDate, officalJoinDate, email, terminationDate, reasonforLeave,
 				currentAdress, permanentAdress, note, emerName, emerPhoneNo, nation, workStatus, bankNo, bankName,
 				bankBranch, imagePath, salarySocicalInsu, socicalInsuNo, healthInsuNo, percentSocicalInsu);
 

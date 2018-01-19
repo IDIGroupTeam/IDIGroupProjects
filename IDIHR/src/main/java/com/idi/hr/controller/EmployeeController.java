@@ -50,7 +50,7 @@ import com.idi.hr.common.Utils;
 import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.JobTitleDAO;
-import com.idi.hr.form.Birth;
+import com.idi.hr.form.EmployeeForm;
 import com.idi.hr.validator.EmployeeValidator;
 
 @Controller
@@ -82,6 +82,8 @@ public class EmployeeController {// extends BaseController {
 			//System.err.println("thang hien tai " + cal.get(Calendar.MONTH));
 			int currentQuarter = cal.get(Calendar.MONTH)/3 + 1;
 			//System.err.println(currentQuarter);
+			EmployeeForm employeeForm = new EmployeeForm();
+			model.addAttribute("employeeForm", employeeForm);
 			model.addAttribute("quarter", currentQuarter);
 			model.addAttribute("formTitle", "Danh sách nhân viên");
 		} catch (Exception e) {
@@ -91,9 +93,33 @@ public class EmployeeController {// extends BaseController {
 		return "listEmployee";
 	}
 
+	@RequestMapping(value = "/listEmployeeSearch", method = RequestMethod.GET)
+	public String listEmployeeSearch(Model model, @RequestParam("searchValue") String searchValue,
+			final RedirectAttributes redirectAttributes) {
+		try {			
+			Date date = new Date();// your date
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);		
+			int currentQuarter = cal.get(Calendar.MONTH)/3 + 1;
+			model.addAttribute("quarter", currentQuarter);
+			
+			EmployeeForm employeeForm = new EmployeeForm();
+			model.addAttribute("employeeForm", employeeForm);
+			List<EmployeeInfo> list = employeeDAO.getEmployeesBySearch(searchValue);
+			if (list.size() < 1)
+				redirectAttributes.addFlashAttribute("message", "Không có nhân viên nào khớp với thông tin: '" + searchValue + "'");
+			model.addAttribute("employees", list);
+			model.addAttribute("formTitle", "Kết quả tìm kiếm nhân viên");
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return "listEmployee";
+	}
+	
 	@RequestMapping(value = "/listEmployeeBirth", method = RequestMethod.GET)
 	public String listEmployeeBirth(Model model, @RequestParam("quarter") int quarter,
-			@ModelAttribute("bithForm") Birth bith, final RedirectAttributes redirectAttributes) {
+			@ModelAttribute("bithForm") EmployeeForm bith, final RedirectAttributes redirectAttributes) {
 		try {
 			System.err.println(bith.getQuarter());
 			List<EmployeeInfo> list = employeeDAO.getEmployeesBirth(quarter);
