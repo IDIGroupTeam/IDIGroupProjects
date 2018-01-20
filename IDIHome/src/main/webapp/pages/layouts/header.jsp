@@ -9,12 +9,11 @@
 			<a class="navbar-brand" href="${url}"><img height="80px"
 				src="/IDICRM/public/images/IDI-logo.png" /></a>
 		</div>
-
 		<ul class="nav navbar-nav navbar-right">
-			<li><a href="/IDIHome">Home</a></li>
-			<li><a href="#news">News</a></li>
-			<li><a href="#contact">Contact</a></li>
-			<li><a href="#about">About</a></li>
+			<li><a href="/IDIHome">Trang chủ</a></li>
+			<li><a href="/IDIHome/tintuc">Tin tức</a></li>
+			<li><a href="/IDIHome/lienhe">Liên hệ</a></li>
+			<li><a href="/IDIHome/vechungtoi">Về chúng tôi</a></li>
 			<li><a href="#" class="login"><span
 					class="glyphicon glyphicon-log-out"></span> Đăng Xuất </a></li>
 		</ul>

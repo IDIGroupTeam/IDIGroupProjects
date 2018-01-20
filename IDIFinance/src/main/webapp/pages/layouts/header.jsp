@@ -9,21 +9,19 @@
 			<a class="navbar-brand" href="${url}"><img height="80px"
 				src="${url}/public/images/IDI-logo.png" /></a>
 		</div>
-
-		<ul class="nav navbar-nav navbar-right">
+	    <ul class="nav navbar-nav navbar-right">
+			<li><a href="/IDIHome">Trang chủ</a></li>
+			<li><a href="/IDIHome/tintuc">Tin tức</a></li>
+			<li><a href="/IDIHome/lienhe">Liên hệ</a></li>
+			<li><a href="/IDIHome/vechungtoi">Về chúng tôi</a></li>
 			<li><a href="#" class="login"><span
 					class="glyphicon glyphicon-log-out"></span> Đăng Xuất </a></li>
 		</ul>
-
-		<!-- <form class="navbar-form navbar-right">
-			<div class="input-group">
-				<input type="text" class="form-control" placeholder="Tìm kiếm">
-				<div class="input-group-btn">
-					<button class="btn btn-default" type="submit">
-						<i class="glyphicon glyphicon-search"></i>
-					</button>
-				</div>
-			</div>
-		</form> -->
+		<div class="topnav navbar-right" id="myTopnav"></div>
+       
 	</div>
+  <form class="form-inline navbar-right" action="#">
+    <input class="form-control mr-sm-2" type="text" placeholder="Xin điền thông tin " >
+    <button class="btn btn-success" type="submit">Tìm kiếm</button>
+  </form>
 </nav>

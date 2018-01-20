@@ -13,10 +13,11 @@ public class HomeController {
 	public String welcome(Model model) {
 		String strDes = null;
 		logger.info("Inside welcome() method in HomeController");
-		model.addAttribute("name", "Phần mềm quản trị IDIGroup");
-		strDes = "Xin chào Bạn! \n" + "Phần mềm đang trong giai đoạn xây dựng \n"
-				+ "Chúng tôi rất cần sự đóng góp ý kiến xây dựng của bạn \n"
-				+ "Bạn có thể trải nghiệm tại các Module Nhân sự, Module Tài chính & Kế toán";
+		model.addAttribute("name", "Phần Mềm Hệ Thống Quản Trị IDIGroup");
+		strDes = "<span>Xin chào Bạn! <br>" + "Phần mềm đang trong giai đoạn xây dựng <br> "
+				+ "Chúng tôi rất cần sự đóng góp ý kiến xây dựng của bạn <br>"
+				+ "Bạn có thể trải nghiệm các chức năng tại các Module Nhân sự, Module Tài chính & Kế toán <br>"
+				+ "Bạn có thể xem và lấy các tài liệu của IDIGroup từ mục Tài liệu <br></span>";
 		model.addAttribute("description", strDes);
 		return "home";
 	}
@@ -39,4 +40,16 @@ public class HomeController {
 	public String listAudioVideo(Model model) {
 		return "listAudioVideo";
 	}
-}
+	@RequestMapping(value="/lienhe") 
+	public String lienhe(Model model) {
+		return "lienhe";
+	}
+	@RequestMapping(value="/vechungtoi") 
+	public String vechungtoi(Model model) {
+		return "vechungtoi";
+	}
+	@RequestMapping(value="/tintuc") 
+	public String tintuc(Model model) {
+		return "tintuc";
+	}
+}   
