@@ -1,4 +1,4 @@
-<%@page import="com.idi.finance.bean.KyKeToan"%>
+<%@page import="com.idi.finance.bean.cdkt.KyKeToanCon"%>
 <%@page import="com.idi.finance.bean.chungtu.ChungTu"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
@@ -39,10 +39,10 @@
 			<label for="loaiKy">Kỳ:</label>
 			<form:select path="loaiKy" multiple="false"
 				class="form-control smallform pull-right">
-				<form:option value="${KyKeToan.WEEK}">Tuần</form:option>
-				<form:option value="${KyKeToan.MONTH}">Tháng</form:option>
-				<form:option value="${KyKeToan.QUARTER}">Quý</form:option>
-				<form:option value="${KyKeToan.YEAR}">Năm</form:option>
+				<form:option value="${KyKeToanCon.WEEK}">Tuần</form:option>
+				<form:option value="${KyKeToanCon.MONTH}">Tháng</form:option>
+				<form:option value="${KyKeToanCon.QUARTER}">Quý</form:option>
+				<form:option value="${KyKeToanCon.YEAR}">Năm</form:option>
 			</form:select>
 		</div>
 
@@ -65,18 +65,6 @@
 		</div>
 
 		<script type="text/javascript">
-			//Khởi tạo ngày sau khi 2 select trên được load đủ nội dung
-			$("#loaiCts").multiselect({
-				maxHeight : 200,
-				buttonWidth : '170px',
-				nonSelectedText : 'Chứng từ',
-				nSelectedText : 'Được chọn',
-				includeSelectAllOption : true,
-				allSelectedText : 'Tất cả',
-				selectAllText : 'Tất cả',
-				selectAllValue : '${ChungTu.TAT_CA}'
-			});
-
 			$(".datetime").datetimepicker({
 				language : 'vi',
 				todayBtn : 1,

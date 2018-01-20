@@ -38,7 +38,12 @@
 						<td bgcolor="#FBEFF2">Chọn loại(*):</td>
 						<td>
 							<form:select path="leaveType">
+								<form:option value="DMS" label="Đi muộn sáng"></form:option>
+								<form:option value="DMC" label="Đi muộn chiều"></form:option>
+								<form:option value="VSS" label="Về sớm sáng"></form:option>
+								<form:option value="VSC" label="Về sớm chiều"></form:option>
 								<form:options items="${leaveTypeMap}" />
+								
 							</form:select>
 						</td>	
 					<tr>	

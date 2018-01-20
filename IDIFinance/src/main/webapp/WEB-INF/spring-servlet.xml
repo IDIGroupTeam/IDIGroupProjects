@@ -42,12 +42,14 @@
 	<bean id="chungTuValidator" class="com.idi.finance.validator.ChungTuValidator" />
 	<bean id="loaiTaiKhoanValidator" class="com.idi.finance.validator.LoaiTaiKhoanValidator" />
 	<bean id="nghiepVuValidator" class="com.idi.finance.validator.NghiepVuValidator" />
+	<bean id="nganHangValidator" class="com.idi.finance.validator.NganHangValidator" />
+	<bean id="nganHangTaiKhoanValidator" class="com.idi.finance.validator.NganHangTaiKhoanValidator" />
 
 	<!-- Config for upload file feature -->
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<!-- setting maximum upload size -->
-		<property name="maxUploadSize" value="1000000" />
+		<property name="maxUploadSize" value="2500000" />
 	</bean>
 
 	<!-- Config database connection -->
@@ -103,4 +105,15 @@
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
+	<bean id="hangHoaDAO" class="com.idi.finance.dao.impl.HangHoaDAOImpl">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+
+	<bean id="diaChiDAO" class="com.idi.finance.dao.impl.DiaChiDAOImpl">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+	
+	<bean id="nganHangDAO" class="com.idi.finance.dao.impl.NganHangDAOImpl">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
 </beans>

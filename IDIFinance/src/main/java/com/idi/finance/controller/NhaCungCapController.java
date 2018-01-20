@@ -14,18 +14,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.idi.finance.bean.NhaCungCap;
-import com.idi.finance.bean.bieudo.KpiGroup;
-import com.idi.finance.dao.KpiChartDAO;
+import com.idi.finance.bean.doitac.NhaCungCap;
 import com.idi.finance.dao.NhaCungCapDAO;
 import com.idi.finance.validator.NhaCungCapValidator;
 
 @Controller
 public class NhaCungCapController {
 	private static final Logger logger = Logger.getLogger(NhaCungCapController.class);
-
-	@Autowired
-	KpiChartDAO kpiChartDAO;
 
 	@Autowired
 	NhaCungCapDAO nhaCungCapDAO;
@@ -50,10 +45,6 @@ public class NhaCungCapController {
 	@RequestMapping("/danhsachnhacungcap")
 	public String danhSachNhaCungCap(Model model) {
 		try {
-			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
-
 			// Lấy danh sách nhà cung cấp
 			List<NhaCungCap> nhaCungCapDs = nhaCungCapDAO.danhSachNhaCungCap();
 			model.addAttribute("nhaCungCapDs", nhaCungCapDs);
@@ -69,10 +60,6 @@ public class NhaCungCapController {
 	@RequestMapping("/xemnhacungcap/{id}")
 	public String xemNhaCungCap(@PathVariable("id") int maNcc, Model model) {
 		try {
-			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
-
 			NhaCungCap nhaCungCap = nhaCungCapDAO.layNhaCungCap(maNcc);
 			model.addAttribute("nhaCungCap", nhaCungCap);
 
@@ -87,10 +74,6 @@ public class NhaCungCapController {
 	@RequestMapping("/suanhacungcap/{id}")
 	public String suaNhaCungCap(@PathVariable("id") int maNcc, Model model) {
 		try {
-			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
-
 			NhaCungCap nhaCungCap = nhaCungCapDAO.layNhaCungCap(maNcc);
 			model.addAttribute("mainFinanceForm", nhaCungCap);
 
@@ -105,10 +88,6 @@ public class NhaCungCapController {
 	@RequestMapping("/taomoinhacungcap")
 	public String taoMoiNhaCungCap(Model model) {
 		try {
-			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
-
 			NhaCungCap nhaCungCap = new NhaCungCap();
 			model.addAttribute("mainFinanceForm", nhaCungCap);
 
@@ -128,7 +107,7 @@ public class NhaCungCapController {
 			if (result.hasErrors()) {
 				model.addAttribute("mainFinanceForm", nhaCungCap);
 				model.addAttribute("tab", "tabDSNCC");
-				
+
 				if (nhaCungCap.getMaNcc() > 0) {
 					// Đây là trường hợp sửa NCC
 					return "suaNhaCungCap";

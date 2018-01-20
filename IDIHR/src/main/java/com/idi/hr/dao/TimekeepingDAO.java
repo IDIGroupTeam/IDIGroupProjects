@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.idi.hr.bean.Timekeeping;
-import com.idi.hr.bean.WorkHistory;
 import com.idi.hr.common.PropertiesManager;
 import com.idi.hr.mapper.TimekeepingMapper;
 
@@ -43,13 +42,14 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	 * @return List of TIMEKEEPING object
 	 * @throws Exception
 	 */
-	public List<Timekeeping> getTimekeepings() {
+	public List<Timekeeping> getTimekeepings(String date) {
 
 		String sql = hr.getProperty("GET_TIMEKEEPING_INFO").toString();
 		log.info("GET_TIMEKEEPING_INFO query: " + sql);
+		Object[] params = new Object[] { date };
 		TimekeepingMapper mapper = new TimekeepingMapper();
 
-		List<Timekeeping> list = jdbcTmpl.query(sql, mapper);
+		List<Timekeeping> list = jdbcTmpl.query(sql, params, mapper);
 		return list;
 
 	}
@@ -95,11 +95,11 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	}
 	
 	/**
-	 * Insert a Timekeeping into database
+	 * Insert list Timekeeping into database
 	 * 
 	 * @param timekeepings
 	 */
-	public void insertOrUpdate(List<Timekeeping> timekeepings) throws Exception {
+	public void insert(List<Timekeeping> timekeepings) throws Exception {
 		try {
 			log.info("Cập nhật thông tin chấm công ....");
 			String sql = hr.getProperty("INSERT_TIMEKEEPING").toString();
@@ -133,48 +133,54 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 			throw e;
 		}
 	}
-
+	
 	/**
-	 * Update a WorkHistory into database
+	 * Update a Timekeeping into database
 	 * 
-	 * @param WorkHistory
+	 * @param timekeepings
 	 */
-	public void updateWorkHistory(WorkHistory workHistory) throws Exception {
+	public void update(Timekeeping timekeeping) throws Exception {
 		try {
-
-			log.info("Cập nhật thông tin lịch sử làm việc cho MNV: " + workHistory.getEmployeeId() + " từ ngày "
-					+ workHistory.getFromDate() + "đến ngày" + workHistory.getToDate());
-			// update
-			String sql = hr.getProperty("UPDATE_WORK_HISTORY").toString();
-			log.info("UPDATE_WORK_HISTORY query: " + sql);
-			Object[] params = new Object[] { workHistory.getToDate(), workHistory.getTitle(),
-					workHistory.getDepartment(), workHistory.getCompany(), workHistory.getSalary(),
-					workHistory.getAchievement(), workHistory.getAppraise(), workHistory.getEmployeeId(),
-					workHistory.getFromDate() };
-			jdbcTmpl.update(sql, params);
-
-		} catch (Exception e) {
-			log.error(e, e);
-			throw e;
-		}
-	}
-
-	/**
-	 * Delete a WorkHistory from database
-	 * 
-	 * @param employeeId,
-	 *            fromDate
-	 */
-	public void deleteWorkHistory(int employeeId, String fromDate) throws Exception {
-		try {
-
-			log.info("Xóa thông tin lịch sử làm việc của MNV : " + employeeId + " từ ngày " + fromDate);
-			// delete
-			String sql = hr.getProperty("DELETE_WORK_HISTORY").toString();
-			log.info("DELETE_WORK_HISTORY query: " + sql);
-			Object[] params = new Object[] { employeeId, fromDate };
-			jdbcTmpl.update(sql, params);
-
+			log.info("Cập nhật thông tin chấm công phát sinh....");
+			try {
+				String timekeepingExist = checkTimekeepingExisting(timekeeping.getEmployeeId(), timekeeping.getDate(),
+						timekeeping.getTimeIn());					
+				if (Integer.parseInt(timekeepingExist) > 0) {
+					log.info("The record for employeeId=" + timekeeping.getEmployeeId() + ", date="
+							+ timekeeping.getDate() + ", check in time=" + timekeeping.getTimeIn()
+							+ " is existing, updating ...");
+					String sql = hr.getProperty("UPDATE_TIMEKEEPING").toString();
+					log.info("UPDATE_TIMEKEEPING query: " + sql);
+					Object[] params = new Object[] {timekeeping.getTimeOut(), timekeeping.getComeLateM(),
+							timekeeping.getLeaveSoonM(), timekeeping.getComeLateA(), timekeeping.getLeaveSoonA(),
+							timekeeping.getComment(), timekeeping.getEmployeeId(), timekeeping.getDate(),
+							timekeeping.getTimeIn() };
+					jdbcTmpl.update(sql, params);
+				}else {
+					log.info("insert Ma NV: " + timekeeping.getEmployeeId() + "|" + timekeeping.getDate() + "|" + timekeeping.getTimeIn());
+					String sql = hr.getProperty("INSERT_TIMEKEEPING").toString();
+					log.info("INSERT_TIMEKEEPING query: " + sql);
+					if(timekeeping.getTimeIn() == null) {
+						PropertiesManager hr = new PropertiesManager("hr.properties");
+						if (timekeeping.getComment().equalsIgnoreCase("Request leave soon morning")) {
+							timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_MORNING").toString());	
+							System.err.println("Request leave soon morning" + timekeeping.getTimeIn());
+						}
+						else if (timekeeping.getComment().equalsIgnoreCase("Request leave soon afternoon")) {
+							timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_AFTERNOON").toString());
+							System.err.println("Request leave soon afternoon" + timekeeping.getTimeIn());
+						}						
+					}						
+					Object[] params = new Object[] { timekeeping.getEmployeeId(), timekeeping.getDate(),
+							timekeeping.getTimeIn(), timekeeping.getTimeOut(), timekeeping.getComeLateM(),
+							timekeeping.getLeaveSoonM(), timekeeping.getComeLateA(),
+							timekeeping.getLeaveSoonA(), timekeeping.getComment() };
+					jdbcTmpl.update(sql, params);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		
 		} catch (Exception e) {
 			log.error(e, e);
 			throw e;

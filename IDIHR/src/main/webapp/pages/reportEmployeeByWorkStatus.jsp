@@ -31,7 +31,7 @@ tr:nth-child(even) {
 		<table>
 			<tr>
 				<td width="40%">
-					<table height="352">
+					<table height="402">
 						<tr>
 							<th>Trạng thái LĐ</th>
 							<th align="center">Số nhân viên</th>
@@ -46,12 +46,9 @@ tr:nth-child(even) {
 				</td>
 				<td width="60%">
 					<table>
-<!-- 						<tr>
-							<th>Biểu đồ</th>
-						</tr> -->
 						<tr>
-							<td><img src="${url}/charts/workStartChart.png" alt="charts"
-								width="650" height="350" />
+							<td><img src="${url}${chart}" alt="charts"
+								width="750" height="400" />
 							</td>
 						</tr>
 					</table>

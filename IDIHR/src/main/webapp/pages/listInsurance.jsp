@@ -25,7 +25,7 @@ tr:nth-child(even) {
 </head>
 <body>
 	<a href="${pageContext.request.contextPath}/insurance/insertInsurance"><button
-			class="btn btn-primary">Thêm mới </button></a>
+			class="btn btn-primary btn-sm">Thêm mới </button></a>
 	<br />
 	<br />
 	<div class="table-responsive">
@@ -34,14 +34,13 @@ tr:nth-child(even) {
 			<tr>
 				<th>Mã NV</th>
 				<th>Số sổ BHXH</th>
-				<th>Lương BH</th>
-				
+				<th>Lương BH</th>				
 				<th>Đóng tại</th>
-				<th>Tình trạng đóng BHXH</th>
+				<th>Tình trạng</th>
 				<th>Số thẻ BHYT</th>
 				<th>Nơi ĐK khám bệnh</th>
-				<th>Quá trình đóng BH</th>
 				<th>Xem chi tiết</th>
+				<th>Quá trình đóng</th>
 				
 				<th>Sửa</th>
 			</tr>
@@ -54,7 +53,7 @@ tr:nth-child(even) {
 					<td>${insurance.place}</td>
 					<td>${insurance.status}</td>
 					<td>${insurance.hInsuNo}</td>
-					<td>${insurance.place}</td>
+					<td>${insurance.hInsuPlace}</td>
 					<td><a href="viewInsurance?socicalInsuNo=${insurance.socicalInsuNo}">Xem chi tiết</a></td>
 					<td><a href="listProcessInsurance?socicalInsuNo=${insurance.socicalInsuNo}&employeeId=${insurance.employeeId}">Quá trình đóng</a></td>
 					<td><a href="editInsurance?socicalInsuNo=${insurance.socicalInsuNo}">Sửa</a></td>

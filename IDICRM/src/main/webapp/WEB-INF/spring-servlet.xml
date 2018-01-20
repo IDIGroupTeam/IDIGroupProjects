@@ -57,5 +57,8 @@
 	<bean id="jdbcTmpl" class="org.springframework.jdbc.core.JdbcTemplate">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
+	<bean id="customerDAO" class="com.idi.customers.dao.CustomerDAO" >
+	    <property name="jdbcTmpl" ref="jdbcTmpl"></property>
+	</bean>
 
 </beans>

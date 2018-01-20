@@ -7,8 +7,8 @@
  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
-  <script src="/IDIHome/public/js/jquery.min.js"></script>
-<script src="/IDIHome/public/js/bootstrap.min.js"></script>
+  <script src="/IDICRM/public/js/jquery.min.js"></script>
+<script src="/IDICRM/public/js/bootstrap.min.js"></script>
 <!-- <script src="${url}/public/js/bootstrap-dialog.min.js"></script>
 <script src="${url}/public/js/bootstrap-multiselect.js"></script>
 <script src="${url}/public/js/jquery.bootcomplete.js"></script>
@@ -26,6 +26,10 @@
     <div id="cacthongbao" class="collapse">
 			<li><a href="#" >Thong bao so 1 </a> </li>
 			<li><a href="#" >Thong bao so 2 </a></li>
+			 <li><a href="#" >Thong bao so 3 </a></li>
+			 <li><a href="/IDICRM/public/documents/Chức năng nhiệm vụ của phòng Kinh doanh cty EBC.pdf">Chức năng nhiệm vụ của phòng Kinh doanh cty EBC</a> </li>
+             <li><a href="/IDICRM/public/documents/quyche/Quy chế Chấm công, báo cáo công việc (sửa đổi, bổ sung).pdf">Quy chế Chấm công, báo cáo công việc (sửa đổi, bổ sung)</a> </li>
+ 
 	 </div>
 	 	
 

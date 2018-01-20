@@ -78,9 +78,7 @@
 					<td bgcolor="#E6E6E6">Ngày cấp:</td>
 					<td><c:out value="${employeeForm.issueDate}" /></td>
 
-
-					<td>Quốc tịch: <c:out value="${employeeForm.nation}" /></td>
-
+					<td>Nơi cấp: <c:out value="${employeeForm.issuePlace}" /></td>					
 				</tr>
 				<tr>
 					<td bgcolor="#E6E6E6">Đ/c hiện tại:</td>
@@ -88,8 +86,7 @@
 
 					<td bgcolor="#E6E6E6">Đ/c thường trú:</td>
 					<td><c:out value="${employeeForm.permanentAdress}" /></td>
-					<td></td>
-					<td></td>
+					<td>Quốc tịch: <c:out value="${employeeForm.nation}" /></td>
 				</tr>
 				<tr>
 					<td colspan="6" nowrap="nowrap" bgcolor="#F6CED8">Liên lạc

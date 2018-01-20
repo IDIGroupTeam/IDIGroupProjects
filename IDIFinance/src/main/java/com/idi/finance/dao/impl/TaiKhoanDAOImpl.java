@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.idi.finance.bean.doitac.NganHangTaiKhoan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.TaiKhoanDAO;
 
@@ -147,11 +148,45 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 	}
 
 	@Override
+	public List<LoaiTaiKhoan> cayTaiKhoan() {
+		String query = "SELECT * FROM TAI_KHOAN_DANH_MUC WHERE MA_TK_CHA IS NULL ORDER BY MA_TK";
+
+		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, new LoaiTaiKhoanMapper());
+		if (taiKhoanDs != null) {
+			Iterator<LoaiTaiKhoan> iter = taiKhoanDs.iterator();
+			while (iter.hasNext()) {
+				LoaiTaiKhoan loaiTaiKhoan = iter.next();
+				loaiTaiKhoan.themLoaiTaiKhoan(danhSachTaiKhoanCon(loaiTaiKhoan));
+			}
+		}
+
+		return taiKhoanDs;
+	}
+
+	private List<LoaiTaiKhoan> danhSachTaiKhoanCon(LoaiTaiKhoan loaiTaiKhoan) {
+		if (loaiTaiKhoan == null || loaiTaiKhoan.getMaTk() == null || loaiTaiKhoan.getMaTk().trim().equals("")) {
+			return null;
+		}
+
+		String query = "SELECT * FROM TAI_KHOAN_DANH_MUC WHERE MA_TK_CHA=? ORDER BY MA_TK";
+
+		Object[] objs = { loaiTaiKhoan.getMaTk().trim() };
+		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, objs, new LoaiTaiKhoanMapper());
+		if (taiKhoanDs != null) {
+			Iterator<LoaiTaiKhoan> iter = taiKhoanDs.iterator();
+			while (iter.hasNext()) {
+				LoaiTaiKhoan loaiTaiKhoanCon = iter.next();
+				loaiTaiKhoanCon.setLoaiTaiKhoan(loaiTaiKhoan);
+				loaiTaiKhoanCon.themLoaiTaiKhoan(danhSachTaiKhoanCon(loaiTaiKhoanCon));
+			}
+		}
+
+		return taiKhoanDs;
+	}
+
+	@Override
 	public List<LoaiTaiKhoan> danhSachTaiKhoan() {
 		String query = "SELECT * FROM TAI_KHOAN_DANH_MUC ORDER BY MA_TK";
-
-		// logger.info("Lấy danh mục tài khoản kế toán từ bảng TAI_KHOAN_DANH_MUC ...");
-		// logger.info(query);
 
 		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, new LoaiTaiKhoanMapper());
 
@@ -169,6 +204,10 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 			loaiTaiKhoan.setMaTkCha(rs.getString("MA_TK_CHA"));
 			loaiTaiKhoan.setSoDu(rs.getInt("SO_DU"));
 
+			NganHangTaiKhoan nganHangTaiKhoan = new NganHangTaiKhoan();
+			nganHangTaiKhoan.setMaTk(rs.getInt("MA_TK_NH"));
+			loaiTaiKhoan.setNganHangTaiKhoan(nganHangTaiKhoan);
+
 			return loaiTaiKhoan;
 		}
 	}
@@ -178,13 +217,17 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 		String query = DANH_SACH_TAI_KHOAN_THEO_CAP1;
 		query = query.replaceAll("\\?", maTkCap1);
 
-		// logger.info("Lấy danh mục tài khoản kế toán từ bảng TAI_KHOAN_DANH_MUC theo
-		// cấp 1 ... " + maTkCap1);
-		// logger.info(query);
-
 		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, new LoaiTaiKhoanMapper());
 
 		return taiKhoanDs;
 	}
 
+	@Override
+	public LoaiTaiKhoan capNhatTaiKhoanNganHang(LoaiTaiKhoan loaiTaiKhoan) {
+		if (loaiTaiKhoan != null && loaiTaiKhoan.getMaTk() != null) {
+			String query = "SELECT * FROM NGAN_HANG_TAI_KHOAN WHERE MA_TK=?";
+			
+		}
+		return loaiTaiKhoan;
+	}
 }

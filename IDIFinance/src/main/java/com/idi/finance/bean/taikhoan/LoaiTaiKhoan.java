@@ -1,5 +1,11 @@
 package com.idi.finance.bean.taikhoan;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import com.idi.finance.bean.doitac.NganHangTaiKhoan;
+
 public class LoaiTaiKhoan {
 	public static final int NO = -1;
 	public static final int CO = 1;
@@ -14,14 +20,27 @@ public class LoaiTaiKhoan {
 	public static final String TIEN_GUI_NGAN_HANG_VANG = "1123";
 	public static final String TIEN_DANG_CHUYEN_NT = "1132";
 
+	public static final String PHAI_THU_KHACH_HANG = "131";
+	public static final String PHAI_TRA_NGUOI_BAN = "331";
+
 	private String maTk;
 	private String tenTk;
 	private String maTenTk;
 	private String maTkCha;
 	private int soDu;
 	private int soDuGiaTri;
-	private LoaiTaiKhoan taiKhoanCha;
+	private LoaiTaiKhoan loaiTaiKhoan;
+	private List<LoaiTaiKhoan> loaiTaiKhoanDs;
 	private boolean isNew = false;
+	private NganHangTaiKhoan nganHangTaiKhoan;
+
+	public LoaiTaiKhoan() {
+
+	}
+
+	public LoaiTaiKhoan(String maTk) {
+		this.maTk = maTk;
+	}
 
 	public String getMaTk() {
 		return maTk;
@@ -71,12 +90,45 @@ public class LoaiTaiKhoan {
 		this.soDuGiaTri = soDuGiaTri;
 	}
 
-	public LoaiTaiKhoan getTaiKhoanCha() {
-		return taiKhoanCha;
+	public LoaiTaiKhoan getLoaiTaiKhoan() {
+		return loaiTaiKhoan;
 	}
 
-	public void setTaiKhoanCha(LoaiTaiKhoan taiKhoanCha) {
-		this.taiKhoanCha = taiKhoanCha;
+	public void setLoaiTaiKhoan(LoaiTaiKhoan loaiTaiKhoan) {
+		this.loaiTaiKhoan = loaiTaiKhoan;
+	}
+
+	public List<LoaiTaiKhoan> getLoaiTaiKhoanDs() {
+		return loaiTaiKhoanDs;
+	}
+
+	public void setLoaiTaiKhoanDs(List<LoaiTaiKhoan> loaiTaiKhoanDs) {
+		this.loaiTaiKhoanDs = loaiTaiKhoanDs;
+	}
+
+	public void themLoaiTaiKhoan(LoaiTaiKhoan loaiTaiKhoan) {
+		if (loaiTaiKhoan == null) {
+			return;
+		}
+
+		if (loaiTaiKhoanDs == null) {
+			loaiTaiKhoanDs = new ArrayList<>();
+		}
+
+		if (!loaiTaiKhoanDs.contains(loaiTaiKhoan)) {
+			loaiTaiKhoanDs.add(loaiTaiKhoan);
+		}
+	}
+
+	public void themLoaiTaiKhoan(List<LoaiTaiKhoan> loaiTaiKhoanDs) {
+		if (loaiTaiKhoanDs == null) {
+			return;
+		}
+
+		Iterator<LoaiTaiKhoan> iter = loaiTaiKhoanDs.iterator();
+		while (iter.hasNext()) {
+			themLoaiTaiKhoan(iter.next());
+		}
 	}
 
 	public boolean isNew() {
@@ -85,6 +137,14 @@ public class LoaiTaiKhoan {
 
 	public void setNew(boolean isNew) {
 		this.isNew = isNew;
+	}
+
+	public NganHangTaiKhoan getNganHangTaiKhoan() {
+		return nganHangTaiKhoan;
+	}
+
+	public void setNganHangTaiKhoan(NganHangTaiKhoan nganHangTaiKhoan) {
+		this.nganHangTaiKhoan = nganHangTaiKhoan;
 	}
 
 	@Override

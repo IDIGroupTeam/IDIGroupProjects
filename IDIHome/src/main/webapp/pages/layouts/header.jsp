@@ -7,7 +7,7 @@
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<a class="navbar-brand" href="${url}"><img height="80px"
-				src="${url}/public/images/IDI-logo.png" /></a>
+				src="/IDICRM/public/images/IDI-logo.png" /></a>
 		</div>
 
 		<ul class="nav navbar-nav navbar-right">

@@ -50,7 +50,7 @@ import com.idi.hr.common.Utils;
 import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.JobTitleDAO;
-import com.idi.hr.form.Birth;
+import com.idi.hr.form.EmployeeForm;
 import com.idi.hr.validator.EmployeeValidator;
 
 @Controller
@@ -82,6 +82,8 @@ public class EmployeeController {// extends BaseController {
 			//System.err.println("thang hien tai " + cal.get(Calendar.MONTH));
 			int currentQuarter = cal.get(Calendar.MONTH)/3 + 1;
 			//System.err.println(currentQuarter);
+			EmployeeForm employeeForm = new EmployeeForm();
+			model.addAttribute("employeeForm", employeeForm);
 			model.addAttribute("quarter", currentQuarter);
 			model.addAttribute("formTitle", "Danh sách nhân viên");
 		} catch (Exception e) {
@@ -91,9 +93,33 @@ public class EmployeeController {// extends BaseController {
 		return "listEmployee";
 	}
 
+	@RequestMapping(value = "/listEmployeeSearch", method = RequestMethod.GET)
+	public String listEmployeeSearch(Model model, @RequestParam("searchValue") String searchValue,
+			final RedirectAttributes redirectAttributes) {
+		try {			
+			Date date = new Date();// your date
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);		
+			int currentQuarter = cal.get(Calendar.MONTH)/3 + 1;
+			model.addAttribute("quarter", currentQuarter);
+			
+			EmployeeForm employeeForm = new EmployeeForm();
+			model.addAttribute("employeeForm", employeeForm);
+			List<EmployeeInfo> list = employeeDAO.getEmployeesBySearch(searchValue);
+			if (list.size() < 1)
+				redirectAttributes.addFlashAttribute("message", "Không có nhân viên nào khớp với thông tin: '" + searchValue + "'");
+			model.addAttribute("employees", list);
+			model.addAttribute("formTitle", "Kết quả tìm kiếm nhân viên");
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return "listEmployee";
+	}
+	
 	@RequestMapping(value = "/listEmployeeBirth", method = RequestMethod.GET)
 	public String listEmployeeBirth(Model model, @RequestParam("quarter") int quarter,
-			@ModelAttribute("bithForm") Birth bith, final RedirectAttributes redirectAttributes) {
+			@ModelAttribute("bithForm") EmployeeForm bith, final RedirectAttributes redirectAttributes) {
 		try {
 			System.err.println(bith.getQuarter());
 			List<EmployeeInfo> list = employeeDAO.getEmployeesBirth(quarter);
@@ -140,7 +166,7 @@ public class EmployeeController {// extends BaseController {
 		DefaultPieDataset dpd = new DefaultPieDataset();
 		for (Map.Entry<String, String> entry : items.entrySet()) {
 			System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());
-			dpd.setValue(entry.getValue(), employeeDAO.countMemberByWorkStatus(entry.getKey(), "all"));
+			dpd.setValue(entry.getValue() + ":" + employeeDAO.countMemberByWorkStatus(entry.getKey(),"all"), employeeDAO.countMemberByWorkStatus(entry.getKey(), "all"));
 		}
 		JFreeChart chart = createChart(dpd, "Biểu đồ trạng thái LĐ");
 
@@ -152,9 +178,10 @@ public class EmployeeController {// extends BaseController {
 				dir.mkdirs();
 			}
 
-			File file = new File(dir + "/workStartChart.png");
+			File file = new File(dir + "/workStatusChart.png");
+			model.addAttribute("chart", "/charts/workStatusChart.png");
 			//System.err.println(dir);
-			ChartUtilities.saveChartAsJPEG(file, chart, 650, 350);
+			ChartUtilities.saveChartAsJPEG(file, chart, 750, 400);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
@@ -197,7 +224,7 @@ public class EmployeeController {// extends BaseController {
 
 		JFreeChart chart = ChartFactory.createPieChart3D(chartTitle, pdSet, true, true, false);
 		PiePlot3D plot = (PiePlot3D)chart.getPlot();
-		PieSectionLabelGenerator generator = new StandardPieSectionLabelGenerator("{0}: {2}", new DecimalFormat("0"), new DecimalFormat("0.00%"));
+		PieSectionLabelGenerator generator = new StandardPieSectionLabelGenerator("{0} ({2})", new DecimalFormat("0"), new DecimalFormat("0%"));
 		plot.setLabelGenerator(generator);
 		plot.setStartAngle(290);
 		plot.setDirection(Rotation.CLOCKWISE);

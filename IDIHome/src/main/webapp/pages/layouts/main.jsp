@@ -12,22 +12,22 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link rel="stylesheet" href="${url}/public/css/bootstrap.min.css" />
-<link rel="stylesheet" href="${url}/public/css/paneltab.css" />
-<link rel="stylesheet" href="${url}/public/css/bootstrap-dialog.min.css" />
+<link rel="stylesheet" href="/IDICRM/public/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/IDICRM/public/css/paneltab.css" />
+<link rel="stylesheet" href="/IDICRM/public/css/bootstrap-dialog.min.css" />
 <link rel="stylesheet"
-href="${url}/public/css/bootstrap-multiselect.css" />
-<link rel="stylesheet" href="${url}/public/css/bootcomplete.css" />
-<link rel="stylesheet" href="${url}/public/css/tabledit.css" />
-<link rel="stylesheet" href="${url}/public/css/style.css" />
+href="/IDICRM/public/css/bootstrap-multiselect.css" />
+<link rel="stylesheet" href="/IDICRM/public/css/bootcomplete.css" />
+<link rel="stylesheet" href="/IDICRM/public/css/tabledit.css" />
+<link rel="stylesheet" href="/IDICRM/public/css/style.css" />
 
-<script src="${url}/public/js/jquery.min.js"></script>
-<script src="${url}/public/js/bootstrap.min.js"></script>
-<script src="${url}/public/js/bootstrap-dialog.min.js"></script>
-<script src="${url}/public/js/bootstrap-multiselect.js"></script>
-<script src="${url}/public/js/jquery.bootcomplete.js"></script>
-<script src="${url}/public/js/jquery.tabledit.js"></script>
-<script src="${url}/public/js/script.js"></script>
+<script src="/IDICRM/public/js/jquery.min.js"></script>
+<script src="/IDICRM/public/js/bootstrap.min.js"></script>
+<script src="/IDICRM/public/js/bootstrap-dialog.min.js"></script>
+<script src="/IDICRM/public/js/bootstrap-multiselect.js"></script>
+<script src="/IDICRM/public/js/jquery.bootcomplete.js"></script>
+<script src="/IDICRM/public/js/jquery.tabledit.js"></script>
+<script src="/IDICRM/public/js/script.js"></script>
 
 <title>Tập đoàn IDI - <tiles:getAsString name="title" /></title>
 <script type="text/javascript">

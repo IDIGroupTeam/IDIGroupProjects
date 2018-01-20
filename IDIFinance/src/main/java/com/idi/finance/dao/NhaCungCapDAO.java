@@ -2,7 +2,7 @@ package com.idi.finance.dao;
 
 import java.util.List;
 
-import com.idi.finance.bean.NhaCungCap;
+import com.idi.finance.bean.doitac.NhaCungCap;
 
 public interface NhaCungCapDAO {
 	public List<NhaCungCap> danhSachNhaCungCap();

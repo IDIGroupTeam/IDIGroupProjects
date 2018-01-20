@@ -1,4 +1,4 @@
-<%@page import="com.idi.finance.bean.KyKeToan"%>
+<%@page import="com.idi.finance.bean.cdkt.KyKeToanCon"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -55,8 +55,8 @@
 
 <h4>Bảng cân đối kế toán</h4>
 
-<div class="form-group">
-	<table style="width: 100%;">
+<div class="table-responsive">
+	<table class="table">
 		<tr>
 			<td><span>Tìm được ${totalRecords} bản ghi</span></td>
 			<td><span>Tổng số trang: ${totalPages}</span></td>
@@ -153,10 +153,10 @@
 </div>
 
 <i class="pull-right">(**): Một kỳ: <c:choose>
-		<c:when test="${mainFinanceForm.periodType==KyKeToan.WEEK}">Tuần</c:when>
-		<c:when test="${mainFinanceForm.periodType==KyKeToan.MONTH}">Tháng</c:when>
-		<c:when test="${mainFinanceForm.periodType==KyKeToan.QUARTER}">Quý</c:when>
-		<c:when test="${mainFinanceForm.periodType==KyKeToan.YEAR}">Năm</c:when>
+		<c:when test="${mainFinanceForm.periodType==KyKeToanCon.WEEK}">Tuần</c:when>
+		<c:when test="${mainFinanceForm.periodType==KyKeToanCon.MONTH}">Tháng</c:when>
+		<c:when test="${mainFinanceForm.periodType==KyKeToanCon.QUARTER}">Quý</c:when>
+		<c:when test="${mainFinanceForm.periodType==KyKeToanCon.YEAR}">Năm</c:when>
 		<c:otherwise>Tháng</c:otherwise>
 	</c:choose>
 </i>

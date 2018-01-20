@@ -52,8 +52,10 @@ function xacNhanXoaNghiepVu(maNv){
 				<th class="text-center align-middle">Mã</th>
 				<th class="text-center align-middle">Tên nghiệp vụ</th>
 				<th class="text-center">Mô tả</th>
-				<th class="text-center align-middle" style="width: 100px;">Lĩnh vực</th>
-				<th class="text-center align-middle" style="width: 110px;">Độ khó</th>
+				<th class="text-center align-middle" style="width: 100px;">Lĩnh
+					vực</th>
+				<th class="text-center align-middle" style="width: 110px;">Độ
+					khó</th>
 				<th class="text-center align-middle" style="width: 90px;"></th>
 			</tr>
 		</thead>
@@ -64,8 +66,7 @@ function xacNhanXoaNghiepVu(maNv){
 					<td>${nghiepVu.tenNv}</td>
 					<td>${nghiepVu.moTa}</td>
 					<td>${nghiepVu.linhVuc.tenLv}</td>
-					<td><c:forEach begin="1"
-							end="${nghiepVu.doKho}">
+					<td><c:forEach begin="1" end="${nghiepVu.doKho}">
 							<span class="glyphicon glyphicon-star" style="color: blue;"></span>
 						</c:forEach> <c:choose>
 							<c:when test="${nghiepVu.doKho<5}">
@@ -80,7 +81,7 @@ function xacNhanXoaNghiepVu(maNv){
 								class="btn" title="Sửa"> <span
 								class="glyphicon glyphicon-edit"></span>
 							</a><a href="${url}/congviec/nghiepvu/xoa/${nghiepVu.maNv}"
-								class="btn" title="Sửa"
+								class="btn" title="Xóa"
 								onclick="return xacNhanXoaNghiepVu(${nghiepVu.maNv});"> <span
 								class="glyphicon glyphicon-remove"></span>
 							</a>

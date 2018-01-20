@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.idi.finance.bean.KhachHang;
+import com.idi.finance.bean.doitac.KhachHang;
 import com.idi.finance.dao.KhachHangDAO;
 
 public class KhachHangDAOImpl implements KhachHangDAO {
@@ -29,7 +29,7 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 
 	@Override
 	public List<KhachHang> danhSachKhachHang() {
-		String query = "SELECT * FROM KHACH_HANG";
+		String query = "SELECT * FROM KHACH_HANG WHERE MA_KH!=1";
 
 		logger.info("Danh sách khách hàng ...");
 		logger.info(query);

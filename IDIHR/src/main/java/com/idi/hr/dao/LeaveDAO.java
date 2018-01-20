@@ -96,6 +96,7 @@ public class LeaveDAO extends JdbcDaoSupport {
 	}
 
 	// ---LEAVE_INFO TABLE---//
+	
 	/**
 	 * get number of time take leave with full day
 	 * 
@@ -103,14 +104,35 @@ public class LeaveDAO extends JdbcDaoSupport {
 	 * @param leaveId
 	 * @return
 	 */
-	public String getLeaveTakenF(String year, int id) {
+	public float getLeaveTaken(String year, int id) {
+
+		String sql = hr.get("GET_LEAVE_TAKEN").toString();
+		log.info("GET_LEAVE_TAKEN query: " + sql);
+		Object[] params = new Object[] { id, year };
+
+		float numberDayLeaveTaken = 0;
+		if(jdbcTmpl.queryForObject(sql, float.class, params) != null)
+			numberDayLeaveTaken = jdbcTmpl.queryForObject(sql, float.class, params);
+		System.err.println(year + "|" + id + "|" + numberDayLeaveTaken);
+		return numberDayLeaveTaken;
+	}
+
+	
+	/**
+	 * get number of time take leave with full day
+	 * 
+	 * @param year
+	 * @param leaveId
+	 * @return
+	 */
+	public float getLeaveTakenF(String year, int id) {
 
 		String sql = hr.get("GET_LEAVE_TAKEN_F").toString();
 		log.info("GET_LEAVE_TAKEN_F query: " + sql);
 		Object[] params = new Object[] { id, year };
 
-		String numberDayLeaveTaken = "";
-		numberDayLeaveTaken = jdbcTmpl.queryForObject(sql, String.class, params);
+		float numberDayLeaveTaken = 0;
+		numberDayLeaveTaken = jdbcTmpl.queryForObject(sql, float.class, params);
 		System.err.println(year + "|" + id + "|" + numberDayLeaveTaken);
 		return numberDayLeaveTaken;
 	}
@@ -122,14 +144,14 @@ public class LeaveDAO extends JdbcDaoSupport {
 	 * @param leaveId
 	 * @return
 	 */
-	public String getLeaveTakenH(String year, int id) {
+	public float getLeaveTakenH(String year, int id) {
 
 		String sql = hr.get("GET_LEAVE_TAKEN_H").toString();
 		log.info("GET_LEAVE_TAKEN_H query: " + sql);
 		Object[] params = new Object[] { id, year };
 
-		String numberDayLeaveTaken = "";
-		numberDayLeaveTaken = jdbcTmpl.queryForObject(sql, String.class, params);
+		float numberDayLeaveTaken = 0;
+		numberDayLeaveTaken = jdbcTmpl.queryForObject(sql, float.class, params);
 
 		System.err.println(year + "|" + id + "|" + numberDayLeaveTaken);
 
@@ -142,13 +164,14 @@ public class LeaveDAO extends JdbcDaoSupport {
 	 * @return List of leave info
 	 * @throws Exception
 	 */
-	public List<LeaveInfo> getLeaves() {
+	public List<LeaveInfo> getLeaves(String date) {
 
 		String sql = hr.getProperty("GET_LEAVES").toString();
 		log.info("GET_LEAVES query: " + sql);
 		LeaveInfoMapper mapper = new LeaveInfoMapper();
+		Object[] params = new Object[] {date};
 
-		List<LeaveInfo> list = jdbcTmpl.query(sql, mapper);
+		List<LeaveInfo> list = jdbcTmpl.query(sql, params, mapper);
 		return list;
 
 	}
@@ -170,7 +193,11 @@ public class LeaveDAO extends JdbcDaoSupport {
 				leaveType = leaveType.substring(0, leaveType.length() - 1);
 			} else if (leaveType.equalsIgnoreCase("KCC"))
 				leaveInfo.setTimeValue(1);
-			else
+			else if (leaveType.equalsIgnoreCase("DMS") || leaveType.equalsIgnoreCase("DMC")
+				|| leaveType.equalsIgnoreCase("VSS")|| leaveType.equalsIgnoreCase("VSC")) {
+				leaveInfo.setTimeValue(1);
+				//dang can nhac luu leave type la gi
+			}else
 				leaveInfo.setTimeValue(8);
 			Object[] params = new Object[] { leaveInfo.getEmployeeId(), leaveInfo.getDate(), leaveType,
 					leaveInfo.getTimeValue(), leaveInfo.getComment() };

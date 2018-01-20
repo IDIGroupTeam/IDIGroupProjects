@@ -14,13 +14,15 @@ public class LeaveInfoMapper implements RowMapper<LeaveInfo> {
 
 		int employeeId = rs.getInt("EMPLOYEE_ID");
 		Date date = rs.getDate("DATE");
-		String leaveType = rs.getString("LEAVE_TYPE");
-		int timeValue = rs.getInt("TIME_VALUE");
+		String leaveType = rs.getString("LEAVE_TYPE");		
+		int timeValue = rs.getInt("TIME_VALUE");		
 		String comment = rs.getString("COMMENT");
 		
 		String employeeName = rs.getString("FULL_NAME");
 		String department = rs.getString("DEPARTMENT");
 		String title = rs.getString("JOB_TITLE");
-		return new LeaveInfo(employeeId, date, leaveType, timeValue, comment, employeeName, department, title);
+		
+		String leaveName = rs.getString("LT.LEAVE_NAME");
+		return new LeaveInfo(employeeId, date, leaveType, timeValue, comment, employeeName, department, title, leaveName);
 	}
 }

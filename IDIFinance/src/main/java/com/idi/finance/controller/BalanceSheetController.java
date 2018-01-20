@@ -20,17 +20,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.idi.finance.bean.KyKeToan;
 import com.idi.finance.bean.bieudo.KpiGroup;
 import com.idi.finance.bean.cdkt.BalanceAssetData;
 import com.idi.finance.bean.cdkt.BalanceAssetItem;
+import com.idi.finance.bean.cdkt.DuLieuKeToan;
+import com.idi.finance.bean.cdkt.KyKeToanCon;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.TaiKhoan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BalanceSheetDAO;
 import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.dao.SoKeToanDAO;
+import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.form.BalanceAssetForm;
+import com.idi.finance.form.TkSoKeToanForm;
 import com.idi.finance.utils.ExcelProcessor;
 import com.idi.finance.utils.Utils;
 
@@ -43,6 +46,9 @@ public class BalanceSheetController {
 
 	@Autowired
 	KpiChartDAO kpiChartDAO;
+
+	@Autowired
+	TaiKhoanDAO taiKhoanDAO;
 
 	@Autowired
 	SoKeToanDAO soKeToanDAO;
@@ -207,10 +213,10 @@ public class BalanceSheetController {
 					+ " - " + form.getCuoi());
 			HashMap<Integer, String> kyDs = new HashMap<>();
 
-			kyDs.put(KyKeToan.WEEK, "Tuần");
-			kyDs.put(KyKeToan.MONTH, "Tháng");
-			kyDs.put(KyKeToan.QUARTER, "Quý");
-			kyDs.put(KyKeToan.YEAR, "Năm");
+			kyDs.put(KyKeToanCon.WEEK, "Tuần");
+			kyDs.put(KyKeToanCon.MONTH, "Tháng");
+			kyDs.put(KyKeToanCon.QUARTER, "Quý");
+			kyDs.put(KyKeToanCon.YEAR, "Năm");
 
 			Iterator<Integer> kyIter = kyDs.keySet().iterator();
 			while (kyIter.hasNext()) {
@@ -329,7 +335,6 @@ public class BalanceSheetController {
 	}
 
 	@RequestMapping(value = "/cdkt/luutrudulieu", method = RequestMethod.POST)
-	// public String save(Model model, @RequestParam("file") MultipartFile file) {
 	public String save(Model model, @ModelAttribute("mainFinanceForm") BalanceAssetForm balanceSheetForm) {
 		// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 		List<KpiGroup> kpiGroupsDb = kpiChartDAO.listKpiGroups();
@@ -389,5 +394,136 @@ public class BalanceSheetController {
 			e.printStackTrace();
 			return "error";
 		}
+	}
+
+	@RequestMapping("/bctc/candoiphatsinh")
+	public String bangCanDoiPhatSinh(@ModelAttribute("mainFinanceForm") TkSoKeToanForm form, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
+			model.addAttribute("kpiGroups", kpiGroups);
+
+			Date homNay = new Date();
+			// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của
+			// tháng hiện tại
+			if (form.getDau() == null) {
+				form.setDau(Utils.getStartPeriod(homNay, form.getLoaiKy()));
+			} else {
+				form.setDau(Utils.getStartPeriod(form.getDau(), form.getLoaiKy()));
+			}
+
+			if (form.getCuoi() == null) {
+				form.setCuoi(Utils.getEndPeriod(homNay, form.getLoaiKy()));
+			} else {
+				form.setCuoi(Utils.getEndPeriod(form.getCuoi(), form.getLoaiKy()));
+			}
+
+			// Lấy danh mục tài khoản các cấp
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.cayTaiKhoan();
+
+			// Lấy dư nợ/có đầu kỳ, nợ phát sinh/có phát sinh và dư nợ/có cuối kỳ
+			HashMap<KyKeToanCon, DuLieuKeToan> duLieuKeToanMap = new HashMap<>();
+
+			// Lặp theo kỳ
+			KyKeToanCon kyKt = new KyKeToanCon(form.getDau(), form.getLoaiKy());
+			while (!kyKt.getCuoi().after(form.getCuoi())) {
+				logger.info("KỲ: " + kyKt);
+
+				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt);
+				KyKeToanCon kyKtTruoc = kyKt.kyTruoc();
+
+				// Tính tổng nợ/có đầu kỳ, phát sinh nợ/có trong kỳ và số dư nợ/có cuối kỳ
+				duLieuKeToan = tongPhatSinh(duLieuKeToan, loaiTaiKhoanDs, duLieuKeToanMap.get(kyKtTruoc));
+
+				duLieuKeToanMap.put(kyKt, duLieuKeToan);
+
+				kyKt = Utils.nextPeriod(kyKt);
+			}
+
+			model.addAttribute("duLieuKeToanMap", duLieuKeToanMap);
+			model.addAttribute("mainFinanceForm", form);
+
+			model.addAttribute("tab", "tabBCDPS");
+			return "bangCanDoiPhatSinh";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	private DuLieuKeToan tongPhatSinh(DuLieuKeToan duLieuKeToan, List<LoaiTaiKhoan> loaiTaiKhoanDs,
+			DuLieuKeToan duLieuKeToanKyTruoc) {
+		if (duLieuKeToan == null)
+			return null;
+
+		HashMap<LoaiTaiKhoan, DuLieuKeToan> duLieuKeToanKyTruocMap = null;
+		if (duLieuKeToanKyTruoc != null && duLieuKeToanKyTruoc.getDuLieuKeToanDs() != null
+				&& duLieuKeToanKyTruoc.getDuLieuKeToanDs().size() > 0) {
+			duLieuKeToanKyTruocMap = new HashMap<>();
+			Iterator<DuLieuKeToan> iter = duLieuKeToanKyTruoc.getDuLieuKeToanDs().iterator();
+			while (iter.hasNext()) {
+				DuLieuKeToan duLieuKeToanConKyTruoc = iter.next();
+				duLieuKeToanKyTruocMap.put(duLieuKeToanConKyTruoc.getLoaiTaiKhoan(), duLieuKeToanConKyTruoc);
+			}
+		}
+
+		// Tính các giá trị cho các kỳ kế toán của tài khoản con
+		if (loaiTaiKhoanDs != null && loaiTaiKhoanDs.size() > 0) {
+			List<DuLieuKeToan> duLieuKeToanDs = new ArrayList<>();
+			Iterator<LoaiTaiKhoan> iter = loaiTaiKhoanDs.iterator();
+			while (iter.hasNext()) {
+				LoaiTaiKhoan loaiTaiKhoan = iter.next();
+
+				DuLieuKeToan duLieuKeToanCon = new DuLieuKeToan(duLieuKeToan.getKyKeToan(), loaiTaiKhoan);
+				duLieuKeToanCon.setDuLieuKeToan(duLieuKeToan);
+
+				DuLieuKeToan duLieuKeToanConKyTruoc = null;
+				if (duLieuKeToanKyTruocMap != null) {
+					duLieuKeToanConKyTruoc = duLieuKeToanKyTruocMap.get(loaiTaiKhoan);
+				}
+
+				duLieuKeToanCon = tongPhatSinh(duLieuKeToanCon, loaiTaiKhoan.getLoaiTaiKhoanDs(),
+						duLieuKeToanConKyTruoc);
+				duLieuKeToanDs.add(duLieuKeToanCon);
+			}
+			duLieuKeToan.themDuLieuKeToan(duLieuKeToanDs);
+		}
+
+		// Tính tổng phát sinh ở đây
+		if (duLieuKeToan.getLoaiTaiKhoan() != null) {
+			double soDuDauKy = 0;
+			double soDuCuoiKy = 0;
+			double tongNoPhatSinh = 0;
+			double tongCoPhatSinh = 0;
+
+			if (duLieuKeToanKyTruoc != null) {
+				soDuDauKy = duLieuKeToanKyTruoc.getSoDuCuoiKy();
+			} else {
+				Date cuoiKyTruoc = Utils.prevPeriod(duLieuKeToan.getKyKeToan()).getCuoi();
+				// Lấy tổng nợ đầu kỳ
+				double noDauKy = soKeToanDAO.tongPhatSinh(duLieuKeToan.getLoaiTaiKhoan().getMaTk(), LoaiTaiKhoan.NO,
+						null, cuoiKyTruoc);
+				// Lấy tổng có đầu kỳ
+				double coDauKy = soKeToanDAO.tongPhatSinh(duLieuKeToan.getLoaiTaiKhoan().getMaTk(), LoaiTaiKhoan.CO,
+						null, cuoiKyTruoc);
+				soDuDauKy = noDauKy - coDauKy;
+			}
+
+			tongNoPhatSinh = soKeToanDAO.tongPhatSinh(duLieuKeToan.getLoaiTaiKhoan().getMaTk(), LoaiTaiKhoan.NO,
+					duLieuKeToan.getKyKeToan().getDau(), duLieuKeToan.getKyKeToan().getCuoi());
+
+			tongCoPhatSinh = soKeToanDAO.tongPhatSinh(duLieuKeToan.getLoaiTaiKhoan().getMaTk(), LoaiTaiKhoan.CO,
+					duLieuKeToan.getKyKeToan().getDau(), duLieuKeToan.getKyKeToan().getCuoi());
+
+			soDuCuoiKy = tongNoPhatSinh - tongCoPhatSinh + soDuDauKy;
+
+			duLieuKeToan.setSoDuDauKy(soDuDauKy);
+			duLieuKeToan.setTongNoPhatSinh(tongNoPhatSinh);
+			duLieuKeToan.setTongCoPhatSinh(tongCoPhatSinh);
+			duLieuKeToan.setSoDuCuoiKy(soDuCuoiKy);
+			logger.info(duLieuKeToan);
+		}
+
+		return duLieuKeToan;
 	}
 }

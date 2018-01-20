@@ -80,7 +80,7 @@ public class Utils {
 		Map<String, String> workStatusMap = new LinkedHashMap<String, String>();
 		workStatusMap.put("Thu viec", "Thử việc");
 		workStatusMap.put("Thoi vu", "Thời vụ");
-		workStatusMap.put("Cong tac vien", "Cộng tác viên");
+		workStatusMap.put("Cong tac", "Cộng tác");
 		workStatusMap.put("Chinh thuc", "Chính thức");
 		workStatusMap.put("Nghi thai san", "Nghỉ thai sản");
 		workStatusMap.put("Nghi om", "Nghỉ ốm");

@@ -64,7 +64,7 @@ public class DepartmentController {
 				dept.setNumberOfMember(deptSize);
 				listD.add(dept);
 				//
-				dpd.setValue(dept.getDepartmentName(), deptSize);
+				dpd.setValue(dept.getDepartmentName() + ": " + deptSize, deptSize);
 			}
 
 			JFreeChart chart = createChart(dpd, "Biểu đồ tỷ lệ lao động theo phòng ban");
@@ -96,7 +96,7 @@ public class DepartmentController {
 
 		JFreeChart chart = ChartFactory.createPieChart3D(chartTitle, pdSet, true, true, true);
 		PiePlot3D plot = (PiePlot3D) chart.getPlot();
-		PieSectionLabelGenerator generator = new StandardPieSectionLabelGenerator("{0}: {2}", new DecimalFormat("0"), new DecimalFormat("0.00%"));
+		PieSectionLabelGenerator generator = new StandardPieSectionLabelGenerator("{0} ({2})", new DecimalFormat("0"), new DecimalFormat("0%"));
 		plot.setLabelGenerator(generator);
 		//plot.setIgnoreZeroValues(true);
 		//plot.setCircular(true);

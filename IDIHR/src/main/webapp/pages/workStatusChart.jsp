@@ -35,9 +35,7 @@ tr:nth-child(even) {
 				<th>Số nhân viên</th>
 			</tr>
 			<tr>
-			<%String rootPath = request.getSession().getServletContext().getRealPath("/"); %>
-				<td rowspan="2"><img src="${rootPath}"+ workStartChart.png>"
-					alt="profile image" width="125px" height="" /></td>
+				<td rowspan="2"><img src="${url}${chart}" alt="chart" width="750" height="400" /></td>
 			</tr>
 			<%-- <c:forEach var="memberWorkStatus" items="${memberWorkStatus}">
 				<tr>

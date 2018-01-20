@@ -7,10 +7,10 @@
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 
 <script type="text/javascript">
-	function xacNhanXoaTaiKhoan(maLv){
+	function xacNhanXoaLinhVuc(maLv){
 		BootstrapDialog.confirm({
 			title : 'Xác nhận',
-			message : 'Bạn muốn xóa tài khoản này không ?<br/>Mã tài khoản: '+maLv,
+			message : 'Bạn muốn xóa lĩnh vực này không ?<br/>Mã lĩnh vực: '+maLv,
 			type : 'type-info',
 			closable : true,
 			draggable : true,
@@ -67,7 +67,7 @@
 							<a href="${url}/congviec/linhvuc/sua/${linhVuc.maLv}" class="btn"
 								title="Sửa"> <span class="glyphicon glyphicon-edit"></span>
 							</a><a href="${url}/congviec/linhvuc/xoa/${linhVuc.maLv}" class="btn"
-								title="Sửa" onclick="return xacNhanXoaLinhVuc(${linhVuc.maLv});">
+								title="Xóa" onclick="return xacNhanXoaLinhVuc(${linhVuc.maLv});">
 								<span class="glyphicon glyphicon-remove"></span>
 							</a>
 						</div></td>

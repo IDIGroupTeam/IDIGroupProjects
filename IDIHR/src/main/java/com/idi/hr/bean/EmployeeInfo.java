@@ -19,6 +19,7 @@ public class EmployeeInfo implements Serializable {
 	private String loginAccount;
 	private String personalId;
 	private String issueDate;
+	private String issuePlace;
 	private String department;
 	private String phoneNo;
 	private String joinDate;
@@ -47,7 +48,7 @@ public class EmployeeInfo implements Serializable {
 	}
 
 	public EmployeeInfo(int employeeId, String loginAccount, String gender, String fullName, String maritalStatus,
-			String jobTitle, String department, String DOB, String personalId, String issueDate, String phoneNo,
+			String jobTitle, String department, String DOB, String personalId, String issueDate, String issuePlace, String phoneNo,
 			String joinDate, String officalJoinDate, String email, String terminationDate, String reasonforLeave,
 			String currentAdress, String permanentAdress, String note, String emerName, String emerPhoneNo,
 			String nation, String workStatus, String bankNo, String bankName, String bankBranch,
@@ -64,6 +65,7 @@ public class EmployeeInfo implements Serializable {
 		this.maritalStatus = maritalStatus;
 		this.personalId = personalId;
 		this.issueDate = issueDate;
+		this.issuePlace = issuePlace;
 		this.phoneNo = phoneNo;
 		this.joinDate = joinDate;
 		this.officalJoinDate = officalJoinDate;
@@ -162,6 +164,14 @@ public class EmployeeInfo implements Serializable {
 
 	public String getIssueDate() {
 		return issueDate;
+	}
+
+	public String getIssuePlace() {
+		return issuePlace;
+	}
+
+	public void setIssuePlace(String issuePlace) {
+		this.issuePlace = issuePlace;
 	}
 
 	public void setIssueDate(String issueDate) {

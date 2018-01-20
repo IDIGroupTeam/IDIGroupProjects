@@ -93,15 +93,15 @@ public class PropertiesManager extends Properties {
 			boolean fileExists = file.exists();
 
 			if (!fileExists) {
-				logger.info("Can not load the properties file from the relative path: " + propPath);
+				logger.debug("Can not load the properties file from the relative path: " + propPath);
 				propPath = "C:/home/idi/properties/";
-				logger.info("Try to load the properties file directly from the absolute path: " + propPath);
+				logger.debug("Try to load the properties file directly from the absolute path: " + propPath);
 				file = new File(propPath + propertiesFileName);
 				fileExists = file.exists();
 			}
 
 			if (fileExists) {
-				logger.info("Properties file exist load it from: " + propPath + propertiesFileName);
+				logger.debug("Properties file exist load it from: " + propPath + propertiesFileName);
 				is = new FileInputStream(propPath + "/" + propertiesFileName);
 			} else {
 				// Otherwise, use resource as stream.

@@ -1,4 +1,4 @@
-<%@page import="com.idi.finance.bean.KyKeToan"%>
+<%@page import="com.idi.finance.bean.cdkt.KyKeToanCon"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -36,10 +36,10 @@
 			<label for="periodType">Kỳ</label>
 			<form:select path="periodType" multiple="false"
 				class="form-control pull-right" cssStyle="width: 180px;">
-				<form:option value="${KyKeToan.WEEK}">Tuần</form:option>
-				<form:option value="${KyKeToan.MONTH}">Tháng</form:option>
-				<form:option value="${KyKeToan.QUARTER}">Quý</form:option>
-				<form:option value="${KyKeToan.YEAR}">Năm</form:option>
+				<form:option value="${KyKeToanCon.WEEK}">Tuần</form:option>
+				<form:option value="${KyKeToanCon.MONTH}">Tháng</form:option>
+				<form:option value="${KyKeToanCon.QUARTER}">Quý</form:option>
+				<form:option value="${KyKeToanCon.YEAR}">Năm</form:option>
 			</form:select>
 		</div>
 

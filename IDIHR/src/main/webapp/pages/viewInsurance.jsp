@@ -72,9 +72,8 @@
 				<tr>
 					<td></td>
 					<td align="right"><a
-						href="editInsurance?socicalInsuNo=${insuranceForm.socicalInsuNo}"><button>Sửa</button></a>
-						<a href="${pageContext.request.contextPath}/insurance/"><button>Quay
-								lại danh sách</button></a></td>
+						href="editInsurance?socicalInsuNo=${insuranceForm.socicalInsuNo}"><button class="btn btn-primary btn-sm">Sửa</button></a>
+						<a href="${pageContext.request.contextPath}/insurance/"><button class="btn btn-primary btn-sm">Quay	lại danh sách</button></a></td>
 				</tr>
 			</tbody>
 		</table>

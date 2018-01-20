@@ -8,6 +8,13 @@
   <groupId>com.idi.customers</groupId>
   <artifactId>IDICRM</artifactId>
   <packaging>war</packaging>
-  <name>IDICustomers Webapps</name>
+  <name>IDICRM Webapps</name>
   <url>http://maven.apache.org</url>
+  <dependencies>
+  <dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-api</artifactId>
+    <version>1.7.6</version>
+  </dependency>
+  </dependencies>
 </project>
