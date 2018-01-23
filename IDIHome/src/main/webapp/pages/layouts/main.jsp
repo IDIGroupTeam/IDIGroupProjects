@@ -20,7 +20,7 @@
 <title><decorator:title default="Tập đoàn IDI" /></title>
 
 </head>
-<body>
+<body height="150%">
 	<div class="container">
 		<%@ include file="header.jsp"%>
 

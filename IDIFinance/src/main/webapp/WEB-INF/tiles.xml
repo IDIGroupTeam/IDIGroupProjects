@@ -3,281 +3,215 @@
 
 <tiles-definitions>
 	<!-- Base Definition -->
-	<definition name="finance" template="/pages/layouts/main.jsp">
+	<definition name="layouts" template="/pages/layouts/main.jsp">
 		<put-attribute name="title" value="Tập đoàn IDI" />
 		<put-attribute name="header" value="/pages/layouts/header.jsp" />
 		<put-attribute name="navigator" value="/pages/layouts/navigator.jsp" />
-		<put-attribute name="kpilist" value="" />
 		<put-attribute name="search" value="" />
 		<put-attribute name="body" value="" />
 		<put-attribute name="footer" value="/pages/layouts/footer.jsp" />
 	</definition>
 
-
-	<!-- Khả năng thanh toán -->
-	<!-- Khả năng thanh toán tức thời -->
-	<definition name="kpiCurrentRatio" extends="finance">
-		<put-attribute name="title" value="Khả năng thanh toán tức thời" />
-		<put-attribute name="kpilist" value="/pages/layouts/payment/payment.jsp" />
-		<put-attribute name="search" value="/pages/layouts/payment/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiCurrentRatio.jsp" />
-	</definition>
-
-	<!-- Khả năng thanh toán nhanh -->
-	<definition name="kpiQuickRatio" extends="finance">
-		<put-attribute name="title" value="Khả năng thanh toán nhanh" />
-		<put-attribute name="kpilist" value="/pages/layouts/payment/payment.jsp" />
-		<put-attribute name="search" value="/pages/layouts/payment/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiQuickRatio.jsp" />
-	</definition>
-
-	<!-- Khả năng thanh toán bằng tiền -->
-	<definition name="kpiCashRatio" extends="finance">
-		<put-attribute name="title" value="Khả năng thanh toán bằng tiền" />
-		<put-attribute name="kpilist" value="/pages/layouts/payment/payment.jsp" />
-		<put-attribute name="search" value="/pages/layouts/payment/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiCashRatio.jsp" />
-	</definition>
-
-
-	<!-- Khả năng hoạt động -->
-	<!-- Vòng quay khoản phải thu -->
-	<definition name="kpiReceivableTurnOver" extends="finance">
-		<put-attribute name="title" value="Vòng quay khoản phải thu" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/operating/operating.jsp" />
+	<!-- Bắt đầu Tab biểu đồ KPI -->
+	<definition name="kpiChart" extends="layouts">
+		<put-attribute name="title" value="Biểu đồ KPI" />
 		<put-attribute name="search"
-			value="/pages/layouts/operating/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiReceivableTurnOver.jsp" />
+			value="/pages/layouts/kpiCharts/search.jsp" />
+		<put-attribute name="body" value="/pages/kpiChart.jsp" />
 	</definition>
 
-	<!-- Kỳ thu tiền bình quân -->
-	<definition name="kpiAvgReceivablePeriod" extends="finance">
-		<put-attribute name="title" value="Kỳ thu tiền bình quân" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/operating/operating.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/operating/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiAvgReceivablePeriod.jsp" />
+	<definition name="chartManagement" extends="layouts">
+		<put-attribute name="title" value="Quản lý biểu đồ" />
+		<put-attribute name="body" value="/pages/chartManagement.jsp" />
+	</definition>
+	<!-- Kết thúc Tab biểu đồ KPI -->
+
+
+	<!-- Bắt đầu Tab chứng từ -->
+	<!-- Phiếu thu -->
+	<definition name="danhSachPhieuThu" extends="layouts">
+		<put-attribute name="title" value="Danh sách phiếu thu" />
+		<put-attribute name="body" value="/pages/chungtu/phieuThuDs.jsp" />
 	</definition>
 
-	<!-- Vòng quay hàng tồn kho (chỉ số đo theo năm/quý) theo giá trị sổ sách -->
-	<definition name="kpiInventoriesTurnOverByDocument" extends="finance">
-		<put-attribute name="title"
-			value="Vòng quay hàng tồn kho (chỉ số đo theo năm/quý) theo giá trị sổ sách" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/operating/operating.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/operating/search.jsp" />
+	<definition name="xemPhieuThu" extends="layouts">
+		<put-attribute name="title" value="Chi tiết phiếu thu" />
+		<put-attribute name="body" value="/pages/chungtu/phieuThuXm.jsp" />
+	</definition>
+
+	<definition name="suaPhieuThu" extends="layouts">
+		<put-attribute name="title" value="Sửa phiếu thu" />
+		<put-attribute name="body" value="/pages/chungtu/phieuThuSu.jsp" />
+	</definition>
+
+	<definition name="taoMoiPhieuThu" extends="layouts">
+		<put-attribute name="title" value="Tạo mới phiếu thu" />
+		<put-attribute name="body" value="/pages/chungtu/phieuThuTm.jsp" />
+	</definition>
+
+	<!-- Phiếu chi -->
+	<definition name="danhSachPhieuChi" extends="layouts">
+		<put-attribute name="title" value="Danh sách phiếu chi" />
+		<put-attribute name="body" value="/pages/chungtu/phieuChiDs.jsp" />
+	</definition>
+
+	<definition name="xemPhieuChi" extends="layouts">
+		<put-attribute name="title" value="Chi tiết phiếu chi" />
+		<put-attribute name="body" value="/pages/chungtu/phieuChiXm.jsp" />
+	</definition>
+
+	<definition name="suaPhieuChi" extends="layouts">
+		<put-attribute name="title" value="Sửa phiếu chi" />
+		<put-attribute name="body" value="/pages/chungtu/phieuChiSu.jsp" />
+	</definition>
+
+	<definition name="taoMoiPhieuChi" extends="layouts">
+		<put-attribute name="title" value="Tạo mới phiếu chi" />
+		<put-attribute name="body" value="/pages/chungtu/phieuChiTm.jsp" />
+	</definition>
+
+	<!-- Báo có -->
+	<definition name="danhSachBaoCo" extends="layouts">
+		<put-attribute name="title" value="Danh sách báo có" />
+		<put-attribute name="body" value="/pages/chungtu/baoCoDs.jsp" />
+	</definition>
+
+	<definition name="xemBaoCo" extends="layouts">
+		<put-attribute name="title" value="Chi tiết báo có" />
+		<put-attribute name="body" value="/pages/chungtu/baoCoXm.jsp" />
+	</definition>
+
+	<definition name="suaBaoCo" extends="layouts">
+		<put-attribute name="title" value="Sửa báo có" />
+		<put-attribute name="body" value="/pages/chungtu/baoCoSu.jsp" />
+	</definition>
+
+	<definition name="taoMoiBaoCo" extends="layouts">
+		<put-attribute name="title" value="Tạo mới báo có" />
+		<put-attribute name="body" value="/pages/chungtu/baoCoTm.jsp" />
+	</definition>
+
+	<!-- Báo nợ -->
+	<definition name="danhSachBaoNo" extends="layouts">
+		<put-attribute name="title" value="Danh sách báo nợ" />
+		<put-attribute name="body" value="/pages/chungtu/baoNoDs.jsp" />
+	</definition>
+
+	<definition name="xemBaoNo" extends="layouts">
+		<put-attribute name="title" value="Chi tiết báo nợ" />
+		<put-attribute name="body" value="/pages/chungtu/baoNoXm.jsp" />
+	</definition>
+
+	<definition name="suaBaoNo" extends="layouts">
+		<put-attribute name="title" value="Sửa báo nợ" />
+		<put-attribute name="body" value="/pages/chungtu/baoNoSu.jsp" />
+	</definition>
+
+	<definition name="taoMoiBaoNo" extends="layouts">
+		<put-attribute name="title" value="Tạo mới báo nợ" />
+		<put-attribute name="body" value="/pages/chungtu/baoNoTm.jsp" />
+	</definition>
+	<!-- Kết thúc Tab chứng từ -->
+
+
+	<!-- Bắt đầu Tab sổ kế toán -->
+	<definition name="sktNhatKyChung" extends="layouts">
+		<put-attribute name="title" value="Sổ nhật ký chung" />
+		<put-attribute name="search" value="/pages/soketoan/sktNhatKyChungTk.jsp" />
+		<put-attribute name="body" value="/pages/soketoan/sktNhatKyChung.jsp" />
+	</definition>
+
+	<definition name="sktSoCai" extends="layouts">
+		<put-attribute name="title" value="Sổ cái" />
+		<put-attribute name="search" value="/pages/soketoan/sktSoCaiTk.jsp" />
+		<put-attribute name="body" value="/pages/soketoan/sktSoCai.jsp" />
+	</definition>
+
+	<definition name="sktSoTienMat" extends="layouts">
+		<put-attribute name="title" value="Sổ tiền mặt" />
+		<!-- <put-attribute name="search" value="/pages/soketoan/sktSoTienMatTk.jsp" /> -->
+		<put-attribute name="body" value="/pages/soketoan/sktSoTienMat.jsp" />
+	</definition>
+
+	<definition name="sktSoCongNo" extends="layouts">
+		<put-attribute name="title" value="Sổ chi tiết công nợ" />
+		<put-attribute name="body" value="/pages/soketoan/sktSoCongNo.jsp" />
+	</definition>
+
+	<definition name="sktSoTienGuiNganHang" extends="layouts">
+		<put-attribute name="title" value="Sổ tiền gửi ngân hàng" />
+		<!-- <put-attribute name="search" value="/pages/soketoan/sktSoTienGuiNganHangTk.jsp" /> -->
 		<put-attribute name="body"
-			value="/pages/kpiInventoriesTurnOverByDocument.jsp" />
+			value="/pages/soketoan/sktSoTienGuiNganHang.jsp" />
 	</definition>
-
-	<!-- Vòng quay hàng tồn kho (chỉ số đo theo năm/quý) theo giá trị thị trường -->
-	<definition name="kpiInventoriesTurnOverByMarket" extends="finance">
-		<put-attribute name="title"
-			value="Vòng quay hàng tồn kho (chỉ số đo theo năm/quý) theo giá trị thị trường" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/operating/operating.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/operating/search.jsp" />
-		<put-attribute name="body"
-			value="/pages/kpiInventoriesTurnOverByMarket.jsp" />
-	</definition>
-
-	<!-- Số ngày tồn kho bình quân theo giá trị sổ sách -->
-	<definition name="kpiDaysInInventoriesByDocument" extends="finance">
-		<put-attribute name="title"
-			value="Số ngày tồn kho bình quân theo giá trị sổ sách" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/operating/operating.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/operating/search.jsp" />
-		<put-attribute name="body"
-			value="/pages/kpiDaysInInventoriesByDocument.jsp" />
-	</definition>
-
-	<!-- Số ngày tồn kho bình quân theo giá trị thị trường -->
-	<definition name="kpiDaysInInventoriesByMarket" extends="finance">
-		<put-attribute name="title"
-			value="Số ngày tồn kho bình quân theo giá trị thị trường" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/operating/operating.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/operating/search.jsp" />
-		<put-attribute name="body"
-			value="/pages/kpiDaysInInventoriesByMarket.jsp" />
-	</definition>
-
-	<!-- Chu kỳ hoạt động của doanh nghiệp theo giá trị sổ sách -->
-	<definition name="kpiOperatingCycleByDocument" extends="finance">
-		<put-attribute name="title"
-			value="Chu kỳ hoạt động của doanh nghiệp theo giá trị sổ sách" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/operating/operating.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/operating/search.jsp" />
-		<put-attribute name="body"
-			value="/pages/kpiOperatingCycleByDocument.jsp" />
-	</definition>
-
-	<!-- Chu kỳ hoạt động của doanh nghiệp theo giá trị thị trường -->
-	<definition name="kpiOperatingCycleByMarket" extends="finance">
-		<put-attribute name="title"
-			value="Chu kỳ hoạt động của doanh nghiệp theo giá trị thị trường" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/operating/operating.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/operating/search.jsp" />
-		<put-attribute name="body"
-			value="/pages/kpiOperatingCycleByMarket.jsp" />
-	</definition>
-
-	<!-- Vòng quay khoản phải trả -->
-	<definition name="kpiPaymentTurnover" extends="finance">
-		<put-attribute name="title" value="Vòng quay khoản phải trả" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/operating/operating.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/operating/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiPaymentTurnover.jsp" />
-	</definition>
-
-	<!-- Kỳ phải trả bình quân -->
-	<definition name="kpiAvgPaymentPeriod" extends="finance">
-		<put-attribute name="title" value="Kỳ phải trả bình quân" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/operating/operating.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/operating/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiAvgPaymentPeriod.jsp" />
-	</definition>
-
-	<!-- Chu kỳ luân chuyển tiền theo giá trị sổ sách -->
-	<definition name="kpiCashConversionCycleByDocument" extends="finance">
-		<put-attribute name="title"
-			value="Chu kỳ luân chuyển tiền theo giá trị sổ sách" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/operating/operating.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/operating/search.jsp" />
-		<put-attribute name="body"
-			value="/pages/kpiCashConversionCycleByDocument.jsp" />
-	</definition>
-
-	<!-- Chu kỳ luân chuyển tiền theo giá trị thị trường -->
-	<definition name="kpiCashConversionCycleByMarket" extends="finance">
-		<put-attribute name="title"
-			value="Chu kỳ luân chuyển tiền theo giá trị thị trường" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/operating/operating.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/operating/search.jsp" />
-		<put-attribute name="body"
-			value="/pages/kpiCashConversionCycleByMarket.jsp" />
-	</definition>
-
-	<!-- Khả năng thanh toán lãi vay -->
-	<definition name="kpiInterestCoverage" extends="finance">
-		<put-attribute name="title" value="Khả năng thanh toán lãi vay" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/operating/operating.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/operating/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiInterestCoverage.jsp" />
-	</definition>
+	<!-- Kết thúc Tab sổ kế toán -->
 
 
-	<!-- Khả năng sinh lời -->
-	<!-- Hiệu suất sử dụng tổng tài sản (Vòng quay tổng tài sản) -->
-	<definition name="kpiTotalAssetsUtility" extends="finance">
-		<put-attribute name="title"
-			value="Hiệu suất sử dụng tổng tài sản (Vòng quay tổng tài sản)" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/profitable/profitable.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/profitable/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiTotalAssetsUtility.jsp" />
-	</definition>
-
-	<!-- Hiệu suất sử dụng tài sản cố định -->
-	<definition name="kpiFixedAssetsTurnover" extends="finance">
-		<put-attribute name="title" value="Hiệu suất sử dụng tài sản cố định" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/profitable/profitable.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/profitable/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiFixedAssetsTurnover.jsp" />
-	</definition>
-
-	<!-- Hiệu suất sử dụng trên vòng quay vốn lưu động -->
-	<definition name="kpiWorkingCapitalTurnover" extends="finance">
-		<put-attribute name="title"
-			value="Hiệu suất sử dụng trên vòng quay vốn lưu động" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/profitable/profitable.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/profitable/search.jsp" />
-		<put-attribute name="body"
-			value="/pages/kpiWorkingCapitalTurnover.jsp" />
-	</definition>
-
-	<!-- Tỷ suất lợi nhuận gộp (Lợi nhuận gộp biên) -->
-	<definition name="kpiGrossProfitMargin" extends="finance">
-		<put-attribute name="title"
-			value="Tỷ suất lợi nhuận gộp (Lợi nhuận gộp biên)" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/profitable/profitable.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/profitable/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiGrossProfitMargin.jsp" />
-	</definition>
-
-	<!-- Tỷ suất lợi nhuận ròng (Lợi nhuận ròng biên) -->
-	<definition name="kpiNetProfitMargin" extends="finance">
-		<put-attribute name="title"
-			value="Tỷ suất lợi nhuận ròng (Lợi nhuận ròng biên)" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/profitable/profitable.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/profitable/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiNetProfitMargin.jsp" />
-	</definition>
-
-
-	<!-- Khả năng cân đối nợ -->
-	<!-- Hệ số nợ (Tỷ số nợ) -->
-	<definition name="kpiDebtRatio" extends="finance">
-		<put-attribute name="title" value="Hệ số nợ" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/balancedebt/balancedebt.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/balancedebt/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiDebtRatio.jsp" />
-	</definition>
-
-	<!-- Đòn bẩy tài chính -->
-	<definition name="kpiFinancialLeverage" extends="finance">
-		<put-attribute name="title" value="Đòn bẩy tài chính" />
-		<put-attribute name="kpilist"
-			value="/pages/layouts/balancedebt/balancedebt.jsp" />
-		<put-attribute name="search"
-			value="/pages/layouts/balancedebt/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiFinancialLeverage.jsp" />
-	</definition>
-
-
-	<!-- Bảng cân đối kế toán -->
-	<definition name="balanceAssets" extends="finance">
+	<!-- Bắt đầu Tab báo cáo tài chính -->
+	<definition name="balanceAsset" extends="layouts">
 		<put-attribute name="title" value="Bảng cân đối kế toán" />
 		<put-attribute name="search"
-			value="/pages/layouts/balanceasset/search.jsp" />
-		<put-attribute name="body" value="/pages/balanceAssets.jsp" />
+			value="/pages/layouts/balanceAssets/search.jsp" />
+		<put-attribute name="body" value="/pages/balanceAsset.jsp" />
+	</definition>
+	<!-- Kết thúc Tab báo cáo tài chính -->
+
+
+	<!-- Bắt đầu Tab quản trị -->
+	<definition name="danhSachTaiKhoan" extends="layouts">
+		<put-attribute name="title" value="Danh mục tài khoản kế toán" />
+		<put-attribute name="body" value="/pages/taiKhoanDs.jsp" />
 	</definition>
 
-	<!-- Cập nhật dữ liệu -->
-	<definition name="update" extends="finance">
+	<definition name="danhSachKhachHang" extends="layouts">
+		<put-attribute name="title" value="Danh sách khách hàng" />
+		<put-attribute name="body" value="/pages/khachHangDs.jsp" />
+	</definition>
+
+	<definition name="xemKhachHang" extends="layouts">
+		<put-attribute name="title" value="Chi tiết khách hàng" />
+		<put-attribute name="body" value="/pages/khachHangXm.jsp" />
+	</definition>
+
+	<definition name="suaKhachHang" extends="layouts">
+		<put-attribute name="title" value="Sửa khách hàng" />
+		<put-attribute name="body" value="/pages/khachHangSu.jsp" />
+	</definition>
+
+	<definition name="taoMoiKhachHang" extends="layouts">
+		<put-attribute name="title" value="Tạo mới khách hàng" />
+		<put-attribute name="body" value="/pages/khachHangTm.jsp" />
+	</definition>
+
+	<definition name="danhSachNhaCungCap" extends="layouts">
+		<put-attribute name="title" value="Danh sách nhà cung cấp" />
+		<put-attribute name="body" value="/pages/nhaCungCapDs.jsp" />
+	</definition>
+
+	<definition name="xemNhaCungCap" extends="layouts">
+		<put-attribute name="title" value="Chi tiết nhà cung cấp" />
+		<put-attribute name="body" value="/pages/nhaCungCapXm.jsp" />
+	</definition>
+
+	<definition name="suaNhaCungCap" extends="layouts">
+		<put-attribute name="title" value="Sửa nhà cung cấp" />
+		<put-attribute name="body" value="/pages/nhaCungCapSu.jsp" />
+	</definition>
+
+	<definition name="taoMoiNhaCungCap" extends="layouts">
+		<put-attribute name="title" value="Tạo mới nhà cung cấp" />
+		<put-attribute name="body" value="/pages/nhaCungCapTm.jsp" />
+	</definition>
+
+	<definition name="update" extends="layouts">
 		<put-attribute name="title" value="Cập nhật dữ liệu" />
 		<put-attribute name="body" value="/pages/update.jsp" />
+	</definition>
+	<!-- Kết thúc Tab quản trị -->
+
+
+	<definition name="error" extends="layouts">
+		<put-attribute name="title" value="Lỗi hệ thống" />
+		<put-attribute name="body" value="/pages/error.jsp" />
 	</definition>
 </tiles-definitions>
