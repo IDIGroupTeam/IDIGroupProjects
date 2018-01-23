@@ -20,9 +20,36 @@
 <!-- Initialize the plugin: -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('#example-getting-started').multiselect();
-	});
+$(function() {
+	$("#department")
+		.change(
+			function() {
+				// Lấy dữ liệu của phòng
+				val = $(this).val();
+					$							
+					.ajax({
+						dataType : "json",
+						url : "${url}/KPI/selection",
+						data : {
+							department : val
+						},
+						success : function(obj) {
+							employeeIdSel = "<option value='all'>Tất cả nhân viên</option>";
+							for (i = 0; i < obj.length; i++) {
+								employeeIdSel += "<option value='" + obj[i].employeeId + "'>"
+										+ "Mã NV " + obj[i].employeeId +", "
+										+ obj[i].fullName
+										+ ", chức vụ: "
+										+ obj[i].jobTitle
+										+ "</option>";
+							}
+							$("#employeeId").html(employeeIdSel);
+						}
+					});
+				
+			});
+});
+
 </script>
 <title>Báo cáo thông tin ngày nghỉ, công tác, làm thêm ...</title>
 </head>
@@ -64,12 +91,12 @@
 				<td bgcolor="#FAFAFA">Chọn phòng ban:</td>
 				<td><form:select path="department">
 						<form:option value="all" label="Tất cả phòng ban"></form:option>
-						<form:options items="${departmentMap}" />
+						<form:options items="${departmentMap}" var="department" />
 					</form:select></td>
-				<td bgcolor="#FAFAFA">Chọn cá nhân:</td>
+				<td bgcolor="#FAFAFA">Chọn nhân viên:</td>
 				<td><form:select path="employeeId">
 						<form:option value="0" label="Tất cả nhân viên"></form:option>
-						<form:options items="${employeeMap}" />
+						<form:options items="${employeeMap}" var="employeeId"/>
 					</form:select></td>
 			</tr>
 			<tr>

@@ -35,6 +35,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.idi.hr.bean.Department;
@@ -485,5 +487,17 @@ public class KPIController {
 			dataset.addValue(entry.getValue(), entry.getKey(), "");
 		}
 		return dataset;
+	}
+	
+	//For Ajax
+	@RequestMapping("/KPI/selection")
+	public @ResponseBody List<EmployeeInfo> employeesByDepartment(@RequestParam("department") String department){
+		List<EmployeeInfo> list = null;
+		if (!department.equalsIgnoreCase("all")) 
+			list = employeeDAO.getEmployeesByDepartment(department);		
+		else
+			list = employeeDAO.getEmployees();		
+		
+		return list;
 	}
 }

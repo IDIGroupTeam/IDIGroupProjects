@@ -20,9 +20,35 @@
 <!-- Initialize the plugin: -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('#example-getting-started').multiselect();
-	});
+$(function() {
+	$("#department")
+		.change(
+			function() {
+				// Lấy dữ liệu của phòng
+				val = $(this).val();
+					$							
+					.ajax({
+						dataType : "json",
+						url : "${url}/KPI/selection",
+						data : {
+							department : val
+						},
+						success : function(obj) {
+							employeeIdSel = "<option value='all'>Tất cả nhân viên</option>";
+							for (i = 0; i < obj.length; i++) {
+								employeeIdSel += "<option value='" + obj[i].employeeId + "'>"
+										+ "Mã NV " + obj[i].employeeId +", "
+										+ obj[i].fullName
+										+ ", chức vụ: "
+										+ obj[i].jobTitle
+										+ "</option>";
+							}
+							$("#employeeId").html(employeeIdSel);
+						}
+					});
+				
+			});
+});
 </script>
 <title>Báo cáo theo các tiêu chí được chọn ...</title>
 </head>

@@ -674,7 +674,7 @@ public class TimekeepingController {
 				employee = (EmployeeInfo) list.get(i);
 				Integer id = employee.getEmployeeId();
 				employeeMap.put(id.toString(),
-						"Ma NV " + id + ", " + employee.getFullName() + ", phòng " + employee.getDepartment());
+						"Mã NV " + id + ", " + employee.getFullName() + ", phòng " + employee.getDepartment());
 			}
 
 		} catch (Exception e) {

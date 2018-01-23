@@ -13,7 +13,12 @@
 		<artifactId>IDIMain</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-
+	
+	<properties>
+		<apachepoi.version>3.16</apachepoi.version>
+		<jackson.version>2.9.2</jackson.version>
+	</properties>
+	
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/commons-validator/commons-validator -->
 		<dependency>
@@ -76,7 +81,26 @@
 			<artifactId>cewolf</artifactId>
 			<version>1.2.4-java7</version>
 		</dependency>
-
+		
+		<!-- Jackson JSON Mapper -->
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>IDIHR</finalName>
