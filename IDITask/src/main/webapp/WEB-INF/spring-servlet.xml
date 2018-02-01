@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<mvc:annotation-driven />
+	<mvc:resources mapping="/public/**" location="/public/" />
+	<mvc:default-servlet-handler />
+	<context:component-scan base-package="com.idi.task" />
+
+	<!-- Config folder to load jsp page for view layer -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/pages/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- Read properties file -->
+	<bean id="properties"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:task.properties" />
+		<!-- <property name="ignoreUnresolvablePlaceholders" value="true" /> <property 
+			name="ignoreResourceNotFound" value="true" /> -->
+	</bean>
+
+	<!-- Config for upload file feature -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- setting maximum upload size -->
+		<property name="maxUploadSize" value="25000000" />
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages/validator" />
+	</bean>
+	<!-- Config database connection -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/idigroup?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="username" value="root" />
+		<property name="password" value="" />
+	</bean>
+
+	<bean id="jdbcTmpl" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<bean id="taskDAO" class="com.idi.task.dao.TaskDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+	<bean id="employeeDAO" class="com.idi.task.dao.EmployeeDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+		<bean id="departmentDAO" class="com.idi.task.dao.DepartmentDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+</beans>
