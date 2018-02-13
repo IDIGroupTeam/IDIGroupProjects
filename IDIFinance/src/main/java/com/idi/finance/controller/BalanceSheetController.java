@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.bieudo.KpiGroup;
 import com.idi.finance.bean.cdkt.BalanceAssetData;
 import com.idi.finance.bean.cdkt.BalanceAssetItem;
@@ -29,7 +30,6 @@ import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.TaiKhoan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BalanceSheetDAO;
-import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.form.BalanceAssetForm;
@@ -42,10 +42,10 @@ public class BalanceSheetController {
 	private static final Logger logger = Logger.getLogger(BalanceSheetController.class);
 
 	@Autowired
-	BalanceSheetDAO balanceSheetDAO;
+	DungChung dungChung;
 
 	@Autowired
-	KpiChartDAO kpiChartDAO;
+	BalanceSheetDAO balanceSheetDAO;
 
 	@Autowired
 	TaiKhoanDAO taiKhoanDAO;
@@ -63,8 +63,7 @@ public class BalanceSheetController {
 	public String balanceAssets(@ModelAttribute("mainFinanceForm") BalanceAssetForm balanceSheetForm, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			// List balance assets:
 			if (balanceSheetForm == null)
@@ -158,8 +157,7 @@ public class BalanceSheetController {
 	public String hachToan(@ModelAttribute("mainFinanceForm") BalanceAssetForm form, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			// Lấy danh sách tài khoản kt có thể thuộc hai chỉ tiêu CDKT trở lên
 			List<LoaiTaiKhoan> loaiTaiKhoanDs = balanceSheetDAO.danhSachTkktThuocNhieuChiTieu();
@@ -327,8 +325,7 @@ public class BalanceSheetController {
 	@RequestMapping("/cdkt/capnhatdulieu")
 	public String update(Model model) {
 		// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-		List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-		model.addAttribute("kpiGroups", kpiGroups);
+		model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 		model.addAttribute("tab", "tabCNDL");
 		return "update";
@@ -337,8 +334,7 @@ public class BalanceSheetController {
 	@RequestMapping(value = "/cdkt/luutrudulieu", method = RequestMethod.POST)
 	public String save(Model model, @ModelAttribute("mainFinanceForm") BalanceAssetForm balanceSheetForm) {
 		// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-		List<KpiGroup> kpiGroupsDb = kpiChartDAO.listKpiGroups();
-		model.addAttribute("kpiGroups", kpiGroupsDb);
+		model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 		if (balanceSheetForm != null && balanceSheetForm.getBalanceAssetFile() != null
 				&& balanceSheetForm.getBalanceAssetFile().getSize() > 0) {
@@ -382,8 +378,7 @@ public class BalanceSheetController {
 	public String balanceSheetCodes(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			List<BalanceAssetItem> bais = balanceSheetDAO.listBais();
 			model.addAttribute("bais", bais);
@@ -400,8 +395,7 @@ public class BalanceSheetController {
 	public String bangCanDoiPhatSinh(@ModelAttribute("mainFinanceForm") TkSoKeToanForm form, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			Date homNay = new Date();
 			// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của

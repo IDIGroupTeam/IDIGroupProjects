@@ -8,6 +8,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.idi.finance.bean.LoaiTien;
+import com.idi.finance.bean.hanghoa.KhoBai;
+import com.idi.finance.bean.soketoan.NghiepVuKeToan_Xn;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class ChungTu {
@@ -20,6 +22,8 @@ public class ChungTu {
 	public static final String CHUNG_TU_BAO_CO = "BC";
 	public static final String CHUNG_TU_KT_TH = "KTTH";
 	public static final String CHUNG_TU_BT_KC = "BTKC";
+	public static final String CHUNG_TU_PHIEU_XUAT_KHO = "PXK";
+	public static final String CHUNG_TU_PHIEU_NHAP_KHO = "PNK";
 
 	private int maCt;
 	private int soCt;
@@ -33,6 +37,9 @@ public class ChungTu {
 	private DoiTuong doiTuong;
 	private List<TaiKhoan> taiKhoanNoDs;
 	private List<TaiKhoan> taiKhoanCoDs;
+
+	private KhoBai khoBai;
+	private List<NghiepVuKeToan_Xn> nghiepVuKeToanDs;
 
 	public int getMaCt() {
 		return maCt;
@@ -177,6 +184,44 @@ public class ChungTu {
 
 	public void setTaiKhoanCoDs(List<TaiKhoan> taiKhoanCoDs) {
 		this.taiKhoanCoDs = taiKhoanCoDs;
+	}
+
+	public KhoBai getKhoBai() {
+		return khoBai;
+	}
+
+	public void setKhoBai(KhoBai khoBai) {
+		this.khoBai = khoBai;
+	}
+
+	public List<NghiepVuKeToan_Xn> getNghiepVuKeToanDs() {
+		return nghiepVuKeToanDs;
+	}
+
+	public void setNghiepVuKeToanDs(List<NghiepVuKeToan_Xn> nghiepVuKeToanDs) {
+		this.nghiepVuKeToanDs = nghiepVuKeToanDs;
+	}
+
+	public void themNghiepVuKeToan(NghiepVuKeToan_Xn nghiepVuKeToan) {
+		if (nghiepVuKeToan == null)
+			return;
+
+		if (nghiepVuKeToanDs == null)
+			nghiepVuKeToanDs = new ArrayList<>();
+
+		if (!nghiepVuKeToanDs.contains(nghiepVuKeToan))
+			nghiepVuKeToanDs.add(nghiepVuKeToan);
+	}
+
+	public void themNghiepVuKeToan(List<NghiepVuKeToan_Xn> nghiepVuKeToanDs) {
+		if (nghiepVuKeToanDs == null)
+			return;
+
+		Iterator<NghiepVuKeToan_Xn> iter = nghiepVuKeToanDs.iterator();
+		while (iter.hasNext()) {
+			NghiepVuKeToan_Xn nghiepVuKeToan = iter.next();
+			themNghiepVuKeToan(nghiepVuKeToan);
+		}
 	}
 
 	public int getSoTkLonNhat() {

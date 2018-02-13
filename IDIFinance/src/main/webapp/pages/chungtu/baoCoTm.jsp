@@ -179,23 +179,34 @@
 
 					$(newTr).insertBefore($(currentTr)).prop("id", newId);
 
-					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk").val("0");
-					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien").val("0.0");
-					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien").prop("placeholder", "0.0");
+					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk").val(
+							"0");
+					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien")
+							.val("0.0");
+					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien").prop(
+							"placeholder", "0.0");
 					//$("#taiKhoanCoDs" + newId + "\\.lyDo").val("");
-					$("#taiKhoanCoDs" + newId + "\\.lyDo").prop("placeholder", "Lý do");
-					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien\\.errors").remove();
-					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk\\.errors").remove();
+					$("#taiKhoanCoDs" + newId + "\\.lyDo").prop("placeholder",
+							"Lý do");
+					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien\\.errors")
+							.remove();
+					$(
+							"#taiKhoanCoDs" + newId
+									+ "\\.loaiTaiKhoan\\.maTk\\.errors")
+							.remove();
 
-					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk").remove();
+					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk")
+							.remove();
 					$("#taiKhoanNoDs" + newId + "\\.soDu").remove();
 					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien").remove();
-					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTienTxt").remove();
+					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTienTxt")
+							.remove();
 					$("#taiKhoanNoDs" + newId + "\\.lyDo").remove();
 
 					$("#xoaTkCo").removeClass("disabled");
-					
-					$("input[id^='taiKhoanCoDs'][id$='\\.soTien\\.soTien']").change(thayDoiDuLieu);
+
+					$("input[id^='taiKhoanCoDs'][id$='\\.soTien\\.soTien']")
+							.change(thayDoiDuLieu);
 				});
 
 		$("#xoaTkCo").click(function() {
@@ -206,7 +217,7 @@
 			if (id == 1) {
 				$("#xoaTkCo").addClass("disabled");
 			}
-			
+
 			capNhapTongTien();
 		});
 

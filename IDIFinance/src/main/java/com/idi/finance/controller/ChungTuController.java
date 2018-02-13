@@ -26,19 +26,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.LoaiTien;
 import com.idi.finance.bean.NhanVien;
-import com.idi.finance.bean.bieudo.KpiGroup;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.DoiTuong;
 import com.idi.finance.bean.chungtu.TaiKhoan;
 import com.idi.finance.bean.doitac.KhachHang;
 import com.idi.finance.bean.doitac.NhaCungCap;
+import com.idi.finance.bean.hanghoa.HangHoa;
+import com.idi.finance.bean.hanghoa.KhoBai;
+import com.idi.finance.bean.soketoan.NghiepVuKeToan_Xn;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BaoCaoDAO;
 import com.idi.finance.dao.ChungTuDAO;
+import com.idi.finance.dao.HangHoaDAO;
 import com.idi.finance.dao.KhachHangDAO;
-import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.dao.NhaCungCapDAO;
 import com.idi.finance.dao.NhanVienDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
@@ -54,7 +57,7 @@ public class ChungTuController {
 	private static final Logger logger = Logger.getLogger(ChungTuController.class);
 
 	@Autowired
-	KpiChartDAO kpiChartDAO;
+	DungChung dungChung;
 
 	@Autowired
 	TaiKhoanDAO taiKhoanDAO;
@@ -73,6 +76,9 @@ public class ChungTuController {
 
 	@Autowired
 	BaoCaoDAO baoCaoDAO;
+
+	@Autowired
+	HangHoaDAO hangHoaDAO;
 
 	@Autowired
 	private ChungTuValidator chungTuValidator;
@@ -97,8 +103,7 @@ public class ChungTuController {
 	public String danhSachPhieuThu(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			// Lấy danh sách phiếu thu
 			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_PHIEU_THU);
@@ -116,8 +121,7 @@ public class ChungTuController {
 	public String xemPhieuThu(@PathVariable("id") int maCt, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
 			if (chungTu == null) {
@@ -157,8 +161,7 @@ public class ChungTuController {
 	public String suaPhieuThu(@PathVariable("id") int maCt, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
 			if (chungTu == null) {
@@ -176,8 +179,7 @@ public class ChungTuController {
 	public String taoMoiPhieuThu(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = new ChungTu();
 			chungTu.setLoaiCt(ChungTu.CHUNG_TU_PHIEU_THU);
@@ -283,8 +285,7 @@ public class ChungTuController {
 	public String danhSachPhieuChi(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			// Lấy danh sách phiếu chi
 			List<ChungTu> phieuChiDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_PHIEU_CHI);
@@ -302,8 +303,7 @@ public class ChungTuController {
 	public String xemPhieuChi(@PathVariable("id") int maCt, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_CHI);
 			if (chungTu == null) {
@@ -343,8 +343,7 @@ public class ChungTuController {
 	public String suaPhieuChi(@PathVariable("id") int maCt, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_CHI);
 			if (chungTu == null) {
@@ -362,8 +361,7 @@ public class ChungTuController {
 	public String taoMoiPhieuChi(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = new ChungTu();
 			chungTu.setLoaiCt(ChungTu.CHUNG_TU_PHIEU_CHI);
@@ -469,8 +467,7 @@ public class ChungTuController {
 	public String danhSachBaoCo(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			// Lấy danh sách phiếu chi
 			List<ChungTu> baoCoDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_BAO_CO);
@@ -488,8 +485,7 @@ public class ChungTuController {
 	public String xemBaoCo(@PathVariable("id") int maCt, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_CO);
 			if (chungTu == null) {
@@ -528,8 +524,7 @@ public class ChungTuController {
 	public String suaBaoCo(@PathVariable("id") int maCt, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_CO);
 			if (chungTu == null) {
@@ -547,8 +542,7 @@ public class ChungTuController {
 	public String taoMoiBaoCo(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = new ChungTu();
 			chungTu.setLoaiCt(ChungTu.CHUNG_TU_BAO_CO);
@@ -655,8 +649,7 @@ public class ChungTuController {
 	public String danhSachBaoNo(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			// Lấy danh sách phiếu chi
 			List<ChungTu> baoNoDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_BAO_NO);
@@ -674,8 +667,7 @@ public class ChungTuController {
 	public String xemBaoNo(@PathVariable("id") int maCt, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_NO);
 			if (chungTu == null) {
@@ -714,8 +706,7 @@ public class ChungTuController {
 	public String suaBaoNo(@PathVariable("id") int maCt, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_NO);
 			if (chungTu == null) {
@@ -733,8 +724,7 @@ public class ChungTuController {
 	public String taoMoiBaoNo(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = new ChungTu();
 			chungTu.setLoaiCt(ChungTu.CHUNG_TU_BAO_NO);
@@ -841,8 +831,7 @@ public class ChungTuController {
 	public String danhSachKeToanTongHop(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			// Lấy danh sách phiếu kế toán tổng hợp
 			List<ChungTu> keToanTongHopDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_KT_TH);
@@ -860,8 +849,7 @@ public class ChungTuController {
 	public String xemKeToanTongHop(@PathVariable("id") int maCt, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_KT_TH);
 			if (chungTu == null) {
@@ -901,8 +889,7 @@ public class ChungTuController {
 	public String suaKeToanTongHop(@PathVariable("id") int maCt, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_KT_TH);
 			if (chungTu == null) {
@@ -920,8 +907,7 @@ public class ChungTuController {
 	public String taoMoiKeToanTongHop(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = new ChungTu();
 			chungTu.setLoaiCt(ChungTu.CHUNG_TU_KT_TH);
@@ -1019,12 +1005,365 @@ public class ChungTuController {
 		}
 	}
 
+	@RequestMapping("/chungtu/phieunhapkho/danhsach")
+	public String danhSachPhieuNhapKho(Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			// Lấy danh sách phiếu xuất
+			List<ChungTu> phieuNhapKhoDs = chungTuDAO.danhSachChungTuKhoTheoLoaiCt(ChungTu.CHUNG_TU_PHIEU_NHAP_KHO);
+			model.addAttribute("phieuNhapKhoDs", phieuNhapKhoDs);
+
+			model.addAttribute("tab", "tabCTPNK");
+			return "danhSachPhieuNhapKho";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/chungtu/phieunhapkho/xem/{id}")
+	public String xemPhieuNhapKho(@PathVariable("id") int maCt, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_NHAP_KHO);
+			if (chungTu == null) {
+				return "redirect:/chungtu/phieunhapkho/danhsach";
+			}
+			model.addAttribute("chungTu", chungTu);
+
+			model.addAttribute("tab", "tabCTPNK");
+			return "xemPhieuNhapKho";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/chungtu/phieunhapkho/pdf/{id}", method = RequestMethod.GET)
+	public void pdfPhieuNhapKho(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
+			Model model) {
+		try {
+			JasperReport jasperReport = getCompiledFile("PhieuNhapKho", req);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, maCt);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@RequestMapping("/chungtu/phieunhapkho/sua/{id}")
+	public String suaPhieuNhapKho(@PathVariable("id") int maCt, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_NHAP_KHO);
+			if (chungTu == null) {
+				return "redirect:/chungtu/phieunhapkho/danhsach";
+			}
+
+			return chuanBiFormPhieuNhapKho(model, chungTu);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/chungtu/phieunhapkho/taomoi")
+	public String taoMoiPhieuNhapKho(Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			ChungTu chungTu = new ChungTu();
+			chungTu.setLoaiCt(ChungTu.CHUNG_TU_PHIEU_NHAP_KHO);
+
+			// Lấy số phiếu thu của năm hiện tại
+			int soKeToanTongHop = chungTuDAO.demSoChungTuTheoLoaiCtVaNam(ChungTu.CHUNG_TU_PHIEU_NHAP_KHO, new Date());
+			soKeToanTongHop++;
+
+			chungTu.setSoCt(soKeToanTongHop);
+			Date ngayLap = new Date();
+			chungTu.setNgayLap(ngayLap);
+			chungTu.setNgayHt(ngayLap);
+
+			NghiepVuKeToan_Xn nghiepVuKeToan = new NghiepVuKeToan_Xn();
+			chungTu.themNghiepVuKeToan(nghiepVuKeToan);
+
+			return chuanBiFormPhieuNhapKho(model, chungTu);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/chungtu/phieunhapkho/luu", method = RequestMethod.POST)
+	public String luuTaoMoiPhieuNhapKho(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu,
+			BindingResult result, Model model) {
+		try {
+			if (result.hasErrors()) {
+				return chuanBiFormPhieuNhapKho(model, chungTu);
+			}
+
+			logger.info("Lưu chứng từ: " + chungTu);
+
+			chungTu.setLoaiCt(ChungTu.CHUNG_TU_PHIEU_NHAP_KHO);
+
+			if (chungTu.getMaCt() > 0) {
+				chungTuDAO.capNhatChungTuKho(chungTu);
+				return "redirect:/chungtu/phieunhapkho/xem/" + chungTu.getMaCt();
+			} else {
+				chungTuDAO.themChungTuKho(chungTu);
+			}
+
+			return "redirect:/chungtu/phieunhapkho/danhsach";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	private String chuanBiFormPhieuNhapKho(Model model, ChungTu chungTu) {
+		try {
+			model.addAttribute("mainFinanceForm", chungTu);
+
+			// Lấy danh sách các loại tiền
+			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
+			model.addAttribute("loaiTienDs", loaiTienDs);
+
+			// Lấy danh sách tài khoản, dùng cho bên nợ & có
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
+
+			// Lấy danh sách kho
+			List<KhoBai> khoBaiDs = hangHoaDAO.danhSachKhoBai();
+			model.addAttribute("khoBaiDs", khoBaiDs);
+
+			// Lấy danh sách hàng hóa
+			List<HangHoa> hangHoaDs = hangHoaDAO.danhSachHangHoa();
+			model.addAttribute("hangHoaDs", hangHoaDs);
+
+			model.addAttribute("tab", "tabCTPNK");
+			if (chungTu.getMaCt() > 0) {
+				// Đây là trường hợp sửa CT
+				return "suaPhieuNhapKho";
+			} else {
+				// Đây là trường hợp tạo mới CT
+				return "taoMoiPhieuNhapKho";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/chungtu/phieunhapkho/xoa/{id}")
+	public String xoaPhieuNhapKho(@PathVariable("id") int maCt, Model model) {
+		try {
+			// Xóa phiếu thu có MA_CT là maCt, LOAI_CT là ChungTu.CHUNG_TU_PHIEU_NHAP_KHO
+			chungTuDAO.xoaChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_NHAP_KHO);
+
+			return "redirect:/chungtu/phieunhapkho/danhsach";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/chungtu/phieuxuatkho/danhsach")
+	public String danhSachPhieuXuatKho(Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			// Lấy danh sách phiếu xuất
+			List<ChungTu> phieuXuatKhoDs = chungTuDAO.danhSachChungTuKhoTheoLoaiCt(ChungTu.CHUNG_TU_PHIEU_XUAT_KHO);
+			model.addAttribute("phieuXuatKhoDs", phieuXuatKhoDs);
+
+			model.addAttribute("tab", "tabCTPXK");
+			return "danhSachPhieuXuatKho";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/chungtu/phieuxuatkho/xem/{id}")
+	public String xemPhieuXuatKho(@PathVariable("id") int maCt, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_XUAT_KHO);
+			if (chungTu == null) {
+				return "redirect:/chungtu/phieuxuatkho/danhsach";
+			}
+			model.addAttribute("chungTu", chungTu);
+
+			model.addAttribute("tab", "tabCTPXK");
+			return "xemPhieuXuatKho";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/chungtu/phieuxuatkho/pdf/{id}", method = RequestMethod.GET)
+	public void pdfPhieuXuatKho(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
+			Model model) {
+		try {
+			JasperReport jasperReport = getCompiledFile("PhieuXuatKho", req);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, maCt);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@RequestMapping("/chungtu/phieuxuatkho/sua/{id}")
+	public String suaPhieuXuatKho(@PathVariable("id") int maCt, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_XUAT_KHO);
+			if (chungTu == null) {
+				return "redirect:/chungtu/phieuxuatkho/danhsach";
+			}
+
+			return chuanBiFormPhieuXuatKho(model, chungTu);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/chungtu/phieuxuatkho/taomoi")
+	public String taoMoiPhieuXuatKho(Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			ChungTu chungTu = new ChungTu();
+			chungTu.setLoaiCt(ChungTu.CHUNG_TU_PHIEU_XUAT_KHO);
+
+			// Lấy số phiếu thu của năm hiện tại
+			int soKeToanTongHop = chungTuDAO.demSoChungTuTheoLoaiCtVaNam(ChungTu.CHUNG_TU_PHIEU_XUAT_KHO, new Date());
+			soKeToanTongHop++;
+
+			chungTu.setSoCt(soKeToanTongHop);
+			Date ngayLap = new Date();
+			chungTu.setNgayLap(ngayLap);
+			chungTu.setNgayHt(ngayLap);
+
+			NghiepVuKeToan_Xn nghiepVuKeToan = new NghiepVuKeToan_Xn();
+			chungTu.themNghiepVuKeToan(nghiepVuKeToan);
+
+			return chuanBiFormPhieuXuatKho(model, chungTu);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/chungtu/phieuxuatkho/luu", method = RequestMethod.POST)
+	public String luuTaoMoiPhieuXuatKho(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu,
+			BindingResult result, Model model) {
+		try {
+			if (result.hasErrors()) {
+				return chuanBiFormPhieuXuatKho(model, chungTu);
+			}
+
+			logger.info("Lưu chứng từ: " + chungTu);
+
+			chungTu.setLoaiCt(ChungTu.CHUNG_TU_PHIEU_XUAT_KHO);
+
+			if (chungTu.getMaCt() > 0) {
+				chungTuDAO.capNhatChungTuKho(chungTu);
+				return "redirect:/chungtu/phieuxuatkho/xem/" + chungTu.getMaCt();
+			} else {
+				chungTuDAO.themChungTuKho(chungTu);
+			}
+
+			return "redirect:/chungtu/phieuxuatkho/danhsach";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	private String chuanBiFormPhieuXuatKho(Model model, ChungTu chungTu) {
+		try {
+			model.addAttribute("mainFinanceForm", chungTu);
+
+			// Lấy danh sách các loại tiền
+			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
+			model.addAttribute("loaiTienDs", loaiTienDs);
+
+			// Lấy danh sách tài khoản, dùng cho bên nợ & có
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
+
+			// Lấy danh sách kho
+			List<KhoBai> khoBaiDs = hangHoaDAO.danhSachKhoBai();
+			model.addAttribute("khoBaiDs", khoBaiDs);
+
+			// Lấy danh sách hàng hóa
+			List<HangHoa> hangHoaDs = hangHoaDAO.danhSachHangHoa();
+			model.addAttribute("hangHoaDs", hangHoaDs);
+
+			model.addAttribute("tab", "tabCTPXK");
+			if (chungTu.getMaCt() > 0) {
+				// Đây là trường hợp sửa CT
+				return "suaPhieuXuatKho";
+			} else {
+				// Đây là trường hợp tạo mới CT
+				return "taoMoiPhieuXuatKho";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/chungtu/phieuxuatkho/xoa/{id}")
+	public String xoaPhieuXuatKho(@PathVariable("id") int maCt, Model model) {
+		try {
+			// Xóa phiếu thu có MA_CT là maCt, LOAI_CT là ChungTu.CHUNG_TU_PHIEU_XUAT_KHO
+			chungTuDAO.xoaChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_XUAT_KHO);
+
+			return "redirect:/chungtu/phieuxuatkho/danhsach";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
 	@RequestMapping("/danhsachbtkc")
 	public String danhSachButToanKetChuyen(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			// Lấy danh sách bút toán kết chuyển
 			List<ChungTu> butToanKetChuyenDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_BT_KC);
@@ -1042,8 +1381,7 @@ public class ChungTuController {
 	public String taoMoiButToanKetChuyen(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			ChungTu chungTu = new ChungTu();
 			chungTu.setLoaiCt(ChungTu.CHUNG_TU_BT_KC);

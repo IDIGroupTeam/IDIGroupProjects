@@ -1,4 +1,3 @@
-<%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
@@ -50,7 +49,7 @@
 	<table class="table table-bordered table-hover">
 		<thead>
 			<tr>
-				<th style="width: 80px;">Mã nhóm hàng hóa</th>
+				<!-- <th style="width: 100px;">Mã nhóm hàng hóa</th> -->
 				<th colspan="${nhomHangHoa.doSau}">Tên nhóm hàng hóa</th>
 			</tr>
 		</thead>
@@ -58,7 +57,7 @@
 			<c:forEach items="${nhomHangHoa.nhomHhDs}" var="nhomHangHoaCon"
 				varStatus="status">
 				<tr>
-					<td>${nhomHangHoaCon.maNhomHh}</td>
+					<%-- <td>${nhomHangHoaCon.maNhomHh}</td> --%>
 					<c:forEach begin="1" end="${nhomHangHoaCon.muc-1}">
 						<td></td>
 					</c:forEach>
@@ -82,7 +81,7 @@
 				<c:set var="doSau" value="${nhomHangHoa.doSau}" scope="request" />
 				<c:set var="nhomHangHoaConDs" value="${nhomHangHoaCon.nhomHhDs}"
 					scope="request" />
-				<jsp:include page="danhSachNhomHangHoaCon.jsp" />
+				<jsp:include page="nhomHangHoaConDs.jsp" />
 			</c:forEach>
 		</tbody>
 	</table>

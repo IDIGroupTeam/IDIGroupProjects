@@ -46,12 +46,11 @@
 
 <div>
 	<span class="pull-left heading4">BÁO CÓ</span>
-	<div class="btn-group btn-group-sm pull-right">
-		<a href="${url}/pdfbaoco/${chungTu.maCt}"
-			class="btn btn-info btn-sm"> <span
-			class="glyphicon glyphicon-download"></span> Xuất
+	<%-- 	<div class="btn-group btn-group-sm pull-right">
+		<a href="${url}/pdfbaoco/${chungTu.maCt}" class="btn btn-info btn-sm">
+			<span class="glyphicon glyphicon-download"></span> Xuất
 		</a>
-	</div>
+	</div> --%>
 </div>
 <br />
 <hr />
@@ -211,8 +210,10 @@
 <div class="row form-group">
 	<div class="col-sm-4">
 		<a href="${url}/danhsachbaoco" class="btn btn-info btn-sm">Danh
-			sách báo có</a> <a id="xoaNut" href="${url}/xoabaoco/${chungTu.maCt}"
-			class="btn btn-info btn-sm">Xóa</a> <a
-			href="${url}/suabaoco/${chungTu.maCt}" class="btn btn-info btn-sm">Sửa</a>
+			sách báo có</a> <a href="${url}/pdfbaoco/${chungTu.maCt}"
+			class="btn btn-info btn-sm">Xuất Pdf </a> <a id="xoaNut"
+			href="${url}/xoabaoco/${chungTu.maCt}" class="btn btn-info btn-sm">Xóa</a>
+		<a href="${url}/suabaoco/${chungTu.maCt}" class="btn btn-info btn-sm">Sửa</a>
+		<a href="${url}/taomoibaoco" class="btn btn-info btn-sm">Tạo mới</a>
 	</div>
 </div>

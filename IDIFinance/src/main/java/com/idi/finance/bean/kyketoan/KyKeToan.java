@@ -1,29 +1,39 @@
 package com.idi.finance.bean.kyketoan;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 public class KyKeToan {
-	private int maKykt;
-	private String tenKykt;
+	public static final int MO = 1;
+	public static final int DONG = 0;
+	public static final int MAC_DINH = 1;
+	public static final int KHONG_MAC_DINH = 0;
+
+	private int maKyKt;
+	private String tenKyKt;
 	private Date batDau;
 	private Date ketThuc;
 	private int trangThai;
+	private int macDinh;
+	private List<SoDuKy> soDuKyDs;
 
-	public int getMaKykt() {
-		return maKykt;
+	public int getMaKyKt() {
+		return maKyKt;
 	}
 
-	public void setMaKykt(int maKykt) {
-		this.maKykt = maKykt;
+	public void setMaKyKt(int maKyKt) {
+		this.maKyKt = maKyKt;
 	}
 
-	public String getTenKykt() {
-		return tenKykt;
+	public String getTenKyKt() {
+		return tenKyKt;
 	}
 
-	public void setTenKykt(String tenKykt) {
-		this.tenKykt = tenKykt;
+	public void setTenKyKt(String tenKyKt) {
+		this.tenKyKt = tenKyKt;
 	}
 
 	public Date getBatDau() {
@@ -50,11 +60,50 @@ public class KyKeToan {
 		this.trangThai = trangThai;
 	}
 
+	public int getMacDinh() {
+		return macDinh;
+	}
+
+	public void setMacDinh(int macDinh) {
+		this.macDinh = macDinh;
+	}
+
+	public List<SoDuKy> getSoDuKyDs() {
+		return soDuKyDs;
+	}
+
+	public void setSoDuKyDs(List<SoDuKy> soDuKyDs) {
+		this.soDuKyDs = soDuKyDs;
+	}
+
+	public void themSoDuKy(SoDuKy soDuKy) {
+		if (soDuKy == null)
+			return;
+
+		if (soDuKyDs == null)
+			soDuKyDs = new ArrayList<>();
+
+		if (!soDuKyDs.contains(soDuKy)) {
+			soDuKyDs.add(soDuKy);
+		}
+	}
+
+	public void themSoDuKy(List<SoDuKy> soDuKyDs) {
+		if (soDuKyDs == null)
+			return;
+
+		Iterator<SoDuKy> iter = soDuKyDs.iterator();
+		while (iter.hasNext()) {
+			SoDuKy soDuKy = iter.next();
+			themSoDuKy(soDuKy);
+		}
+	}
+
 	@Override
 	public String toString() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
 
-		String out = maKykt + " " + tenKykt + "  " + sdf.format(batDau) + " " + sdf.format(ketThuc) + " " + trangThai;
+		String out = tenKyKt + "  " + sdf.format(batDau) + " " + sdf.format(ketThuc);
 		return out;
 	}
 
@@ -70,7 +119,7 @@ public class KyKeToan {
 
 		KyKeToan item = (KyKeToan) obj;
 		try {
-			if (maKykt != item.getMaKykt()) {
+			if (maKyKt != item.getMaKyKt()) {
 				return false;
 			}
 		} catch (Exception e) {

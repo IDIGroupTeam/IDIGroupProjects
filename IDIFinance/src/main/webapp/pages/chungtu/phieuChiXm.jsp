@@ -46,12 +46,12 @@
 
 <div>
 	<span class="pull-left heading4">PHIẾU CHI</span>
-	<div class="btn-group btn-group-sm pull-right">
+	<%-- <div class="btn-group btn-group-sm pull-right">
 		<a href="${url}/pdfphieuchi/${chungTu.maCt}"
 			class="btn btn-info btn-sm"> <span
 			class="glyphicon glyphicon-download"></span> Xuất
 		</a>
-	</div>
+	</div> --%>
 </div>
 <br />
 <hr />
@@ -174,7 +174,7 @@
 					<td><fmt:formatNumber
 							value="${chungTu.taiKhoanNoDs[status.index].soTien.soTien}"
 							maxFractionDigits="2"></fmt:formatNumber>
-							${chungTu.taiKhoanNoDs[status.index].soTien.loaiTien.maLt}</td>
+						${chungTu.taiKhoanNoDs[status.index].soTien.loaiTien.maLt}</td>
 					<td>${chungTu.taiKhoanNoDs[status.index].lyDo}</td>
 
 					<!-- Phần ghi Có -->
@@ -184,7 +184,7 @@
 							<td><fmt:formatNumber
 									value="${chungTu.taiKhoanCoDs[status.index].soTien.soTien}"
 									maxFractionDigits="2"></fmt:formatNumber>
-									${chungTu.taiKhoanCoDs[status.index].soTien.loaiTien.maLt}</td>
+								${chungTu.taiKhoanCoDs[status.index].soTien.loaiTien.maLt}</td>
 						</c:when>
 						<c:otherwise>
 							<td></td>
@@ -200,10 +200,12 @@
 <div class="row form-group">
 	<div class="col-sm-4">
 		<a href="${url}/danhsachphieuchi" class="btn btn-info btn-sm">Danh
-			sách phiếu chi</a> <a id="xoaNut"
+			sách phiếu chi</a> <a href="${url}/pdfphieuchi/${chungTu.maCt}"
+			class="btn btn-info btn-sm">Xuất Pdf </a> <a id="xoaNut"
 			href="${url}/xoaphieuchi/${chungTu.maCt}" class="btn btn-info btn-sm">Xóa</a>
 		<a href="${url}/suaphieuchi/${chungTu.maCt}"
-			class="btn btn-info btn-sm">Sửa</a>
+			class="btn btn-info btn-sm">Sửa</a> <a href="${url}/taomoiphieuchi"
+			class="btn btn-info btn-sm">Tạo mới </a>
 	</div>
 </div>
 

@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 
-<ul class="nav nav-tabs nav-pills nav-justified">
+<ul class="main-tab nav nav-tabs nav-pills nav-justified">
 	<li class="dropdown"><a class="dropdown-toggle"
 		data-toggle="dropdown" href="#">Biểu đồ KPI<span class="caret"></span>
 	</a>
@@ -26,6 +26,14 @@
 			<li id="tabCTBN"><a href="${url}/danhsachbaono">Báo nợ</a></li>
 			<li id="tabCTKTTH"><a href="${url}/danhsachktth">Kế toán
 					tổng hợp</a></li>
+			<li id="tabCTPNK"><a href="${url}/chungtu/phieunhapkho/danhsach">Phiếu
+					nhập kho</a></li>
+			<li id="tabCTPXK"><a href="${url}/chungtu/phieuxuatkho/danhsach">Phiếu
+					xuất kho</a></li>
+			<li id="tabCTMH"><a href="${url}/chungtu/phieunhapkho/danhsach">Mua
+					hàng</a></li>
+			<li id="tabCTPBH"><a href="${url}/chungtu/phieuxuatkho/danhsach">Bán
+					hàng</a></li>
 		</ul></li>
 	<li class="dropdown"><a class="dropdown-toggle"
 		data-toggle="dropdown" href="#">Sổ kế toán<span class="caret"></span>
@@ -34,12 +42,10 @@
 			<li id="tabSKTNKC"><a href="${url}/soketoan/nhatkychung">Nhật
 					ký chung</a></li>
 			<li id="tabSKTSC"><a href="${url}/soketoan/socai">Sổ cái</a></li>
-			<%-- <li id="tabSKTSTM"><a href="${url}/soketoan/sotienmat">Sổ tiền mặt</a></li> --%>
 			<li id="tabSKTSCN"><a href="${url}/soketoan/socongno">Sổ
 					công nợ</a></li>
 			<li id="tabSKTSCN"><a href="${url}/soketoan/socongno">Bù trừ
 					công nợ</a></li>
-			<%-- <li id="tabSKTSTGNH"><a href="${url}/soketoan/sotienguinganhang">Sổ tiền gửi</a></li> --%>
 			<%-- <li id="tabBTKC"><a href="${url}/danhsachbtkc">Bút toán kết chuyển</a></li> --%>
 		</ul></li>
 	<li class="dropdown"><a class="dropdown-toggle"
@@ -55,7 +61,7 @@
 			<li><a href="#">Bảng lưu chuyển tiền tệ</a></li>
 
 		</ul></li>
-	<li class="dropdown"><a class="dropdown-toggle"
+	<%-- <li class="dropdown"><a class="dropdown-toggle"
 		data-toggle="dropdown" href="#">Nghiệp vụ<span class="caret"></span>
 	</a>
 		<ul class="dropdown-menu">
@@ -63,13 +69,14 @@
 					lý nghiệp vụ</a></li>
 			<li id="tabDSLV"><a href="${url}/congviec/linhvuc/danhsach">Lĩnh
 					vực</a></li>
-		</ul></li>
+		</ul></li> --%>
 	<li class="dropdown"><a class="dropdown-toggle"
 		data-toggle="dropdown" href="#">Quản trị<span class="caret"></span>
 	</a>
 		<ul class="dropdown-menu">
-			<li id="tabCNSDDK"><a href="#">Cập nhật số dư đầu kỳ</a></li>
-			<li id="tabKKT"><a href="#">Kỳ kế toán</a></li>
+			<li id="tabKKT"><a href="${url}/kyketoan/danhsach">Kỳ kế
+					toán</a></li>
+
 			<li class="divider"></li>
 			<li id="tabDSNT"><a href="#">Danh sách ngoại tệ</a></li>
 			<li id="tabDSBCDKT"><a href="${url}/cdkt/danhsachtaikhoan">Danh
@@ -77,10 +84,6 @@
 			<li id="tabDMTK"><a href="${url}/taikhoan/danhsach">Danh
 					sách tài khoản</a></li>
 
-			<%-- <li id="tabDSNCC"><a href="${url}/danhsachnhacungcap">Danh
-					sách nhà cung cấp</a></li> --%>
-			<%-- <li id="tabDSKH"><a href="${url}/danhsachkhachhang">Danh
-					sách khách hàng</a></li> --%>
 			<li class="divider"></li>
 			<li id="tabDSHH"><a href="${url}/hanghoa/danhsach">Danh sách
 					hàng hóa</a></li>
@@ -88,6 +91,9 @@
 					hàng hóa</a></li>
 			<li id="tabDSDVHH"><a href="${url}/hanghoa/donvi/danhsach">Đơn
 					vị tính</a></li>
+			<li id="tabDSK"><a href="${url}/hanghoa/kho/danhsach">Kho
+					bãi</a></li>
+
 			<li class="divider"></li>
 			<li id="tabDSNH"><a href="${url}/nganhang/danhsach">Danh
 					sách ngân hàng</a></li>

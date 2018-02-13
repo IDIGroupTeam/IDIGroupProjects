@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 
-<ul class="nav nav-tabs nav-pills nav-justified">
+<ul class="main-tab nav nav-tabs nav-pills nav-justified">
 	<li id="tabDSKH"><a href="${url}/danhsachkhachhang">Danh sách
 			khách hàng</a></li>
 	<li id="tabDSNCC"><a href="${url}/danhsachnhacungcap">Danh

@@ -46,12 +46,12 @@
 
 <div>
 	<span class="pull-left heading4">PHIẾU THU</span>
-	<div class="btn-group btn-group-sm pull-right">
+	<%-- <div class="btn-group btn-group-sm pull-right">
 		<a href="${url}/pdfphieuthu/${chungTu.maCt}"
 			class="btn btn-info btn-sm"> <span
 			class="glyphicon glyphicon-download"></span> Xuất
 		</a>
-	</div>
+	</div> --%>
 </div>
 <br />
 <hr />
@@ -201,9 +201,11 @@
 <div class="row form-group">
 	<div class="col-sm-4">
 		<a href="${url}/danhsachphieuthu" class="btn btn-info btn-sm">Danh
-			sách phiếu thu</a> <a id="xoaNut"
+			sách phiếu thu</a> <a href="${url}/pdfphieuthu/${chungTu.maCt}"
+			class="btn btn-info btn-sm">Xuất Pdf </a> <a id="xoaNut"
 			href="${url}/xoaphieuthu/${chungTu.maCt}" class="btn btn-info btn-sm">Xóa</a>
 		<a href="${url}/suaphieuthu/${chungTu.maCt}"
-			class="btn btn-info btn-sm">Sửa</a>
+			class="btn btn-info btn-sm">Sửa</a> <a href="${url}/taomoiphieuthu"
+			class="btn btn-info btn-sm">Tạo mới </a>
 	</div>
 </div>

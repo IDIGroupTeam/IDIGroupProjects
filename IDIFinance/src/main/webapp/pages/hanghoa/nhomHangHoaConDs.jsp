@@ -11,7 +11,7 @@
 	<c:when test="${not empty nhomHangHoaConDs and not empty doSau}">
 		<c:forEach items="${nhomHangHoaConDs}" var="nhomHangHoaCon">
 			<tr>
-				<td>${nhomHangHoaCon.maNhomHh}</td>
+				<%-- <td>${nhomHangHoaCon.maNhomHh}</td> --%>
 				<c:forEach begin="1" end="${nhomHangHoaCon.muc-1}">
 					<td></td>
 				</c:forEach>
@@ -30,6 +30,11 @@
 						</a>
 					</div></td>
 			</tr>
+
+			<c:set var="doSau" value="${doSau}" scope="request" />
+			<c:set var="nhomHangHoaConDs" value="${nhomHangHoaCon.nhomHhDs}"
+				scope="request" />
+			<jsp:include page="nhomHangHoaConDs.jsp" />
 		</c:forEach>
 	</c:when>
 </c:choose>

@@ -41,7 +41,7 @@
 	// Shorthand for $( document ).ready()
 	$(function() {
 		var currentTab = "${tab}";
-		$(".nav-tabs li").removeClass("active");
+		$(".main-tab li").removeClass("active");
 		$("#" + currentTab).addClass("active");
 		$("#" + currentTab).parent().parent().addClass("active");
 	});

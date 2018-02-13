@@ -1,10 +1,14 @@
 package com.idi.finance.bean.hanghoa;
 
-public class LoaiHangHoa {
+import com.idi.finance.bean.chungtu.Tien;
+
+public class HangHoa {
 	private int maHh;
 	private String tenHh;
 	private DonVi donVi;
 	private NhomHangHoa nhomHh;
+	private Tien giaBan;
+	private Tien giaMua;
 
 	public int getMaHh() {
 		return maHh;
@@ -38,6 +42,22 @@ public class LoaiHangHoa {
 		this.nhomHh = nhomHh;
 	}
 
+	public Tien getGiaBan() {
+		return giaBan;
+	}
+
+	public void setGiaBan(Tien giaBan) {
+		this.giaBan = giaBan;
+	}
+
+	public Tien getGiaMua() {
+		return giaMua;
+	}
+
+	public void setGiaMua(Tien giaMua) {
+		this.giaMua = giaMua;
+	}
+
 	@Override
 	public String toString() {
 		String out = maHh + "  " + tenHh;
@@ -50,22 +70,13 @@ public class LoaiHangHoa {
 			return false;
 		}
 
-		if (!(obj instanceof LoaiHangHoa)) {
+		if (!(obj instanceof HangHoa)) {
 			return false;
 		}
 
-		LoaiHangHoa item = (LoaiHangHoa) obj;
+		HangHoa item = (HangHoa) obj;
 		try {
 			if (maHh != item.getMaHh()) {
-				return false;
-			}
-
-			if (tenHh == null) {
-				if (item.getTenHh() != null)
-					return false;
-			} else if (item.getTenHh() == null) {
-				return false;
-			} else if (!tenHh.trim().equals(item.getTenHh().trim())) {
 				return false;
 			}
 		} catch (Exception e) {

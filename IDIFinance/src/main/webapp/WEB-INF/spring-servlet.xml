@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
 	<mvc:annotation-driven />
 	<mvc:resources mapping="/public/**" location="/public/" />
@@ -44,6 +45,11 @@
 	<bean id="nghiepVuValidator" class="com.idi.finance.validator.NghiepVuValidator" />
 	<bean id="nganHangValidator" class="com.idi.finance.validator.NganHangValidator" />
 	<bean id="nganHangTaiKhoanValidator" class="com.idi.finance.validator.NganHangTaiKhoanValidator" />
+	<bean id="kyKeToanValidator" class="com.idi.finance.validator.KyKeToanValidator" />
+	<bean id="donViValidator" class="com.idi.finance.validator.DonViValidator" />
+	<bean id="nhomHangHoaValidator" class="com.idi.finance.validator.NhomHangHoaValidator" />
+	<bean id="hangHoaValidator" class="com.idi.finance.validator.HangHoaValidator" />
+	<bean id="khoBaiValidator" class="com.idi.finance.validator.KhoBaiValidator" />
 
 	<!-- Config for upload file feature -->
 	<bean id="multipartResolver"
@@ -51,6 +57,9 @@
 		<!-- setting maximum upload size -->
 		<property name="maxUploadSize" value="2500000" />
 	</bean>
+
+	<bean id="dungChung" class="com.idi.finance.bean.DungChung"
+		init-method="init"></bean>
 
 	<!-- Config database connection -->
 	<bean id="dataSource"
@@ -105,6 +114,10 @@
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
+	<bean id="kyKeToanDAO" class="com.idi.finance.dao.impl.KyKeToanDAOImpl">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+
 	<bean id="hangHoaDAO" class="com.idi.finance.dao.impl.HangHoaDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
@@ -112,7 +125,7 @@
 	<bean id="diaChiDAO" class="com.idi.finance.dao.impl.DiaChiDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
-	
+
 	<bean id="nganHangDAO" class="com.idi.finance.dao.impl.NganHangDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>

@@ -1,4 +1,3 @@
-<%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
@@ -37,7 +36,7 @@
 	});
 </script>
 
-<h4>Danh sách đơn vị tính của hàng hóa</h4>
+<h4>Danh sách hàng hóa</h4>
 <div class="pull-right">
 	<a href="${url}/hanghoa/taomoi" class="btn btn-info btn-sm"> <span
 		class="glyphicon glyphicon-plus"></span> Tạo mới
@@ -55,23 +54,26 @@
 				<th>Tên hàng hóa</th>
 				<th>Đơn vị</th>
 				<th>Nhóm</th>
+				<th>Giá bán</th>
+				<th>Giá mua</th>
 				<th></th>
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach items="${loaiHangHoaDs}" var="loaiHangHoa"
-				varStatus="status">
+			<c:forEach items="${hangHoaDs}" var="hangHoa" varStatus="status">
 				<tr>
-					<td>${loaiHangHoa.maHh}</td>
-					<td>${loaiHangHoa.tenHh}</td>
-					<td>${loaiHangHoa.donVi.tenDv}</td>
-					<td>${loaiHangHoa.nhomHh.tenNhomHh}</td>
+					<td>${hangHoa.maHh}</td>
+					<td>${hangHoa.tenHh}</td>
+					<td>${hangHoa.donVi.tenDv}</td>
+					<td>${hangHoa.nhomHh.tenNhomHh}</td>
+					<th></th>
+					<th></th>
 					<td><div class="btn-group btn-group-sm">
-							<a href="${url}/hanghoa/sua/${loaiHangHoa.maHh}" class="btn"
+							<a href="${url}/hanghoa/sua/${hangHoa.maHh}" class="btn"
 								title="Sửa"> <span class="glyphicon glyphicon-edit"></span>
-							</a><a href="${url}/hanghoa/xoa/${loaiHangHoa.maHh}" class="btn"
-								title="Sửa" onclick="return xacNhanXoa(${loaiHangHoa.maHh});">
-								<span class="glyphicon glyphicon-remove"></span>
+							</a><a href="${url}/hanghoa/xoa/${hangHoa.maHh}" class="btn"
+								title="Sửa" onclick="return xacNhanXoa(${hangHoa.maHh});"> <span
+								class="glyphicon glyphicon-remove"></span>
 							</a>
 						</div></td>
 				</tr>

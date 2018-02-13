@@ -46,11 +46,11 @@
 
 <div>
 	<span class="pull-left heading4">PHIẾU KẾ TOÁN TỔNG HỢP</span>
-	<div class="btn-group btn-group-sm pull-right">
+	<%-- <div class="btn-group btn-group-sm pull-right">
 		<a href="${url}/pdfktth/${chungTu.maCt}" class="btn btn-info btn-sm">
 			<span class="glyphicon glyphicon-download"></span> Xuất
 		</a>
-	</div>
+	</div> --%>
 </div>
 <br />
 <hr />
@@ -209,10 +209,12 @@
 </div>
 
 <div class="row form-group">
-	<div class="col-sm-4">
+	<div class="col-sm-5">
 		<a href="${url}/danhsachktth" class="btn btn-info btn-sm">Danh
-			sách phiếu kế toán tổng hợp</a> <a id="xoaNut"
+			sách phiếu kế toán tổng hợp</a> <a href="${url}/pdfktth/${chungTu.maCt}"
+			class="btn btn-info btn-sm"> Xuất Pdf </a> <a id="xoaNut"
 			href="${url}/xoaktth/${chungTu.maCt}" class="btn btn-info btn-sm">Xóa</a>
 		<a href="${url}/suaktth/${chungTu.maCt}" class="btn btn-info btn-sm">Sửa</a>
+		<a href="${url}/taomoiktth" class="btn btn-info btn-sm">Tạo mới</a>
 	</div>
 </div>
