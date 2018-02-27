@@ -85,11 +85,11 @@ public class LeaveDAO extends JdbcDaoSupport {
 		String sql = hr.get("GET_LEAVE_TYPE").toString();
 		log.info("GET_LEAVE_TYPE query: " + sql);
 		Object[] params = new Object[] { leaveId };
-		System.err.println(leaveId + ":");
+		//System.err.println(leaveId + ":");
 		String leaveTypeName = "";
 		leaveTypeName = jdbcTmpl.queryForObject(sql, String.class, params);
 
-		System.err.println(leaveId + ": " + leaveTypeName);
+		//System.err.println(leaveId + ": " + leaveTypeName);
 
 		return leaveTypeName;
 
@@ -113,7 +113,7 @@ public class LeaveDAO extends JdbcDaoSupport {
 		float numberDayLeaveTaken = 0;
 		if(jdbcTmpl.queryForObject(sql, float.class, params) != null)
 			numberDayLeaveTaken = jdbcTmpl.queryForObject(sql, float.class, params);
-		System.err.println(year + "|" + id + "|" + numberDayLeaveTaken);
+		//System.err.println(year + "|" + id + "|" + numberDayLeaveTaken);
 		return numberDayLeaveTaken;
 	}
 
@@ -133,7 +133,7 @@ public class LeaveDAO extends JdbcDaoSupport {
 
 		float numberDayLeaveTaken = 0;
 		numberDayLeaveTaken = jdbcTmpl.queryForObject(sql, float.class, params);
-		System.err.println(year + "|" + id + "|" + numberDayLeaveTaken);
+		//System.err.println(year + "|" + id + "|" + numberDayLeaveTaken);
 		return numberDayLeaveTaken;
 	}
 
@@ -153,7 +153,7 @@ public class LeaveDAO extends JdbcDaoSupport {
 		float numberDayLeaveTaken = 0;
 		numberDayLeaveTaken = jdbcTmpl.queryForObject(sql, float.class, params);
 
-		System.err.println(year + "|" + id + "|" + numberDayLeaveTaken);
+		//System.err.println(year + "|" + id + "|" + numberDayLeaveTaken);
 
 		return numberDayLeaveTaken;
 	}
@@ -259,7 +259,7 @@ public class LeaveDAO extends JdbcDaoSupport {
 			countNumber = jdbcTmpl.queryForObject(sql, Integer.class, params);
 		else
 			countNumber = 0;
-		System.err.println("leaveType:" + leaveType + ", " + countNumber);
+		//System.err.println("leaveType:" + leaveType + ", " + countNumber);
 
 		return countNumber;
 	}
@@ -273,7 +273,7 @@ public class LeaveDAO extends JdbcDaoSupport {
 	 */
 	public void insertOrUpdateLeaveReport(LeaveReport leaveReport) throws Exception {
 		try {
-			log.info("Insert new or update leaveReport ....");
+			log.info(" Thêm mới/cập nhật thông tin ngày nghỉ ....");
 			String sql = hr.getProperty("UPDATE_LEAVE_REPORT").toString();
 			Object[] params = new Object[] { leaveReport.getQuataLeave(), leaveReport.getLeaveUsed(),
 					leaveReport.getLeaveRemain(), leaveReport.getSeniority(), leaveReport.getRestQuata(),

@@ -34,7 +34,7 @@ $(function() {
 							department : val
 						},
 						success : function(obj) {
-							employeeIdSel = "<option value='all'>Tất cả nhân viên</option>";
+							employeeIdSel = "<option value='0'>Tất cả nhân viên</option>";
 							for (i = 0; i < obj.length; i++) {
 								employeeIdSel += "<option value='" + obj[i].employeeId + "'>"
 										+ "Mã NV " + obj[i].employeeId +", "

@@ -41,7 +41,7 @@
 					<td nowrap="nowrap">${leaveReport.name}</td>
 					<td nowrap="nowrap">${leaveReport.joinDate}</td>
 					<td nowrap="nowrap">${leaveReport.department}</td>
-					<td>${leaveReport.seniority}</td>
+					<td nowrap="nowrap">${leaveReport.seniority} tháng</td>
 
 					<!-- dynamic generate begin  -->
 					<c:forEach var="leaveTypes" items="${leaveReport.leaveTypes}">

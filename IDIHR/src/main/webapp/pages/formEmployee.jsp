@@ -27,15 +27,15 @@
 				<tr>
 					<td><form:errors path="fullName" class="error-message" /></td>
 				</tr>
-				<%-- <tr>
+				<tr>
 					<td><form:errors path="email" class="error-message" /></td>
-				</tr> --%>
+				</tr>
 				<tr>
 					<td><form:errors path="gender" class="error-message" /></td>
 				</tr>
-				<%-- <tr>
+				<tr>
 					<td><form:errors path="loginAccount" class="error-message" /></td>
-				</tr> --%>
+				</tr>
 
 			</table>
 			<table class="table">
@@ -78,16 +78,16 @@
 								<img src="/IDIHR/public/images/avatar.gif" height="170px"
 									width="145px" />
 							</c:if></td>
-						<td bgcolor="#E6E6E6">Email:</td>
+						<td bgcolor="#E6E6E6">Email(*):</td>
 						<!-- can check duplicate  -->
-						<td><form:input path="email" maxlength="45"/></td>
+						<td><form:input path="email" required="required" maxlength="45"/></td>
 
 						<td bgcolor="#E6E6E6">T/T hôn nhân:</td>
 						<td><form:select path="maritalStatus">
 								<%-- <form:option value="" label="-Hôn nhân-" /> --%>
-								<form:option value="sigle" label="Độc thân" />
-								<form:option value="married" label="Đã lập gia đình" />
-								<form:option value="widowed" label="Góa" />
+								<form:option value="Độc thân" label="Độc thân" />
+								<form:option value="Đã lập gia đình" label="Đã lập gia đình" />
+								<form:option value="Guá" label="Góa" />
 							</form:select></td>
 
 						<%-- 
@@ -95,9 +95,9 @@
 						<td><form:input path="percentSocicalInsu" size="6" /></td> --%>
 					</tr>
 					<tr>
-						<td bgcolor="#E6E6E6">Account:</td>
+						<td bgcolor="#E6E6E6">Account(*):</td>
 						<!-- can check duplicate  -->
-						<td><form:input path="loginAccount" size="10" maxlength="45"/></td>
+						<td><form:input path="loginAccount" size="10" maxlength="45" required="required"/></td>
 						<td bgcolor="#E6E6E6">Trạng thái LĐ:</td>
 						<td><form:select path="workStatus">
 								<form:options items="${workStatusMap}" />
@@ -109,8 +109,8 @@
 						<td bgcolor="#E6E6E6">Giới tính:</td>
 						<td><form:select path="gender">
 								<%-- <form:option value="" label="-Giới tính-" /> --%>
-								<form:option value="male" label="Nam" />
-								<form:option value="female" label="Nữ" />
+								<form:option value="Nam" label="Nam" />
+								<form:option value="Nữ" label="Nữ" />
 							</form:select></td>
 						<td bgcolor="#E6E6E6">Chức vụ:</td>
 						<td><form:select path="jobTitle">

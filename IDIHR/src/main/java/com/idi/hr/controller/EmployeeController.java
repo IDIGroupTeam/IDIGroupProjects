@@ -94,8 +94,7 @@ public class EmployeeController {// extends BaseController {
 	}
 
 	@RequestMapping(value = "/listEmployeeSearch", method = RequestMethod.GET)
-	public String listEmployeeSearch(Model model, @RequestParam("searchValue") String searchValue,
-			final RedirectAttributes redirectAttributes) {
+	public String listEmployeeSearch(Model model, @RequestParam("searchValue") String searchValue) {
 		try {			
 			Date date = new Date();// your date
 			Calendar cal = Calendar.getInstance();
@@ -107,7 +106,7 @@ public class EmployeeController {// extends BaseController {
 			model.addAttribute("employeeForm", employeeForm);
 			List<EmployeeInfo> list = employeeDAO.getEmployeesBySearch(searchValue);
 			if (list.size() < 1)
-				redirectAttributes.addFlashAttribute("message", "Không có nhân viên nào khớp với thông tin: '" + searchValue + "'");
+				model.addAttribute("message", "Không có nhân viên nào khớp với thông tin: '" + searchValue + "'");
 			model.addAttribute("employees", list);
 			model.addAttribute("formTitle", "Kết quả tìm kiếm nhân viên");
 		} catch (Exception e) {
@@ -294,7 +293,7 @@ public class EmployeeController {// extends BaseController {
 			}
 			employeeDAO.insertOrUpdateEmployee(employeeInfo);
 			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Insert/Update employee successful!");
+			redirectAttributes.addFlashAttribute("message", "Thêm mới/cập nhật thông tin nhân viên thành công!");
 		} catch (Exception e) {
 			log.error(e, e);
 		}

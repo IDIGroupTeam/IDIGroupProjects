@@ -48,7 +48,7 @@
 					<td><c:out value="${employeeForm.maritalStatus}" /></td>
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Account(*):</td>
+					<td bgcolor="#E6E6E6">Account:</td>
 					<td><c:out value="${employeeForm.loginAccount}" /></td>
 					<td bgcolor="#E6E6E6">Trạng thái LĐ:</td>
 					<td><c:out value="${employeeForm.workStatus}" /></td>

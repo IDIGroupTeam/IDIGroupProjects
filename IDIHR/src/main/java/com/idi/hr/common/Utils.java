@@ -78,14 +78,14 @@ public class Utils {
 	
 	public static Map<String, String> workStatusMap() {
 		Map<String, String> workStatusMap = new LinkedHashMap<String, String>();
-		workStatusMap.put("Thu viec", "Thử việc");
-		workStatusMap.put("Thoi vu", "Thời vụ");
-		workStatusMap.put("Cong tac", "Cộng tác");
-		workStatusMap.put("Chinh thuc", "Chính thức");
-		workStatusMap.put("Nghi thai san", "Nghỉ thai sản");
-		workStatusMap.put("Nghi om", "Nghỉ ốm");
-		workStatusMap.put("Nghi khong luong", "Nghỉ không lương");
-		workStatusMap.put("Da thoi viec", "Đã thôi việc");
+		workStatusMap.put("Thử việc", "Thử việc");
+		workStatusMap.put("Thời vụ", "Thời vụ");
+		workStatusMap.put("Công tác", "Cộng tác");
+		workStatusMap.put("Chinh thức", "Chính thức");
+		workStatusMap.put("Nghỉ thai sản", "Nghỉ thai sản");
+		workStatusMap.put("Nghỉ ốm", "Nghỉ ốm");
+		workStatusMap.put("Nghỉ không lương", "Nghỉ không lương");
+		workStatusMap.put("Đã thôi việc", "Đã thôi việc");
 		return workStatusMap;
 	}
 }

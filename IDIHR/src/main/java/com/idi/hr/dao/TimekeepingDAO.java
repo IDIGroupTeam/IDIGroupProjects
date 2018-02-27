@@ -172,7 +172,8 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 						}						
 					}						
 					Object[] params = new Object[] { timekeeping.getEmployeeId(), timekeeping.getDate(),
-							timekeeping.getTimeIn(), timekeeping.getTimeOut(), timekeeping.getComeLateM(),
+							timekeeping.getTimeIn(),// tam thoi bo 26/2/2018
+							timekeeping.getTimeOut(), timekeeping.getComeLateM(),
 							timekeeping.getLeaveSoonM(), timekeeping.getComeLateA(),
 							timekeeping.getLeaveSoonA(), timekeeping.getComment() };
 					jdbcTmpl.update(sql, params);
