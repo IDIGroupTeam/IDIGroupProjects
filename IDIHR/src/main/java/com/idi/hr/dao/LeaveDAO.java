@@ -264,6 +264,38 @@ public class LeaveDAO extends JdbcDaoSupport {
 		return countNumber;
 	}
 
+	/**
+	 * get leave info for report
+	 * 
+	 * @param year
+	 * @param month
+	 * @param employeeIds
+	 * @param leaveType
+	 * @return
+	 * @throws Exception
+	 */
+
+	public int getLeaveReport(String year, String month, String employeeIds, String leaveType) throws Exception {
+		int countNumber = 0;
+		String sql = hr.getProperty("GET_LEAVE_INFO_FOR_REPORT").toString();
+		if (month != null && month.length() > 0)
+			sql = sql + " AND MONTH(DATE) = '" + month + "' ";
+
+		if (employeeIds != null && employeeIds.length() > 0)
+			sql = sql + " AND EMPLOYEE_ID IN (" + employeeIds + ")";
+
+		log.info("GET_LEAVE_INFO_FOR_REPORT query: " + sql);
+
+		Object[] params = new Object[] { year, leaveType };
+		if (jdbcTmpl.queryForObject(sql, Integer.class, params) != null)
+			countNumber = jdbcTmpl.queryForObject(sql, Integer.class, params);
+		else
+			countNumber = 0;
+		//System.err.println("leaveType:" + leaveType + ", " + countNumber);
+
+		return countNumber;
+	}
+	
 	// ---LEAVE_REPORT TABLE---//
 
 	/**

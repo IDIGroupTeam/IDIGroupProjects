@@ -53,19 +53,23 @@ $(function() {
 <title>Báo cáo theo các tiêu chí được chọn ...</title>
 </head>
 <body>
-	<a href="${url}/KPI/"><button class="btn btn-lg btn-primary btn-sm">Reset dữ liệu </button></a> <br><br>
+	<a href="${url}/KPI/"><button class="btn btn-lg btn-primary btn-sm">Khôi phục thông tin lựa chọn như ban đầu</button></a> <br><br>
 	<form:form action="generateReport" modelAttribute="reportForm" method="POST">		
 		<table class="table table-bordered">
 			<jsp:useBean id="now" class="java.util.Date" />
 			<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
 			<tr>
 				<td bgcolor="#FAFAFA" width="30%">Năm:</td>
-				<td><form:select path="yearReport">
-						<c:forEach begin="0" end="3" varStatus="loop">
+				<td><form:select path="yearReport" value="${currentYear}" >
+						<form:option value="${currentYear}" label="${currentYear}" />
+						<form:option value="${currentYear-1}" label="${currentYear-1}" />
+						<form:option value="${currentYear-2}" label="${currentYear-2}" />
+						<form:option value="${currentYear-3}" label="${currentYear-3}" />
+<%-- 						<c:forEach begin="0" end="3" varStatus="loop">
 							<c:set var="currentYear" value="${year - loop.index}" />
 							<option value="${currentYear}"
 								${form.yearReport == currentYear ? 'selected="selected"' : ''}>${currentYear}</option>
-						</c:forEach>
+						</c:forEach> --%>
 					</form:select></td>
 				<td bgcolor="#FAFAFA">Tháng:</td>
 				<td>

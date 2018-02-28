@@ -222,4 +222,40 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 		
 		return countNumber;
 	}
+	
+	/**
+	 * get time keeping for report, come late, leave soon
+	 * 
+	 * @param year
+	 * @param month
+	 * @param employeeIds
+	 * @param leaveType
+	 * @return
+	 * @throws Exception
+	 */
+	public String getTimekeepingReport(String year, String month, String employeeIds, String leaveType) throws Exception {
+		String countNumber = "";
+		String sqlCL = hr.getProperty("GET_TIMEKEEPING_COME_LATE_FOR_REPORT").toString();
+		String sqlLS = hr.getProperty("GET_TIMEKEEPING_LEAVE_SOON_FOR_REPORT").toString();
+		String sql="";
+		if(leaveType.equalsIgnoreCase("DM"))
+			sql = sqlCL;
+		else if(leaveType.equalsIgnoreCase("VS"))
+			sql = sqlLS;
+		if (month != null && month.length() > 0)
+			sql = sql + " AND MONTH(DATE) = '" + month + "' ";
+
+		if (employeeIds != null && employeeIds.length() > 0)
+			sql = sql + " AND EMPLOYEE_ID IN (" + employeeIds + ")";		
+
+		log.info("GET_TIMEKEEPING_FOR_REPORT query: " + sql);
+
+		Object[] params = new Object[] { year };
+		countNumber = jdbcTmpl.queryForObject(sql, String.class, params);
+		
+		System.err.println(leaveType + ": " + countNumber);
+		
+		return countNumber;
+	}
+	
 }

@@ -81,7 +81,13 @@ public class KPIController {
 			// get list leave type
 			Map<String, String> leaveTypeMap = this.leaveTypesForReport();
 			model.addAttribute("leaveTypeMap", leaveTypeMap);
-
+			
+			Date date = new Date();// your date
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			int currentYear = cal.get(Calendar.YEAR);
+			model.addAttribute("currentYear", currentYear);
+			
 			model.addAttribute("formTitle", "Tùy chọn dữ liệu cần cho báo cáo");
 			model.addAttribute("chart", "/charts/workStatusChart.png");
 		} catch (Exception e) {
@@ -97,19 +103,36 @@ public class KPIController {
 			final RedirectAttributes redirectAttributes) {
 		try {
 			// ArrayList<LeaveReport> list = new ArrayList<>();
-			//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");			
-			
+			// DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
 			Date date = new Date();// your date
-			//String currentDate = dateFormat.format(date);
+			// String currentDate = dateFormat.format(date);
 			Calendar cal = Calendar.getInstance();
-			cal.setTime(date);			
-			
+			cal.setTime(date);
+
 			String year = leaveReport.getYearReport();
-			System.err.println("year: " + year);
+			model.addAttribute("currentYear", year);
+			
+			log.info("Nam: " + year);
 			String month = leaveReport.getMonthReport();
 			int employeeId = leaveReport.getEmployeeId();
 			String typeReport = leaveReport.getLeaveTypeReport();
 			String department = leaveReport.getDepartment();
+			String employeeIds = "";
+			if (!department.equalsIgnoreCase("all")) {
+				List<EmployeeInfo> list = null;
+				list = employeeDAO.getEmployeesByDepartment(department);
+				EmployeeInfo employee = new EmployeeInfo();
+				for (int i = 0; i < list.size(); i++) {
+					employee = (EmployeeInfo) list.get(i);
+					Integer id = employee.getEmployeeId();
+					if(i==0) 
+						employeeIds = id.toString();
+					else
+						employeeIds = employeeIds + "," + id.toString();
+				}				
+				//System.err.println(employeeIds);
+			}
 			// get list department
 			Map<String, String> departmentMap = this.dataForDepartments();
 			model.addAttribute("departmentMap", departmentMap);
@@ -165,23 +188,30 @@ public class KPIController {
 			} else if (typeReport.equalsIgnoreCase("DM")) {
 				model.addAttribute("formTitle", "Biểu đồ thông kê số lần đi muộn");
 				Map<String, Integer> values = new LinkedHashMap<String, Integer>();
-				System.err.println("ve bieu do di muon " + month);
+				log.info("Ve bieu do di muon " + month);
+
 				if (month.isEmpty()) {
-					System.err.println("ve bieu do di muon khong chon thang " + cal.get(Calendar.YEAR) +"|" + Integer.parseInt(year));
+					log.info("Ve bieu do di muon khong chon thang " + cal.get(Calendar.YEAR) + "|" + Integer.parseInt(year));
 					int maxMonth = 12;
 					if (Integer.parseInt(year) <= cal.get(Calendar.YEAR)) {
-						if(Integer.parseInt(year) == cal.get(Calendar.YEAR)) //chi check voi nm hien tai
+						if (Integer.parseInt(year) == cal.get(Calendar.YEAR)) // chi check voi nm hien tai
 							maxMonth = cal.get(Calendar.MONTH) + 1;
-						//voi nhung nam truoc thi = 12
-						System.err.println("ve bieu do di muon, thang hien tail " + maxMonth);
-						for (int i = 1; i <= maxMonth; i++) {							
-							values.put("Tháng " + i, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year, String.valueOf(i), employeeId, typeReport)));
-							System.err.println("ve bieu do di muon " + month);
+						// voi nhung nam truoc thi = 12
+						log.info("Ve bieu do di muon, thang hien tai " + maxMonth);
+						for (int i = 1; i <= maxMonth; i++) {
+							if (department.equalsIgnoreCase("all"))
+								values.put("Tháng " + i, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year,	String.valueOf(i), employeeId, typeReport)));
+							else
+								values.put("Tháng " + i, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year,	String.valueOf(i), employeeIds, typeReport)));
+							log.info("Ve bieu do di muon " + month);
 						}
-					}						
+					}
 				} else {
-					System.err.println("ve bieu do di muon thang" + month);
-					values.put("Tháng " + month, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year, month, employeeId, typeReport)));
+					log.info("Ve bieu do di muon thang " + month);
+					if (department.equalsIgnoreCase("all"))
+						values.put("Tháng " + month, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year, month, employeeId, typeReport)));
+					else
+						values.put("Tháng " + month, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year, month, employeeIds, typeReport)));
 				}
 
 				// Create Dataset
@@ -192,7 +222,7 @@ public class KPIController {
 						"Năm " + year, // Category axis
 						"Số lần đi muộn", // Value axis
 						dataset, PlotOrientation.VERTICAL, true, true, false);
-				
+
 				try {
 					String rootPath = request.getSession().getServletContext().getRealPath("/");
 					File dir = new File(rootPath + "charts/");
@@ -210,25 +240,31 @@ public class KPIController {
 			} else if (typeReport.equalsIgnoreCase("VS")) {
 				model.addAttribute("formTitle", "Biểu đồ thông kê số lần về sớm ");
 				Map<String, Integer> values = new LinkedHashMap<String, Integer>();
-				System.err.println("ve bieu do ve som " + month);
+				log.info("Ve bieu do ve som " + month);
 				if (month.isEmpty()) {
-					System.err.println("ve bieu do ve som khong chon thang cua nam hien tai" + cal.get(Calendar.YEAR) +"|" + Integer.parseInt(year));
+					log.info("Ve bieu do ve som khong chon thang cua nam hien tai " + cal.get(Calendar.YEAR) + "|" + Integer.parseInt(year));
 					int maxMonth = 12;
 					if (Integer.parseInt(year) <= cal.get(Calendar.YEAR)) {
-						if(Integer.parseInt(year) == cal.get(Calendar.YEAR)) //chi check voi nm hien tai
+						if (Integer.parseInt(year) == cal.get(Calendar.YEAR)) // chi check voi nm hien tai
 							maxMonth = cal.get(Calendar.MONTH) + 1;
-						//voi nhung nam truoc thi = 12
-						System.err.println("ve bieu do ve som, thang hien tail " + maxMonth);
-						for (int i = 1; i <= maxMonth; i++) {							
-							values.put("Tháng " + i, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year, String.valueOf(i), employeeId, typeReport)));
-							System.err.println("ve bieu do ve som " + month);
+						// voi nhung nam truoc thi = 12
+						log.info("Ve bieu do ve som, thang hien tai " + maxMonth);
+						for (int i = 1; i <= maxMonth; i++) {
+							if (department.equalsIgnoreCase("all"))
+								values.put("Tháng " + i, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year,	String.valueOf(i), employeeId, typeReport)));
+							else
+								values.put("Tháng " + i, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year,	String.valueOf(i), employeeIds, typeReport)));
+							log.info("Ve bieu do ve som " + month);
 						}
-					}else {
+					} else {
 						model.addAttribute("message", "Vui lòng chọn thời gian báo cáo thích hợp ...");
 					}
 				} else {
-					System.err.println("ve bieu do ve som thang" + month);
-					values.put("Tháng " + month, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year, month, employeeId, typeReport)));
+					log.info("Ve bieu do ve som thang " + month);
+					if (department.equalsIgnoreCase("all"))
+						values.put("Tháng " + month, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year, month, employeeId, typeReport)));
+					else
+						values.put("Tháng " + month, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year, month, employeeIds, typeReport)));
 				}
 
 				// Create Dataset
@@ -239,8 +275,9 @@ public class KPIController {
 						"Năm " + year, // Category axis
 						"Số lần về sớm", // Value axis
 						dataset, PlotOrientation.VERTICAL, true, true, false);
-				
+
 				try {
+					
 					String rootPath = request.getSession().getServletContext().getRealPath("/");
 					File dir = new File(rootPath + "charts/");
 					if (!dir.exists()) {
@@ -250,39 +287,40 @@ public class KPIController {
 					File file = new File(dir + "/leaveSoonChart.png");
 					model.addAttribute("chart", "/charts/leaveSoonChart.png");
 					ChartUtilities.saveChartAsJPEG(file, chart, 750, 400);
+					
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
+				
 				return "reportByKPI";
-			} else if(typeReport.equalsIgnoreCase("TTLD")) {
+				
+			} else if (typeReport.equalsIgnoreCase("TTLD")) {
 				Map<String, String> items = Utils.workStatusMap();
 				Map<String, Integer> memberWorkStatus = new LinkedHashMap<String, Integer>();
 				for (Map.Entry<String, String> entry : items.entrySet()) {
 					// System.out.println("Item : " + entry.getKey() + " Count : " +
 					// entry.getValue());
-					memberWorkStatus.put(entry.getValue(),
-							employeeDAO.countMemberByWorkStatus(entry.getKey(), department));
+					memberWorkStatus.put(entry.getValue(), employeeDAO.countMemberByWorkStatus(entry.getKey(), department));
 				}
-				if (!leaveReport.getDepartment().equalsIgnoreCase("all"))
+				if (!department.equalsIgnoreCase("all"))
 					model.addAttribute("formTitle", "Biểu đồ trạng thái lao động phòng " + department);
 				else
-					model.addAttribute("formTitle", "Biểu đồ trạng thái lao động");
+					model.addAttribute("formTitle", "Biểu đồ trạng thái lao động tất cả phòng ban");
 
 				// drawPieChart
 				response.setContentType("image/png");
 				// Map<String, String> items = workStatusMap();
 				DefaultPieDataset dpd = new DefaultPieDataset();
 				for (Map.Entry<String, String> entry : items.entrySet()) {
-					// System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());
-					dpd.setValue(entry.getValue() + ":"
-							+ employeeDAO.countMemberByWorkStatus(entry.getKey(), department),
-							employeeDAO.countMemberByWorkStatus(entry.getKey(), department));
+					// System.out.println("Item : " + entry.getKey() + " Count : " +
+					// entry.getValue());
+					dpd.setValue(entry.getValue() + ":" + employeeDAO.countMemberByWorkStatus(entry.getKey(), department),	employeeDAO.countMemberByWorkStatus(entry.getKey(), department));
 				}
 				JFreeChart chart = null;
-				if (!leaveReport.getDepartment().equalsIgnoreCase("all"))
-					chart = createPieChart(dpd, "Biểu đồ trạng thái LĐ phòng " + department);
+				if (!department.equalsIgnoreCase("all"))
+					chart = createPieChart(dpd, "Biểu đồ trạng thái lao động phòng " + department);
 				else
-					chart = createPieChart(dpd, "Biểu đồ trạng thái LĐ");
+					chart = createPieChart(dpd, "Biểu đồ trạng thái lao động tất cả phòng ban");
 
 				try {
 					String rootPath = request.getSession().getServletContext().getRealPath("/");
@@ -298,62 +336,123 @@ public class KPIController {
 					ex.printStackTrace();
 				}
 				return "reportByKPI";
-			} else {
-				String leaveTypeName = leaveDAO.getLeaveType(typeReport); 			
 				
-				if(typeReport.startsWith("LT"))
-					model.addAttribute("formTitle", "Biểu đồ thông kê số giờ " + leaveTypeName);	
+			} else {
+				String leaveTypeName = leaveDAO.getLeaveType(typeReport);
+
+				if (typeReport.startsWith("LT"))
+					model.addAttribute("formTitle", "Biểu đồ thông kê số giờ " + leaveTypeName);
 				else
 					model.addAttribute("formTitle", "Biểu đồ thông kê số lần " + leaveTypeName);
-				
+
 				Map<String, Float> values = new LinkedHashMap<String, Float>();
-				//System.err.println("ve bieu do "+ typeReport + month);
+				// System.err.println("ve bieu do "+ typeReport + month);
 				if (month.isEmpty()) {
-					System.err.println("ve bieu do ve som khong chon thang " + cal.get(Calendar.YEAR) +"|" + Integer.parseInt(year));
+					log.info("Ve bieu do ve som khong chon thang " + cal.get(Calendar.YEAR) + "|"	+ Integer.parseInt(year));
 					int maxMonth = 12;
 					if (Integer.parseInt(year) <= cal.get(Calendar.YEAR)) {
-						if(Integer.parseInt(year) == cal.get(Calendar.YEAR)) //chi check voi nm hien tai
+						if (Integer.parseInt(year) == cal.get(Calendar.YEAR)) // chi check voi nm hien tai
 							maxMonth = cal.get(Calendar.MONTH) + 1;
-						//voi nhung nam truoc thi = 12
-						
-						//System.err.println("ve bieu do ve som, thang hien tail " + maxMonth);
-						for (int i = 1; i <= maxMonth; i++) {	
-							if(typeReport.startsWith("LT") || typeReport.startsWith("KCC")) { //|| leaveDAO.getLeaveReport(year,  String.valueOf(i), employeeId, typeReport) == 0) {
-								values.put("Tháng " + i, (float)leaveDAO.getLeaveReport(year,  String.valueOf(i), employeeId, typeReport));
-							}else {
-								if(leaveDAO.getLeaveReport(year, month, employeeId, typeReport) > 0) 
-									values.put("Tháng " + i, (float)leaveDAO.getLeaveReport(year,  String.valueOf(i), employeeId, typeReport)/8);
+						// voi nhung nam truoc thi = 12
+
+						// System.err.println("ve bieu do ve som, thang hien tail " + maxMonth);
+						for (int i = 1; i <= maxMonth; i++) {
+							if (typeReport.startsWith("LT") || typeReport.startsWith("KCC")) { // ||
+																								// leaveDAO.getLeaveReport(year,
+																								// String.valueOf(i),
+																								// employeeId,
+																								// typeReport) == 0) {
+								if(department.equalsIgnoreCase("all"))
+									values.put("Tháng " + i, (float) leaveDAO.getLeaveReport(year, String.valueOf(i), employeeId, typeReport));
 								else
-									values.put("Tháng " + i, (float)leaveDAO.getLeaveReport(year,  String.valueOf(i), employeeId, typeReport));
+									values.put("Tháng " + i, (float) leaveDAO.getLeaveReport(year, String.valueOf(i), employeeIds, typeReport));
+							} else {
+								if (leaveDAO.getLeaveReport(year, month, employeeId, typeReport) > 0)
+									if(department.equalsIgnoreCase("all"))
+										values.put("Tháng " + i, (float) leaveDAO.getLeaveReport(year, String.valueOf(i), employeeId, typeReport) / 8);
+									else
+										values.put("Tháng " + i, (float) leaveDAO.getLeaveReport(year, String.valueOf(i), employeeIds, typeReport) / 8);
+								else
+									if(department.equalsIgnoreCase("all"))
+										values.put("Tháng " + i, (float) leaveDAO.getLeaveReport(year, String.valueOf(i), employeeId, typeReport));
+									else
+										values.put("Tháng " + i, (float) leaveDAO.getLeaveReport(year, String.valueOf(i), employeeIds, typeReport));
 							}
-							//System.err.println("ve bieu do "+ typeReport + month);
+							// System.err.println("ve bieu do "+ typeReport + month);
 						}
-					}						
+					}
 				} else {
-					//neu muon co the ve them thang nien truoc va thang nien sau trong th chi chon 1 thang cu the, neu thang <12, thang = 12 chi 1 thang nien truoc
-					System.err.println("ve bieu do ve "+ typeReport + month);
-					if(typeReport.startsWith("LT") || typeReport.startsWith("KCC") || leaveDAO.getLeaveReport(year, month, employeeId, typeReport) == 0) {
-						if(Integer.parseInt(month) < 12 && Integer.parseInt(month) > 1) {
-							values.put("Tháng " + (Integer.parseInt(month) - 1), (float)leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) - 1)), employeeId, typeReport));
-							values.put("Tháng " + month, (float)leaveDAO.getLeaveReport(year, month, employeeId, typeReport));
-							values.put("Tháng " +  (Integer.parseInt(month) + 1), (float)leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) + 1)), employeeId, typeReport));
-						}else if(Integer.parseInt(month) == 1){
-							values.put("Tháng " + month, (float)leaveDAO.getLeaveReport(year, month, employeeId, typeReport));
-						}else {
-							values.put("Tháng " + (Integer.parseInt(month) - 1), (float)leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) - 1)), employeeId, typeReport));
-							values.put("Tháng " + month, (float)leaveDAO.getLeaveReport(year, month, employeeId, typeReport));							
-						}
-					}else {
-						if(leaveDAO.getLeaveReport(year, month, employeeId, typeReport) > 0) {
-							if(Integer.parseInt(month) < 12 && Integer.parseInt(month) > 1) {
-								values.put("Tháng " + (Integer.parseInt(month) - 1), (float)leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) - 1)), employeeId, typeReport)/8);
-								values.put("Tháng " + month, (float)leaveDAO.getLeaveReport(year, month, employeeId, typeReport)/8);
-								values.put("Tháng " +  (Integer.parseInt(month) + 1), (float)leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) + 1)), employeeId, typeReport)/8);
-							}else if(Integer.parseInt(month) == 1){
-								values.put("Tháng " + month, (float)leaveDAO.getLeaveReport(year, month, employeeId, typeReport));
+					// neu muon co the ve them thang nien truoc va thang nien sau trong th chi chon
+					// 1 thang cu the, neu thang < 12, thang = 12 chi 1 thang nien truoc
+					log.info("Ve bieu do ve " + typeReport + " thang "+ month);
+					if (typeReport.startsWith("LT") || typeReport.startsWith("KCC")
+							|| leaveDAO.getLeaveReport(year, month, employeeId, typeReport) == 0) {
+						if (Integer.parseInt(month) < 12 && Integer.parseInt(month) > 1) {
+							if(department.equalsIgnoreCase("all")) {
+								values.put("Tháng " + (Integer.parseInt(month) - 1), (float) leaveDAO.getLeaveReport(year,	String.valueOf((Integer.parseInt(month) - 1)), employeeId, typeReport));
+								values.put("Tháng " + month, (float) leaveDAO.getLeaveReport(year, month, employeeId, typeReport));
+								values.put("Tháng " + (Integer.parseInt(month) + 1), (float) leaveDAO.getLeaveReport(year,	String.valueOf((Integer.parseInt(month) + 1)), employeeId, typeReport));
 							}else {
-								values.put("Tháng " + (Integer.parseInt(month) - 1), (float)leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) - 1)), employeeId, typeReport)/8);
-								values.put("Tháng " + month, (float)leaveDAO.getLeaveReport(year, month, employeeId, typeReport)/8);							
+								values.put("Tháng " + (Integer.parseInt(month) - 1), (float) leaveDAO.getLeaveReport(year,	String.valueOf((Integer.parseInt(month) - 1)), employeeIds, typeReport));
+								values.put("Tháng " + month, (float) leaveDAO.getLeaveReport(year, month, employeeIds, typeReport));
+								values.put("Tháng " + (Integer.parseInt(month) + 1), (float) leaveDAO.getLeaveReport(year,	String.valueOf((Integer.parseInt(month) + 1)), employeeIds, typeReport));
+							}
+						} else if (Integer.parseInt(month) == 1) {
+							if(department.equalsIgnoreCase("all"))
+								values.put("Tháng " + month, (float) leaveDAO.getLeaveReport(year, month, employeeId, typeReport));
+							else
+								values.put("Tháng " + month, (float) leaveDAO.getLeaveReport(year, month, employeeIds, typeReport));
+						} else {
+							if(department.equalsIgnoreCase("all")) {
+								values.put("Tháng " + (Integer.parseInt(month) - 1), (float) leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) - 1)), employeeId, typeReport));
+								values.put("Tháng " + month, (float) leaveDAO.getLeaveReport(year, month, employeeId, typeReport));
+							}
+							else {
+								values.put("Tháng " + (Integer.parseInt(month) - 1), (float) leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) - 1)), employeeIds, typeReport));
+								values.put("Tháng " + month, (float) leaveDAO.getLeaveReport(year, month, employeeIds, typeReport));
+							}
+						}
+					} else {
+						if (leaveDAO.getLeaveReport(year, month, employeeId, typeReport) > 0) {
+							if (Integer.parseInt(month) < 12 && Integer.parseInt(month) > 1) {
+								if(department.equalsIgnoreCase("all")) {
+									values.put("Tháng " + (Integer.parseInt(month) - 1),
+											(float) leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) - 1)), employeeId, typeReport) / 8);
+									values.put("Tháng " + month,
+											(float) leaveDAO.getLeaveReport(year, month, employeeId, typeReport) / 8);
+									values.put("Tháng " + (Integer.parseInt(month) + 1),
+											(float) leaveDAO.getLeaveReport(year,
+													String.valueOf((Integer.parseInt(month) + 1)), employeeId, typeReport)	/ 8);
+								}else {
+									values.put("Tháng " + (Integer.parseInt(month) - 1),
+											(float) leaveDAO.getLeaveReport(year, String.valueOf((Integer.parseInt(month) - 1)), employeeIds, typeReport) / 8);
+									values.put("Tháng " + month,
+											(float) leaveDAO.getLeaveReport(year, month, employeeIds, typeReport) / 8);
+									values.put("Tháng " + (Integer.parseInt(month) + 1),
+											(float) leaveDAO.getLeaveReport(year,
+													String.valueOf((Integer.parseInt(month) + 1)), employeeIds, typeReport)	/ 8);
+								}									
+							} else if (Integer.parseInt(month) == 1) {
+								if(department.equalsIgnoreCase("all"))
+									values.put("Tháng " + month,
+											(float) leaveDAO.getLeaveReport(year, month, employeeId, typeReport));
+								else
+									values.put("Tháng " + month,
+											(float) leaveDAO.getLeaveReport(year, month, employeeIds, typeReport));
+							} else {
+								if(department.equalsIgnoreCase("all")) {
+									values.put("Tháng " + (Integer.parseInt(month) - 1),
+											(float) leaveDAO.getLeaveReport(year,
+													String.valueOf((Integer.parseInt(month) - 1)), employeeId, typeReport)	/ 8);
+									values.put("Tháng " + month,
+											(float) leaveDAO.getLeaveReport(year, month, employeeId, typeReport) / 8);
+								}else {
+									values.put("Tháng " + (Integer.parseInt(month) - 1),
+											(float) leaveDAO.getLeaveReport(year,
+													String.valueOf((Integer.parseInt(month) - 1)), employeeIds, typeReport)	/ 8);
+									values.put("Tháng " + month,
+											(float) leaveDAO.getLeaveReport(year, month, employeeIds, typeReport) / 8);
+								}
 							}
 						}
 					}
@@ -364,17 +463,17 @@ public class KPIController {
 
 				// Create chart
 				JFreeChart chart = null;
-				if(typeReport.startsWith("LT"))
+				if (typeReport.startsWith("LT"))
 					chart = ChartFactory.createBarChart("Biểu đồ thông kê số giờ " + leaveTypeName, // Chart Title
-					"Năm " + year, // Category axis
-					"Số giờ " + leaveTypeName, // Value axis
-					dataset, PlotOrientation.VERTICAL, true, true, false);	
+							"Năm " + year, // Category axis
+							"Số giờ " + leaveTypeName, // Value axis
+							dataset, PlotOrientation.VERTICAL, true, true, false);
 				else
 					chart = ChartFactory.createBarChart("Biểu đồ thông kê số lần " + leaveTypeName, // Chart Title
-					"Năm " + year, // Category axis
-					"Số lần " + leaveTypeName, // Value axis
-					dataset, PlotOrientation.VERTICAL, true, true, false);
-				
+							"Năm " + year, // Category axis
+							"Số lần " + leaveTypeName, // Value axis
+							dataset, PlotOrientation.VERTICAL, true, true, false);
+
 				try {
 					String rootPath = request.getSession().getServletContext().getRealPath("/");
 					File dir = new File(rootPath + "charts/");
@@ -388,8 +487,8 @@ public class KPIController {
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
-				return "reportByKPI";				
-			}	
+				return "reportByKPI";
+			}
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -471,33 +570,33 @@ public class KPIController {
 
 	private CategoryDataset createDataset(Map<String, Float> values) {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		
+
 		for (Map.Entry<String, Float> entry : values.entrySet()) {
 			System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());
-			dataset.addValue(entry.getValue(), entry.getKey(), "" );
+			dataset.addValue(entry.getValue(), entry.getKey(), "");
 		}
 		return dataset;
 	}
-	
+
 	private CategoryDataset createDatasetI(Map<String, Integer> values) {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		
+
 		for (Map.Entry<String, Integer> entry : values.entrySet()) {
 			System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());
 			dataset.addValue(entry.getValue(), entry.getKey(), "");
 		}
 		return dataset;
 	}
-	
-	//For Ajax
+
+	// For Ajax
 	@RequestMapping("/KPI/selection")
-	public @ResponseBody List<EmployeeInfo> employeesByDepartment(@RequestParam("department") String department){
+	public @ResponseBody List<EmployeeInfo> employeesByDepartment(@RequestParam("department") String department) {
 		List<EmployeeInfo> list = null;
-		if (!department.equalsIgnoreCase("all")) 
-			list = employeeDAO.getEmployeesByDepartment(department);		
+		if (!department.equalsIgnoreCase("all"))
+			list = employeeDAO.getEmployeesByDepartment(department);
 		else
-			list = employeeDAO.getEmployees();		
-		
+			list = employeeDAO.getEmployees();
+
 		return list;
 	}
 }
