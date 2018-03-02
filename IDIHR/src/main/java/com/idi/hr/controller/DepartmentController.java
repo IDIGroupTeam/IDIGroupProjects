@@ -33,6 +33,7 @@ import com.idi.hr.bean.Department;
 import com.idi.hr.bean.EmployeeInfo;
 import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
+import com.idi.hr.form.EmployeeForm;
 
 @Controller
 public class DepartmentController {
@@ -173,6 +174,8 @@ public class DepartmentController {
 		try {
 			List<EmployeeInfo> list = employeeDAO.getEmployeesByDepartment(departmentId);
 			model.addAttribute("employees", list);
+			EmployeeForm employeeForm = new EmployeeForm();
+			model.addAttribute("employeeForm", employeeForm);
 			model.addAttribute("formTitle", "Danh sách nhân viên phòng " + departmentId);
 		} catch (Exception e) {
 			log.error(e, e);
