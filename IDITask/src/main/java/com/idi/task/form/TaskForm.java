@@ -38,13 +38,21 @@ public class TaskForm implements Serializable{
 	
 	//For comment
 	private int commentIndex;
-	//private int taskId;
 	private int commentedBy;
 	private Timestamp commentTime;
 	private String content;	
 	
 	private List<Task> listComment;
 
+	// For searching
+	private String searchValue;
+	
+	//Paging
+	private int pageIndex;
+	private int totalRecords;
+	private int numberRecordsOfPage;
+	private int totalPages;
+	
 	public int getTaskId() {
 		return taskId;
 	}
@@ -259,6 +267,46 @@ public class TaskForm implements Serializable{
 
 	public void setListComment(List<Task> listComment) {
 		this.listComment = listComment;
+	}
+
+	public String getSearchValue() {
+		return searchValue;
+	}
+
+	public void setSearchValue(String searchValue) {
+		this.searchValue = searchValue;
+	}
+
+	public int getPageIndex() {
+		return pageIndex;
+	}
+
+	public void setPageIndex(int pageIndex) {
+		this.pageIndex = pageIndex;
+	}
+
+	public int getTotalRecords() {
+		return totalRecords;
+	}
+
+	public void setTotalRecords(int totalRecords) {
+		this.totalRecords = totalRecords;
+	}
+
+	public int getNumberRecordsOfPage() {
+		return numberRecordsOfPage;
+	}
+
+	public void setNumberRecordsOfPage(int numberRecordsOfPage) {
+		this.numberRecordsOfPage = numberRecordsOfPage;
+	}
+
+	public int getTotalPages() {
+		return totalPages;
+	}
+
+	public void setTotalPages(int totalPages) {
+		this.totalPages = totalPages;
 	}	
 	
 }

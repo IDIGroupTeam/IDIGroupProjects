@@ -15,7 +15,9 @@ public class Task implements Serializable {
 	private String taskName;
 	private int createdBy;
 	private int ownedBy;
+	private String ownerName;
 	private int secondOwned;
+	private String subscriber;
 	private int verifyBy;
 	private int updateId; // auto not edit show only 
 	private Timestamp updateTS;
@@ -38,16 +40,18 @@ public class Task implements Serializable {
 
 	}
 
-	public Task(int taskId, String taskName, int createdBy, int ownedBy, int secondOwned, int verifyBy, int updateId, 
-			Timestamp updateTS,	int resolvedBy, Timestamp creationDate, Date dueDate, Timestamp resolutionDate,
-			String type, String area, String priority, String status, String plannedFor, String timeSpent,
-			String estimate, String timeSpentType,String estimateTimeType, String description) {
+	public Task(int taskId, String taskName, int createdBy, int ownedBy, String ownerName, int secondOwned, String subscriber,
+			int verifyBy, int updateId, Timestamp updateTS,	int resolvedBy, Timestamp creationDate, Date dueDate, 
+			Timestamp resolutionDate, String type, String area, String priority, String status, String plannedFor, 
+			String timeSpent, String estimate, String timeSpentType, String estimateTimeType, String description) {
 
 		this.taskId = taskId;
 		this.taskName = taskName;
 		this.createdBy = createdBy;
 		this.ownedBy = ownedBy;
+		this.ownerName = ownerName;
 		this.secondOwned = secondOwned;
+		this.subscriber = subscriber;
 		this.verifyBy = verifyBy;
 		this.updateId = updateId;
 		this.updateTS = updateTS;
@@ -99,12 +103,27 @@ public class Task implements Serializable {
 		return ownedBy;
 	}
 
+	public String getOwnerName() {
+		return ownerName;
+	}
+
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
+	}
+
 	public int getSecondOwned() {
 		return secondOwned;
 	}
 
 	public void setSecondOwned(int secondOwned) {
 		this.secondOwned = secondOwned;
+	}
+	public String getSubscriber() {
+		return subscriber;
+	}
+
+	public void setSubscriber(String subscriber) {
+		this.subscriber = subscriber;
 	}
 
 	public int getVerifyBy() {

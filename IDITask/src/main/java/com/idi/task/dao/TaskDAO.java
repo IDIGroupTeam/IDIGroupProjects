@@ -1,6 +1,8 @@
 package com.idi.task.dao;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.sql.DataSource;
 
@@ -13,6 +15,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import com.idi.task.bean.Task;
 import com.idi.task.bean.TaskComment;
 import com.idi.task.common.PropertiesManager;
+import com.idi.task.mapper.MailListMapping;
 import com.idi.task.mapper.TaskCommentMapper;
 import com.idi.task.mapper.TaskMapper;
 
@@ -117,8 +120,10 @@ public class TaskDAO extends JdbcDaoSupport {
 			//	task.setResolutionDate("");
 			//	task.setResolvedBy("");
 			//}
-			
-			System.err.println(task.getTaskName() +"|"+ task.getCreatedBy() +"|"+ task.getOwnedBy() +"|"+ 
+			if(task.getTimeSpent() != null && task.getTimeSpent().length() == 0)
+				task.setTimeSpent(null);
+			System.err.println(task.getTaskName()  +"|"+  task.getOwnedBy() +"| est type "+  task.getEstimateTimeType() +"| spent type "+
+					task.getTimeSpentType() +"|"+
 					task.getDueDate() +"|"+ task.getSecondOwned() + "|" + task.getVerifyBy() +"|"+ 
 					task.getType() +"|"+ task.getArea() +"|"+ task.getPriority() +"|"+ task.getPlannedFor() +"|"+
 					task.getTimeSpent() +"|"+ task.getEstimate() +"|"+ task.getDescription() +"|"+ task.getTaskId());
@@ -135,7 +140,67 @@ public class TaskDAO extends JdbcDaoSupport {
 			throw e;
 		}
 	}
+	
+	/**
+	 * Get tasks from DB by search
+	 * @param search value
+	 * @return List of task
+	 * @throws Exception
+	 */
+	public List<Task> getTasksBySearch(String value) {
+		String sql = properties.getProperty("GET_TASKS_BY_SEARCH").toString();
+		log.info("GET_TASKS_BY_SEARCH query: " + sql);
+		value = "%" + value + "%";
+		Object[] params = new Object[] {value, value, value, value, value};
+		TaskMapper mapper = new TaskMapper();
 
+		List<Task> list = jdbcTmpl.query(sql, params, mapper);
+
+		return list;
+	}
+	
+	/**
+	 * get list id of who related this task
+	 * @param taskId
+	 * @return
+	 */
+	private String getRelatedIds(int taskId) {
+		String sql = properties.getProperty("GET_RELATED_IDS").toString();
+		log.info("GET_RELATED_IDS query: " + sql);
+		MailListMapping mapper = new MailListMapping();
+		Object[] params = new Object[] {taskId};		
+		
+		String listIds = jdbcTmpl.queryForObject(sql, params, mapper);
+		System.err.println(listIds);
+		return listIds;
+	}
+	
+	/**
+	 * Get list email
+	 * @param taskId
+	 * @return list email address
+	 */
+	public List<String> getMailList(int taskId){
+		String ids = getRelatedIds(taskId);
+		String sql = properties.getProperty("GET_EMAIL_LIST").toString();
+		log.info("GET_EMAIL_LIST query: " + sql);
+		List<String> list = new ArrayList<String>();		
+		StringTokenizer st = new StringTokenizer(ids, ",");
+		while (st.hasMoreElements()) {
+			String id = st.nextToken();
+			//System.err.println("id"+id);
+			if(id != null && !id.equalsIgnoreCase("0") && !id.equalsIgnoreCase("null")) {
+				Object[] params = new Object[] {id};	
+				String email = jdbcTmpl.queryForObject(sql, params, String.class);
+				//System.err.println("email"+email);
+				list.add(email);
+			}
+		}		
+		//System.err.println("sql: "+jdbcTmpl.toString());
+		//System.err.println(list);
+		return list;
+	}
+	
 	//------------------- Task comment ------------------//
 	
 	/**

@@ -17,7 +17,9 @@ public class TaskMapper implements RowMapper<Task> {
 		String taskName = rs.getString("TASK_NAME");
 		int createdBy = rs.getInt("CREATED_BY");
 		int ownedBy = rs.getInt("OWNED_BY");
+		String ownerName = rs.getString("FULL_NAME");
 		int secondOwned = rs.getInt("SECOND_OWNER");
+		String subscriber = rs.getString("SUBSCRIBER");
 		int verifyBy = rs.getInt("VERIFY_BY");
 		int updateId = rs.getInt("UPDATE_ID");
 		Timestamp updateTS = rs.getTimestamp("UPDATE_TS");
@@ -36,7 +38,7 @@ public class TaskMapper implements RowMapper<Task> {
 		String estimateTimeType = rs.getString("ESTIMATE_TIME_TYPE");//h/d/w/m
 		String description =rs.getString("DESCRIPTION");
 
-		return new Task(taskId, taskName, createdBy, ownedBy, secondOwned, verifyBy, updateId, updateTS, resolvedBy, creationDate,
+		return new Task(taskId, taskName, createdBy, ownedBy, ownerName, secondOwned, subscriber, verifyBy, updateId, updateTS, resolvedBy, creationDate,
 				dueDate, resolutionDate, type, area, priority, status, plannedFor, timeSpent, estimate, timeSpentType, estimateTimeType, description);
 	}
 

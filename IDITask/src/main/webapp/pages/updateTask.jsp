@@ -8,11 +8,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<script src="${url}/public/js/bootstrap-autosize.js"></script>
-<link rel="bootstrap-autosize"
-	href="${url}/public/css/bootstrap-autosize.css" />
+
+<link rel="bootstrap-autosize" href="${url}/public/css/bootstrap-autosize.css" />
+<link rel="stylesheet" href="${url}/public/css/jquery-ui.css">
+<link rel="stylesheet" href="${url}/public/css/style.css">
 
 <!-- Initialize the plugin: -->
+<script src="${url}/public/js/bootstrap-autosize.js"></script>
+<script src="${url}/public/js/jquery-ui.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript">
 	$(function() {
@@ -71,6 +74,23 @@
 			append : "\n"
 		});
 	});
+	
+/*     Spring.addDecoration(new Spring.AjaxEventDecoration({                           
+        elementId: 'subcribersPopup',  
+        formId: 'taskForm',  
+        event: 'onclick',  
+        popup: true ,
+        params: {fragments: "taskForm"}
+	})); 
+    
+    function openPopupPage() {  
+        window.location.href = '${url}/updateSubscriber&taskId=${taskForm.taskId}';  
+     } */
+     
+     $(function() {
+    	  $( "#tabs" ).tabs();
+    	});
+     
 </script>
 
 <title>Tập đoàn IDI - Quản lý công việc</title>
@@ -83,13 +103,10 @@
 </style>
 </head>
 <body>
-	<a href="${pageContext.request.contextPath}/"><button
-			class="btn btn-lg btn-primary btn-sm">Quay lại danh sách
-			công việc</button></a><br/><br/>
-	<form:form modelAttribute="taskForm" method="POST" action="updateTask"
-		enctype="multipart/form-data">
-		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu"
-			name="Lưu" />
+	<a href="${pageContext.request.contextPath}/">
+	<button	class="btn btn-lg btn-primary btn-sm">Quay lại danh sách công việc</button></a><br/><br/>
+	<form:form modelAttribute="taskForm" method="POST" action="updateTask" enctype="multipart/form-data">
+		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" name="Lưu" />
 		<br />
 		<br />
 		<form:hidden path="taskId" />
@@ -117,7 +134,15 @@
 							required="required" size="110" class="form-control animated" /></td>
 				</tr>
 			</tbody>
-		</table>
+		</table>		
+
+<div id="tabs">
+  <ul>
+    <li class="list-group-item list-group-item-primary"><a href="#overview">Thông tin chung</a></li>
+    <li class="list-group-item list-group-item-secondary"><a href="#links">Danh sách công việc và người liên quan</a></li>
+  </ul>
+  <div id="overview">	
+		
 		<br />
 		<table class="table table-bordered">
 			<tbody>
@@ -131,6 +156,7 @@
 					<td><form:input path="plannedFor" type="Month"
 							class="form-control animated" /></td>
 				</tr>
+				<div class="form-group row">
 				<tr>
 					<td bgcolor="#FAFAFA">Độ ưu tiên:</td>
 					<td><form:select path="priority" class="form-control animated">
@@ -146,22 +172,24 @@
 							<form:option value="9" label="9" />
 							<form:option value="10" label="10" />
 						</form:select></td>
-
+					
 					<td bgcolor="#FAFAFA">Thời gian ước lượng để làm:</td>
-					<td><form:input path="estimate" type="number" /> <form:select
-							path="estimateTimeType">
+					<td><form:input path="estimate" type="number" class="col-xs-4"/> &nbsp;
+						<form:select path="estimateTimeType">
 							<form:option value="m" label="Phút" />
-							<form:option value="h" label="Giờ" />
+							<form:option value="h" label="Giờ" />														
 							<form:option value="d" label="Ngày" />
 							<form:option value="w" label="Tuần" />
 						</form:select></td>
+				
 				</tr>
+				</div>
 				<tr>
 					<td bgcolor="#FAFAFA"></td>
 					<td></td>
 					<td bgcolor="#FAFAFA">Thời gian đã làm:</td>
-					<td><form:input path="timeSpent" type="number" /> <form:select
-							path="timeSpentType">
+					<td><form:input path="timeSpent" type="number" class="col-xs-4"/> &nbsp;
+						<form:select path="timeSpentType">
 							<form:option value="m" label="Phút" />
 							<form:option value="h" label="Giờ" />
 							<form:option value="d" label="Ngày" />
@@ -208,6 +236,12 @@
 							</c:forEach>
 						</form:select></td>
 				</tr>
+<!-- 				<tr>
+					<td bgcolor="#FAFAFA">Những người liên quan:</td>
+					<td colspan="3"> truongnv, tuyen px, haitd, anhnv, xxx, yyy&nbsp; 
+					<input class="btn btn-lg btn-primary btn-sm" type="button" name="subscriber" 
+						id="subscribersPopup" value="Cập nhật ds" onclick="openPopupPage()" /></td>
+				</tr> -->
 				<tr>
 					<td bgcolor="#FAFAFA">Mô tả:</td>
 					<td colspan="3"><form:textarea path="description" cols="110"
@@ -215,10 +249,11 @@
 				</tr>
 			</tbody>
 		</table>
+		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" name="Lưu" /> <br/><br/>
 		<table class="table table-bordered">
 			<tbody>
 				<tr>
-					<td> <b>Thảo luận </b></td>
+					<td style="background: infobackground;"> <b>Thảo luận </b></td>
 				</tr>
 				<tr>
 					<td><form:textarea path="content" class="form-control animatedArea" rows="3" /></td>
@@ -226,7 +261,7 @@
 				<c:forEach var="taskComment" items="${listComment}">
 				<tr>
 					<c:if test="${taskComment.commentedBy == 0}">
-						<td>${taskComment.commentIndex}.&nbsp;<b style="color: blue;"> Cần xong phân quền mới có thông tin </b> &nbsp;${taskComment.commentTime}</td>
+						<td>${taskComment.commentIndex}.&nbsp;<b style="color: blue;"> Cần xong phân quền mới có thông tin người comment</b> &nbsp;${taskComment.commentTime}</td>
 					</c:if>
 					<c:if test="${taskComment.commentedBy > 0}">
 						<td>${taskComment.commentIndex}.&nbsp;${taskComment.commentedBy}&nbsp;${taskComment.commentTime}</td>
@@ -237,8 +272,12 @@
 				</tr>
 			</c:forEach>
 			</tbody>
-		</table>		
-		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" name="Lưu" />
+		</table>	
+		</div>
+		 <div id="overview">
+		 </div>
+		 </div>
+		 			
 	</form:form>
 	<br/>
 		<a href="${pageContext.request.contextPath}/"><button
