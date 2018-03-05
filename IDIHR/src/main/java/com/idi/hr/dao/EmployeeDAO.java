@@ -60,7 +60,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	}
 	
 	/**
-	 * get employee by employeeId
+	 * Checking account existing or not
 	 * 
 	 * @param account
 	 * @return int

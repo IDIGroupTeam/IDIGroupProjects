@@ -1,8 +1,10 @@
 package com.idi.hr.dao;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.mail.internet.MimeMessage;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
@@ -10,6 +12,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
 import com.idi.hr.bean.Timekeeping;
 import com.idi.hr.common.PropertiesManager;
@@ -20,6 +24,9 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	private static final Logger log = Logger.getLogger(TimekeepingDAO.class.getName());
 
 	private JdbcTemplate jdbcTmpl;
+	
+	@Autowired
+	private JavaMailSender mailSender;
 
 	public JdbcTemplate getJdbcTmpl() {
 		return jdbcTmpl;
@@ -94,6 +101,26 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 
 	}
 	
+	
+	/**
+	 * Checking is employee or not
+	 * 
+	 * @param id, name
+	 * @return int
+	 *
+	 */
+	public int isEmployee(int id, String name) {
+
+		String sql = hr.get("IS_EMPLOYEE").toString();
+		log.info("IS_EMPLOYEE query: " + sql);
+		Object[] params = new Object[] { id, name };
+		
+		int number = jdbcTmpl.queryForObject(sql, Integer.class, params);
+		
+		return number;
+	}
+	
+	
 	/**
 	 * Insert list Timekeeping into database
 	 * 
@@ -116,12 +143,29 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 								+ timekeepingDTO.getDate() + ", check in time=" + timekeepingDTO.getTimeIn()
 								+ " is existing, do not insert ...");
 					}else {
-						System.err.println("insert Ma NV: " + timekeepingDTO.getEmployeeId() + "|" + timekeepingDTO.getDate() + "|" + timekeepingDTO.getTimeIn());
-						Object[] params = new Object[] { timekeepingDTO.getEmployeeId(), timekeepingDTO.getDate(),
-								timekeepingDTO.getTimeIn(), timekeepingDTO.getTimeOut(), timekeepingDTO.getComeLateM(),
-								timekeepingDTO.getLeaveSoonM(), timekeepingDTO.getComeLateA(),
-								timekeepingDTO.getLeaveSoonA(), timekeepingDTO.getComment() };
-						jdbcTmpl.update(sql, params);
+						if(isEmployee(timekeepingDTO.getEmployeeId(), timekeepingDTO.getEmployeeName()) > 0) {
+							log.info("insert Ma NV: " + timekeepingDTO.getEmployeeId() + "|" + timekeepingDTO.getEmployeeName() + "|" + timekeepingDTO.getDate() + "|" + timekeepingDTO.getTimeIn());
+							Object[] params = new Object[] { timekeepingDTO.getEmployeeId(), timekeepingDTO.getDate(),
+									timekeepingDTO.getTimeIn(), timekeepingDTO.getTimeOut(), timekeepingDTO.getComeLateM(),
+									timekeepingDTO.getLeaveSoonM(), timekeepingDTO.getComeLateA(),
+									timekeepingDTO.getLeaveSoonA(), timekeepingDTO.getComment() };
+							jdbcTmpl.update(sql, params);
+						}else {
+							// Gửi mail thông báo thông tin nhân viên từ máy chấm công không khớp 
+							MimeMessage mimeMessage = mailSender.createMimeMessage();
+							MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+							String htmlMsg = "Thông tin mã và tên nhân viên từ máy chấm công không khớp với thông tin được tạo trên hệ thống phần mềm. <br/>\n "
+									+ "Ngày: " + timekeepingDTO.getDate() + " <br/>\n "
+									+ "Mã nhân viên: " + timekeepingDTO.getEmployeeId() + " <br/>\n "
+									+ "Tên nhân viên: " + timekeepingDTO.getEmployeeName() + "<br/> <br/> \n"
+									+ "Được inport bởi: (lấy từ phần phân quyền) <e-mail> lúc " + Calendar.getInstance().getTime();
+							mimeMessage.setContent(htmlMsg,"text/html; charset=UTF-8");
+							helper.setTo("tuyenpx.idigroup@gmail.com");
+							helper.setSubject("Cảnh báo: Thông tin nhân viên không khớp");
+							helper.setFrom("IDIHRNotReply");
+							mailSender.send(mimeMessage);
+						}
+						
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

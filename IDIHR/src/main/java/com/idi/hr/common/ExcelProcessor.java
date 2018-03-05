@@ -71,8 +71,18 @@ public class ExcelProcessor {
 								if (value.length() > 3) {
 									value = value.substring(2, value.length());
 									timekeeping.setEmployeeId(Integer.parseInt(value));
-									logger.info("Ma NV: " + value);
+									logger.info("Mã NV: " + value);
 								}
+							}
+						}
+						
+						// Đọc tên NV
+						if (columnStrIndex.equalsIgnoreCase("F")) {
+							String value = cell.getStringCellValue();
+							if (value != null && !value.trim().equals("")) {
+								value = value.trim();
+								timekeeping.setEmployeeName(value);
+								logger.info("Tên NV: " + value);								
 							}
 						}
 
@@ -83,7 +93,7 @@ public class ExcelProcessor {
 							case STRING:
 								String value = cell.getStringCellValue();
 								timekeeping.setTimeIn(value);
-								logger.info("Gio vao: " + value);
+								logger.info("Giờ vào: " + value);
 								StringTokenizer st = new StringTokenizer(value, ":");
 								String h = "0";
 								String s = "0";
