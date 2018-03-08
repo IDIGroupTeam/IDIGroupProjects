@@ -1,5 +1,7 @@
 package com.idi.hr.dao;
 
+import java.nio.charset.Charset;
+
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -17,7 +19,8 @@ import com.idi.hr.mapper.EmployeeMapper;
 public class EmployeeDAO extends JdbcDaoSupport {
 
 	private static final Logger log = Logger.getLogger(EmployeeDAO.class.getName());
-
+    public static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
+    public static final Charset UTF_8 = Charset.forName("UTF-8");
 	private JdbcTemplate jdbcTmpl;
 
 	public JdbcTemplate getJdbcTmpl() {
@@ -189,11 +192,18 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	public List<EmployeeInfo> getEmployeesBirth(int quarter) {
 
 		String sql = hr.getProperty("GET_MEMBER_QUARTER_BIRTHDAY").toString();
-		log.info("GET_MEMBER_QUARTER_BIRTHDAY query: " + sql);
+		String sqlUnicode = "";
+		try {
+			byte[] ptext = sql.getBytes(ISO_8859_1); 
+			sqlUnicode = new String(ptext, UTF_8); 
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		log.info("GET_MEMBER_QUARTER_BIRTHDAY query: " + sqlUnicode);
 		Object[] params = new Object[] {quarter};
 		EmployeeMapper mapper = new EmployeeMapper();
 
-		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);
+		List<EmployeeInfo> list = jdbcTmpl.query(sqlUnicode, params, mapper);
 
 		return list;
 
