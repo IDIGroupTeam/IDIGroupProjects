@@ -39,7 +39,7 @@ tr:nth-child(even) {
 							<form:option value="4" label="Quý 4" />
 						</form:select></td>
 					<td><input class="btn btn-lg btn-primary btn-sm" type="submit"
-						value="Cập nhật danh sách" /></td>
+						value="Tìm kiếm" /></td>
 				</tr>
 			</table>
 			<c:if test="${not empty message}">

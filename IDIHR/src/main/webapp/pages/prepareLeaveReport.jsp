@@ -103,6 +103,7 @@ $(function() {
 				<td bgcolor="#FAFAFA">Lựa chọn các thông tin cần báo cáo</td>
 				<td colspan="3"><form:select path="leaveTypeReport"
 						multiple="multiple" size="12">
+						<form:option value="TNC" label="Tính công"></form:option>
 						<form:option value="DM" label="Đi muộn"></form:option>
 						<form:option value="VS" label="Về sớm"></form:option>
 						<form:options items="${leaveTypeMap}" />

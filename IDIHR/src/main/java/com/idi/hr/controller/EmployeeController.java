@@ -73,7 +73,7 @@ public class EmployeeController {// extends BaseController {
 	@RequestMapping(value = { "/" }, method = RequestMethod.GET)
 	public String listEmployees(Model model) {
 		try {
-			List<EmployeeInfo> list = employeeDAO.getEmployees();
+			List<EmployeeInfo> list = employeeDAO.getAllEmployees();
 			model.addAttribute("employees", list);
 
 			Date date = new Date();// your date

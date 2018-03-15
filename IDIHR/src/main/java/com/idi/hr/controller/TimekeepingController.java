@@ -278,7 +278,16 @@ public class TimekeepingController {
 							else
 								leaveForReport.put(lT, "Đi muộn");
 
-						} else {
+						}else if(lT.equalsIgnoreCase("TNC")) {
+							//co can yeu cau phai chon thang cu the ko hay cho pheo tinh ca nam
+							//model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ th!");
+							//Tính ngày công cho toàn bộ nhân viên 
+							leaveForReport.put(lT, "Ngày công");
+							//ngay cong thuc te
+							lTV = Float.toString((float) timekeepingDAO.getWorkedTime(year, month, id)/2);
+							//gio cong thuc te
+							//ngay/gio cong chuan
+						}else {
 							if (lT.startsWith("LT") || lT.startsWith("KCC")
 									|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
 								lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
@@ -392,7 +401,16 @@ public class TimekeepingController {
 								else
 									leaveForReport.put(lT, "Đi muộn");
 
-							} else {
+							}else if(lT.equalsIgnoreCase("TNC")) {
+								//co can yeu cau phai chon thang cu the ko hay cho pheo tinh ca nam
+								//model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ th!");
+								//Tính ngày công cho toàn bộ nhân viên 
+								leaveForReport.put(lT, "Ngày công");
+								//ngay cong thuc te
+								lTV = Float.toString((float) timekeepingDAO.getWorkedTime(year, month, id)/2);
+								//gio cong thuc te
+								//ngay/gio cong chuan
+							}else {
 								if (lT.startsWith("LT") || lT.startsWith("KCC")
 										|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
 									lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
@@ -508,7 +526,16 @@ public class TimekeepingController {
 								else
 									leaveForReport.put(lT, "Đi muộn");
 
-							} else {
+							}else if(lT.equalsIgnoreCase("TNC")) {
+								//co can yeu cau phai chon thang cu the ko hay cho pheo tinh ca nam
+								//model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ th!");
+								//Tính ngày công cho toàn bộ nhân viên 
+								leaveForReport.put(lT, "Ngày công");
+								//ngay cong thuc te
+								lTV = Float.toString((float) timekeepingDAO.getWorkedTime(year, month, id)/2);
+								//gio cong thuc te
+								//ngay/gio cong chuan
+							}else {
 								if (lT.startsWith("LT") || lT.startsWith("KCC")
 										|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
 									lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));

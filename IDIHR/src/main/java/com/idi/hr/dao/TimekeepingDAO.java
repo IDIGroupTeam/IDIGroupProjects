@@ -302,4 +302,28 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 		return countNumber;
 	}
 	
+	/**
+	 * get half worked day
+	 * @param year
+	 * @param month
+	 * @param employeeId
+	 * @return
+	 * @throws Exception
+	 */
+	public int getWorkedTime(String year, String month, int employeeId) throws Exception {
+		int countNumber = 0;
+		String sql = hr.getProperty("CHECK_WORKED_TIME").toString();		
+		log.info("CHECK_WORKED_TIME query: " + sql);
+		
+		if (month != null && month.length() > 0)
+			sql = sql + " AND MONTH(DATE) = '" + month + "' ";		
+				
+		Object[] params = new Object[] { year, employeeId };
+		countNumber = jdbcTmpl.queryForObject(sql, Integer.class, params);
+		
+		System.err.println("So ngay da lam viec: " +month+ year+ employeeId+ countNumber);
+		
+		return countNumber;
+	}
+	
 }

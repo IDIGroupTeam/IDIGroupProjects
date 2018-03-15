@@ -163,7 +163,26 @@ public class EmployeeDAO extends JdbcDaoSupport {
 
 		}
 	}
+	
+	/**
+	 * Get employees from DB
+	 * 
+	 * @return List of employee
+	 * @throws Exception
+	 */
+	public List<EmployeeInfo> getAllEmployees() {
 
+		String sql = hr.getProperty("GET_ALL_EMPLOYEES").toString();
+		log.info("GET_ALL_EMPLOYEES query: " + sql);
+		Object[] params = new Object[] {};
+		EmployeeMapper mapper = new EmployeeMapper();
+
+		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);
+
+		return list;
+
+	}
+	
 	/**
 	 * Get employees from DB
 	 * 
@@ -173,11 +192,18 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	public List<EmployeeInfo> getEmployees() {
 
 		String sql = hr.getProperty("GET_EMPLOYEES").toString();
-		log.info("GET_EMPLOYEES query: " + sql);
+		String sqlUnicode = "";
+		try {
+			byte[] ptext = sql.getBytes(ISO_8859_1); 
+			sqlUnicode = new String(ptext, UTF_8); 
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		log.info("GET_EMPLOYEES query: " + sqlUnicode);
 		Object[] params = new Object[] {};
 		EmployeeMapper mapper = new EmployeeMapper();
 
-		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);
+		List<EmployeeInfo> list = jdbcTmpl.query(sqlUnicode, params, mapper);
 
 		return list;
 
@@ -218,11 +244,18 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	public List<EmployeeInfo> getEmployeesByDepartment(String department) {
 
 		String sql = hr.getProperty("GET_EMPLOYEES_BY_DEPARTMENT").toString();
-		log.info("GET_EMPLOYEES_BY_DEPARTMENT query: " + sql);
+		String sqlUnicode = "";
+		try {
+			byte[] ptext = sql.getBytes(ISO_8859_1); 
+			sqlUnicode = new String(ptext, UTF_8); 
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		log.info("GET_EMPLOYEES_BY_DEPARTMENT query: " + sqlUnicode);
 		Object[] params = new Object[] {department};
 		EmployeeMapper mapper = new EmployeeMapper();
 
-		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);
+		List<EmployeeInfo> list = jdbcTmpl.query(sqlUnicode, params, mapper);
 
 		return list;
 	}
