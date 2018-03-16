@@ -45,15 +45,52 @@ public class EmployeeDAO extends JdbcDaoSupport {
 
 		String sql = properties.getProperty("GET_EMPLOYEES").toString();
 		log.info("GET_EMPLOYEES query: " + sql);
-		Object[] params = new Object[] {};
+		
 		EmployeeMapper mapper = new EmployeeMapper();
 
-		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);
+		List<EmployeeInfo> list = jdbcTmpl.query(sql, mapper);
 
 		return list;
 
+	}	
+	
+	/**
+	 * Get employees for chose subscriber 
+	 * @param taskId
+	 * @return List of employee
+	 * @throws Exception
+	 */
+	public List<EmployeeInfo> getEmployeesForSub(String subscriber) {
+
+		String sql = properties.getProperty("GET_EMPLOYEES_FOR_SUB").toString();
+		if(subscriber != null && subscriber.length() > 0)
+			sql = sql + " AND E.EMPLOYEE_ID NOT IN (" + subscriber + ")";
+		log.info("GET_EMPLOYEES_FOR_SUB query: " + sql);
+		
+		EmployeeMapper mapper = new EmployeeMapper();
+		List<EmployeeInfo> list = jdbcTmpl.query(sql, mapper);
+
+		return list;
 	}
 	
+	/**
+	 * Get employees subscriber
+	 * @param taskId
+	 * @return List of employee
+	 * @throws Exception
+	 */
+	public List<EmployeeInfo> getEmployeesSub(String subscriber) {
+
+		String sql = properties.getProperty("GET_TASK_SUBSCRIBER").toString();
+		if(subscriber != null && subscriber.length() > 0)
+			sql = sql + " AND E.EMPLOYEE_ID IN (" + subscriber + ")";
+		log.info("GET_TASK_SUBSCRIBER query: " + sql);
+		
+		EmployeeMapper mapper = new EmployeeMapper();
+		List<EmployeeInfo> list = jdbcTmpl.query(sql, mapper);
+
+		return list;
+	}
 	
 	/**
 	 * Get employees from DB

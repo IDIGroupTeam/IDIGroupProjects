@@ -77,13 +77,32 @@ public class TaskDAO extends JdbcDaoSupport {
 	}
 
 	/**
+	 * get list subscriber of task 
+	 * @param taskId
+	 * @return
+	 */
+	public String getTaskSubscriber(int taskId){
+		String subscriber="";
+		try {
+			String sql = properties.get("GET_SUBSCRIBER").toString();
+			log.info("GET_SUBSCRIBER query: " + sql);
+			Object[] params = new Object[] { taskId };	
+	
+			subscriber = jdbcTmpl.queryForObject(sql, params, String.class);
+		} catch (Exception e) {
+			log.error(e, e);
+			throw e;
+		}
+		return subscriber;
+	}
+	
+	/**
 	 * Insert a task into database
 	 * 
 	 * @param Task
 	 */
 	public void insertTask(Task task) throws Exception {
 		try {
-
 			log.info("Thêm mới thông tin task ....");
 			String sql = properties.getProperty("INSERT_TASK").toString();
 			log.info("INSERT_TASK query: " + sql);
@@ -133,6 +152,27 @@ public class TaskDAO extends JdbcDaoSupport {
 					task.getResolvedBy(), task.getDueDate(), task.getResolutionDate(),
 					task.getType(), task.getArea(), task.getPriority(), task.getStatus(), task.getPlannedFor(),  
 					task.getTimeSpent(), task.getTimeSpentType(), task.getEstimate(), task.getEstimateTimeType(), task.getDescription(), task.getTaskId() };
+			jdbcTmpl.update(sql, params);
+
+		} catch (Exception e) {
+			log.error(e, e);
+			throw e;
+		}
+	}
+	
+	/**
+	 * Update subscriber for a task into database
+	 * @param sub
+	 * @param taskId
+	 * @throws Exception
+	 */
+	public void updateSubscriber(String sub, int taskId) throws Exception {
+		try {
+			log.info("Cập nhật thông tin người liên quan đến công viêc mã " + taskId);
+			String sql = properties.getProperty("UPDATE_SUBSCRIBER").toString();
+			log.info("UPDATE_SUBSCRIBER query: " + sql);
+
+			Object[] params = new Object[] {sub, taskId};
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {

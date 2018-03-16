@@ -76,6 +76,9 @@
 </style>
 </head>
 <body>
+	<a href="${pageContext.request.contextPath}/"><button
+			class="btn btn-lg btn-primary btn-sm">Quay lại danh sách
+			công việc</button></a><br/><br/>
 	<form:form modelAttribute="taskForm" method="POST"
 		action="insertNewTask" enctype="multipart/form-data">
 		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu"
@@ -165,8 +168,9 @@
 				</tbody>
 			</table>
 		</div>
+		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu"
+			name="Lưu" /> <br/><br/>
 	</form:form>
-	<br />
 	<a href="${pageContext.request.contextPath}/"><button
 			class="btn btn-lg btn-primary btn-sm">Quay lại danh sách
 			công việc</button></a>

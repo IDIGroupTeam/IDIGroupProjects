@@ -173,7 +173,6 @@ tr:nth-child(even) {
 			</td>
 			<td>Số bản ghi trong một trang:</td>
 			<td><form:select path="numberRecordsOfPage" class="form-control">					
-					<form:option value="5">5</form:option>
 					<form:option value="25">25</form:option>
 					<form:option value="50">50</form:option>
 					<form:option value="100">100</form:option>
@@ -195,7 +194,7 @@ tr:nth-child(even) {
 			<c:forEach var="task" items="${tasks}">
 				<tr>
 					<td>${task.taskId}</td>
-					<td><a href="/IDITask/editTask?taskId=${task.taskId}">${task.taskName}</a></td>
+					<td><a href="/IDITask/editTask?tab=1&taskId=${task.taskId}">${task.taskName}</a></td>
 					<td>${task.area}</td>
 					<c:if test="${task.ownedBy == 0}">
 						<td>Chưa giao cho ai</td>

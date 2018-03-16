@@ -36,6 +36,9 @@ public class TaskForm implements Serializable{
 	private String estimateTimeType;
 	private String description;
 	
+	private String subscriber;
+	private String forSubscriber;
+	
 	//For comment
 	private int commentIndex;
 	private int commentedBy;
@@ -255,6 +258,22 @@ public class TaskForm implements Serializable{
 
 	public String getContent() {
 		return content;
+	}
+
+	public String getSubscriber() {
+		return subscriber;
+	}
+
+	public void setSubscriber(String subscriber) {
+		this.subscriber = subscriber;
+	}
+
+	public String getForSubscriber() {
+		return forSubscriber;
+	}
+
+	public void setForSubscriber(String forSubscriber) {
+		this.forSubscriber = forSubscriber;
 	}
 
 	public void setContent(String content) {

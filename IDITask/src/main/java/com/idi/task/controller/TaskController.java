@@ -60,7 +60,7 @@ public class TaskController {
 			// Total records
 			// Total of page
 			if (form.getNumberRecordsOfPage() == 0) {
-				form.setNumberRecordsOfPage(5); //set 5 for testing
+				form.setNumberRecordsOfPage(25); 
 			}
 
 			if (form.getPageIndex() == 0) {
@@ -120,16 +120,60 @@ public class TaskController {
 		return "listTask";
 	}
 
-	@RequestMapping(value = "/updateSubscriber", method = RequestMethod.POST)
-	public String Subscriber(Model model, @ModelAttribute("taskForm") TaskForm taskForm) {
+	@RequestMapping(value = "/updateSub")
+	public String updateSub(Model model,  @ModelAttribute("taskForm") TaskForm taskForm) {
 		try {
-			System.err.println(taskForm.getTaskId());			
-			model.addAttribute("formTitle", "Quản lý danh sách người liên quan");
+			//get danh sach subscriber hien tai
+			String sub = taskDAO.getTaskSubscriber(taskForm.getTaskId());
+			String subRemove = taskForm.getSubscriber();
+			String subAddNew = taskForm.getForSubscriber();
+			//System.out.println("sub new current: " + subRemove);
+			//System.out.println("sub new select: " + subAddNew);
+			
+			String subUpdated = "";
+			if(sub != null && sub.length() > 0) {
+				//Co thay doi (remove bot nguoi lien quan)
+				if(subRemove!= null) {
+					//System.err.println("vi tri remove" + sub.indexOf(subRemove));			
+					//(sub.indexOf(subRemove), sub.indexOf(subRemove) + subRemove.length());
+					System.err.println(subUpdated);
+					if(subAddNew != null) {
+						subUpdated = sub.replace(subRemove, subAddNew);
+						//System.err.println("co remove cu va add them moi " + subUpdated);
+					}else {
+						subUpdated = sub.replace(subRemove, "0");
+						//System.err.println("Chi remove bot di va khong add them " + subUpdated);
+					}
+				}else {
+					subUpdated = sub + "," + subAddNew;
+					//System.err.println("Chi add them " + subUpdated);
+				}
+			}else {
+				if(subAddNew != null) {
+					subUpdated = subAddNew;
+				}else {
+					log.info("Thông tin nguoi liên quan không có gì cập nhật ...");
+				}
+			}
+			
+			taskDAO.updateSubscriber(subUpdated, taskForm.getTaskId());
+			
+/*						 	
+			model.addAttribute("sub", sub);
+			if(sub !=null && sub.length() > 0)
+				model.addAttribute("subscriberList", employeesSub(sub));
+			else
+				model.addAttribute("subscriberList", null);
+			//get toan bo sach sach nguoi co the lua chon
+			model.addAttribute("employeesList", employeesForSub(sub));*/
+			
+			model.addAttribute("formTitle", "Quản lý danh sách người liên quan đến công việc mã " + taskForm.getTaskId());
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
 		}
-		return "updateSubscriber";
+
+		return "redirect:/editTask?tab=2&taskId=" + taskForm.getTaskId();
 	}
 	
 /*	@RequestMapping(value = "/searchTask")
@@ -287,8 +331,8 @@ public class TaskController {
 		} catch (Exception e) {
 			log.error(e, e);
 		}
-
-		return "redirect:/editTask?taskId=" + taskForm.getTaskId();
+		
+		return "redirect:/editTask?tab=1&taskId=" + taskForm.getTaskId();
 	}
 
 	@RequestMapping("/addNewTask")
@@ -309,12 +353,21 @@ public class TaskController {
 	}
 
 	@RequestMapping("/editTask")
-	public String editTask(Model model, @RequestParam("taskId") int taskId) {
+	public String editTask(Model model, @RequestParam("taskId") int taskId, @RequestParam("tab") int tab) {
 		Task task = new Task();
 		TaskForm taskForm = new TaskForm();
-
+		
 		if (taskId > 0) {
-
+			//get danh sach subscriber hien tai
+			String sub = taskDAO.getTaskSubscriber(taskId); 	
+			model.addAttribute("sub", sub);
+			if(sub !=null && sub.length() > 0)
+				model.addAttribute("subscriberList", employeesSub(sub));
+			else
+				model.addAttribute("subscriberList", null);
+			//get toan bo sach sach nguoi co the lua chon
+			model.addAttribute("employeesListS", employeesForSub(sub));
+			
 			// get list department
 			Map<String, String> departmentMap = this.listDepartments();
 			model.addAttribute("departmentMap", departmentMap);
@@ -354,8 +407,19 @@ public class TaskController {
 				model.addAttribute("employeesList", employees("all"));
 
 			// System.err.println(task.getTaskName());
-			model.addAttribute("formTitle", "Sửa thông tin công việc");
+			
+			model.addAttribute("formTitle", "Cập nhật thông tin công việc mã " + taskId);
 			model.addAttribute("taskForm", taskForm);
+			
+			if(tab==1) {
+				model.addAttribute("active1","active");
+				model.addAttribute("tabActive1","tab-pane active");
+				model.addAttribute("tabActive2","tab-pane");
+			}else if(tab==2) {
+				model.addAttribute("active2","active");
+				model.addAttribute("tabActive1","tab-pane");
+				model.addAttribute("tabActive2","tab-pane active");
+			}
 
 		} else {
 			return "redirect:/";
@@ -363,27 +427,6 @@ public class TaskController {
 
 		return "updateTask";
 	}
-
-	/*
-	 * private String taskForm(Model model, Task task) {
-	 * 
-	 * // get list department Map<String, String> departmentMap =
-	 * this.listDepartments(); model.addAttribute("departmentMap", departmentMap);
-	 * 
-	 * String actionform = ""; if (task.getTaskName() != null) {
-	 * model.addAttribute("formTitle", "Sửa thông tin công việc"); // get list
-	 * employee id //Map<String, String> employeeMap = this.employees("all");
-	 * model.addAttribute("employeesList", employees(task.getArea())); actionform =
-	 * "updateTask"; } else { model.addAttribute("formTitle",
-	 * "Thêm mới thông tin công việc"); // get list employee id //Map<String,
-	 * String> employeeMap = this.employees("all");
-	 * model.addAttribute("employeesList", employees("all")); actionform =
-	 * "addNewTask"; }
-	 * 
-	 * model.addAttribute("taskForm", task);
-	 * 
-	 * return actionform; }
-	 */
 
 	/*
 	 * private Map<Integer, String> employees() { Map<Integer, String> employeeMap =
@@ -398,6 +441,18 @@ public class TaskController {
 	 * employeeMap; }
 	 */
 
+	private List<EmployeeInfo> employeesForSub(String subscriber) {
+		List<EmployeeInfo> list = null;
+		list = employeeDAO.getEmployeesForSub(subscriber);
+		return list;
+	}
+	
+	private List<EmployeeInfo> employeesSub(String subscriber) {
+		List<EmployeeInfo> list = null;
+		list = employeeDAO.getEmployeesSub(subscriber);
+		return list;
+	}
+
 	private List<EmployeeInfo> employees(String department) {
 		List<EmployeeInfo> list = null;
 		if (!department.equalsIgnoreCase("all"))
@@ -407,7 +462,7 @@ public class TaskController {
 
 		return list;
 	}
-
+	
 	private Map<String, String> listDepartments() {
 		Map<String, String> departmentMap = new LinkedHashMap<String, String>();
 		try {
