@@ -8,8 +8,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.idi.finance.bean.LoaiTien;
-import com.idi.finance.bean.hanghoa.KhoBai;
-import com.idi.finance.bean.soketoan.NghiepVuKeToan_Xn;
+import com.idi.finance.bean.hanghoa.HangHoa;
+import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class ChungTu {
@@ -24,12 +24,16 @@ public class ChungTu {
 	public static final String CHUNG_TU_BT_KC = "BTKC";
 	public static final String CHUNG_TU_PHIEU_XUAT_KHO = "PXK";
 	public static final String CHUNG_TU_PHIEU_NHAP_KHO = "PNK";
+	public static final String CHUNG_TU_MUA_HANG = "MH";
+	public static final String CHUNG_TU_BAN_HANG = "BH";
 
 	private int maCt;
 	private int soCt;
 	private String loaiCt;
 	private Date ngayLap;
 	private Date ngayHt;
+	private Date ngayTao;
+	private Date ngaySua;
 	private LoaiTien loaiTien = new LoaiTien();
 	private Tien soTien = new Tien();
 	private String lyDo;
@@ -38,8 +42,10 @@ public class ChungTu {
 	private List<TaiKhoan> taiKhoanNoDs;
 	private List<TaiKhoan> taiKhoanCoDs;
 
-	private KhoBai khoBai;
-	private List<NghiepVuKeToan_Xn> nghiepVuKeToanDs;
+	private TaiKhoan tkThue;
+	private LoaiTaiKhoan thanhToan;
+	private KhoHang khoBai;
+	private List<HangHoa> hangHoaDs;
 
 	public int getMaCt() {
 		return maCt;
@@ -75,6 +81,22 @@ public class ChungTu {
 
 	public Date getNgayHt() {
 		return ngayHt;
+	}
+
+	public Date getNgayTao() {
+		return ngayTao;
+	}
+
+	public void setNgayTao(Date ngayTao) {
+		this.ngayTao = ngayTao;
+	}
+
+	public Date getNgaySua() {
+		return ngaySua;
+	}
+
+	public void setNgaySua(Date ngaySua) {
+		this.ngaySua = ngaySua;
 	}
 
 	public void setNgayHt(Date ngayHt) {
@@ -186,41 +208,75 @@ public class ChungTu {
 		this.taiKhoanCoDs = taiKhoanCoDs;
 	}
 
-	public KhoBai getKhoBai() {
+	public TaiKhoan getTkThue() {
+		return tkThue;
+	}
+
+	public void setTkThue(TaiKhoan tkThue) {
+		this.tkThue = tkThue;
+	}
+
+	public LoaiTaiKhoan getThanhToan() {
+		return thanhToan;
+	}
+
+	public void setThanhToan(LoaiTaiKhoan thanhToan) {
+		this.thanhToan = thanhToan;
+	}
+
+	public KhoHang getKhoBai() {
 		return khoBai;
 	}
 
-	public void setKhoBai(KhoBai khoBai) {
+	public void setKhoBai(KhoHang khoBai) {
 		this.khoBai = khoBai;
 	}
 
-	public List<NghiepVuKeToan_Xn> getNghiepVuKeToanDs() {
-		return nghiepVuKeToanDs;
+	public List<HangHoa> getHangHoaDs() {
+		return hangHoaDs;
 	}
 
-	public void setNghiepVuKeToanDs(List<NghiepVuKeToan_Xn> nghiepVuKeToanDs) {
-		this.nghiepVuKeToanDs = nghiepVuKeToanDs;
+	public void setHangHoaDs(List<HangHoa> hangHoaDs) {
+		soTien = new Tien();
+		soTien.setLoaiTien(getLoaiTien());
+
+		if (hangHoaDs != null) {
+			Iterator<HangHoa> iter = hangHoaDs.iterator();
+			while (iter.hasNext()) {
+				HangHoa hangHoa = iter.next();
+				double tien = hangHoa.getSoLuong() * hangHoa.getGiaMua().getSoTien();
+				soTien.setSoTien(tien + soTien.getSoTien());
+			}
+			soTien.setGiaTri(soTien.getSoTien() * soTien.getLoaiTien().getBanRa());
+		}
+		this.hangHoaDs = hangHoaDs;
 	}
 
-	public void themNghiepVuKeToan(NghiepVuKeToan_Xn nghiepVuKeToan) {
-		if (nghiepVuKeToan == null)
+	public void themHangHoa(HangHoa hangHoa) {
+		if (hangHoa == null)
 			return;
 
-		if (nghiepVuKeToanDs == null)
-			nghiepVuKeToanDs = new ArrayList<>();
+		if (hangHoaDs == null)
+			hangHoaDs = new ArrayList<>();
 
-		if (!nghiepVuKeToanDs.contains(nghiepVuKeToan))
-			nghiepVuKeToanDs.add(nghiepVuKeToan);
+		if (!hangHoaDs.contains(hangHoa)) {
+			hangHoaDs.add(hangHoa);
+			if (hangHoa.getGiaMua() != null) {
+				double tien = hangHoa.getSoLuong() * hangHoa.getGiaMua().getSoTien();
+				soTien.setSoTien(tien + soTien.getSoTien());
+				soTien.setGiaTri(soTien.getSoTien() * soTien.getLoaiTien().getBanRa());
+			}
+		}
 	}
 
-	public void themNghiepVuKeToan(List<NghiepVuKeToan_Xn> nghiepVuKeToanDs) {
-		if (nghiepVuKeToanDs == null)
+	public void themHangHoa(List<HangHoa> hangHoaDs) {
+		if (hangHoaDs == null)
 			return;
 
-		Iterator<NghiepVuKeToan_Xn> iter = nghiepVuKeToanDs.iterator();
+		Iterator<HangHoa> iter = hangHoaDs.iterator();
 		while (iter.hasNext()) {
-			NghiepVuKeToan_Xn nghiepVuKeToan = iter.next();
-			themNghiepVuKeToan(nghiepVuKeToan);
+			HangHoa hangHoa = iter.next();
+			themHangHoa(hangHoa);
 		}
 	}
 
@@ -240,6 +296,13 @@ public class ChungTu {
 		}
 
 		return soTkLonNhat;
+	}
+
+	public int getSoHangHoa() {
+		if (hangHoaDs != null)
+			return hangHoaDs.size();
+
+		return 0;
 	}
 
 	public int getSoDongNkc() {

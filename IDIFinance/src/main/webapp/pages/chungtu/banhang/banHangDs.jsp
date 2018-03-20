@@ -15,14 +15,14 @@
 	});
 </script>
 
-<h4>Danh mục phiếu nhập kho</h4>
+<h4>Danh mục chứng từ bán hàng</h4>
 <p>
 	<!-- <i>Ghi nợ vào các tài khoản tiền mặt: 111, 1111, ...</i> -->
 </p>
 
 <div class="pull-right">
 	<i>(*): Mặc định là tiền VND</i>&nbsp;&nbsp;&nbsp;&nbsp; <a
-		href="${url}/chungtu/phieunhapkho/taomoi" class="btn btn-info btn-sm">
+		href="${url}/chungtu/banhang/taomoi" class="btn btn-info btn-sm">
 		<span class="glyphicon glyphicon-plus"></span> Tạo mới
 	</a>
 </div>
@@ -47,42 +47,38 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach items="${phieuNhapKhoDs}" var="phieuNhapKho"
-				varStatus="status">
+			<c:forEach items="${banHangDs}" var="banHang" varStatus="status">
 				<tr>
 					<td class="text-center" style="width: 50px;"><fmt:formatDate
-							value="${phieuNhapKho.ngayHt}" pattern="dd/M/yyyy" type="Date"
+							value="${banHang.ngayHt}" pattern="dd/M/yyyy" type="Date"
 							dateStyle="SHORT" /></td>
-					<td class="text-center" style="width: 50px;">${phieuNhapKho.loaiCt}${phieuNhapKho.soCt}</td>
-					<td><a
-						href="${url}/chungtu/phieunhapkho/xem/${phieuNhapKho.maCt}">${phieuNhapKho.lyDo}</a></td>
+					<td class="text-center" style="width: 50px;">${banHang.loaiCt}${banHang.soCt}</td>
+					<td><a href="${url}/chungtu/banhang/xem/${banHang.maCt}">${banHang.lyDo}</a></td>
 					<td align="right"><fmt:formatNumber
-							value="${phieuNhapKho.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
+							value="${banHang.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
 					<td><c:choose>
 							<c:when
-								test="${phieuNhapKho.doiTuong.loaiDt == DoiTuong.KHACH_VANG_LAI}">
-								${phieuNhapKho.doiTuong.nguoiNop}
+								test="${banHang.doiTuong.loaiDt == DoiTuong.KHACH_VANG_LAI}">
+								${banHang.doiTuong.nguoiNop}
 							</c:when>
-							<c:otherwise>${phieuNhapKho.doiTuong.tenDt}
+							<c:otherwise>${banHang.doiTuong.tenDt}
 							</c:otherwise>
 						</c:choose></td>
-					<td>${phieuNhapKho.doiTuong.diaChi}</td>
-					<td>${phieuNhapKho.doiTuong.maThue}</td>
+					<td>${banHang.doiTuong.diaChi}</td>
+					<td>${banHang.doiTuong.maThue}</td>
 					<td><c:choose>
-							<c:when
-								test="${phieuNhapKho.doiTuong.loaiDt == DoiTuong.NHAN_VIEN}">
+							<c:when test="${banHang.doiTuong.loaiDt == DoiTuong.NHAN_VIEN}">
 								Nhân viên
 							</c:when>
-							<c:when
-								test="${phieuNhapKho.doiTuong.loaiDt == DoiTuong.KHACH_HANG}">
+							<c:when test="${banHang.doiTuong.loaiDt == DoiTuong.KHACH_HANG}">
 								Khách hàng
 							</c:when>
 							<c:when
-								test="${phieuNhapKho.doiTuong.loaiDt == DoiTuong.NHA_CUNG_CAP}">
+								test="${banHang.doiTuong.loaiDt == DoiTuong.NHA_CUNG_CAP}">
 								Nhà cung cấp
 							</c:when>
 							<c:when
-								test="${phieuNhapKho.doiTuong.loaiDt == DoiTuong.KHACH_VANG_LAI}">
+								test="${banHang.doiTuong.loaiDt == DoiTuong.KHACH_VANG_LAI}">
 								Khách vãng lai
 							</c:when>
 						</c:choose></td>

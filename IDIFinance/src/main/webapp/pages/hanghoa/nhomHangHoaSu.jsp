@@ -25,28 +25,36 @@
 
 <form:hidden path="maNhomHh" />
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="tenNhomHh">Tên nhóm
-		hàng hóa:(*)</label>
-	<div class="col-sm-4">
-		<form:input path="tenNhomHh" placeholder="Tên nhóm hàng hóa"
-			cssClass="form-control" />
-		<form:errors path="tenNhomHh" cssClass="error"></form:errors>
-	</div>
-
 	<label class="control-label col-sm-2" for="nhomHh.maNhomHh">Nhóm
 		cha:</label>
-	<div class="col-sm-4">
+	<div class="col-sm-2">
 		<form:select path="nhomHh.maNhomHh" cssClass="form-control">
 			<form:option value="0" label=""></form:option>
 			<form:options items="${nhomHangHoaDs}" itemValue="maNhomHh"
 				itemLabel="tenNhomHh"></form:options>
 		</form:select>
 	</div>
+
+	<label class="control-label col-sm-2" for="tenNhomHh">Tên
+		nhóm:(*)</label>
+	<div class="col-sm-2">
+		<form:input path="tenNhomHh" placeholder="Tên nhóm hàng hóa"
+			cssClass="form-control" />
+		<form:errors path="tenNhomHh" cssClass="error"></form:errors>
+	</div>
+
+	<label class="control-label col-sm-2" for="nhomHh.kyHieuNhomHh">Mã
+		nhóm:</label>
+	<div class="col-sm-2">
+		<form:input path="kyHieuNhomHh" placeholder="Mã hàng hóa"
+			cssClass="form-control" />
+	</div>
 </div>
 
 <div class="row form-group">
 	<div class="col-sm-2">
 		<a href="${url}/hanghoa/nhom/danhsach" class="btn btn-info btn-sm">Hủy</a>
-		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu thay đổi</button>
+		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu
+			thay đổi</button>
 	</div>
 </div>

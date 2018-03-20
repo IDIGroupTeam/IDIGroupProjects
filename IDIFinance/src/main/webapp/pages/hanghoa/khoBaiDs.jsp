@@ -52,7 +52,7 @@
 				<th style="width: 80px;">Mã kho</th>
 				<th>Tên kho</th>
 				<th>Địa chỉ</th>
-				<th>Tài khoản kho</th>
+				<!-- <th>Tài khoản kho</th> -->
 				<th>Mô tả</th>
 				<th></th>
 			</tr>
@@ -60,10 +60,10 @@
 		<tbody>
 			<c:forEach items="${khoBaiDs}" var="khoBai" varStatus="status">
 				<tr>
-					<td>${khoBai.maKho}</td>
+					<td>${khoBai.kyHieuKho}</td>
 					<td>${khoBai.tenKho}</td>
 					<td>${khoBai.diaChi}</td>
-					<td></td>
+					<!-- <td></td> -->
 					<td>${khoBai.moTa}</td>
 					<td><div class="btn-group btn-group-sm">
 							<a href="${url}/hanghoa/kho/sua/${khoBai.maKho}" class="btn"

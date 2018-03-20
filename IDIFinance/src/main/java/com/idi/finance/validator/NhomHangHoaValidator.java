@@ -4,13 +4,13 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.idi.finance.bean.hanghoa.NhomHangHoa;
+import com.idi.finance.bean.hanghoa.NhomHang;
 
 public class NhomHangHoaValidator implements Validator {
 
 	@Override
 	public boolean supports(Class<?> cls) {
-		return cls == NhomHangHoa.class;
+		return cls == NhomHang.class;
 	}
 
 	@Override

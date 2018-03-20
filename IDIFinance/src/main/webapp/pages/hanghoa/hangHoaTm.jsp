@@ -17,11 +17,32 @@
 		$("#submitBt").click(function() {
 			$("#mainFinanceForm").submit();
 		});
+
+		$('#tkKhoMd\\.maTk').combobox({
+			bsVersion: '4'
+		});
+		$('#tkDoanhThuMd\\.maTk').combobox({
+			bsVersion: '4'
+		});
+		$('#tkChiPhiMd\\.maTk').combobox({
+			bsVersion: '4'
+		});
 	});
 </script>
 
 <h4>Thêm mới hàng hóa</h4>
 <br />
+
+<div class="row form-group">
+	<label class="control-label col-sm-2" for="tinhChat">Tính chất</label>
+	<div class="col-sm-4">
+		<form:select path="tinhChat" cssClass="form-control">
+			<form:option value="1" label="Vật tư hàng hóa"></form:option>
+			<form:option value="2" label="Dịch vụ"></form:option>
+			<form:option value="3" label="Thành phẩm"></form:option>
+		</form:select>
+	</div>
+</div>
 
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="tenHh">Tên hàng
@@ -31,17 +52,26 @@
 			cssClass="form-control" />
 		<form:errors path="tenHh" cssClass="error"></form:errors>
 	</div>
+
+	<label class="control-label col-sm-2" for="kyHieuHh">Mã hàng
+		hóa:(*)</label>
+	<div class="col-sm-4">
+		<form:input path="kyHieuHh" placeholder="Mã hàng hóa"
+			cssClass="form-control" />
+		<form:errors path="kyHieuHh" cssClass="error"></form:errors>
+	</div>
 </div>
 
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="nhomHh.maNhomHh">Nhóm
-		hàng hóa:(*)</label>
+		hàng hóa:</label>
 	<div class="col-sm-4">
 		<form:select path="nhomHh.maNhomHh" cssClass="form-control">
 			<form:option value="0" label=""></form:option>
 			<form:options items="${nhomHangHoaDs}" itemValue="maNhomHh"
 				itemLabel="tenNhomHh"></form:options>
 		</form:select>
+		<form:errors path="nhomHh.maNhomHh" cssClass="error"></form:errors>
 	</div>
 
 	<label class="control-label col-sm-2" for="donVi.maDv">Đơn vị
@@ -50,6 +80,50 @@
 		<form:select path="donVi.maDv" cssClass="form-control">
 			<form:option value="0" label=""></form:option>
 			<form:options items="${donViDs}" itemValue="maDv" itemLabel="tenDv"></form:options>
+		</form:select>
+	</div>
+</div>
+
+<div class="row form-group">
+	<label class="control-label col-sm-2" for="khoMd.maKho">Kho mặc
+		định:</label>
+	<div class="col-sm-4">
+		<form:select path="khoMd.maKho" cssClass="form-control">
+			<form:option value="0" label=""></form:option>
+			<form:options items="${khoBaiDs}" itemValue="maKho"
+				itemLabel="tenKho"></form:options>
+		</form:select>
+	</div>
+
+	<label class="control-label col-sm-2" for="tkKhoMd.maTk">Tài
+		khoản kho:</label>
+	<div class="col-sm-4">
+		<form:select path="tkKhoMd.maTk" cssClass="form-control" multiple="multiple">
+			<form:option value="" label=""></form:option>
+			<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
+				itemLabel="maTenTk"></form:options>
+		</form:select>
+	</div>
+</div>
+
+<div class="row form-group">
+	<label class="control-label col-sm-2" for="tkDoanhThuMd.maTk">Tài
+		khoản doanh thu:</label>
+	<div class="col-sm-4">
+		<form:select path="tkDoanhThuMd.maTk" cssClass="form-control">
+			<form:option value="" label=""></form:option>
+			<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
+				itemLabel="maTenTk"></form:options>
+		</form:select>
+	</div>
+
+	<label class="control-label col-sm-2" for="tkChiPhiMd.maTk">Tài
+		khoản chi phí:</label>
+	<div class="col-sm-4">
+		<form:select path="tkChiPhiMd.maTk" cssClass="form-control">
+			<form:option value="" label=""></form:option>
+			<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
+				itemLabel="maTenTk"></form:options>
 		</form:select>
 	</div>
 </div>

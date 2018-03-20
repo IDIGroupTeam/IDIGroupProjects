@@ -254,3 +254,6 @@
 		</div>
 	</div>
 </div>
+<hr />
+<h4>Cấu hình khác</h4>
+<div></div>

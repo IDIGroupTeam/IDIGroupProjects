@@ -11,7 +11,7 @@
 	<c:when test="${not empty nhomHangHoaConDs and not empty doSau}">
 		<c:forEach items="${nhomHangHoaConDs}" var="nhomHangHoaCon">
 			<tr>
-				<%-- <td>${nhomHangHoaCon.maNhomHh}</td> --%>
+				<td>${nhomHangHoaCon.kyHieuNhomHh}</td>
 				<c:forEach begin="1" end="${nhomHangHoaCon.muc-1}">
 					<td></td>
 				</c:forEach>

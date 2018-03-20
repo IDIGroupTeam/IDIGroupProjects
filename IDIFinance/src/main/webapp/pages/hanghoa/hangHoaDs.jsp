@@ -53,21 +53,37 @@
 				<th style="width: 80px;">Mã hàng hóa</th>
 				<th>Tên hàng hóa</th>
 				<th>Đơn vị</th>
+				<th>Tính chất</th>
 				<th>Nhóm</th>
-				<th>Giá bán</th>
-				<th>Giá mua</th>
+				<th>Kho mặc định</th>
+				<th>Tk kho</th>
+				<th>Tk doanh thu</th>
+				<th>Tk chi phí</th>
 				<th></th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:forEach items="${hangHoaDs}" var="hangHoa" varStatus="status">
 				<tr>
-					<td>${hangHoa.maHh}</td>
+					<td>${hangHoa.kyHieuHh}</td>
 					<td>${hangHoa.tenHh}</td>
 					<td>${hangHoa.donVi.tenDv}</td>
+					<td><c:choose>
+							<c:when test="${hangHoa.tinhChat == 1}">
+								Vật tư hàng hóa
+							</c:when>
+							<c:when test="${hangHoa.tinhChat == 2}">
+								Dịch vụ
+							</c:when>
+							<c:when test="${hangHoa.tinhChat == 3}">
+								Thành phẩm
+							</c:when>
+						</c:choose></td>
 					<td>${hangHoa.nhomHh.tenNhomHh}</td>
-					<th></th>
-					<th></th>
+					<td>${hangHoa.khoMd.tenKho}</td>
+					<td>${hangHoa.tkKhoMd.maTk}</td>
+					<td>${hangHoa.tkDoanhThuMd.maTk}</td>
+					<td>${hangHoa.tkChiPhiMd.maTk}</td>
 					<td><div class="btn-group btn-group-sm">
 							<a href="${url}/hanghoa/sua/${hangHoa.maHh}" class="btn"
 								title="Sửa"> <span class="glyphicon glyphicon-edit"></span>

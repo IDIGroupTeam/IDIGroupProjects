@@ -23,7 +23,10 @@ import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.DoiTuong;
 import com.idi.finance.bean.chungtu.TaiKhoan;
 import com.idi.finance.bean.chungtu.Tien;
-import com.idi.finance.bean.soketoan.NghiepVuKeToan_Xn;
+import com.idi.finance.bean.hanghoa.DonVi;
+import com.idi.finance.bean.hanghoa.HangHoa;
+import com.idi.finance.bean.hanghoa.KhoHang;
+import com.idi.finance.bean.hanghoa.NhomHang;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.ChungTuDAO;
 
@@ -35,16 +38,10 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 	@Value("${DANH_SACH_CHUNG_TU_KHO_THEO_LOAI}")
 	private String DANH_SACH_CHUNG_TU_KHO_THEO_LOAI;
-	
-	@Value("${LAY_CHUNG_TU_THEO_MACT}")
-	private String LAY_CHUNG_TU_THEO_MACT;
-	
-	@Value("${LAY_CHUNG_TU_KHO_THEO_MACT}")
-	private String LAY_CHUNG_TU_KHO_THEO_MACT;
 
 	@Value("${LAY_CHUNG_TU_THEO_MACT_LOAICT}")
 	private String LAY_CHUNG_TU_THEO_MACT_LOAICT;
-	
+
 	@Value("${LAY_CHUNG_TU_KHO_THEO_MACT_LOAICT}")
 	private String LAY_CHUNG_TU_KHO_THEO_MACT_LOAICT;
 
@@ -84,14 +81,11 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 	@Value("${XOA_CHUNG_TU_HANG_HOA}")
 	private String XOA_CHUNG_TU_HANG_HOA;
 
-	@Value("${XOA_CHUNG_TU_TAI_KHOAN_KHO}")
-	private String XOA_CHUNG_TU_TAI_KHOAN_KHO;
+	@Value("${XOA_CHUNG_TU_NVKT_KHO}")
+	private String XOA_CHUNG_TU_NVKT_KHO;
 
-	@Value("${XOA_TAI_KHOAN}")
-	private String XOA_TAI_KHOAN;
-
-	@Value("${XOA_CHUNG_TU}")
-	private String XOA_CHUNG_TU;
+	@Value("${XOA_NVKT}")
+	private String XOA_NVKT;
 
 	@Value("${XOA_CHUNG_TU_THEO_MACT_LOAICT}")
 	private String XOA_CHUNG_TU_THEO_MACT_LOAICT;
@@ -194,7 +188,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 			}
 		}
 	}
-	
+
 	@Override
 	public List<ChungTu> danhSachChungTuKhoTheoLoaiCt(String loaiCt) {
 		String query = DANH_SACH_CHUNG_TU_KHO_THEO_LOAI;
@@ -205,7 +199,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 		Object[] objs = { loaiCt, loaiCt, loaiCt };
 		List<ChungTu> chungTuDs = jdbcTmpl.query(query, objs, new ChungTuKhoMapper());
 
-		// Gộp chứng từ trùng nhau nhưng có tài khoản ảnh hường khác nhau
+		// Gộp chứng từ trùng nhau nhưng có tài khoản ảnh hưởng khác nhau
 		List<ChungTu> ketQua = null;
 		if (chungTuDs != null) {
 			ketQua = new ArrayList<>();
@@ -213,12 +207,53 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 			while (iter.hasNext()) {
 				ChungTu chungTu = iter.next();
 
-				int pos = ketQua.indexOf(chungTu);
-				if (pos > -1) {
-					ChungTu chungTuTmpl = ketQua.get(pos);
-					chungTuTmpl.themTaiKhoan(chungTu.getTaiKhoanDs());
+				// Với mỗi chứng từ
+				if (chungTu.getHangHoaDs() != null) {
+					// Nếu chứng từ mới có danh sách hàng hóa cần bổ sung
+					// Thì sắp xếp danh sách hàng hóa của chứng từ mới trước
+					List<HangHoa> hangHoaDs = new ArrayList<>();
+					Iterator<HangHoa> hangHoaIter = chungTu.getHangHoaDs().iterator();
+					while (hangHoaIter.hasNext()) {
+						HangHoa hangHoa = hangHoaIter.next();
+
+						int pos = hangHoaDs.indexOf(hangHoa);
+						if (pos > -1) {
+							hangHoaDs.get(pos).tronTk(hangHoa);
+						} else {
+							hangHoaDs.add(hangHoa);
+						}
+					}
+					chungTu.setHangHoaDs(hangHoaDs);
+
+					// Rồi gộp danh sách hàng hóa chứng từ mới vào danh sách hàng hóa chứng từ cũ
+					int pos = ketQua.indexOf(chungTu);
+					if (pos > -1) {
+						ChungTu chungTuTmpl = ketQua.get(pos);
+
+						if (chungTuTmpl.getHangHoaDs() != null) {
+							Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
+							while (hhIter.hasNext()) {
+								HangHoa hangHoa = hhIter.next();
+
+								int posTmpl = chungTuTmpl.getHangHoaDs().indexOf(hangHoa);
+								if (posTmpl > -1) {
+									chungTuTmpl.getHangHoaDs().get(posTmpl).tronTk(hangHoa);
+								} else {
+									chungTuTmpl.themHangHoa(hangHoa);
+								}
+							}
+						} else {
+							chungTuTmpl.themHangHoa(chungTu.getHangHoaDs());
+						}
+					} else {
+						ketQua.add(chungTu);
+					}
 				} else {
-					ketQua.add(chungTu);
+					// Nếu chứng từ mới không có danh sách hàng hóa cần bổ sung,
+					// thì đưa nó vào danh sách kết quả nếu trước đó chưa có nó
+					if (ketQua.indexOf(chungTu) == -1) {
+						ketQua.add(chungTu);
+					}
 				}
 			}
 		}
@@ -253,105 +288,85 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				loaiTien.setBanRa(rs.getDouble("TY_GIA"));
 				chungTu.setLoaiTien(loaiTien);
 
+				HangHoa hangHoa = new HangHoa();
+				hangHoa.setMaHh(rs.getInt("MA_HH"));
+				hangHoa.setKyHieuHh(rs.getString("KH_HH"));
+				hangHoa.setTenHh(rs.getString("TEN_HH"));
+				hangHoa.setSoLuong(rs.getDouble("SO_LUONG_TN"));
+
+				DonVi donVi = new DonVi();
+				donVi.setMaDv(rs.getInt("MA_DV"));
+				donVi.setTenDv(rs.getString("TEN_DV"));
+				hangHoa.setDonVi(donVi);
+
+				NhomHang nhomHang = new NhomHang();
+				nhomHang.setMaNhomHh(rs.getInt("MA_NHOM_HH"));
+				nhomHang.setKyHieuNhomHh(rs.getString("KH_NHOM_HH"));
+				nhomHang.setTenNhomHh(rs.getString("TEN_NHOM_HH"));
+				hangHoa.setNhomHh(nhomHang);
+
+				Tien giaMua = new Tien();
+				giaMua.setSoTien(rs.getDouble("GIA_MUA"));
+				giaMua.setLoaiTien(loaiTien);
+				giaMua.setGiaTri(loaiTien.getBanRa() * giaMua.getSoTien());
+				hangHoa.setGiaMua(giaMua);
+
+				Tien giaNhapKho = new Tien();
+				giaNhapKho.setSoTien(rs.getDouble("GIA_NHAP_KHO"));
+				giaNhapKho.setLoaiTien(loaiTien);
+				giaNhapKho.setGiaTri(loaiTien.getBanRa() * giaNhapKho.getSoTien());
+				hangHoa.setGiaNhapKho(giaNhapKho);
+
+				Tien giaBan = new Tien();
+				giaBan.setSoTien(rs.getDouble("GIA_BAN"));
+				giaBan.setLoaiTien(loaiTien);
+				giaBan.setGiaTri(loaiTien.getBanRa() * giaBan.getSoTien());
+				hangHoa.setGiaMua(giaBan);
+
+				KhoHang khoHang = new KhoHang();
+				khoHang.setMaKho(rs.getInt("MA_KHO"));
+				khoHang.setKyHieuKho(rs.getString("KH_KHO"));
+				khoHang.setTenKho(rs.getString("TEN_KHO"));
+				khoHang.setDiaChi(rs.getString("DIA_CHI"));
+				khoHang.setMoTa(rs.getString("MO_TA"));
+				hangHoa.setKho(khoHang);
+
 				TaiKhoan taiKhoan = new TaiKhoan();
 				taiKhoan.setSoDu(rs.getInt("SO_DU"));
 				taiKhoan.setLyDo(rs.getString("TK_LY_DO"));
+				taiKhoan.setMaNvkt(rs.getInt("MA_NVKT"));
 
 				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
 				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
 				loaiTaiKhoan.setTenTk(rs.getString("TEN_TK"));
 				taiKhoan.setLoaiTaiKhoan(loaiTaiKhoan);
 
-				Tien tien = new Tien();
-				tien.setSoTien(rs.getDouble("SO_TIEN"));
-				// if (loaiTaiKhoan.getMaTk().equals(LoaiTaiKhoan.TIEN_MAT_NT)
-				// || loaiTaiKhoan.getMaTk().equals(LoaiTaiKhoan.TIEN_GUI_NGAN_HANG_NT)
-				// || loaiTaiKhoan.getMaTk().equals(LoaiTaiKhoan.TIEN_DANG_CHUYEN_NT)
-				// || loaiTaiKhoan.getMaTk().equals(LoaiTaiKhoan.TIEN_MAT_VANG)
-				// || loaiTaiKhoan.getMaTk().equals(LoaiTaiKhoan.TIEN_GUI_NGAN_HANG_VANG)) {
-				tien.setLoaiTien(loaiTien);
-				// }
-				tien.setGiaTri(tien.getLoaiTien().getBanRa() * tien.getSoTien());
-				taiKhoan.setSoTien(tien);
+				Tien tkTien = new Tien();
+				tkTien.setSoTien(rs.getDouble("SO_TIEN"));
+				tkTien.setLoaiTien(loaiTien);
+				tkTien.setGiaTri(tkTien.getLoaiTien().getBanRa() * tkTien.getSoTien());
+				taiKhoan.setSoTien(tkTien);
 
-				chungTu.themTaiKhoan(taiKhoan);
 				taiKhoan.setChungTu(chungTu);
+
+				int loaiTk = rs.getInt("LOAI_TK");
+				if (loaiTk == HangHoa.TK_THANH_TOAN) {
+					hangHoa.setTkThanhtoan(taiKhoan);
+				} else if (loaiTk == HangHoa.TK_KHO) {
+					hangHoa.setTkKho(taiKhoan);
+				} else if (loaiTk == HangHoa.TK_DOANH_THU) {
+					hangHoa.setTkDoanhThu(taiKhoan);
+				} else if (loaiTk == HangHoa.TK_CHI_PHI) {
+					hangHoa.setTkChiPhi(taiKhoan);
+				}
+
+				chungTu.themHangHoa(hangHoa);
 
 				return chungTu;
 			} catch (Exception e) {
 				return null;
 			}
 		}
-	}
-
-	@Override
-	public ChungTu layChungTu(int maCt) {
-		String layChungTu = LAY_CHUNG_TU_THEO_MACT;
-
-		logger.info("Lấy chứng từ theo MA_CT: '" + maCt + "' ...");
-		logger.info(layChungTu);
-
-		Object[] objs = { maCt, maCt, maCt };
-		List<ChungTu> chungTuDs = jdbcTmpl.query(layChungTu, objs, new ChungTuMapper());
-
-		// Gộp chứng từ trùng nhau nhưng có tài khoản ảnh hường khác nhau
-		List<ChungTu> ketQua = null;
-		if (chungTuDs != null) {
-			ketQua = new ArrayList<>();
-			Iterator<ChungTu> iter = chungTuDs.iterator();
-			while (iter.hasNext()) {
-				ChungTu chungTu = iter.next();
-
-				int pos = ketQua.indexOf(chungTu);
-				if (pos > -1) {
-					ChungTu chungTuTmpl = ketQua.get(pos);
-					chungTuTmpl.themTaiKhoan(chungTu.getTaiKhoanDs());
-				} else {
-					ketQua.add(chungTu);
-				}
-			}
-		}
-
-		if (ketQua != null && ketQua.size() > 0) {
-			return ketQua.get(0);
-		}
-
-		return null;
-	}
-	
-	@Override
-	public ChungTu layChungTuKho(int maCt) {
-		String layChungTu = LAY_CHUNG_TU_KHO_THEO_MACT;
-
-		logger.info("Lấy chứng từ theo MA_CT: '" + maCt + "' ...");
-		logger.info(layChungTu);
-
-		Object[] objs = { maCt, maCt, maCt };
-		List<ChungTu> chungTuDs = jdbcTmpl.query(layChungTu, objs, new ChungTuKhoMapper());
-
-		// Gộp chứng từ trùng nhau nhưng có tài khoản ảnh hường khác nhau
-		List<ChungTu> ketQua = null;
-		if (chungTuDs != null) {
-			ketQua = new ArrayList<>();
-			Iterator<ChungTu> iter = chungTuDs.iterator();
-			while (iter.hasNext()) {
-				ChungTu chungTu = iter.next();
-
-				int pos = ketQua.indexOf(chungTu);
-				if (pos > -1) {
-					ChungTu chungTuTmpl = ketQua.get(pos);
-					chungTuTmpl.themTaiKhoan(chungTu.getTaiKhoanDs());
-				} else {
-					ketQua.add(chungTu);
-				}
-			}
-		}
-
-		if (ketQua != null && ketQua.size() > 0) {
-			return ketQua.get(0);
-		}
-
-		return null;
 	}
 
 	@Override
@@ -388,7 +403,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 		return null;
 	}
-	
+
 	@Override
 	public ChungTu layChungTuKho(int maCt, String loaiCt) {
 		String layChungTu = LAY_CHUNG_TU_KHO_THEO_MACT_LOAICT;
@@ -407,12 +422,53 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 			while (iter.hasNext()) {
 				ChungTu chungTu = iter.next();
 
-				int pos = ketQua.indexOf(chungTu);
-				if (pos > -1) {
-					ChungTu chungTuTmpl = ketQua.get(pos);
-					chungTuTmpl.themTaiKhoan(chungTu.getTaiKhoanDs());
+				// Với mỗi chứng từ
+				if (chungTu.getHangHoaDs() != null) {
+					// Nếu chứng từ mới có danh sách hàng hóa cần bổ sung
+					// Thì sắp xếp danh sách hàng hóa của chứng từ mới trước
+					List<HangHoa> hangHoaDs = new ArrayList<>();
+					Iterator<HangHoa> hangHoaIter = chungTu.getHangHoaDs().iterator();
+					while (hangHoaIter.hasNext()) {
+						HangHoa hangHoa = hangHoaIter.next();
+
+						int pos = hangHoaDs.indexOf(hangHoa);
+						if (pos > -1) {
+							hangHoaDs.get(pos).tronTk(hangHoa);
+						} else {
+							hangHoaDs.add(hangHoa);
+						}
+					}
+					chungTu.setHangHoaDs(hangHoaDs);
+
+					// Rồi gộp danh sách hàng hóa chứng từ mới vào danh sách hàng hóa chứng từ cũ
+					int pos = ketQua.indexOf(chungTu);
+					if (pos > -1) {
+						ChungTu chungTuTmpl = ketQua.get(pos);
+
+						if (chungTuTmpl.getHangHoaDs() != null) {
+							Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
+							while (hhIter.hasNext()) {
+								HangHoa hangHoa = hhIter.next();
+
+								int posTmpl = chungTuTmpl.getHangHoaDs().indexOf(hangHoa);
+								if (posTmpl > -1) {
+									chungTuTmpl.getHangHoaDs().get(posTmpl).tronTk(hangHoa);
+								} else {
+									chungTuTmpl.themHangHoa(hangHoa);
+								}
+							}
+						} else {
+							chungTuTmpl.themHangHoa(chungTu.getHangHoaDs());
+						}
+					} else {
+						ketQua.add(chungTu);
+					}
 				} else {
-					ketQua.add(chungTu);
+					// Nếu chứng từ mới không có danh sách hàng hóa cần bổ sung,
+					// thì đưa nó vào danh sách kết quả nếu trước đó chưa có nó
+					if (ketQua.indexOf(chungTu) == -1) {
+						ketQua.add(chungTu);
+					}
 				}
 			}
 		}
@@ -535,6 +591,10 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 	@Override
 	public void themChungTuKho(ChungTu chungTu) {
+		if (chungTu == null || chungTu.getHangHoaDs() == null) {
+			return;
+		}
+
 		String themChungTu = THEM_CHUNG_TU_KHO;
 		String themTaiKhoan = THEM_TAI_KHOAN;
 		String themChungTuTaiKhoanKho = THEM_CHUNG_TU_TAI_KHOAN_KHO;
@@ -560,62 +620,101 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					stt.setInt(9, chungTu.getDoiTuong().getMaDt());
 					stt.setInt(10, chungTu.getDoiTuong().getLoaiDt());
 					stt.setString(11, chungTu.getDoiTuong().getNguoiNop());
-					stt.setInt(12, chungTu.getKhoBai().getMaKho());
+					// stt.setInt(12, chungTu.getKhoBai().getMaKho());
 
 					return stt;
 				}
 			}, holder);
 
-			// Thêm chứng từ tài khoản
 			chungTu.setMaCt(holder.getKey().intValue());
-			Iterator<NghiepVuKeToan_Xn> iter = chungTu.getNghiepVuKeToanDs().iterator();
-			while (iter.hasNext()) {
-				NghiepVuKeToan_Xn nvkt = iter.next();
 
-				logger.info("Thêm vào bảng tai_khoan: ");
-				logger.info("Thêm tài khoản nợ " + nvkt.getTaiKhoanNo());
-				GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
-				jdbcTmpl.update(new PreparedStatementCreator() {
-					@Override
-					public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-						PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
-						stt.setString(1, nvkt.getTaiKhoanNo().getLoaiTaiKhoan().getMaTk());
-						stt.setDouble(2, nvkt.getTaiKhoanNo().getSoTien().getSoTien());
-						stt.setInt(3, nvkt.getTaiKhoanNo().getSoDu());
-						stt.setString(4, nvkt.getTaiKhoanNo().getLyDo());
+			// Với từng loại hàng hóa
+			Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
+			while (hhIter.hasNext()) {
+				HangHoa hangHoa = hhIter.next();
+				logger.info("Hàng hóa: " + hangHoa);
 
-						return stt;
-					}
-				}, nvktHolder);
-				nvkt.getTaiKhoanNo().setMaNvkt(nvktHolder.getKey().intValue());
+				logger.info("Thêm vào chung_tu_hang_hoa");
+				jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
+						hangHoa.getGiaMua().getSoTien(), hangHoa.getGiaNhapKho().getSoTien(),
+						hangHoa.getGiaBan().getSoTien(), hangHoa.getKho().getMaKho());
 
-				logger.info("Thêm vào tài khoản nợ vào chung_tu_nvkt");
-				jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), nvkt.getHangHoa().getMaHh(),
-						nvkt.getTaiKhoanNo().getMaNvkt());
+				logger.info("Thêm vào bảng nghiep_vu_ke_toan: ");
+				if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null) {
+					logger.info("Tài khoản kho: " + hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
+					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
+					jdbcTmpl.update(new PreparedStatementCreator() {
+						@Override
+						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
+							stt.setString(1, hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
+							stt.setDouble(2, hangHoa.getSoLuong() * hangHoa.getGiaMua().getSoTien());
+							stt.setInt(3, hangHoa.getTkKho().getSoDu());
+							stt.setString(4, chungTu.getLyDo());
 
-				logger.info("Có " + nvkt.getTaiKhoanCo());
-				nvktHolder = new GeneratedKeyHolder();
-				jdbcTmpl.update(new PreparedStatementCreator() {
-					@Override
-					public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-						PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
-						stt.setString(1, nvkt.getTaiKhoanCo().getLoaiTaiKhoan().getMaTk());
-						stt.setDouble(2, nvkt.getTaiKhoanCo().getSoTien().getSoTien());
-						stt.setInt(3, nvkt.getTaiKhoanCo().getSoDu());
-						stt.setString(4, nvkt.getTaiKhoanCo().getLyDo());
+							return stt;
+						}
+					}, nvktHolder);
+					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
+							nvktHolder.getKey().intValue(), HangHoa.TK_KHO);
+				}
 
-						return stt;
-					}
-				}, nvktHolder);
-				nvkt.getTaiKhoanCo().setMaNvkt(nvktHolder.getKey().intValue());
+				if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null) {
+					logger.info("Tài khoản doanh thu:" + hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
+					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
+					jdbcTmpl.update(new PreparedStatementCreator() {
+						@Override
+						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
+							stt.setString(1, hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
+							stt.setDouble(2, hangHoa.getSoLuong() * hangHoa.getGiaMua().getSoTien());
+							stt.setInt(3, hangHoa.getTkDoanhThu().getSoDu());
+							stt.setString(4, chungTu.getLyDo());
 
-				logger.info("Thêm vào tài khoản có vào chung_tu_nvkt");
-				jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), nvkt.getHangHoa().getMaHh(),
-						nvkt.getTaiKhoanCo().getMaNvkt());
+							return stt;
+						}
+					}, nvktHolder);
+					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
+							nvktHolder.getKey().intValue(), HangHoa.TK_DOANH_THU);
+				}
 
-				logger.info("Thêm vào bảng tài khoản vào  chung_tu_hanghoa");
-				jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), nvkt.getHangHoa().getMaHh(), nvkt.getSoLuongCt(),
-						nvkt.getSoLuongTn(), nvkt.getDonGia().getSoTien());
+				if (hangHoa.getTkChiPhi() != null && hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk() != null) {
+					logger.info("Tài khoản chi phí:" + hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
+					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
+					jdbcTmpl.update(new PreparedStatementCreator() {
+						@Override
+						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
+							stt.setString(1, hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
+							stt.setDouble(2, hangHoa.getSoLuong() * hangHoa.getGiaMua().getSoTien());
+							stt.setInt(3, hangHoa.getTkChiPhi().getSoDu());
+							stt.setString(4, chungTu.getLyDo());
+
+							return stt;
+						}
+					}, nvktHolder);
+					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
+							nvktHolder.getKey().intValue(), HangHoa.TK_CHI_PHI);
+				}
+
+				if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null) {
+					logger.info("Tài khoản thanh toán:" + hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
+					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
+					jdbcTmpl.update(new PreparedStatementCreator() {
+						@Override
+						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
+							stt.setString(1, hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
+							stt.setDouble(2, hangHoa.getSoLuong() * hangHoa.getGiaMua().getSoTien());
+							stt.setInt(3, hangHoa.getTkThanhtoan().getSoDu());
+							stt.setString(4, chungTu.getLyDo());
+
+							return stt;
+						}
+					}, nvktHolder);
+					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
+							nvktHolder.getKey().intValue(), HangHoa.TK_THANH_TOAN);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -625,80 +724,143 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 	@Override
 	public void capNhatChungTuKho(ChungTu chungTu) {
 		String capNhatChungTu = CAP_NHAT_CHUNG_TU_KHO;
+
 		String themTaiKhoan = THEM_TAI_KHOAN;
 		String themChungTuTaiKhoanKho = THEM_CHUNG_TU_TAI_KHOAN_KHO;
 		String themChungTuHangHoa = THEM_CHUNG_TU_HANG_HOA;
+
 		String xoaChungTuHangHoa = XOA_CHUNG_TU_HANG_HOA;
-		String xoaChungTuTkKho = XOA_CHUNG_TU_TAI_KHOAN_KHO;
-		String xoaTk = XOA_TAI_KHOAN;
+		String xoaChungTuNvktKho = XOA_CHUNG_TU_NVKT_KHO;
+		String xoaChungTuNvkt = XOA_NVKT;
 
 		try {
-			// Cập nhật chứng từ
+			logger.info("Cập nhật chứng từ " + chungTu);
 			jdbcTmpl.update(capNhatChungTu, chungTu.getSoCt(), chungTu.getLoaiCt(), chungTu.getNgayLap(),
 					chungTu.getNgayHt(), chungTu.getLyDo(), chungTu.getLoaiTien().getMaLt(),
 					chungTu.getLoaiTien().getBanRa(), chungTu.getKemTheo(), chungTu.getDoiTuong().getMaDt(),
-					chungTu.getDoiTuong().getLoaiDt(), chungTu.getDoiTuong().getNguoiNop(),
-					chungTu.getKhoBai().getMaKho(), chungTu.getMaCt());
+					chungTu.getDoiTuong().getLoaiDt(), chungTu.getDoiTuong().getNguoiNop(), chungTu.getMaCt());
 
-			// Cập nhật (hoặc thêm mới) chứng từ tài khoản
-			if (chungTu.getNghiepVuKeToanDs() != null && chungTu.getNghiepVuKeToanDs().size() > 0) {
-				// Xóa hết tài khoản cũ rồi thêm mới từ đầu
-				jdbcTmpl.update(xoaChungTuHangHoa, chungTu.getMaCt());
-				jdbcTmpl.update(xoaTk, chungTu.getMaCt());
-				jdbcTmpl.update(xoaChungTuTkKho, chungTu.getMaCt());
+			// Xóa dữ liệu cũ liên quan đến chứng từ:
+			// Xóa chung_tu_hang_hoa
+			jdbcTmpl.update(xoaChungTuHangHoa, chungTu.getMaCt());
 
-				// Thêm mới từ đầu
-				Iterator<NghiepVuKeToan_Xn> iter = chungTu.getNghiepVuKeToanDs().iterator();
-				while (iter.hasNext()) {
-					NghiepVuKeToan_Xn nvkt = iter.next();
+			// Xóa chung_tu_nvkt
+			jdbcTmpl.update(xoaChungTuNvktKho, chungTu.getMaCt());
 
-					logger.info("Thêm vào bảng tai_khoan: ");
-					logger.info("Thêm tài khoản nợ " + nvkt.getTaiKhoanNo());
+			// Xóa nghiep_vu_ke_toan
+			if (chungTu.getHangHoaDs() != null && chungTu.getHangHoaDs().size() > 0) {
+				// Với từng loại hàng hóa
+				Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
+				while (hhIter.hasNext()) {
+					HangHoa hangHoa = hhIter.next();
+
+					if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null) {
+						jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkKho().getMaNvkt());
+					}
+
+					if (hangHoa.getTkDoanhThu() != null
+							&& hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null) {
+						jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkDoanhThu().getMaNvkt());
+					}
+
+					if (hangHoa.getTkChiPhi() != null && hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk() != null) {
+						jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkChiPhi().getMaNvkt());
+					}
+
+					if (hangHoa.getTkThanhtoan() != null
+							&& hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null) {
+						jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkThanhtoan().getMaNvkt());
+					}
+				}
+			}
+
+			// Với từng loại hàng hóa
+			Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
+			while (hhIter.hasNext()) {
+				HangHoa hangHoa = hhIter.next();
+				logger.info("Hàng hóa: " + hangHoa);
+
+				// Thêm vào chung_tu_hang_hoa
+				jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
+						hangHoa.getGiaMua().getSoTien(), hangHoa.getKho().getMaKho(), hangHoa.getGiaMua().getSoTien());
+
+				// Thêm vào bảng nghiep_vu_ke_toan
+				if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null) {
+					logger.info("Tài khoản kho: " + hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
-							stt.setString(1, nvkt.getTaiKhoanNo().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, nvkt.getTaiKhoanNo().getSoTien().getSoTien());
-							stt.setInt(3, nvkt.getTaiKhoanNo().getSoDu());
-							stt.setString(4, nvkt.getTaiKhoanNo().getLyDo());
+							stt.setString(1, hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
+							stt.setDouble(2, hangHoa.getSoLuong() * hangHoa.getGiaMua().getSoTien());
+							stt.setInt(3, hangHoa.getTkKho().getSoDu());
+							stt.setString(4, chungTu.getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
-					nvkt.getTaiKhoanNo().setMaNvkt(nvktHolder.getKey().intValue());
+					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
+							nvktHolder.getKey().intValue(), HangHoa.TK_KHO);
+				}
 
-					logger.info("Thêm vào tài khoản nợ vào chung_tu_nvkt");
-					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), nvkt.getHangHoa().getMaHh(),
-							nvkt.getTaiKhoanNo().getMaNvkt());
-
-					logger.info("Có " + nvkt.getTaiKhoanCo());
-					nvktHolder = new GeneratedKeyHolder();
+				if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null) {
+					logger.info("Tài khoản doanh thu:" + hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
+					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
-							stt.setString(1, nvkt.getTaiKhoanCo().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, nvkt.getTaiKhoanCo().getSoTien().getSoTien());
-							stt.setInt(3, nvkt.getTaiKhoanCo().getSoDu());
-							stt.setString(4, nvkt.getTaiKhoanCo().getLyDo());
+							stt.setString(1, hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
+							stt.setDouble(2, hangHoa.getSoLuong() * hangHoa.getGiaMua().getSoTien());
+							stt.setInt(3, hangHoa.getTkDoanhThu().getSoDu());
+							stt.setString(4, chungTu.getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
-					nvkt.getTaiKhoanCo().setMaNvkt(nvktHolder.getKey().intValue());
+					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
+							nvktHolder.getKey().intValue(), HangHoa.TK_DOANH_THU);
+				}
 
-					logger.info("Thêm vào tài khoản có vào chung_tu_nvkt");
-					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), nvkt.getHangHoa().getMaHh(),
-							nvkt.getTaiKhoanCo().getMaNvkt());
+				if (hangHoa.getTkChiPhi() != null && hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk() != null) {
+					logger.info("Tài khoản chi phí:" + hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
+					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
+					jdbcTmpl.update(new PreparedStatementCreator() {
+						@Override
+						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
+							stt.setString(1, hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
+							stt.setDouble(2, hangHoa.getSoLuong() * hangHoa.getGiaMua().getSoTien());
+							stt.setInt(3, hangHoa.getTkChiPhi().getSoDu());
+							stt.setString(4, chungTu.getLyDo());
 
-					logger.info("Thêm vào bảng tài khoản vào  chung_tu_hanghoa");
-					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), nvkt.getHangHoa().getMaHh(),
-							nvkt.getSoLuongCt(), nvkt.getSoLuongTn(), nvkt.getDonGia().getSoTien());
+							return stt;
+						}
+					}, nvktHolder);
+					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
+							nvktHolder.getKey().intValue(), HangHoa.TK_CHI_PHI);
+				}
+
+				if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null) {
+					logger.info("Tài khoản thanh toán:" + hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
+					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
+					jdbcTmpl.update(new PreparedStatementCreator() {
+						@Override
+						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
+							stt.setString(1, hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
+							stt.setDouble(2, hangHoa.getSoLuong() * hangHoa.getGiaMua().getSoTien());
+							stt.setInt(3, hangHoa.getTkThanhtoan().getSoDu());
+							stt.setString(4, chungTu.getLyDo());
+
+							return stt;
+						}
+					}, nvktHolder);
+					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
+							nvktHolder.getKey().intValue(), HangHoa.TK_THANH_TOAN);
 				}
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -715,15 +877,6 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 	}
 
 	@Override
-	public void xoaChungTu(int maCt) {
-		String xoaChungTu = XOA_CHUNG_TU;
-		String xoaChungTuTk = XOA_CHUNG_TU_TAI_KHOAN;
-		jdbcTmpl.update(xoaChungTu, maCt);
-		jdbcTmpl.update(xoaChungTuTk, maCt);
-		logger.info("Xóa chứng từ có MA_CT = " + maCt);
-	}
-
-	@Override
 	public void xoaChungTu(int maCt, String loaiCt) {
 		String xoaChungTu = XOA_CHUNG_TU_THEO_MACT_LOAICT;
 		String xoaChungTuTk = XOA_CHUNG_TU_TAI_KHOAN;
@@ -732,4 +885,51 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 		logger.info("Xóa chứng từ có MA_CT = " + maCt);
 	}
 
+	@Override
+	public void xoaChungTuKho(ChungTu chungTu) {
+		if (chungTu == null)
+			return;
+
+		String xoaChungTu = XOA_CHUNG_TU_THEO_MACT_LOAICT;
+		String xoaChungTuHangHoa = XOA_CHUNG_TU_HANG_HOA;
+		String xoaChungTuNvktKho = XOA_CHUNG_TU_NVKT_KHO;
+		String xoaChungTuNvkt = XOA_NVKT;
+
+		// Xóa chứng từ
+		jdbcTmpl.update(xoaChungTu, chungTu.getMaCt(), chungTu.getLoaiCt());
+
+		// Xóa dữ liệu cũ liên quan đến chứng từ:
+		// Xóa chung_tu_hang_hoa
+		jdbcTmpl.update(xoaChungTuHangHoa, chungTu.getMaCt());
+
+		// Xóa chung_tu_nvkt
+		jdbcTmpl.update(xoaChungTuNvktKho, chungTu.getMaCt());
+
+		// Xóa nghiep_vu_ke_toan
+		if (chungTu.getHangHoaDs() != null && chungTu.getHangHoaDs().size() > 0) {
+			// Với từng loại hàng hóa
+			Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
+			while (hhIter.hasNext()) {
+				HangHoa hangHoa = hhIter.next();
+
+				if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null) {
+					jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkKho().getMaNvkt());
+				}
+
+				if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null) {
+					jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkDoanhThu().getMaNvkt());
+				}
+
+				if (hangHoa.getTkChiPhi() != null && hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk() != null) {
+					jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkChiPhi().getMaNvkt());
+				}
+
+				if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null) {
+					jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkThanhtoan().getMaNvkt());
+				}
+			}
+		}
+
+		logger.info("Xóa chứng từ có MA_CT = " + chungTu.getMaCt());
+	}
 }

@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.idi.finance.bean.hanghoa.DonVi;
 import com.idi.finance.bean.hanghoa.HangHoa;
-import com.idi.finance.bean.hanghoa.KhoBai;
-import com.idi.finance.bean.hanghoa.NhomHangHoa;
+import com.idi.finance.bean.hanghoa.KhoHang;
+import com.idi.finance.bean.hanghoa.NhomHang;
 
 public interface HangHoaDAO {
 	public List<DonVi> danhSachDonViHangHoa();
@@ -18,21 +18,25 @@ public interface HangHoaDAO {
 
 	public void xoaDonVi(int maDv);
 
-	public NhomHangHoa danhSachNhomHangHoa(NhomHangHoa nhomHangHoa);
+	public NhomHang danhSachNhomHangHoa(NhomHang nhomHangHoa);
 
-	public List<NhomHangHoa> danhSachNhomHangHoa();
+	public List<NhomHang> danhSachNhomHangHoa();
 
-	public NhomHangHoa layNhomHangHoa(int maNhomHn);
+	public NhomHang layNhomHangHoa(int maNhomHn);
 
-	public void capNhatNhomHangHoa(NhomHangHoa nhomHangHoa);
+	public void capNhatNhomHangHoa(NhomHang nhomHangHoa);
 
-	public void themNhomHangHoa(NhomHangHoa nhomHangHoa);
+	public void themNhomHangHoa(NhomHang nhomHangHoa);
 
 	public void xoaNhomHangHoa(int maNhomHh);
 
 	public List<HangHoa> danhSachHangHoa();
+	
+	public List<HangHoa> danhSachHangHoa(String tuKhoa);
 
 	public HangHoa layHangHoa(int maHh);
+	
+	public boolean kiemTraDuyNhat(int maHh, String kyHieuHh);
 
 	public void capNhatHangHoa(HangHoa hangHoa);
 
@@ -40,13 +44,13 @@ public interface HangHoaDAO {
 
 	public void xoaHangHoa(int maHh);
 
-	public List<KhoBai> danhSachKhoBai();
+	public List<KhoHang> danhSachKhoBai();
 
-	public KhoBai layKhoBai(int maKho);
+	public KhoHang layKhoBai(int maKho);
 
-	public void capNhatKhoBai(KhoBai khoBai);
+	public void capNhatKhoBai(KhoHang khoBai);
 
-	public void themKhoBai(KhoBai khoBai);
+	public void themKhoBai(KhoHang khoBai);
 
 	public void xoaKhoBai(int maKho);
 }

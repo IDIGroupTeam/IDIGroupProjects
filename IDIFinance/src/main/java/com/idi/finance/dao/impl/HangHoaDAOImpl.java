@@ -12,8 +12,9 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.idi.finance.bean.hanghoa.DonVi;
 import com.idi.finance.bean.hanghoa.HangHoa;
-import com.idi.finance.bean.hanghoa.KhoBai;
-import com.idi.finance.bean.hanghoa.NhomHangHoa;
+import com.idi.finance.bean.hanghoa.KhoHang;
+import com.idi.finance.bean.hanghoa.NhomHang;
+import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.HangHoaDAO;
 
 public class HangHoaDAOImpl implements HangHoaDAO {
@@ -49,8 +50,14 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 	@Value("${DANH_SACH_HANG_HOA}")
 	private String DANH_SACH_HANG_HOA;
 
+	@Value("${DANH_SACH_HANG_HOA_THEO_TEN}")
+	private String DANH_SACH_HANG_HOA_THEO_TEN;
+
 	@Value("${LAY_HANG_HOA}")
 	private String LAY_HANG_HOA;
+
+	@Value("${KIEM_TRA_KH_HH}")
+	private String KIEM_TRA_KH_HH;
 
 	@Value("${CAP_NHAT_HANG_HOA}")
 	private String CAP_NHAT_HANG_HOA;
@@ -155,18 +162,18 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 	}
 
 	@Override
-	public NhomHangHoa danhSachNhomHangHoa(NhomHangHoa nhomHangHoa) {
+	public NhomHang danhSachNhomHangHoa(NhomHang nhomHangHoa) {
 		String query = DANH_SACH_NHOM_HANG_HOA_THEO_CHA;
 
 		Object[] params = { nhomHangHoa.getMaNhomHh() };
-		List<NhomHangHoa> nhomHangHoaDs = jdbcTmpl.query(query, params, new NhomHangHoaMapper());
+		List<NhomHang> nhomHangHoaDs = jdbcTmpl.query(query, params, new NhomHangHoaMapper());
 
 		if (nhomHangHoaDs != null && nhomHangHoaDs.size() > 0) {
 			int doSau = 1;
 
-			Iterator<NhomHangHoa> iter = nhomHangHoaDs.iterator();
+			Iterator<NhomHang> iter = nhomHangHoaDs.iterator();
 			while (iter.hasNext()) {
-				NhomHangHoa nhomHangHoaCon = iter.next();
+				NhomHang nhomHangHoaCon = iter.next();
 				nhomHangHoaCon.setNhomHh(nhomHangHoa);
 				nhomHangHoaCon.setMuc(nhomHangHoa.getMuc() + 1);
 
@@ -182,23 +189,24 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 	}
 
 	@Override
-	public List<NhomHangHoa> danhSachNhomHangHoa() {
+	public List<NhomHang> danhSachNhomHangHoa() {
 		String query = DANH_SACH_NHOM_HANG_HOA;
 
-		List<NhomHangHoa> nhomHangHoaDs = jdbcTmpl.query(query, new NhomHangHoaMapper());
+		List<NhomHang> nhomHangHoaDs = jdbcTmpl.query(query, new NhomHangHoaMapper());
 
 		return nhomHangHoaDs;
 	}
 
-	public class NhomHangHoaMapper implements RowMapper<NhomHangHoa> {
-		public NhomHangHoa mapRow(ResultSet rs, int rowNum) throws SQLException {
+	public class NhomHangHoaMapper implements RowMapper<NhomHang> {
+		public NhomHang mapRow(ResultSet rs, int rowNum) throws SQLException {
 			try {
-				NhomHangHoa nhomHangHoa = new NhomHangHoa();
+				NhomHang nhomHangHoa = new NhomHang();
 
 				nhomHangHoa.setMaNhomHh(rs.getInt("MA_NHOM_HH"));
+				nhomHangHoa.setKyHieuNhomHh(rs.getString("KH_NHOM_HH"));
 				nhomHangHoa.setTenNhomHh(rs.getString("TEN_NHOM_HH"));
 
-				NhomHangHoa nhomHangHoaCha = new NhomHangHoa();
+				NhomHang nhomHangHoaCha = new NhomHang();
 				nhomHangHoaCha.setMaNhomHh(rs.getInt("MA_NHOM_HH_CHA"));
 				nhomHangHoa.setNhomHh(nhomHangHoaCha);
 
@@ -210,7 +218,7 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 	}
 
 	@Override
-	public NhomHangHoa layNhomHangHoa(int maNhomHn) {
+	public NhomHang layNhomHangHoa(int maNhomHn) {
 		String query = LAY_NHOM_HANG_HOA;
 
 		try {
@@ -222,29 +230,30 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 	}
 
 	@Override
-	public void capNhatNhomHangHoa(NhomHangHoa nhomHangHoa) {
+	public void capNhatNhomHangHoa(NhomHang nhomHangHoa) {
 		if (nhomHangHoa == null || nhomHangHoa.getNhomHh() == null) {
 			return;
 		}
 		String query = CAP_NHAT_NHOM_HANG_HOA;
 
 		try {
-			jdbcTmpl.update(query, nhomHangHoa.getTenNhomHh(), nhomHangHoa.getNhomHh().getMaNhomHh(),
-					nhomHangHoa.getMaNhomHh());
+			jdbcTmpl.update(query, nhomHangHoa.getKyHieuNhomHh(), nhomHangHoa.getTenNhomHh(),
+					nhomHangHoa.getNhomHh().getMaNhomHh(), nhomHangHoa.getMaNhomHh());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void themNhomHangHoa(NhomHangHoa nhomHangHoa) {
+	public void themNhomHangHoa(NhomHang nhomHangHoa) {
 		if (nhomHangHoa == null || nhomHangHoa.getNhomHh() == null) {
 			return;
 		}
 
 		String query = THEM_NHOM_HANG_HOA;
 		try {
-			jdbcTmpl.update(query, nhomHangHoa.getTenNhomHh(), nhomHangHoa.getNhomHh().getMaNhomHh());
+			jdbcTmpl.update(query, nhomHangHoa.getKyHieuNhomHh(), nhomHangHoa.getTenNhomHh(),
+					nhomHangHoa.getNhomHh().getMaNhomHh());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -268,13 +277,32 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 		return hangHoaDs;
 	}
 
+	@Override
+	public List<HangHoa> danhSachHangHoa(String tuKhoa) {
+		if (tuKhoa == null || tuKhoa.trim().equals("")) {
+			String query = DANH_SACH_HANG_HOA;
+
+			List<HangHoa> hangHoaDs = jdbcTmpl.query(query, new HangHoaMapper());
+			return hangHoaDs;
+		} else {
+			String query = DANH_SACH_HANG_HOA_THEO_TEN;
+			query = query.replaceAll("\\?", tuKhoa.trim());
+
+			List<HangHoa> hangHoaDs = jdbcTmpl.query(query, new HangHoaMapper());
+
+			return hangHoaDs;
+		}
+	}
+
 	public class HangHoaMapper implements RowMapper<HangHoa> {
 		public HangHoa mapRow(ResultSet rs, int rowNum) throws SQLException {
 			try {
 				HangHoa hangHoa = new HangHoa();
 
 				hangHoa.setMaHh(rs.getInt("MA_HH"));
+				hangHoa.setKyHieuHh(rs.getString("KH_HH"));
 				hangHoa.setTenHh(rs.getString("TEN_HH"));
+				hangHoa.setTinhChat(rs.getInt("TINH_CHAT"));
 
 				DonVi donVi = new DonVi();
 				donVi.setMaDv(rs.getInt("MA_DV"));
@@ -282,10 +310,29 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 				donVi.setMoTa(rs.getString("MO_TA"));
 				hangHoa.setDonVi(donVi);
 
-				NhomHangHoa nhomHangHoa = new NhomHangHoa();
+				NhomHang nhomHangHoa = new NhomHang();
 				nhomHangHoa.setMaNhomHh(rs.getInt("MA_NHOM_HH"));
+				nhomHangHoa.setKyHieuNhomHh(rs.getString("KH_NHOM_HH"));
 				nhomHangHoa.setTenNhomHh(rs.getString("TEN_NHOM_HH"));
 				hangHoa.setNhomHh(nhomHangHoa);
+
+				int maKho = rs.getInt("MA_KHO");
+				if (maKho > 0) {
+					KhoHang kho = layKhoBai(maKho);
+					hangHoa.setKhoMd(kho);
+				}
+
+				LoaiTaiKhoan tkKhoMd = new LoaiTaiKhoan();
+				tkKhoMd.setMaTk(rs.getString("MA_TK_KHO"));
+				hangHoa.setTkKhoMd(tkKhoMd);
+
+				LoaiTaiKhoan tkDoanhThuMd = new LoaiTaiKhoan();
+				tkDoanhThuMd.setMaTk(rs.getString("MA_TK_DT"));
+				hangHoa.setTkDoanhThuMd(tkDoanhThuMd);
+
+				LoaiTaiKhoan tkChiPhiMd = new LoaiTaiKhoan();
+				tkChiPhiMd.setMaTk(rs.getString("MA_TK_CP"));
+				hangHoa.setTkChiPhiMd(tkChiPhiMd);
 
 				return hangHoa;
 			} catch (Exception e) {
@@ -306,6 +353,26 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 		}
 	}
 
+	public boolean kiemTraDuyNhat(int maHh, String kyHieuHh) {
+		if (kyHieuHh == null || kyHieuHh.trim().equals("")) {
+			return true;
+		}
+
+		String query = KIEM_TRA_KH_HH;
+		try {
+			Object[] objs = { kyHieuHh, maHh };
+			Integer number = jdbcTmpl.queryForObject(query, objs, Integer.class);
+
+			if (number > 0) {
+				return false;
+			} else {
+				return true;
+			}
+		} catch (Exception e) {
+			return true;
+		}
+	};
+
 	@Override
 	public void capNhatHangHoa(HangHoa hangHoa) {
 		if (hangHoa == null || hangHoa.getDonVi() == null || hangHoa.getNhomHh() == null) {
@@ -314,8 +381,9 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 		String query = CAP_NHAT_HANG_HOA;
 
 		try {
-			jdbcTmpl.update(query, hangHoa.getTenHh(), hangHoa.getDonVi().getMaDv(), hangHoa.getNhomHh().getMaNhomHh(),
-					hangHoa.getMaHh());
+			jdbcTmpl.update(query, hangHoa.getKyHieuHh(), hangHoa.getTenHh(), hangHoa.getDonVi().getMaDv(),
+					hangHoa.getNhomHh().getMaNhomHh(), hangHoa.getKhoMd().getMaKho(), hangHoa.getTkKhoMd().getMaTk(),
+					hangHoa.getTkDoanhThuMd().getMaTk(), hangHoa.getTkChiPhiMd().getMaTk(), hangHoa.getMaHh());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -329,7 +397,9 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 
 		String query = THEM_HANG_HOA;
 		try {
-			jdbcTmpl.update(query, hangHoa.getTenHh(), hangHoa.getDonVi().getMaDv(), hangHoa.getNhomHh().getMaNhomHh());
+			jdbcTmpl.update(query, hangHoa.getKyHieuHh(), hangHoa.getTenHh(), hangHoa.getDonVi().getMaDv(),
+					hangHoa.getNhomHh().getMaNhomHh(), hangHoa.getKhoMd().getMaKho(), hangHoa.getTkKhoMd().getMaTk(),
+					hangHoa.getTkDoanhThuMd().getMaTk(), hangHoa.getTkChiPhiMd().getMaTk());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -343,22 +413,23 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 	}
 
 	@Override
-	public List<KhoBai> danhSachKhoBai() {
+	public List<KhoHang> danhSachKhoBai() {
 		String query = DANH_SACH_KHO;
 
 		logger.info("Danh sách kho bãi ...");
 		logger.info(query);
 
-		List<KhoBai> hangHoaDs = jdbcTmpl.query(query, new KhoBaiMapper());
+		List<KhoHang> hangHoaDs = jdbcTmpl.query(query, new KhoBaiMapper());
 		return hangHoaDs;
 	}
 
-	public class KhoBaiMapper implements RowMapper<KhoBai> {
-		public KhoBai mapRow(ResultSet rs, int rowNum) throws SQLException {
+	public class KhoBaiMapper implements RowMapper<KhoHang> {
+		public KhoHang mapRow(ResultSet rs, int rowNum) throws SQLException {
 			try {
-				KhoBai khoBai = new KhoBai();
+				KhoHang khoBai = new KhoHang();
 
 				khoBai.setMaKho(rs.getInt("MA_KHO"));
+				khoBai.setKyHieuKho(rs.getString("KH_KHO"));
 				khoBai.setTenKho(rs.getString("TEN_KHO"));
 				khoBai.setDiaChi(rs.getString("DIA_CHI"));
 				khoBai.setMoTa(rs.getString("MO_TA"));
@@ -371,7 +442,7 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 	}
 
 	@Override
-	public KhoBai layKhoBai(int maKho) {
+	public KhoHang layKhoBai(int maKho) {
 		String query = LAY_KHO;
 
 		try {
@@ -383,28 +454,29 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 	}
 
 	@Override
-	public void capNhatKhoBai(KhoBai khoBai) {
+	public void capNhatKhoBai(KhoHang khoBai) {
 		if (khoBai == null) {
 			return;
 		}
 		String query = CAP_NHAT_KHO;
 
 		try {
-			jdbcTmpl.update(query, khoBai.getTenKho(), khoBai.getDiaChi(), khoBai.getMoTa(), khoBai.getMaKho());
+			jdbcTmpl.update(query, khoBai.getKyHieuKho(), khoBai.getTenKho(), khoBai.getDiaChi(), khoBai.getMoTa(),
+					khoBai.getMaKho());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void themKhoBai(KhoBai khoBai) {
+	public void themKhoBai(KhoHang khoBai) {
 		if (khoBai == null) {
 			return;
 		}
 		String query = THEM_KHO;
 
 		try {
-			jdbcTmpl.update(query, khoBai.getTenKho(), khoBai.getDiaChi(), khoBai.getMoTa());
+			jdbcTmpl.update(query, khoBai.getKyHieuKho(), khoBai.getTenKho(), khoBai.getDiaChi(), khoBai.getMoTa());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

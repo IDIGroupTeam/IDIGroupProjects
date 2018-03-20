@@ -49,7 +49,7 @@
 	<table class="table table-bordered table-hover">
 		<thead>
 			<tr>
-				<!-- <th style="width: 100px;">Mã nhóm hàng hóa</th> -->
+				<th style="width: 100px;">Mã nhóm hàng hóa</th>
 				<th colspan="${nhomHangHoa.doSau}">Tên nhóm hàng hóa</th>
 			</tr>
 		</thead>
@@ -57,7 +57,7 @@
 			<c:forEach items="${nhomHangHoa.nhomHhDs}" var="nhomHangHoaCon"
 				varStatus="status">
 				<tr>
-					<%-- <td>${nhomHangHoaCon.maNhomHh}</td> --%>
+					<td>${nhomHangHoaCon.kyHieuNhomHh}</td>
 					<c:forEach begin="1" end="${nhomHangHoaCon.muc-1}">
 						<td></td>
 					</c:forEach>

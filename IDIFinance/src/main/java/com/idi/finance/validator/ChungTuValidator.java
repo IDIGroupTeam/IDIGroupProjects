@@ -10,6 +10,7 @@ import org.springframework.validation.Validator;
 
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.TaiKhoan;
+import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class ChungTuValidator implements Validator {
@@ -157,7 +158,100 @@ public class ChungTuValidator implements Validator {
 					errors.rejectValue("taiKhoanNoDs[0].loaiTaiKhoan.maTk",
 							"Duplicate.taiKhoanNoDs[0].loaiTaiKhoan.maTk");
 				}
+			} else if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_MUA_HANG)) {
+				// Validate cho chứng từ mua hàng
+				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "doiTuong.tenDt", "NotEmpty.chungTu.doiTuong.tenDt");
+				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lyDo", "NotEmpty.chungTu.lyDo");
+
+				if (chungTu.getLoaiTien().getBanRa() == 0) {
+					errors.rejectValue("loaiTien.banRa", "NotEmptyOrEqual0.chungTu.loaiTien.banRa");
+				}
+
+				if (chungTu.getHangHoaDs() != null) {
+					int id = 0;
+					Iterator<HangHoa> iter = chungTu.getHangHoaDs().iterator();
+					while (iter.hasNext()) {
+						HangHoa hangHoa = iter.next();
+
+						if (hangHoa.getTenHh() == null || hangHoa.getTenHh().trim().equals("")) {
+							errors.rejectValue("hangHoaDs[" + id + "].tenHh", "NotEmpty.hangHoa.tenHh");
+						}
+
+						if (hangHoa.getKho() == null || hangHoa.getKho().getMaKho() == 0) {
+							errors.rejectValue("hangHoaDs[" + id + "].kho.maKho", "NotEmpty.hangHoa.kho.maKho");
+						}
+
+						if (hangHoa.getTkKho() == null || hangHoa.getTkKho().getLoaiTaiKhoan() == null
+								|| hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() == null
+								|| hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+							errors.rejectValue("hangHoaDs[" + id + "].tkKho.loaiTaiKhoan.maTk",
+									"NotEmpty.hangHoa.tkKho.loaiTaiKhoan.maTk");
+						}
+
+						if (hangHoa.getTkThanhtoan() == null || hangHoa.getTkThanhtoan().getLoaiTaiKhoan() == null
+								|| hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() == null
+								|| hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+							errors.rejectValue("hangHoaDs[" + id + "].tkThanhtoan.loaiTaiKhoan.maTk",
+									"NotEmpty.hangHoa.tkThanhtoan.loaiTaiKhoan.maTk");
+						}
+						id++;
+					}
+				}
+			} else if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_BAN_HANG)) {
+				// Validate cho chứng từ mua hàng
+				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "doiTuong.tenDt", "NotEmpty.chungTu.doiTuong.tenDt");
+				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lyDo", "NotEmpty.chungTu.lyDo");
+
+				if (chungTu.getLoaiTien().getBanRa() == 0) {
+					errors.rejectValue("loaiTien.banRa", "NotEmptyOrEqual0.chungTu.loaiTien.banRa");
+				}
+
+				if (chungTu.getHangHoaDs() != null) {
+					int id = 0;
+					Iterator<HangHoa> iter = chungTu.getHangHoaDs().iterator();
+					while (iter.hasNext()) {
+						HangHoa hangHoa = iter.next();
+
+						if (hangHoa.getTenHh() == null || hangHoa.getTenHh().trim().equals("")) {
+							errors.rejectValue("hangHoaDs[" + id + "].tenHh", "NotEmpty.hangHoa.tenHh");
+						}
+
+						if (hangHoa.getKho() == null || hangHoa.getKho().getMaKho() == 0) {
+							errors.rejectValue("hangHoaDs[" + id + "].kho.maKho", "NotEmpty.hangHoa.kho.maKho");
+						}
+
+						if (hangHoa.getTkKho() == null || hangHoa.getTkKho().getLoaiTaiKhoan() == null
+								|| hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() == null
+								|| hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+							errors.rejectValue("hangHoaDs[" + id + "].tkKho.loaiTaiKhoan.maTk",
+									"NotEmpty.hangHoa.tkKho.loaiTaiKhoan.maTk");
+						}
+
+						if (hangHoa.getTkThanhtoan() == null || hangHoa.getTkThanhtoan().getLoaiTaiKhoan() == null
+								|| hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() == null
+								|| hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+							errors.rejectValue("hangHoaDs[" + id + "].tkThanhtoan.loaiTaiKhoan.maTk",
+									"NotEmpty.hangHoa.tkThanhtoan.loaiTaiKhoan.maTk");
+						}
+						
+						if (hangHoa.getTkDoanhThu() == null || hangHoa.getTkDoanhThu().getLoaiTaiKhoan() == null
+								|| hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() == null
+								|| hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+							errors.rejectValue("hangHoaDs[" + id + "].tkDoanhThu.loaiTaiKhoan.maTk",
+									"NotEmpty.hangHoa.tkDoanhThu.loaiTaiKhoan.maTk");
+						}
+
+						if (hangHoa.getTkChiPhi() == null || hangHoa.getTkChiPhi().getLoaiTaiKhoan() == null
+								|| hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk() == null
+								|| hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+							errors.rejectValue("hangHoaDs[" + id + "].tkChiPhi.loaiTaiKhoan.maTk",
+									"NotEmpty.hangHoa.tkChiPhi.loaiTaiKhoan.maTk");
+						}
+						id++;
+					}
+				}
 			} else if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_KT_TH)) {
+
 				// Validate cho phần kế toán tổng hợp
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "doiTuong.tenDt", "NotEmpty.chungTu.doiTuong.tenDt");
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lyDo", "NotEmpty.chungTu.lyDo");

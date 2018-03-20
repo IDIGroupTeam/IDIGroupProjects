@@ -13,6 +13,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="${url}/public/css/bootstrap.min.css" />
 <link rel="stylesheet" href="${url}/public/css/paneltab.css" />
+<link rel="stylesheet" href="${url}/public/css/bootstrap-combobox.css" />
 <link rel="stylesheet" href="${url}/public/css/bootstrap-dialog.min.css" />
 <link rel="stylesheet"
 	href="${url}/public/css/bootstrap-multiselect.css" />
@@ -25,8 +26,10 @@
 <script src="${url}/public/js/jquery.min.js"></script>
 <script src="${url}/public/js/bootstrap.min.js"></script>
 <script src="${url}/public/js/bootstrap-dialog.min.js"></script>
+<script src="${url}/public/js/bootstrap-combobox.js"></script>
 <script src="${url}/public/js/bootstrap-multiselect.js"></script>
 <script src="${url}/public/js/jquery.bootcomplete.js"></script>
+<script src="${url}/public/js/bootstrap3-typeahead.js"></script>
 <script src="${url}/public/js/jquery.tabledit.js"></script>
 <script src="${url}/public/js/jquery.treetable.js"></script>
 <script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>

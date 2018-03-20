@@ -21,10 +21,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.idi.finance.bean.bieudo.KpiGroup;
 import com.idi.finance.bean.hanghoa.DonVi;
 import com.idi.finance.bean.hanghoa.HangHoa;
-import com.idi.finance.bean.hanghoa.KhoBai;
-import com.idi.finance.bean.hanghoa.NhomHangHoa;
+import com.idi.finance.bean.hanghoa.KhoHang;
+import com.idi.finance.bean.hanghoa.NhomHang;
+import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.HangHoaDAO;
 import com.idi.finance.dao.KpiChartDAO;
+import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.form.BalanceAssetForm;
 import com.idi.finance.validator.DonViValidator;
 import com.idi.finance.validator.HangHoaValidator;
@@ -40,6 +42,9 @@ public class HangHoaController {
 
 	@Autowired
 	HangHoaDAO hangHoaDAO;
+
+	@Autowired
+	TaiKhoanDAO taiKhoanDAO;
 
 	@Autowired
 	DonViValidator donViValidator;
@@ -66,11 +71,11 @@ public class HangHoaController {
 
 		if (target.getClass() == DonVi.class) {
 			binder.setValidator(donViValidator);
-		} else if (target.getClass() == NhomHangHoa.class) {
+		} else if (target.getClass() == NhomHang.class) {
 			binder.setValidator(nhomHangHoaValidator);
 		} else if (target.getClass() == HangHoa.class) {
 			binder.setValidator(hangHoaValidator);
-		} else if (target.getClass() == KhoBai.class) {
+		} else if (target.getClass() == KhoHang.class) {
 			binder.setValidator(khoBaiValidator);
 		}
 	}
@@ -192,7 +197,7 @@ public class HangHoaController {
 			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
 			model.addAttribute("kpiGroups", kpiGroups);
 
-			NhomHangHoa nhomHangHoa = new NhomHangHoa();
+			NhomHang nhomHangHoa = new NhomHang();
 			nhomHangHoa = hangHoaDAO.danhSachNhomHangHoa(nhomHangHoa);
 
 			model.addAttribute("nhomHangHoa", nhomHangHoa);
@@ -212,7 +217,7 @@ public class HangHoaController {
 			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
 			model.addAttribute("kpiGroups", kpiGroups);
 
-			NhomHangHoa nhomHangHoa = hangHoaDAO.layNhomHangHoa(maNhomHh);
+			NhomHang nhomHangHoa = hangHoaDAO.layNhomHangHoa(maNhomHh);
 			if (nhomHangHoa == null) {
 				return "redirect:/hanghoa/nhom/danhsach";
 			}
@@ -231,7 +236,7 @@ public class HangHoaController {
 			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
 			model.addAttribute("kpiGroups", kpiGroups);
 
-			NhomHangHoa nhomHangHoa = new NhomHangHoa();
+			NhomHang nhomHangHoa = new NhomHang();
 
 			return chuanBiFormNhomHangHoa(model, nhomHangHoa);
 		} catch (Exception e) {
@@ -241,7 +246,7 @@ public class HangHoaController {
 	}
 
 	@RequestMapping(value = "/hanghoa/nhom/luu", method = RequestMethod.POST)
-	public String luuTaoMoiNhomHangHoa(@ModelAttribute("mainFinanceForm") @Validated NhomHangHoa nhomHangHoa,
+	public String luuTaoMoiNhomHangHoa(@ModelAttribute("mainFinanceForm") @Validated NhomHang nhomHangHoa,
 			BindingResult result, Model model) {
 		try {
 			if (result.hasErrors()) {
@@ -264,11 +269,11 @@ public class HangHoaController {
 		}
 	}
 
-	private String chuanBiFormNhomHangHoa(Model model, NhomHangHoa nhomHangHoa) {
+	private String chuanBiFormNhomHangHoa(Model model, NhomHang nhomHangHoa) {
 		try {
 			model.addAttribute("mainFinanceForm", nhomHangHoa);
 
-			List<NhomHangHoa> nhomHangHoaDs = hangHoaDAO.danhSachNhomHangHoa();
+			List<NhomHang> nhomHangHoaDs = hangHoaDAO.danhSachNhomHangHoa();
 			model.addAttribute("nhomHangHoaDs", nhomHangHoaDs);
 
 			model.addAttribute("tab", "tabDSNHH");
@@ -382,8 +387,14 @@ public class HangHoaController {
 			List<DonVi> donViDs = hangHoaDAO.danhSachDonViHangHoa();
 			model.addAttribute("donViDs", donViDs);
 
-			List<NhomHangHoa> nhomHangHoaDs = hangHoaDAO.danhSachNhomHangHoa();
+			List<NhomHang> nhomHangHoaDs = hangHoaDAO.danhSachNhomHangHoa();
 			model.addAttribute("nhomHangHoaDs", nhomHangHoaDs);
+
+			List<KhoHang> khoBaiDs = hangHoaDAO.danhSachKhoBai();
+			model.addAttribute("khoBaiDs", khoBaiDs);
+
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
 			model.addAttribute("tab", "tabDSHH");
 			if (hangHoa.getMaHh() > 0) {
@@ -419,7 +430,7 @@ public class HangHoaController {
 			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
 			model.addAttribute("kpiGroups", kpiGroups);
 
-			List<KhoBai> khoBaiDs = hangHoaDAO.danhSachKhoBai();
+			List<KhoHang> khoBaiDs = hangHoaDAO.danhSachKhoBai();
 			model.addAttribute("khoBaiDs", khoBaiDs);
 			logger.info(khoBaiDs);
 			model.addAttribute("tab", "tabDSK");
@@ -437,7 +448,7 @@ public class HangHoaController {
 			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
 			model.addAttribute("kpiGroups", kpiGroups);
 
-			KhoBai khoBai = hangHoaDAO.layKhoBai(maKho);
+			KhoHang khoBai = hangHoaDAO.layKhoBai(maKho);
 			if (khoBai == null) {
 				return "redirect:/hanghoa/kho/danhsach";
 			}
@@ -456,7 +467,7 @@ public class HangHoaController {
 			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
 			model.addAttribute("kpiGroups", kpiGroups);
 
-			KhoBai khoBai = new KhoBai();
+			KhoHang khoBai = new KhoHang();
 
 			return chuanBiFormKhoBai(model, khoBai);
 		} catch (Exception e) {
@@ -466,7 +477,7 @@ public class HangHoaController {
 	}
 
 	@RequestMapping(value = "/hanghoa/kho/luu", method = RequestMethod.POST)
-	public String luuTaoMoiKhoBai(@ModelAttribute("mainFinanceForm") @Validated KhoBai khoBai, BindingResult result,
+	public String luuTaoMoiKhoBai(@ModelAttribute("mainFinanceForm") @Validated KhoHang khoBai, BindingResult result,
 			Model model) {
 		try {
 			if (result.hasErrors()) {
@@ -489,7 +500,7 @@ public class HangHoaController {
 		}
 	}
 
-	private String chuanBiFormKhoBai(Model model, KhoBai khoBai) {
+	private String chuanBiFormKhoBai(Model model, KhoHang khoBai) {
 		try {
 			model.addAttribute("mainFinanceForm", khoBai);
 

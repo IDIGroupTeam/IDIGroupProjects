@@ -10,6 +10,7 @@ public class TaiKhoan {
 	private int soDu = -1;
 	private String lyDo;
 	private BalanceAssetItem bai;
+	private int maNvkt;
 
 	public ChungTu getChungTu() {
 		return chungTu;
@@ -57,6 +58,14 @@ public class TaiKhoan {
 
 	public void setBai(BalanceAssetItem bai) {
 		this.bai = bai;
+	}
+
+	public int getMaNvkt() {
+		return maNvkt;
+	}
+
+	public void setMaNvkt(int maNvkt) {
+		this.maNvkt = maNvkt;
 	}
 
 	@Override

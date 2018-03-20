@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class NhomHangHoa {
+public class NhomHang {
 	private int maNhomHh;
+	private String kyHieuNhomHh;
 	private String tenNhomHh;
 	private int doSau = 1;
 	private int muc;
-	private NhomHangHoa nhomHh;
-	private List<NhomHangHoa> nhomHhDs;
+	private NhomHang nhomHh;
+	private List<NhomHang> nhomHhDs;
 
 	public int getMaNhomHh() {
 		return maNhomHh;
@@ -18,6 +19,14 @@ public class NhomHangHoa {
 
 	public void setMaNhomHh(int maNhomHh) {
 		this.maNhomHh = maNhomHh;
+	}
+
+	public String getKyHieuNhomHh() {
+		return kyHieuNhomHh;
+	}
+
+	public void setKyHieuNhomHh(String kyHieuNhomHh) {
+		this.kyHieuNhomHh = kyHieuNhomHh;
 	}
 
 	public String getTenNhomHh() {
@@ -44,23 +53,23 @@ public class NhomHangHoa {
 		this.muc = muc;
 	}
 
-	public NhomHangHoa getNhomHh() {
+	public NhomHang getNhomHh() {
 		return nhomHh;
 	}
 
-	public void setNhomHh(NhomHangHoa nhomHh) {
+	public void setNhomHh(NhomHang nhomHh) {
 		this.nhomHh = nhomHh;
 	}
 
-	public List<NhomHangHoa> getNhomHhDs() {
+	public List<NhomHang> getNhomHhDs() {
 		return nhomHhDs;
 	}
 
-	public void setNhomHhDs(List<NhomHangHoa> nhomHhDs) {
+	public void setNhomHhDs(List<NhomHang> nhomHhDs) {
 		this.nhomHhDs = nhomHhDs;
 	}
 
-	public void themNhomHh(NhomHangHoa nhomHangHoa) {
+	public void themNhomHh(NhomHang nhomHangHoa) {
 		if (nhomHangHoa == null) {
 			return;
 		}
@@ -74,12 +83,12 @@ public class NhomHangHoa {
 		}
 	}
 
-	public void themNhomHh(List<NhomHangHoa> nhomHangHoaDs) {
+	public void themNhomHh(List<NhomHang> nhomHangHoaDs) {
 		if (nhomHangHoaDs == null) {
 			return;
 		}
 
-		Iterator<NhomHangHoa> iter = nhomHangHoaDs.iterator();
+		Iterator<NhomHang> iter = nhomHangHoaDs.iterator();
 		while (iter.hasNext()) {
 			themNhomHh(iter.next());
 		}
@@ -97,24 +106,24 @@ public class NhomHangHoa {
 			return false;
 		}
 
-		if (!(obj instanceof NhomHangHoa)) {
+		if (!(obj instanceof NhomHang)) {
 			return false;
 		}
 
-		NhomHangHoa item = (NhomHangHoa) obj;
+		NhomHang item = (NhomHang) obj;
 		try {
 			if (maNhomHh != item.getMaNhomHh()) {
 				return false;
 			}
 
-			if (tenNhomHh == null) {
+			/*if (tenNhomHh == null) {
 				if (item.getTenNhomHh() != null)
 					return false;
 			} else if (item.getTenNhomHh() == null) {
 				return false;
 			} else if (!tenNhomHh.trim().equals(item.getTenNhomHh().trim())) {
 				return false;
-			}
+			}*/
 		} catch (Exception e) {
 			return false;
 		}

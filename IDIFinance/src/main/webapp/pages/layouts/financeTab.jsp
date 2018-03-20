@@ -26,13 +26,9 @@
 			<li id="tabCTBN"><a href="${url}/danhsachbaono">Báo nợ</a></li>
 			<li id="tabCTKTTH"><a href="${url}/danhsachktth">Kế toán
 					tổng hợp</a></li>
-			<li id="tabCTPNK"><a href="${url}/chungtu/phieunhapkho/danhsach">Phiếu
-					nhập kho</a></li>
-			<li id="tabCTPXK"><a href="${url}/chungtu/phieuxuatkho/danhsach">Phiếu
-					xuất kho</a></li>
-			<li id="tabCTMH"><a href="${url}/chungtu/phieunhapkho/danhsach">Mua
+			<li id="tabCTMH"><a href="${url}/chungtu/muahang/danhsach">Mua
 					hàng</a></li>
-			<li id="tabCTPBH"><a href="${url}/chungtu/phieuxuatkho/danhsach">Bán
+			<li id="tabCTBH"><a href="${url}/chungtu/banhang/danhsach">Bán
 					hàng</a></li>
 		</ul></li>
 	<li class="dropdown"><a class="dropdown-toggle"
@@ -44,9 +40,6 @@
 			<li id="tabSKTSC"><a href="${url}/soketoan/socai">Sổ cái</a></li>
 			<li id="tabSKTSCN"><a href="${url}/soketoan/socongno">Sổ
 					công nợ</a></li>
-			<li id="tabSKTSCN"><a href="${url}/soketoan/socongno">Bù trừ
-					công nợ</a></li>
-			<%-- <li id="tabBTKC"><a href="${url}/danhsachbtkc">Bút toán kết chuyển</a></li> --%>
 		</ul></li>
 	<li class="dropdown"><a class="dropdown-toggle"
 		data-toggle="dropdown" href="#">Báo cáo tài chính<span

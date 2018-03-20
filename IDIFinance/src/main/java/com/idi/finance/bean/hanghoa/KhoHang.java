@@ -1,9 +1,12 @@
 package com.idi.finance.bean.hanghoa;
 
+import java.util.List;
+
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
-public class KhoBai {
+public class KhoHang {
 	private int maKho;
+	private String kyHieuKho;
 	private String tenKho;
 	private String diaChi;
 	private LoaiTaiKhoan taiKhoan;
@@ -15,6 +18,14 @@ public class KhoBai {
 
 	public void setMaKho(int maKho) {
 		this.maKho = maKho;
+	}
+
+	public String getKyHieuKho() {
+		return kyHieuKho;
+	}
+
+	public void setKyHieuKho(String kyHieuKho) {
+		this.kyHieuKho = kyHieuKho;
 	}
 
 	public String getTenKho() {
@@ -65,7 +76,7 @@ public class KhoBai {
 			return false;
 		}
 
-		KhoBai item = (KhoBai) obj;
+		KhoHang item = (KhoHang) obj;
 		try {
 			if (maKho != item.getMaKho()) {
 				return false;

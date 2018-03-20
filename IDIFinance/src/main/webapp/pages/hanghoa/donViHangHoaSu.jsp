@@ -41,8 +41,7 @@
 
 <div class="row form-group">
 	<div class="col-sm-2">
-		<a href="${url}/hanghoa/donvi/danhsach/${mainFinanceForm.maDv}"
-			class="btn btn-info btn-sm">Hủy</a>
+		<a href="${url}/hanghoa/donvi/danhsach" class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu
 			thay đổi</button>
 	</div>
