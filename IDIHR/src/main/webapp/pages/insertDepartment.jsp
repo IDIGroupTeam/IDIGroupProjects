@@ -34,15 +34,11 @@
 						<td bgcolor="#E6E6E6">Ghi chú:</td>
 						<td colspan="5"><form:textarea path="desc" cols="45"/></td>
 					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td><input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" /> <a
-							href="${pageContext.request.contextPath}/department/">Thoát</a></td>
-						<td>&nbsp;</td>
-					</tr>
 				</tbody>
 			</table>
 		</div>
+		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" /><br/><br/>
 	</form:form>
+	<a href="${pageContext.request.contextPath}/department/"><button class="btn btn-primary btn-sm">Quay lại danh sách phòng ban</button></a>
 </body>
 </html>

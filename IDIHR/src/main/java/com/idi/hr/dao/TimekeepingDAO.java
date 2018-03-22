@@ -321,7 +321,7 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 		Object[] params = new Object[] { year, employeeId };
 		countNumber = jdbcTmpl.queryForObject(sql, Integer.class, params);
 		
-		System.err.println("So ngay da lam viec: " +month+ year+ employeeId+ countNumber);
+		System.err.println("So ngay da lam viec: " +month+"|"+ year+ "|"+employeeId+"|"+ countNumber);
 		
 		return countNumber;
 	}

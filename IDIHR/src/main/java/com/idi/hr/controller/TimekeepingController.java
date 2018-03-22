@@ -33,6 +33,7 @@ import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.LeaveDAO;
 import com.idi.hr.dao.TimekeepingDAO;
+import com.idi.hr.dao.WorkingDayDAO;
 import com.idi.hr.form.LeaveInfoForm;
 import com.idi.hr.common.ExcelProcessor;
 import com.idi.hr.common.PropertiesManager;
@@ -53,6 +54,9 @@ public class TimekeepingController {
 
 	@Autowired
 	private DepartmentDAO departmentDAO;
+	
+	@Autowired
+	private WorkingDayDAO workingDayDAO;
 
 	ExcelProcessor xp = new ExcelProcessor();
 
@@ -280,13 +284,18 @@ public class TimekeepingController {
 
 						}else if(lT.equalsIgnoreCase("TNC")) {
 							//co can yeu cau phai chon thang cu the ko hay cho pheo tinh ca nam
-							//model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ th!");
-							//Tính ngày công cho toàn bộ nhân viên 
+							//model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ the!");
+							//Tính ngày công cho nhân viên của phòng 
 							leaveForReport.put(lT, "Ngày công");
 							//ngay cong thuc te
-							lTV = Float.toString((float) timekeepingDAO.getWorkedTime(year, month, id)/2);
-							//gio cong thuc te
-							//ngay/gio cong chuan
+							if(month.length() < 2)
+								lTV = (float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8 + (float)timekeepingDAO.getWorkedTime(year, month, id)/2 + "/" + workingDayDAO.getWorkingDay(year +"-0" + month, "IDI").getWorkDayOfMonth();
+							else
+								lTV = (float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8 + (float)timekeepingDAO.getWorkedTime(year, month, id)/2 + "/" + workingDayDAO.getWorkingDay(year +"-" + month, "IDI").getWorkDayOfMonth();
+							//số ngày nghỉ phép, đi công tác của tháng
+							//System.err.println(Float.toString((float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8));
+							log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: " + leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
+							//gio cong thuc te	
 						}else {
 							if (lT.startsWith("LT") || lT.startsWith("KCC")
 									|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
@@ -403,13 +412,18 @@ public class TimekeepingController {
 
 							}else if(lT.equalsIgnoreCase("TNC")) {
 								//co can yeu cau phai chon thang cu the ko hay cho pheo tinh ca nam
-								//model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ th!");
-								//Tính ngày công cho toàn bộ nhân viên 
+								//model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ the!");
+								//Tính ngày công cho nhân viên của phòng 
 								leaveForReport.put(lT, "Ngày công");
 								//ngay cong thuc te
-								lTV = Float.toString((float) timekeepingDAO.getWorkedTime(year, month, id)/2);
-								//gio cong thuc te
-								//ngay/gio cong chuan
+								if(month.length() < 2)
+									lTV = (float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8 + (float)timekeepingDAO.getWorkedTime(year, month, id)/2 + "/" + workingDayDAO.getWorkingDay(year +"-0" + month, "IDI").getWorkDayOfMonth();
+								else
+									lTV = (float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8 + (float)timekeepingDAO.getWorkedTime(year, month, id)/2 + "/" + workingDayDAO.getWorkingDay(year +"-" + month, "IDI").getWorkDayOfMonth();
+								//số ngày nghỉ phép, đi công tác của tháng
+								//System.err.println(Float.toString((float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8));
+								log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: " + leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
+								//gio cong thuc te	
 							}else {
 								if (lT.startsWith("LT") || lT.startsWith("KCC")
 										|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
@@ -431,7 +445,6 @@ public class TimekeepingController {
 								// if(lTSum.equalsIgnoreCase(lT)) {
 
 								// }
-
 							}
 
 							leaveInfos.put(lT, lTV);
@@ -528,13 +541,18 @@ public class TimekeepingController {
 
 							}else if(lT.equalsIgnoreCase("TNC")) {
 								//co can yeu cau phai chon thang cu the ko hay cho pheo tinh ca nam
-								//model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ th!");
-								//Tính ngày công cho toàn bộ nhân viên 
+								//model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ the!");
+								//Tính ngày công cho nhân viên của phòng 
 								leaveForReport.put(lT, "Ngày công");
 								//ngay cong thuc te
-								lTV = Float.toString((float) timekeepingDAO.getWorkedTime(year, month, id)/2);
-								//gio cong thuc te
-								//ngay/gio cong chuan
+								if(month.length() < 2)
+									lTV = (float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8 + (float)timekeepingDAO.getWorkedTime(year, month, id)/2 + "/" + workingDayDAO.getWorkingDay(year +"-0" + month, "IDI").getWorkDayOfMonth();
+								else
+									lTV = (float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8 + (float)timekeepingDAO.getWorkedTime(year, month, id)/2 + "/" + workingDayDAO.getWorkingDay(year +"-" + month, "IDI").getWorkDayOfMonth();
+								//số ngày nghỉ phép, đi công tác của tháng
+								//System.err.println(Float.toString((float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8));
+								log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: " + leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
+								//gio cong thuc te	
 							}else {
 								if (lT.startsWith("LT") || lT.startsWith("KCC")
 										|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
@@ -611,6 +629,9 @@ public class TimekeepingController {
 						list.add(leaveForGenReport);
 					}
 				}
+				model.addAttribute("moth", month);
+				model.addAttribute("year", year );
+				model.addAttribute("department", leaveReport.getDepartment());
 			}
 			model.addAttribute("leaveReports", list);
 			model.addAttribute("formTitle", "Thống kê dữ liệu chuyên cần");

@@ -95,4 +95,8 @@
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 	
+	<bean id="workingDayDAO" class="com.idi.hr.dao.WorkingDayDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+	
 </beans>

@@ -21,9 +21,12 @@
 	<a href="${url}/timekeeping/leaveInfo">
 		<button class="btn btn-lg btn-primary btn-sm">Chấm công phát
 			sinh</button>
-	</a> &nbsp;
+	</a> 
 	<a href="${url}/timekeeping/prepareGenerateLeaveReport">
 		<button class="btn btn-lg btn-primary btn-sm">Xuất báo cáo</button>
+	</a>
+	<a href="${url}/timekeeping/listWorkingDay">
+		<button class="btn btn-lg btn-primary btn-sm">Định nghĩa số ngày công chuẩn</button>
 	</a>
 	<br />
 	<br />

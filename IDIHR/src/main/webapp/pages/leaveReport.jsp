@@ -15,6 +15,21 @@
 			class="btn btn-primary btn-sm">Quay lại chấm công phát sinh</button></a>
 	<br />
 	<br />
+	<table><tr>
+	<c:if test="${moth > 0}">
+		<td> Tháng: ${moth} &nbsp;</td>
+	</c:if>
+	<c:if test="${year != null}">
+		<td> Năm: ${year} &nbsp;</td>
+	</c:if>
+	<c:if test="${department != 'all' && empty message}">
+		<td> Phòng: ${department}</td>
+	</c:if>
+	<c:if test="${department == 'all'}">
+		<td> Tất cả các phòng ban</td>
+	</c:if>
+	</tr><tr>
+	</tr></table>
 	<div class="table-responsive">
 		<table class="table table-bordered">
 			<tr bgcolor=B5CBCE>

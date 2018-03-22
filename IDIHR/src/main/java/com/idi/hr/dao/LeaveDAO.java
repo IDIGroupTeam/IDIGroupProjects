@@ -252,14 +252,16 @@ public class LeaveDAO extends JdbcDaoSupport {
 		if (employeeId > 0)
 			sql = sql + " AND EMPLOYEE_ID = " + employeeId + "";
 
+		sql = sql + " AND LEAVE_TYPE IN ('" + leaveType +"')";
+		
 		log.info("GET_LEAVE_INFO_FOR_REPORT query: " + sql);
 
-		Object[] params = new Object[] { year, leaveType };
+		Object[] params = new Object[] { year };
 		if (jdbcTmpl.queryForObject(sql, Integer.class, params) != null)
 			countNumber = jdbcTmpl.queryForObject(sql, Integer.class, params);
 		else
 			countNumber = 0;
-		//System.err.println("leaveType:" + leaveType + ", " + countNumber);
+		//System.err.println("leaveType: " + leaveType + ", employeeId: " + employeeId + "|" + countNumber);
 
 		return countNumber;
 	}
