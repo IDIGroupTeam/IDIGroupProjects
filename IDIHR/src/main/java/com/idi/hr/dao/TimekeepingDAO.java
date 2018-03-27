@@ -49,13 +49,24 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	 * @return List of TIMEKEEPING object
 	 * @throws Exception
 	 */
-	public List<Timekeeping> getTimekeepings(String date) {
-
-		String sql = hr.getProperty("GET_TIMEKEEPING_INFO").toString();
-		log.info("GET_TIMEKEEPING_INFO query: " + sql);
-		Object[] params = new Object[] { date };
+	public List<Timekeeping> getTimekeepings(String fromDate, String toDate, String dept, String eId) {
+		String sql = "";
+		Object[] params = null;
+		if(toDate != null) {
+			sql = hr.getProperty("GET_TIMEKEEPINGS").toString();
+			if(dept != null && !dept.equalsIgnoreCase("all"))
+				sql = sql + " AND E.DEPARTMENT = '"+ dept +"'";
+			if(eId != null && Integer.parseInt(eId) > 0)
+				sql = sql + " AND E.EMPLOYEE_ID = " + eId;
+			log.info("GET_TIMEKEEPINGS query: " + sql);
+			params = new Object[] { fromDate, toDate };
+		}else {
+			sql = hr.getProperty("GET_TIMEKEEPING_INFO").toString();
+			log.info("GET_TIMEKEEPING_INFO query: " + sql);
+			params = new Object[] { fromDate };
+		}
+		
 		TimekeepingMapper mapper = new TimekeepingMapper();
-
 		List<Timekeeping> list = jdbcTmpl.query(sql, params, mapper);
 		return list;
 

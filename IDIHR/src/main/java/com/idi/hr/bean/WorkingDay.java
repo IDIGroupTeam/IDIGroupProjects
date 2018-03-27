@@ -11,17 +11,18 @@ public class WorkingDay implements Serializable {
 	private static final long serialVersionUID = -3871012330726286155L;
 	
 	private String month;
-	private String workDayOfMonth;
+	private Float workDayOfMonth;
 	private String forCompany; 
 	private String comment;
 	private String updateId;
 	private Timestamp updateTs;
+	private String duplicate;
 	
 	public WorkingDay() {
 		
 	}
 
-	public WorkingDay(String month, String workDayOfMonth, String forCompany, String updateId, Timestamp updateTs, String comment) {
+	public WorkingDay(String month, Float workDayOfMonth, String forCompany, String updateId, Timestamp updateTs, String comment) {
 		this.month = month;
 		this.workDayOfMonth = workDayOfMonth;
 		this.forCompany = forCompany;	
@@ -38,11 +39,11 @@ public class WorkingDay implements Serializable {
 		this.month = month;
 	}
 
-	public String getWorkDayOfMonth() {
+	public Float getWorkDayOfMonth() {
 		return workDayOfMonth;
 	}
 
-	public void setWorkDayOfMonth(String workDayOfMonth) {
+	public void setWorkDayOfMonth(Float workDayOfMonth) {
 		this.workDayOfMonth = workDayOfMonth;
 	}
 
@@ -77,5 +78,12 @@ public class WorkingDay implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
+	public String getDuplicate() {
+		return duplicate;
+	}
+
+	public void setDuplicate(String duplicate) {
+		this.duplicate = duplicate;
+	}	
 }

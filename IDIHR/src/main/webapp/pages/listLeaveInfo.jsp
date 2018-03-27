@@ -5,6 +5,41 @@
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 <html>
 <head>
+<!-- Initialize the plugin: -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript">
+$(function() {
+	$("#dept")
+		.change(
+			function() {
+				
+				// Lấy dữ liệu của phòng
+				val = $(this).val();
+					$							
+					.ajax({						
+						dataType : "json",
+						url : "${url}/timekeeping/selection",
+						data : {							
+							dept : val
+						},
+						success : function(obj) {							
+							eIdSel = "<option value='0'>Tất cả nhân viên</option>";
+							for (i = 0; i < obj.length; i++) {
+								eIdSel += "<option value='" + obj[i].employeeId + "'>"
+										+ "Mã NV " + obj[i].employeeId +", "
+										+ obj[i].fullName
+										+ ", "
+										+ obj[i].jobTitle
+										+ "</option>";
+							}
+							$("#eId").html(eIdSel);
+						}
+					});
+				
+			});
+});
+
+</script>
 <title>Thông tin ngày nghỉ, công tác, làm thêm ...</title>
 <style>
 table {
@@ -28,20 +63,33 @@ tr:nth-child(even) {
 	<a href="${url}/timekeeping/addLeaveInfo"><button
 			class="btn btn-lg btn-primary btn-sm">Thêm mới</button></a>
 	<a href="${url}/timekeeping/"><button
-			class="btn btn-lg btn-primary btn-sm">Quay lại thông tin
-			chấm công</button></a>
+			class="btn btn-lg btn-primary btn-sm">Quay lại thông tin chấm công</button></a>
 	<br />	
 	<br />
 	<form:form action="leaveInfo" modelAttribute="leaveInfoForm"
 			method="GET">
-			<table>
-				<tr>
-					<td><b><i>Chọn ngày khác</i></b></td>
-					<td align="center"><form:input path="date" type="date" required="required"/></td>
-					<td><input class="btn btn-lg btn-primary btn-sm" type="submit"
-						value="Cập nhật lại danh sách" /></td>
-				</tr>
-			</table>
+		<table class="table">
+			<tr>
+				<td>Chọn xem từ ngày:(*) &nbsp;<form:input path="date" type="date"
+						required="required" class="form-control animated"/></td>
+				<td>Đến ngày:(*) &nbsp;<form:input path="toDate" type="date"
+						required="required" class="form-control animated"/></td>
+				<td>Phòng: &nbsp;
+					<form:select path="dept" class="form-control animated">
+						<form:option value="all" label="Tất cả phòng ban"></form:option>
+						<form:options items="${departmentMap}" var="dept"/>
+					</form:select>
+				</td>
+				<td>Nhân viên: &nbsp;
+					<form:select path="eId" class="form-control animated">
+						<form:option value="0" label="Tất cả nhân viên"></form:option>
+						<form:options items="${employeeMap}" var="eId"/>
+					</form:select>
+				</td>
+				<td align="center"><input class="btn btn-lg btn-primary btn-sm" type="submit"
+					value="Xem danh sách" /></td>
+			</tr>
+		</table>
 			<br/>
 			<c:if test="${not empty message}">
 				<div class="alert alert-success">${message}</div>

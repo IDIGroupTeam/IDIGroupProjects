@@ -75,15 +75,15 @@ $(function() {
 				<td>
 					<form:select path="monthReport">
 						<form:option value="" label="Cả năm" />
-						<form:option value="1" label="Tháng 1" />
-						<form:option value="2" label="Tháng 2" />
-						<form:option value="3" label="Tháng 3" />
-						<form:option value="4" label="Tháng 4" />
-						<form:option value="5" label="Tháng 5" />
-						<form:option value="6" label="Tháng 6" />
-						<form:option value="7" label="Tháng 7" />
-						<form:option value="8" label="Tháng 8" />
-						<form:option value="9" label="Tháng 9" />
+						<form:option value="01" label="Tháng 1" />
+						<form:option value="02" label="Tháng 2" />
+						<form:option value="03" label="Tháng 3" />
+						<form:option value="04" label="Tháng 4" />
+						<form:option value="05" label="Tháng 5" />
+						<form:option value="06" label="Tháng 6" />
+						<form:option value="07" label="Tháng 7" />
+						<form:option value="08" label="Tháng 8" />
+						<form:option value="09" label="Tháng 9" />
 						<form:option value="10" label="Tháng 10" />
 						<form:option value="11" label="Tháng 11" />
 						<form:option value="12" label="Tháng 12" />						

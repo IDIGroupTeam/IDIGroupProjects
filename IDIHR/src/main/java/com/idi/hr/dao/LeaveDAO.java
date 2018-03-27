@@ -164,13 +164,24 @@ public class LeaveDAO extends JdbcDaoSupport {
 	 * @return List of leave info
 	 * @throws Exception
 	 */
-	public List<LeaveInfo> getLeaves(String date) {
-
-		String sql = hr.getProperty("GET_LEAVES").toString();
-		log.info("GET_LEAVES query: " + sql);
-		LeaveInfoMapper mapper = new LeaveInfoMapper();
-		Object[] params = new Object[] {date};
-
+	public List<LeaveInfo> getLeaves(String fromDate, String toDate, String dept, String eId) {
+		String sql = "";
+		Object[] params = null;
+		if(toDate != null) {
+			sql = hr.getProperty("GET_LEAVES_FOR_SEARCH").toString();
+			if(dept != null && !dept.equalsIgnoreCase("all"))
+				sql = sql + " AND E.DEPARTMENT = '"+ dept +"'";
+			if(eId != null && Integer.parseInt(eId) > 0)
+				sql = sql + " AND E.EMPLOYEE_ID = " + eId;
+			sql = sql + " ORDER BY L.EMPLOYEE_ID, L.DATE ";	
+			log.info("GET_LEAVES_FOR_SEARCH query: " + sql);
+			params = new Object[] { fromDate, toDate };
+		}else {
+			sql = hr.getProperty("GET_LEAVES").toString();
+			log.info("GET_LEAVES query: " + sql);
+			params = new Object[] { fromDate };
+		}			
+		LeaveInfoMapper mapper = new LeaveInfoMapper();		
 		List<LeaveInfo> list = jdbcTmpl.query(sql, params, mapper);
 		return list;
 

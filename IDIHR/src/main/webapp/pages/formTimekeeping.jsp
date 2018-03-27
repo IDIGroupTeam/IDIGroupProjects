@@ -6,6 +6,41 @@
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 <html>
 <head>
+<!-- Initialize the plugin: -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript">
+$(function() {
+	$("#dept")
+		.change(
+			function() {
+				
+				// Lấy dữ liệu của phòng
+				val = $(this).val();
+					$							
+					.ajax({						
+						dataType : "json",
+						url : "${url}/timekeeping/selection",
+						data : {							
+							dept : val
+						},
+						success : function(obj) {							
+							eIdSel = "<option value='0'>Tất cả nhân viên</option>";
+							for (i = 0; i < obj.length; i++) {
+								eIdSel += "<option value='" + obj[i].employeeId + "'>"
+										+ "Mã NV " + obj[i].employeeId +", "
+										+ obj[i].fullName
+										+ ", "
+										+ obj[i].jobTitle
+										+ "</option>";
+							}
+							$("#eId").html(eIdSel);
+						}
+					});
+				
+			});
+});
+
+</script>
 <title>Dữ liệu chấm công nhân viên</title>
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
@@ -18,27 +53,39 @@
 		//	int timeInAfternoon = Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON"));
 		//	int timeOutAfternoon = Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON"));
 	%>
-	<a href="${url}/timekeeping/leaveInfo">
-		<button class="btn btn-lg btn-primary btn-sm">Chấm công phát
-			sinh</button>
-	</a> 
 	<a href="${url}/timekeeping/prepareGenerateLeaveReport">
 		<button class="btn btn-lg btn-primary btn-sm">Xuất báo cáo</button>
 	</a>
+	<a href="${url}/timekeeping/leaveInfo">
+		<button class="btn btn-lg btn-primary btn-sm">Chấm công phát sinh</button>
+	</a> 	
 	<a href="${url}/timekeeping/listWorkingDay">
 		<button class="btn btn-lg btn-primary btn-sm">Định nghĩa số ngày công chuẩn</button>
 	</a>
 	<br />
 	<br />
 	<form:form action="listByDate" modelAttribute="leaveInfoForm"
-		method="GET">
+		method="POST">
 		<table class="table">
 			<tr>
-				<td><b><i>Chọn ngày khác(*)</i></b></td>
-				<td align="center"><form:input path="date" type="date"
-						required="required" /></td>
-				<td><input class="btn btn-lg btn-primary btn-sm" type="submit"
-					value="Cập nhật lại danh sách" /></td>
+				<td>Chọn xem từ ngày:(*) &nbsp;<form:input path="date" type="date"
+						required="required" class="form-control animated"/></td>
+				<td>Đến ngày:(*) &nbsp;<form:input path="toDate" type="date"
+						required="required" class="form-control animated"/></td>
+				<td>Phòng: &nbsp;
+					<form:select path="dept" class="form-control animated">
+						<form:option value="all" label="Tất cả phòng ban"></form:option>
+						<form:options items="${departmentMap}" var="dept"/>
+					</form:select>
+				</td>
+				<td>Nhân viên: &nbsp;
+					<form:select path="eId" class="form-control animated">
+						<form:option value="0" label="Tất cả nhân viên"></form:option>
+						<form:options items="${employeeMap}" var="eId"/>
+					</form:select>
+				</td>
+				<td align="center"><input class="btn btn-lg btn-primary btn-sm" type="submit"
+					value="Xem danh sách" /></td>
 			</tr>
 		</table>
 		<c:if test="${not empty message}">

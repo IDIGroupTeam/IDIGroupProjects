@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -78,7 +80,7 @@ public class TimekeepingController {
 				List<Timekeeping> timekeepings = xp.loadTimekeepingDataFromExcel(timeKeepingFile.getInputStream());
 				timekeepingDAO.insert(timekeepings);
 
-				List<Timekeeping> list = timekeepingDAO.getTimekeepings(currentDate);
+				List<Timekeeping> list = timekeepingDAO.getTimekeepings(currentDate, null, null, null);
 				model.addAttribute("timekeepings", list);
 				model.addAttribute("formTitle", "Dữ liệu chấm công ngày " + currentDate);
 
@@ -94,7 +96,7 @@ public class TimekeepingController {
 		} else {
 			String comment = "Hãy chọn file excel dữ liệu chấm công.";
 			model.addAttribute("comment", comment);
-			List<Timekeeping> list = timekeepingDAO.getTimekeepings(currentDate);
+			List<Timekeeping> list = timekeepingDAO.getTimekeepings(currentDate, null, null, null);
 			model.addAttribute("timekeepings", list);
 			model.addAttribute("formTitle", "Dữ liệu chấm công ngày " + currentDate);
 			return "formTimekeeping";
@@ -108,11 +110,20 @@ public class TimekeepingController {
 			Date date = new Date();
 			String currentDate = dateFormat.format(date);
 			List<Timekeeping> list = null;
-			list = timekeepingDAO.getTimekeepings(currentDate);
+			list = timekeepingDAO.getTimekeepings(currentDate, null, null, null);
 			List<LeaveInfo> listL = null;
-			listL = leaveDAO.getLeaves(currentDate);
+			listL = leaveDAO.getLeaves(currentDate, null, null, null);
 			if(list.size() == 0 && listL.size() == 0)
 				model.addAttribute("message", "Không có dữ liệu chấm công cho ngày " + currentDate);
+			
+			// get list department
+			Map<String, String> departmentMap = this.dataForDepartments();
+
+			// get list employee id
+			Map<String, String> employeeMap = this.employees();
+			model.addAttribute("employeeMap", employeeMap);
+			
+			model.addAttribute("departmentMap", departmentMap);			
 			model.addAttribute("timekeepings", list);
 			model.addAttribute("leaveInfos", listL);
 			model.addAttribute("timekeepingForm", timekeeping);
@@ -135,23 +146,55 @@ public class TimekeepingController {
 			List<Timekeeping> list = null;
 			List<LeaveInfo> listL = null;
 			
-			
-			if (leaveInfoForm.getDate() != null) {
-				list = timekeepingDAO.getTimekeepings(leaveInfoForm.getDate());
-				listL = leaveDAO.getLeaves(leaveInfoForm.getDate());
+			String fromDate = leaveInfoForm.getDate();
+			String toDate = leaveInfoForm.getToDate();
+			String dept = leaveInfoForm.getDept();
+			String eId = leaveInfoForm.geteId();
+
+			System.err.println(fromDate + "|" + toDate + "|" + dept + "|" + eId);
+			if (fromDate != null && toDate != null) {
+				if(fromDate != null && toDate.equalsIgnoreCase("viewDetail")){
+					Calendar calendar = Calendar.getInstance();
+					// System.err.println(fromDate.substring(0, 4) + "|" + fromDate.substring(5, 7));
+			        calendar.set(Integer.parseInt(fromDate.substring(0, 4)), Integer.parseInt(fromDate.substring(5, 7))-1, 1);
+			       
+				    int lastDate = calendar.getActualMaximum(calendar.DAY_OF_MONTH);
+
+				   // calendar.set(Calendar.DATE, lastDate);
+				   // int lastDay = calendar.get(Calendar.DAY_OF_WEEK);
+				    //System.out.println("Last Date: " + lastDate +"|"+ calendar.getTime());
+				    //System.out.println("Last Day : " + lastDay);
+				    toDate = fromDate.substring(0, 4)+"-" + fromDate.substring(5, 7) + "-" + lastDate;
+				    System.out.println("to date " + toDate);
+				}
+				list = timekeepingDAO.getTimekeepings(fromDate, toDate, dept, eId);
+				listL = leaveDAO.getLeaves(fromDate, toDate, dept, eId);
+				if(list.size() == 0 && listL.size() == 0)
+					model.addAttribute("message", "Không có dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate );;
 			}else {
-				list = timekeepingDAO.getTimekeepings(currentDate);
-				listL = leaveDAO.getLeaves(currentDate);
+				list = timekeepingDAO.getTimekeepings(currentDate, null, null, null);
+				listL = leaveDAO.getLeaves(currentDate, null, null, null);
+				if(list.size() == 0 && listL.size() == 0)
+					model.addAttribute("message", "Không có dữ liệu chấm công cho ngày " + currentDate);
 			}	
-			System.err.println(currentDate + "|" + leaveInfoForm.getDate());
-			if(list.size() == 0 && listL.size() == 0)
-				model.addAttribute("message", "Không có dữ liệu chấm công cho ngày " + leaveInfoForm.getDate());
+			//System.err.println(currentDate + "|" + leaveInfoForm.getDate());
+			//if(list.size() == 0 && listL.size() == 0)
+			//	model.addAttribute("message", "Không có dữ liệu chấm công cho ngày " + leaveInfoForm.getDate());
+			
+			// get list department
+			Map<String, String> departmentMap = this.dataForDepartments();
+			model.addAttribute("departmentMap", departmentMap);
+
+			// get list employee id
+			Map<String, String> employeeMap = this.employees();
+			model.addAttribute("employeeMap", employeeMap);
+			
 			model.addAttribute("timekeepings", list);
 			model.addAttribute("leaveInfos", listL);
 			model.addAttribute("timekeepingForm", timekeeping);
 			model.addAttribute("leaveInfoForm", leaveInfoForm);
 			if (leaveInfoForm.getDate() != null)
-				model.addAttribute("formTitle", "Dữ liệu chấm công ngày " + leaveInfoForm.getDate());
+				model.addAttribute("formTitle", "Dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate);
 			else
 				model.addAttribute("formTitle", "Dữ liệu chấm công ngày " + currentDate);
 
@@ -171,20 +214,32 @@ public class TimekeepingController {
 			// Calendar cal = Calendar.getInstance();
 			// cal.setTime(date);
 			List<LeaveInfo> list = null;
-			if (leaveInfoForm.getDate() != null) {
-				list = leaveDAO.getLeaves(leaveInfoForm.getDate());
+			String fromDate = leaveInfoForm.getDate();
+			String toDate = leaveInfoForm.getToDate();
+			String dept = leaveInfoForm.getDept();
+			String eId = leaveInfoForm.geteId();
+			
+			if (fromDate != null && toDate != null) {
+				list = leaveDAO.getLeaves(fromDate, toDate, dept, eId);
 				if(list.size() == 0)
-					model.addAttribute("message", "Không có dữ liệu chấm công phát sinh cho ngày " + leaveInfoForm.getDate());
+					model.addAttribute("message", "Không có dữ liệu chấm công phát sinh từ ngày " + fromDate + " đến ngày " + toDate);
+				model.addAttribute("formTitle", "Dữ liệu chấm công phát sinh từ ngày " + fromDate + " đến ngày " + toDate);
 			}else {
-				list = leaveDAO.getLeaves(currentDate);
+				list = leaveDAO.getLeaves(currentDate, null, null, null);
 				if(list.size() == 0)
 					model.addAttribute("message", "Không có dữ liệu chấm công phát sinh cho ngày " + currentDate);
-			}
-			model.addAttribute("leaveInfos", list);
-			if (leaveInfoForm.getDate() != null)
-				model.addAttribute("formTitle", "Dữ liệu chấm công phát sinh ngày " + leaveInfoForm.getDate());
-			else
 				model.addAttribute("formTitle", "Dữ liệu chấm công phát sinh ngày " + currentDate);
+			}
+			
+			// get list department
+			Map<String, String> departmentMap = this.dataForDepartments();
+			model.addAttribute("departmentMap", departmentMap);
+
+			// get list employee id
+			Map<String, String> employeeMap = this.employees();
+			model.addAttribute("employeeMap", employeeMap);			
+			
+			model.addAttribute("leaveInfos", list);			
 
 		} catch (Exception e) {
 			log.error(e, e);
@@ -283,6 +338,10 @@ public class TimekeepingController {
 								leaveForReport.put(lT, "Đi muộn");
 
 						}else if(lT.equalsIgnoreCase("TNC")) {
+							if(month == null || month.length() == 0) {
+								model.addAttribute("message", "Tính ngày công bắt buộc phải chọn tháng cụ thể!");
+								return "leaveReport";
+							}
 							//co can yeu cau phai chon thang cu the ko hay cho pheo tinh ca nam
 							//model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ the!");
 							//Tính ngày công cho nhân viên của phòng 
@@ -411,6 +470,10 @@ public class TimekeepingController {
 									leaveForReport.put(lT, "Đi muộn");
 
 							}else if(lT.equalsIgnoreCase("TNC")) {
+								if(month == null || month.length() == 0) {
+									model.addAttribute("message", "Tính ngày công bắt buộc phải chọn tháng cụ thể!");
+									return "leaveReport";
+								}				
 								//co can yeu cau phai chon thang cu the ko hay cho pheo tinh ca nam
 								//model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ the!");
 								//Tính ngày công cho nhân viên của phòng 
@@ -540,6 +603,10 @@ public class TimekeepingController {
 									leaveForReport.put(lT, "Đi muộn");
 
 							}else if(lT.equalsIgnoreCase("TNC")) {
+								if(month == null || month.length() == 0) {
+									model.addAttribute("message", "Tính ngày công bắt buộc phải chọn tháng cụ thể!");
+									return "leaveReport";
+								}
 								//co can yeu cau phai chon thang cu the ko hay cho pheo tinh ca nam
 								//model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ the!");
 								//Tính ngày công cho nhân viên của phòng 
@@ -629,7 +696,7 @@ public class TimekeepingController {
 						list.add(leaveForGenReport);
 					}
 				}
-				model.addAttribute("moth", month);
+				model.addAttribute("month", month);
 				model.addAttribute("year", year );
 				model.addAttribute("department", leaveReport.getDepartment());
 			}
@@ -794,5 +861,18 @@ public class TimekeepingController {
 		//System.out.println("leave used " + leaveUsed);
 		leaveUsed = leaveUsed/8;
 		return leaveUsed;
+	}
+	
+	// For Ajax
+	@RequestMapping("/timekeeping/selection")
+	public @ResponseBody List<EmployeeInfo> employeesByDepartment(@RequestParam("dept") String department) {
+		//System.err.println("ajax method");
+		List<EmployeeInfo> list = null;
+		if (!department.equalsIgnoreCase("all"))
+			list = employeeDAO.getEmployeesByDepartment(department);
+		else
+			list = employeeDAO.getEmployees();
+
+		return list;
 	}
 }

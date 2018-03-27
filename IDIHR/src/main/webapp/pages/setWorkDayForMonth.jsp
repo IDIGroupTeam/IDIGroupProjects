@@ -18,7 +18,13 @@
 <body>
 	<form:form modelAttribute="workingDayForm" method="POST"
 		action="addWorkingDay">
-		<div class="table table-bordered" >
+		<table>
+			<tr>
+				<td><form:errors path="duplicate" class="error-message" /></td>
+				<td><form:errors path="workDayOfMonth" class="error-message" /></td>				
+			</tr>
+		</table>
+		<div class="table table-bordered" >			
 			<table class="table">
 				<tbody>
 					<tr>
@@ -40,8 +46,8 @@
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Số ngày làm viêc chuẩn:(*)</td>
-						<td><form:input path="workDayOfMonth" maxlength="5" size="5"
-								required="required" type="Number" class="form-control animated"/></td>
+						<td><form:input path="workDayOfMonth"
+								required="required" type="number" step="0.5" min="1" max="28" class="form-control animated"/></td>
 						<td></td>						
 					</tr>
 					<tr>

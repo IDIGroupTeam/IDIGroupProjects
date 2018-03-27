@@ -40,7 +40,7 @@
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Số ngày làm viêc chuẩn:(*)</td>
-						<td><form:input path="workDayOfMonth" maxlength="5" size="5" type="Number" 
+						<td><form:input path="workDayOfMonth" type="number" step="0.5" min="1" max="28" 
 								required="required" class="form-control animated"/></td>
 						<td></td>						
 					</tr>

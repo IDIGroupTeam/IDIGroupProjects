@@ -66,7 +66,7 @@ public class WorkingDayDAO extends JdbcDaoSupport {
 	
 			workingDay = jdbcTmpl.queryForObject(sql, params, mapper);
 		}catch(Exception e) {
-			workingDay.setWorkDayOfMonth("0");
+			//workingDay.setWorkDayOfMonth(0);
 			workingDay.setComment("Tháng này chưa định nghĩa ngày công chuẩn");
 		}
 		return workingDay;

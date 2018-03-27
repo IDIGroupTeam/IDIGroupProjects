@@ -1,3 +1,4 @@
+<%@page import="java.util.Calendar"%>
 <%@page language="java" contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -16,8 +17,8 @@
 	<br />
 	<br />
 	<table><tr>
-	<c:if test="${moth > 0}">
-		<td> Tháng: ${moth} &nbsp;</td>
+	<c:if test="${month > 0}">
+		<td> Tháng: ${month} &nbsp;</td>
 	</c:if>
 	<c:if test="${year != null}">
 		<td> Năm: ${year} &nbsp;</td>
@@ -61,7 +62,12 @@
 					<!-- dynamic generate begin  -->
 					<c:forEach var="leaveTypes" items="${leaveReport.leaveTypes}">
 						<c:if test="${leaveTypes.value !='0'}">
-							<td>${leaveTypes.value}</td>
+							<c:if test="${leaveTypes.key !='TNC'}" >
+								<td>${leaveTypes.value}</td>
+							</c:if>
+							<c:if test="${leaveTypes.key =='TNC'}" >
+								<td><a href="listByDate?date=${year}-${month}-01&toDate=viewDetail&dept=${leaveReport.department}&eId=${leaveReport.employeeId}">${leaveTypes.value}</a></td>
+							</c:if>
 						</c:if>
 						<c:if test="${leaveTypes.value == '0'}">
 							<td></td>
