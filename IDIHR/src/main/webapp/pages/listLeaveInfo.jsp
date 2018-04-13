@@ -66,8 +66,7 @@ tr:nth-child(even) {
 			class="btn btn-lg btn-primary btn-sm">Quay lại thông tin chấm công</button></a>
 	<br />	
 	<br />
-	<form:form action="leaveInfo" modelAttribute="leaveInfoForm"
-			method="GET">
+	<form:form action="leaveInfo" modelAttribute="leaveInfoForm" method="GET">
 		<table class="table">
 			<tr>
 				<td>Chọn xem từ ngày:(*) &nbsp;<form:input path="date" type="date"

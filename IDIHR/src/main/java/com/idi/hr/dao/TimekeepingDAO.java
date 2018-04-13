@@ -219,11 +219,11 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 						PropertiesManager hr = new PropertiesManager("hr.properties");
 						if (timekeeping.getComment().equalsIgnoreCase("Request leave soon morning")) {
 							timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_MORNING").toString());	
-							System.err.println("Request leave soon morning" + timekeeping.getTimeIn());
+							System.err.println("Request leave soon morning " + timekeeping.getTimeIn());
 						}
 						else if (timekeeping.getComment().equalsIgnoreCase("Request leave soon afternoon")) {
 							timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_AFTERNOON").toString());
-							System.err.println("Request leave soon afternoon" + timekeeping.getTimeIn());
+							System.err.println("Request leave soon afternoon " + timekeeping.getTimeIn());
 						}						
 					}						
 					Object[] params = new Object[] { timekeeping.getEmployeeId(), timekeeping.getDate(),

@@ -119,6 +119,38 @@ public class LeaveDAO extends JdbcDaoSupport {
 
 	
 	/**
+	 * get number of time request for leave or come late/ leave soon
+	 * 
+	 * @param year
+	 * @param month
+	 * @param leave type
+	 * @param leaveId
+	 * @return
+	 */
+	public float getLeaveRequestUsed(String requestType, int year, int month, int id) {
+
+		String sql = hr.get("COUNT_LEAVE_REQUEST_USED").toString();
+		if(requestType.startsWith("DM") || requestType.startsWith("VS")) {			
+			sql = sql + " AND LEAVE_TYPE IN ('DMS','DMC','VSS','VSC')";
+			if(month > 0)
+				sql = sql + " AND MONTH(DATE) = " + month;
+		}else {
+			sql = sql + " AND LEAVE_TYPE IN ('" + requestType +"') ";
+			if(month > 0)
+				sql = sql + " AND MONTH(DATE) < " + month;
+		}
+		log.info("COUNT_LEAVE_REQUEST_USED query: " + sql);
+		Object[] params = new Object[] { id, year };
+
+		float numberDayLeaveTaken = 0;
+		if(jdbcTmpl.queryForObject(sql, float.class, params) != null)
+			numberDayLeaveTaken = jdbcTmpl.queryForObject(sql, float.class, params);
+		System.err.println(year + "|" + id + "|" + requestType + "|" + month + ": "+ numberDayLeaveTaken);
+		return numberDayLeaveTaken;
+	}
+
+	
+	/**
 	 * get number of time take leave with full day
 	 * 
 	 * @param year
@@ -154,7 +186,6 @@ public class LeaveDAO extends JdbcDaoSupport {
 		numberDayLeaveTaken = jdbcTmpl.queryForObject(sql, float.class, params);
 
 		//System.err.println(year + "|" + id + "|" + numberDayLeaveTaken);
-
 		return numberDayLeaveTaken;
 	}
 
@@ -228,7 +259,7 @@ public class LeaveDAO extends JdbcDaoSupport {
 	 * @param leaveType
 	 * @throws Exception
 	 */
-	public void deleteLeaveInfo(int employeeId, java.util.Date date, String leaveType) throws Exception {
+	public void deleteLeaveInfo(int employeeId, String date, String leaveType) throws Exception {
 		try {
 			log.info("Xóa thông tin ngày nghỉ của MNV : " + employeeId + " ngày " + date);
 			// delete
@@ -272,7 +303,7 @@ public class LeaveDAO extends JdbcDaoSupport {
 			countNumber = jdbcTmpl.queryForObject(sql, Integer.class, params);
 		else
 			countNumber = 0;
-		//System.err.println("leaveType: " + leaveType + ", employeeId: " + employeeId + "|" + countNumber);
+		System.err.println("leaveType: " + leaveType + ", month: "+ month+ ", year " + year+", employeeId: " + employeeId + "|" + countNumber);
 
 		return countNumber;
 	}
@@ -290,21 +321,23 @@ public class LeaveDAO extends JdbcDaoSupport {
 
 	public int getLeaveReport(String year, String month, String employeeIds, String leaveType) throws Exception {
 		int countNumber = 0;
-		String sql = hr.getProperty("GET_LEAVE_INFO_FOR_REPORT").toString();
+		String sql = hr.getProperty("GET_LEAVES_INFO_FOR_REPORT").toString();
 		if (month != null && month.length() > 0)
 			sql = sql + " AND MONTH(DATE) = '" + month + "' ";
 
 		if (employeeIds != null && employeeIds.length() > 0)
 			sql = sql + " AND EMPLOYEE_ID IN (" + employeeIds + ")";
 
-		log.info("GET_LEAVE_INFO_FOR_REPORT query: " + sql);
+		log.info("GET_LEAVES_INFO_FOR_REPORT query: " + sql);
+		
+		System.err.println("");
 
 		Object[] params = new Object[] { year, leaveType };
 		if (jdbcTmpl.queryForObject(sql, Integer.class, params) != null)
 			countNumber = jdbcTmpl.queryForObject(sql, Integer.class, params);
 		else
 			countNumber = 0;
-		//System.err.println("leaveType:" + leaveType + ", " + countNumber);
+		System.err.println("leaveType:" + leaveType + ", " + countNumber);
 
 		return countNumber;
 	}

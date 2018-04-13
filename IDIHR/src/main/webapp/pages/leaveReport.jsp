@@ -14,6 +14,9 @@
 			class="btn btn-primary btn-sm">Quay lại thông tin chấm công</button></a>
 	<a href="${url}/timekeeping/leaveInfo"><button
 			class="btn btn-primary btn-sm">Quay lại chấm công phát sinh</button></a>
+	<a href="${url}/timekeeping/export.xls?month=${month}&year=${year}&department=${department}"><button
+			class="btn btn-primary btn-sm">Xuất ra file excel</button></a>		
+			
 	<br />
 	<br />
 	<table><tr>
@@ -32,6 +35,9 @@
 	</tr><tr>
 	</tr></table>
 	<div class="table-responsive">
+	<c:if test="${not empty message}">
+		<div class="alert alert-success">${message}</div>
+		</c:if>
 		<table class="table table-bordered">
 			<tr bgcolor=B5CBCE>
 				<th nowrap="nowrap">Mã NV</th>
@@ -81,10 +87,7 @@
 					<td bgcolor="#F5F6CE">${leaveReport.leaveRemain}</td>
 				</tr>
 			</c:forEach>
-		</table>
-		<c:if test="${not empty message}">
-			<div class="alert alert-success">${message}</div>
-		</c:if>
+		</table>		
 	</div>
 </body>
 </html>

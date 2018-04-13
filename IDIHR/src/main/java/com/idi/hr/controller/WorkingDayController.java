@@ -40,7 +40,6 @@ public class WorkingDayController {
 		if (target == null) {
 			return;
 		}
-		// System.out.println("Target=" + target);
 
 		if (target.getClass() == WorkingDay.class) {
 			dataBinder.setValidator(workingDayValidator);

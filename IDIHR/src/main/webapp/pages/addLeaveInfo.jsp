@@ -19,6 +19,13 @@
 	<form:form modelAttribute="leaveInfoForm" method="POST"
 		action="insertLeaveInfo">
 		<div class="table">
+			<table>
+				<tr>
+					<td><form:errors path="overLate" class="error-message" /></td>
+					<td><form:errors path="overLeave" class="error-message" /></td>
+					<td><form:errors path="duplicate" class="error-message" /></td>						
+				</tr>
+			</table>
 			<table class="table table-bordered">
 				<tbody>
 					<tr>
@@ -32,23 +39,18 @@
 					</tr>
 					<tr>
 						<td bgcolor="#FBEFF2">Chọn ngày(*):</td>
-						<td><form:input path="date" type="date" required="required" value="11/11/2017"/></td>
+						<td><form:input path="date" type="date" required="required" /></td>
 					</tr>	
 					<tr>
 						<td bgcolor="#FBEFF2">Chọn loại(*):</td>
 						<td>
 							<form:select path="leaveType">
-								<form:option value="DMS" label="Đi muộn sáng"></form:option>
-								<form:option value="DMC" label="Đi muộn chiều"></form:option>
-								<form:option value="VSS" label="Về sớm sáng"></form:option>
-								<form:option value="VSC" label="Về sớm chiều"></form:option>
-								<form:options items="${leaveTypeMap}" />
-								
+								<form:options items="${leaveTypeMap}" />								
 							</form:select>
 						</td>	
 					<tr>	
 						<td bgcolor="#FBEFF2">Điền số giờ nếu cần (Làm thêm giờ):</td>					
-						<td><form:input path="timeValue" size="1" type="number" min="0" max="24"/> (Mặc định cả ngày = 8h, nửa ngày = 4h)</td>
+						<td><form:input path="timeValue" step="0.5" type="number" min="0" max="24"/> (Mặc định cả ngày = 8h, nửa ngày = 4h)</td>
 					</tr>
 					<tr>
 						<td bgcolor="#FBEFF2">Ghi chú:</td>
@@ -63,6 +65,6 @@
 			<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" /> 			
 		</div>
 	</form:form>
-	<a href="${pageContext.request.contextPath}/timekeeping/leaveInfo/"><button class="btn btn-lg btn-primary btn-sm">Xem dữ liệu chấm công</button></a>
+	<a href="${pageContext.request.contextPath}/timekeeping/leaveInfo"><button class="btn btn-lg btn-primary btn-sm">Quay lại danh sách chấm công phát sinh</button></a>
 </body>
 </html>

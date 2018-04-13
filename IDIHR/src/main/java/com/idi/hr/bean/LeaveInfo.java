@@ -15,11 +15,14 @@ public class LeaveInfo implements Serializable {
 	private String leaveType;
 	private int timeValue;
 	private String comment;
-	private String leaveName;// = rs.getString("LEAVE_NAME");
+	private String leaveName;
 	private String employeeName;
 	private String department;
 	private String title;
-
+	private String overLate;
+	private String overLeave;
+	private String duplicate;
+	
 	public LeaveInfo() {
 	}
 
@@ -108,4 +111,28 @@ public class LeaveInfo implements Serializable {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
+	public String getOverLate() {
+		return overLate;
+	}
+
+	public void setOverLate(String overLate) {
+		this.overLate = overLate;
+	}
+
+	public String getOverLeave() {
+		return overLeave;
+	}
+
+	public void setOverLeave(String overLeave) {
+		this.overLeave = overLeave;
+	}
+
+	public String getDuplicate() {
+		return duplicate;
+	}
+
+	public void setDuplicate(String duplicate) {
+		this.duplicate = duplicate;
+	}	
 }

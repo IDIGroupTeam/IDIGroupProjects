@@ -1,5 +1,10 @@
 package com.idi.hr.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -12,11 +17,21 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,8 +52,8 @@ import com.idi.hr.dao.LeaveDAO;
 import com.idi.hr.dao.TimekeepingDAO;
 import com.idi.hr.dao.WorkingDayDAO;
 import com.idi.hr.form.LeaveInfoForm;
+import com.idi.hr.validator.LeaveValidator;
 import com.idi.hr.common.ExcelProcessor;
-import com.idi.hr.common.PropertiesManager;
 import com.idi.hr.common.Utils;
 
 @Controller
@@ -56,17 +71,37 @@ public class TimekeepingController {
 
 	@Autowired
 	private DepartmentDAO departmentDAO;
-	
+
 	@Autowired
 	private WorkingDayDAO workingDayDAO;
 
+	@Autowired
+	private LeaveValidator leaveValidator;
+
+	private ArrayList<LeaveReport> list;
+	
+	Map<String, String> leaveForReport;
+	
 	ExcelProcessor xp = new ExcelProcessor();
+
+	@InitBinder
+	protected void initBinder(WebDataBinder dataBinder) {
+
+		// Form mục tiêu
+		Object target = dataBinder.getTarget();
+		if (target == null) {
+			return;
+		}
+		if (target.getClass() == LeaveInfo.class) {
+			dataBinder.setValidator(leaveValidator);
+		}
+	}
 
 	@RequestMapping(value = "/timekeeping/updateData", method = RequestMethod.POST)
 	public String updateData(Model model, @RequestParam("timeKeepingFile") MultipartFile timeKeepingFile,
 			LeaveInfoForm leaveInfoForm) {
-//		System.err.println("import excel file");
-//		System.err.println(timeKeepingFile.getName());
+		// System.err.println("import excel file");
+		// System.err.println(timeKeepingFile.getName());
 		Timekeeping timekeeping = new Timekeeping();
 		model.addAttribute("timekeepingForm", timekeeping);
 		model.addAttribute("leaveInfoForm", leaveInfoForm);
@@ -113,17 +148,17 @@ public class TimekeepingController {
 			list = timekeepingDAO.getTimekeepings(currentDate, null, null, null);
 			List<LeaveInfo> listL = null;
 			listL = leaveDAO.getLeaves(currentDate, null, null, null);
-			if(list.size() == 0 && listL.size() == 0)
+			if (list.size() == 0 && listL.size() == 0)
 				model.addAttribute("message", "Không có dữ liệu chấm công cho ngày " + currentDate);
-			
+
 			// get list department
 			Map<String, String> departmentMap = this.dataForDepartments();
 
 			// get list employee id
 			Map<String, String> employeeMap = this.employees();
 			model.addAttribute("employeeMap", employeeMap);
-			
-			model.addAttribute("departmentMap", departmentMap);			
+
+			model.addAttribute("departmentMap", departmentMap);
 			model.addAttribute("timekeepings", list);
 			model.addAttribute("leaveInfos", listL);
 			model.addAttribute("timekeepingForm", timekeeping);
@@ -145,42 +180,45 @@ public class TimekeepingController {
 			String currentDate = dateFormat.format(date);
 			List<Timekeeping> list = null;
 			List<LeaveInfo> listL = null;
-			
+
 			String fromDate = leaveInfoForm.getDate();
 			String toDate = leaveInfoForm.getToDate();
 			String dept = leaveInfoForm.getDept();
 			String eId = leaveInfoForm.geteId();
 
-			System.err.println(fromDate + "|" + toDate + "|" + dept + "|" + eId);
+			// System.err.println(fromDate + "|" + toDate + "|" + dept + "|" + eId);
 			if (fromDate != null && toDate != null) {
-				if(fromDate != null && toDate.equalsIgnoreCase("viewDetail")){
+				if (fromDate != null && toDate.equalsIgnoreCase("viewDetail")) {
 					Calendar calendar = Calendar.getInstance();
-					// System.err.println(fromDate.substring(0, 4) + "|" + fromDate.substring(5, 7));
-			        calendar.set(Integer.parseInt(fromDate.substring(0, 4)), Integer.parseInt(fromDate.substring(5, 7))-1, 1);
-			       
-				    int lastDate = calendar.getActualMaximum(calendar.DAY_OF_MONTH);
-
-				   // calendar.set(Calendar.DATE, lastDate);
-				   // int lastDay = calendar.get(Calendar.DAY_OF_WEEK);
-				    //System.out.println("Last Date: " + lastDate +"|"+ calendar.getTime());
-				    //System.out.println("Last Day : " + lastDay);
-				    toDate = fromDate.substring(0, 4)+"-" + fromDate.substring(5, 7) + "-" + lastDate;
-				    System.out.println("to date " + toDate);
+					// System.err.println(fromDate.substring(0, 4) + "|" + fromDate.substring(5,
+					// 7));
+					calendar.set(Integer.parseInt(fromDate.substring(0, 4)),
+							Integer.parseInt(fromDate.substring(5, 7)) - 1, 1);
+					int lastDate = calendar.getActualMaximum(calendar.DAY_OF_MONTH);
+					// calendar.set(Calendar.DATE, lastDate);
+					// int lastDay = calendar.get(Calendar.DAY_OF_WEEK);
+					// System.out.println("Last Date: " + lastDate +"|"+ calendar.getTime());
+					// System.out.println("Last Day : " + lastDay);
+					toDate = fromDate.substring(0, 4) + "-" + fromDate.substring(5, 7) + "-" + lastDate;
+					System.out.println("to date " + toDate);
 				}
 				list = timekeepingDAO.getTimekeepings(fromDate, toDate, dept, eId);
 				listL = leaveDAO.getLeaves(fromDate, toDate, dept, eId);
-				if(list.size() == 0 && listL.size() == 0)
-					model.addAttribute("message", "Không có dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate );;
-			}else {
+				if (list.size() == 0 && listL.size() == 0)
+					model.addAttribute("message",
+							"Không có dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate);
+				;
+			} else {
 				list = timekeepingDAO.getTimekeepings(currentDate, null, null, null);
 				listL = leaveDAO.getLeaves(currentDate, null, null, null);
-				if(list.size() == 0 && listL.size() == 0)
+				if (list.size() == 0 && listL.size() == 0)
 					model.addAttribute("message", "Không có dữ liệu chấm công cho ngày " + currentDate);
-			}	
-			//System.err.println(currentDate + "|" + leaveInfoForm.getDate());
-			//if(list.size() == 0 && listL.size() == 0)
-			//	model.addAttribute("message", "Không có dữ liệu chấm công cho ngày " + leaveInfoForm.getDate());
-			
+			}
+			// System.err.println(currentDate + "|" + leaveInfoForm.getDate());
+			// if(list.size() == 0 && listL.size() == 0)
+			// model.addAttribute("message", "Không có dữ liệu chấm công cho ngày " +
+			// leaveInfoForm.getDate());
+
 			// get list department
 			Map<String, String> departmentMap = this.dataForDepartments();
 			model.addAttribute("departmentMap", departmentMap);
@@ -188,7 +226,7 @@ public class TimekeepingController {
 			// get list employee id
 			Map<String, String> employeeMap = this.employees();
 			model.addAttribute("employeeMap", employeeMap);
-			
+
 			model.addAttribute("timekeepings", list);
 			model.addAttribute("leaveInfos", listL);
 			model.addAttribute("timekeepingForm", timekeeping);
@@ -218,28 +256,30 @@ public class TimekeepingController {
 			String toDate = leaveInfoForm.getToDate();
 			String dept = leaveInfoForm.getDept();
 			String eId = leaveInfoForm.geteId();
-			
+
 			if (fromDate != null && toDate != null) {
 				list = leaveDAO.getLeaves(fromDate, toDate, dept, eId);
-				if(list.size() == 0)
-					model.addAttribute("message", "Không có dữ liệu chấm công phát sinh từ ngày " + fromDate + " đến ngày " + toDate);
-				model.addAttribute("formTitle", "Dữ liệu chấm công phát sinh từ ngày " + fromDate + " đến ngày " + toDate);
-			}else {
+				if (list.size() == 0)
+					model.addAttribute("message",
+							"Không có dữ liệu chấm công phát sinh từ ngày " + fromDate + " đến ngày " + toDate);
+				model.addAttribute("formTitle",
+						"Dữ liệu chấm công phát sinh từ ngày " + fromDate + " đến ngày " + toDate);
+			} else {
 				list = leaveDAO.getLeaves(currentDate, null, null, null);
-				if(list.size() == 0)
+				if (list.size() == 0)
 					model.addAttribute("message", "Không có dữ liệu chấm công phát sinh cho ngày " + currentDate);
 				model.addAttribute("formTitle", "Dữ liệu chấm công phát sinh ngày " + currentDate);
 			}
-			
+
 			// get list department
 			Map<String, String> departmentMap = this.dataForDepartments();
 			model.addAttribute("departmentMap", departmentMap);
 
 			// get list employee id
 			Map<String, String> employeeMap = this.employees();
-			model.addAttribute("employeeMap", employeeMap);			
-			
-			model.addAttribute("leaveInfos", list);			
+			model.addAttribute("employeeMap", employeeMap);
+
+			model.addAttribute("leaveInfos", list);
 
 		} catch (Exception e) {
 			log.error(e, e);
@@ -278,7 +318,8 @@ public class TimekeepingController {
 			@ModelAttribute("generateLeaveReport") @Validated LeaveReport leaveReport,
 			final RedirectAttributes redirectAttributes) {
 		try {
-			ArrayList<LeaveReport> list = new ArrayList<>();
+			list = new ArrayList<>();
+			LeaveReport leaveForGenReport;
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = new Date();
 			String currentDate = dateFormat.format(date);
@@ -295,7 +336,7 @@ public class TimekeepingController {
 					log.info("Báo cáo cho nhân viên có mã nv: " + leaveReport.getEmployeeId() + ". Tháng "
 							+ leaveReport.getMonthReport() + ", năm " + leaveReport.getYearReport());
 					EmployeeInfo employee = employeeDAO.getEmployee(String.valueOf(leaveReport.getEmployeeId()));
-					LeaveReport leaveForGenReport = new LeaveReport();
+					leaveForGenReport = new LeaveReport();
 					Integer id = employee.getEmployeeId();
 					leaveForGenReport.setEmployeeId(id);
 					leaveForGenReport.setName(employee.getFullName());
@@ -323,7 +364,7 @@ public class TimekeepingController {
 					// tinh toan de lay gia tri va gen thong tin leave info theo cac chi so dc nguoi
 					// dung lua chon
 					Map<String, String> leaveInfos = new LinkedHashMap<String, String>();
-					Map<String, String> leaveForReport = new LinkedHashMap<String, String>();
+					leaveForReport = new LinkedHashMap<String, String>();
 					StringTokenizer st = new StringTokenizer(leaveReport.getLeaveTypeReport(), ",");
 					while (st.hasMoreTokens()) {
 						String lT = st.nextToken();
@@ -337,25 +378,32 @@ public class TimekeepingController {
 							else
 								leaveForReport.put(lT, "Đi muộn");
 
-						}else if(lT.equalsIgnoreCase("TNC")) {
-							if(month == null || month.length() == 0) {
+						} else if (lT.equalsIgnoreCase("TNC")) {
+							if (month == null || month.length() == 0) {
 								model.addAttribute("message", "Tính ngày công bắt buộc phải chọn tháng cụ thể!");
 								return "leaveReport";
 							}
-							//co can yeu cau phai chon thang cu the ko hay cho pheo tinh ca nam
-							//model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ the!");
-							//Tính ngày công cho nhân viên của phòng 
+							// co can yeu cau phai chon thang cu the ko hay cho pheo tinh ca nam
+							// model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ
+							// the!");
+							// Tính ngày công cho nhân viên của phòng
 							leaveForReport.put(lT, "Ngày công");
-							//ngay cong thuc te
-							if(month.length() < 2)
-								lTV = (float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8 + (float)timekeepingDAO.getWorkedTime(year, month, id)/2 + "/" + workingDayDAO.getWorkingDay(year +"-0" + month, "IDI").getWorkDayOfMonth();
+							// ngay cong thuc te
+							if (month.length() < 2)
+								lTV = (float) leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT") / 8
+										+ (float) timekeepingDAO.getWorkedTime(year, month, id) / 2 + "/"
+										+ workingDayDAO.getWorkingDay(year + "-0" + month, "IDI").getWorkDayOfMonth();
 							else
-								lTV = (float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8 + (float)timekeepingDAO.getWorkedTime(year, month, id)/2 + "/" + workingDayDAO.getWorkingDay(year +"-" + month, "IDI").getWorkDayOfMonth();
-							//số ngày nghỉ phép, đi công tác của tháng
-							//System.err.println(Float.toString((float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8));
-							log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: " + leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
-							//gio cong thuc te	
-						}else {
+								lTV = (float) leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT") / 8
+										+ (float) timekeepingDAO.getWorkedTime(year, month, id) / 2 + "/"
+										+ workingDayDAO.getWorkingDay(year + "-" + month, "IDI").getWorkDayOfMonth();
+							// số ngày nghỉ phép, đi công tác của tháng
+							// System.err.println(Float.toString((float)leaveDAO.getLeaveReport(year, month,
+							// id, "NP','CT','HT")/8));
+							log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: "
+									+ leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
+							// gio cong thuc te
+						} else {
 							if (lT.startsWith("LT") || lT.startsWith("KCC")
 									|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
 								lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
@@ -426,7 +474,7 @@ public class TimekeepingController {
 
 					for (int i = 0; i < listE.size(); i++) {
 						EmployeeInfo employee = new EmployeeInfo();
-						LeaveReport leaveForGenReport = new LeaveReport();
+						leaveForGenReport = new LeaveReport();
 						employee = (EmployeeInfo) listE.get(i);
 						Integer id = employee.getEmployeeId();
 						leaveForGenReport.setEmployeeId(id);
@@ -455,7 +503,7 @@ public class TimekeepingController {
 						// tinh toan de lay gia tri va gen thong tin leave info theo cac chi so dc nguoi
 						// dung lua chon
 						Map<String, String> leaveInfos = new LinkedHashMap<String, String>();
-						Map<String, String> leaveForReport = new LinkedHashMap<String, String>();
+						leaveForReport = new LinkedHashMap<String, String>();
 						StringTokenizer st = new StringTokenizer(leaveReport.getLeaveTypeReport(), ",");
 						while (st.hasMoreTokens()) {
 							String lT = st.nextToken();
@@ -469,25 +517,34 @@ public class TimekeepingController {
 								else
 									leaveForReport.put(lT, "Đi muộn");
 
-							}else if(lT.equalsIgnoreCase("TNC")) {
-								if(month == null || month.length() == 0) {
+							} else if (lT.equalsIgnoreCase("TNC")) {
+								if (month == null || month.length() == 0) {
 									model.addAttribute("message", "Tính ngày công bắt buộc phải chọn tháng cụ thể!");
 									return "leaveReport";
-								}				
-								//co can yeu cau phai chon thang cu the ko hay cho pheo tinh ca nam
-								//model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ the!");
-								//Tính ngày công cho nhân viên của phòng 
+								}
+								// co can yeu cau phai chon thang cu the ko hay cho pheo tinh ca nam
+								// model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ
+								// the!");
+								// Tính ngày công cho nhân viên của phòng
 								leaveForReport.put(lT, "Ngày công");
-								//ngay cong thuc te
-								if(month.length() < 2)
-									lTV = (float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8 + (float)timekeepingDAO.getWorkedTime(year, month, id)/2 + "/" + workingDayDAO.getWorkingDay(year +"-0" + month, "IDI").getWorkDayOfMonth();
+								// ngay cong thuc te
+								if (month.length() < 2)
+									lTV = (float) leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT") / 8
+											+ (float) timekeepingDAO.getWorkedTime(year, month, id) / 2 + "/"
+											+ workingDayDAO.getWorkingDay(year + "-0" + month, "IDI")
+													.getWorkDayOfMonth();
 								else
-									lTV = (float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8 + (float)timekeepingDAO.getWorkedTime(year, month, id)/2 + "/" + workingDayDAO.getWorkingDay(year +"-" + month, "IDI").getWorkDayOfMonth();
-								//số ngày nghỉ phép, đi công tác của tháng
-								//System.err.println(Float.toString((float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8));
-								log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: " + leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
-								//gio cong thuc te	
-							}else {
+									lTV = (float) leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT") / 8
+											+ (float) timekeepingDAO.getWorkedTime(year, month, id) / 2 + "/"
+											+ workingDayDAO.getWorkingDay(year + "-" + month, "IDI")
+													.getWorkDayOfMonth();
+								// số ngày nghỉ phép, đi công tác của tháng
+								// System.err.println(Float.toString((float)leaveDAO.getLeaveReport(year, month,
+								// id, "NP','CT','HT")/8));
+								log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: "
+										+ leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
+								// gio cong thuc te
+							} else {
 								if (lT.startsWith("LT") || lT.startsWith("KCC")
 										|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
 									lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
@@ -557,7 +614,7 @@ public class TimekeepingController {
 
 					for (int i = 0; i < listE.size(); i++) {
 						EmployeeInfo employee = new EmployeeInfo();
-						LeaveReport leaveForGenReport = new LeaveReport();
+						leaveForGenReport = new LeaveReport();
 						employee = (EmployeeInfo) listE.get(i);
 						Integer id = employee.getEmployeeId();
 						leaveForGenReport.setEmployeeId(id);
@@ -588,7 +645,7 @@ public class TimekeepingController {
 						// tinh toan de lay gia tri va gen thong tin leave info theo cac chi so dc nguoi
 						// dung lua chon
 						Map<String, String> leaveInfos = new LinkedHashMap<String, String>();
-						Map<String, String> leaveForReport = new LinkedHashMap<String, String>();
+						leaveForReport = new LinkedHashMap<String, String>();
 						StringTokenizer st = new StringTokenizer(leaveReport.getLeaveTypeReport(), ",");
 						while (st.hasMoreTokens()) {
 							String lT = st.nextToken();
@@ -602,25 +659,34 @@ public class TimekeepingController {
 								else
 									leaveForReport.put(lT, "Đi muộn");
 
-							}else if(lT.equalsIgnoreCase("TNC")) {
-								if(month == null || month.length() == 0) {
+							} else if (lT.equalsIgnoreCase("TNC")) {
+								if (month == null || month.length() == 0) {
 									model.addAttribute("message", "Tính ngày công bắt buộc phải chọn tháng cụ thể!");
 									return "leaveReport";
 								}
-								//co can yeu cau phai chon thang cu the ko hay cho pheo tinh ca nam
-								//model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ the!");
-								//Tính ngày công cho nhân viên của phòng 
+								// co can yeu cau phai chon thang cu the ko hay cho pheo tinh ca nam
+								// model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ
+								// the!");
+								// Tính ngày công cho nhân viên của phòng
 								leaveForReport.put(lT, "Ngày công");
-								//ngay cong thuc te
-								if(month.length() < 2)
-									lTV = (float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8 + (float)timekeepingDAO.getWorkedTime(year, month, id)/2 + "/" + workingDayDAO.getWorkingDay(year +"-0" + month, "IDI").getWorkDayOfMonth();
+								// ngay cong thuc te
+								if (month.length() < 2)
+									lTV = (float) leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT") / 8
+											+ (float) timekeepingDAO.getWorkedTime(year, month, id) / 2 + "/"
+											+ workingDayDAO.getWorkingDay(year + "-0" + month, "IDI")
+													.getWorkDayOfMonth();
 								else
-									lTV = (float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8 + (float)timekeepingDAO.getWorkedTime(year, month, id)/2 + "/" + workingDayDAO.getWorkingDay(year +"-" + month, "IDI").getWorkDayOfMonth();
-								//số ngày nghỉ phép, đi công tác của tháng
-								//System.err.println(Float.toString((float)leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT")/8));
-								log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: " + leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
-								//gio cong thuc te	
-							}else {
+									lTV = (float) leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT") / 8
+											+ (float) timekeepingDAO.getWorkedTime(year, month, id) / 2 + "/"
+											+ workingDayDAO.getWorkingDay(year + "-" + month, "IDI")
+													.getWorkDayOfMonth();
+								// số ngày nghỉ phép, đi công tác của tháng
+								// System.err.println(Float.toString((float)leaveDAO.getLeaveReport(year, month,
+								// id, "NP','CT','HT")/8));
+								log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: "
+										+ leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
+								// gio cong thuc te
+							} else {
 								if (lT.startsWith("LT") || lT.startsWith("KCC")
 										|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
 									lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
@@ -688,7 +754,6 @@ public class TimekeepingController {
 						 * leaveUsedLastYear)); }
 						 */
 						leaveForGenReport.setLeaveRemain(String.valueOf(quataLeave - leaveUsed));
-						//
 
 						model.addAttribute("leaveInfos", leaveInfos);
 						leaveForGenReport.setLeaveTypes(leaveInfos);
@@ -697,7 +762,8 @@ public class TimekeepingController {
 					}
 				}
 				model.addAttribute("month", month);
-				model.addAttribute("year", year );
+				model.addAttribute("year", year);
+				model.addAttribute("generateLeaveReport", leaveReport);
 				model.addAttribute("department", leaveReport.getDepartment());
 			}
 			model.addAttribute("leaveReports", list);
@@ -709,38 +775,173 @@ public class TimekeepingController {
 		return "leaveReport";
 	}
 
+	@RequestMapping(value = "/timekeeping/export.xls", method = RequestMethod.GET)
+	public String getExcel(Model model, @RequestParam("department") String department, @RequestParam("month") String month, @RequestParam("year") String year) {
+		// List animalList = animalService.getAnimalList();
+		// TimekeepingListExcelView excel = new TimekeepingListExcelView();
+		model.addAttribute("leaveReports", list);
+		// excel.setExcelHeader(excelSheet);
+		// excel.setExcelHeader(excelSheet);
+		File dir = new File("C:/IDIGroup/Report");
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet = workbook.createSheet("data");
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		Date date = new Date();
+		String currentDate = dateFormat.format(date);
+		
+	    CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+	    Font font = sheet.getWorkbook().createFont();
+	    font.setBold(true);
+	    font.setFontHeightInPoints((short) 12);
+	    cellStyle.setFont(font);
+	    
+		Row row1 = sheet.createRow(0);
+		Cell cell = row1.createCell(3);
+		cell.setCellStyle(cellStyle);
+		cell.setCellValue("Thống kê báo cáo cho ");
+		if(department != null && !department.equalsIgnoreCase("all")) {
+			cell = row1.createCell(4);
+			cell.setCellStyle(cellStyle);
+			cell.setCellValue(" Phòng " + department);
+		}else {
+			cell = row1.createCell(4);
+			cell.setCellStyle(cellStyle);
+			cell.setCellValue(" Tất cả các phòng ban ");
+		}
+			
+		if(month != null && month.length() > 0) {
+			cell = row1.createCell(5);
+			cell.setCellStyle(cellStyle);
+			cell.setCellValue(" Tháng " + month);
+			cell = row1.createCell(6);
+			cell.setCellStyle(cellStyle);
+			cell.setCellValue(" Năm " + year);
+		}else {
+			cell = row1.createCell(5);
+			cell.setCellStyle(cellStyle);
+			cell.setCellValue(" Tất cả các tháng ");
+			cell = row1.createCell(6);
+			cell.setCellStyle(cellStyle);
+			cell.setCellValue(" Năm " + year);
+		}
+		
+		// gen column name
+		int rowNum = 2;
+		Row row = sheet.createRow(rowNum);
+		Cell cell11 = row.createCell(0);
+		cell11.setCellValue("Mã NV");
+		Cell cell21 = row.createCell(1);
+		cell21.setCellValue("Họ tên");
+		Cell cell31 = row.createCell(2);
+		cell31.setCellValue("Phòng");
+		Cell cell41 = row.createCell(3);
+		cell41.setCellValue("Tổng số ngày phép");
+		Cell cell51 = row.createCell(4);
+		cell51.setCellValue("Ngày phép đã dùng");
+		Cell cell61 = row.createCell(5);
+		cell61.setCellValue("Ngày phép còn lại");
+
+		//Map<String, String> leaveTypes = list.get(0).getLeaveTypes();
+
+		int column = 6;
+		for (Map.Entry<String, String> entry : leaveForReport.entrySet()) {
+			Cell cell71 = row.createCell(column++);
+			cell71.setCellValue(entry.getValue());
+			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+		}
+
+		// gen value
+		rowNum = 3;
+		for (int i = 0; i < list.size(); i++) {
+			row = sheet.createRow(rowNum++);
+			int colNum = 0;
+			LeaveReport leaveReport = new LeaveReport();
+			leaveReport = list.get(i);
+			Cell cell1 = row.createCell(colNum++);
+			cell1.setCellValue((Integer) leaveReport.getEmployeeId());
+			Cell cell2 = row.createCell(colNum++);
+			cell2.setCellValue((String) leaveReport.getName());
+			Cell cell3 = row.createCell(colNum++);
+			cell3.setCellValue((String) leaveReport.getDepartment());
+			Cell cell4 = row.createCell(colNum++);
+			cell4.setCellValue((String) leaveReport.getQuataLeave());
+			Cell cell5 = row.createCell(colNum++);
+			cell5.setCellValue((String) leaveReport.getLeaveUsed());
+			Cell cell6 = row.createCell(colNum++);
+			cell6.setCellValue((String) leaveReport.getLeaveRemain());
+			Map<String, String> leaveTypesValue = list.get(i).getLeaveTypes();
+			for (Map.Entry<String, String> entry : leaveTypesValue.entrySet()) {
+				Cell cell7 = row.createCell(colNum++);
+				cell7.setCellValue(entry.getValue());
+
+				// System.out.println("Key = " + entry.getKey() + ", Value = " +
+				// entry.getValue());
+			}
+		}
+
+		try {
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			FileOutputStream outputStream = new FileOutputStream(
+					dir + "/" + "/Thong ke du lieu cham cong " + currentDate + ".xlsx");
+			workbook.write(outputStream);
+			workbook.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("Done");
+		model.addAttribute("message", "Dữ liệu đã được export ra file C:/IDIGroup/Report/ThongKeDuLieuChuyenCan.xlsx!");
+		model.addAttribute("leaveForReport", leaveForReport);
+		model.addAttribute("leaveReports", list);
+		model.addAttribute("formTitle", "Xuất ra file excel thống kê dữ liệu chuyên cần");
+		model.addAttribute("month", month);
+		model.addAttribute("year", year);
+		model.addAttribute("department", department);
+		return "leaveReport";
+
+	}
+
 	@RequestMapping(value = "/timekeeping/insertLeaveInfo", method = RequestMethod.POST)
 	public String insertLeaveInfo(Model model, @ModelAttribute("leaveInfoForm") @Validated LeaveInfo leaveInfo,
-			final RedirectAttributes redirectAttributes) {
+			BindingResult result, final RedirectAttributes redirectAttributes) {
 		try {
-			leaveDAO.insertLeaveInfo(leaveInfo);
-			
-			//add thong tin xin phep di muon ve som vao table timekeeping
-			PropertiesManager hr = new PropertiesManager("hr.properties");
-			String leaveType = leaveInfo.getLeaveType();
-			Timekeeping timekeeping = new Timekeeping();
-			timekeeping.setEmployeeId(leaveInfo.getEmployeeId());
-			timekeeping.setEmployeeName(leaveInfo.getEmployeeName());
-			timekeeping.setDepartment(leaveInfo.getDepartment());
-			timekeeping.setTitle(leaveInfo.getTitle());
-			timekeeping.setDate(leaveInfo.getDate());
-			timekeeping.setComment(leaveInfo.getComment());
-			if (leaveType.equalsIgnoreCase("DMS")) {
-				timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_MORNING").toString());				
-			}
-			else if (leaveType.equalsIgnoreCase("DMC")) {
-				timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_AFTERNOON").toString());
-			}
-			else if (leaveType.equalsIgnoreCase("VSS")) {
-				timekeeping.setTimeOut(hr.getProperty("TIME_CHECK_OUT_MORNING").toString());
-				timekeeping.setComment("Request leave soon morning");
-			}
-			else if (leaveType.equalsIgnoreCase("VSC")) {
-				timekeeping.setTimeOut(hr.getProperty("TIME_CHECK_OUT_AFTERNOON").toString());
-				timekeeping.setComment("Request leave soon afternoon");
+
+			// validation
+			if (result.hasErrors()) {
+				System.err.println("validate data is fail");
+				return this.addLeaveInfo(model, leaveInfo);
 			}
 
-			timekeepingDAO.update(timekeeping);
+			leaveDAO.insertLeaveInfo(leaveInfo);
+
+			/*
+			 * //add thong tin xin phep di muon ve som vao table timekeeping
+			 * PropertiesManager hr = new PropertiesManager("hr.properties"); String
+			 * leaveType = leaveInfo.getLeaveType(); Timekeeping timekeeping = new
+			 * Timekeeping(); timekeeping.setEmployeeId(leaveInfo.getEmployeeId());
+			 * timekeeping.setEmployeeName(leaveInfo.getEmployeeName());
+			 * timekeeping.setDepartment(leaveInfo.getDepartment());
+			 * timekeeping.setTitle(leaveInfo.getTitle());
+			 * timekeeping.setDate(leaveInfo.getDate());
+			 * timekeeping.setComment(leaveInfo.getComment()); if
+			 * (leaveType.equalsIgnoreCase("DMS")) {
+			 * timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_MORNING").toString()); }
+			 * else if (leaveType.equalsIgnoreCase("DMC")) {
+			 * timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_AFTERNOON").toString());
+			 * } else if (leaveType.equalsIgnoreCase("VSS")) {
+			 * timekeeping.setTimeOut(hr.getProperty("TIME_CHECK_OUT_MORNING").toString());
+			 * timekeeping.setComment("Request leave soon morning"); } else if
+			 * (leaveType.equalsIgnoreCase("VSC")) {
+			 * timekeeping.setTimeOut(hr.getProperty("TIME_CHECK_OUT_AFTERNOON").toString())
+			 * ; timekeeping.setComment("Request leave soon afternoon"); }
+			 * 
+			 * timekeepingDAO.update(timekeeping);
+			 */
+
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Thêm thông tin ngày nghỉ thành công!");
 
@@ -768,9 +969,10 @@ public class TimekeepingController {
 
 	@RequestMapping(value = "/timekeeping/deleteLeaveInfo")
 	public String deleteLeaveInfo(Model model, @RequestParam("employeeId") int employeeId,
-			@RequestParam("date") Date date, @RequestParam("leaveType") String leaveType,
+			@RequestParam("date") String date, @RequestParam("leaveType") String leaveType,
 			final RedirectAttributes redirectAttributes) {
 		try {
+			System.err.println("delete leave info ");
 			leaveDAO.deleteLeaveInfo(employeeId, date, leaveType);
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Xóa thông tin ngày nghỉ thành công!");
@@ -856,17 +1058,17 @@ public class TimekeepingController {
 	private float getLeaveUsed(String year, int id) {
 		// Tinh toan so ngay phep da su dung va so ngay phep con lai
 		float leaveUsed = 0;
-		if(leaveDAO.getLeaveTaken(year, id) > 0)
+		if (leaveDAO.getLeaveTaken(year, id) > 0)
 			leaveUsed = leaveDAO.getLeaveTaken(year, id);
-		//System.out.println("leave used " + leaveUsed);
-		leaveUsed = leaveUsed/8;
+		// System.out.println("leave used " + leaveUsed);
+		leaveUsed = leaveUsed / 8;
 		return leaveUsed;
 	}
-	
+
 	// For Ajax
 	@RequestMapping("/timekeeping/selection")
 	public @ResponseBody List<EmployeeInfo> employeesByDepartment(@RequestParam("dept") String department) {
-		//System.err.println("ajax method");
+		// System.err.println("ajax method");
 		List<EmployeeInfo> list = null;
 		if (!department.equalsIgnoreCase("all"))
 			list = employeeDAO.getEmployeesByDepartment(department);
