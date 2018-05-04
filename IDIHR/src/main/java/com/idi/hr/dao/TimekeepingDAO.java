@@ -1,5 +1,7 @@
 package com.idi.hr.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -10,11 +12,14 @@ import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
+import com.idi.hr.bean.LeaveReport;
 import com.idi.hr.bean.Timekeeping;
 import com.idi.hr.common.PropertiesManager;
 import com.idi.hr.mapper.TimekeepingMapper;
@@ -171,7 +176,7 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 									+ "Tên nhân viên: " + timekeepingDTO.getEmployeeName() + "<br/> <br/> \n"
 									+ "Được inport bởi: (lấy từ phần phân quyền) <e-mail> lúc " + Calendar.getInstance().getTime();
 							mimeMessage.setContent(htmlMsg,"text/html; charset=UTF-8");
-							helper.setTo("tuyenpx.idigroup@gmail.com");
+							helper.setTo("idigroupbsc@gmail.com");
 							helper.setSubject("Cảnh báo: Thông tin nhân viên không khớp");
 							helper.setFrom("IDIHRNotReply");
 							mailSender.send(mimeMessage);
@@ -253,8 +258,8 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	 * @return
 	 * @throws Exception
 	 */
-	public String getTimekeepingReport(String year, String month, int employeeId, String leaveType) throws Exception {
-		String countNumber = "";
+	public LeaveReport getTimekeepingReport(String year, String month, int employeeId, String leaveType) throws Exception {
+		
 		String sqlCL = hr.getProperty("GET_TIMEKEEPING_COME_LATE_FOR_REPORT").toString();
 		String sqlLS = hr.getProperty("GET_TIMEKEEPING_LEAVE_SOON_FOR_REPORT").toString();
 		String sql="";
@@ -271,11 +276,28 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 		log.info("GET_TIMEKEEPING_FOR_REPORT query: " + sql);
 
 		Object[] params = new Object[] { year };
-		countNumber = jdbcTmpl.queryForObject(sql, String.class, params);
-		
-		System.err.println(leaveType + ": " + countNumber);
-		
-		return countNumber;
+		return jdbcTmpl.query(sql, params, new ResultSetExtractor<LeaveReport>() {
+			@Override
+			public LeaveReport extractData(ResultSet rs) throws SQLException, DataAccessException{
+				if(rs.next()) {
+					LeaveReport leaveReport = new LeaveReport();
+					
+					if(leaveType.equalsIgnoreCase("DM")) {
+						leaveReport.setComeLate(rs.getInt("COUNT"));
+						leaveReport.setLateAValue(rs.getInt("LATE_A"));
+						leaveReport.setLateMValue(rs.getInt("LATE_M"));						
+					}						
+					else if(leaveType.equalsIgnoreCase("VS")) {
+						leaveReport.setLeaveSoon(rs.getInt("COUNT"));
+						leaveReport.setLeaveSoonAValue(rs.getInt("LEAVE_SOON_A"));
+						leaveReport.setLeaveSoonMValue(rs.getInt("LEAVE_SOON_M"));	
+					}
+						
+					return leaveReport;
+				}
+				return null;
+			}
+		});
 	}
 	
 	/**

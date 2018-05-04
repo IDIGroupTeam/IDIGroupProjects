@@ -109,11 +109,13 @@ public class ExcelProcessor {
 									lateMValue = Integer.parseInt(h)
 											- Integer.parseInt(hr.getProperty("TIME_CHECK_IN_MORNING"));
 									System.err.println("Muon sang: " + lateMValue + ":" + s);
-									timekeeping.setComeLateM("0" + lateMValue + ":" + s);
+									System.err.println(String.valueOf(lateMValue*60 + Integer.parseInt(s)));
+									timekeeping.setComeLateM(String.valueOf(lateMValue*60 + Integer.parseInt(s)));
+									//timekeeping.setComeLateM("0" + lateMValue + ":" + s);
 								} else if (Integer.parseInt(h) == Integer
 										.parseInt(hr.getProperty("TIME_CHECK_IN_MORNING")) && Integer.parseInt(s) > 0) {
 									System.err.println("Muon sang: " + 0 + ":" + s);
-									timekeeping.setComeLateM(0 + ":" + s);
+									timekeeping.setComeLateM(s);
 								}
 								// check in late at afternoon
 								int lateAValue = 0;
@@ -121,12 +123,14 @@ public class ExcelProcessor {
 									lateAValue = Integer.parseInt(h)
 											- Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON"));
 									System.err.println("Muon chieu: " + lateAValue + ":" + s);
+									System.err.println(String.valueOf(lateAValue*60 + Integer.parseInt(s)));
+									timekeeping.setComeLateA(String.valueOf(lateAValue*60 + Integer.parseInt(s)));
 									timekeeping.setComeLateA("0" + lateAValue + ":" + s);
 								} else if (Integer.parseInt(h) == Integer
 										.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON"))
 										&& Integer.parseInt(s) > 0) {
 									System.err.println("Muon chieu: " + 0 + ":" + s);
-									timekeeping.setComeLateA(0 + ":" + s);
+									timekeeping.setComeLateA(s);
 								}
 
 								break;
@@ -161,15 +165,22 @@ public class ExcelProcessor {
 									soonMValue = Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_MORNING"))
 											- (Integer.parseInt(h) + 1);
 									System.err.println("Ve som sang: " + soonMValue + ":" + (60 - Integer.parseInt(s)));
-									String hour = "0";
+									//String hour = "0";
 									int min = 60 - Integer.parseInt(s);
 
-									if (soonMValue > 0 && soonMValue < 10)
-										hour = "0" + soonMValue;
-									if (0 < min && min < 10)
+									if (soonMValue > 0 && soonMValue < 10) {
+										//hour = "0" + soonMValue;
+										timekeeping.setLeaveSoonM(String.valueOf((soonMValue*60 + min)));
+									}else {
+										if (0 < min && min < 10)
 										s = "0" + min;
-
-									timekeeping.setLeaveSoonM(hour + ":" + s);
+										timekeeping.setLeaveSoonM(String.valueOf(min));
+									}
+										
+									/*if (0 < min && min < 10)
+										s = "0" + min;
+									
+									timekeeping.setLeaveSoonM(hour + ":" + s);*/
 								}
 								// check out soon afternoon
 								int soonAValue = 0;
@@ -180,16 +191,22 @@ public class ExcelProcessor {
 											- (Integer.parseInt(h) + 1);
 									System.err
 											.println("Ve som chieu: " + soonAValue + ":" + (60 - Integer.parseInt(s)));
-									String hour = "0";
+									//String hour = "0";
 									int min = 60 - Integer.parseInt(s);
 
-									if (soonAValue > 0 && soonAValue < 10)
-										hour = "0" + soonAValue;
-									if (0 < min && min < 10)
+									if (soonAValue > 0 && soonAValue < 10) {
+										//hour = "0" + soonAValue;
+										timekeeping.setLeaveSoonA(String.valueOf((soonAValue*60 + min)));
+									}else {
+										if (0 < min && min < 10)
 										s = "0" + min;
-									timekeeping.setLeaveSoonA(hour + ":" + s);
+										timekeeping.setLeaveSoonA(String.valueOf(min));
+									}
+									/*	if (0 < min && min < 10)
+											s = "0" + min;
+										timekeeping.setLeaveSoonA(hour + ":" + s);
+									}*/
 								}
-
 								break;
 							case NUMERIC:
 								Double doubleValue = cell.getNumericCellValue();

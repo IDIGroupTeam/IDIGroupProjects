@@ -185,25 +185,25 @@ $(function() {
 						<td bgcolor="EDC7D0">${timekeeping.timeOut}</td>
 					</c:if>
 					<c:if test="${not empty timekeeping.comeLateM}">
-						<td bgcolor="#F5F6CE">${timekeeping.comeLateM}</td>
+						<td bgcolor="#F5F6CE">${timekeeping.comeLateM} phút</td>
 					</c:if>
 					<c:if test="${empty timekeeping.comeLateM}">
 						<td>${timekeeping.comeLateM}</td>
 					</c:if>
 					<c:if test="${not empty timekeeping.comeLateA}">
-						<td bgcolor="#F5F6CE">${timekeeping.comeLateA}</td>
+						<td bgcolor="#F5F6CE">${timekeeping.comeLateA} phút</td>
 					</c:if>
 					<c:if test="${empty timekeeping.comeLateA}">
 						<td>${timekeeping.comeLateA}</td>
 					</c:if>
 					<c:if test="${not empty timekeeping.leaveSoonM}">
-						<td bgcolor="#F5F6CE">${timekeeping.leaveSoonM}</td>
+						<td bgcolor="#F5F6CE">${timekeeping.leaveSoonM} phút</td>
 					</c:if>
 					<c:if test="${empty timekeeping.leaveSoonM}">
 						<td>${timekeeping.leaveSoonM}</td>
 					</c:if>
 					<c:if test="${not empty timekeeping.leaveSoonA}">
-						<td bgcolor="#F5F6CE">${timekeeping.leaveSoonA}</td>
+						<td bgcolor="#F5F6CE">${timekeeping.leaveSoonA} phút</td>
 					</c:if>
 					<c:if test="${empty timekeeping.leaveSoonA}">
 						<td>${timekeeping.leaveSoonA}</td>

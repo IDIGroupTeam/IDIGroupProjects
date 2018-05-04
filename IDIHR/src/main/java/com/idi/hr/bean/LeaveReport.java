@@ -24,9 +24,15 @@ public class LeaveReport implements Serializable {
 	private String leaveRemain;// so ngay phep con lai trong nam = (quataLeave - leaveUsed) + restQuata
 	private String monthReport;
 	private String yearReport;
+	
 	//count come late, leave soon, 
-	private int comeLate = 0; 
-	private int leaveSoon = 0;
+	private int comeLate = 0; // tong so lan di muon
+	private int leaveSoon = 0; // tong so lan ve som
+	private int lateMValue = 0; // tong thoi gian di muon sang
+	private int lateAValue = 0; // tong thoi gian di muon chieu
+	private int leaveSoonMValue = 0; // tong thoi gian ve som sang
+	private int leaveSoonAValue = 0; // tong thoi gian ve som chieu
+	
 	private String leaveTypeReport;	
 	private Map<String, String> leaveTypes;
 	
@@ -116,6 +122,38 @@ public class LeaveReport implements Serializable {
 
 	public void setLeaveSoon(int leaveSoon) {
 		this.leaveSoon = leaveSoon;
+	}
+
+	public int getLateMValue() {
+		return lateMValue;
+	}
+
+	public void setLateMValue(int lateMValue) {
+		this.lateMValue = lateMValue;
+	}
+
+	public int getLateAValue() {
+		return lateAValue;
+	}
+
+	public void setLateAValue(int lateAValue) {
+		this.lateAValue = lateAValue;
+	}
+
+	public int getLeaveSoonMValue() {
+		return leaveSoonMValue;
+	}
+
+	public void setLeaveSoonMValue(int leaveSoonMValue) {
+		this.leaveSoonMValue = leaveSoonMValue;
+	}
+
+	public int getLeaveSoonAValue() {
+		return leaveSoonAValue;
+	}
+
+	public void setLeaveSoonAValue(int leaveSoonAValue) {
+		this.leaveSoonAValue = leaveSoonAValue;
 	}
 
 	public int getEmployeeId() {

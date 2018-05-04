@@ -19,7 +19,7 @@ import java.util.StringTokenizer;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
+//import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -200,7 +200,7 @@ public class TimekeepingController {
 					// System.out.println("Last Date: " + lastDate +"|"+ calendar.getTime());
 					// System.out.println("Last Day : " + lastDay);
 					toDate = fromDate.substring(0, 4) + "-" + fromDate.substring(5, 7) + "-" + lastDate;
-					System.out.println("to date " + toDate);
+					//System.out.println("to date " + toDate);
 				}
 				list = timekeepingDAO.getTimekeepings(fromDate, toDate, dept, eId);
 				listL = leaveDAO.getLeaves(fromDate, toDate, dept, eId);
@@ -371,13 +371,18 @@ public class TimekeepingController {
 						// String lTSum = "";
 						String lTV = "";
 						if (lT.equalsIgnoreCase("VS") || lT.equalsIgnoreCase("DM")) {
-							lTV = timekeepingDAO.getTimekeepingReport(year, month, id, lT);
+							LeaveReport comeLLeaveS;
+							comeLLeaveS = timekeepingDAO.getTimekeepingReport(year, month, id, lT);								
 							// System.err.println("leave type: " + lT);
-							if (lT.equalsIgnoreCase("VS"))
-								leaveForReport.put(lT, "Về sớm");
-							else
-								leaveForReport.put(lT, "Đi muộn");
-
+							if (lT.equalsIgnoreCase("VS")) {
+								leaveForReport.put(lT, "SL Về sớm/tổng tg(p)");
+								//leaveForReport.put("TGVS", "TG Về sớm");
+								lTV = String.valueOf(comeLLeaveS.getLeaveSoon()) + "/" + (comeLLeaveS.getLeaveSoonAValue() + comeLLeaveS.getLeaveSoonMValue());
+							}else {
+								leaveForReport.put(lT, "SL Đi muộn/tổng tg(p)");
+								//leaveForReport.put("TGDM", "TG Đi muộn");
+								lTV = String.valueOf(comeLLeaveS.getComeLate()) + "/" + (comeLLeaveS.getLateAValue()+ comeLLeaveS.getLateMValue());
+							}
 						} else if (lT.equalsIgnoreCase("TNC")) {
 							if (month == null || month.length() == 0) {
 								model.addAttribute("message", "Tính ngày công bắt buộc phải chọn tháng cụ thể!");
@@ -510,13 +515,18 @@ public class TimekeepingController {
 							// String lTSum = "";
 							String lTV = "";
 							if (lT.equalsIgnoreCase("VS") || lT.equalsIgnoreCase("DM")) {
-								lTV = timekeepingDAO.getTimekeepingReport(year, month, id, lT);
+								LeaveReport comeLLeaveS;
+								comeLLeaveS = timekeepingDAO.getTimekeepingReport(year, month, id, lT);								
 								// System.err.println("leave type: " + lT);
-								if (lT.equalsIgnoreCase("VS"))
-									leaveForReport.put(lT, "Về sớm");
-								else
-									leaveForReport.put(lT, "Đi muộn");
-
+								if (lT.equalsIgnoreCase("VS")) {
+									leaveForReport.put(lT, "SL Về sớm/tổng tg(p)");
+									//leaveForReport.put("TGVS", "TG Về sớm");
+									lTV = String.valueOf(comeLLeaveS.getLeaveSoon()) + "/" + (comeLLeaveS.getLeaveSoonAValue() + comeLLeaveS.getLeaveSoonMValue());
+								}else {
+									leaveForReport.put(lT, "SL Đi muộn/tổng tg(p)");
+									//leaveForReport.put("TGDM", "TG Đi muộn");
+									lTV = String.valueOf(comeLLeaveS.getComeLate()) + "/" + (comeLLeaveS.getLateAValue()+ comeLLeaveS.getLateMValue());
+								}
 							} else if (lT.equalsIgnoreCase("TNC")) {
 								if (month == null || month.length() == 0) {
 									model.addAttribute("message", "Tính ngày công bắt buộc phải chọn tháng cụ thể!");
@@ -652,13 +662,20 @@ public class TimekeepingController {
 							// String lTSum = "";
 							String lTV = "";
 							if (lT.equalsIgnoreCase("VS") || lT.equalsIgnoreCase("DM")) {
-								lTV = timekeepingDAO.getTimekeepingReport(year, month, id, lT);
+								LeaveReport comeLLeaveS;
+								comeLLeaveS = timekeepingDAO.getTimekeepingReport(year, month, id, lT);								
 								// System.err.println("leave type: " + lT);
-								if (lT.equalsIgnoreCase("VS"))
-									leaveForReport.put(lT, "Về sớm");
-								else
-									leaveForReport.put(lT, "Đi muộn");
-
+								if (lT.equalsIgnoreCase("VS")) {
+									leaveForReport.put(lT, "SL Về sớm/tổng tg(p)");
+									//leaveForReport.put("TGVS", "TG Về sớm");
+									System.err.println("ve som: "+ comeLLeaveS.getLeaveSoonAValue() + "|" + comeLLeaveS.getLeaveSoonMValue());
+									lTV = String.valueOf(comeLLeaveS.getLeaveSoon()) + "/" + (comeLLeaveS.getLeaveSoonAValue() + comeLLeaveS.getLeaveSoonMValue());
+								}else {
+									leaveForReport.put(lT, "SL Đi muộn/tổng tg(p)");
+									//leaveForReport.put("TGDM", "TG Đi muộn");
+									System.err.println("di muon: "+ comeLLeaveS.getLateAValue()  +"|" + comeLLeaveS.getLateMValue());
+									lTV = String.valueOf(comeLLeaveS.getComeLate()) + "/" + (comeLLeaveS.getLateAValue() + comeLLeaveS.getLateMValue());
+								}		
 							} else if (lT.equalsIgnoreCase("TNC")) {
 								if (month == null || month.length() == 0) {
 									model.addAttribute("message", "Tính ngày công bắt buộc phải chọn tháng cụ thể!");
@@ -894,7 +911,7 @@ public class TimekeepingController {
 		}
 
 		System.out.println("Done");
-		model.addAttribute("message", "Dữ liệu đã được export ra file C:/IDIGroup/Report/ThongKeDuLieuChuyenCan.xlsx!");
+		model.addAttribute("message", "Dữ liệu đã được export ra file C:/IDIGroup/Report/Thong ke du lieu chuyen can.xlsx!");
 		model.addAttribute("leaveForReport", leaveForReport);
 		model.addAttribute("leaveReports", list);
 		model.addAttribute("formTitle", "Xuất ra file excel thống kê dữ liệu chuyên cần");

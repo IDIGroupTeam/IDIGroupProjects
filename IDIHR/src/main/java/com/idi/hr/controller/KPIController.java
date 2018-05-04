@@ -200,7 +200,7 @@ public class KPIController {
 						log.info("Ve bieu do di muon, thang hien tai " + maxMonth);
 						for (int i = 1; i <= maxMonth; i++) {
 							if (department.equalsIgnoreCase("all"))
-								values.put("Tháng " + i, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year,	String.valueOf(i), employeeId, typeReport)));
+								values.put("Tháng " + i, timekeepingDAO.getTimekeepingReport(year,	String.valueOf(i), employeeId, typeReport).getComeLate());
 							else
 								values.put("Tháng " + i, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year,	String.valueOf(i), employeeIds, typeReport)));
 							log.info("Ve bieu do di muon " + month);
@@ -209,7 +209,7 @@ public class KPIController {
 				} else {
 					log.info("Ve bieu do di muon thang " + month);
 					if (department.equalsIgnoreCase("all"))
-						values.put("Tháng " + month, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year, month, employeeId, typeReport)));
+						values.put("Tháng " + month, timekeepingDAO.getTimekeepingReport(year, month, employeeId, typeReport).getComeLate());
 					else
 						values.put("Tháng " + month, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year, month, employeeIds, typeReport)));
 				}
@@ -251,7 +251,7 @@ public class KPIController {
 						log.info("Ve bieu do ve som, thang hien tai " + maxMonth);
 						for (int i = 1; i <= maxMonth; i++) {
 							if (department.equalsIgnoreCase("all"))
-								values.put("Tháng " + i, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year,	String.valueOf(i), employeeId, typeReport)));
+								values.put("Tháng " + i, timekeepingDAO.getTimekeepingReport(year,	String.valueOf(i), employeeId, typeReport).getLeaveSoon());
 							else
 								values.put("Tháng " + i, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year,	String.valueOf(i), employeeIds, typeReport)));
 							log.info("Ve bieu do ve som " + month);
@@ -262,7 +262,7 @@ public class KPIController {
 				} else {
 					log.info("Ve bieu do ve som thang " + month);
 					if (department.equalsIgnoreCase("all"))
-						values.put("Tháng " + month, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year, month, employeeId, typeReport)));
+						values.put("Tháng " + month, timekeepingDAO.getTimekeepingReport(year, month, employeeId, typeReport).getLeaveSoon());
 					else
 						values.put("Tháng " + month, Integer.parseInt(timekeepingDAO.getTimekeepingReport(year, month, employeeIds, typeReport)));
 				}
