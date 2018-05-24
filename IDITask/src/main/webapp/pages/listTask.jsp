@@ -78,7 +78,7 @@ tr:nth-child(even) {
 		<table class="table">
 			<tr>
 				<td style="color: background;"><i>Tìm công việc theo: Mã
-						việc/Tên việc/Người được giao/Trạng thái công việc/Mã phòng </i></td>
+						việc/Tên việc/Người được giao/Trạng thái công việc/Mã phòng/Kế hoạch cho tháng </i></td>
 				<td align="center"><form:input path="searchValue"
 						required="required" class="form-control"/></td>
 				<td><input id="search" class="btn btn-lg btn-primary btn-sm" type="submit"
@@ -189,6 +189,7 @@ tr:nth-child(even) {
 				<th>Giao cho</th>
 				<th>Trạng thái</th>
 				<th>Mức độ</th>
+				<th>Kế hoạch cho</th>
 				<th>Ngày cập nhật</th>
 			</tr>
 			<c:forEach var="task" items="${tasks}">
@@ -204,6 +205,7 @@ tr:nth-child(even) {
 					</c:if>
 					<td>${task.status}</td>
 					<td>${task.priority}</td>
+					<td>${task.plannedFor}</td>
 					<td>${task.updateTS}</td>
 				</tr>
 			</c:forEach>

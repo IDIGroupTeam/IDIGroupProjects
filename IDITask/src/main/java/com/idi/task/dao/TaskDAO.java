@@ -56,6 +56,28 @@ public class TaskDAO extends JdbcDaoSupport {
 		return list;
 
 	}
+	
+	/**
+	 * Get list Task related from DB 
+	 * 
+	 * @return List of Task
+	 * @throws Exception
+	 */
+	public List<Task> getTasksRelated(String taskIds) {
+
+		String sql = properties.getProperty("GET_TASKS_RELATED").toString();
+		log.info("GET_TASKS_RELATED query: " + sql);
+		//Object[] params = new Object[] { taskIds };
+		if(taskIds != null && taskIds.length() > 0)
+			sql = sql + " AND TASK_ID IN (" + taskIds + ") ORDER BY UPDATE_TS DESC";		
+		System.err.println("task related: " + taskIds);
+		TaskMapper mapper = new TaskMapper();
+
+		List<Task> list = jdbcTmpl.query(sql, mapper);
+		System.err.println("so luong cv lien quan " +list.size());
+		return list;
+
+	}
 
 	/**
 	 * get task by task id
@@ -180,6 +202,27 @@ public class TaskDAO extends JdbcDaoSupport {
 			throw e;
 		}
 	}
+
+	/**
+	 * Update task related for a task into database
+	 * @param task related
+	 * @param taskId
+	 * @throws Exception
+	 */
+	public void updateRelated(String tasksRelated, int taskId) throws Exception {
+		try {
+			log.info("thêm công việc liên quan đến công viêc mã " + taskId);
+			String sql = properties.getProperty("UPDATE_RELATED").toString();
+			log.info("UPDATE_RELATED query: " + sql);
+
+			Object[] params = new Object[] {tasksRelated, taskId};
+			jdbcTmpl.update(sql, params);
+
+		} catch (Exception e) {
+			log.error(e, e);
+			throw e;
+		}
+	}
 	
 	/**
 	 * Get tasks from DB by search
@@ -191,9 +234,29 @@ public class TaskDAO extends JdbcDaoSupport {
 		String sql = properties.getProperty("GET_TASKS_BY_SEARCH").toString();
 		log.info("GET_TASKS_BY_SEARCH query: " + sql);
 		value = "%" + value + "%";
-		Object[] params = new Object[] {value, value, value, value, value};
+		Object[] params = new Object[] {value, value, value, value, value, value};
 		TaskMapper mapper = new TaskMapper();
 
+		List<Task> list = jdbcTmpl.query(sql, params, mapper);
+
+		return list;
+	}
+	
+	/**
+	 * Get tasks from DB by search
+	 * @param search value
+	 * @return List of task
+	 * @throws Exception
+	 */
+	public List<Task> getTasksBySearchForRelated(String value, String related) {
+		String sql = properties.getProperty("GET_TASKS_BY_SEARCH_FOR_RELATED").toString();
+		//log.info("GET_TASKS_BY_SEARCH_FOR_RELATED query: " + sql);
+		value = "%" + value + "%";
+		//System.err.println("related for search " + related);
+		sql = sql.replaceAll("%TASK_RELATED%", related);
+		Object[] params = new Object[] {value, value, value, value, value, value};
+		TaskMapper mapper = new TaskMapper();
+		log.info("GET_TASKS_BY_SEARCH_FOR_RELATED query: " + sql);
 		List<Task> list = jdbcTmpl.query(sql, params, mapper);
 
 		return list;

@@ -39,6 +39,9 @@ public class TaskForm implements Serializable{
 	private String subscriber;
 	private String forSubscriber;
 	
+	private String related;
+	private String relatedAdding;
+	
 	//For comment
 	private int commentIndex;
 	private int commentedBy;
@@ -49,6 +52,7 @@ public class TaskForm implements Serializable{
 
 	// For searching
 	private String searchValue;
+	private String tab;
 	
 	//Paging
 	private int pageIndex;
@@ -276,6 +280,22 @@ public class TaskForm implements Serializable{
 		this.forSubscriber = forSubscriber;
 	}
 
+	public String getRelated() {
+		return related;
+	}
+
+	public void setRelated(String related) {
+		this.related = related;
+	}
+
+	public String getRelatedAdding() {
+		return relatedAdding;
+	}
+
+	public void setRelatedAdding(String relatedAdding) {
+		this.relatedAdding = relatedAdding;
+	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
@@ -290,6 +310,14 @@ public class TaskForm implements Serializable{
 
 	public String getSearchValue() {
 		return searchValue;
+	}
+	
+	public String getTab() {
+		return tab;
+	}
+
+	public void setTab(String tab) {
+		this.tab = tab;
 	}
 
 	public void setSearchValue(String searchValue) {

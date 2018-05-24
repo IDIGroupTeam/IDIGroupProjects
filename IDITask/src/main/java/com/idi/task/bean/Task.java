@@ -18,6 +18,7 @@ public class Task implements Serializable {
 	private String ownerName;
 	private int secondOwned;
 	private String subscriber;
+	private String related;
 	private int verifyBy;
 	private int updateId; // auto not edit show only 
 	private Timestamp updateTS;
@@ -41,7 +42,7 @@ public class Task implements Serializable {
 	}
 
 	public Task(int taskId, String taskName, int createdBy, int ownedBy, String ownerName, int secondOwned, String subscriber,
-			int verifyBy, int updateId, Timestamp updateTS,	int resolvedBy, Timestamp creationDate, Date dueDate, 
+			String related, int verifyBy, int updateId, Timestamp updateTS,	int resolvedBy, Timestamp creationDate, Date dueDate, 
 			Timestamp resolutionDate, String type, String area, String priority, String status, String plannedFor, 
 			String timeSpent, String estimate, String timeSpentType, String estimateTimeType, String description) {
 
@@ -52,6 +53,7 @@ public class Task implements Serializable {
 		this.ownerName = ownerName;
 		this.secondOwned = secondOwned;
 		this.subscriber = subscriber;
+		this.related = related;
 		this.verifyBy = verifyBy;
 		this.updateId = updateId;
 		this.updateTS = updateTS;
@@ -124,6 +126,14 @@ public class Task implements Serializable {
 
 	public void setSubscriber(String subscriber) {
 		this.subscriber = subscriber;
+	}
+
+	public String getRelated() {
+		return related;
+	}
+
+	public void setRelated(String related) {
+		this.related = related;
 	}
 
 	public int getVerifyBy() {
