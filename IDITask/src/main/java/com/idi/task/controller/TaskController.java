@@ -1,14 +1,20 @@
 package com.idi.task.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
-
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -26,8 +32,20 @@ import com.idi.task.bean.Department;
 import com.idi.task.bean.EmployeeInfo;
 import com.idi.task.bean.Task;
 import com.idi.task.bean.TaskComment;
+import com.idi.task.common.Utils;
 import com.idi.task.dao.TaskDAO;
+import com.idi.task.form.ReportForm;
 import com.idi.task.form.TaskForm;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import javax.mail.internet.MimeMessage;
 
@@ -50,6 +68,8 @@ public class TaskController {
 	@Autowired
 	private JavaMailSender mailSender;
 
+	public static File fontFile = new File("c:/home/idi/properties/vuTimes.ttf");
+	
 	@RequestMapping(value = { "/" })
 	public String listTasks(Model model, @ModelAttribute("taskForm") TaskForm form) {
 		try {
@@ -143,8 +163,9 @@ public class TaskController {
 						//System.err.println("element " + tasksRelatedNew);
 					}
 				}
-				if(tasksRelatedNew.startsWith(","))
-					tasksRelatedNew= tasksRelatedNew.substring(1, tasksRelatedNew.length());
+				tasksRelatedNew = Utils.cutComma(tasksRelatedNew);
+				//if(tasksRelatedNew.startsWith(","))
+				//	tasksRelatedNew= tasksRelatedNew.substring(1, tasksRelatedNew.length());
 				taskDAO.updateRelated(tasksRelatedNew, taskId);
 			}
 			
@@ -202,8 +223,11 @@ public class TaskController {
 					subUpdated = subAddNew;
 			}
 
-			if(subUpdated != null  && subUpdated.length() > 0)
-				taskDAO.updateSubscriber(subUpdated, taskForm.getTaskId());
+			if(subUpdated != null  && subUpdated.length() > 0) {
+				 subUpdated = Utils.cutComma(subUpdated);
+				 taskDAO.updateSubscriber(subUpdated, taskForm.getTaskId());
+			}
+				
 
 			/*
 			 * model.addAttribute("sub", sub); if(sub !=null && sub.length() > 0)
@@ -524,26 +548,124 @@ public class TaskController {
 		}
 
 		return "updateTask";
+	}	
+	
+	@RequestMapping("/prepareReport")
+	public String prepareReport(Model model) {
+		ReportForm taskReportForm = new ReportForm();
+		model.addAttribute("formTitle", "Lựa chọn thông tin báo cáo công việc");
+
+		// get list department
+		Map<String, String> departmentMap = this.listDepartments();
+		model.addAttribute("departmentMap", departmentMap);
+
+		// get list employee id
+		model.addAttribute("employeesList", employeesMap("all"));
+
+		model.addAttribute("taskReportForm", taskReportForm);
+
+		return "prepareReport";
+	}
+	
+	@RequestMapping("/generateTaskReport")
+	public String generateTaskReport(Model model,  @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) {
+		List<Task> list = null;
+		list = taskDAO.getTasksForReport(taskReportForm);
+		model.addAttribute("reportForm", taskReportForm);
+		model.addAttribute("tasks", list);
+		model.addAttribute("formTitle", "Thông tin báo cáo công việc");
+		return "taskReport";
+	}
+		
+	@RequestMapping("/exportToPDF")
+	public String getPDF(Model model,  @ModelAttribute("fDate") String fDate, @ModelAttribute("tDate") String tDate,
+			@ModelAttribute("eName") String eName, @ModelAttribute("dept") String dept, @ModelAttribute("eId") int eId) throws Exception {
+		System.err.println("export to pdf");
+		
+		Document document = new Document();
+		File dir = new File("C:/IDIGroup/Report");
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		
+		String fileName = "";
+		if(eId > 0 && dept.equalsIgnoreCase("all"))
+			fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
+			+ " của " + eName + " phòng " + dept + ".pdf";
+		else if (eId < 1 && !dept.equalsIgnoreCase("all"))
+			fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
+			+ " của phòng " + dept + ".pdf";
+		else if (eId > 0 && dept.equalsIgnoreCase("all"))
+			fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
+			+ " của " + eName + ".pdf";
+		else
+			fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate;
+		
+		PdfWriter.getInstance(document, new FileOutputStream(dir + "/" + fileName));
+		BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	    Font font = new Font(bf,14); 
+		document.open();
+		//Font font = FontFactory.getFont(FontFactory.TIMES_ROMAN, "UTF-8");
+		//Chunk chunk = new Chunk(fileName, font);		 
+		//document.add(chunk);
+		
+		PdfPTable table = new PdfPTable(6);
+		addTableHeader(table, font);
+		List<Task> list = null;
+        ReportForm taskReportForm = new ReportForm();
+        taskReportForm.setFromDate(fDate);
+        taskReportForm.setToDate(tDate);
+        taskReportForm.setDepartment(dept);
+        taskReportForm.setEmployeeId(eId);
+        taskReportForm.setEmployeeName(eName);
+		list = taskDAO.getTasksForReport(taskReportForm);
+		
+		addRows(table, list);
+		//addCustomRows(table);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		String currentDate = dateFormat.format(date);
+		document.add(new Paragraph("                     " + fileName.substring(0, fileName.length() - 4), font));		
+		document.add(new Paragraph("                     ", font));
+		document.add(table);		
+		document.add(new Paragraph("               Ngày tạo báo cáo " + currentDate, font));
+		
+		document.close();
+		model.addAttribute("reportForm", taskReportForm);
+		model.addAttribute("formTitle", "Export báo cáo công việc");
+		return "taskExport";
 	}
 
-	/*
-	 * private Map<Integer, String> employees() { Map<Integer, String> employeeMap =
-	 * new LinkedHashMap<Integer, String>(); try { List<EmployeeInfo> list = null;
-	 * list = employeeDAO.getEmployees(); EmployeeInfo employee = new
-	 * EmployeeInfo(); for (int i = 0; i < list.size(); i++) { employee =
-	 * (EmployeeInfo) list.get(i); Integer id = employee.getEmployeeId();
-	 * employeeMap.put(id, "Mã NV " + id + ", " + employee.getFullName() + ", " +
-	 * employee.getJobTitle()); }
-	 * 
-	 * } catch (Exception e) { log.error(e, e); e.printStackTrace(); } return
-	 * employeeMap; }
-	 */
-
+	private void addTableHeader(PdfPTable table, Font font) {//throws DocumentException, IOException {
+	    Stream.of("Mã việc", "Tên việc", "Người làm", "Trạng thái","Cập nhật gần nhất","Ngày phải xong")
+	      .forEach(columnTitle -> {
+	        PdfPCell header = new PdfPCell();
+	        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+	        header.setPhrase(new Phrase(columnTitle, font));	       
+	        table.addCell(header);
+	    });
+	}
+	
+	private void addRows(PdfPTable table, List<Task> tasks) throws DocumentException, IOException {
+		BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	    Font font = new Font(bf,12); 
+		for(int i = 0; i < tasks.size(); i++) {
+			Task task = new Task();
+			task = (Task)tasks.get(i);
+			table.addCell(String.valueOf(task.getTaskId()));
+		    table.addCell(new Paragraph(task.getTaskName(), font));
+		    table.addCell(new Paragraph(task.getOwnerName(), font));
+		    table.addCell(new Paragraph(task.getStatus(), font));
+		    table.addCell(String.valueOf(task.getUpdateTS()));
+		    table.addCell(String.valueOf(task.getDueDate()));	
+		}	        
+	}
+	
 	private List<EmployeeInfo> employeesForSub(String subscriber) {
 		List<EmployeeInfo> list = null;
 		
 		list = employeeDAO.getEmployeesForSub(subscriber);
-		System.err.println("lít availabe for subs: "+ list.size());
+		//System.err.println("lít availabe for subs: "+ list.size());
 		return list;
 	}
 
@@ -561,6 +683,25 @@ public class TaskController {
 			list = employeeDAO.getEmployees();
 
 		return list;
+	}
+	
+	private Map<String, String> employeesMap(String department) {
+		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
+		List<EmployeeInfo> list = null;
+		if (!department.equalsIgnoreCase("all"))
+			list = employeeDAO.getEmployeesByDepartment(department);
+		else
+			list = employeeDAO.getEmployees();
+		
+		EmployeeInfo employee = new EmployeeInfo();
+		for (int i = 0; i < list.size(); i++) {
+			employee = (EmployeeInfo) list.get(i);
+			Integer id = employee.getEmployeeId();
+			employeeMap.put(id.toString(),
+					"Mã NV " + id + ", " + employee.getFullName());
+		}
+		
+		return employeeMap;
 	}
 
 	private Map<String, String> listDepartments() {
@@ -582,8 +723,8 @@ public class TaskController {
 
 	// For Ajax
 	@RequestMapping("/selection")
-	public @ResponseBody List<EmployeeInfo> employeesByDepartment(@RequestParam("area") String department) {
-		System.err.println("AJax");
+	public @ResponseBody List<EmployeeInfo> employeesByDepartment(@RequestParam("department") String department) {
+		System.out.println("AJax");
 		List<EmployeeInfo> list = null;
 		if (!department.equalsIgnoreCase("all"))
 			list = employeeDAO.getEmployeesByDepartment(department);
@@ -593,6 +734,18 @@ public class TaskController {
 		return list;
 	}
 
+	@RequestMapping("/selectionArea")
+	public @ResponseBody List<EmployeeInfo> employeesByArea(@RequestParam("area") String area) {
+		System.out.println("AJax");
+		List<EmployeeInfo> list = null;
+		if (!area.equalsIgnoreCase(""))
+			list = employeeDAO.getEmployeesByDepartment(area);
+		else
+			list = employeeDAO.getEmployees();
+
+		return list;
+	}
+	
 	@RequestMapping("/lookingTask")
 	public @ResponseBody List<Task> getTaskForAddingRelated(@RequestParam("relatedAdding") String relatedAdding) {
 		System.err.println("AJax");

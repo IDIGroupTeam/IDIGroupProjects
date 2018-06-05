@@ -31,7 +31,7 @@
 							$
 									.ajax({
 										dataType : "json",
-										url : "${url}/selection",
+										url : "${url}/selectionArea",
 										data : {
 											area : val
 										},

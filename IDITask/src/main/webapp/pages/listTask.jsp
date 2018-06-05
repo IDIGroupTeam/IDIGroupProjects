@@ -72,6 +72,7 @@ tr:nth-child(even) {
 </head>
 <body>
 	<a href="${url}/addNewTask"><button class="btn btn-primary btn-sm">Tạo việc mới</button></a>
+	<a href="${url}/prepareReport"><button class="btn btn-primary btn-sm">Thống kê/báo cáo</button></a>
 	<br />
 	<br />
 	<form:form modelAttribute="taskForm" method="POST">

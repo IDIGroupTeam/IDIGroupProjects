@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Utils {
+	
 	public static String format(String str) {
 		if (str != null) {
 			str = str.replaceAll("\\s+", " ");
@@ -87,5 +88,18 @@ public class Utils {
 		workStatusMap.put("Nghi khong luong", "Nghỉ không lương");
 		workStatusMap.put("Da thoi viec", "Đã thôi việc");
 		return workStatusMap;
+	}
+	
+	//Cut comma unnecessary
+	public static String cutComma(String input) {
+		if(input.startsWith(","))
+			input = input.substring(1, input.length());
+		if(input.endsWith(","))
+			input = input.substring(0, input.length() - 1);
+		if(input.contentEquals(",,"))
+			input = input.replaceAll(",,", ",");
+		if(input.contentEquals(",0,"))
+			input = input.replaceAll(",0,", ",");
+		return input;
 	}
 }

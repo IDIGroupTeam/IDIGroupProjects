@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import com.idi.task.bean.Task;
 import com.idi.task.bean.TaskComment;
 import com.idi.task.common.PropertiesManager;
+import com.idi.task.form.ReportForm;
 import com.idi.task.mapper.MailListMapping;
 import com.idi.task.mapper.TaskCommentMapper;
 import com.idi.task.mapper.TaskMapper;
@@ -189,6 +190,7 @@ public class TaskDAO extends JdbcDaoSupport {
 	 * @throws Exception
 	 */
 	public void updateSubscriber(String sub, int taskId) throws Exception {
+		
 		try {
 			log.info("Cập nhật thông tin người liên quan đến công viêc mã " + taskId);
 			String sql = properties.getProperty("UPDATE_SUBSCRIBER").toString();
@@ -210,6 +212,7 @@ public class TaskDAO extends JdbcDaoSupport {
 	 * @throws Exception
 	 */
 	public void updateRelated(String tasksRelated, int taskId) throws Exception {
+		
 		try {
 			log.info("thêm công việc liên quan đến công viêc mã " + taskId);
 			String sql = properties.getProperty("UPDATE_RELATED").toString();
@@ -228,13 +231,45 @@ public class TaskDAO extends JdbcDaoSupport {
 	 * Get tasks from DB by search
 	 * @param search value
 	 * @return List of task
-	 * @throws Exception
+	 * 
 	 */
 	public List<Task> getTasksBySearch(String value) {
+		
 		String sql = properties.getProperty("GET_TASKS_BY_SEARCH").toString();
 		log.info("GET_TASKS_BY_SEARCH query: " + sql);
 		value = "%" + value + "%";
 		Object[] params = new Object[] {value, value, value, value, value, value};
+		TaskMapper mapper = new TaskMapper();
+
+		List<Task> list = jdbcTmpl.query(sql, params, mapper);
+
+		return list;
+	}
+	
+	/**
+	 * Get tasks from DB for report
+	 * @param reportForm
+	 * @return List of task
+	 * 
+	 */
+	public List<Task> getTasksForReport(ReportForm reportForm) {
+		
+		String sql = properties.getProperty("GET_TASKS_FOR_REPORT").toString();
+		if(reportForm.getFromDate() != null && reportForm.getFromDate().length() > 0)
+			sql = sql.replaceAll("%FROM_DATE%", reportForm.getFromDate());
+		if(reportForm.getToDate() != null && reportForm.getToDate().length() > 0)
+			sql = sql.replaceAll("%TO_DATE%", reportForm.getToDate());
+		if(reportForm.getEmployeeId() > 0)
+			sql = sql + " AND T.OWNED_BY = " + reportForm.getEmployeeId();
+		else
+			if(reportForm.getDepartment() != null && reportForm.getDepartment().equalsIgnoreCase("all"))
+				sql = sql + " AND T.AREA = " + reportForm.getDepartment();
+		
+		sql = sql + " ORDER BY T.UPDATE_TS DESC";
+		
+		log.info("GET_TASKS_FOR_REPORT query: " + sql);
+		
+		Object[] params = new Object[] {};
 		TaskMapper mapper = new TaskMapper();
 
 		List<Task> list = jdbcTmpl.query(sql, params, mapper);
