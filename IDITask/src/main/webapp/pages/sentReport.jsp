@@ -6,7 +6,7 @@
 <html>
 <head>
 
-<title>Báo cáo công việc</title>
+<title>Gửi Báo cáo công việc</title>
 <style>
 table {
 	font-family: arial, sans-serif;
@@ -26,22 +26,14 @@ tr:nth-child(even) {
 </style>
 </head>
 <body>
+	<a href="${url}/"><button class="btn btn-lg btn-primary btn-sm"> Quay lại dach sách công việc</button></a>
 	<a href="${url}/prepareReport"><button
 			class="btn btn-primary btn-sm">Lựa chọn lại thông tin cần
 			báo cáo</button></a>
 	<br />
-	<h3>
-		Báo cáo công việc từ ngày ${reportForm.fromDate} đến ngày
-		${reportForm.toDate}
-		<c:if test="${reportForm.employeeId > 0}">
-			của ${reportForm.employeeName}
-       	</c:if>
-		<c:if test="${reportForm.department != 'all'}"> phòng ${reportForm.department}</c:if>
-	</h3>
 	<br />	
 	<div class="alert alert-success">
-		Báo cáo công việc đã được export ra file PDF và lưu tại thư mục C:\IDIGroup\Report ... 
-	</div>
-	<a href="${url}/sendReportForm?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${reportForm.employeeName}&dept=${reportForm.department}&eId=${reportForm.employeeId}"><button class="btn btn-primary btn-sm">Gửi báo cáo</button></a>
+		Báo cáo công việc đã được gửi thành công ... 
+	</div>	
 </body>
 </html>

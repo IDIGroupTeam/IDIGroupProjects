@@ -28,8 +28,7 @@ tr:nth-child(even) {
 <body>
 	<a href="${url}/prepareReport"><button class="btn btn-primary btn-sm">Lựa chọn lại thông tin cần báo cáo</button></a>
 	<c:if test="${tasks.size() > 0}">
-		<a href="${url}/exportToPDF?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${tasks[0].ownerName}&dept=${reportForm.department}&eId=${reportForm.employeeId}"><button class="btn btn-primary btn-sm">Export ra file PDF</button></a>
-		<a href="${url}/"><button class="btn btn-primary btn-sm">Gửi báo cáo</button></a>
+		<a href="${url}/exportToPDF?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${tasks[0].ownerName}&dept=${reportForm.department}&eId=${reportForm.employeeId}"><button class="btn btn-primary btn-sm">Export ra file PDF và gửi báo cáo</button></a>
 	</c:if>	
 	<br />
 	<h3>Báo cáo công việc từ ngày ${reportForm.fromDate} đến ngày ${reportForm.toDate}

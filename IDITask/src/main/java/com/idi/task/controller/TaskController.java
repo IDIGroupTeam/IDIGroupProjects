@@ -35,6 +35,7 @@ import com.idi.task.bean.TaskComment;
 import com.idi.task.common.Utils;
 import com.idi.task.dao.TaskDAO;
 import com.idi.task.form.ReportForm;
+import com.idi.task.form.SendReportForm;
 import com.idi.task.form.TaskForm;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -47,7 +48,14 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
+import javax.mail.Multipart;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -568,7 +576,7 @@ public class TaskController {
 	}
 	
 	@RequestMapping("/generateTaskReport")
-	public String generateTaskReport(Model model,  @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) {
+	public String generateTaskReport(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) {
 		List<Task> list = null;
 		list = taskDAO.getTasksForReport(taskReportForm);
 		model.addAttribute("reportForm", taskReportForm);
@@ -577,10 +585,85 @@ public class TaskController {
 		return "taskReport";
 	}
 		
+	@RequestMapping("/sendReportForm")
+	public String sendReportForm(Model model,  @ModelAttribute("fDate") String fDate, @ModelAttribute("tDate") String tDate,
+			@ModelAttribute("eName") String eName, @ModelAttribute("dept") String dept, @ModelAttribute("eId") int eId) {
+		SendReportForm sendReportForm = new SendReportForm();
+		if(eId > 0)
+			if(dept != null && !dept.equalsIgnoreCase("all"))
+				sendReportForm.setSubject("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept);
+			else
+				sendReportForm.setSubject("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của " + eName);
+		else
+			if(dept != null && !dept.equalsIgnoreCase("all"))
+				sendReportForm.setSubject("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept);
+			else
+				sendReportForm.setSubject("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban");
+		
+		List<Task> list = null;
+		ReportForm taskReportForm = new ReportForm();
+		taskReportForm.setFromDate(fDate);
+		taskReportForm.setToDate(tDate);
+		taskReportForm.setEmployeeId(eId);
+		taskReportForm.setDepartment(dept);
+		list = taskDAO.getTasksForReport(taskReportForm);
+		model.addAttribute("tasks", list);
+		model.addAttribute("formTitle", "Gửi báo cáo công việc");
+		model.addAttribute("sendReportForm", sendReportForm);
+
+		return "sendReportForm";
+	}
+	
+	@RequestMapping(value ="/sendReport")
+	public String sendReport(Model model, @ModelAttribute("sendReportForm") @Validated SendReportForm sendReportForm, @RequestParam(required=false, value="formTitle") String formTitle) throws Exception {
+		if(formTitle == null) {
+			MimeMessage mimeMessage = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+			
+			File file = new File("C:\\IDIGroup\\Report\\" + sendReportForm.getSubject() + ".pdf");
+			if(file.exists()) {
+				mimeMessage.setFrom("IDITask-NotReply");
+				helper.setSubject(sendReportForm.getSubject());
+				mimeMessage.setContent(sendReportForm.getSubject(), "text/html; charset=UTF-8");
+				
+				Multipart multipart = new MimeMultipart();
+				BodyPart attach = new MimeBodyPart();
+				DataSource source = new FileDataSource("C:\\IDIGroup\\Report\\" + sendReportForm.getSubject() + ".pdf");
+				attach.setDataHandler(new DataHandler(source));
+				attach.setFileName("C:\\IDIGroup\\Report\\" + sendReportForm.getSubject() + ".pdf");
+				
+				multipart.addBodyPart(attach);
+				BodyPart content = new MimeBodyPart();
+				content.setContent("Cáo cáo công việc", "text/html; charset=UTF-8");
+				multipart.addBodyPart(content);
+				
+				mimeMessage.setContent(multipart, "text/html; charset=UTF-8");
+				
+				StringTokenizer st = new StringTokenizer(sendReportForm.getSendTo(), ";");
+				while(st.hasMoreTokens()) {
+					String sendTo = st.nextToken(";");
+					if(sendTo != null && sendTo.length() > 0 && sendTo.contains("@") && sendTo.contains(".com")) {
+						log.info("send report cho " + sendTo);
+						helper.setTo(sendTo);						
+						mailSender.send(mimeMessage);
+						//System.err.println("sent");
+					}			
+				}
+				//model.addAttribute("isReload","Yes");
+				model.addAttribute("formTitle", "Gửi báo cáo công việc");
+				return "redirect:/sendReport";
+			}else {
+				model.addAttribute("formTitle", "Vui lòng export file trước khi gửi báo cáo công việc");
+			}
+		}else
+			model.addAttribute("formTitle", "Gửi báo cáo công việc");
+		return "sentReport";
+	}
+	
 	@RequestMapping("/exportToPDF")
-	public String getPDF(Model model,  @ModelAttribute("fDate") String fDate, @ModelAttribute("tDate") String tDate,
+	public String getPDF(Model model, @ModelAttribute("fDate") String fDate, @ModelAttribute("tDate") String tDate,
 			@ModelAttribute("eName") String eName, @ModelAttribute("dept") String dept, @ModelAttribute("eId") int eId) throws Exception {
-		System.err.println("export to pdf");
+		//System.err.println("export to pdf");
 		
 		Document document = new Document();
 		File dir = new File("C:/IDIGroup/Report");
@@ -599,7 +682,7 @@ public class TaskController {
 			fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
 			+ " của " + eName + ".pdf";
 		else
-			fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate;
+			fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate + ".pdf";
 		
 		PdfWriter.getInstance(document, new FileOutputStream(dir + "/" + fileName));
 		BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
