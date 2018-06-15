@@ -21,7 +21,7 @@
 </script>
 
 <h4>Sửa nhóm hàng hóa</h4>
-<br />
+<hr />
 
 <form:hidden path="maNhomHh" />
 <div class="row form-group">

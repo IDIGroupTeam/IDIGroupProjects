@@ -21,7 +21,7 @@
 </script>
 
 <h4>Sửa đơn vị hàng hóa</h4>
-<br />
+<hr />
 
 <form:hidden path="maDv" />
 <div class="row form-group">

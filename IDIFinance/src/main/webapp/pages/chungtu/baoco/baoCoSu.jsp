@@ -13,7 +13,7 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		$("#mainFinanceForm").attr("action", "${url}/luutaomoibaoco");
+		$("#mainFinanceForm").attr("action", "${url}/chungtu/baoco/luu");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		$("#submitBt").click(function() {
@@ -162,7 +162,7 @@
 
 			capNhapTongTien();
 		}
-		
+
 		$("#themTkCo").click(
 				function() {
 					var currentTr = $(this).parent().parent();
@@ -179,23 +179,36 @@
 
 					$(newTr).insertBefore($(currentTr)).prop("id", newId);
 
-					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk").val("0");
-					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien").val("0.0");
-					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien").prop("placeholder", "0.0");
+					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk").val(
+							"0");
+					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien")
+							.val("0.0");
+					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien").prop(
+							"placeholder", "0.0");
+					$("#taiKhoanCoDs" + newId + "\\.maNvkt").val("0");
 					//$("#taiKhoanCoDs" + newId + "\\.lyDo").val("");
-					$("#taiKhoanCoDs" + newId + "\\.lyDo").prop("placeholder", "Lý do");
-					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien\\.errors").remove();
-					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk\\.errors").remove();
+					$("#taiKhoanCoDs" + newId + "\\.lyDo").prop("placeholder",
+							"Lý do");
+					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien\\.errors")
+							.remove();
+					$(
+							"#taiKhoanCoDs" + newId
+									+ "\\.loaiTaiKhoan\\.maTk\\.errors")
+							.remove();
 
-					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk").remove();
+					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk")
+							.remove();
 					$("#taiKhoanNoDs" + newId + "\\.soDu").remove();
+					$("#taiKhoanNoDs" + newId + "\\.maNvkt").remove();
 					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien").remove();
-					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTienTxt").remove();
+					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTienTxt")
+							.remove();
 					$("#taiKhoanNoDs" + newId + "\\.lyDo").remove();
 
 					$("#xoaTkCo").removeClass("disabled");
-					
-					$("input[id^='taiKhoanCoDs'][id$='\\.soTien\\.soTien']").change(thayDoiDuLieu);
+
+					$("input[id^='taiKhoanCoDs'][id$='\\.soTien\\.soTien']")
+							.change(thayDoiDuLieu);
 				});
 
 		$("#xoaTkCo").click(function() {
@@ -206,7 +219,7 @@
 			if (id == 1) {
 				$("#xoaTkCo").addClass("disabled");
 			}
-			
+
 			capNhapTongTien();
 		});
 
@@ -391,6 +404,15 @@
 				maxFractionDigits="2"></fmt:formatNumber>
 		</p>
 	</div>
+	
+	<label class="control-label col-sm-2" for=ngayLap>Ngày thanh toán</label>
+	<div class="col-sm-4">
+		<div class="input-group date datetime smallform">
+			<form:input path="ngayTt" class="form-control" />
+			<span class="input-group-addon"><span
+				class="glyphicon glyphicon-calendar"></span></span>
+		</div>
+	</div>
 </div>
 
 <div class="table-responsive row form-group">
@@ -422,7 +444,8 @@
 									multiple="false">
 									<form:options items="${loaiTaiKhoanTgnhDs}" itemValue="maTk"
 										itemLabel="maTenTk" />
-								</form:select> <form:hidden path="taiKhoanNoDs[${status.index}].soDu" /></td>
+								</form:select> <form:hidden path="taiKhoanNoDs[${status.index}].soDu" /> <form:hidden
+									path="taiKhoanNoDs[${status.index}].maNvkt" /></td>
 							<td><span id="taiKhoanNoDs${status.index}.soTien.soTienTxt">
 									<fmt:formatNumber
 										value="${mainFinanceForm.taiKhoanNoDs[status.index].soTien.soTien}"></fmt:formatNumber>
@@ -443,7 +466,9 @@
 							<form:option value="0">Tài khoản</form:option>
 							<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
 								itemLabel="maTenTk" />
-						</form:select> <form:hidden path="taiKhoanCoDs[${status.index}].soDu" /> <form:errors
+						</form:select> <form:hidden path="taiKhoanCoDs[${status.index}].soDu" /> <form:hidden
+							path="taiKhoanCoDs[${status.index}].maNvkt" />
+						<form:errors
 							path="taiKhoanCoDs[${status.index}].loaiTaiKhoan.maTk"
 							cssClass="error" /></td>
 					<td><form:input cssClass="form-control"
@@ -474,7 +499,7 @@
 
 <div class="row form-group">
 	<div class="col-sm-2">
-		<a href="${url}/xembaoco/${mainFinanceForm.maCt}"
+		<a href="${url}/chungtu/baoco/xem/${mainFinanceForm.maCt}"
 			class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu
 			thay đổi</button>

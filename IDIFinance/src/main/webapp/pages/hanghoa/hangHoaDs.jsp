@@ -1,3 +1,4 @@
+<%@page import="com.idi.finance.bean.hanghoa.HangHoa"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
@@ -6,10 +7,11 @@
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 
 <script type="text/javascript">
-	function xacNhanXoa(maDv){
+	function xacNhanXoa(maDv) {
 		BootstrapDialog.confirm({
 			title : 'Xác nhận',
-			message : 'Bạn muốn xóa hàng hóa này không ?<br/>Mã hàng hóa: '+maDv,
+			message : 'Bạn muốn xóa hàng hóa này không ?<br/>Mã hàng hóa: '
+					+ maDv,
 			type : 'type-info',
 			closable : true,
 			draggable : true,
@@ -17,22 +19,21 @@
 			btnOKLabel : 'Có',
 			callback : function(result) {
 				if (result) {
-					$("#mainFinanceForm").attr(
-							"action", "${url}/hanghoa/xoa/"+maDv);
-					$("#mainFinanceForm").attr(
-							"method", "GET");
+					$("#mainFinanceForm").attr("action",
+							"${url}/hanghoa/xoa/" + maDv);
+					$("#mainFinanceForm").attr("method", "GET");
 					$("#mainFinanceForm").submit();
 				}
 			}
 		});
-	
+
 		return false;
 	}
-	
+
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		
+
 	});
 </script>
 
@@ -59,23 +60,22 @@
 				<th>Tk kho</th>
 				<th>Tk doanh thu</th>
 				<th>Tk chi phí</th>
-				<th></th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:forEach items="${hangHoaDs}" var="hangHoa" varStatus="status">
 				<tr>
 					<td>${hangHoa.kyHieuHh}</td>
-					<td>${hangHoa.tenHh}</td>
+					<td><a href="${url}/hanghoa/xem/${hangHoa.maHh}">${hangHoa.tenHh}</a></td>
 					<td>${hangHoa.donVi.tenDv}</td>
 					<td><c:choose>
-							<c:when test="${hangHoa.tinhChat == 1}">
+							<c:when test="${hangHoa.tinhChat == HangHoa.TINH_CHAT_VTHH}">
 								Vật tư hàng hóa
 							</c:when>
-							<c:when test="${hangHoa.tinhChat == 2}">
+							<c:when test="${hangHoa.tinhChat == HangHoa.TINH_CHAT_DV}">
 								Dịch vụ
 							</c:when>
-							<c:when test="${hangHoa.tinhChat == 3}">
+							<c:when test="${hangHoa.tinhChat == HangHoa.TINH_CHAT_TP}">
 								Thành phẩm
 							</c:when>
 						</c:choose></td>
@@ -84,14 +84,6 @@
 					<td>${hangHoa.tkKhoMd.maTk}</td>
 					<td>${hangHoa.tkDoanhThuMd.maTk}</td>
 					<td>${hangHoa.tkChiPhiMd.maTk}</td>
-					<td><div class="btn-group btn-group-sm">
-							<a href="${url}/hanghoa/sua/${hangHoa.maHh}" class="btn"
-								title="Sửa"> <span class="glyphicon glyphicon-edit"></span>
-							</a><a href="${url}/hanghoa/xoa/${hangHoa.maHh}" class="btn"
-								title="Sửa" onclick="return xacNhanXoa(${hangHoa.maHh});"> <span
-								class="glyphicon glyphicon-remove"></span>
-							</a>
-						</div></td>
 				</tr>
 			</c:forEach>
 		</tbody>

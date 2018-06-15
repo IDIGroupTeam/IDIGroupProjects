@@ -1,3 +1,4 @@
+<%@page import="com.idi.finance.bean.kyketoan.KyKeToan"%>
 <%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
 <%@page import="com.idi.finance.bean.chungtu.DoiTuong"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
@@ -47,7 +48,7 @@
 <div>
 	<span class="pull-left heading4">PHIẾU THU</span>
 	<%-- <div class="btn-group btn-group-sm pull-right">
-		<a href="${url}/pdfphieuthu/${chungTu.maCt}"
+		<a href="${url}/chungtu/phieuthu/pdf/${chungTu.maCt}"
 			class="btn btn-info btn-sm"> <span
 			class="glyphicon glyphicon-download"></span> Xuất
 		</a>
@@ -147,6 +148,13 @@
 			maxFractionDigits="2"></fmt:formatNumber>
 		VND
 	</div>
+
+	<label class="control-label col-sm-2" for=ngayHt>Ngày thanh
+		toán:</label>
+	<div class="col-sm-4">
+		<span id="ngayTt"><fmt:formatDate value="${chungTu.ngayTt}"
+				pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" /></span>
+	</div>
 </div>
 
 <div class="table-responsive row form-group">
@@ -200,12 +208,21 @@
 
 <div class="row form-group">
 	<div class="col-sm-4">
-		<a href="${url}/danhsachphieuthu" class="btn btn-info btn-sm">Danh
-			sách phiếu thu</a> <a href="${url}/pdfphieuthu/${chungTu.maCt}"
-			class="btn btn-info btn-sm">Xuất Pdf </a> <a id="xoaNut"
-			href="${url}/xoaphieuthu/${chungTu.maCt}" class="btn btn-info btn-sm">Xóa</a>
-		<a href="${url}/suaphieuthu/${chungTu.maCt}"
-			class="btn btn-info btn-sm">Sửa</a> <a href="${url}/taomoiphieuthu"
-			class="btn btn-info btn-sm">Tạo mới </a>
+		<a href="${url}/chungtu/phieuthu/danhsach" class="btn btn-info btn-sm">Danh
+			sách phiếu thu</a>
+
+		<c:choose>
+			<c:when
+				test="${kyKeToan!=null && kyKeToan.trangThai!= KyKeToan.DONG}">
+				<a href="${url}/chungtu/phieuthu/pdf/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Xuất Pdf </a>
+				<a id="xoaNut" href="${url}/chungtu/phieuthu/xoa/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Xóa</a>
+				<a href="${url}/chungtu/phieuthu/sua/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Sửa</a>
+				<a href="${url}/chungtu/phieuthu/taomoi" class="btn btn-info btn-sm">Tạo
+					mới </a>
+			</c:when>
+		</c:choose>
 	</div>
 </div>

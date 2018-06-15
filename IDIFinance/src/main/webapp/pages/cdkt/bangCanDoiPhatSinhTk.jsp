@@ -16,6 +16,83 @@
 			$("#mainFinanceForm").prop("method", "POST");
 			$("#mainFinanceForm").submit();
 		});
+
+		function docKyKeToanDs(kyKeToanDsStr) {
+			kyKeToanDsStr = $.trim(kyKeToanDsStr);
+			kyKeToanDsStr = kyKeToanDsStr
+					.substring(1, kyKeToanDsStr.length - 1);
+
+			var kyKeToanDsTmpl = kyKeToanDsStr.split(", ");
+			var kyKeToanDs = new Array();
+			for (var i = 0; i < kyKeToanDsTmpl.length; i++) {
+				var kyKeToan = new Object();
+				var kyKeToanTmpl = kyKeToanDsTmpl[i].split(" ");
+				kyKeToan.maKyKt = $.trim(kyKeToanTmpl[0]);
+				kyKeToan.batDau = $.trim(kyKeToanTmpl[1]);
+				kyKeToan.ketThuc = $.trim(kyKeToanTmpl[2]);
+				kyKeToanDs[i] = kyKeToan;
+			}
+
+			return kyKeToanDs;
+		}
+
+		var kyKeToanDsStr = '${kyKeToanDs}';
+		var kyKeToanDs = docKyKeToanDs(kyKeToanDsStr);
+
+		$("#kyKeToan\\.maKyKt").change(
+				function() {
+					var kyKeToan;
+					var id = $(this).val();
+
+					for (var i = 0; i < kyKeToanDs.length; i++) {
+						if (kyKeToanDs[i].maKyKt == id) {
+							kyKeToan = kyKeToanDs[i];
+							break;
+						}
+					}
+
+					$('.datetime').datetimepicker('setStartDate',
+							kyKeToan.batDau);
+					$('.datetime').datetimepicker('setEndDate',
+							kyKeToan.ketThuc);
+
+					var homNay = new Date();
+					var batDau = new Date(kyKeToan.batDau);
+					var ketThuc = new Date(kyKeToan.ketThuc);
+
+					if (homNay.getTime() >= batDau.getTime()
+							&& homNay.getTime() <= ketThuc.getTime()) {
+						y = homNay.getFullYear();
+						m = homNay.getMonth();
+
+						batDau = new Date();
+						batDau.setFullYear(y, m, 1);
+						ketThuc = new Date();
+						ketThuc.setFullYear(y, m + 1, 0);
+					}
+
+					$("#dau").val(
+							batDau.getDate() + "/" + (batDau.getMonth() + 1)
+									+ "/" + batDau.getFullYear());
+					$("#cuoi").val(
+							ketThuc.getDate() + "/" + (ketThuc.getMonth() + 1)
+									+ "/" + ketThuc.getFullYear());
+
+					$('.datetime').datetimepicker('update');
+				});
+
+		$(".datetime").datetimepicker({
+			language : 'vi',
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			minView : 2,
+			forceParse : 0,
+			pickerPosition : "top-left",
+			startDate : '${mainFinanceForm.kyKeToan.batDau}',
+			endDate : '${mainFinanceForm.kyKeToan.ketThuc}'
+		});
 	});
 </script>
 
@@ -25,14 +102,13 @@
 	</div>
 	<div class="panel-body">
 		<div class="form-group">
-			<label for="loaiKy">Kỳ:</label>
-			<form:select path="loaiKy" multiple="false"
-				class="form-control smallform pull-right">
-				<form:option value="${KyKeToanCon.WEEK}">Tuần</form:option>
-				<form:option value="${KyKeToanCon.MONTH}">Tháng</form:option>
-				<form:option value="${KyKeToanCon.QUARTER}">Quý</form:option>
-				<form:option value="${KyKeToanCon.YEAR}">Năm</form:option>
-			</form:select>
+			<label for="dau">Kỳ:</label>
+			<div class="input-group smallform pull-right">
+				<form:select path="kyKeToan.maKyKt" class="form-control">
+					<form:options items="${kyKeToanDs}" itemLabel="tenKyKt"
+						itemValue="maKyKt" />
+				</form:select>
+			</div>
 		</div>
 
 		<div class="form-group">
@@ -53,18 +129,17 @@
 			</div>
 		</div>
 
-		<script type="text/javascript">
-			$(".datetime").datetimepicker({
-				language : 'vi',
-				todayBtn : 1,
-				autoclose : 1,
-				todayHighlight : 1,
-				startView : 2,
-				minView : 2,
-				forceParse : 0,
-				pickerPosition : "top-left"
-			});
-		</script>
+		<%-- <div class="form-group">
+			<label for="loaiKy">Khoảng:</label>
+			<form:select path="loaiKy" multiple="false"
+				class="form-control smallform pull-right">
+				<form:option value="${KyKeToanCon.NAN}">Toàn bộ</form:option>
+				<form:option value="${KyKeToanCon.WEEK}">Tuần</form:option>
+				<form:option value="${KyKeToanCon.MONTH}">Tháng</form:option>
+				<form:option value="${KyKeToanCon.QUARTER}">Quý</form:option>
+				<form:option value="${KyKeToanCon.YEAR}">Năm</form:option>
+			</form:select>
+		</div> --%>
 	</div>
 	<div class="panel-footer">
 		<button id="submitBut" type="button" class="btn btn-info btn-sm">Tìm

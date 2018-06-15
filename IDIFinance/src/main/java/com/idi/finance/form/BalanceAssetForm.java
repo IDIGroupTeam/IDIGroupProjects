@@ -5,12 +5,16 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.idi.finance.bean.cdkt.KyKeToanCon;
 import com.idi.finance.bean.chungtu.TaiKhoan;
+import com.idi.finance.bean.kyketoan.KyKeToan;
 
 public class BalanceAssetForm {
+	private KyKeToan kyKeToan;
+
 	private String[] assetCodes;
 	private String[] assetPeriods;
-	private int periodType = 1;
+	private int periodType = KyKeToanCon.YEAR;
 
 	private boolean first;
 	private int numberRecordsOfPage;
@@ -26,6 +30,14 @@ public class BalanceAssetForm {
 	private Date cuoi;
 
 	private List<TaiKhoan> taiKhoanDs;
+
+	public KyKeToan getKyKeToan() {
+		return kyKeToan;
+	}
+
+	public void setKyKeToan(KyKeToan kyKeToan) {
+		this.kyKeToan = kyKeToan;
+	}
 
 	public String[] getAssetCodes() {
 		return assetCodes;

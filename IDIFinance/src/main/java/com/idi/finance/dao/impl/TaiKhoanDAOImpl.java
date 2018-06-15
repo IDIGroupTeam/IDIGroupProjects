@@ -203,6 +203,7 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 			loaiTaiKhoan.setMaTenTk(rs.getString("MA_TK") + " - " + rs.getString("TEN_TK"));
 			loaiTaiKhoan.setMaTkCha(rs.getString("MA_TK_CHA"));
 			loaiTaiKhoan.setSoDu(rs.getInt("SO_DU"));
+			loaiTaiKhoan.setLuongTinh(rs.getBoolean("LUONG_TINH"));
 
 			NganHangTaiKhoan nganHangTaiKhoan = new NganHangTaiKhoan();
 			nganHangTaiKhoan.setMaTk(rs.getInt("MA_TK_NH"));

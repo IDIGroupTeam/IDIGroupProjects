@@ -44,8 +44,6 @@ public interface BalanceSheetDAO {
 
 	public List<BalanceAssetItem> danhSachCdktTheoTkkt(String maTk, int soDu);
 
-	public void capNhatCanDoiKeToan(List<TaiKhoan> taiKhoanDs);
-
 	public List<BalanceAssetItem> listBais();
 
 	public BalanceAssetData getPeriodEndValue(BalanceAssetData bad);

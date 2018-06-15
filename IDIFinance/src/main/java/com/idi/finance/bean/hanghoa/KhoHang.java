@@ -5,12 +5,15 @@ import java.util.List;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class KhoHang {
+	public static final int MA_KHO_MAC_DINH = 1;
+
 	private int maKho;
 	private String kyHieuKho;
 	private String tenKho;
 	private String diaChi;
 	private LoaiTaiKhoan taiKhoan;
 	private String moTa;
+	private List<HangHoa> hangHoaDs;
 
 	public int getMaKho() {
 		return maKho;
@@ -58,6 +61,14 @@ public class KhoHang {
 
 	public void setMoTa(String moTa) {
 		this.moTa = moTa;
+	}
+
+	public List<HangHoa> getHangHoaDs() {
+		return hangHoaDs;
+	}
+
+	public void setHangHoaDs(List<HangHoa> hangHoaDs) {
+		this.hangHoaDs = hangHoaDs;
 	}
 
 	@Override

@@ -13,7 +13,7 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		$("#mainFinanceForm").attr("action", "${url}/luutaomoiktth");
+		$("#mainFinanceForm").attr("action", "${url}/chungtu/ktth/luu");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		$("#submitBt").click(function() {
@@ -204,6 +204,7 @@
 			lyDo = $("#taiKhoanNoDs" + id + "\\.lyDo").clone();
 			maTk = $("#taiKhoanNoDs" + id + "\\.loaiTaiKhoan\\.maTk").clone();
 			soDu = $("#taiKhoanNoDs" + id + "\\.soDu").clone();
+			maNvkt = $("#taiKhoanNoDs" + id + "\\.maNvkt").clone();
 			soTien = $("#taiKhoanNoDs" + id + "\\.soTien\\.soTien").clone();
 
 			// Chèn vào tr mới nhất
@@ -211,6 +212,7 @@
 			$(lyDo).appendTo($(targetTd));
 			$(maTk).appendTo($(targetTd).next());
 			$(soDu).appendTo($(targetTd).next());
+			$(maNvkt).appendTo($(targetTd).next());
 			$(soTien).appendTo($(targetTd).next().next());
 
 			// Đổi id và name
@@ -221,11 +223,14 @@
 			$(maTk).prop("name", "taiKhoanNoDs[" + id + "].loaiTaiKhoan.maTk");
 			$(soDu).prop("id", "taiKhoanNoDs" + id + ".soDu");
 			$(soDu).prop("name", "taiKhoanNoDs[" + id + "].soDu");
+			$(maNvkt).prop("id", "taiKhoanNoDs" + id + ".maNvkt");
+			$(maNvkt).prop("name", "taiKhoanNoDs[" + id + "].maNvkt");
 			$(soTien).prop("id", "taiKhoanNoDs" + id + ".soTien.soTien");
 			$(soTien).prop("name", "taiKhoanNoDs[" + id + "].soTien.soTien");
 
 			// Làm sạch dữ liệu
 			$(maTk).val("0");
+			$(maNvkt).val("0");
 			$(soTien).val("0");
 		}
 
@@ -234,6 +239,7 @@
 			lyDo = $("#taiKhoanCoDs" + id + "\\.lyDo").clone();
 			maTk = $("#taiKhoanCoDs" + id + "\\.loaiTaiKhoan\\.maTk").clone();
 			soDu = $("#taiKhoanCoDs" + id + "\\.soDu").clone();
+			maNvkt = $("#taiKhoanCoDs" + id + "\\.maNvkt").clone();
 			soTien = $("#taiKhoanCoDs" + id + "\\.soTien\\.soTien").clone();
 
 			// Chèn vào tr mới nhất
@@ -241,6 +247,7 @@
 			$(lyDo).appendTo($(targetTd));
 			$(maTk).appendTo($(targetTd).next());
 			$(soDu).appendTo($(targetTd).next());
+			$(maNvkt).appendTo($(targetTd).next());
 			$(soTien).appendTo($(targetTd).next().next());
 
 			// Đổi id và name
@@ -251,11 +258,14 @@
 			$(maTk).prop("name", "taiKhoanCoDs[" + id + "].loaiTaiKhoan.maTk");
 			$(soDu).prop("id", "taiKhoanCoDs" + id + ".soDu");
 			$(soDu).prop("name", "taiKhoanCoDs[" + id + "].soDu");
+			$(maNvkt).prop("id", "taiKhoanCoDs" + id + ".maNvkt");
+			$(maNvkt).prop("name", "taiKhoanCoDs[" + id + "].maNvkt");
 			$(soTien).prop("id", "taiKhoanCoDs" + id + ".soTien.soTien");
 			$(soTien).prop("name", "taiKhoanCoDs[" + id + "].soTien.soTien");
 
 			// Làm sạch dữ liệu
 			$(maTk).val("0");
+			$(maNvkt).val("0");
 			$(soTien).val("0");
 		}
 
@@ -582,6 +592,15 @@
 			&nbsp;VND
 		</p>
 	</div>
+	
+	<label class="control-label col-sm-2" for=ngayLap>Ngày thanh toán</label>
+	<div class="col-sm-4">
+		<div class="input-group date datetime smallform">
+			<form:input path="ngayTt" class="form-control" />
+			<span class="input-group-addon"><span
+				class="glyphicon glyphicon-calendar"></span></span>
+		</div>
+	</div>
 </div>
 
 <div class="table-responsive row form-group">
@@ -618,7 +637,8 @@
 									<form:option value="0">Tài khoản</form:option>
 									<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
 										itemLabel="maTenTk" />
-								</form:select> <form:hidden path="taiKhoanNoDs[${status.index}].soDu" /> <form:errors
+								</form:select> <form:hidden path="taiKhoanNoDs[${status.index}].soDu" /> <form:hidden
+									path="taiKhoanNoDs[${status.index}].maNvkt" /> <form:errors
 									path="taiKhoanNoDs[${status.index}].loaiTaiKhoan.maTk"
 									cssClass="error" /></td>
 							<td><form:input cssClass="form-control"
@@ -647,7 +667,8 @@
 									<form:option value="0">Tài khoản</form:option>
 									<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
 										itemLabel="maTenTk" />
-								</form:select> <form:hidden path="taiKhoanCoDs[${status.index}].soDu" /> <form:errors
+								</form:select> <form:hidden path="taiKhoanCoDs[${status.index}].soDu" /> <form:hidden
+									path="taiKhoanCoDs[${status.index}].maNvkt" /> <form:errors
 									path="taiKhoanCoDs[${status.index}].loaiTaiKhoan.maTk"
 									cssClass="error" /></td>
 							<td><form:input cssClass="form-control"
@@ -701,7 +722,7 @@
 
 <div class="row form-group">
 	<div class="col-sm-2">
-		<a href="${url}/xemktth/${mainFinanceForm.maCt}"
+		<a href="${url}/chungtu/ktth/xem/${mainFinanceForm.maCt}"
 			class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu
 			thay đổi</button>

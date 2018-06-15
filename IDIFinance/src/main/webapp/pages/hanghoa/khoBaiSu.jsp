@@ -21,7 +21,7 @@
 </script>
 
 <h4>Sửa kho</h4>
-<br />
+<hr />
 
 <form:hidden path="maKho" />
 <div class="row form-group">

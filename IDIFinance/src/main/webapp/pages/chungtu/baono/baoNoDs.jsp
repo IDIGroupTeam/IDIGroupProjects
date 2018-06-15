@@ -1,3 +1,4 @@
+<%@page import="com.idi.finance.bean.kyketoan.KyKeToan"%>
 <%@page import="com.idi.finance.bean.chungtu.DoiTuong"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
@@ -20,12 +21,30 @@
 	<i>Ghi có vào các tài khoản tiền gửi ngân hàng: 112, 1121, ...</i>
 </p>
 
-<div class="pull-right">
-	<i>(*): Mặc định là tiền VND</i>&nbsp;&nbsp;&nbsp;&nbsp; <a
-		href="${url}/taomoibaono" class="btn btn-info btn-sm"> <span
-		class="glyphicon glyphicon-plus"></span> Tạo mới
-	</a>
-</div>
+<c:choose>
+	<c:when test="${kyKeToan.trangThai== KyKeToan.DONG}">
+		<div class="pull-left">
+			<i>Kỳ kế toán hiện tại bị đóng, bạn chỉ xem, không thể thêm mới
+				hoặc sửa dữ liệu.</i>
+		</div>
+		<div class="pull-right">
+			<i>(*): Mặc định là tiền VND</i>&nbsp;&nbsp;&nbsp;&nbsp;
+		</div>
+	</c:when>
+	<c:otherwise>
+		<div class="pull-right">
+			<i>(*): Mặc định là tiền VND</i>&nbsp;&nbsp;&nbsp;&nbsp;
+			<c:choose>
+				<c:when test="${kyKeToan.trangThai!= KyKeToan.DONG}">
+					<i>(*): Mặc định là tiền VND</i>&nbsp;&nbsp;&nbsp;&nbsp; <a
+						href="${url}/chungtu/baono/taomoi" class="btn btn-info btn-sm">
+						<span class="glyphicon glyphicon-plus"></span> Tạo mới
+					</a>
+				</c:when>
+			</c:choose>
+		</div>
+	</c:otherwise>
+</c:choose>
 <br />
 <br />
 
@@ -53,9 +72,9 @@
 							value="${baoNo.ngayHt}" pattern="dd/M/yyyy" type="Date"
 							dateStyle="SHORT" /></td>
 					<td class="text-center" style="width: 50px;">${baoNo.loaiCt}${baoNo.soCt}</td>
-					<td><a href="${url}/xembaono/${baoNo.maCt}">${baoNo.lyDo}</a></td>
-					<td align="right"><fmt:formatNumber value="${baoNo.soTien.giaTri}"
-							maxFractionDigits="2"></fmt:formatNumber></td>
+					<td><a href="${url}/chungtu/baono/xem/${baoNo.maCt}">${baoNo.lyDo}</a></td>
+					<td align="right"><fmt:formatNumber
+							value="${baoNo.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
 					<td><c:choose>
 							<c:when
 								test="${baoNo.doiTuong.loaiDt == DoiTuong.KHACH_VANG_LAI}">

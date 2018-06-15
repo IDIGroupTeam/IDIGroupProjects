@@ -114,7 +114,7 @@ public class CongViecController {
 	}
 
 	@RequestMapping("/congviec/nghiepvu/sua/{maNv}")
-	public String suaPhieuThu(@PathVariable("maNv") String maNv, Model model) {
+	public String suaCongViecNghiepVu(@PathVariable("maNv") String maNv, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();

@@ -11,6 +11,7 @@ public class TaiKhoan {
 	private String lyDo;
 	private BalanceAssetItem bai;
 	private int maNvkt;
+	private int nhomDk;
 
 	public ChungTu getChungTu() {
 		return chungTu;
@@ -68,9 +69,17 @@ public class TaiKhoan {
 		this.maNvkt = maNvkt;
 	}
 
+	public int getNhomDk() {
+		return nhomDk;
+	}
+
+	public void setNhomDk(int nhomDk) {
+		this.nhomDk = nhomDk;
+	}
+
 	@Override
 	public String toString() {
-		String out = chungTu + " - " + loaiTaiKhoan + " - " + soDu + " " + lyDo;
+		String out = loaiTaiKhoan + " - " + soDu;
 		return out;
 	}
 

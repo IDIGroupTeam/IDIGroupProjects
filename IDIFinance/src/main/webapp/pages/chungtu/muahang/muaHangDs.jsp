@@ -1,3 +1,4 @@
+<%@page import="com.idi.finance.bean.kyketoan.KyKeToan"%>
 <%@page import="com.idi.finance.bean.chungtu.DoiTuong"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
@@ -20,12 +21,40 @@
 	<!-- <i>Ghi nợ vào các tài khoản tiền mặt: 111, 1111, ...</i> -->
 </p>
 
-<div class="pull-right">
-	<i>(*): Mặc định là tiền VND</i>&nbsp;&nbsp;&nbsp;&nbsp; <a
-		href="${url}/chungtu/muahang/taomoi" class="btn btn-info btn-sm">
-		<span class="glyphicon glyphicon-plus"></span> Tạo mới
-	</a>
-</div>
+<c:choose>
+	<c:when test="${kyKeToan.trangThai== KyKeToan.DONG}">
+		<div class="pull-left">
+			<i>Kỳ kế toán hiện tại bị đóng, bạn chỉ xem, không thể thêm mới
+				hoặc sửa dữ liệu.</i>
+		</div>
+		<div class="pull-right">
+			<i>(*): Mặc định là tiền VND</i>&nbsp;&nbsp;&nbsp;&nbsp;
+		</div>
+	</c:when>
+	<c:otherwise>
+		<div class="pull-right">
+			<c:choose>
+				<c:when test="${kyKeToan.trangThai!= KyKeToan.DONG}">
+					<a href="${url}/chungtu/muahang/taomoi/1"
+						class="btn btn-info btn-sm"> <span
+						class="glyphicon glyphicon-plus"></span> Mua hàng trong nước
+					</a>
+					<a href="${url}/chungtu/muahang/taomoi/2"
+						class="btn btn-info btn-sm"> <span
+						class="glyphicon glyphicon-plus"></span> Mua hàng nước ngoài
+					</a>
+					<a href="${url}/chungtu/muahang/taomoi/3"
+						class="btn btn-info btn-sm"> <span
+						class="glyphicon glyphicon-plus"></span> Mua dịch vụ trong nước
+					</a>
+					<%-- <a href="${url}/chungtu/muahang/taomoi/4" class="btn btn-info btn-sm">
+		<span class="glyphicon glyphicon-plus"></span> Mua dịch vụ nước ngoài
+	</a> --%>
+				</c:when>
+			</c:choose>
+		</div>
+	</c:otherwise>
+</c:choose>
 <br />
 <br />
 
@@ -35,7 +64,8 @@
 			<tr>
 				<th class="text-center" colspan="2">Phiếu nhập kho</th>
 				<th class="text-center" rowspan="2">Lý do</th>
-				<th class="text-center" rowspan="2">Tổng số tiền (*)</th>
+				<th class="text-center" rowspan="2">Tổng số tiền <br />(VND)
+				</th>
 				<th class="text-center" rowspan="2">Đối tượng nộp</th>
 				<th class="text-center" rowspan="2">Địa chỉ</th>
 				<th class="text-center" rowspan="2">Mã số thuế</th>

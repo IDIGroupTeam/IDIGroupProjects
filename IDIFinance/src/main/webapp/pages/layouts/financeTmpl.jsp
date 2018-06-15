@@ -29,7 +29,7 @@
 <script src="${url}/public/js/bootstrap-combobox.js"></script>
 <script src="${url}/public/js/bootstrap-multiselect.js"></script>
 <script src="${url}/public/js/jquery.bootcomplete.js"></script>
-<script src="${url}/public/js/bootstrap3-typeahead.js"></script>
+<%-- <script src="${url}/public/js/bootstrap3-typeahead.js"></script> --%>
 <script src="${url}/public/js/jquery.tabledit.js"></script>
 <script src="${url}/public/js/jquery.treetable.js"></script>
 <script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>

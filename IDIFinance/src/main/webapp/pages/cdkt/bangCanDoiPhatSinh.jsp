@@ -89,6 +89,27 @@
 						value="${duLieuKeToanCon.duLieuKeToanDs}" scope="request" />
 					<jsp:include page="bangCanDoiPhatSinhCon.jsp" />
 				</c:forEach>
+				<tr style="font-weight: bold;">
+					<td></td>
+					<td>Tổng</td>
+					<td class="text-right"><fmt:formatNumber
+							value="${duLieuKeToan.value.noDauKy}" type="NUMBER"></fmt:formatNumber>
+					</td>
+					<td class="text-right"><fmt:formatNumber
+							value="${duLieuKeToan.value.coDauKy}" type="NUMBER"></fmt:formatNumber>
+					</td>
+					<td class="text-right"><fmt:formatNumber
+							value="${duLieuKeToan.value.tongNoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+					<td class="text-right"><fmt:formatNumber
+							value="${duLieuKeToan.value.tongCoPhatSinh}" type="NUMBER"></fmt:formatNumber>
+					</td>
+					<td class="text-right"><fmt:formatNumber
+							value="${duLieuKeToan.value.noCuoiKy}" type="NUMBER"></fmt:formatNumber>
+					</td>
+					<td class="text-right"><fmt:formatNumber
+							value="${duLieuKeToan.value.coCuoiKy}" type="NUMBER"></fmt:formatNumber>
+					</td>
+				</tr>
 			</c:forEach>
 		</tbody>
 	</table>

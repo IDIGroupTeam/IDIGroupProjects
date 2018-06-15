@@ -1,3 +1,4 @@
+<%@page import="com.idi.finance.bean.kyketoan.KyKeToan"%>
 <%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
 <%@page import="com.idi.finance.bean.chungtu.DoiTuong"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
@@ -20,9 +21,9 @@
 							BootstrapDialog
 									.confirm({
 										title : 'Xác nhận',
-										message : 'Bạn muốn xóa phiếu chi này không ?<br/><b>Số phiếu chi:</b> ${chungTu.soCt}<br /> <b>Ngày lập:</b> '
+										message : 'Bạn muốn xóa phiếu chi này không ?_$tag_$tSố phiếu chi:_$ta ${chungTu.soCt}_$tag_ _$tNgày lập:_$ta '
 												+ ngayLap
-												+ ' <br /> <b>Lý do:</b> ${chungTu.lyDo}',
+												+ ' _$tag_ _$tLý do:_$ta ${chungTu.lyDo}',
 										type : 'type-info',
 										closable : true,
 										draggable : true,
@@ -47,7 +48,7 @@
 <div>
 	<span class="pull-left heading4">PHIẾU CHI</span>
 	<%-- <div class="btn-group btn-group-sm pull-right">
-		<a href="${url}/pdfphieuchi/${chungTu.maCt}"
+		<a href="${url}/chungtu/phieuchi/pdf/${chungTu.maCt}"
 			class="btn btn-info btn-sm"> <span
 			class="glyphicon glyphicon-download"></span> Xuất
 		</a>
@@ -146,6 +147,13 @@
 			maxFractionDigits="2"></fmt:formatNumber>
 		VND
 	</div>
+
+	<label class="control-label col-sm-2" for=ngayHt>Ngày thanh
+		toán:</label>
+	<div class="col-sm-4">
+		<span id="ngayTt"><fmt:formatDate value="${chungTu.ngayTt}"
+				pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" /></span>
+	</div>
 </div>
 
 <div class="table-responsive row form-group">
@@ -199,14 +207,21 @@
 
 <div class="row form-group">
 	<div class="col-sm-4">
-		<a href="${url}/danhsachphieuchi" class="btn btn-info btn-sm">Danh
-			sách phiếu chi</a> <a href="${url}/pdfphieuchi/${chungTu.maCt}"
-			class="btn btn-info btn-sm">Xuất Pdf </a> <a id="xoaNut"
-			href="${url}/xoaphieuchi/${chungTu.maCt}" class="btn btn-info btn-sm">Xóa</a>
-		<a href="${url}/suaphieuchi/${chungTu.maCt}"
-			class="btn btn-info btn-sm">Sửa</a> <a href="${url}/taomoiphieuchi"
-			class="btn btn-info btn-sm">Tạo mới </a>
+		<a href="${url}/chungtu/phieuchi/danhsach" class="btn btn-info btn-sm">Danh
+			sách phiếu chi</a>
+
+		<c:choose>
+			<c:when
+				test="${kyKeToan!=null && kyKeToan.trangThai!= KyKeToan.DONG}">
+				<a href="${url}/chungtu/phieuchi/pdf/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Xuất Pdf </a>
+				<a id="xoaNut" href="${url}/chungtu/phieuchi/xoa/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Xóa</a>
+				<a href="${url}/chungtu/phieuchi/sua/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Sửa</a>
+				<a href="${url}/chungtu/phieuchi/taomoi" class="btn btn-info btn-sm">Tạo
+					mới </a>
+			</c:when>
+		</c:choose>
 	</div>
 </div>
-
-

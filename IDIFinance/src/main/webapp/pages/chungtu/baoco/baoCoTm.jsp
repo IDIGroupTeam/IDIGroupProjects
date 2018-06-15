@@ -13,7 +13,7 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		$("#mainFinanceForm").attr("action", "${url}/luutaomoibaoco");
+		$("#mainFinanceForm").attr("action", "${url}/chungtu/baoco/luu");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		$("#submitBt").click(function() {
@@ -403,6 +403,15 @@
 			&nbsp;VND
 		</p>
 	</div>
+	
+	<label class="control-label col-sm-2" for=ngayLap>Ngày thanh toán</label>
+	<div class="col-sm-4">
+		<div class="input-group date datetime smallform">
+			<form:input path="ngayTt" class="form-control" />
+			<span class="input-group-addon"><span
+				class="glyphicon glyphicon-calendar"></span></span>
+		</div>
+	</div>
 </div>
 
 <div class="table-responsive row form-group">
@@ -486,7 +495,7 @@
 
 <div class="row form-group">
 	<div class="col-sm-2">
-		<a href="${url}/danhsachbaoco" class="btn btn-info btn-sm">Hủy</a>
+		<a href="${url}/chungtu/baoco/danhsach" class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Tạo
 			mới</button>
 	</div>

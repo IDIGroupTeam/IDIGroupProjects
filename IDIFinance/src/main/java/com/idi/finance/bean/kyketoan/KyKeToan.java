@@ -101,9 +101,10 @@ public class KyKeToan {
 
 	@Override
 	public String toString() {
+		// SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
 
-		String out = tenKyKt + "  " + sdf.format(batDau) + " " + sdf.format(ketThuc);
+		String out = maKyKt + " " + sdf.format(batDau) + " " + sdf.format(ketThuc);
 		return out;
 	}
 

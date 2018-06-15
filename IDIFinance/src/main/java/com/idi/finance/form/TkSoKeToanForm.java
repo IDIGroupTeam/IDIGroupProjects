@@ -1,15 +1,19 @@
 package com.idi.finance.form;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import com.idi.finance.bean.cdkt.KyKeToanCon;
+import com.idi.finance.bean.kyketoan.KyKeToan;
 
 public class TkSoKeToanForm {
-	private int loaiKy = KyKeToanCon.MONTH;
+	private int loaiKy = KyKeToanCon.NAN;
 	private String taiKhoan;
 	private int maDt;
+	private KyKeToan kyKeToan;
 	private Date dau;
 	private Date cuoi;
 	private List<String> loaiCts;
@@ -39,6 +43,14 @@ public class TkSoKeToanForm {
 		this.maDt = maDt;
 	}
 
+	public KyKeToan getKyKeToan() {
+		return kyKeToan;
+	}
+
+	public void setKyKeToan(KyKeToan kyKeToan) {
+		this.kyKeToan = kyKeToan;
+	}
+
 	public Date getDau() {
 		return dau;
 	}
@@ -48,6 +60,25 @@ public class TkSoKeToanForm {
 	}
 
 	public Date getCuoi() {
+		if (cuoi != null) {
+			try {
+				Calendar cal = Calendar.getInstance(Locale.FRANCE);
+				cal.setTime(cuoi);
+				
+				cal.set(Calendar.HOUR_OF_DAY, 0);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 0);
+				
+				cal.add(Calendar.DATE, 1);
+
+				cal.setTimeInMillis(cal.getTimeInMillis() - 1);
+				cuoi = cal.getTime();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		return cuoi;
 	}
 

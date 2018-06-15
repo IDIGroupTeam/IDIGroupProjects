@@ -53,6 +53,9 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 	@Value("${DANH_SACH_HANG_HOA_THEO_TEN}")
 	private String DANH_SACH_HANG_HOA_THEO_TEN;
 
+	@Value("${DANH_SACH_KH_HANG_HOA}")
+	private String DANH_SACH_KH_HANG_HOA;
+
 	@Value("${LAY_HANG_HOA}")
 	private String LAY_HANG_HOA;
 
@@ -302,7 +305,7 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 				hangHoa.setMaHh(rs.getInt("MA_HH"));
 				hangHoa.setKyHieuHh(rs.getString("KH_HH"));
 				hangHoa.setTenHh(rs.getString("TEN_HH"));
-				hangHoa.setTinhChat(rs.getInt("TINH_CHAT"));
+				hangHoa.setKyHieuTenHh(rs.getString("KH_HH") + " - " + rs.getString("TEN_HH"));
 
 				DonVi donVi = new DonVi();
 				donVi.setMaDv(rs.getInt("MA_DV"));
@@ -315,6 +318,11 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 				nhomHangHoa.setKyHieuNhomHh(rs.getString("KH_NHOM_HH"));
 				nhomHangHoa.setTenNhomHh(rs.getString("TEN_NHOM_HH"));
 				hangHoa.setNhomHh(nhomHangHoa);
+
+				hangHoa.setTinhChat(rs.getInt("TINH_CHAT"));
+				hangHoa.setMoTa(rs.getString("MO_TA"));
+				hangHoa.setNguonGoc(rs.getString("NGUON_GOC"));
+				hangHoa.setThoiHanBh(rs.getInt("THOI_HAN_BH"));
 
 				int maKho = rs.getInt("MA_KHO");
 				if (maKho > 0) {
@@ -333,6 +341,48 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 				LoaiTaiKhoan tkChiPhiMd = new LoaiTaiKhoan();
 				tkChiPhiMd.setMaTk(rs.getString("MA_TK_CP"));
 				hangHoa.setTkChiPhiMd(tkChiPhiMd);
+
+				LoaiTaiKhoan tkChietKhauMd = new LoaiTaiKhoan();
+				tkChietKhauMd.setMaTk(rs.getString("MA_TK_CK"));
+				hangHoa.setTkChietKhauMd(tkChietKhauMd);
+
+				LoaiTaiKhoan tkGiamGiaMd = new LoaiTaiKhoan();
+				tkGiamGiaMd.setMaTk(rs.getString("MA_TK_GG"));
+				hangHoa.setTkGiamGiaMd(tkGiamGiaMd);
+
+				LoaiTaiKhoan tkTraLaiMd = new LoaiTaiKhoan();
+				tkTraLaiMd.setMaTk(rs.getString("MA_TK_TL"));
+				hangHoa.setTkTraLaiMd(tkTraLaiMd);
+
+				hangHoa.setTyLeCktmMd(rs.getDouble("TY_LE_CKTM"));
+				hangHoa.setThueSuatGtgtMd(rs.getDouble("THUE_SUAT_GTGT"));
+				hangHoa.setThueSuatXkMd(rs.getDouble("THUE_SUAT_XK"));
+				hangHoa.setThueSuatNkMd(rs.getDouble("THUE_SUAT_NK"));
+				hangHoa.setThueSuatTtdbMd(rs.getDouble("THUE_SUAT_TTDB"));
+
+				return hangHoa;
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	}
+
+	public List<HangHoa> danhSachKhHangHoa() {
+		String query = DANH_SACH_KH_HANG_HOA;
+
+		List<HangHoa> hangHoaDs = jdbcTmpl.query(query, new KhHangHoaMapper());
+		return hangHoaDs;
+	}
+
+	public class KhHangHoaMapper implements RowMapper<HangHoa> {
+		public HangHoa mapRow(ResultSet rs, int rowNum) throws SQLException {
+			try {
+				HangHoa hangHoa = new HangHoa();
+
+				hangHoa.setMaHh(rs.getInt("MA_HH"));
+				hangHoa.setKyHieuHh(rs.getString("KH_HH"));
+				hangHoa.setTenHh(rs.getString("TEN_HH"));
+				hangHoa.setKyHieuTenHh(rs.getString("KH_HH") + " - " + rs.getString("TEN_HH"));
 
 				return hangHoa;
 			} catch (Exception e) {
@@ -382,8 +432,13 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 
 		try {
 			jdbcTmpl.update(query, hangHoa.getKyHieuHh(), hangHoa.getTenHh(), hangHoa.getDonVi().getMaDv(),
-					hangHoa.getNhomHh().getMaNhomHh(), hangHoa.getKhoMd().getMaKho(), hangHoa.getTkKhoMd().getMaTk(),
-					hangHoa.getTkDoanhThuMd().getMaTk(), hangHoa.getTkChiPhiMd().getMaTk(), hangHoa.getMaHh());
+					hangHoa.getNhomHh().getMaNhomHh(), hangHoa.getTinhChat(), hangHoa.getMoTa(), hangHoa.getNguonGoc(),
+					hangHoa.getThoiHanBh(), hangHoa.getKhoMd().getMaKho(), hangHoa.getTkKhoMd().getMaTk(),
+					hangHoa.getTkDoanhThuMd().getMaTk(), hangHoa.getTkChiPhiMd().getMaTk(),
+					hangHoa.getTkChietKhauMd().getMaTk(), hangHoa.getTkGiamGiaMd().getMaTk(),
+					hangHoa.getTkTraLaiMd().getMaTk(), hangHoa.getTyLeCktmMd(), hangHoa.getThueSuatGtgtMd(),
+					hangHoa.getThueSuatXkMd(), hangHoa.getThueSuatNkMd(), hangHoa.getThueSuatTtdbMd(),
+					hangHoa.getMaHh());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -398,8 +453,12 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 		String query = THEM_HANG_HOA;
 		try {
 			jdbcTmpl.update(query, hangHoa.getKyHieuHh(), hangHoa.getTenHh(), hangHoa.getDonVi().getMaDv(),
-					hangHoa.getNhomHh().getMaNhomHh(), hangHoa.getKhoMd().getMaKho(), hangHoa.getTkKhoMd().getMaTk(),
-					hangHoa.getTkDoanhThuMd().getMaTk(), hangHoa.getTkChiPhiMd().getMaTk());
+					hangHoa.getNhomHh().getMaNhomHh(), hangHoa.getTinhChat(), hangHoa.getMoTa(), hangHoa.getNguonGoc(),
+					hangHoa.getThoiHanBh(), hangHoa.getKhoMd().getMaKho(), hangHoa.getTkKhoMd().getMaTk(),
+					hangHoa.getTkDoanhThuMd().getMaTk(), hangHoa.getTkChiPhiMd().getMaTk(),
+					hangHoa.getTkChietKhauMd().getMaTk(), hangHoa.getTkGiamGiaMd().getMaTk(),
+					hangHoa.getTkTraLaiMd().getMaTk(), hangHoa.getTyLeCktmMd(), hangHoa.getThueSuatGtgtMd(),
+					hangHoa.getThueSuatXkMd(), hangHoa.getThueSuatNkMd(), hangHoa.getThueSuatTtdbMd());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

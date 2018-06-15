@@ -2,6 +2,7 @@ package com.idi.finance.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.doitac.NganHangTaiKhoan;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.kyketoan.SoDuKy;
@@ -24,6 +26,9 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 
 	@Value("${LAY_KY_KE_TOAN}")
 	private String LAY_KY_KE_TOAN;
+
+	@Value("${LAY_KY_KE_TOAN_CHUNG_TU}")
+	private String LAY_KY_KE_TOAN_CHUNG_TU;
 
 	@Value("${LAY_KY_KE_TOAN_MAC_DINH}")
 	private String LAY_KY_KE_TOAN_MAC_DINH;
@@ -126,7 +131,27 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 		} catch (Exception e) {
 			return null;
 		}
+	}
 
+	@Override
+	public KyKeToan layKyKeToan(ChungTu chungTu) {
+		if (chungTu == null) {
+			return null;
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		String ngayHt = sdf.format(chungTu.getNgayHt());
+
+		String query = LAY_KY_KE_TOAN_CHUNG_TU;
+
+		try {
+			Object[] objs = { ngayHt, ngayHt };
+			KyKeToan kyKeToan = jdbcTmpl.queryForObject(query, objs, new KyKeToanMapper());
+
+			return kyKeToan;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	@Override
@@ -312,6 +337,7 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 				loaiTaiKhoan.setMaTenTk(rs.getString("MA_TK") + " - " + rs.getString("TEN_TK"));
 				loaiTaiKhoan.setMaTkCha(rs.getString("MA_TK_CHA"));
 				loaiTaiKhoan.setSoDu(rs.getInt("SO_DU"));
+				loaiTaiKhoan.setLuongTinh(rs.getBoolean("LUONG_TINH"));
 
 				NganHangTaiKhoan nganHangTaiKhoan = new NganHangTaiKhoan();
 				nganHangTaiKhoan.setMaTk(rs.getInt("MA_TK_NH"));

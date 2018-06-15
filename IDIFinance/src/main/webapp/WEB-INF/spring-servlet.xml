@@ -50,6 +50,7 @@
 	<bean id="nhomHangHoaValidator" class="com.idi.finance.validator.NhomHangHoaValidator" />
 	<bean id="hangHoaValidator" class="com.idi.finance.validator.HangHoaValidator" />
 	<bean id="khoBaiValidator" class="com.idi.finance.validator.KhoBaiValidator" />
+	<bean id="ketChuyenButToanValidator" class="com.idi.finance.validator.KetChuyenButToanValidator" />
 
 	<!-- Config for upload file feature -->
 	<bean id="multipartResolver"
@@ -127,6 +128,10 @@
 	</bean>
 
 	<bean id="nganHangDAO" class="com.idi.finance.dao.impl.NganHangDAOImpl">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+
+	<bean id="khoHangDAO" class="com.idi.finance.dao.impl.KhoHangDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 </beans>

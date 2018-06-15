@@ -62,19 +62,25 @@
 					<td rowspan="${chungTu.soDongNkc}" class="text-center"
 						style="width: 50px;"><c:choose>
 							<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU}">
-								<a href="${url}/xemphieuthu/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
+								<a href="${url}/chungtu/phieuthu/xem/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
 							</c:when>
 							<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI}">
-								<a href="${url}/xemphieuchi/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
+								<a href="${url}/chungtu/phieuchi/xem/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
 							</c:when>
 							<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
-								<a href="${url}/xembaoco/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
+								<a href="${url}/chungtu/baoco/xem/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
 							</c:when>
 							<c:when test="${ chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
-								<a href="${url}/xembaono/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
+								<a href="${url}/chungtu/baono/xem/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
 							</c:when>
 							<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH}">
-								<a href="${url}/xemktth/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
+								<a href="${url}/chungtu/ktth/xem/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
+							</c:when>
+							<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">
+								<a href="${url}/chungtu/muahang/xem/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
+							</c:when>
+							<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_BAN_HANG}">
+								<a href="${url}/chungtu/banhang/xem/${chungTu.maCt}">${chungTu.loaiCt}${chungTu.soCt}</a>
 							</c:when>
 							<c:otherwise>${chungTu.loaiCt}${chungTu.soCt}</c:otherwise>
 						</c:choose></td>

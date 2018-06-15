@@ -75,6 +75,17 @@
 </div>
 
 <div class="row form-group">
+	<label class="control-label col-sm-2" for="soDu">Lưỡng tính</label>
+	<div class="col-sm-4">
+		<form:select path="luongTinh" cssClass="form-control" placeholder="Lưỡng tính">
+			<form:option value="0" label="Không" />
+			<form:option value="1" label="Có" />
+		</form:select>
+	</div>
+	<i class="col-sm-6">Tài khoản lưỡng tính hay không</i>
+</div>
+
+<div class="row form-group">
 	<div class="col-sm-2">
 		<a href="${url}/taikhoan/danhsach" class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu</button>

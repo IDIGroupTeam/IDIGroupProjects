@@ -21,7 +21,7 @@
 </script>
 
 <h4>Thêm mới nhóm hàng hóa</h4>
-<br />
+<hr />
 
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="nhomHh.maNhomHh">Nhóm

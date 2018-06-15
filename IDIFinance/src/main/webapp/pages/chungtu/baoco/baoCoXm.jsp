@@ -1,3 +1,4 @@
+<%@page import="com.idi.finance.bean.kyketoan.KyKeToan"%>
 <%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
 <%@page import="com.idi.finance.bean.chungtu.DoiTuong"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
@@ -47,7 +48,7 @@
 <div>
 	<span class="pull-left heading4">BÁO CÓ</span>
 	<%-- 	<div class="btn-group btn-group-sm pull-right">
-		<a href="${url}/pdfbaoco/${chungTu.maCt}" class="btn btn-info btn-sm">
+		<a href="${url}/chungtu/baoco/pdf/${chungTu.maCt}" class="btn btn-info btn-sm">
 			<span class="glyphicon glyphicon-download"></span> Xuất
 		</a>
 	</div> --%>
@@ -146,6 +147,13 @@
 			maxFractionDigits="2"></fmt:formatNumber>
 		VND
 	</div>
+
+	<label class="control-label col-sm-2" for=ngayHt>Ngày thanh
+		toán:</label>
+	<div class="col-sm-4">
+		<span id="ngayTt"><fmt:formatDate value="${chungTu.ngayTt}"
+				pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" /></span>
+	</div>
 </div>
 
 <div class="row form-group">
@@ -209,11 +217,21 @@
 
 <div class="row form-group">
 	<div class="col-sm-4">
-		<a href="${url}/danhsachbaoco" class="btn btn-info btn-sm">Danh
-			sách báo có</a> <a href="${url}/pdfbaoco/${chungTu.maCt}"
-			class="btn btn-info btn-sm">Xuất Pdf </a> <a id="xoaNut"
-			href="${url}/xoabaoco/${chungTu.maCt}" class="btn btn-info btn-sm">Xóa</a>
-		<a href="${url}/suabaoco/${chungTu.maCt}" class="btn btn-info btn-sm">Sửa</a>
-		<a href="${url}/taomoibaoco" class="btn btn-info btn-sm">Tạo mới</a>
+		<a href="${url}/chungtu/baoco/danhsach" class="btn btn-info btn-sm">Danh
+			sách báo có</a>
+
+		<c:choose>
+			<c:when
+				test="${kyKeToan!=null && kyKeToan.trangThai!= KyKeToan.DONG}">
+				<a href="${url}/chungtu/baoco/pdf/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Xuất Pdf </a>
+				<a id="xoaNut" href="${url}/chungtu/baoco/xoa/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Xóa</a>
+				<a href="${url}/chungtu/baoco/sua/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Sửa</a>
+				<a href="${url}/chungtu/baoco/taomoi" class="btn btn-info btn-sm">Tạo
+					mới</a>
+			</c:when>
+		</c:choose>
 	</div>
 </div>

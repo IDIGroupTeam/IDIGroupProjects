@@ -32,6 +32,8 @@ public interface HangHoaDAO {
 
 	public List<HangHoa> danhSachHangHoa();
 	
+	public List<HangHoa> danhSachKhHangHoa();
+	
 	public List<HangHoa> danhSachHangHoa(String tuKhoa);
 
 	public HangHoa layHangHoa(int maHh);

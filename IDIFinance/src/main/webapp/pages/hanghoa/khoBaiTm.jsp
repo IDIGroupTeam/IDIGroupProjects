@@ -21,7 +21,7 @@
 </script>
 
 <h4>Thêm mới kho</h4>
-<br />
+<hr />
 
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="kyHieuKho">Mã kho:(*)</label>

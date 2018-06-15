@@ -17,6 +17,11 @@ public class DuLieuKeToan {
 	private double tongNoPhatSinh;
 	private double tongCoPhatSinh;
 
+	private double noDauKy;
+	private double coDauKy;
+	private double noCuoiKy;
+	private double coCuoiKy;
+
 	private DuLieuKeToan duLieuKeToan;
 	private List<DuLieuKeToan> duLieuKeToanDs;
 	private List<NghiepVuKeToan> nghiepVuKeToanDs;
@@ -80,6 +85,38 @@ public class DuLieuKeToan {
 
 	public void setTongCoPhatSinh(double tongCoPhatSinh) {
 		this.tongCoPhatSinh = tongCoPhatSinh;
+	}
+
+	public double getNoDauKy() {
+		return noDauKy;
+	}
+
+	public void setNoDauKy(double noDauKy) {
+		this.noDauKy = noDauKy;
+	}
+
+	public double getCoDauKy() {
+		return coDauKy;
+	}
+
+	public void setCoDauKy(double coDauKy) {
+		this.coDauKy = coDauKy;
+	}
+
+	public double getNoCuoiKy() {
+		return noCuoiKy;
+	}
+
+	public void setNoCuoiKy(double noCuoiKy) {
+		this.noCuoiKy = noCuoiKy;
+	}
+
+	public double getCoCuoiKy() {
+		return coCuoiKy;
+	}
+
+	public void setCoCuoiKy(double coCuoiKy) {
+		this.coCuoiKy = coCuoiKy;
 	}
 
 	public List<NghiepVuKeToan> getNghiepVuKeToanDs() {

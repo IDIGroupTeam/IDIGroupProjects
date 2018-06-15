@@ -1,3 +1,4 @@
+<%@page import="com.idi.finance.bean.kyketoan.KyKeToan"%>
 <%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
 <%@page import="com.idi.finance.bean.chungtu.DoiTuong"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
@@ -47,7 +48,7 @@
 <div>
 	<span class="pull-left heading4">PHIẾU KẾ TOÁN TỔNG HỢP</span>
 	<%-- <div class="btn-group btn-group-sm pull-right">
-		<a href="${url}/pdfktth/${chungTu.maCt}" class="btn btn-info btn-sm">
+		<a href="${url}/chungtu/ktth/pdf/${chungTu.maCt}" class="btn btn-info btn-sm">
 			<span class="glyphicon glyphicon-download"></span> Xuất
 		</a>
 	</div> --%>
@@ -145,6 +146,13 @@
 			maxFractionDigits="2"></fmt:formatNumber>
 		VND
 	</div>
+
+	<label class="control-label col-sm-2" for=ngayHt>Ngày thanh
+		toán:</label>
+	<div class="col-sm-4">
+		<span id="ngayTt"><fmt:formatDate value="${chungTu.ngayTt}"
+				pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" /></span>
+	</div>
 </div>
 
 <div class="table-responsive row form-group">
@@ -176,7 +184,7 @@
 							<td><fmt:formatNumber
 									value="${chungTu.taiKhoanNoDs[status.index].soTien.soTien}"
 									maxFractionDigits="2"></fmt:formatNumber></td>
-							<td>${chungTu.taiKhoanCoDs[status.index].lyDo}</td>
+							<td>${chungTu.taiKhoanNoDs[status.index].lyDo}</td>
 						</c:when>
 						<c:otherwise>
 							<td></td>
@@ -210,11 +218,21 @@
 
 <div class="row form-group">
 	<div class="col-sm-5">
-		<a href="${url}/danhsachktth" class="btn btn-info btn-sm">Danh
-			sách phiếu kế toán tổng hợp</a> <a href="${url}/pdfktth/${chungTu.maCt}"
-			class="btn btn-info btn-sm"> Xuất Pdf </a> <a id="xoaNut"
-			href="${url}/xoaktth/${chungTu.maCt}" class="btn btn-info btn-sm">Xóa</a>
-		<a href="${url}/suaktth/${chungTu.maCt}" class="btn btn-info btn-sm">Sửa</a>
-		<a href="${url}/taomoiktth" class="btn btn-info btn-sm">Tạo mới</a>
+		<a href="${url}/chungtu/ktth/danhsach" class="btn btn-info btn-sm">Danh
+			sách phiếu kế toán tổng hợp</a>
+
+		<c:choose>
+			<c:when
+				test="${kyKeToan!=null && kyKeToan.trangThai!= KyKeToan.DONG}">
+				<a href="${url}/chungtu/ktth/pdf/${chungTu.maCt}"
+					class="btn btn-info btn-sm"> Xuất Pdf </a>
+				<a id="xoaNut" href="${url}/chungtu/ktth/xoa/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Xóa</a>
+				<a href="${url}/chungtu/ktth/sua/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Sửa</a>
+				<a href="${url}/chungtu/ktth/taomoi" class="btn btn-info btn-sm">Tạo
+					mới</a>
+			</c:when>
+		</c:choose>
 	</div>
 </div>

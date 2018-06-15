@@ -8,7 +8,9 @@ import com.idi.finance.bean.doitac.NganHangTaiKhoan;
 
 public class LoaiTaiKhoan {
 	public static final int NO = -1;
+	public static final String NO_XAU = "NO";
 	public static final int CO = 1;
+	public static final String CO_XAU = "CO";
 
 	public static final String TIEN_MAT = "111";
 	public static final String TIEN_MAT_VN = "1111";
@@ -29,6 +31,7 @@ public class LoaiTaiKhoan {
 	private String maTkCha;
 	private int soDu;
 	private int soDuGiaTri;
+	private boolean luongTinh;
 	private LoaiTaiKhoan loaiTaiKhoan;
 	private List<LoaiTaiKhoan> loaiTaiKhoanDs;
 	private boolean isNew = false;
@@ -90,6 +93,14 @@ public class LoaiTaiKhoan {
 		this.soDuGiaTri = soDuGiaTri;
 	}
 
+	public boolean isLuongTinh() {
+		return luongTinh;
+	}
+
+	public void setLuongTinh(boolean luongTinh) {
+		this.luongTinh = luongTinh;
+	}
+
 	public LoaiTaiKhoan getLoaiTaiKhoan() {
 		return loaiTaiKhoan;
 	}
@@ -149,7 +160,7 @@ public class LoaiTaiKhoan {
 
 	@Override
 	public String toString() {
-		String out = maTk + " " + tenTk + " " + maTkCha + " " + soDu;
+		String out = maTk + " " + tenTk;
 		return out;
 	}
 

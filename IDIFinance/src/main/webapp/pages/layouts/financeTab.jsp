@@ -20,16 +20,22 @@
 			class="caret"></span>
 	</a>
 		<ul class="dropdown-menu">
-			<li id="tabCTPT"><a href="${url}/danhsachphieuthu">Phiếu thu</a></li>
-			<li id="tabCTPC"><a href="${url}/danhsachphieuchi">Phiếu chi</a></li>
-			<li id="tabCTBC"><a href="${url}/danhsachbaoco">Báo có</a></li>
-			<li id="tabCTBN"><a href="${url}/danhsachbaono">Báo nợ</a></li>
-			<li id="tabCTKTTH"><a href="${url}/danhsachktth">Kế toán
-					tổng hợp</a></li>
+			<li id="tabCTPT"><a href="${url}/chungtu/phieuthu/danhsach">Phiếu
+					thu</a></li>
+			<li id="tabCTPC"><a href="${url}/chungtu/phieuchi/danhsach">Phiếu
+					chi</a></li>
+			<li id="tabCTBC"><a href="${url}/chungtu/baoco/danhsach">Báo
+					có</a></li>
+			<li id="tabCTBN"><a href="${url}/chungtu/baono/danhsach">Báo
+					nợ</a></li>
+			<li id="tabCTKTTH"><a href="${url}/chungtu/ktth/danhsach">Kế
+					toán tổng hợp</a></li>
 			<li id="tabCTMH"><a href="${url}/chungtu/muahang/danhsach">Mua
 					hàng</a></li>
 			<li id="tabCTBH"><a href="${url}/chungtu/banhang/danhsach">Bán
 					hàng</a></li>
+			<li id="tabCTKC"><a
+				href="${url}/chungtu/ketchuyen/danhsach">Kết chuyển</a></li>
 		</ul></li>
 	<li class="dropdown"><a class="dropdown-toggle"
 		data-toggle="dropdown" href="#">Sổ kế toán<span class="caret"></span>
@@ -93,7 +99,7 @@
 			<li id="tabDSNHTK"><a href="${url}/nganhang/taikhoan/danhsach">Danh
 					sách tài khoản ngân hàng</a></li>
 
-			<%-- <li id="tabCNDL"><a href="${url}/cdkt/capnhatdulieu">Cập
-												nhật dữ liệu</a></li> --%>
+			<li id="tabCNDL"><a href="${url}/cdkt/capnhatdulieu">Cập
+					nhật dữ liệu</a></li>
 		</ul></li>
 </ul>

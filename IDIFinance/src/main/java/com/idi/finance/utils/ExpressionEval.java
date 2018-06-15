@@ -228,25 +228,4 @@ public class ExpressionEval {
 
 		return rs;
 	}
-
-	/**
-	 * Lấy danh sách các toán từ, toán hạng của biểu thức.
-	 * 
-	 * @param expression
-	 * @return
-	 */
-	public static List<String> getItems(String expression) {
-		if (expression == null)
-			return null;
-
-		List<String> rs = new ArrayList<>();
-
-		expression = formatExpression(expression);
-		String[] splits = expression.split(" ");
-		for (int i = 0; i < splits.length; i++) {
-			rs.add(splits[i].trim());
-		}
-
-		return rs;
-	}
 }

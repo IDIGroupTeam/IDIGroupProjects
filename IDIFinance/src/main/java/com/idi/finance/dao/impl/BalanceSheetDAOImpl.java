@@ -45,9 +45,6 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	@Value("${DANH_SACH_CDKT_THEO_TKKT}")
 	private String DANH_SACH_CDKT_THEO_TKKT;
 
-	@Value("${CAP_NHAT_CAN_DOI_KE_TOAN}")
-	private String CAP_NHAT_CAN_DOI_KE_TOAN;
-
 	@Value("${LAY_CDKT_KY_TRUOC}")
 	private String LAY_CDKT_KY_TRUOC;
 
@@ -593,6 +590,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 			taiKhoan.setMaTenTk(rs.getString("MA_TK") + " - " + rs.getString("TEN_TK"));
 			taiKhoan.setMaTkCha(rs.getString("MA_TK_CHA"));
 			taiKhoan.setSoDu(rs.getInt("SO_DU"));
+			taiKhoan.setLuongTinh(rs.getBoolean("LUONG_TINH"));
 			taiKhoan.setSoDuGiaTri(rs.getInt("SO_DU_GIA_TRI"));
 
 			return taiKhoan;
@@ -637,26 +635,6 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	}
 
 	@Override
-	public void capNhatCanDoiKeToan(List<TaiKhoan> taiKhoanDs) {
-		if (taiKhoanDs != null) {
-			String query = CAP_NHAT_CAN_DOI_KE_TOAN;
-			Iterator<TaiKhoan> iter = taiKhoanDs.iterator();
-			while (iter.hasNext()) {
-				TaiKhoan taiKhoan = iter.next();
-				logger.info("Cập nhật cân đối kế toán vào bảng CHUNG_TU_TAI_KHOAN: ASSET_CODE: "
-						+ taiKhoan.getBai().getAssetCode() + ". MA_CT: " + taiKhoan.getChungTu().getMaCt() + ". MA_TK: "
-						+ taiKhoan.getLoaiTaiKhoan().getMaTk() + ". SO_DU: " + taiKhoan.getSoDu());
-				try {
-					jdbcTmpl.update(query, taiKhoan.getBai().getAssetCode(), taiKhoan.getChungTu().getMaCt(),
-							taiKhoan.getLoaiTaiKhoan().getMaTk(), taiKhoan.getSoDu());
-				} catch (Exception e) {
-					logger.info("LỖI CẬP NHẬT: " + e.getMessage());
-				}
-			}
-		}
-	}
-
-	@Override
 	public BalanceAssetData getPeriodEndValue(BalanceAssetData bad) {
 		if (bad == null || bad.getPeriod() == null || bad.getAsset() == null || bad.getAsset().getAssetCode() == null)
 			return bad;
@@ -688,25 +666,33 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		String batDau = sdf.format(start);
 		String ketThuc = sdf.format(end);
 
-		// logger.info("Tính chi tiêu cân đối kế toán: " + bad.getAsset().getAssetCode()
-		// + " từ " + batDau + " đến " + ketThuc);
-
 		Iterator<LoaiTaiKhoan> iter = bad.getAsset().getTaiKhoanDs().iterator();
 		while (iter.hasNext()) {
 			try {
 				LoaiTaiKhoan loaiTaiKhoan = iter.next();
 				String tmplQuery = query.replaceAll("\\$MA_TK\\$", loaiTaiKhoan.getMaTk());
 
-				Object[] params = { bad.getAsset().getAssetCode(), loaiTaiKhoan.getSoDuGiaTri(), batDau, ketThuc };
-				Double value = jdbcTmpl.queryForObject(tmplQuery, params, Double.class);
+				java.sql.Date homNay = new java.sql.Date(new Date().getTime());
+				logger.info(bad.getAsset().getAssetCode() + " " + loaiTaiKhoan.getMaTk() + " "
+						+ loaiTaiKhoan.getSoDuGiaTri() + " " + batDau + " " + ketThuc + " " + homNay);
+				logger.info(tmplQuery);
+
+				Double value = new Double(0);
+				try {
+					Object[] params = { bad.getAsset().getAssetCode(), loaiTaiKhoan.getSoDuGiaTri(), batDau, ketThuc,
+							bad.getAsset().getAssetCode(), loaiTaiKhoan.getSoDuGiaTri(), batDau, ketThuc, homNay,
+							bad.getAsset().getAssetCode(), loaiTaiKhoan.getSoDuGiaTri(), batDau, ketThuc, homNay };
+					value = jdbcTmpl.queryForObject(tmplQuery, params, Double.class);
+				} catch (Exception e) {
+					// logger.info(e.getMessage());
+				}
+
 				bad.setEndValue(bad.getEndValue() + bad.getAsset().getSoDu() * loaiTaiKhoan.getSoDuGiaTri() * value);
-				// logger.info(tmplQuery);
-				// logger.info(loaiTaiKhoan + " " + value);
+				logger.info(value + " " + bad.getEndValue());
 			} catch (Exception e) {
-				// logger.error("LỖI: " + e.getMessage());
+				// e.printStackTrace();
 			}
 		}
-		// logger.info(bad);
 
 		return bad;
 	}

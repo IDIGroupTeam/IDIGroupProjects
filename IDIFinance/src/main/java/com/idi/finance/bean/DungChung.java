@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.idi.finance.bean.bieudo.KpiGroup;
+import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.dao.KyKeToanDAO;

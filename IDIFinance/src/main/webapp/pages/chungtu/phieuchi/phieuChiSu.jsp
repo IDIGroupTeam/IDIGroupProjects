@@ -13,7 +13,7 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		$("#mainFinanceForm").attr("action", "${url}/luutaomoiphieuchi");
+		$("#mainFinanceForm").attr("action", "${url}//chungtu/phieuchi/luu");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		$("#submitBt").click(function() {
@@ -186,6 +186,7 @@
 							.val("0.0");
 					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien").prop(
 							"placeholder", "0.0");
+					$("#taiKhoanNoDs" + newId + "\\.maNvkt").val("0");
 					//$("#taiKhoanNoDs" + newId + "\\.lyDo").val("");
 					$("#taiKhoanNoDs" + newId + "\\.lyDo").prop("placeholder",
 							"Lý do");
@@ -199,6 +200,7 @@
 					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk")
 							.remove();
 					$("#taiKhoanCoDs" + newId + "\\.soDu").remove();
+					$("#taiKhoanCoDs" + newId + "\\.maNvkt").remove();
 					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien").remove();
 					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTienTxt")
 							.remove();
@@ -404,6 +406,15 @@
 			&nbsp;VND
 		</p>
 	</div>
+	
+	<label class="control-label col-sm-2" for=ngayLap>Ngày thanh toán</label>
+	<div class="col-sm-4">
+		<div class="input-group date datetime smallform">
+			<form:input path="ngayTt" class="form-control" />
+			<span class="input-group-addon"><span
+				class="glyphicon glyphicon-calendar"></span></span>
+		</div>
+	</div>
 </div>
 
 <div class="table-responsive row form-group">
@@ -434,7 +445,9 @@
 							<form:option value="0">Tài khoản</form:option>
 							<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
 								itemLabel="maTenTk" />
-						</form:select> <form:hidden path="taiKhoanNoDs[${status.index}].soDu" /> <form:errors
+						</form:select> <form:hidden path="taiKhoanNoDs[${status.index}].soDu" /> <form:hidden
+							path="taiKhoanNoDs[${status.index}].maNvkt" />
+						<form:errors
 							path="taiKhoanNoDs[${status.index}].loaiTaiKhoan.maTk"
 							cssClass="error" /></td>
 					<td><form:input cssClass="form-control"
@@ -454,7 +467,8 @@
 									multiple="false">
 									<form:options items="${loaiTaiKhoanTmDs}" itemValue="maTk"
 										itemLabel="maTenTk" />
-								</form:select> <form:hidden path="taiKhoanCoDs[${status.index}].soDu" /></td>
+								</form:select> <form:hidden path="taiKhoanCoDs[${status.index}].soDu" /> <form:hidden
+									path="taiKhoanCoDs[${status.index}].maNvkt" /></td>
 							<td><span id="taiKhoanCoDs${status.index}.soTien.soTienTxt"><fmt:formatNumber
 										value="${mainFinanceForm.taiKhoanCoDs[status.index].soTien.soTien}"></fmt:formatNumber>
 									${mainFinanceForm.loaiTien.maLt}</span> <form:hidden
@@ -487,7 +501,7 @@
 
 <div class="row form-group">
 	<div class="col-sm-2">
-		<a href="${url}/xemphieuchi/${mainFinanceForm.maCt}"
+		<a href="${url}/chungtu/phieuchi/xem/${mainFinanceForm.maCt}"
 			class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu
 			thay đổi</button>

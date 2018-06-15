@@ -34,6 +34,12 @@ public class KyKeToanCon {
 		cuoi = Utils.getEndPeriod(date, this.loai);
 	}
 
+	public KyKeToanCon(Date dau, Date cuoi) {
+		this.loai = NAN;
+		this.dau = dau;
+		this.cuoi = cuoi;
+	}
+
 	public int getLoai() {
 		return loai;
 	}

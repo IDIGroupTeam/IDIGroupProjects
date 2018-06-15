@@ -5,11 +5,20 @@ import org.springframework.format.annotation.NumberFormat;
 import com.idi.finance.bean.LoaiTien;
 
 public class Tien {
+	private int maGia;
 	private LoaiTien loaiTien = new LoaiTien();
 	@NumberFormat(pattern = "#")
 	private double soTien;
 	@NumberFormat(pattern = "#")
 	private double giaTri;
+
+	public int getMaGia() {
+		return maGia;
+	}
+
+	public void setMaGia(int maGia) {
+		this.maGia = maGia;
+	}
 
 	public LoaiTien getLoaiTien() {
 		return loaiTien;
@@ -52,6 +61,10 @@ public class Tien {
 
 		Tien item = (Tien) obj;
 		try {
+			if (maGia != item.getMaGia()) {
+				return false;
+			}
+
 			if (loaiTien == null) {
 				if (item.getLoaiTien() != null)
 					return false;

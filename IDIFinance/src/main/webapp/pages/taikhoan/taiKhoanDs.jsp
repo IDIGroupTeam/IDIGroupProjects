@@ -56,6 +56,7 @@
 				<th>Mã tài khoản (Cấp 3)</th>
 				<th>Tên tài khoản</th>
 				<th>Số dư</th>
+				<th>Lưỡng tính</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -81,12 +82,18 @@
 							<c:when test="${taiKhoan.soDu==LoaiTaiKhoan.NO}">Nợ</c:when>
 							<c:otherwise>Có</c:otherwise>
 						</c:choose></td>
+					<td><c:choose>
+							<c:when test="${taiKhoan.luongTinh==true}">
+								<span class="glyphicon glyphicon-ok" style="color: blue;"></span>
+							</c:when>
+						</c:choose></td>
 					<td><div class="btn-group btn-group-sm">
 							<a href="${url}/taikhoan/sua/${taiKhoan.maTk}" class="btn"
 								title="Sửa"> <span class="glyphicon glyphicon-edit"></span>
 							</a><a href="${url}/taikhoan/xoa/${taiKhoan.maTk}" class="btn"
-								title="Sửa" onclick="return xacNhanXoaTaiKhoan(${taiKhoan.maTk});">
-								<span class="glyphicon glyphicon-remove"></span>
+								title="Sửa"
+								onclick="return xacNhanXoaTaiKhoan(${taiKhoan.maTk});"> <span
+								class="glyphicon glyphicon-remove"></span>
 							</a>
 						</div></td>
 				</tr>

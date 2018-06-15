@@ -163,13 +163,22 @@ public class Utils {
 	}
 
 	public static KyKeToanCon nextPeriod(KyKeToanCon ky) {
-		if (ky == null || ky.getDau() == null)
+		if (ky == null || ky.getCuoi() == null)
 			return null;
 
 		KyKeToanCon nextPeriod = new KyKeToanCon();
 		nextPeriod.setLoai(ky.getLoai());
-		nextPeriod.setDau(nextPeriod(ky.getDau(), ky.getLoai()));
-		nextPeriod.setCuoi(getEndPeriod(nextPeriod.getDau(), nextPeriod.getLoai()));
+
+		if (ky.getLoai() == KyKeToanCon.NAN) {
+			Date dau = new Date();
+			dau.setTime(ky.getCuoi().getTime() + 1);
+			nextPeriod.setDau(dau);
+			nextPeriod.setCuoi(null);
+		} else {
+			nextPeriod.setDau(nextPeriod(ky.getDau(), ky.getLoai()));
+			nextPeriod.setCuoi(getEndPeriod(nextPeriod.getDau(), nextPeriod.getLoai()));
+		}
+
 		return nextPeriod;
 	}
 
@@ -195,8 +204,17 @@ public class Utils {
 
 		KyKeToanCon prevPeriod = new KyKeToanCon();
 		prevPeriod.setLoai(ky.getLoai());
-		prevPeriod.setDau(prevPeriod(ky.getDau(), ky.getLoai()));
-		prevPeriod.setCuoi(getEndPeriod(prevPeriod.getDau(), prevPeriod.getLoai()));
+
+		if (ky.getLoai() == KyKeToanCon.NAN) {
+			prevPeriod.setDau(null);
+			Date cuoi = new Date();
+			cuoi.setTime(ky.getDau().getTime() - 1);
+			prevPeriod.setCuoi(cuoi);
+		} else {
+			prevPeriod.setDau(prevPeriod(ky.getDau(), ky.getLoai()));
+			prevPeriod.setCuoi(getEndPeriod(prevPeriod.getDau(), prevPeriod.getLoai()));
+		}
+
 		return prevPeriod;
 	}
 }

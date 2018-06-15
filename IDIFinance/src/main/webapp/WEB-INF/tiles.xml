@@ -13,6 +13,11 @@
 		<put-attribute name="footer" value="/pages/layouts/footer.jsp" />
 	</definition>
 
+	<definition name="koKyKeToanMacDinh" extends="taichinh">
+		<put-attribute name="title" value="Không có kỳ kế toán mặc định" />
+		<put-attribute name="body" value="/pages/koKyKeToanMacDinh.jsp" />
+	</definition>
+
 	<!-- Bắt đầu Tab biểu đồ KPI -->
 	<definition name="kpiChart" extends="taichinh">
 		<put-attribute name="title" value="Biểu đồ KPI" />
@@ -170,6 +175,7 @@
 			value="/pages/chungtu/muahang/muaHangTm.jsp" />
 	</definition>
 
+
 	<!-- Chứng từ bán hàng -->
 	<definition name="danhSachBanHang" extends="taichinh">
 		<put-attribute name="title" value="Danh sách bán hàng" />
@@ -193,6 +199,53 @@
 		<put-attribute name="title" value="Tạo mới bán hàng" />
 		<put-attribute name="body"
 			value="/pages/chungtu/banhang/banHangTm.jsp" />
+	</definition>
+
+	<!-- Kết chuyển -->
+	<definition name="danhSachKetChuyen" extends="taichinh">
+		<put-attribute name="title" value="Danh sách kết chuyển" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketchuyen/ketChuyenDs.jsp" />
+	</definition>
+
+	<definition name="xemKetChuyen" extends="taichinh">
+		<put-attribute name="title" value="Chi tiết kết chuyển" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketchuyen/ketChuyenXm.jsp" />
+	</definition>
+
+	<definition name="taoMoiKetChuyen" extends="taichinh">
+		<put-attribute name="title" value="Tạo mới kết chuyển" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketchuyen/ketChuyenTm.jsp" />
+	</definition>
+
+	<!-- Bút toán kết chuyển tự động -->
+	<definition name="danhSachKetChuyenButToan" extends="taichinh">
+		<put-attribute name="title"
+			value="Danh sách bút toán kết chuyển tự động" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketchuyen/ketChuyenButToanDs.jsp" />
+	</definition>
+
+	<definition name="xemKetChuyenButToan" extends="taichinh">
+		<put-attribute name="title"
+			value="Chi tiết bút toán kết chuyển tự động" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketchuyen/ketChuyenButToanXm.jsp" />
+	</definition>
+
+	<definition name="suaKetChuyenButToan" extends="taichinh">
+		<put-attribute name="title" value="Sửa bút toán kết chuyển tự động" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketchuyen/ketChuyenButToanSu.jsp" />
+	</definition>
+
+	<definition name="taoMoiKetChuyenButToan" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới bút toán kết chuyển tự động" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketchuyen/ketChuyenButToanTm.jsp" />
 	</definition>
 	<!-- Kết thúc Tab chứng từ -->
 
@@ -244,12 +297,6 @@
 	<definition name="balanceSheetCodes" extends="taichinh">
 		<put-attribute name="title" value="Danh sách tài khoản kết toán" />
 		<put-attribute name="body" value="/pages/cdkt/balanceSheetCodes.jsp" />
-	</definition>
-
-	<definition name="hachToan" extends="taichinh">
-		<put-attribute name="title"
-			value="Cập nhật bảng cân đối kế toán - Hạch toán" />
-		<put-attribute name="body" value="/pages/cdkt/hachToan.jsp" />
 	</definition>
 
 	<definition name="bangCanDoiPhatSinh" extends="taichinh">
@@ -376,6 +423,11 @@
 	<definition name="danhSachHangHoa" extends="taichinh">
 		<put-attribute name="title" value="Danh sách Hàng hóa" />
 		<put-attribute name="body" value="/pages/hanghoa/hangHoaDs.jsp" />
+	</definition>
+
+	<definition name="xemHangHoa" extends="taichinh">
+		<put-attribute name="title" value="Chi tiết hàng hóa" />
+		<put-attribute name="body" value="/pages/hanghoa/hangHoaXm.jsp" />
 	</definition>
 
 	<definition name="taoMoiHangHoa" extends="taichinh">

@@ -104,23 +104,23 @@
 						<td><c:choose>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU}">
-									<a href="${url}/xemphieuthu/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									<a href="${url}/chungtu/phieuthu/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI}">
-									<a href="${url}/xemphieuchi/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									<a href="${url}/chungtu/phieuchi/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
-									<a href="${url}/xembaono/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									<a href="${url}/chungtu/baono/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
-									<a href="${url}/xembaoco/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									<a href="${url}/chungtu/baoco/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH}">
-									<a href="${url}/xemktth/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									<a href="${url}/chungtu/ktth/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:otherwise>${nghiepVuKeToan.chungTu.loaiCt}${chungTu.soCt}</c:otherwise>
 							</c:choose></td>

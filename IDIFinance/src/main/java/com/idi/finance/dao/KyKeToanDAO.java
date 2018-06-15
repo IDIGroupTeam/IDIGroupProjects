@@ -3,6 +3,7 @@ package com.idi.finance.dao;
 import java.util.Date;
 import java.util.List;
 
+import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.kyketoan.SoDuKy;
 
@@ -11,6 +12,8 @@ public interface KyKeToanDAO {
 	public List<KyKeToan> danhSachKyKeToan();
 
 	public KyKeToan layKyKeToan(int maKyKt);
+
+	public KyKeToan layKyKeToan(ChungTu chungTu);
 
 	public KyKeToan layKyKeToanMacDinh();
 

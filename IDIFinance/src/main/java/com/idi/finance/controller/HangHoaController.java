@@ -18,14 +18,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.idi.finance.bean.bieudo.KpiGroup;
+import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.hanghoa.DonVi;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.hanghoa.NhomHang;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.HangHoaDAO;
-import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.form.BalanceAssetForm;
 import com.idi.finance.validator.DonViValidator;
@@ -38,7 +37,7 @@ public class HangHoaController {
 	private static final Logger logger = Logger.getLogger(HangHoaController.class);
 
 	@Autowired
-	KpiChartDAO kpiChartDAO;
+	DungChung dungChung;
 
 	@Autowired
 	HangHoaDAO hangHoaDAO;
@@ -85,8 +84,7 @@ public class HangHoaController {
 			Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			List<DonVi> donViDs = hangHoaDAO.danhSachDonViHangHoa();
 			model.addAttribute("donViDs", donViDs);
@@ -103,8 +101,7 @@ public class HangHoaController {
 	public String suaDonVi(@PathVariable("id") int maDv, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			DonVi donVi = hangHoaDAO.layDonVi(maDv);
 			if (donVi == null) {
@@ -122,8 +119,7 @@ public class HangHoaController {
 	public String taoMoiDonVi(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			DonVi donVi = new DonVi();
 
@@ -194,8 +190,7 @@ public class HangHoaController {
 			Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			NhomHang nhomHangHoa = new NhomHang();
 			nhomHangHoa = hangHoaDAO.danhSachNhomHangHoa(nhomHangHoa);
@@ -214,8 +209,7 @@ public class HangHoaController {
 	public String suaNhomHangHoa(@PathVariable("id") int maNhomHh, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			NhomHang nhomHangHoa = hangHoaDAO.layNhomHangHoa(maNhomHh);
 			if (nhomHangHoa == null) {
@@ -233,8 +227,7 @@ public class HangHoaController {
 	public String taoMoiNhomHangHoa(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			NhomHang nhomHangHoa = new NhomHang();
 
@@ -307,8 +300,7 @@ public class HangHoaController {
 	public String danhSachHangHoa(@ModelAttribute("mainFinanceForm") BalanceAssetForm balanceSheetForm, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			List<HangHoa> hangHoaDs = hangHoaDAO.danhSachHangHoa();
 			model.addAttribute("hangHoaDs", hangHoaDs);
@@ -321,12 +313,31 @@ public class HangHoaController {
 		}
 	}
 
+	@RequestMapping("/hanghoa/xem/{id}")
+	public String xemHangHoa(@PathVariable("id") int maHh, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			HangHoa hangHoa = hangHoaDAO.layHangHoa(maHh);
+			if (hangHoa == null) {
+				return "redirect:/hanghoa/danhsach";
+			}
+			model.addAttribute("hangHoa", hangHoa);
+
+			model.addAttribute("tab", "tabDSHH");
+			return "xemHangHoa";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
 	@RequestMapping("/hanghoa/sua/{id}")
 	public String suaHangHoa(@PathVariable("id") int maHh, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			HangHoa hangHoa = hangHoaDAO.layHangHoa(maHh);
 			if (hangHoa == null) {
@@ -344,8 +355,7 @@ public class HangHoaController {
 	public String taoMoiHangHoa(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			HangHoa hangHoa = new HangHoa();
 
@@ -368,7 +378,7 @@ public class HangHoaController {
 
 			if (hangHoa.getMaHh() > 0) {
 				hangHoaDAO.capNhatHangHoa(hangHoa);
-				return "redirect:/hanghoa/danhsach";
+				return "redirect:/hanghoa/xem/" + hangHoa.getMaHh();
 			} else {
 				hangHoaDAO.themHangHoa(hangHoa);
 			}
@@ -427,8 +437,7 @@ public class HangHoaController {
 	public String danhSachKhoBai(@ModelAttribute("mainFinanceForm") BalanceAssetForm balanceSheetForm, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			List<KhoHang> khoBaiDs = hangHoaDAO.danhSachKhoBai();
 			model.addAttribute("khoBaiDs", khoBaiDs);
@@ -445,8 +454,7 @@ public class HangHoaController {
 	public String suaKhoBai(@PathVariable("id") int maKho, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			KhoHang khoBai = hangHoaDAO.layKhoBai(maKho);
 			if (khoBai == null) {
@@ -464,8 +472,7 @@ public class HangHoaController {
 	public String taoMoiKhoBai(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			KhoHang khoBai = new KhoHang();
 

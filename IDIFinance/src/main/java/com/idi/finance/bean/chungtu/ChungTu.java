@@ -10,6 +10,8 @@ import org.apache.log4j.Logger;
 import com.idi.finance.bean.LoaiTien;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.hanghoa.KhoHang;
+import com.idi.finance.bean.kyketoan.KyKeToan;
+import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class ChungTu {
@@ -21,19 +23,31 @@ public class ChungTu {
 	public static final String CHUNG_TU_BAO_NO = "BN";
 	public static final String CHUNG_TU_BAO_CO = "BC";
 	public static final String CHUNG_TU_KT_TH = "KTTH";
-	public static final String CHUNG_TU_BT_KC = "BTKC";
-	public static final String CHUNG_TU_PHIEU_XUAT_KHO = "PXK";
-	public static final String CHUNG_TU_PHIEU_NHAP_KHO = "PNK";
 	public static final String CHUNG_TU_MUA_HANG = "MH";
 	public static final String CHUNG_TU_BAN_HANG = "BH";
+	public static final String CHUNG_TU_KET_CHUYEN = "KC";
+
+	// Các hằng số dùng cho chứng từ mua và bán hàng
+	public static final int HANG_HOA_TRONG_NUOC = 1;
+	public static final int HANG_HOA_NUOC_NGOAI = 2;
+	public static final int DICH_VU_TRONG_NUOC = 3;
+	public static final int DICH_VU_NUOC_NGOAI = 4;
+
+	// Chiều mua/ bán
+	public static final int MUA = 1;
+	public static final int BAN = -1;
 
 	private int maCt;
 	private int soCt;
 	private String loaiCt;
+	// Mỗi loại chứng từ có thể có thêm phân loại cụ thể
+	private int tinhChatCt;
+	private int chieu = MUA;
 	private Date ngayLap;
 	private Date ngayHt;
 	private Date ngayTao;
 	private Date ngaySua;
+	private Date ngayTt;
 	private LoaiTien loaiTien = new LoaiTien();
 	private Tien soTien = new Tien();
 	private String lyDo;
@@ -41,11 +55,14 @@ public class ChungTu {
 	private DoiTuong doiTuong;
 	private List<TaiKhoan> taiKhoanNoDs;
 	private List<TaiKhoan> taiKhoanCoDs;
+	private List<NghiepVuKeToan> nvktDs;
+	private List<KetChuyenButToan> kcbtDs;
 
 	private TaiKhoan tkThue;
 	private LoaiTaiKhoan thanhToan;
 	private KhoHang khoBai;
 	private List<HangHoa> hangHoaDs;
+	private KyKeToan kyKeToan;
 
 	public int getMaCt() {
 		return maCt;
@@ -71,6 +88,22 @@ public class ChungTu {
 		this.loaiCt = loaiCt;
 	}
 
+	public int getTinhChatCt() {
+		return tinhChatCt;
+	}
+
+	public void setTinhChatCt(int tinhChatCt) {
+		this.tinhChatCt = tinhChatCt;
+	}
+
+	public int getChieu() {
+		return chieu;
+	}
+
+	public void setChieu(int chieu) {
+		this.chieu = chieu;
+	}
+
 	public Date getNgayLap() {
 		return ngayLap;
 	}
@@ -81,6 +114,10 @@ public class ChungTu {
 
 	public Date getNgayHt() {
 		return ngayHt;
+	}
+
+	public void setNgayHt(Date ngayHt) {
+		this.ngayHt = ngayHt;
 	}
 
 	public Date getNgayTao() {
@@ -99,8 +136,12 @@ public class ChungTu {
 		this.ngaySua = ngaySua;
 	}
 
-	public void setNgayHt(Date ngayHt) {
-		this.ngayHt = ngayHt;
+	public Date getNgayTt() {
+		return ngayTt;
+	}
+
+	public void setNgayTt(Date ngayTt) {
+		this.ngayTt = ngayTt;
 	}
 
 	public LoaiTien getLoaiTien() {
@@ -208,6 +249,53 @@ public class ChungTu {
 		this.taiKhoanCoDs = taiKhoanCoDs;
 	}
 
+	public List<NghiepVuKeToan> getNvktDs() {
+		return nvktDs;
+	}
+
+	public void setNvktDs(List<NghiepVuKeToan> nvktDs) {
+		this.nvktDs = nvktDs;
+	}
+
+	public List<KetChuyenButToan> getKcbtDs() {
+		if (kcbtDs == null) {
+			kcbtDs = new ArrayList<>();
+		}
+		return kcbtDs;
+	}
+
+	public void setKcbtDs(List<KetChuyenButToan> kcbtDs) {
+		this.kcbtDs = kcbtDs;
+	}
+
+	public void themKetChuyenButToan(KetChuyenButToan ketChuyenButToan) {
+		if (ketChuyenButToan == null)
+			return;
+
+		if (kcbtDs == null) {
+			kcbtDs = new ArrayList<>();
+		}
+
+		int pos = kcbtDs.indexOf(ketChuyenButToan);
+		if (pos > -1) {
+			KetChuyenButToan ketChuyenButToanTmpl = kcbtDs.get(pos);
+			ketChuyenButToanTmpl.tron(ketChuyenButToan);
+		} else {
+			kcbtDs.add(ketChuyenButToan);
+		}
+	}
+
+	public void themKetChuyenButToan(List<KetChuyenButToan> ketChuyenButToanDs) {
+		if (ketChuyenButToanDs == null) {
+			return;
+		}
+
+		Iterator<KetChuyenButToan> iter = ketChuyenButToanDs.iterator();
+		while (iter.hasNext()) {
+			themKetChuyenButToan(iter.next());
+		}
+	}
+
 	public TaiKhoan getTkThue() {
 		return tkThue;
 	}
@@ -244,7 +332,7 @@ public class ChungTu {
 			Iterator<HangHoa> iter = hangHoaDs.iterator();
 			while (iter.hasNext()) {
 				HangHoa hangHoa = iter.next();
-				double tien = hangHoa.getSoLuong() * hangHoa.getGiaMua().getSoTien();
+				double tien = hangHoa.getSoLuong() * hangHoa.getGiaKho().getSoTien();
 				soTien.setSoTien(tien + soTien.getSoTien());
 			}
 			soTien.setGiaTri(soTien.getSoTien() * soTien.getLoaiTien().getBanRa());
@@ -261,8 +349,9 @@ public class ChungTu {
 
 		if (!hangHoaDs.contains(hangHoa)) {
 			hangHoaDs.add(hangHoa);
-			if (hangHoa.getGiaMua() != null) {
-				double tien = hangHoa.getSoLuong() * hangHoa.getGiaMua().getSoTien();
+			if (hangHoa.getGiaKho() != null) {
+				double tien = hangHoa.getSoLuong() * hangHoa.getGiaKho().getSoTien();
+				soTien.setLoaiTien(this.getLoaiTien());
 				soTien.setSoTien(tien + soTien.getSoTien());
 				soTien.setGiaTri(soTien.getSoTien() * soTien.getLoaiTien().getBanRa());
 			}
@@ -325,6 +414,14 @@ public class ChungTu {
 		}
 
 		return soDongNkc;
+	}
+
+	public KyKeToan getKyKeToan() {
+		return kyKeToan;
+	}
+
+	public void setKyKeToan(KyKeToan kyKeToan) {
+		this.kyKeToan = kyKeToan;
 	}
 
 	@Override
