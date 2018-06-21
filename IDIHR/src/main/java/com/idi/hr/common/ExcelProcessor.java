@@ -95,42 +95,46 @@ public class ExcelProcessor {
 								timekeeping.setTimeIn(value);
 								logger.info("Giờ vào: " + value);
 								StringTokenizer st = new StringTokenizer(value, ":");
-								String h = "0";
-								String s = "0";
+								int h = 0;
+								int m = 0;
 								while (st.hasMoreElements()) {
-									h = st.nextToken();// System.out.println(h);
-									s = st.nextToken();// System.out.println(s);
+									h = Integer.parseInt(st.nextToken());// System.out.println(h);
+									m = Integer.parseInt(st.nextToken());// System.out.println(s);
 								}
+								
 								// check in late at morning
 								int lateMValue = 0;
-								if (Integer.parseInt(h) > Integer.parseInt(hr.getProperty("TIME_CHECK_IN_MORNING"))
-										&& Integer.parseInt(h) < Integer
-												.parseInt(hr.getProperty("TIME_CHECK_OUT_MORNING"))) {
-									lateMValue = Integer.parseInt(h)
-											- Integer.parseInt(hr.getProperty("TIME_CHECK_IN_MORNING"));
-									System.err.println("Muon sang: " + lateMValue + ":" + s);
-									System.err.println(String.valueOf(lateMValue*60 + Integer.parseInt(s)));
-									timekeeping.setComeLateM(String.valueOf(lateMValue*60 + Integer.parseInt(s)));
+								if (h > Integer.parseInt(hr.getProperty("TIME_CHECK_IN_MORNING"))
+										&& h < Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_MORNING"))) {
+									lateMValue = (h	- Integer.parseInt(hr.getProperty("TIME_CHECK_IN_MORNING")));
+									//System.err.println("Muon sang: " + lateMValue + ":" + m);
+									//System.err.println(String.valueOf(lateMValue*60 + m));
+									timekeeping.setComeLateM(String.valueOf(lateMValue*60 + m));
 									//timekeeping.setComeLateM("0" + lateMValue + ":" + s);
-								} else if (Integer.parseInt(h) == Integer
-										.parseInt(hr.getProperty("TIME_CHECK_IN_MORNING")) && Integer.parseInt(s) > 0) {
-									System.err.println("Muon sang: " + 0 + ":" + s);
-									timekeeping.setComeLateM(s);
+								} else if (h == Integer.parseInt(hr.getProperty("TIME_CHECK_IN_MORNING")) && m > 0) {
+									//System.err.println("Muon sang: " + 0 + ":" + m);
+									timekeeping.setComeLateM(String.valueOf(m));
 								}
+								
 								// check in late at afternoon
 								int lateAValue = 0;
-								if (Integer.parseInt(h) > Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON"))) {
-									lateAValue = Integer.parseInt(h)
-											- Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON"));
-									System.err.println("Muon chieu: " + lateAValue + ":" + s);
-									System.err.println(String.valueOf(lateAValue*60 + Integer.parseInt(s)));
-									timekeeping.setComeLateA(String.valueOf(lateAValue*60 + Integer.parseInt(s)));
-									timekeeping.setComeLateA("0" + lateAValue + ":" + s);
-								} else if (Integer.parseInt(h) == Integer
-										.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON"))
-										&& Integer.parseInt(s) > 0) {
-									System.err.println("Muon chieu: " + 0 + ":" + s);
-									timekeeping.setComeLateA(s);
+								int hRequireA = Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON_H"));
+								int mRequireA = Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON_M"));
+								
+								//can nhac care them dam bao ko tinh di muon cho t/h check in sau gio ve, vi se tinh la nghi ko phep buoi chieu								
+								if (h > hRequireA) {
+									lateAValue = h - hRequireA;									
+									//System.err.println("Muon chieu: " + lateAValue + ":" + m);
+									//System.err.println(String.valueOf(lateAValue*60 + m));
+									if(m >= mRequireA){
+										timekeeping.setComeLateA(String.valueOf(lateAValue*60 + (m - mRequireA)));
+									}else {
+										timekeeping.setComeLateA(String.valueOf((lateAValue-1)*60 + (60 - mRequireA) + m));
+									}
+								} else if (h == hRequireA 
+										&& m > Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON_M"))) {
+									//System.err.println("Muon chieu: " + 0 + ":" + m);
+									timekeeping.setComeLateA(String.valueOf(m - Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON_M"))));
 								}
 
 								break;
@@ -154,26 +158,26 @@ public class ExcelProcessor {
 
 								StringTokenizer st = new StringTokenizer(value, ":");
 								String h = "0";
-								String s = "0";
+								String m = "0";
 								while (st.hasMoreElements()) {
 									h = st.nextToken();// System.out.println(h);
-									s = st.nextToken();// System.out.println(s);
+									m = st.nextToken();// System.out.println(s);
 								}
 								// check out soon morning
 								int soonMValue = 0;
 								if (Integer.parseInt(h) < Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_MORNING"))) {
 									soonMValue = Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_MORNING"))
 											- (Integer.parseInt(h) + 1);
-									System.err.println("Ve som sang: " + soonMValue + ":" + (60 - Integer.parseInt(s)));
+									System.err.println("Ve som sang: " + soonMValue + ":" + (60 - Integer.parseInt(m)));
 									//String hour = "0";
-									int min = 60 - Integer.parseInt(s);
+									int min = 60 - Integer.parseInt(m);
 
 									if (soonMValue > 0 && soonMValue < 10) {
 										//hour = "0" + soonMValue;
 										timekeeping.setLeaveSoonM(String.valueOf((soonMValue*60 + min)));
 									}else {
 										if (0 < min && min < 10)
-										s = "0" + min;
+										m = "0" + min;
 										timekeeping.setLeaveSoonM(String.valueOf(min));
 									}
 										
@@ -182,30 +186,22 @@ public class ExcelProcessor {
 									
 									timekeeping.setLeaveSoonM(hour + ":" + s);*/
 								}
+								
 								// check out soon afternoon
 								int soonAValue = 0;
-								if (Integer.parseInt(h) >= Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON"))
-										&& Integer.parseInt(h) < Integer
-												.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON"))) {
-									soonAValue = Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON"))
-											- (Integer.parseInt(h) + 1);
-									System.err
-											.println("Ve som chieu: " + soonAValue + ":" + (60 - Integer.parseInt(s)));
-									//String hour = "0";
-									int min = 60 - Integer.parseInt(s);
-
-									if (soonAValue > 0 && soonAValue < 10) {
-										//hour = "0" + soonAValue;
-										timekeeping.setLeaveSoonA(String.valueOf((soonAValue*60 + min)));
-									}else {
-										if (0 < min && min < 10)
-										s = "0" + min;
-										timekeeping.setLeaveSoonA(String.valueOf(min));
+								if (Integer.parseInt(h) > Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON_H")) 
+										|| (Integer.parseInt(h) == Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON_H")) 
+										   && (Integer.parseInt(m) > Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON_M"))))){
+									if(Integer.parseInt(h) < Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_H"))) {									
+										soonAValue = Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_H"))	- (Integer.parseInt(h));
+										if(Integer.parseInt(m) >= Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_M"))) {
+											timekeeping.setLeaveSoonA(String.valueOf(soonAValue*60 + (Integer.parseInt(m) - Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_M")))));
+										}else {
+											timekeeping.setLeaveSoonA(String.valueOf((soonAValue-1)*60 + (60 - Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_M"))) + Integer.parseInt(m)));
+										}
+									}else if(Integer.parseInt(h) == Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_H")) && Integer.parseInt(m) > Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_M"))) {
+										timekeeping.setLeaveSoonA(String.valueOf(Integer.parseInt(m) - Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_M"))));
 									}
-									/*	if (0 < min && min < 10)
-											s = "0" + min;
-										timekeeping.setLeaveSoonA(hour + ":" + s);
-									}*/
 								}
 								break;
 							case NUMERIC:
@@ -219,14 +215,15 @@ public class ExcelProcessor {
 						}
 
 						// Đọc ghi chú
-						if (columnStrIndex.equalsIgnoreCase("P")) {
+					/* Comment lai chi update khi co update = tay
+ 					if (columnStrIndex.equalsIgnoreCase("P")) {
 							// CellType cellType = cell.getCellTypeEnum();
 							String value = cell.getStringCellValue();
 							if (value != null && !value.trim().equals("")) {
 								timekeeping.setComment(value.trim());
 								logger.info("Comment: " + value.trim());
 							}
-						}
+						}*/
 					}
 
 					// logger.info(timekeeping);
