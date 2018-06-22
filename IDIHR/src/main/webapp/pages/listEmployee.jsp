@@ -36,7 +36,7 @@ tr:nth-child(even) {
 	<form:form action="listEmployeeSearch" modelAttribute="employeeForm" method="GET">
 	<table class="table">
 		<tr>
-			<td style="color: purple;"><i>Nhập thông tin nhân viên muốn tìm kiếm: Tên/Email/Account/Mã NV/Mã phòng/Mã chức vụ </i></td>
+			<td style="color: purple;"><i>Nhập thông tin nhân viên muốn tìm kiếm: Tên/Email/Account/Mã NV/Mã phòng/Mã chức vụ/trạng thái LĐ </i></td>
 			<td align="center">
 				<form:input path="searchValue" required="required"/>
 			</td>
@@ -47,38 +47,39 @@ tr:nth-child(even) {
 	</table>
 	</form:form>
 	<div class="table-responsive">
-		
+		<c:if test="${not empty message}">
+			<div class="alert alert-success">${message}</div>
+		</c:if>
 		<table class="table table-striped">
 			<tr>
-				<th>Mã NV</th>
+				<th nowrap="nowrap">Mã NV</th>
 				<th>Họ tên</th>
 				<th>Account</th>
 				<th>Email</th>
-				<th>Chức vụ</th>
+				<th nowrap="nowrap">Chức vụ</th>
 				<th>Phòng</th>
-				<th>Giới tính</th>
+				<th>Trạng thái</th>
+				<!-- th nowrap="nowrap">Giới tính</th-->
 				<th>Số đt</th>
-				<th>Xem chi tiết</th>
+				<th nowrap="nowrap">Chi tiết</th>
 				<th>Sửa</th>
 			</tr>
 			<c:forEach var="employee" items="${employees}">
 				<tr>
 					<td>${employee.employeeId}</td>
-					<td>${employee.fullName}</td>
+					<td nowrap="nowrap">${employee.fullName}</td>
 					<td>${employee.loginAccount}</td>
 					<td>${employee.email}</td>
 					<td>${employee.jobTitle}</td>
 					<td>${employee.department}</td>
-					<td>${employee.gender}</td>
+					<td nowrap="nowrap">${employee.workStatus}</td>
+					<!-- td>${employee.gender}</td-->
 					<td>${employee.phoneNo}</td>
 					<td><a href="/IDIHR/viewEmployee?employeeId=${employee.employeeId}">Xem</a></td>
 					<td><a href="/IDIHR/editEmployee?employeeId=${employee.employeeId}">Sửa</a></td>
 				</tr>
 			</c:forEach>
 		</table>
-		<c:if test="${not empty message}">
-			<div class="alert alert-success">${message}</div>
-		</c:if>
 	</div>
 </body>
 </html>

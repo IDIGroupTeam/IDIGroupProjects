@@ -271,7 +271,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		String sql = hr.getProperty("GET_EMPLOYEE_BY_SEARCH").toString();
 		log.info("GET_EMPLOYEE_BY_SEARCH query: " + sql);
 		value = "%" + value + "%";
-		Object[] params = new Object[] {value, value, value, value, value, value};
+		Object[] params = new Object[] {value, value, value, value, value, value, value};
 		EmployeeMapper mapper = new EmployeeMapper();
 
 		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);

@@ -1,6 +1,7 @@
 <%@page import="com.idi.hr.common.PropertiesManager"%>
 <%@page language="java" contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
@@ -185,25 +186,25 @@ $(function() {
 						<td bgcolor="EDC7D0">${timekeeping.timeOut}</td>
 					</c:if>
 					<c:if test="${not empty timekeeping.comeLateM}">
-						<td bgcolor="#F5F6CE">${timekeeping.comeLateM} phút</td>
+						<td bgcolor="#F5F6CE"><fmt:formatNumber value="${timekeeping.comeLateM/60}" pattern="0"/>h<fmt:formatNumber value="${timekeeping.comeLateM % 60}" pattern="00"/></td>
 					</c:if>
 					<c:if test="${empty timekeeping.comeLateM}">
 						<td>${timekeeping.comeLateM}</td>
 					</c:if>
 					<c:if test="${not empty timekeeping.comeLateA}">
-						<td bgcolor="#F5F6CE">${timekeeping.comeLateA} phút</td>
+						<td bgcolor="#F5F6CE"><fmt:formatNumber value="${timekeeping.comeLateA/60}" pattern="0"/>h<fmt:formatNumber value="${timekeeping.comeLateA % 60}" pattern="00"/></td>
 					</c:if>
 					<c:if test="${empty timekeeping.comeLateA}">
 						<td>${timekeeping.comeLateA}</td>
 					</c:if>
 					<c:if test="${not empty timekeeping.leaveSoonM}">
-						<td bgcolor="#F5F6CE">${timekeeping.leaveSoonM} phút</td>
+						<td bgcolor="#F5F6CE"><fmt:formatNumber value="${timekeeping.leaveSoonM/60}" pattern="0" />h<fmt:formatNumber value="${timekeeping.leaveSoonM % 60}" pattern="00"/></td>
 					</c:if>
 					<c:if test="${empty timekeeping.leaveSoonM}">
 						<td>${timekeeping.leaveSoonM}</td>
 					</c:if>
 					<c:if test="${not empty timekeeping.leaveSoonA}">
-						<td bgcolor="#F5F6CE">${timekeeping.leaveSoonA} phút</td>
+						<td bgcolor="#F5F6CE"><fmt:formatNumber value="${timekeeping.leaveSoonA/60}" pattern="0" />h<fmt:formatNumber value="${timekeeping.leaveSoonA%60}" pattern="00"/></td>
 					</c:if>
 					<c:if test="${empty timekeeping.leaveSoonA}">
 						<td>${timekeeping.leaveSoonA}</td>
