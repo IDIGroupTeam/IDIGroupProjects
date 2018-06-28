@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Utils {
 	public static String format(String str) {
@@ -76,16 +74,16 @@ public class Utils {
 	    return diff;
 	}
 	
-	public static Map<String, String> workStatusMap() {
+/*	public static Map<String, String> workStatusMap() {
 		Map<String, String> workStatusMap = new LinkedHashMap<String, String>();
-		workStatusMap.put("Thử việc", "Thử việc");
-		workStatusMap.put("Thời vụ", "Thời vụ");
-		workStatusMap.put("Cộng tác", "Cộng tác");
-		workStatusMap.put("Chính thức", "Chính thức");
-		workStatusMap.put("Nghỉ thai sản", "Nghỉ thai sản");
-		workStatusMap.put("Nghỉ ốm", "Nghỉ ốm");
-		workStatusMap.put("Nghỉ không lương", "Nghỉ không lương");
-		workStatusMap.put("Đã thôi việc", "Đã thôi việc");
+		workStatusMap.put("ThuViec", "Thử việc");
+		workStatusMap.put("ThoiVu", "Thời vụ");
+		workStatusMap.put("CongTac", "Cộng tác");
+		workStatusMap.put("ChinhThuc", "Chính thức");
+		workStatusMap.put("NghiThaiSan", "Nghỉ thai sản");
+		workStatusMap.put("NghiOm", "Nghỉ ốm");
+		workStatusMap.put("NghiKhongLuong", "Nghỉ không lương");
+		workStatusMap.put("DaThoiViec", "Đã thôi việc");
 		return workStatusMap;
-	}
+	}*/
 }

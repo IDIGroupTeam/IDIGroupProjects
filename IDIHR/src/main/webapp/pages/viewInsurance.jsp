@@ -25,15 +25,14 @@
 				</tr>
 				<tr>
 					<td bgcolor="#E6E6E6">Mã NV:</td>
-					<td><c:out value="${insuranceForm.employeeId}" /></td>
-					<td bgcolor="#E6E6E6">Tỷ lệ đóng (%): Cty</td>
+					<td><c:out value="${name}" /></td>
+					<td bgcolor="#E6E6E6">Tỷ lệ đóng của công ty:</td>
 					<td><c:out value="${insuranceForm.percentSInsuC}" /></td>
 				</tr>
 				<tr>
 					<td bgcolor="#E6E6E6">Số sổ BHXH:</td>
 					<td><c:out value="${insuranceForm.socicalInsuNo}" /></td>
-					<td bgcolor="#E6E6E6" align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
-						Người LĐ</td>
+					<td bgcolor="#E6E6E6">Tỷ lệ đóng của người LĐ:</td>
 					<td><c:out value="${insuranceForm.percentSInsuE}" /></td>
 				</tr>
 				<tr>
@@ -63,11 +62,11 @@
 				<tr>
 					<td bgcolor="#E6E6E6">Số thẻ BHYT:</td>
 					<td><c:out value="${insuranceForm.hInsuNo}" /></td>
-					<td bgcolor="#E6E6E6">Nơi ĐK khám bệnh:</td>
+					<td bgcolor="#E6E6E6">Nơi ĐK khám chữa bệnh:</td>
 					<td><c:out value="${insuranceForm.hInsuPlace}" /></td>
 				<tr>
 				<tr>
-					<td bgcolor="#FBEFF2">Ghi chú:</td>
+					<td bgcolor="#E6E6E6">Ghi chú:</td>
 					<td colspan="3"><c:out value="${insuranceForm.comment}" /></td>
 				<tr>
 					<td></td>

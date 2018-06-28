@@ -149,7 +149,7 @@ public class EmployeeController {// extends BaseController {
 
 	@RequestMapping(value = "/workStatusReport", method = RequestMethod.GET)
 	public String workStatusReport(Model model, HttpServletResponse response,  HttpServletRequest request) {
-		Map<String, String> items = Utils.workStatusMap();
+		Map<String, String> items = employeeDAO.getWorkStatusMap();
 		Map<String, Integer> memberWorkStatus = new LinkedHashMap<String, Integer>();
 		for (Map.Entry<String, String> entry : items.entrySet()) {
 			System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());
@@ -316,7 +316,7 @@ public class EmployeeController {// extends BaseController {
 		Map<String, String> departmentMap = this.dataForDepartments();
 		model.addAttribute("departmentMap", departmentMap);
 		// get works status
-		Map<String, String> workStatusMap = Utils.workStatusMap();
+		Map<String, String> workStatusMap = employeeDAO.getWorkStatusMap();
 		model.addAttribute("workStatusMap", workStatusMap);
 
 		if (employeeInfo.getEmployeeId() > 0) {

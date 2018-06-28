@@ -60,12 +60,12 @@ $(function() {
 			<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
 			<tr>
 				<td bgcolor="#FAFAFA" width="30%">Năm:</td>
-				<td><form:select path="yearReport" value="${currentYear}" >
+				<td><form:select path="yearReport" value="${currentYear}" class="form-control animated">
 						<form:option value="${currentYear}" label="${currentYear}" />
 						<form:option value="${currentYear-1}" label="${currentYear-1}" />
 						<form:option value="${currentYear-2}" label="${currentYear-2}" />
 						<form:option value="${currentYear-3}" label="${currentYear-3}" />
-<%-- 						<c:forEach begin="0" end="3" varStatus="loop">
+					<%--<c:forEach begin="0" end="3" varStatus="loop">
 							<c:set var="currentYear" value="${year - loop.index}" />
 							<option value="${currentYear}"
 								${form.yearReport == currentYear ? 'selected="selected"' : ''}>${currentYear}</option>
@@ -73,7 +73,7 @@ $(function() {
 					</form:select></td>
 				<td bgcolor="#FAFAFA">Tháng:</td>
 				<td>
-					<form:select path="monthReport">
+					<form:select path="monthReport" class="form-control animated">
 						<form:option value="" label="Cả năm" />
 						<form:option value="01" label="Tháng 1" />
 						<form:option value="02" label="Tháng 2" />
@@ -92,19 +92,20 @@ $(function() {
 			</tr>
 			<tr>
 				<td bgcolor="#FAFAFA">Phòng ban:</td>
-				<td><form:select path="department">
+				<td><form:select path="department" class="form-control animated">
 						<form:option value="all" label="Tất cả phòng ban"></form:option>
 						<form:options items="${departmentMap}" />
 					</form:select></td>
-				<td bgcolor="#FAFAFA">Nhân viên:</td>
-				<td><form:select path="employeeId">
+				<td bgcolor="#FAFAFA" nowrap="nowrap">Nhân viên:</td>
+				<td><form:select path="employeeId" class="form-control animated">
 						<form:option value="0" label="Tất cả nhân viên"></form:option>
 						<form:options items="${employeeMap}" />
 					</form:select></td>
 			</tr>
 			<tr>
 				<td bgcolor="#FAFAFA">Thông tin cần báo cáo:</td>
-				<td colspan="3"><form:select path="leaveTypeReport">
+				<td colspan="3">
+				    <form:select path="leaveTypeReport" class="form-control animated">
 						<form:option value="TTLD" label="Trạng thái lao động"></form:option>
 						<form:option value="TLLDTP" label="Tỷ lệ lao động theo phòng ban"></form:option>
 						<form:option value="DM" label="Đi muộn"></form:option>
@@ -116,10 +117,8 @@ $(function() {
 		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Tạo biểu đồ"/> &nbsp;
 		<table align="center">
 			<tr>
-				<td><img src="${url}${chart}" alt="chart"
-					width="750" height="400" /></td>
+				<td><img src="${url}${chart}" alt="chart" width="750" height="400" /></td>
 			</tr>
-
 		</table>		
 	</form:form>	
 </body>

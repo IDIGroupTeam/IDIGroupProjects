@@ -34,7 +34,7 @@ $(function() {
 							department : val
 						},
 						success : function(obj) {
-							employeeIdSel = "<option value='0'>Tất cả nhân viên</option>";
+							employeeIdSel = "<option value='0'>Tất cả nhân viên hiện tại</option>";
 							for (i = 0; i < obj.length; i++) {
 								employeeIdSel += "<option value='" + obj[i].employeeId + "'>"
 										+ "Mã NV " + obj[i].employeeId +", "
@@ -63,7 +63,7 @@ $(function() {
 			<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
 			<tr>
 				<td bgcolor="#FAFAFA" width="30%">Chọn năm:</td>
-				<td><form:select path="yearReport">
+				<td><form:select path="yearReport" class="form-control animated">
 						<c:forEach begin="0" end="5" varStatus="loop">
 							<c:set var="currentYear" value="${year - loop.index}" />
 							<option value="${currentYear}"
@@ -71,7 +71,7 @@ $(function() {
 						</c:forEach>
 					</form:select></td>
 				<td bgcolor="#FAFAFA">Chọn tháng:</td>
-				<td><form:select path="monthReport">
+				<td><form:select path="monthReport" class="form-control animated">
 						<form:option value="" label="Cả năm" />
 						<form:option value="01" label="Tháng 1" />
 						<form:option value="02" label="Tháng 2" />
@@ -88,22 +88,28 @@ $(function() {
 					</form:select></td>
 			</tr>
 			<tr>
-				<td bgcolor="#FAFAFA">Chọn phòng ban:</td>
-				<td><form:select path="department">
+				<td bgcolor="#FAFAFA" nowrap="nowrap">Chọn phòng ban:</td>
+				<td><form:select path="department" class="form-control animated">
 						<form:option value="all" label="Tất cả phòng ban"></form:option>
 						<form:options items="${departmentMap}" var="department" />
 					</form:select></td>
-				<td bgcolor="#FAFAFA">Chọn nhân viên:</td>
-				<td><form:select path="employeeId">
-						<form:option value="0" label="Tất cả nhân viên"></form:option>
+				<td bgcolor="#FAFAFA" nowrap="nowrap">Chọn nhân viên:</td>
+				<td><form:select path="employeeId" class="form-control animated">
+						<form:option value="0" label="Tất cả nhân viên hiện tại"></form:option>
 						<form:options items="${employeeMap}" var="employeeId"/>
 					</form:select></td>
 			</tr>
 			<tr>
-				<td bgcolor="#FAFAFA">Lựa chọn các thông tin cần báo cáo</td>
+<!-- 				<td>
+				<div class="form-check checkbox-teal">
+					<label class="form-check-label" for="active">Chọn cả nhân viên đã nghỉ việc</label>
+					<input type="checkbox" class="form-check-input" name="active" value="active" id="active" />    		
+				</div>	 		
+				</td>	-->		
+				<td bgcolor="#FAFAFA">Chọn các thông tin cần báo cáo</td>
 				<td colspan="3"><form:select path="leaveTypeReport"
-						multiple="multiple" size="12">
-						<form:option value="TNC" label="Tính công"></form:option>
+						multiple="multiple" size="12" class="form-control animated">
+						<form:option value="TNC" label="Tính ngày công theo tháng"></form:option>
 						<form:option value="DM" label="Đi muộn"></form:option>
 						<form:option value="VS" label="Về sớm"></form:option>
 						<form:options items="${leaveTypeMap}" />

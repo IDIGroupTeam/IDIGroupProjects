@@ -38,7 +38,7 @@ tr:nth-child(even) {
 		<tr>
 			<td style="color: purple;"><i>Nhập thông tin nhân viên muốn tìm kiếm: Tên/Email/Account/Mã NV/Mã phòng/Mã chức vụ/trạng thái LĐ </i></td>
 			<td align="center">
-				<form:input path="searchValue" required="required"/>
+				<form:input path="searchValue" required="required" class="form-control animated"/>
 			</td>
 			<td>
 				<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Tìm" />
@@ -72,7 +72,7 @@ tr:nth-child(even) {
 					<td>${employee.email}</td>
 					<td>${employee.jobTitle}</td>
 					<td>${employee.department}</td>
-					<td nowrap="nowrap">${employee.workStatus}</td>
+					<td nowrap="nowrap">${employee.statusName}</td>
 					<!-- td>${employee.gender}</td-->
 					<td>${employee.phoneNo}</td>
 					<td><a href="/IDIHR/viewEmployee?employeeId=${employee.employeeId}">Xem</a></td>

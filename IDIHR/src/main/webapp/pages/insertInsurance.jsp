@@ -16,9 +16,10 @@
 </style>
 </head>
 <body>
+	<a href="${pageContext.request.contextPath}/insurance/"><button class="btn btn-primary btn-sm">Quay lại danh sách bảo hiểm</button></a>
+	<br/><br/>
 	<form:form modelAttribute="insuranceForm" method="POST"
-		action="insertInsurance">
-		<div class="table table-bordered">
+		action="insertInsurance">		
 			<table class="table">
 				<tbody>
 					<tr>
@@ -27,27 +28,27 @@
 					</tr>
 					<tr>
 						<td bgcolor="#E6E6E6">Chọn NV:</td>
-						<td><form:select path="employeeId">
+						<td><form:select path="employeeId" class="form-control animated">
 								<form:options items="${employeeMap}" />
 							</form:select></td>
-						<td bgcolor="#E6E6E6">Tỷ lệ đóng (%): Cty</td>
+						<td bgcolor="#E6E6E6">% Tỷ lệ đóng của công ty: </td>
 						<td><form:input path="percentSInsuC" size="6" maxlength="6"
-								required="required" /></td>
+								required="required" class="form-control animated"/></td>
 					</tr>
 					<tr>
 						<td bgcolor="#E6E6E6">Số sổ BHXH:</td>
 						<td><form:input path="socicalInsuNo" maxlength="12" size="12"
-								required="required" /></td>
-						<td bgcolor="#E6E6E6" align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Người LĐ</td>
+								required="required" class="form-control animated"/></td>
+						<td bgcolor="#E6E6E6">% Tỷ lệ đóng của người LĐ: </td>
 						<td><form:input path="percentSInsuE" size="6" maxlength="6"
-								required="required" /></td>
+								required="required" class="form-control animated"/></td>
 					</tr>
 					<tr>
 						<td bgcolor="#E6E6E6">Lương BH:</td>
-						<td><form:input path="salarySocicalInsu" size="12" maxlength="12"
+						<td><form:input path="salarySocicalInsu" size="12" maxlength="12" class="form-control animated"
 								required="required" title="Lương BH ít nhất phải bằng lương tối thiểu vùng"/></td>
 						<td bgcolor="#E6E6E6">Vùng lương:</td>
-						<td><form:select path="salaryZone">
+						<td><form:select path="salaryZone" class="form-control animated">
 								<form:option value="1" label="Vùng 1" />
 								<form:option value="2" label="Vùng 2" />
 								<form:option value="3" label="Vùng 3" />
@@ -56,12 +57,12 @@
 								
 					</tr>
 					<tr>
-<%-- 						<td bgcolor="#E6E6E6">Cty đóng:</td>
+<%-- 					<td bgcolor="#E6E6E6">Cty đóng:</td>
 						<td><form:input path="companyPay" maxlength="64"/></td> --%>
 						<td bgcolor="#E6E6E6">Nơi đóng:</td>
-						<td><form:input path="place" required="required" maxlength="64"/></td>
+						<td><form:input path="place" required="required" maxlength="64" class="form-control animated"/></td>
 						<td bgcolor="#E6E6E6">Phương thức đóng:</td>
-						<td><form:select path="payType">
+						<td><form:select path="payType" class="form-control animated">
 								<form:option value="T" label="Theo tháng" />
 								<form:option value="Q" label="Theo quý" />
 								<form:option value="N" label="Theo năm" />
@@ -69,7 +70,7 @@
 					</tr>
 					<tr>
 						<td bgcolor="#E6E6E6">Tình trạng đóng:</td>
-						<td><form:select path="status">
+						<td><form:select path="status" class="form-control animated">
 								<form:option value="Dang nop" label="Đang nộp" />
 								<form:option value="Dang nghi thai san" label="Đang nghỉ thai sản" />
 								<form:option value="Dang nghi om" label="Đang nghỉ ốm" />
@@ -83,20 +84,17 @@
 					</tr>
 					<tr>
 						<td bgcolor="#E6E6E6">Số thẻ BHYT:</td>
-						<td><form:input path="hInsuNo"  maxlength="12" /></td>
-						<td bgcolor="#E6E6E6">Nơi ĐK khám bệnh:</td>
-						<td><form:input path="hInsuPlace" maxlength="64"/></td>
+						<td><form:input path="hInsuNo"  maxlength="12" class="form-control animated"/></td>
+						<td bgcolor="#E6E6E6">Nơi ĐK khám chữa bệnh:</td>
+						<td><form:input path="hInsuPlace" maxlength="64" class="form-control animated"/></td>
 					<tr>
 					<tr>
-						<td bgcolor="#FBEFF2">Ghi chú:</td>
-						<td colspan="3"><form:textarea path="comment" cols="64" /></td>
-					<tr>
-						<td align="left"><input class="btn btn-primary btn-sm" type="submit" value="Lưu" /></td>
+						<td bgcolor="#E6E6E6">Ghi chú:</td>
+						<td colspan="3"><form:textarea path="comment" cols="64" class="form-control animated"/></td>
 					</tr>
 				</tbody>
 			</table>
-		</div>
-	</form:form>
-	 <a href="${pageContext.request.contextPath}/insurance/"><button class="btn btn-primary btn-sm">Thoát</button></a>
+			<input class="btn btn-primary btn-sm" type="submit" value="Lưu" />
+	</form:form>	
 </body>
 </html>

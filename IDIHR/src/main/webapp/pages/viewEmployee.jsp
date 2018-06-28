@@ -51,7 +51,7 @@
 					<td bgcolor="#E6E6E6">Account:</td>
 					<td><c:out value="${employeeForm.loginAccount}" /></td>
 					<td bgcolor="#E6E6E6">Trạng thái LĐ:</td>
-					<td><c:out value="${employeeForm.workStatus}" /></td>
+					<td><c:out value="${employeeForm.statusName}" /></td>
 				</tr>
 				<tr>
 					<td bgcolor="#E6E6E6">Giới tính:</td>
@@ -66,11 +66,12 @@
 					<td><c:out value="${employeeForm.department}" /></td>
 				</tr>
 				<tr>
-						<td bgcolor="#E6E6E6">Ngày vào cty:</td>
-						<td><c:out value="${employeeForm.joinDate}" /></td>
-						<td bgcolor="#E6E6E6">Ngày ký HĐLĐ:</td>
-						<td><c:out value="${employeeForm.officalJoinDate}" /></td>
-					</tr>
+					<td bgcolor="#E6E6E6">Ngày vào cty:</td>
+					<td><c:out value="${employeeForm.joinDate}" /></td>
+					<td bgcolor="#E6E6E6">Ngày ký HĐLĐ:</td>
+					<td><c:out value="${employeeForm.officalJoinDate}" /></td>
+					<td>Quốc tịch: <c:out value="${employeeForm.nation}" /></td>
+				</tr>
 				<tr>
 					<td bgcolor="#E6E6E6">CMND/CCCD/passportNo:</td>
 					<td><c:out value="${employeeForm.personalId}" /></td>
@@ -86,18 +87,16 @@
 
 					<td bgcolor="#E6E6E6">Đ/c thường trú:</td>
 					<td><c:out value="${employeeForm.permanentAdress}" /></td>
-					<td>Quốc tịch: <c:out value="${employeeForm.nation}" /></td>
+					
 				</tr>
 				<tr>
-					<td colspan="6" nowrap="nowrap" bgcolor="#F6CED8">Liên lạc
-						khẩn cấp:</td>
+					<td colspan="6" nowrap="nowrap" bgcolor="#F6CED8">Liên lạc khẩn cấp:</td>
 				</tr>
 				<tr>
 					<td bgcolor="#FBEFF2">Tên người liên lạc:</td>
 					<td><c:out value="${employeeForm.emerName}" /></td>
 					<td bgcolor="#FBEFF2">Số đt:</td>
 					<td><c:out value="${employeeForm.emerPhoneNo}" /></td>
-
 				</tr>
 
 				<tr>

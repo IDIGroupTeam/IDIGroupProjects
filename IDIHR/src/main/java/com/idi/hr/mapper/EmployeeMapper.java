@@ -38,6 +38,7 @@ public class EmployeeMapper implements RowMapper<EmployeeInfo> {
 		String nation = rs.getString("NATION");
 
 		String workStatus = rs.getString("WORK_STATUS");
+		String statusName = rs.getString("STATUS_NAME");
 		String bankNo = rs.getString("BANK_NO");
 		String bankName = rs.getString("BANK_NAME");
 		String bankBranch = rs.getString("BANK_BRANCH");
@@ -49,7 +50,7 @@ public class EmployeeMapper implements RowMapper<EmployeeInfo> {
 
 		return new EmployeeInfo(employeeId, loginAccount, gender, fullName, maritalStatus, jobTitle, department, DOB,
 				personalId, issueDate, issuePlace, phoneNo, joinDate, officalJoinDate, email, terminationDate, reasonforLeave,
-				currentAdress, permanentAdress, note, emerName, emerPhoneNo, nation, workStatus, bankNo, bankName,
+				currentAdress, permanentAdress, note, emerName, emerPhoneNo, nation, workStatus, statusName, bankNo, bankName,
 				bankBranch, imagePath, salarySocicalInsu, socicalInsuNo, healthInsuNo, percentSocicalInsu);
 
 	}

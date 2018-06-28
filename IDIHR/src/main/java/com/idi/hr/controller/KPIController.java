@@ -47,7 +47,6 @@ import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.LeaveDAO;
 import com.idi.hr.dao.TimekeepingDAO;
-import com.idi.hr.common.Utils;
 
 @Controller
 public class KPIController {
@@ -295,7 +294,7 @@ public class KPIController {
 				return "reportByKPI";
 				
 			} else if (typeReport.equalsIgnoreCase("TTLD")) {
-				Map<String, String> items = Utils.workStatusMap();
+				Map<String, String> items = employeeDAO.getWorkStatusMap();
 				Map<String, Integer> memberWorkStatus = new LinkedHashMap<String, Integer>();
 				for (Map.Entry<String, String> entry : items.entrySet()) {
 					// System.out.println("Item : " + entry.getKey() + " Count : " +

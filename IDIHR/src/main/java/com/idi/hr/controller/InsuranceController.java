@@ -47,13 +47,34 @@ public class InsuranceController {
 	private Map<String, String> employees() {
 		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
 		try {
+			//note: nhung 
 			List<EmployeeInfo> list = employeeDAO.getEmployees();
 			EmployeeInfo employee = new EmployeeInfo();
 			for (int i = 0; i < list.size(); i++) {
 				employee = (EmployeeInfo) list.get(i);
 				Integer id = employee.getEmployeeId();
 				employeeMap.put(id.toString(),
-						"Ma NV " + id + ", " + employee.getFullName() + ", phòng " + employee.getDepartment());
+						"Mã NV " + id + ", " + employee.getFullName() + ", phòng " + employee.getDepartment());
+			}
+
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return employeeMap;
+	}
+	
+	private Map<String, String> allEmployees() {
+		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
+		try {
+			//note: nhung 
+			List<EmployeeInfo> list = employeeDAO.getAllEmployees();
+			EmployeeInfo employee = new EmployeeInfo();
+			for (int i = 0; i < list.size(); i++) {
+				employee = (EmployeeInfo) list.get(i);
+				Integer id = employee.getEmployeeId();
+				employeeMap.put(id.toString(),
+						"Mã NV " + id + ", " + employee.getFullName() + ", phòng " + employee.getDepartment());
 			}
 
 		} catch (Exception e) {
@@ -105,7 +126,7 @@ public class InsuranceController {
 			model.addAttribute("formTitle", "Thêm mới thông tin bảo hiểm");
 			actionform = "insertInsurance";
 		}
-		System.err.println(actionform);
+		//System.err.println(actionform);
 		return actionform;
 	}
 
@@ -122,6 +143,11 @@ public class InsuranceController {
 			insurance = this.insuranceDAO.getInsurance(socicalInsuNo);
 			model.addAttribute("insuranceForm", insurance);
 			model.addAttribute("formTitle", "Thông tin bảo hiểm");
+			Map<String, String> employeeMap = this.allEmployees();
+			String name = "";
+			String id= String.valueOf(insurance.getEmployeeId());
+			name = employeeMap.get(id);
+			model.addAttribute("name", name);
 		}
 		if (insurance == null) {
 			return "redirect:/insurance/";
@@ -152,7 +178,7 @@ public class InsuranceController {
 			model.addAttribute("socicalInsuNo", socicalInsuNo);
 			model.addAttribute("employeeId", employeeId);
 			// Get employee info for insurance
-			Map<String, String> employeeMap = this.employees();
+			Map<String, String> employeeMap = this.allEmployees();
 			String name = "";
 			name = employeeMap.get(employeeId);
 			model.addAttribute("name", name);

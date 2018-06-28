@@ -33,6 +33,7 @@ public class EmployeeInfo implements Serializable {
 	private String nation;
 	//private File image;
 	private String workStatus;
+	private String statusName;
 	private String bankNo;
 	private String bankName;
 	private String bankBranch;
@@ -42,7 +43,7 @@ public class EmployeeInfo implements Serializable {
 	private String healthInsuNo;
 	private String percentSocicalInsu;
 	private int seniority;
-	
+		
 	public EmployeeInfo() {
 
 	}
@@ -51,7 +52,7 @@ public class EmployeeInfo implements Serializable {
 			String jobTitle, String department, String DOB, String personalId, String issueDate, String issuePlace, String phoneNo,
 			String joinDate, String officalJoinDate, String email, String terminationDate, String reasonforLeave,
 			String currentAdress, String permanentAdress, String note, String emerName, String emerPhoneNo,
-			String nation, String workStatus, String bankNo, String bankName, String bankBranch,
+			String nation, String workStatus, String statusName, String bankNo, String bankName, String bankBranch,
 			String imagePath, String salarySocicalInsu, String socicalInsuNo, String healthInsuNo,
 			String percentSocicalInsu) {
 
@@ -80,6 +81,7 @@ public class EmployeeInfo implements Serializable {
 		this.nation = nation;
 		//this.image = image;
 		this.workStatus = workStatus;
+		this.statusName = statusName;
 		this.bankNo = bankNo;
 		this.bankName = bankName;
 		this.bankBranch = bankBranch;
@@ -270,6 +272,14 @@ public class EmployeeInfo implements Serializable {
 		return image;
 	}*/
 
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
 	public String getEmerName() {
 		return emerName;
 	}
@@ -357,7 +367,7 @@ public class EmployeeInfo implements Serializable {
 	public void setPercentSocicalInsu(String percentSocicalInsu) {
 		this.percentSocicalInsu = percentSocicalInsu;
 	}
-
+	
 /*	public void setImage(File image) {
 		this.image = image;
 	}*/

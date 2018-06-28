@@ -1,15 +1,20 @@
 package com.idi.hr.dao;
 
 import java.nio.charset.Charset;
-
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.idi.hr.bean.EmployeeInfo;
@@ -43,10 +48,6 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	 * 
 	 * @param employeeId
 	 * @return employee object
-	 * @throws AppException
-	 *             If having any checked exception
-	 * @throws SysException
-	 *             If runtime exception happen
 	 */
 	public EmployeeInfo getEmployee(String employeeId) {
 
@@ -55,11 +56,9 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		Object[] params = new Object[] { employeeId };
 
 		EmployeeMapper mapper = new EmployeeMapper();
-
 		EmployeeInfo employee = jdbcTmpl.queryForObject(sql, params, mapper);
 
 		return employee;
-
 	}
 	
 	/**
@@ -76,10 +75,8 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		Object[] params = new Object[] { account };
 		
 		String accountNumber = jdbcTmpl.queryForObject(sql, String.class, params);
-		
-		//System.err.println(accountNumber);
-		return Integer.parseInt(accountNumber);
 
+		return Integer.parseInt(accountNumber);
 	}
 	
 	/**
@@ -100,17 +97,13 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		
 		//System.err.println(accountNumber);
 		return Integer.parseInt(numberEmployee);
-
 	}
 
 	/**
 	 * Insert or update a employee into database
 	 * 
 	 * @param employeeInfo
-	 * @throws AppException
-	 *             If having any checked exception
-	 * @throws SysException
-	 *             If runtime exception happen
+	 * @throws Exception
 	 */
 	public void insertOrUpdateEmployee(EmployeeInfo employeeInfo) throws Exception {
 		try {
@@ -150,17 +143,11 @@ public class EmployeeDAO extends JdbcDaoSupport {
 						employeeInfo.getSocicalInsuNo(), employeeInfo.getHealthInsuNo(),
 						employeeInfo.getPercentSocicalInsu() };
 				jdbcTmpl.update(sql, params);
-
-				// if (employeeInfo.getImage() != null) {
-				// stmt.setBinaryStream(++i, new ByteArrayInputStream(employeeInfo.getImage()),
-				// employeeInfo.getImage().length);
-				// }
 			}
 
 		} catch (Exception e) {
 			log.error(e, e);
 			throw e;
-
 		}
 	}
 	
@@ -180,7 +167,6 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);
 
 		return list;
-
 	}
 	
 	/**
@@ -206,7 +192,24 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		List<EmployeeInfo> list = jdbcTmpl.query(sqlUnicode, params, mapper);
 
 		return list;
-
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Map<String, String> getWorkStatusMap(){
+		Map<String, String> workStatusMap = new LinkedHashMap<String, String>();
+		String sql = hr.getProperty("GET_WORK_STATUS");
+		return jdbcTmpl.query(sql, new ResultSetExtractor<Map<String, String>>() {
+			@Override
+			public Map<String, String> extractData(ResultSet rs) throws SQLException, DataAccessException {
+				while(rs.next()) {
+					workStatusMap.put(rs.getString("STATUS_ID"), rs.getString("STATUS_NAME"));					
+				}
+				return workStatusMap;
+			}
+		});		
 	}
 	
 	/**
@@ -277,6 +280,5 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		List<EmployeeInfo> list = jdbcTmpl.query(sql, params, mapper);
 
 		return list;
-
 	}
 }

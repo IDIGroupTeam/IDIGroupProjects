@@ -31,7 +31,7 @@ tr:nth-child(even) {
 			<table class="table">
 				<tr>
 					<td><b><i>Chọn quý khác</i></b></td>
-					<td align="center"><form:select path="quarter">
+					<td align="center"><form:select path="quarter" class="form-control animated">
 							<%-- <form:option value="" label="-Chon quý-" /> --%>
 							<form:option value="1" label="Quý 1" />
 							<form:option value="2" label="Quý 2" />
@@ -52,6 +52,7 @@ tr:nth-child(even) {
 				<th>Họ tên</th>
 				<th>Chức vụ</th>
 				<th>Phòng</th>
+				<th>Trạng thái</th>
 				<th>Giới tính</th>
 				<th>Ngày sinh</th>
 				<th>Ngày vào cty</th>
@@ -63,6 +64,7 @@ tr:nth-child(even) {
 					<td>${employee.fullName}</td>
 					<td>${employee.jobTitle}</td>
 					<td>${employee.department}</td>
+					<td>${employee.statusName}</td>
 					<td>${employee.gender}</td>
 					<td>${employee.DOB}</td>
 					<td>${employee.joinDate}</td>

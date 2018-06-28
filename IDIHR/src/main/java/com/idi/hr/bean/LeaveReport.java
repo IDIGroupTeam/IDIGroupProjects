@@ -33,6 +33,8 @@ public class LeaveReport implements Serializable {
 	private int leaveSoonMValue = 0; // tong thoi gian ve som sang
 	private int leaveSoonAValue = 0; // tong thoi gian ve som chieu
 	
+	private String active;
+	
 	private String leaveTypeReport;	
 	private Map<String, String> leaveTypes;
 	
@@ -50,7 +52,14 @@ public class LeaveReport implements Serializable {
 		this.leaveRemain = leaveRemain;
 
 	}
-	
+
+	public String getActive() {
+		return active;
+	}
+
+	public void setActive(String active) {
+		this.active = active;
+	}
 	
 	public Map<String, String> getLeaveTypes() {
 		return leaveTypes;
