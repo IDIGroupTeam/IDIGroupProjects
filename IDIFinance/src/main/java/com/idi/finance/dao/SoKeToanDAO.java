@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.idi.finance.bean.chungtu.ChungTu;
-import com.idi.finance.bean.chungtu.TaiKhoan;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 
 public interface SoKeToanDAO {

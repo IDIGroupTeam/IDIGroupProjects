@@ -46,7 +46,8 @@ public class Tien {
 
 	@Override
 	public String toString() {
-		return soTien * loaiTien.getBanRa() + " " + loaiTien.getMaLt();
+		// return soTien * loaiTien.getBanRa() + " " + loaiTien.getMaLt();
+		return soTien + " " + giaTri;
 	}
 
 	@Override

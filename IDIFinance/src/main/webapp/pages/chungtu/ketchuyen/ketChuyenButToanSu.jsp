@@ -84,7 +84,7 @@
 	<div class="col-sm-4">
 		<form:select path="loaiKc" class="form-control">
 			<form:option value="${KetChuyenButToan.KCBT_CUOI_KY}">Kết chuyển cuối kỳ</form:option>
-			<form:option value="${KetChuyenButToan.KCBT_DAU_KY}">Kết chuyển đầu kỳ</form:option>
+			<%-- <form:option value="${KetChuyenButToan.KCBT_DAU_KY}">Kết chuyển đầu kỳ</form:option> --%>
 		</form:select>
 		<br />
 		<form:errors path="loaiKc" cssClass="error" />

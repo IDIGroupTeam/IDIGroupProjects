@@ -15,4 +15,6 @@ public interface KhoHangDAO {
 	public void themNhapKho(HangHoa hangHoa);
 
 	public void suaNhapKho(HangHoa hangHoa);
+
+	public void xoaKho(HangHoa hangHoa);
 }

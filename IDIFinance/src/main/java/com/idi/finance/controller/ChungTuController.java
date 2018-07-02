@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -53,7 +52,6 @@ import com.idi.finance.dao.NhaCungCapDAO;
 import com.idi.finance.dao.NhanVienDAO;
 import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
-import com.idi.finance.utils.ExpressionEval;
 import com.idi.finance.validator.ChungTuValidator;
 import com.idi.finance.validator.KetChuyenButToanValidator;
 
@@ -1325,7 +1323,7 @@ public class ChungTuController {
 						HangHoa hangHoa = iter.next();
 
 						double soLuong = khoHangDAO.laySoLuong(hangHoa);
-						if (soLuong == 0) {
+						if (soLuong == -1) {
 							khoHangDAO.themNhapKho(hangHoa);
 						} else {
 							hangHoa.setSoLuong(soLuong + hangHoa.getSoLuong());
@@ -1363,7 +1361,6 @@ public class ChungTuController {
 			Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
 			while (hhIter.hasNext()) {
 				HangHoa hangHoa = hhIter.next();
-
 				hangHoa.getGiaKho().setLoaiTien(chungTu.getLoaiTien());
 
 				// Tính tổng tiền mua hàng đề ghi vào tài khoản công nợ
@@ -1377,6 +1374,7 @@ public class ChungTuController {
 						&& hangHoa.getTkThueNk().getSoTien() != null) {
 					double thue = hangHoa.getTkThueNk().getSoTien().getSoTien() / chungTu.getLoaiTien().getBanRa();
 					hangHoa.getTkThueNk().getSoTien().setSoTien(thue);
+					hangHoa.getTkThueNk().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 					tongThue += thue;
 				}
 
@@ -1384,6 +1382,7 @@ public class ChungTuController {
 						&& hangHoa.getTkThueTtdb().getSoTien() != null) {
 					double thue = hangHoa.getTkThueTtdb().getSoTien().getSoTien() / chungTu.getLoaiTien().getBanRa();
 					hangHoa.getTkThueTtdb().getSoTien().setSoTien(thue);
+					hangHoa.getTkThueTtdb().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 					tongThue += thue;
 				}
 
@@ -1393,8 +1392,9 @@ public class ChungTuController {
 					// Có thuế Gtgt
 					double thue = hangHoa.getTkThueGtgt().getSoTien().getSoTien() / chungTu.getLoaiTien().getBanRa();
 					hangHoa.getTkThueGtgt().getSoTien().setSoTien(thue);
+					hangHoa.getTkThueGtgt().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 
-					if (hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("0")) {
+					if (hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						// Đây là trường hợp thuế Gtgt tính theo phương pháp trực tiếp
 						// Ghi thuế gtgt vào hàng hóa
 						tongThue += thue;
@@ -1655,59 +1655,106 @@ public class ChungTuController {
 
 			chungTu.setLoaiCt(ChungTu.CHUNG_TU_BAN_HANG);
 
-			// Chuẩn hóa dữ liệu trước khi cập nhật vào CSDL
-			// Đảm bảo các trường dữ liệu đúng với ý nghĩa của nó
-			// Đảm bảo giá trị được tính thống nhất theo loại tiền đã chọn
-			// Với từng loại hàng hóa
-			Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
-			while (hhIter.hasNext()) {
-				HangHoa hangHoa = hhIter.next();
+			if (chungTu.getHangHoaDs() != null) {
+				// Chuẩn hóa dữ liệu trước khi cập nhật vào CSDL
+				// Đảm bảo các trường dữ liệu đúng với ý nghĩa của nó
+				// Đảm bảo giá trị được tính thống nhất theo loại tiền đã chọn
+				// Với từng loại hàng hóa
+				Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
+				while (hhIter.hasNext()) {
+					HangHoa hangHoa = hhIter.next();
 
-				if (hangHoa.getTkThueGtgt() != null && hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() != null
-						&& !hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")
-						&& hangHoa.getTkThueGtgt().getSoTien() != null) {
-					// Có thuế Gtgt, tính theo phương pháp khấu trừ
-					double thue = hangHoa.getTkThueGtgt().getSoTien().getSoTien() / chungTu.getLoaiTien().getBanRa();
-					hangHoa.getTkThueGtgt().getSoTien().setSoTien(thue);
+					// Tổng thuế: thực ra chỉ một trong 2: thuế XNK hoặc thuế GTGT
+					double tongThue = 0;
+					if (hangHoa.getTkThueGtgt() != null && hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() != null
+							&& !hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")
+							&& hangHoa.getTkThueGtgt().getSoTien() != null) {
+						// Có thuế Gtgt, tính theo phương pháp khấu trừ
+						double thue = hangHoa.getTkThueGtgt().getSoTien().getSoTien()
+								/ chungTu.getLoaiTien().getBanRa();
+						hangHoa.getTkThueGtgt().getSoTien().setSoTien(thue);
+						hangHoa.getTkThueGtgt().getSoTien().setLoaiTien(chungTu.getLoaiTien());
+						tongThue += thue;
+					}
+
+					if (hangHoa.getTkThueXk() != null && hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null
+							&& !hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk().trim().equals("")
+							&& hangHoa.getTkThueXk().getSoTien() != null) {
+						double thue = hangHoa.getTkThueXk().getSoTien().getSoTien() / chungTu.getLoaiTien().getBanRa();
+						hangHoa.getTkThueXk().getSoTien().setSoTien(thue);
+						hangHoa.getTkThueXk().getSoTien().setLoaiTien(chungTu.getLoaiTien());
+						tongThue += thue;
+					}
+
+					// Tổng doanh thu
+					double tongDoanhThu = hangHoa.getSoLuong() * hangHoa.getDonGia().getSoTien()
+							* chungTu.getLoaiTien().getBanRa();
+					Tien doanhThu = new Tien();
+					doanhThu.setLoaiTien(chungTu.getLoaiTien());
+					doanhThu.setSoTien(tongDoanhThu);
+
+					if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
+							&& !hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+						hangHoa.getTkDoanhThu().setSoTien(doanhThu);
+					}
+
+					// Tổng thanh toán
+					double tongThanhToan = tongDoanhThu + tongThue;
+					Tien thanhToan = new Tien();
+					thanhToan.setLoaiTien(chungTu.getLoaiTien());
+					thanhToan.setSoTien(tongThanhToan);
+
+					if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
+							&& !hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+						hangHoa.getTkThanhtoan().setSoTien(thanhToan);
+					}
+
+					// Tổng giá vốn
+					double tongGiaVon = hangHoa.getSoLuong() * hangHoa.getGiaKho().getSoTien();
+					Tien giaVon = new Tien();
+					giaVon.setLoaiTien(chungTu.getLoaiTien());
+					giaVon.setSoTien(tongGiaVon);
+
+					if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
+							&& !hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+						hangHoa.getTkGiaVon().setSoTien(giaVon);
+					}
+
+					if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null
+							&& !hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+						hangHoa.getTkKho().setSoTien(giaVon);
+					}
 				}
 
-				double tongDoanhThu = hangHoa.getSoLuong() * hangHoa.getDonGia().getSoTien()
-						* chungTu.getLoaiTien().getBanRa();
-				Tien doanhThu = new Tien();
-				doanhThu.setLoaiTien(chungTu.getLoaiTien());
-				doanhThu.setSoTien(tongDoanhThu);
-
-				if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
-						&& !hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
-					hangHoa.getTkThanhtoan().setSoTien(doanhThu);
+				if (chungTu.getMaCt() > 0) {
+					chungTuDAO.capNhatChungTuKho(chungTu);
+					return "redirect:/chungtu/banhang/xem/" + chungTu.getMaCt();
+				} else {
+					chungTuDAO.themChungTuKho(chungTu);
 				}
 
-				if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
-						&& !hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
-					hangHoa.getTkDoanhThu().setSoTien(doanhThu);
+				// Xuất kho: cần thực hiện việc xuất kho
+				// Coi như dữ liệu đã được kiểm tra từ trước
+				// Cần phải làm chức năng kiểm tra đó sau
+				// Ta cũng có thể tách phần này thành một nút riêng
+				// giống phần mua hàng có nút nhập kho riêng
+				Iterator<HangHoa> iter = chungTu.getHangHoaDs().iterator();
+				while (hhIter.hasNext()) {
+					HangHoa hangHoa = hhIter.next();
+
+					// Kiểm tra số lượng tổn kho
+					double soLuong = khoHangDAO.laySoLuong(hangHoa);
+					if (hangHoa.getSoLuong() < soLuong) {
+						hangHoa.setSoLuong(soLuong - hangHoa.getSoLuong());
+						khoHangDAO.suaNhapKho(hangHoa);
+					} else if (hangHoa.getSoLuong() < soLuong) {
+						// Vì đã xuất hết hàng, có thể xóa kho, xóa giá
+						khoHangDAO.xoaKho(hangHoa);
+					} else {
+						// Không đủ hàng hóa để bán
+						// Cần bắn ra lỗi và thông báo
+					}
 				}
-
-				double tongGiaVon = hangHoa.getSoLuong() * hangHoa.getGiaKho().getSoTien();
-				Tien giaVon = new Tien();
-				giaVon.setLoaiTien(chungTu.getLoaiTien());
-				giaVon.setSoTien(tongGiaVon);
-
-				if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
-						&& !hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
-					hangHoa.getTkGiaVon().setSoTien(giaVon);
-				}
-
-				if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null
-						&& !hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
-					hangHoa.getTkKho().setSoTien(giaVon);
-				}
-			}
-
-			if (chungTu.getMaCt() > 0) {
-				chungTuDAO.capNhatChungTuKho(chungTu);
-				return "redirect:/chungtu/banhang/xem/" + chungTu.getMaCt();
-			} else {
-				chungTuDAO.themChungTuKho(chungTu);
 			}
 
 			return "redirect:/chungtu/banhang/danhsach";
@@ -2151,6 +2198,7 @@ public class ChungTuController {
 
 	@RequestMapping("/chungtu/hanghoa")
 	public @ResponseBody HangHoa layHangHoa(@RequestParam("maHh") int maHh) {
+		logger.info("maHh " + maHh);
 		return hangHoaDAO.layHangHoa(maHh);
 	}
 

@@ -703,13 +703,13 @@
 		function khoiTao() {
 			// Lấy các dòng mẫu sạch
 			hangTienDong = $("#hangTien" + (soDongTk - 1)).html();
-			hangTienDong = "_$ta" + hangTienDong + "_$tag";
+			hangTienDong = "<tr>" + hangTienDong + "</tr>";
 
 			thueDong = $("#thue" + (soDongTk - 1)).html();
-			thueDong = "_$ta" + thueDong + "_$tag";
+			thueDong = "<tr>" + thueDong + "</tr>";
 
 			chiPhiDong = $("#chiPhi" + (soDongTk - 1)).html();
-			chiPhiDong = "_$ta" + chiPhiDong + "_$tag";
+			chiPhiDong = "<tr>" + chiPhiDong + "</tr>";
 
 			if (soDongTk > 1) {
 				$("#hangTien" + (soDongTk - 1)).remove();
@@ -890,8 +890,9 @@
 			&nbsp;VND
 		</p>
 	</div>
-	
-	<label class="control-label col-sm-2" for=ngayLap>Ngày thanh toán</label>
+
+	<label class="control-label col-sm-2" for=ngayLap>Ngày thanh
+		toán</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
 			<form:input path="ngayTt" class="form-control" />
@@ -930,7 +931,8 @@
 
 <div class="row form-group">
 	<div class="col-sm-2">
-		<a href="${url}/chungtu/muahang/danhsach" class="btn btn-info btn-sm">Hủy</a>
+		<a href="${url}/chungtu/muahang/xem/${mainFinanceForm.maCt}"
+			class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu</button>
 	</div>
 </div>

@@ -3,6 +3,7 @@ package com.idi.finance.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -32,6 +33,9 @@ public class KhoHangDAOImpl implements KhoHangDAO {
 
 	@Value("${SUA_NHAP_KHO}")
 	private String SUA_NHAP_KHO;
+
+	@Value("${XOA_KHO_HANG}")
+	private String XOA_KHO_HANG;
 
 	private JdbcTemplate jdbcTmpl;
 
@@ -102,14 +106,17 @@ public class KhoHangDAOImpl implements KhoHangDAO {
 					new Object[] { hangHoa.getMaHh(), hangHoa.getKho().getMaKho(), hangHoa.getGiaKho().getMaGia() },
 					Double.class);
 		} catch (Exception e) {
-			return 0;
+			return -1;
 		}
 	}
 
 	@Override
 	public void themNhapKho(HangHoa hangHoa) {
-		String themNhapKho = THEM_NHAP_KHO;
+		if (hangHoa == null) {
+			return;
+		}
 
+		String themNhapKho = THEM_NHAP_KHO;
 		Date homNay = new Date();
 		try {
 			jdbcTmpl.update(themNhapKho, hangHoa.getMaHh(), hangHoa.getKho().getMaKho(), hangHoa.getGiaKho().getMaGia(),
@@ -121,8 +128,11 @@ public class KhoHangDAOImpl implements KhoHangDAO {
 
 	@Override
 	public void suaNhapKho(HangHoa hangHoa) {
-		String suaNhapKho = SUA_NHAP_KHO;
+		if (hangHoa == null) {
+			return;
+		}
 
+		String suaNhapKho = SUA_NHAP_KHO;
 		Date homNay = new Date();
 		try {
 			jdbcTmpl.update(suaNhapKho, hangHoa.getSoLuong(), new java.sql.Date(homNay.getTime()), hangHoa.getMaHh(),
@@ -132,4 +142,17 @@ public class KhoHangDAOImpl implements KhoHangDAO {
 		}
 	}
 
+	@Override
+	public void xoaKho(HangHoa hangHoa) {
+		if (hangHoa == null) {
+			return;
+		}
+
+		String xoaKho = XOA_KHO_HANG;
+		try {
+			jdbcTmpl.update(xoaKho, hangHoa.getMaHh(), hangHoa.getKho().getMaKho(), hangHoa.getGiaKho().getMaGia());
+		} catch (Exception e) {
+			logger.info(e.getMessage());
+		}
+	}
 }

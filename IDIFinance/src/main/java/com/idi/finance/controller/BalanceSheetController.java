@@ -28,6 +28,8 @@ import com.idi.finance.bean.cdkt.DuLieuKeToan;
 import com.idi.finance.bean.cdkt.KyKeToanCon;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.TaiKhoan;
+import com.idi.finance.bean.kyketoan.KyKeToan;
+import com.idi.finance.bean.kyketoan.SoDuKy;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BalanceSheetDAO;
 import com.idi.finance.dao.KyKeToanDAO;
@@ -197,9 +199,9 @@ public class BalanceSheetController {
 					+ " - " + form.getCuoi());
 			HashMap<Integer, String> kyDs = new HashMap<>();
 
-			// kyDs.put(KyKeToanCon.WEEK, "Tuần");
-			// kyDs.put(KyKeToanCon.MONTH, "Tháng");
-			// kyDs.put(KyKeToanCon.QUARTER, "Quý");
+			kyDs.put(KyKeToanCon.WEEK, "Tuần");
+			kyDs.put(KyKeToanCon.MONTH, "Tháng");
+			kyDs.put(KyKeToanCon.QUARTER, "Quý");
 			kyDs.put(KyKeToanCon.YEAR, "Năm");
 
 			Iterator<Integer> kyIter = kyDs.keySet().iterator();
@@ -413,6 +415,8 @@ public class BalanceSheetController {
 				}
 			}
 
+			List<SoDuKy> soDuKyDs = kyKeToanDAO.danhSachSoDuKy(form.getKyKeToan().getMaKyKt());
+
 			// Lấy danh mục tài khoản các cấp
 			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.cayTaiKhoan();
 
@@ -430,7 +434,8 @@ public class BalanceSheetController {
 				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt);
 
 				// Tính tổng nợ/có đầu kỳ, phát sinh nợ/có trong kỳ và số dư nợ/có cuối kỳ
-				duLieuKeToan = tongPhatSinh(duLieuKeToan, loaiTaiKhoanDs, duLieuKeToanMap.get(kyKtTruoc));
+				duLieuKeToan = tongPhatSinh(duLieuKeToan, loaiTaiKhoanDs, duLieuKeToanMap.get(kyKtTruoc),
+						form.getKyKeToan());
 
 				if (duLieuKeToan.getDuLieuKeToanDs() != null) {
 					Iterator<DuLieuKeToan> iter = duLieuKeToan.getDuLieuKeToanDs().iterator();
@@ -465,7 +470,8 @@ public class BalanceSheetController {
 					KyKeToanCon kyKtTruoc = kyKt.kyTruoc();
 
 					// Tính tổng nợ/có đầu kỳ, phát sinh nợ/có trong kỳ và số dư nợ/có cuối kỳ
-					duLieuKeToan = tongPhatSinh(duLieuKeToan, loaiTaiKhoanDs, duLieuKeToanMap.get(kyKtTruoc));
+					duLieuKeToan = tongPhatSinh(duLieuKeToan, loaiTaiKhoanDs, duLieuKeToanMap.get(kyKtTruoc),
+							form.getKyKeToan());
 
 					if (duLieuKeToan.getDuLieuKeToanDs() != null) {
 						Iterator<DuLieuKeToan> iter = duLieuKeToan.getDuLieuKeToanDs().iterator();
@@ -510,7 +516,7 @@ public class BalanceSheetController {
 	}
 
 	private DuLieuKeToan tongPhatSinh(DuLieuKeToan duLieuKeToan, List<LoaiTaiKhoan> loaiTaiKhoanDs,
-			DuLieuKeToan duLieuKeToanKyTruoc) {
+			DuLieuKeToan duLieuKeToanKyTruoc, KyKeToan kyKeToan) {
 		if (duLieuKeToan == null)
 			return null;
 
@@ -541,7 +547,7 @@ public class BalanceSheetController {
 				}
 
 				duLieuKeToanCon = tongPhatSinh(duLieuKeToanCon, loaiTaiKhoan.getLoaiTaiKhoanDs(),
-						duLieuKeToanConKyTruoc);
+						duLieuKeToanConKyTruoc, kyKeToan);
 				duLieuKeToanDs.add(duLieuKeToanCon);
 			}
 			duLieuKeToan.themDuLieuKeToan(duLieuKeToanDs);
@@ -560,11 +566,19 @@ public class BalanceSheetController {
 				Date cuoiKyTruoc = Utils.prevPeriod(duLieuKeToan.getKyKeToan()).getCuoi();
 				// Lấy tổng nợ đầu kỳ
 				double noDauKy = soKeToanDAO.tongPhatSinh(duLieuKeToan.getLoaiTaiKhoan().getMaTk(), LoaiTaiKhoan.NO,
-						null, cuoiKyTruoc);
+						kyKeToan.getBatDau(), cuoiKyTruoc);
 				// Lấy tổng có đầu kỳ
 				double coDauKy = soKeToanDAO.tongPhatSinh(duLieuKeToan.getLoaiTaiKhoan().getMaTk(), LoaiTaiKhoan.CO,
-						null, cuoiKyTruoc);
+						kyKeToan.getBatDau(), cuoiKyTruoc);
 				soDuDauKy = noDauKy - coDauKy;
+
+				try {
+					SoDuKy soDuKy = kyKeToanDAO.laySoDuKy(duLieuKeToan.getLoaiTaiKhoan().getMaTk(),
+							kyKeToan.getMaKyKt());
+					soDuDauKy = soDuDauKy + soDuKy.getNoDauKy() - soDuKy.getCoDauKy();
+				} catch (Exception e) {
+
+				}
 			}
 
 			tongNoPhatSinh = soKeToanDAO.tongPhatSinh(duLieuKeToan.getLoaiTaiKhoan().getMaTk(), LoaiTaiKhoan.NO,

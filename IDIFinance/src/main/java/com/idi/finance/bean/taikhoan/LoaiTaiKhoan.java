@@ -12,6 +12,7 @@ public class LoaiTaiKhoan {
 	public static final int CO = 1;
 	public static final String CO_XAU = "CO";
 
+	// Bộ tài khoản thông tư 200
 	public static final String TIEN_MAT = "111";
 	public static final String TIEN_MAT_VN = "1111";
 	public static final String TIEN_MAT_NT = "1112";
@@ -24,6 +25,10 @@ public class LoaiTaiKhoan {
 
 	public static final String PHAI_THU_KHACH_HANG = "131";
 	public static final String PHAI_TRA_NGUOI_BAN = "331";
+
+	public static final String LOI_NHUAN_CHUA_PHAN_PHOI = "421";
+	public static final String LOI_NHUAN_CHUA_PHAN_PHOI_KY_TRUOC = "4211";
+	public static final String LOI_NHUAN_CHUA_PHAN_PHOI_KY_NAY = "4212";
 
 	private String maTk;
 	private String tenTk;

@@ -67,12 +67,12 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 		if (loaiTaiKhoan == null)
 			return;
 
-		String updateTkQry = "UPDATE TAI_KHOAN_DANH_MUC SET TEN_TK=?, MA_TK_CHA=?, SO_DU=? WHERE MA_TK=?";
+		String updateTkQry = "UPDATE TAI_KHOAN_DANH_MUC SET TEN_TK=?, MA_TK_CHA=?, SO_DU=?, LUONG_TINH=? WHERE MA_TK=?";
 
 		// Update to DANH_MUC_TAI_KHOAN
 		try {
 			jdbcTmpl.update(updateTkQry, loaiTaiKhoan.getTenTk(), loaiTaiKhoan.getMaTkCha(), loaiTaiKhoan.getSoDu(),
-					loaiTaiKhoan.getMaTk());
+					loaiTaiKhoan.isLuongTinh(), loaiTaiKhoan.getMaTk());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -227,7 +227,7 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 	public LoaiTaiKhoan capNhatTaiKhoanNganHang(LoaiTaiKhoan loaiTaiKhoan) {
 		if (loaiTaiKhoan != null && loaiTaiKhoan.getMaTk() != null) {
 			String query = "SELECT * FROM NGAN_HANG_TAI_KHOAN WHERE MA_TK=?";
-			
+
 		}
 		return loaiTaiKhoan;
 	}

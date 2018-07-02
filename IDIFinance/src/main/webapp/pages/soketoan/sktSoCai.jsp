@@ -105,83 +105,89 @@
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU}">
 									<a
-										href="${url}/chungtu/phieuthu/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+										href="${url}/chungtu/phieuthu/xem/${nghiepVuKeToan.chungTu.maCt}"
+										target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI}">
 									<a
-										href="${url}/chungtu/phieuchi/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+										href="${url}/chungtu/phieuchi/xem/${nghiepVuKeToan.chungTu.maCt}"
+										target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
 									<a
-										href="${url}/chungtu/baono/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+										href="${url}/chungtu/baono/xem/${nghiepVuKeToan.chungTu.maCt}"
+										target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
 									<a
-										href="${url}/chungtu/baoco/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+										href="${url}/chungtu/baoco/xem/${nghiepVuKeToan.chungTu.maCt}"
+										target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH}">
 									<a
-										href="${url}/chungtu/ktth/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+										href="${url}/chungtu/ktth/xem/${nghiepVuKeToan.chungTu.maCt}"
+										target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">
 									<a
-										href="${url}/chungtu/muahang/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+										href="${url}/chungtu/muahang/xem/${nghiepVuKeToan.chungTu.maCt}"
+										target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAN_HANG}">
 									<a
-										href="${url}/chungtu/banhang/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+										href="${url}/chungtu/banhang/xem/${nghiepVuKeToan.chungTu.maCt}"
+										target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:otherwise>${nghiepVuKeToan.chungTu.loaiCt}${chungTu.soCt}</c:otherwise>
 							</c:choose></td>
 						<c:choose>
 							<c:when
-								test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU || nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
+								test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU || nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO || (nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH && nghiepVuKeToan.taiKhoanNo.soTien.soTien >= nghiepVuKeToan.taiKhoanCo.soTien.soTien)}">
 								<td>${nghiepVuKeToan.taiKhoanCo.lyDo}</td>
-								<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
-								<td class="text-right"><fmt:formatNumber
-										value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-										type="NUMBER"></fmt:formatNumber></td>
-								<td class="text-right">0</td>
+								<c:if
+									test="${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.contains(mainFinanceForm.taiKhoan)}">
+									<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
+									<td class="text-right"><fmt:formatNumber
+											value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+											type="NUMBER"></fmt:formatNumber></td>
+									<td class="text-right">0</td>
+								</c:if>
+								<c:if
+									test="${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk.contains(mainFinanceForm.taiKhoan)}">
+									<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
+									<td class="text-right">0</td>
+									<td class="text-right"><fmt:formatNumber
+											value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+											type="NUMBER"></fmt:formatNumber></td>
+								</c:if>
 								<td></td>
 							</c:when>
 							<c:when
-								test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI || nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
+								test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI || nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO || (nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH && nghiepVuKeToan.taiKhoanCo.soTien.soTien > nghiepVuKeToan.taiKhoanNo.soTien.soTien)}">
 								<td>${nghiepVuKeToan.taiKhoanNo.lyDo}</td>
-								<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
-								<td class="text-right">0</td>
-								<td class="text-right"><fmt:formatNumber
-										value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-										type="NUMBER"></fmt:formatNumber></td>
+								<c:if
+									test="${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.contains(mainFinanceForm.taiKhoan)}">
+									<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
+									<td class="text-right"><fmt:formatNumber
+											value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+											type="NUMBER"></fmt:formatNumber></td>
+									<td class="text-right">0</td>
+								</c:if>
+								<c:if
+									test="${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk.contains(mainFinanceForm.taiKhoan)}">
+									<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
+									<td class="text-right">0</td>
+									<td class="text-right"><fmt:formatNumber
+											value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+											type="NUMBER"></fmt:formatNumber></td>
+								</c:if>
 								<td></td>
-							</c:when>
-							<c:when
-								test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH}">
-								<c:choose>
-									<c:when test="${not empty nghiepVuKeToan.taiKhoanNo}">
-										<td>${nghiepVuKeToan.taiKhoanNo.lyDo}</td>
-										<td></td>
-										<td class="text-right"><fmt:formatNumber
-												value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-												type="NUMBER"></fmt:formatNumber></td>
-										<td class="text-right">0</td>
-										<td></td>
-									</c:when>
-									<c:otherwise>
-										<td>${nghiepVuKeToan.taiKhoanCo.lyDo}</td>
-										<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
-										<td class="text-right">0</td>
-										<td class="text-right"><fmt:formatNumber
-												value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-												type="NUMBER"></fmt:formatNumber></td>
-										<td></td>
-									</c:otherwise>
-								</c:choose>
 							</c:when>
 							<c:when
 								test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">

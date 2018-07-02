@@ -94,13 +94,9 @@ public class KyKeToanController {
 			model.addAttribute("kyKeToan", kyKeToan);
 
 			// Lấy số dư đầu và cuối kỳ của các nhóm tài khoản
-			// Nhóm tài khoản tiền mặt
-			List<SoDuKy> tienMatDs = kyKeToanDAO.danhSachSoDuKy(LoaiTaiKhoan.TIEN_MAT, maKyKt);
-			model.addAttribute("tienMatDs", tienMatDs);
-
-			// Nhóm tài khoản tiền gửi ngân hàng
-			List<SoDuKy> tienGuiDs = kyKeToanDAO.danhSachSoDuKy(LoaiTaiKhoan.TIEN_GUI_NGAN_HANG, maKyKt);
-			model.addAttribute("tienGuiDs", tienGuiDs);
+			// Nhóm tài khoản kế toán
+			List<SoDuKy> taiKhoanDs = kyKeToanDAO.danhSachSoDuKy(maKyKt);
+			model.addAttribute("taiKhoanDs", taiKhoanDs);
 
 			// Nhóm tài khoản CCDV, VT, HH
 
@@ -259,107 +255,97 @@ public class KyKeToanController {
 
 			// Tìm kỳ ngay trước nó
 			KyKeToan kyKeToanTruoc = kyKeToanDAO.layKyKeToanTruoc(kyKeToan);
+			if (kyKeToanTruoc != null) {
+				// Nếu có kỳ trước thì mới chuyển số dư
 
-			// Với từng loại nhóm tài khoản, ta làm đủ các bước sau:
+				// Với số dư các tài khoản
+				// Lấy danh sách tài khoản
+				List<LoaiTaiKhoan> taiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+				Iterator<LoaiTaiKhoan> iter = taiKhoanDs.iterator();
+				while (iter.hasNext()) {
+					LoaiTaiKhoan loaiTaiKhoan = iter.next();
 
-			// Với tài khoản tiền mặt
-			// Lấy danh sách tài khoản
-			List<LoaiTaiKhoan> tienMatDs = taiKhoanDAO.danhSachTaiKhoanTheoCap1(LoaiTaiKhoan.TIEN_MAT);
-
-			Iterator<LoaiTaiKhoan> tienMatIter = tienMatDs.iterator();
-			while (tienMatIter.hasNext()) {
-				LoaiTaiKhoan loaiTaiKhoan = tienMatIter.next();
-
-				if (kyKeToanTruoc != null) {
-					// Lấy số dư cuối kỳ trước
-
-					// Hoặc
-					// Tính tổng phát sinh kỳ trước
-					double noPhatSinh = soKeToanDAO.tongPhatSinh(loaiTaiKhoan.getMaTk(), LoaiTaiKhoan.NO,
-							kyKeToanTruoc.getBatDau(), kyKeToanTruoc.getKetThuc());
-
-					double coPhatSinh = soKeToanDAO.tongPhatSinh(loaiTaiKhoan.getMaTk(), LoaiTaiKhoan.CO,
-							kyKeToanTruoc.getBatDau(), kyKeToanTruoc.getKetThuc());
-
-					// Cộng số dư đầu kỳ trước để tính ra số dư cuối kỳ trước
-					SoDuKy soDuCuoiKyTruoc = kyKeToanDAO.laySoDuKy(loaiTaiKhoan.getMaTk(), kyKeToanTruoc.getMaKyKt());
-					double noDauKy = noPhatSinh - coPhatSinh;
 					try {
-						noDauKy = soDuCuoiKyTruoc.getNoDauKy() - soDuCuoiKyTruoc.getCoDauKy() + noPhatSinh - coPhatSinh;
+
+						if (loaiTaiKhoan.getMaTk().trim().equals(LoaiTaiKhoan.LOI_NHUAN_CHUA_PHAN_PHOI_KY_NAY)) {
+							// Riêng với tài khoản 4212 thì ko chuyển gì
+							continue;
+						} else if (loaiTaiKhoan.getMaTk().trim()
+								.equals(LoaiTaiKhoan.LOI_NHUAN_CHUA_PHAN_PHOI_KY_TRUOC)) {
+							// Riêng với tài khoản 4211 thì sẽ chuyển sang 4211
+							double noPhatSinh = soKeToanDAO.tongPhatSinh(LoaiTaiKhoan.LOI_NHUAN_CHUA_PHAN_PHOI_KY_NAY,
+									LoaiTaiKhoan.NO, kyKeToanTruoc.getBatDau(), kyKeToanTruoc.getKetThuc());
+
+							double coPhatSinh = soKeToanDAO.tongPhatSinh(LoaiTaiKhoan.LOI_NHUAN_CHUA_PHAN_PHOI_KY_NAY,
+									LoaiTaiKhoan.CO, kyKeToanTruoc.getBatDau(), kyKeToanTruoc.getKetThuc());
+
+							// TÍnh số dư 4212 của kỳ trước để ghi vào 4211 của kỳ này
+							double noDauKy = noPhatSinh - coPhatSinh;
+
+							logger.info(loaiTaiKhoan.getMaTk() + ": " + noDauKy);
+							SoDuKy soDuKy = new SoDuKy();
+							soDuKy.setKyKeToan(kyKeToan);
+							soDuKy.setLoaiTaiKhoan(loaiTaiKhoan);
+							if (noDauKy > 0) {
+								// Nếu số dư khác 0 thì mới cần chuyển
+								// copy số dư cuối kỳ trước sang thành số dư đầu kỳ mới
+
+								soDuKy.setNoDauKy(noDauKy);
+								soDuKy.setCoDauKy(0);
+								kyKeToanDAO.themSoDuDauKy(soDuKy);
+							} else if (noDauKy < 0) {
+								soDuKy.setNoDauKy(0);
+								soDuKy.setCoDauKy(noDauKy * -1);
+								kyKeToanDAO.themSoDuDauKy(soDuKy);
+							}
+						} else {
+							// Còn các tài khoản còn lại thì chuyển bình thường
+							// Lấy nợ đầu kỳ - có đầu kỳ + nợ phát sinh - có phát sinh
+							// Hoặc lấy số dư cuối kỳ trước
+							// Tính tổng phát sinh kỳ trước
+							double noPhatSinh = soKeToanDAO.tongPhatSinh(loaiTaiKhoan.getMaTk(), LoaiTaiKhoan.NO,
+									kyKeToanTruoc.getBatDau(), kyKeToanTruoc.getKetThuc());
+
+							double coPhatSinh = soKeToanDAO.tongPhatSinh(loaiTaiKhoan.getMaTk(), LoaiTaiKhoan.CO,
+									kyKeToanTruoc.getBatDau(), kyKeToanTruoc.getKetThuc());
+
+							// Cộng số dư đầu kỳ trước để tính ra số dư cuối kỳ trước
+							SoDuKy soDuKyTruoc = kyKeToanDAO.laySoDuKy(loaiTaiKhoan.getMaTk(),
+									kyKeToanTruoc.getMaKyKt());
+							double noDauKy = noPhatSinh - coPhatSinh;
+							try {
+								noDauKy = soDuKyTruoc.getNoDauKy() - soDuKyTruoc.getCoDauKy() + noPhatSinh - coPhatSinh;
+							} catch (Exception e) {
+
+							}
+
+							logger.info(loaiTaiKhoan.getMaTk() + ": " + noDauKy);
+							SoDuKy soDuKy = new SoDuKy();
+							soDuKy.setKyKeToan(kyKeToan);
+							soDuKy.setLoaiTaiKhoan(loaiTaiKhoan);
+							if (noDauKy > 0) {
+								// Nếu số dư khác 0 thì mới cần chuyển
+								// copy số dư cuối kỳ trước sang thành số dư đầu kỳ mới
+
+								soDuKy.setNoDauKy(noDauKy);
+								soDuKy.setCoDauKy(0);
+								kyKeToanDAO.themSoDuDauKy(soDuKy);
+							} else if (noDauKy < 0) {
+								soDuKy.setNoDauKy(0);
+								soDuKy.setCoDauKy(noDauKy * -1);
+								kyKeToanDAO.themSoDuDauKy(soDuKy);
+							}
+						}
 					} catch (Exception e) {
-
+						logger.info(e.getMessage());
 					}
-
-					// copy số dư cuối kỳ trước sang thành số dư đầu kỳ mới
-					SoDuKy soDuKy = new SoDuKy();
-					soDuKy.setKyKeToan(kyKeToan);
-					soDuKy.setLoaiTaiKhoan(loaiTaiKhoan);
-					soDuKy.setNoDauKy(noDauKy);
-					soDuKy.setCoDauKy(0);
-
-					kyKeToanDAO.themSoDuDauKy(soDuKy);
-				} else {
-					// copy số dư cuối kỳ trước sang thành số dư đầu kỳ mới
-					SoDuKy soDuKy = new SoDuKy();
-					soDuKy.setKyKeToan(kyKeToan);
-					soDuKy.setLoaiTaiKhoan(loaiTaiKhoan);
-					soDuKy.setNoDauKy(0);
-					soDuKy.setCoDauKy(0);
-
-					kyKeToanDAO.themSoDuDauKy(soDuKy);
-				}
-			}
-
-			// Với tài khoản tiền gửi
-			// Lấy danh sách tài khoản
-			List<LoaiTaiKhoan> tienGuiDs = taiKhoanDAO.danhSachTaiKhoanTheoCap1(LoaiTaiKhoan.TIEN_GUI_NGAN_HANG);
-
-			Iterator<LoaiTaiKhoan> tienGuiIter = tienGuiDs.iterator();
-			while (tienGuiIter.hasNext()) {
-				LoaiTaiKhoan loaiTaiKhoan = tienGuiIter.next();
-
-				if (kyKeToanTruoc != null) {
-					// Lấy số dư cuối kỳ trước
-
-					// Hoặc
-					// Tính tổng phát sinh kỳ trước
-					double noPhatSinh = soKeToanDAO.tongPhatSinh(loaiTaiKhoan.getMaTk(), LoaiTaiKhoan.NO,
-							kyKeToanTruoc.getBatDau(), kyKeToanTruoc.getKetThuc());
-
-					double coPhatSinh = soKeToanDAO.tongPhatSinh(loaiTaiKhoan.getMaTk(), LoaiTaiKhoan.CO,
-							kyKeToanTruoc.getBatDau(), kyKeToanTruoc.getKetThuc());
-
-					// Cộng số dư đầu kỳ trước để tính ra số dư cuối kỳ trước
-					SoDuKy soDuCuoiKyTruoc = kyKeToanDAO.laySoDuKy(loaiTaiKhoan.getMaTk(), kyKeToanTruoc.getMaKyKt());
-					double noDauKy = noPhatSinh - coPhatSinh;
-					try {
-						noDauKy = soDuCuoiKyTruoc.getNoDauKy() - soDuCuoiKyTruoc.getCoDauKy() + noPhatSinh - coPhatSinh;
-					} catch (Exception e) {
-
-					}
-
-					// copy số dư cuối kỳ trước sang thành số dư đầu kỳ mới
-					SoDuKy soDuKy = new SoDuKy();
-					soDuKy.setKyKeToan(kyKeToan);
-					soDuKy.setLoaiTaiKhoan(loaiTaiKhoan);
-					soDuKy.setNoDauKy(noDauKy);
-					soDuKy.setCoDauKy(0);
-
-					kyKeToanDAO.themSoDuDauKy(soDuKy);
-				} else {
-					// copy số dư cuối kỳ trước sang thành số dư đầu kỳ mới
-					SoDuKy soDuKy = new SoDuKy();
-					soDuKy.setKyKeToan(kyKeToan);
-					soDuKy.setLoaiTaiKhoan(loaiTaiKhoan);
-					soDuKy.setNoDauKy(0);
-					soDuKy.setCoDauKy(0);
-
-					kyKeToanDAO.themSoDuDauKy(soDuKy);
 				}
 			}
 
 			return "redirect:/kyketoan/xem/" + maKyKt;
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			e.printStackTrace();
 			return "error";
 		}

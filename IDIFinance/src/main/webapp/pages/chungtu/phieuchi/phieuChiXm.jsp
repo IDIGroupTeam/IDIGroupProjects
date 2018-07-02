@@ -21,9 +21,9 @@
 							BootstrapDialog
 									.confirm({
 										title : 'Xác nhận',
-										message : 'Bạn muốn xóa phiếu chi này không ?_$tag_$tSố phiếu chi:_$ta ${chungTu.soCt}_$tag_ _$tNgày lập:_$ta '
+										message : 'Bạn muốn xóa phiếu chi này không ?<br/><b>Số phiếu chi:</b> ${chungTu.soCt}<br /> <b>Ngày lập:</b> '
 												+ ngayLap
-												+ ' _$tag_ _$tLý do:_$ta ${chungTu.lyDo}',
+												+ ' <br /> <b>Lý do:</b> ${chungTu.lyDo}',
 										type : 'type-info',
 										closable : true,
 										draggable : true,

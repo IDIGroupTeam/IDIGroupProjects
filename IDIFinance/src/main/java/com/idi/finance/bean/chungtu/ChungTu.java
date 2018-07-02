@@ -58,11 +58,25 @@ public class ChungTu {
 	private List<NghiepVuKeToan> nvktDs;
 	private List<KetChuyenButToan> kcbtDs;
 
-	private TaiKhoan tkThue;
 	private LoaiTaiKhoan thanhToan;
 	private KhoHang khoBai;
 	private List<HangHoa> hangHoaDs;
 	private KyKeToan kyKeToan;
+
+	private TaiKhoan tkThanhtoan;
+	private TaiKhoan tkKho;
+	private TaiKhoan tkDoanhThu;
+	private TaiKhoan tkChiPhi;
+	private TaiKhoan tkGiaVon;
+	private TaiKhoan tkChietKhau;
+	private TaiKhoan tkGiamGia;
+	private TaiKhoan tkTraLai;
+
+	private TaiKhoan tkThueGtgt;
+	private TaiKhoan tkThueTtdb;
+	private TaiKhoan tkThueXk;
+	private TaiKhoan tkThueNk;
+	private TaiKhoan tkThue;
 
 	public int getMaCt() {
 		return maCt;
@@ -296,14 +310,6 @@ public class ChungTu {
 		}
 	}
 
-	public TaiKhoan getTkThue() {
-		return tkThue;
-	}
-
-	public void setTkThue(TaiKhoan tkThue) {
-		this.tkThue = tkThue;
-	}
-
 	public LoaiTaiKhoan getThanhToan() {
 		return thanhToan;
 	}
@@ -327,17 +333,24 @@ public class ChungTu {
 	public void setHangHoaDs(List<HangHoa> hangHoaDs) {
 		soTien = new Tien();
 		soTien.setLoaiTien(getLoaiTien());
+		this.hangHoaDs = new ArrayList<>();
 
-		if (hangHoaDs != null) {
-			Iterator<HangHoa> iter = hangHoaDs.iterator();
-			while (iter.hasNext()) {
-				HangHoa hangHoa = iter.next();
-				double tien = hangHoa.getSoLuong() * hangHoa.getGiaKho().getSoTien();
-				soTien.setSoTien(tien + soTien.getSoTien());
-			}
-			soTien.setGiaTri(soTien.getSoTien() * soTien.getLoaiTien().getBanRa());
-		}
-		this.hangHoaDs = hangHoaDs;
+		tkThanhtoan = null;
+		tkKho = null;
+		tkDoanhThu = null;
+		tkChiPhi = null;
+		tkGiaVon = null;
+		tkChietKhau = null;
+		tkGiamGia = null;
+		tkTraLai = null;
+
+		tkThueGtgt = null;
+		tkThueTtdb = null;
+		tkThueXk = null;
+		tkThueNk = null;
+		tkThue = null;
+
+		themHangHoa(hangHoaDs);
 	}
 
 	public void themHangHoa(HangHoa hangHoa) {
@@ -347,7 +360,12 @@ public class ChungTu {
 		if (hangHoaDs == null)
 			hangHoaDs = new ArrayList<>();
 
-		if (!hangHoaDs.contains(hangHoa)) {
+		// Cập nhật giá trị trước khi thêm
+		capNhatTongHangHoa(hangHoa);
+
+		// Thêm vào danh sách
+		int pos = hangHoaDs.indexOf(hangHoa);
+		if (pos == -1) {
 			hangHoaDs.add(hangHoa);
 			if (hangHoa.getGiaKho() != null) {
 				double tien = hangHoa.getSoLuong() * hangHoa.getGiaKho().getSoTien();
@@ -355,6 +373,10 @@ public class ChungTu {
 				soTien.setSoTien(tien + soTien.getSoTien());
 				soTien.setGiaTri(soTien.getSoTien() * soTien.getLoaiTien().getBanRa());
 			}
+		} else {
+			// Trộn thêm các tài khoản vào
+			HangHoa hangHoaTmpl = hangHoaDs.get(pos);
+			hangHoaTmpl.tronTk(hangHoa);
 		}
 	}
 
@@ -366,6 +388,328 @@ public class ChungTu {
 		while (iter.hasNext()) {
 			HangHoa hangHoa = iter.next();
 			themHangHoa(hangHoa);
+		}
+	}
+
+	private void capNhatTongHangHoa(HangHoa hangHoa) {
+		if (hangHoa == null)
+			return;
+
+		// Các tk dùng cho mua bán
+		if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan() != null
+				&& hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
+				&& !hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+			if (tkThanhtoan == null) {
+				tkThanhtoan = new TaiKhoan();
+				tkThanhtoan.setLoaiTaiKhoan(hangHoa.getTkThanhtoan().getLoaiTaiKhoan());
+				tkThanhtoan.setSoDu(hangHoa.getTkThanhtoan().getSoDu());
+			}
+
+			int pos = hangHoaDs.indexOf(hangHoa);
+			HangHoa hangHoaTmpl = null;
+			if (pos > -1) {
+				hangHoaTmpl = hangHoaDs.get(pos);
+			}
+
+			if (pos == -1 || (hangHoaTmpl != null && hangHoaTmpl.getTkThanhtoan() == null)
+					|| (hangHoaTmpl != null && hangHoaTmpl.getTkThanhtoan() != null
+							&& hangHoaTmpl.getTkThanhtoan().getSoTien().getSoTien() == 0)) {
+				tkThanhtoan.getSoTien().setSoTien(
+						tkThanhtoan.getSoTien().getSoTien() + hangHoa.getTkThanhtoan().getSoTien().getSoTien());
+				tkThanhtoan.getSoTien().setGiaTri(
+						tkThanhtoan.getSoTien().getGiaTri() + hangHoa.getTkThanhtoan().getSoTien().getGiaTri());
+			}
+		}
+
+		if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan() != null
+				&& hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null
+				&& !hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+			if (tkKho == null) {
+				tkKho = new TaiKhoan();
+				tkKho.setLoaiTaiKhoan(hangHoa.getTkKho().getLoaiTaiKhoan());
+				tkKho.setSoDu(hangHoa.getTkKho().getSoDu());
+			}
+
+			int pos = hangHoaDs.indexOf(hangHoa);
+			HangHoa hangHoaTmpl = null;
+			if (pos > -1) {
+				hangHoaTmpl = hangHoaDs.get(pos);
+			}
+
+			if (pos == -1 || (hangHoaTmpl != null && hangHoaTmpl.getTkKho() == null) || (hangHoaTmpl != null
+					&& hangHoaTmpl.getTkKho() == null && hangHoaTmpl.getTkKho().getSoTien().getSoTien() == 0)) {
+				tkKho.getSoTien().setSoTien(tkKho.getSoTien().getSoTien() + hangHoa.getTkKho().getSoTien().getSoTien());
+				tkKho.getSoTien().setGiaTri(tkKho.getSoTien().getGiaTri() + hangHoa.getTkKho().getSoTien().getGiaTri());
+			}
+		}
+
+		if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan() != null
+				&& hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
+				&& !hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+			if (tkDoanhThu == null) {
+				tkDoanhThu = new TaiKhoan();
+				tkDoanhThu.setLoaiTaiKhoan(hangHoa.getTkDoanhThu().getLoaiTaiKhoan());
+				tkDoanhThu.setSoDu(hangHoa.getTkDoanhThu().getSoDu());
+			}
+
+			int pos = hangHoaDs.indexOf(hangHoa);
+			HangHoa hangHoaTmpl = null;
+			if (pos > -1) {
+				hangHoaTmpl = hangHoaDs.get(pos);
+			}
+
+			if (pos == -1 || (hangHoaTmpl != null && hangHoaTmpl.getTkDoanhThu() == null)
+					|| (hangHoaTmpl != null && hangHoaTmpl.getTkDoanhThu() == null
+							&& hangHoaTmpl.getTkDoanhThu().getSoTien().getSoTien() == 0)) {
+				tkDoanhThu.getSoTien().setSoTien(
+						tkDoanhThu.getSoTien().getSoTien() + hangHoa.getTkDoanhThu().getSoTien().getSoTien());
+				tkDoanhThu.getSoTien().setGiaTri(
+						tkDoanhThu.getSoTien().getGiaTri() + hangHoa.getTkDoanhThu().getSoTien().getGiaTri());
+			}
+		}
+
+		if (hangHoa.getTkChiPhi() != null && hangHoa.getTkChiPhi().getLoaiTaiKhoan() != null
+				&& hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk() != null
+				&& !hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+			if (tkChiPhi == null) {
+				tkChiPhi = new TaiKhoan();
+				tkChiPhi.setLoaiTaiKhoan(hangHoa.getTkChiPhi().getLoaiTaiKhoan());
+				tkChiPhi.setSoDu(hangHoa.getTkChiPhi().getSoDu());
+			}
+
+			int pos = hangHoaDs.indexOf(hangHoa);
+			HangHoa hangHoaTmpl = null;
+			if (pos > -1) {
+				hangHoaTmpl = hangHoaDs.get(pos);
+			}
+
+			if (pos == -1 || (hangHoaTmpl != null && hangHoaTmpl.getTkChiPhi() == null) || (hangHoaTmpl != null
+					&& hangHoaTmpl.getTkChiPhi() == null && hangHoaTmpl.getTkChiPhi().getSoTien().getSoTien() == 0)) {
+				tkChiPhi.getSoTien()
+						.setSoTien(tkChiPhi.getSoTien().getSoTien() + hangHoa.getTkChiPhi().getSoTien().getSoTien());
+				tkChiPhi.getSoTien()
+						.setGiaTri(tkChiPhi.getSoTien().getGiaTri() + hangHoa.getTkChiPhi().getSoTien().getGiaTri());
+			}
+		}
+
+		if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan() != null
+				&& hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
+				&& !hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+			if (tkGiaVon == null) {
+				tkGiaVon = new TaiKhoan();
+				tkGiaVon.setLoaiTaiKhoan(hangHoa.getTkGiaVon().getLoaiTaiKhoan());
+				tkGiaVon.setSoDu(hangHoa.getTkGiaVon().getSoDu());
+			}
+
+			int pos = hangHoaDs.indexOf(hangHoa);
+			HangHoa hangHoaTmpl = null;
+			if (pos > -1) {
+				hangHoaTmpl = hangHoaDs.get(pos);
+			}
+
+			if (pos == -1 || (hangHoaTmpl != null && hangHoaTmpl.getTkGiaVon() == null) || (hangHoaTmpl != null
+					&& hangHoaTmpl.getTkGiaVon() == null && hangHoaTmpl.getTkGiaVon().getSoTien().getSoTien() == 0)) {
+				tkGiaVon.getSoTien()
+						.setSoTien(tkGiaVon.getSoTien().getSoTien() + hangHoa.getTkGiaVon().getSoTien().getSoTien());
+				tkGiaVon.getSoTien()
+						.setGiaTri(tkGiaVon.getSoTien().getGiaTri() + hangHoa.getTkGiaVon().getSoTien().getGiaTri());
+			}
+		}
+
+		if (hangHoa.getTkChietKhau() != null && hangHoa.getTkChietKhau().getLoaiTaiKhoan() != null
+				&& hangHoa.getTkChietKhau().getLoaiTaiKhoan().getMaTk() != null
+				&& !hangHoa.getTkChietKhau().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+			if (tkChietKhau == null) {
+				tkChietKhau = new TaiKhoan();
+				tkChietKhau.setLoaiTaiKhoan(hangHoa.getTkChietKhau().getLoaiTaiKhoan());
+				tkChietKhau.setSoDu(hangHoa.getTkChietKhau().getSoDu());
+			}
+
+			int pos = hangHoaDs.indexOf(hangHoa);
+			HangHoa hangHoaTmpl = null;
+			if (pos > -1) {
+				hangHoaTmpl = hangHoaDs.get(pos);
+			}
+
+			if (pos == -1 || (hangHoaTmpl != null && hangHoaTmpl.getTkChietKhau() == null)
+					|| (hangHoaTmpl != null && hangHoaTmpl.getTkChietKhau() == null
+							&& hangHoaTmpl.getTkChietKhau().getSoTien().getSoTien() == 0)) {
+				tkChietKhau.getSoTien().setSoTien(
+						tkChietKhau.getSoTien().getSoTien() + hangHoa.getTkChietKhau().getSoTien().getSoTien());
+				tkChietKhau.getSoTien().setGiaTri(
+						tkChietKhau.getSoTien().getGiaTri() + hangHoa.getTkChietKhau().getSoTien().getGiaTri());
+			}
+		}
+
+		if (hangHoa.getTkGiamGia() != null && hangHoa.getTkGiamGia().getLoaiTaiKhoan() != null
+				&& hangHoa.getTkGiamGia().getLoaiTaiKhoan().getMaTk() != null
+				&& !hangHoa.getTkGiamGia().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+			if (tkGiamGia == null) {
+				tkGiamGia = new TaiKhoan();
+				tkGiamGia.setLoaiTaiKhoan(hangHoa.getTkGiamGia().getLoaiTaiKhoan());
+				tkGiamGia.setSoDu(hangHoa.getTkGiamGia().getSoDu());
+			}
+
+			int pos = hangHoaDs.indexOf(hangHoa);
+			HangHoa hangHoaTmpl = null;
+			if (pos > -1) {
+				hangHoaTmpl = hangHoaDs.get(pos);
+			}
+
+			if (pos == -1 || (hangHoaTmpl != null && hangHoaTmpl.getTkGiamGia() == null) || (hangHoaTmpl != null
+					&& hangHoaTmpl.getTkGiamGia() == null && hangHoaTmpl.getTkGiamGia().getSoTien().getSoTien() == 0)) {
+				tkGiamGia.getSoTien()
+						.setSoTien(tkGiamGia.getSoTien().getSoTien() + hangHoa.getTkGiamGia().getSoTien().getSoTien());
+				tkGiamGia.getSoTien()
+						.setGiaTri(tkGiamGia.getSoTien().getGiaTri() + hangHoa.getTkGiamGia().getSoTien().getGiaTri());
+			}
+		}
+
+		if (hangHoa.getTkTraLai() != null && hangHoa.getTkTraLai().getLoaiTaiKhoan() != null
+				&& hangHoa.getTkTraLai().getLoaiTaiKhoan().getMaTk() != null
+				&& !hangHoa.getTkTraLai().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+			if (tkTraLai == null) {
+				tkTraLai = new TaiKhoan();
+				tkTraLai.setLoaiTaiKhoan(hangHoa.getTkTraLai().getLoaiTaiKhoan());
+				tkTraLai.setSoDu(hangHoa.getTkTraLai().getSoDu());
+			}
+
+			int pos = hangHoaDs.indexOf(hangHoa);
+			HangHoa hangHoaTmpl = null;
+			if (pos > -1) {
+				hangHoaTmpl = hangHoaDs.get(pos);
+			}
+
+			if (pos == -1 || (hangHoaTmpl != null && hangHoaTmpl.getTkTraLai() == null) || (hangHoaTmpl != null
+					&& hangHoaTmpl.getTkTraLai() == null && hangHoaTmpl.getTkTraLai().getSoTien().getSoTien() == 0)) {
+				tkTraLai.getSoTien()
+						.setSoTien(tkTraLai.getSoTien().getSoTien() + hangHoa.getTkTraLai().getSoTien().getSoTien());
+				tkTraLai.getSoTien()
+						.setGiaTri(tkTraLai.getSoTien().getGiaTri() + hangHoa.getTkTraLai().getSoTien().getGiaTri());
+			}
+		}
+
+		// Các tk thuế
+		if (hangHoa.getTkThueGtgt() != null && hangHoa.getTkThueGtgt().getLoaiTaiKhoan() != null
+				&& hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() != null
+				&& !hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+			if (tkThueGtgt == null) {
+				tkThueGtgt = new TaiKhoan();
+				tkThueGtgt.setLoaiTaiKhoan(hangHoa.getTkThueGtgt().getLoaiTaiKhoan());
+				tkThueGtgt.setSoDu(hangHoa.getTkThueGtgt().getSoDu());
+			}
+
+			int pos = hangHoaDs.indexOf(hangHoa);
+			HangHoa hangHoaTmpl = null;
+			if (pos > -1) {
+				hangHoaTmpl = hangHoaDs.get(pos);
+			}
+
+			if (pos == -1 || (hangHoaTmpl != null && hangHoaTmpl.getTkThueGtgt() == null)
+					|| (hangHoaTmpl != null && hangHoaTmpl.getTkThueGtgt() == null
+							&& hangHoaTmpl.getTkThueGtgt().getSoTien().getSoTien() == 0)) {
+				tkThueGtgt.getSoTien().setSoTien(
+						tkThueGtgt.getSoTien().getSoTien() + hangHoa.getTkThueGtgt().getSoTien().getSoTien());
+				tkThueGtgt.getSoTien().setGiaTri(
+						tkThueGtgt.getSoTien().getGiaTri() + hangHoa.getTkThueGtgt().getSoTien().getGiaTri());
+			}
+		}
+
+		if (hangHoa.getTkThueTtdb() != null && hangHoa.getTkThueTtdb().getLoaiTaiKhoan() != null
+				&& hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk() != null
+				&& !hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+			if (tkThueTtdb == null) {
+				tkThueTtdb = new TaiKhoan();
+				tkThueTtdb.setLoaiTaiKhoan(hangHoa.getTkThueTtdb().getLoaiTaiKhoan());
+				tkThueTtdb.setSoDu(hangHoa.getTkThueTtdb().getSoDu());
+			}
+
+			int pos = hangHoaDs.indexOf(hangHoa);
+			HangHoa hangHoaTmpl = null;
+			if (pos > -1) {
+				hangHoaTmpl = hangHoaDs.get(pos);
+			}
+
+			if (pos == -1 || (hangHoaTmpl != null && hangHoaTmpl.getTkThueTtdb() == null)
+					|| (hangHoaTmpl != null && hangHoaTmpl.getTkThueTtdb() == null
+							&& hangHoaTmpl.getTkThueTtdb().getSoTien().getSoTien() == 0)) {
+				tkThueTtdb.getSoTien().setSoTien(
+						tkThueTtdb.getSoTien().getSoTien() + hangHoa.getTkThueTtdb().getSoTien().getSoTien());
+				tkThueTtdb.getSoTien().setGiaTri(
+						tkThueTtdb.getSoTien().getGiaTri() + hangHoa.getTkThueTtdb().getSoTien().getGiaTri());
+			}
+		}
+
+		if (hangHoa.getTkThueXk() != null && hangHoa.getTkThueXk().getLoaiTaiKhoan() != null
+				&& hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null
+				&& !hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+			if (tkThueXk == null) {
+				tkThueXk = new TaiKhoan();
+				tkThueXk.setLoaiTaiKhoan(hangHoa.getTkThueXk().getLoaiTaiKhoan());
+				tkThueXk.setSoDu(hangHoa.getTkThueXk().getSoDu());
+			}
+
+			int pos = hangHoaDs.indexOf(hangHoa);
+			HangHoa hangHoaTmpl = null;
+			if (pos > -1) {
+				hangHoaTmpl = hangHoaDs.get(pos);
+			}
+
+			if (pos == -1 || (hangHoaTmpl != null && hangHoaTmpl.getTkThueXk() == null) || (hangHoaTmpl != null
+					&& hangHoaTmpl.getTkThueXk() == null && hangHoaTmpl.getTkThueXk().getSoTien().getSoTien() == 0)) {
+				tkThueXk.getSoTien()
+						.setSoTien(tkThueXk.getSoTien().getSoTien() + hangHoa.getTkThueXk().getSoTien().getSoTien());
+				tkThueXk.getSoTien()
+						.setGiaTri(tkThueXk.getSoTien().getGiaTri() + hangHoa.getTkThueXk().getSoTien().getGiaTri());
+			}
+		}
+
+		if (hangHoa.getTkThueNk() != null && hangHoa.getTkThueNk().getLoaiTaiKhoan() != null
+				&& hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk() != null
+				&& !hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+			if (tkThueNk == null) {
+				tkThueNk = new TaiKhoan();
+				tkThueNk.setLoaiTaiKhoan(hangHoa.getTkThueNk().getLoaiTaiKhoan());
+				tkThueNk.setSoDu(hangHoa.getTkThueNk().getSoDu());
+			}
+
+			int pos = hangHoaDs.indexOf(hangHoa);
+			HangHoa hangHoaTmpl = null;
+			if (pos > -1) {
+				hangHoaTmpl = hangHoaDs.get(pos);
+			}
+
+			if (pos == -1 || (hangHoaTmpl != null && hangHoaTmpl.getTkThueNk() == null) || (hangHoaTmpl != null
+					&& hangHoaTmpl.getTkThueNk() == null && hangHoaTmpl.getTkThueNk().getSoTien().getSoTien() == 0)) {
+				tkThueNk.getSoTien()
+						.setSoTien(tkThueNk.getSoTien().getSoTien() + hangHoa.getTkThueNk().getSoTien().getSoTien());
+				tkThueNk.getSoTien()
+						.setGiaTri(tkThueNk.getSoTien().getGiaTri() + hangHoa.getTkThueNk().getSoTien().getGiaTri());
+			}
+		}
+
+		if (hangHoa.getTkThue() != null && hangHoa.getTkThue().getLoaiTaiKhoan() != null
+				&& hangHoa.getTkThue().getLoaiTaiKhoan().getMaTk() != null
+				&& !hangHoa.getTkThue().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+			if (tkThue == null) {
+				tkThue = new TaiKhoan();
+				tkThue.setLoaiTaiKhoan(hangHoa.getTkThue().getLoaiTaiKhoan());
+				tkThue.setSoDu(hangHoa.getTkThue().getSoDu());
+			}
+
+			int pos = hangHoaDs.indexOf(hangHoa);
+			HangHoa hangHoaTmpl = null;
+			if (pos > -1) {
+				hangHoaTmpl = hangHoaDs.get(pos);
+			}
+
+			if (pos == -1 || (hangHoaTmpl != null && hangHoaTmpl.getTkThue() == null) || (hangHoaTmpl != null
+					&& hangHoaTmpl.getTkThue() == null && hangHoaTmpl.getTkThue().getSoTien().getSoTien() == 0)) {
+				tkThue.getSoTien()
+						.setSoTien(tkThue.getSoTien().getSoTien() + hangHoa.getTkThue().getSoTien().getSoTien());
+				tkThue.getSoTien()
+						.setGiaTri(tkThue.getSoTien().getGiaTri() + hangHoa.getTkThue().getSoTien().getGiaTri());
+			}
 		}
 	}
 
@@ -396,7 +740,6 @@ public class ChungTu {
 
 	public int getSoDongNkc() {
 		int soDongNkc = 1;
-
 		if (loaiCt.equals(CHUNG_TU_KT_TH)) {
 			if (taiKhoanNoDs == null) {
 				if (taiKhoanCoDs != null) {
@@ -409,6 +752,43 @@ public class ChungTu {
 					soDongNkc += taiKhoanNoDs.size() + taiKhoanCoDs.size();
 				}
 			}
+		} else if (loaiCt.equals(CHUNG_TU_MUA_HANG)) {
+			soDongNkc = 0;
+			if (tkKho != null && tkKho.getSoTien() != null && tkKho.getSoTien().getSoTien() > 0) {
+				soDongNkc++;
+			}
+			if (tkThanhtoan != null && tkThanhtoan.getSoTien() != null && tkThanhtoan.getSoTien().getSoTien() > 0) {
+				soDongNkc++;
+			}
+			if (tkThueGtgt != null && tkThueGtgt.getSoTien() != null && tkThueGtgt.getSoTien().getSoTien() > 0) {
+				soDongNkc++;
+			}
+			if (tkThueTtdb != null && tkThueTtdb.getSoTien() != null && tkThueTtdb.getSoTien().getSoTien() > 0) {
+				soDongNkc++;
+			}
+			if (tkThueNk != null && tkThueNk.getSoTien() != null && tkThueNk.getSoTien().getSoTien() > 0) {
+				soDongNkc++;
+			}
+		} else if (loaiCt.equals(CHUNG_TU_BAN_HANG)) {
+			soDongNkc = 0;
+			if (tkKho != null && tkKho.getSoTien() != null && tkKho.getSoTien().getSoTien() > 0) {
+				soDongNkc++;
+				// Giá vốn ghi cùng dòng với tkKho
+			}
+			if (tkThanhtoan != null && tkThanhtoan.getSoTien() != null && tkThanhtoan.getSoTien().getSoTien() > 0) {
+				soDongNkc++;
+			}
+			if (tkDoanhThu != null && tkDoanhThu.getSoTien() != null && tkDoanhThu.getSoTien().getSoTien() > 0) {
+				soDongNkc++;
+			}
+			if (tkThueGtgt != null && tkThueGtgt.getSoTien() != null && tkThueGtgt.getSoTien().getSoTien() > 0) {
+				soDongNkc++;
+			}
+			if (tkThueXk != null && tkThueXk.getSoTien() != null && tkThueXk.getSoTien().getSoTien() > 0) {
+				soDongNkc++;
+			}
+		} else if (loaiCt.equals(CHUNG_TU_KET_CHUYEN)) {
+
 		} else {
 			soDongNkc += getSoTkLonNhat();
 		}
@@ -422,6 +802,110 @@ public class ChungTu {
 
 	public void setKyKeToan(KyKeToan kyKeToan) {
 		this.kyKeToan = kyKeToan;
+	}
+
+	public TaiKhoan getTkThanhtoan() {
+		return tkThanhtoan;
+	}
+
+	public void setTkThanhtoan(TaiKhoan tkThanhtoan) {
+		this.tkThanhtoan = tkThanhtoan;
+	}
+
+	public TaiKhoan getTkKho() {
+		return tkKho;
+	}
+
+	public void setTkKho(TaiKhoan tkKho) {
+		this.tkKho = tkKho;
+	}
+
+	public TaiKhoan getTkDoanhThu() {
+		return tkDoanhThu;
+	}
+
+	public void setTkDoanhThu(TaiKhoan tkDoanhThu) {
+		this.tkDoanhThu = tkDoanhThu;
+	}
+
+	public TaiKhoan getTkChiPhi() {
+		return tkChiPhi;
+	}
+
+	public void setTkChiPhi(TaiKhoan tkChiPhi) {
+		this.tkChiPhi = tkChiPhi;
+	}
+
+	public TaiKhoan getTkGiaVon() {
+		return tkGiaVon;
+	}
+
+	public void setTkGiaVon(TaiKhoan tkGiaVon) {
+		this.tkGiaVon = tkGiaVon;
+	}
+
+	public TaiKhoan getTkChietKhau() {
+		return tkChietKhau;
+	}
+
+	public void setTkChietKhau(TaiKhoan tkChietKhau) {
+		this.tkChietKhau = tkChietKhau;
+	}
+
+	public TaiKhoan getTkGiamGia() {
+		return tkGiamGia;
+	}
+
+	public void setTkGiamGia(TaiKhoan tkGiamGia) {
+		this.tkGiamGia = tkGiamGia;
+	}
+
+	public TaiKhoan getTkTraLai() {
+		return tkTraLai;
+	}
+
+	public void setTkTraLai(TaiKhoan tkTraLai) {
+		this.tkTraLai = tkTraLai;
+	}
+
+	public TaiKhoan getTkThueGtgt() {
+		return tkThueGtgt;
+	}
+
+	public void setTkThueGtgt(TaiKhoan tkThueGtgt) {
+		this.tkThueGtgt = tkThueGtgt;
+	}
+
+	public TaiKhoan getTkThueTtdb() {
+		return tkThueTtdb;
+	}
+
+	public void setTkThueTtdb(TaiKhoan tkThueTtdb) {
+		this.tkThueTtdb = tkThueTtdb;
+	}
+
+	public TaiKhoan getTkThueXk() {
+		return tkThueXk;
+	}
+
+	public void setTkThueXk(TaiKhoan tkThueXk) {
+		this.tkThueXk = tkThueXk;
+	}
+
+	public TaiKhoan getTkThueNk() {
+		return tkThueNk;
+	}
+
+	public void setTkThueNk(TaiKhoan tkThueNk) {
+		this.tkThueNk = tkThueNk;
+	}
+
+	public TaiKhoan getTkThue() {
+		return tkThue;
+	}
+
+	public void setTkThue(TaiKhoan tkThue) {
+		this.tkThue = tkThue;
 	}
 
 	@Override

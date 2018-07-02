@@ -79,7 +79,19 @@
 				<a href="${url}/kyketoan/chuyensodu/${kyKeToan.maKyKt}"
 					class="btn btn-info btn-sm"
 					title="Chuyển số dư cuối kỳ trước sang số dư đầu kỳ hiện tại">Chuyển
-					số dư</a>
+					số dư từ kỳ trước</a>
+			</c:when>
+		</c:choose>
+		<c:choose>
+			<c:when test="${kyKeToan.trangThai==1}">
+				<a href="#" class="btn btn-info btn-sm disabled"
+					title="Nhập số dư đầu kỳ">Nhập số dư đầu kỳ</a>
+			</c:when>
+		</c:choose>
+		<c:choose>
+			<c:when test="${kyKeToan.trangThai==1}">
+				<a href="#" class="btn btn-info btn-sm disabled"
+					title="Xuất số dư cuối kỳ">Xuất số dư cuối kỳ</a>
 			</c:when>
 		</c:choose>
 		<c:choose>
@@ -117,7 +129,7 @@
 <hr />
 <h4>Số dự đầu kỳ, cuối kỳ</h4>
 <div>
-	<ul class="nav nav-tabs nav-pills nav-justified">
+	<!-- <ul class="nav nav-tabs nav-pills nav-justified">
 		<li class="active"><a data-toggle="tab" href="#tienMat">Tài
 				khoản tiền mặt</a></li>
 		<li><a data-toggle="tab" href="#tienGui">Tài khoản gửi ngân
@@ -125,10 +137,22 @@
 		<li><a data-toggle="tab" href="#ccdv">Tài khoản CCDV, vật tư,
 				hàng hóa</a></li>
 		<li><a data-toggle="tab" href="#dt">Tài khoản theo đối tượng</a></li>
+	</ul> -->
+	<ul class="nav nav-tabs nav-pills nav-justified">
+		<li class="active"><a data-toggle="tab" href="#sdTaiKhoan">Số
+				dư tài khoản</a></li>
+		<!-- <li><a data-toggle="tab" href="#sdCongNoKH">Công nợ khách
+				hàng</a></li>
+		<li><a data-toggle="tab" href="#sdCongNoNCC">Công nợ nhà cung
+				cấp</a></li>
+		<li><a data-toggle="tab" href="#sdCongNoNV">Công nợ nhân viên</a></li> -->
+		<li><a data-toggle="tab" href="#sdTonKho">Tồn kho VTHH</a></li>
+		<li><a data-toggle="tab" href="#sdCCDC">Công cụ, dụng cụ</a></li>
+		<li><a data-toggle="tab" href="#sdTSCD">Tài sản cố định</a></li>
 	</ul>
 
 	<div class="tab-content table-responsive sub-content">
-		<div id="tienMat" class="tab-pane fade in active">
+		<div id="sdTaiKhoan" class="tab-pane fade in active">
 			<table class="table table-bordered table-hover">
 				<thead>
 					<tr>
@@ -145,7 +169,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${tienMatDs}" var="tienMat">
+					<c:forEach items="${taiKhoanDs}" var="tienMat">
 						<tr>
 							<td>${tienMat.loaiTaiKhoan.maTk}</td>
 							<td>${tienMat.loaiTaiKhoan.tenTk}</td>
@@ -162,7 +186,7 @@
 				</tbody>
 			</table>
 		</div>
-		<div id="tienGui" class="tab-pane fade">
+		<%-- <div id="sdCongNoKH" class="tab-pane fade">
 			<table class="table table-bordered table-hover">
 				<thead>
 					<tr>
@@ -196,7 +220,7 @@
 				</tbody>
 			</table>
 		</div>
-		<div id="ccdv" class="tab-pane fade">
+		<div id="sdCongNoNCC" class="tab-pane fade">
 			<table class="table table-bordered table-hover">
 				<thead>
 					<tr>
@@ -224,7 +248,35 @@
 				</tbody>
 			</table>
 		</div>
-		<div id="dt" class="tab-pane fade">
+		<div id="sdCongNoNV" class="tab-pane fade">
+			<table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<th rowspan="2" class="text-center">Mã TK</th>
+						<th rowspan="2" class="text-center">Tên TK</th>
+						<th colspan="2" class="text-center">Đầu kỳ</th>
+						<th colspan="2" class="text-center">Cuối kỳ</th>
+					</tr>
+					<tr>
+						<th class="text-center">Nợ</th>
+						<th class="text-center">Có</th>
+						<th class="text-center">Nợ</th>
+						<th class="text-center">Có</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div> --%>
+		<div id="sdTonKho" class="tab-pane fade">
 			<table class="table table-bordered table-hover">
 				<thead>
 					<tr>
@@ -252,6 +304,63 @@
 				</tbody>
 			</table>
 		</div>
+		<div id="sdCCDC" class="tab-pane fade">
+			<table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<th rowspan="2" class="text-center">Mã TK</th>
+						<th rowspan="2" class="text-center">Tên TK</th>
+						<th colspan="2" class="text-center">Đầu kỳ</th>
+						<th colspan="2" class="text-center">Cuối kỳ</th>
+					</tr>
+					<tr>
+						<th class="text-center">Nợ</th>
+						<th class="text-center">Có</th>
+						<th class="text-center">Nợ</th>
+						<th class="text-center">Có</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="sdTSCD" class="tab-pane fade">
+			<table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<th rowspan="2" class="text-center">Mã TK</th>
+						<th rowspan="2" class="text-center">Tên TK</th>
+						<th colspan="2" class="text-center">Đầu kỳ</th>
+						<th colspan="2" class="text-center">Cuối kỳ</th>
+					</tr>
+					<tr>
+						<th class="text-center">Nợ</th>
+						<th class="text-center">Có</th>
+						<th class="text-center">Nợ</th>
+						<th class="text-center">Có</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
 	</div>
 </div>
 <hr />

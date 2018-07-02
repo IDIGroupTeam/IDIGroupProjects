@@ -1,6 +1,5 @@
 package com.idi.finance.validator;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import org.springframework.validation.Validator;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;
 import com.idi.finance.bean.chungtu.TaiKhoan;
-import com.idi.finance.bean.hanghoa.DonGia;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
@@ -339,6 +337,12 @@ public class ChungTuValidator implements Validator {
 
 				if (chungTu.getLoaiTien().getBanRa() == 0) {
 					errors.rejectValue("loaiTien.banRa", "NotEmptyOrEqual0.chungTu.loaiTien.banRa");
+				}
+
+				// Giới hạn không để cả hai bên nợ có đề có số tài khoản lớn hơn 1
+				if (chungTu.getTaiKhoanNoDs() != null && chungTu.getTaiKhoanNoDs().size() > 1
+						&& chungTu.getTaiKhoanCoDs() != null && chungTu.getTaiKhoanCoDs().size() > 1) {
+					errors.rejectValue("soTien.soTien", "tooMany.taiKhoan.noCo");
 				}
 
 				// Kiểm tra dữ liệu phần định khoản

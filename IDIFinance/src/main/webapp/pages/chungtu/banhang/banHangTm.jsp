@@ -337,7 +337,7 @@
 			} else {
 				param += "&maKho=0";
 			}
-
+			
 			$
 					.ajax({
 						url : "${url}/chungtu/hanghoa/giavonds",
@@ -892,8 +892,9 @@
 			&nbsp;VND
 		</p>
 	</div>
-	
-	<label class="control-label col-sm-2" for=ngayLap>Ngày thanh toán</label>
+
+	<label class="control-label col-sm-2" for=ngayLap>Ngày thanh
+		toán</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
 			<form:input path="ngayTt" class="form-control" />

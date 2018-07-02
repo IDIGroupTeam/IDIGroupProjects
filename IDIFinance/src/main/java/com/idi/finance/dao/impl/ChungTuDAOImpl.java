@@ -274,22 +274,6 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 				// Với mỗi chứng từ
 				if (chungTu.getHangHoaDs() != null) {
-					// Nếu chứng từ mới có danh sách hàng hóa cần bổ sung
-					// Thì sắp xếp danh sách hàng hóa của chứng từ mới trước
-					List<HangHoa> hangHoaDs = new ArrayList<>();
-					Iterator<HangHoa> hangHoaIter = chungTu.getHangHoaDs().iterator();
-					while (hangHoaIter.hasNext()) {
-						HangHoa hangHoa = hangHoaIter.next();
-
-						int pos = hangHoaDs.indexOf(hangHoa);
-						if (pos > -1) {
-							hangHoaDs.get(pos).tronTk(hangHoa);
-						} else {
-							hangHoaDs.add(hangHoa);
-						}
-					}
-					chungTu.setHangHoaDs(hangHoaDs);
-
 					// Rồi gộp danh sách hàng hóa chứng từ mới vào danh sách hàng hóa chứng từ cũ
 					int pos = ketQua.indexOf(chungTu);
 					if (pos > -1) {
@@ -299,13 +283,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
 							while (hhIter.hasNext()) {
 								HangHoa hangHoa = hhIter.next();
-
-								int posTmpl = chungTuTmpl.getHangHoaDs().indexOf(hangHoa);
-								if (posTmpl > -1) {
-									chungTuTmpl.getHangHoaDs().get(posTmpl).tronTk(hangHoa);
-								} else {
-									chungTuTmpl.themHangHoa(hangHoa);
-								}
+								chungTuTmpl.themHangHoa(hangHoa);
 							}
 						} else {
 							chungTuTmpl.themHangHoa(chungTu.getHangHoaDs());
@@ -502,22 +480,6 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 				// Với mỗi chứng từ
 				if (chungTu.getHangHoaDs() != null) {
-					// Nếu chứng từ mới có danh sách hàng hóa cần bổ sung
-					// Thì sắp xếp danh sách hàng hóa của chứng từ mới trước
-					List<HangHoa> hangHoaDs = new ArrayList<>();
-					Iterator<HangHoa> hangHoaIter = chungTu.getHangHoaDs().iterator();
-					while (hangHoaIter.hasNext()) {
-						HangHoa hangHoa = hangHoaIter.next();
-
-						int pos = hangHoaDs.indexOf(hangHoa);
-						if (pos > -1) {
-							hangHoaDs.get(pos).tronTk(hangHoa);
-						} else {
-							hangHoaDs.add(hangHoa);
-						}
-					}
-					chungTu.setHangHoaDs(hangHoaDs);
-
 					// Rồi gộp danh sách hàng hóa chứng từ mới vào danh sách hàng hóa chứng từ cũ
 					int pos = ketQua.indexOf(chungTu);
 					if (pos > -1) {
@@ -527,13 +489,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
 							while (hhIter.hasNext()) {
 								HangHoa hangHoa = hhIter.next();
-
-								int posTmpl = chungTuTmpl.getHangHoaDs().indexOf(hangHoa);
-								if (posTmpl > -1) {
-									chungTuTmpl.getHangHoaDs().get(posTmpl).tronTk(hangHoa);
-								} else {
-									chungTuTmpl.themHangHoa(hangHoa);
-								}
+								chungTuTmpl.themHangHoa(hangHoa);
 							}
 						} else {
 							chungTuTmpl.themHangHoa(chungTu.getHangHoaDs());
@@ -601,7 +557,10 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					stt.setDate(4, ngayLap);
 					java.sql.Date ngayHt = new java.sql.Date(chungTu.getNgayHt().getTime());
 					stt.setDate(5, ngayHt);
-					java.sql.Date ngayTt = new java.sql.Date(chungTu.getNgayTt().getTime());
+					java.sql.Date ngayTt = null;
+					if (chungTu.getNgayTt() != null) {
+						ngayTt = new java.sql.Date(chungTu.getNgayTt().getTime());
+					}
 					stt.setDate(6, ngayTt);
 					stt.setString(7, chungTu.getLyDo());
 					stt.setString(8, chungTu.getLoaiTien().getMaLt());
@@ -762,7 +721,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 	@Override
 	public void themChungTuKho(ChungTu chungTu) {
-		if (chungTu == null || chungTu.getKcbtDs() == null || chungTu.getKcbtDs().size() == 0) {
+		if (chungTu == null || chungTu.getHangHoaDs() == null || chungTu.getHangHoaDs().size() == 0) {
 			return;
 		}
 
@@ -787,7 +746,10 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					stt.setDate(4, ngayLap);
 					java.sql.Date ngayHt = new java.sql.Date(chungTu.getNgayHt().getTime());
 					stt.setDate(5, ngayHt);
-					java.sql.Date ngayTt = new java.sql.Date(chungTu.getNgayTt().getTime());
+					java.sql.Date ngayTt = null;
+					if (chungTu.getNgayTt() != null) {
+						ngayTt = new java.sql.Date(chungTu.getNgayTt().getTime());
+					}
 					stt.setDate(6, ngayTt);
 					stt.setString(7, chungTu.getLyDo());
 					stt.setString(8, chungTu.getLoaiTien().getMaLt());
@@ -1894,10 +1856,10 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					soTien.setLoaiTien(chungTu.getLoaiTien());
 
 					if (ketQua >= 0) {
-						soTien.setSoTien(ketQua);
+						soTien.setSoTien(ketQua / chungTu.getLoaiTien().getBanRa());
 						soTien.setGiaTri(ketQua);
 					} else {
-						soTien.setSoTien(ketQua * -1);
+						soTien.setSoTien((ketQua * -1) / chungTu.getLoaiTien().getBanRa());
 						soTien.setGiaTri(ketQua * -1);
 
 						TaiKhoan taiKhoanNo = ketChuyenButToan.getTaiKhoanNo();

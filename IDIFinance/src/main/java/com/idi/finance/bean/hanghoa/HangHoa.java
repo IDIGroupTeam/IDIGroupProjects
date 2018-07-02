@@ -2,6 +2,7 @@ package com.idi.finance.bean.hanghoa;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.format.annotation.NumberFormat;
 
 import com.idi.finance.bean.chungtu.TaiKhoan;
@@ -10,6 +11,7 @@ import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class HangHoa {
+	private static final Logger logger = Logger.getLogger(HangHoa.class);
 	public static final int TK_THANH_TOAN = 1;
 	public static final int TK_KHO = 2;
 	public static final int TK_DOANH_THU = 3;
@@ -488,46 +490,46 @@ public class HangHoa {
 		if (hangHoa == null)
 			return;
 
-		if (this.getTkKho() == null) {
+		if (this.getTkKho() == null && hangHoa.getTkKho() != null) {
 			this.setTkKho(hangHoa.getTkKho());
 		}
-		if (this.getTkDoanhThu() == null) {
+		if (this.getTkDoanhThu() == null && hangHoa.getTkDoanhThu() != null) {
 			this.setTkDoanhThu(hangHoa.getTkDoanhThu());
 		}
-		if (this.getTkGiaVon() == null) {
+		if (this.getTkGiaVon() == null && hangHoa.getTkGiaVon() != null) {
 			this.setTkGiaVon(hangHoa.getTkGiaVon());
 		}
-		if (this.getTkChiPhi() == null) {
+		if (this.getTkChiPhi() == null && hangHoa.getTkChiPhi() != null) {
 			this.setTkChiPhi(hangHoa.getTkChiPhi());
 		}
-		if (this.getTkThanhtoan() == null) {
+		if (this.getTkThanhtoan() == null && hangHoa.getTkThanhtoan() != null) {
 			this.setTkThanhtoan(hangHoa.getTkThanhtoan());
 		}
-		if (this.getTkThueNk() == null) {
+		if (this.getTkThueNk() == null && hangHoa.getTkThueNk() != null) {
 			this.setTkThueNk(hangHoa.getTkThueNk());
 		}
 		if (this.getThueSuatNk() == 0) {
 			this.setThueSuatNk(hangHoa.getThueSuatNk());
 		}
-		if (this.getTkThueXk() == null) {
+		if (this.getTkThueXk() == null && hangHoa.getTkThueXk() != null) {
 			this.setTkThueXk(hangHoa.getTkThueXk());
 		}
 		if (this.getThueSuatXk() == 0) {
 			this.setThueSuatXk(hangHoa.getThueSuatXk());
 		}
-		if (this.getTkThueTtdb() == null) {
+		if (this.getTkThueTtdb() == null && hangHoa.getTkThueTtdb() != null) {
 			this.setTkThueTtdb(hangHoa.getTkThueTtdb());
 		}
 		if (this.getThueSuatTtdb() == 0) {
 			this.setThueSuatTtdb(hangHoa.getThueSuatTtdb());
 		}
-		if (this.getTkThueGtgt() == null) {
+		if (this.getTkThueGtgt() == null && hangHoa.getTkThueGtgt() != null) {
 			this.setTkThueGtgt(hangHoa.getTkThueGtgt());
 		}
 		if (this.getThueSuatGtgt() == 0) {
 			this.setThueSuatGtgt(hangHoa.getThueSuatGtgt());
 		}
-		if (this.getTkThueGtgtDu() == null) {
+		if (this.getTkThueGtgtDu() == null && hangHoa.getTkThueGtgtDu() != null) {
 			this.setTkThueGtgtDu(hangHoa.getTkThueGtgtDu());
 		}
 	}

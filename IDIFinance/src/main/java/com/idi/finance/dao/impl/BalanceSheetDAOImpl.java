@@ -681,7 +681,10 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 				try {
 					Object[] params = { bad.getAsset().getAssetCode(), loaiTaiKhoan.getSoDuGiaTri(), batDau, ketThuc,
 							bad.getAsset().getAssetCode(), loaiTaiKhoan.getSoDuGiaTri(), batDau, ketThuc, homNay,
-							bad.getAsset().getAssetCode(), loaiTaiKhoan.getSoDuGiaTri(), batDau, ketThuc, homNay };
+							bad.getAsset().getAssetCode(), loaiTaiKhoan.getSoDuGiaTri(), batDau, ketThuc, homNay,
+							homNay, bad.getAsset().getAssetCode(), loaiTaiKhoan.getSoDuGiaTri(), batDau, ketThuc,
+							homNay, bad.getAsset().getAssetCode(), loaiTaiKhoan.getSoDuGiaTri(), batDau, ketThuc,
+							homNay };
 					value = jdbcTmpl.queryForObject(tmplQuery, params, Double.class);
 				} catch (Exception e) {
 					// logger.info(e.getMessage());

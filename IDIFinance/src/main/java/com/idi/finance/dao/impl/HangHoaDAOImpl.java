@@ -362,6 +362,7 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 
 				return hangHoa;
 			} catch (Exception e) {
+				e.printStackTrace();
 				return null;
 			}
 		}
@@ -397,8 +398,11 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 
 		try {
 			Object[] objs = { maHh };
+			logger.info(query);
+			logger.info("maHh " + maHh);
 			return jdbcTmpl.queryForObject(query, objs, new HangHoaMapper());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

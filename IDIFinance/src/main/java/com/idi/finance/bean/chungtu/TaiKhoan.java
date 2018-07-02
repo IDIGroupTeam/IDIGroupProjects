@@ -79,7 +79,7 @@ public class TaiKhoan {
 
 	@Override
 	public String toString() {
-		String out = loaiTaiKhoan + " - " + soDu;
+		String out = loaiTaiKhoan + " - " + soDu + " - " + soTien;
 		return out;
 	}
 

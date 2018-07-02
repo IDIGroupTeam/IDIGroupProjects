@@ -219,42 +219,11 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 				// Với mỗi chứng từ
 				if (chungTu.getHangHoaDs() != null) {
-					// Nếu chứng từ mới có danh sách hàng hóa cần bổ sung
-					// Thì sắp xếp danh sách hàng hóa của chứng từ mới trước
-					List<HangHoa> hangHoaDs = new ArrayList<>();
-					Iterator<HangHoa> hangHoaIter = chungTu.getHangHoaDs().iterator();
-					while (hangHoaIter.hasNext()) {
-						HangHoa hangHoa = hangHoaIter.next();
-
-						int pos = hangHoaDs.indexOf(hangHoa);
-						if (pos > -1) {
-							hangHoaDs.get(pos).tronTk(hangHoa);
-						} else {
-							hangHoaDs.add(hangHoa);
-						}
-					}
-					chungTu.setHangHoaDs(hangHoaDs);
-
 					// Rồi gộp danh sách hàng hóa chứng từ mới vào danh sách hàng hóa chứng từ cũ
 					int pos = ketQua.indexOf(chungTu);
 					if (pos > -1) {
 						ChungTu chungTuTmpl = ketQua.get(pos);
-
-						if (chungTuTmpl.getHangHoaDs() != null) {
-							Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
-							while (hhIter.hasNext()) {
-								HangHoa hangHoa = hhIter.next();
-
-								int posTmpl = chungTuTmpl.getHangHoaDs().indexOf(hangHoa);
-								if (posTmpl > -1) {
-									chungTuTmpl.getHangHoaDs().get(posTmpl).tronTk(hangHoa);
-								} else {
-									chungTuTmpl.themHangHoa(hangHoa);
-								}
-							}
-						} else {
-							chungTuTmpl.themHangHoa(chungTu.getHangHoaDs());
-						}
+						chungTuTmpl.themHangHoa(chungTu.getHangHoaDs());
 					} else {
 						ketQua.add(chungTu);
 					}
@@ -477,6 +446,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		Object[] objs = { batDau, ketThuc, batDau, ketThuc, batDau, ketThuc };
 		List<NghiepVuKeToan> nghiepVuKeToanDs = jdbcTmpl.query(query, objs, new NghiepVuKeToanMapper());
 		logger.info(nghiepVuKeToanDs);
+		logger.info(nghiepVuKeToanDs.size());
 		return nghiepVuKeToanDs;
 	}
 
