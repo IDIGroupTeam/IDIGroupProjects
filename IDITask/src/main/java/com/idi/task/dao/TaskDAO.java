@@ -262,8 +262,8 @@ public class TaskDAO extends JdbcDaoSupport {
 		if(reportForm.getEmployeeId() > 0)
 			sql = sql + " AND T.OWNED_BY = " + reportForm.getEmployeeId();
 		else
-			if(reportForm.getDepartment() != null && reportForm.getDepartment().equalsIgnoreCase("all"))
-				sql = sql + " AND T.AREA = " + reportForm.getDepartment();
+			if(reportForm.getDepartment() != null && !reportForm.getDepartment().equalsIgnoreCase("all"))
+				sql = sql + " AND T.AREA = '" + reportForm.getDepartment() + "'";
 		
 		sql = sql + " ORDER BY T.UPDATE_TS DESC";
 		

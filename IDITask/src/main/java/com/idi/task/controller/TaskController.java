@@ -32,6 +32,7 @@ import com.idi.task.bean.Department;
 import com.idi.task.bean.EmployeeInfo;
 import com.idi.task.bean.Task;
 import com.idi.task.bean.TaskComment;
+import com.idi.task.common.PropertiesManager;
 import com.idi.task.common.Utils;
 import com.idi.task.dao.TaskDAO;
 import com.idi.task.form.ReportForm;
@@ -75,8 +76,10 @@ public class TaskController {
 
 	@Autowired
 	private JavaMailSender mailSender;
-
-	public static File fontFile = new File("c:/home/idi/properties/vuTimes.ttf");
+	
+	PropertiesManager properties = new PropertiesManager("task.properties");
+	
+	public static File fontFile = new File("/home/idi/properties/vuTimes.ttf");
 	
 	@RequestMapping(value = { "/" })
 	public String listTasks(Model model, @ModelAttribute("taskForm") TaskForm form) {
@@ -619,8 +622,8 @@ public class TaskController {
 		if(formTitle == null) {
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-			
-			File file = new File("C:\\IDIGroup\\Report\\" + sendReportForm.getSubject() + ".pdf");
+			String path = properties.getProperty("REPORT_PATH");
+			File file = new File(path + sendReportForm.getSubject() + ".pdf");
 			if(file.exists()) {
 				mimeMessage.setFrom("IDITask-NotReply");
 				helper.setSubject(sendReportForm.getSubject());
@@ -628,9 +631,9 @@ public class TaskController {
 				
 				Multipart multipart = new MimeMultipart();
 				BodyPart attach = new MimeBodyPart();
-				DataSource source = new FileDataSource("C:\\IDIGroup\\Report\\" + sendReportForm.getSubject() + ".pdf");
+				DataSource source = new FileDataSource(path + sendReportForm.getSubject() + ".pdf");
 				attach.setDataHandler(new DataHandler(source));
-				attach.setFileName("C:\\IDIGroup\\Report\\" + sendReportForm.getSubject() + ".pdf");
+				attach.setFileName(path + sendReportForm.getSubject() + ".pdf");
 				
 				multipart.addBodyPart(attach);
 				BodyPart content = new MimeBodyPart();
@@ -666,7 +669,8 @@ public class TaskController {
 		//System.err.println("export to pdf");
 		
 		Document document = new Document();
-		File dir = new File("C:/IDIGroup/Report");
+		String path = properties.getProperty("REPORT_PATH");
+		File dir = new File(path);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
@@ -715,6 +719,7 @@ public class TaskController {
 		
 		document.close();
 		model.addAttribute("reportForm", taskReportForm);
+		model.addAttribute("path", path);
 		model.addAttribute("formTitle", "Export báo cáo công việc");
 		return "taskExport";
 	}

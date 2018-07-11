@@ -237,8 +237,11 @@ INSERT INTO `idigroup`.`leave_type` (`LEAVE_ID`, `LEAVE_NAME`, `COMMENT`) VALUES
 ('O', 'Ốm điều dưỡng', NULL),
 ('O2', 'Ốm điều dưỡng nửa ngày', NULL),
 ('X', 'Lương thời gian', NULL),
-('X2', 'Lương nửa thời gian', NULL);
-
+('X2', 'Lương nửa thời gian', NULL),
+('CVBNDGS', 'Công việc bên ngoài đầu giờ sáng', NULL),
+('CVBNDGC', 'Công việc bên ngoài đầu giờ chiều', NULL),
+('CVBNCGS', 'Công việc bên ngoài cuối giờ sáng', NULL),
+('CVBNCGC', 'Công việc bên ngoài cuối giờ chiều', NULL);
 -- --------------------------------------------------------
 
 --

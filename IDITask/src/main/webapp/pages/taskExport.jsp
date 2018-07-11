@@ -40,7 +40,7 @@ tr:nth-child(even) {
 	</h3>
 	<br />	
 	<div class="alert alert-success">
-		Báo cáo công việc đã được export ra file PDF và lưu tại thư mục C:\IDIGroup\Report ... 
+		Báo cáo công việc đã được export ra file PDF và lưu tại thư mục ${path} 
 	</div>
 	<a href="${url}/sendReportForm?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${reportForm.employeeName}&dept=${reportForm.department}&eId=${reportForm.employeeId}"><button class="btn btn-primary btn-sm">Gửi báo cáo</button></a>
 </body>

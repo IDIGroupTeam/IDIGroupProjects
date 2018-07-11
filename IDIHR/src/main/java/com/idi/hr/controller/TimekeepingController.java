@@ -53,6 +53,7 @@ import com.idi.hr.dao.TimekeepingDAO;
 import com.idi.hr.dao.WorkingDayDAO;
 import com.idi.hr.form.LeaveInfoForm;
 import com.idi.hr.validator.LeaveValidator;
+import com.idi.hr.common.PropertiesManager;
 import com.idi.hr.common.ExcelProcessor;
 import com.idi.hr.common.Utils;
 
@@ -84,6 +85,8 @@ public class TimekeepingController {
 
 	ExcelProcessor xp = new ExcelProcessor();
 
+	PropertiesManager properties = new PropertiesManager("hr.properties");
+	
 	@InitBinder
 	protected void initBinder(WebDataBinder dataBinder) {
 
@@ -835,7 +838,8 @@ public class TimekeepingController {
 		model.addAttribute("leaveReports", list);
 		// excel.setExcelHeader(excelSheet);
 		// excel.setExcelHeader(excelSheet);
-		File dir = new File("C:/IDIGroup/Report");
+		String path = properties.getProperty("REPORT_PATH");
+		File dir = new File(path);
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet("data");
 		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -937,7 +941,7 @@ public class TimekeepingController {
 				dir.mkdirs();
 			}
 			FileOutputStream outputStream = new FileOutputStream(
-					dir + "/" + "/Thong ke du lieu cham cong " + currentDate + ".xlsx");
+					dir + "/" + "/Thong ke du lieu chuyen can " + currentDate + ".xlsx");
 			workbook.write(outputStream);
 			workbook.close();
 		} catch (FileNotFoundException e) {
@@ -946,9 +950,8 @@ public class TimekeepingController {
 			e.printStackTrace();
 		}
 
-		System.out.println("Done");
-		model.addAttribute("message",
-				"Dữ liệu đã được export ra file C:/IDIGroup/Report/Thong ke du lieu chuyen can.xlsx!");
+		//System.out.println("Done");
+		model.addAttribute("message", "Dữ liệu đã được export ra file "+ path + "Thong ke du lieu chuyen can " + currentDate + ".xlsx!");
 		model.addAttribute("leaveForReport", leaveForReport);
 		model.addAttribute("leaveReports", list);
 		model.addAttribute("formTitle", "Xuất ra file excel thống kê dữ liệu chuyên cần");
