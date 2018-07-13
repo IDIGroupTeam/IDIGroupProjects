@@ -277,6 +277,8 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 		String query = LAY_SO_DU_KY_THEO_KKT;
 
 		try {
+			logger.info(query);
+			logger.info("Mã kỳ kế toán " + maKkt);
 			Object[] objs = { maKkt };
 			List<SoDuKy> soDuKyDs = jdbcTmpl.query(query, objs, new SoDuKyMapper());
 			return soDuKyDs;

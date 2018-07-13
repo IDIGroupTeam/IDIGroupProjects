@@ -11,11 +11,13 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		$("#mainFinanceForm").addClass("form-horizontal");
-		$("#submitBut").click(function() {
-			$("#mainFinanceForm").prop("action", "${url}/soketoan/nhatkychung");
-			$("#mainFinanceForm").prop("method", "POST");
-			$("#mainFinanceForm").submit();
-		});
+		$("#submitBut").click(
+				function() {
+					$("#mainFinanceForm").prop("action",
+							"${url}/soketoan/nhatkychung");
+					$("#mainFinanceForm").prop("method", "POST");
+					$("#mainFinanceForm").submit();
+				});
 
 		function docKyKeToanDs(kyKeToanDsStr) {
 			kyKeToanDsStr = $.trim(kyKeToanDsStr);
@@ -124,6 +126,7 @@
 				<form:option value="${ChungTu.CHUNG_TU_KT_TH}">Phiếu kế toán tổng hợp</form:option>
 				<form:option value="${ChungTu.CHUNG_TU_MUA_HANG}">Mua hàng</form:option>
 				<form:option value="${ChungTu.CHUNG_TU_BAN_HANG}">Bán hàng</form:option>
+				<form:option value="${ChungTu.CHUNG_TU_KET_CHUYEN}">Kết chuyển</form:option>
 			</form:select>
 		</div>
 

@@ -115,20 +115,16 @@ public class KyKeToanCon {
 		}
 
 		KyKeToanCon item = (KyKeToanCon) obj;
-		try {
-			if (loai != item.getLoai()) {
-				return false;
-			}
+		if (loai != item.getLoai()) {
+			return false;
+		}
 
-			if (dau == null) {
-				if (item.getDau() != null)
-					return false;
-			} else if (item.getDau() == null) {
+		if (dau == null) {
+			if (item.getDau() != null)
 				return false;
-			} else if (!dau.equals(item.getDau())) {
-				return false;
-			}
-		} catch (Exception e) {
+		} else if (item.getDau() == null) {
+			return false;
+		} else if (!dau.equals(item.getDau())) {
 			return false;
 		}
 

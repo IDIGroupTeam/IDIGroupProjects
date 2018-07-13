@@ -5,7 +5,10 @@ import java.util.List;
 
 import com.idi.finance.bean.cdkt.BalanceAssetData;
 import com.idi.finance.bean.cdkt.BalanceAssetItem;
+import com.idi.finance.bean.cdkt.DuLieuKeToan;
+import com.idi.finance.bean.cdkt.KyKeToanCon;
 import com.idi.finance.bean.chungtu.TaiKhoan;
+import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public interface BalanceSheetDAO {

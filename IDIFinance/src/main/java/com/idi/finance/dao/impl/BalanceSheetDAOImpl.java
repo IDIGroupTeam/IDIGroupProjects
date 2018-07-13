@@ -18,7 +18,6 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.idi.finance.bean.cdkt.BalanceAssetData;
 import com.idi.finance.bean.cdkt.BalanceAssetItem;
-import com.idi.finance.bean.chungtu.TaiKhoan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BalanceSheetDAO;
 import com.idi.finance.utils.Utils;

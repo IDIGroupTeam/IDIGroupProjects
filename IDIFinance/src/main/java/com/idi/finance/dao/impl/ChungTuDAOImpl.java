@@ -152,21 +152,41 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 	}
 
 	@Override
-	public List<ChungTu> danhSachChungTuTheoLoaiCt(String loaiCt, Date batDau, Date ketThuc) {
-		if (loaiCt == null || batDau == null || ketThuc == null) {
+	public List<ChungTu> danhSachChungTu(List<String> loaiCts, Date batDau, Date ketThuc) {
+		if (loaiCts == null || batDau == null || ketThuc == null) {
 			return null;
+		}
+
+		String query = DANH_SACH_CHUNG_TU_THEO_LOAI;
+
+		if (loaiCts.contains(ChungTu.TAT_CA)) {
+			query = query.replaceAll("\\$DIEU_KIEN_LOAI_CT\\$", "");
+			logger.info("Danh sách tất cả chứng từ ...");
+		} else {
+			logger.info("Danh sách tất cả chứng từ loại " + loaiCts + " ...");
+
+			String dieuKien = "";
+			Iterator<String> iter = loaiCts.iterator();
+			while (iter.hasNext()) {
+				String loaiCt = iter.next();
+				dieuKien += "'" + loaiCt.trim() + "',";
+			}
+			if (!dieuKien.equals("")) {
+				dieuKien = dieuKien.substring(0, dieuKien.length() - 1);
+			}
+			dieuKien = " AND CT.LOAI_CT IN (" + dieuKien + ")";
+
+			query = query.replaceAll("\\$DIEU_KIEN_LOAI_CT\\$", dieuKien);
 		}
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
 		String batDauStr = sdf.format(batDau);
 		String ketThucStr = sdf.format(ketThuc);
 
-		String query = DANH_SACH_CHUNG_TU_THEO_LOAI;
-
-		logger.info("Danh sách chứng từ theo loại chứng từ: '" + loaiCt + "' từ " + batDauStr + " đến " + ketThucStr);
+		logger.info("Danh sách chứng từ theo loại chứng từ: '" + loaiCts + "' từ " + batDauStr + " đến " + ketThucStr);
 		logger.info(query);
 
-		Object[] objs = { loaiCt, batDauStr, ketThucStr, loaiCt, batDauStr, ketThucStr, loaiCt, batDauStr, ketThucStr };
+		Object[] objs = { batDauStr, ketThucStr, batDauStr, ketThucStr, batDauStr, ketThucStr };
 		List<ChungTu> chungTuDs = jdbcTmpl.query(query, objs, new ChungTuMapper());
 
 		// Gộp chứng từ trùng nhau nhưng có tài khoản ảnh hường khác nhau
@@ -246,22 +266,42 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 	}
 
 	@Override
-	public List<ChungTu> danhSachChungTuKhoTheoLoaiCt(String loaiCt, Date batDau, Date ketThuc) {
-		if (loaiCt == null || batDau == null || ketThuc == null) {
+	public List<ChungTu> danhSachChungTuKho(List<String> loaiCts, Date batDau, Date ketThuc) {
+		if (loaiCts == null || batDau == null || ketThuc == null) {
 			return null;
+		}
+
+		String query = DANH_SACH_CHUNG_TU_KHO_THEO_LOAI;
+
+		if (loaiCts.contains(ChungTu.TAT_CA)) {
+			query = query.replaceAll("\\$DIEU_KIEN_LOAI_CT\\$", "");
+			logger.info("Danh sách tất cả chứng từ ...");
+		} else {
+			logger.info("Danh sách tất cả chứng từ loại " + loaiCts + " ...");
+
+			String dieuKien = "";
+			Iterator<String> iter = loaiCts.iterator();
+			while (iter.hasNext()) {
+				String loaiCt = iter.next();
+				dieuKien += "'" + loaiCt.trim() + "',";
+			}
+			if (!dieuKien.equals("")) {
+				dieuKien = dieuKien.substring(0, dieuKien.length() - 1);
+			}
+			dieuKien = " AND CT.LOAI_CT IN (" + dieuKien + ")";
+
+			query = query.replaceAll("\\$DIEU_KIEN_LOAI_CT\\$", dieuKien);
 		}
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
 		String batDauStr = sdf.format(batDau);
 		String ketThucStr = sdf.format(ketThuc);
 
-		String query = DANH_SACH_CHUNG_TU_KHO_THEO_LOAI;
-
 		logger.info(
-				"Danh sách chứng từ kho theo loại chứng từ: '" + loaiCt + "' từ " + batDauStr + " đến " + ketThucStr);
+				"Danh sách chứng từ kho theo loại chứng từ: '" + loaiCts + "' từ " + batDauStr + " đến " + ketThucStr);
 		logger.info(query);
 
-		Object[] objs = { loaiCt, batDauStr, ketThucStr, loaiCt, batDauStr, ketThucStr, loaiCt, batDauStr, ketThucStr };
+		Object[] objs = { batDauStr, ketThucStr, batDauStr, ketThucStr, batDauStr, ketThucStr };
 		List<ChungTu> chungTuDs = jdbcTmpl.query(query, objs, new ChungTuKhoMapper());
 
 		// Gộp chứng từ trùng nhau nhưng có tài khoản ảnh hưởng khác nhau
@@ -278,16 +318,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					int pos = ketQua.indexOf(chungTu);
 					if (pos > -1) {
 						ChungTu chungTuTmpl = ketQua.get(pos);
-
-						if (chungTuTmpl.getHangHoaDs() != null) {
-							Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
-							while (hhIter.hasNext()) {
-								HangHoa hangHoa = hhIter.next();
-								chungTuTmpl.themHangHoa(hangHoa);
-							}
-						} else {
-							chungTuTmpl.themHangHoa(chungTu.getHangHoaDs());
-						}
+						chungTuTmpl.themHangHoa(chungTu.getHangHoaDs());
 					} else {
 						ketQua.add(chungTu);
 					}
@@ -375,6 +406,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				taiKhoan.setSoDu(rs.getInt("SO_DU"));
 				taiKhoan.setLyDo(rs.getString("TK_LY_DO"));
 				taiKhoan.setMaNvkt(rs.getInt("MA_NVKT"));
+				taiKhoan.setNhomDk(rs.getInt("NHOM_DK"));
 
 				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
 				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
@@ -420,6 +452,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 				return chungTu;
 			} catch (Exception e) {
+				e.printStackTrace();
 				return null;
 			}
 		}
@@ -837,13 +870,13 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkKho().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkKho().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkKho().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_KHO, 0);
+							nvktHolder.getKey().intValue(), hangHoa.getTkKho().getNhomDk(), HangHoa.TK_KHO, 0);
 				}
 
 				if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
@@ -857,13 +890,13 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkGiaVon().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkGiaVon().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkGiaVon().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_GIA_VON, 0);
+							nvktHolder.getKey().intValue(), hangHoa.getTkGiaVon().getNhomDk(), HangHoa.TK_GIA_VON, 0);
 				}
 
 				if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
@@ -877,13 +910,14 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkDoanhThu().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkDoanhThu().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkDoanhThu().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_DOANH_THU, 0);
+							nvktHolder.getKey().intValue(), hangHoa.getTkDoanhThu().getNhomDk(), HangHoa.TK_DOANH_THU,
+							0);
 				}
 
 				if (hangHoa.getTkChiPhi() != null && hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk() != null
@@ -897,13 +931,13 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkChiPhi().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkChiPhi().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkChiPhi().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_CHI_PHI, 0);
+							nvktHolder.getKey().intValue(), hangHoa.getTkChiPhi().getNhomDk(), HangHoa.TK_CHI_PHI, 0);
 				}
 
 				if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
@@ -917,13 +951,14 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThanhtoan().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkThanhtoan().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkThanhtoan().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_THANH_TOAN, 0);
+							nvktHolder.getKey().intValue(), hangHoa.getTkThanhtoan().getNhomDk(), HangHoa.TK_THANH_TOAN,
+							0);
 				}
 
 				// Các tài khoản về thuế nhập khẩu, xuất khẩu,
@@ -939,13 +974,14 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueNk().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkThueNk().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkThueNk().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_THUE_NK, hangHoa.getThueSuatNk());
+							nvktHolder.getKey().intValue(), hangHoa.getTkThueNk().getNhomDk(), HangHoa.TK_THUE_NK,
+							hangHoa.getThueSuatNk());
 				}
 
 				if (hangHoa.getTkThueXk() != null && hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null
@@ -959,13 +995,14 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueXk().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkThueXk().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkThueXk().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_THUE_XK, hangHoa.getThueSuatXk());
+							nvktHolder.getKey().intValue(), hangHoa.getTkThueXk().getNhomDk(), HangHoa.TK_THUE_XK,
+							hangHoa.getThueSuatXk());
 				}
 
 				if (hangHoa.getTkThueTtdb() != null && hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk() != null
@@ -980,13 +1017,14 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueTtdb().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkThueTtdb().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkThueTtdb().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_THUE_TTDB, hangHoa.getThueSuatTtdb());
+							nvktHolder.getKey().intValue(), hangHoa.getTkThueTtdb().getNhomDk(), HangHoa.TK_THUE_TTDB,
+							hangHoa.getThueSuatTtdb());
 				}
 
 				if (hangHoa.getTkThueGtgtDu() != null && hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk() != null
@@ -1000,13 +1038,14 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueGtgtDu().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkThueGtgtDu().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkThueGtgtDu().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_THUE_GTGT_DU, hangHoa.getThueSuatGtgt());
+							nvktHolder.getKey().intValue(), hangHoa.getTkThueGtgtDu().getNhomDk(),
+							HangHoa.TK_THUE_GTGT_DU, hangHoa.getThueSuatGtgt());
 				}
 
 				if (hangHoa.getTkThueGtgt() != null && hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() != null
@@ -1025,7 +1064,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 								stt.setString(1, hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk());
 								stt.setDouble(2, hangHoa.getTkThueGtgt().getSoTien().getSoTien());
 								stt.setInt(3, hangHoa.getTkThueGtgt().getSoDu());
-								stt.setString(4, chungTu.getLyDo());
+								stt.setString(4, hangHoa.getTkThueGtgt().getLyDo());
 
 								return stt;
 							}
@@ -1033,7 +1072,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						nvKtId = nvktHolder.getKey().intValue();
 					}
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(), nvKtId,
-							HangHoa.TK_THUE_GTGT, hangHoa.getThueSuatGtgt());
+							hangHoa.getTkThueGtgt().getNhomDk(), HangHoa.TK_THUE_GTGT, hangHoa.getThueSuatGtgt());
 				}
 			}
 		} catch (Exception e) {
@@ -1082,6 +1121,11 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkKho().getMaNvkt());
 					}
 
+					if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan() != null
+							&& hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null) {
+						jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkGiaVon().getMaNvkt());
+					}
+
 					if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan() != null
 							&& hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null) {
 						jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkDoanhThu().getMaNvkt());
@@ -1095,6 +1139,31 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan() != null
 							&& hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null) {
 						jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkThanhtoan().getMaNvkt());
+					}
+
+					if (hangHoa.getTkThueNk() != null && hangHoa.getTkThueNk().getLoaiTaiKhoan() != null
+							&& hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk() != null) {
+						jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkThueNk().getMaNvkt());
+					}
+
+					if (hangHoa.getTkThueXk() != null && hangHoa.getTkThueXk().getLoaiTaiKhoan() != null
+							&& hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null) {
+						jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkThueXk().getMaNvkt());
+					}
+
+					if (hangHoa.getTkThueTtdb() != null && hangHoa.getTkThueTtdb().getLoaiTaiKhoan() != null
+							&& hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk() != null) {
+						jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkThueTtdb().getMaNvkt());
+					}
+
+					if (hangHoa.getTkThueGtgtDu() != null && hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan() != null
+							&& hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk() != null) {
+						jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkThueGtgtDu().getMaNvkt());
+					}
+
+					if (hangHoa.getTkThueGtgt() != null && hangHoa.getTkThueGtgt().getLoaiTaiKhoan() != null
+							&& hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() != null) {
+						jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkThueGtgt().getMaNvkt());
 					}
 				}
 			}
@@ -1174,13 +1243,13 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkKho().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkKho().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkKho().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_KHO, 0);
+							nvktHolder.getKey().intValue(), hangHoa.getTkKho().getNhomDk(), HangHoa.TK_KHO, 0);
 				}
 
 				if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
@@ -1194,13 +1263,13 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkGiaVon().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkGiaVon().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkGiaVon().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_GIA_VON, 0);
+							nvktHolder.getKey().intValue(), hangHoa.getTkGiaVon().getNhomDk(), HangHoa.TK_GIA_VON, 0);
 				}
 
 				if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
@@ -1214,13 +1283,14 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkDoanhThu().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkDoanhThu().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkDoanhThu().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_DOANH_THU, 0);
+							nvktHolder.getKey().intValue(), hangHoa.getTkDoanhThu().getNhomDk(), HangHoa.TK_DOANH_THU,
+							0);
 				}
 
 				if (hangHoa.getTkChiPhi() != null && hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk() != null
@@ -1234,13 +1304,13 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkChiPhi().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkChiPhi().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkChiPhi().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_CHI_PHI, 0);
+							nvktHolder.getKey().intValue(), hangHoa.getTkChiPhi().getNhomDk(), HangHoa.TK_CHI_PHI, 0);
 				}
 
 				if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
@@ -1254,13 +1324,14 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThanhtoan().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkThanhtoan().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkThanhtoan().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_THANH_TOAN, 0);
+							nvktHolder.getKey().intValue(), hangHoa.getTkThanhtoan().getNhomDk(), HangHoa.TK_THANH_TOAN,
+							0);
 				}
 
 				// Các tài khoản về thuế nhập khẩu, xuất khẩu,
@@ -1276,13 +1347,14 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueNk().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkThueNk().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkThueNk().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_THUE_NK, hangHoa.getThueSuatNk());
+							nvktHolder.getKey().intValue(), hangHoa.getTkThueNk().getNhomDk(), HangHoa.TK_THUE_NK,
+							hangHoa.getThueSuatNk());
 				}
 
 				if (hangHoa.getTkThueXk() != null && hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null
@@ -1296,13 +1368,14 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueXk().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkThueXk().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkThueXk().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_THUE_XK, hangHoa.getThueSuatXk());
+							nvktHolder.getKey().intValue(), hangHoa.getTkThueXk().getNhomDk(), HangHoa.TK_THUE_XK,
+							hangHoa.getThueSuatXk());
 				}
 
 				if (hangHoa.getTkThueTtdb() != null && hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk() != null
@@ -1317,13 +1390,14 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueTtdb().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkThueTtdb().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkThueTtdb().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_THUE_TTDB, hangHoa.getThueSuatTtdb());
+							nvktHolder.getKey().intValue(), hangHoa.getTkThueTtdb().getNhomDk(), HangHoa.TK_THUE_TTDB,
+							hangHoa.getThueSuatTtdb());
 				}
 
 				if (hangHoa.getTkThueGtgtDu() != null && hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk() != null
@@ -1337,13 +1411,14 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							stt.setString(1, hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueGtgtDu().getSoTien().getSoTien());
 							stt.setInt(3, hangHoa.getTkThueGtgtDu().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setString(4, hangHoa.getTkThueGtgtDu().getLyDo());
 
 							return stt;
 						}
 					}, nvktHolder);
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(),
-							nvktHolder.getKey().intValue(), HangHoa.TK_THUE_GTGT_DU, hangHoa.getThueSuatGtgt());
+							nvktHolder.getKey().intValue(), hangHoa.getTkThueGtgtDu().getNhomDk(),
+							HangHoa.TK_THUE_GTGT_DU, hangHoa.getThueSuatGtgt());
 				}
 
 				if (hangHoa.getTkThueGtgt() != null && hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() != null
@@ -1360,7 +1435,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 								stt.setString(1, hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk());
 								stt.setDouble(2, hangHoa.getTkThueGtgt().getSoTien().getSoTien());
 								stt.setInt(3, hangHoa.getTkThueGtgt().getSoDu());
-								stt.setString(4, chungTu.getLyDo());
+								stt.setString(4, hangHoa.getTkThueGtgt().getLyDo());
 
 								return stt;
 							}
@@ -1368,7 +1443,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						nvKtId = nvktHolder.getKey().intValue();
 					}
 					jdbcTmpl.update(themChungTuTaiKhoanKho, chungTu.getMaCt(), hangHoa.getMaHh(), nvKtId,
-							HangHoa.TK_THUE_GTGT, hangHoa.getThueSuatGtgt());
+							hangHoa.getTkThueGtgt().getNhomDk(), HangHoa.TK_THUE_GTGT, hangHoa.getThueSuatGtgt());
 				}
 			}
 		} catch (Exception e) {
@@ -1766,7 +1841,6 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 				return chungTu;
 			} catch (Exception e) {
-				e.printStackTrace();
 				return null;
 			}
 		}
@@ -1848,6 +1922,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					}
 				}
 
+				// Tính kết quả thực của công thức
 				try {
 					double ketQua = ExpressionEval.calExp(congThuc);
 					logger.info("Kết quả " + ketQua);

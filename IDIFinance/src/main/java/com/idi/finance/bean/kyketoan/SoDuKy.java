@@ -96,7 +96,7 @@ public class SoDuKy {
 
 	@Override
 	public String toString() {
-		String out = kyKeToan + " " + loaiTaiKhoan;
+		String out = kyKeToan + " " + loaiTaiKhoan + " " + noDauKy + " " + coDauKy;
 		return out;
 	}
 }

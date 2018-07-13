@@ -49,25 +49,41 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td></td>
-				<td></td>
-				<td><b>Số dư đầu</b></td>
-				<td></td>
-				<c:choose>
-					<c:when test="${soDuDau>=0}">
-						<td class="text-right"><fmt:formatNumber value="${soDuDau}"
+			<c:choose>
+				<c:when test="${loaiTaiKhoan.luongTinh}">
+					<tr>
+						<td></td>
+						<td></td>
+						<td><b>Số dư đầu</b></td>
+						<td></td>
+						<td class="text-right"><fmt:formatNumber value="${noDau}"
 								type="NUMBER"></fmt:formatNumber></td>
-						<td class="text-right">0</td>
-					</c:when>
-					<c:otherwise>
-						<td class="text-right">0</td>
-						<td class="text-right"><fmt:formatNumber value="${0-soDuDau}"
+						<td class="text-right"><fmt:formatNumber value="${coDau}"
 								type="NUMBER"></fmt:formatNumber></td>
-					</c:otherwise>
-				</c:choose>
-				<td></td>
-			</tr>
+						<td></td>
+					</tr>
+				</c:when>
+				<c:otherwise>
+					<tr>
+						<td></td>
+						<td></td>
+						<td><b>Số dư đầu</b></td>
+						<td></td>
+						<c:if test="${soDuDau>=0}">
+							<td class="text-right"><fmt:formatNumber value="${soDuDau}"
+									type="NUMBER"></fmt:formatNumber></td>
+							<td class="text-right">0</td>
+						</c:if>
+						<c:if test="${soDuDau<0}">
+							<td class="text-right">0</td>
+							<td class="text-right"><fmt:formatNumber
+									value="${0-soDuDau}" type="NUMBER"></fmt:formatNumber></td>
+						</c:if>
+						<td></td>
+					</tr>
+				</c:otherwise>
+			</c:choose>
+
 			<c:forEach items="${duLieuKeToanDs}" var="duLieuKeToan">
 				<tr>
 					<td></td>
@@ -77,147 +93,148 @@
 							- <fmt:formatDate value="${duLieuKeToan.kyKeToan.cuoi}"
 								pattern="dd/M/yyyy"></fmt:formatDate></b></td>
 				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td><i>Số dư đầu kỳ</i></td>
-					<td></td>
-					<c:choose>
-						<c:when test="${duLieuKeToan.soDuDauKy>=0}">
+				<c:choose>
+					<c:when test="${loaiTaiKhoan.luongTinh}">
+						<tr>
+							<td></td>
+							<td></td>
+							<td><i>Số dư đầu kỳ</i></td>
+							<td></td>
 							<td class="text-right"><fmt:formatNumber
-									value="${duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
-							<td class="text-right">0</td>
-						</c:when>
-						<c:otherwise>
-							<td class="text-right">0</td>
+									value="${duLieuKeToan.noDauKy}" type="NUMBER"></fmt:formatNumber></td>
 							<td class="text-right"><fmt:formatNumber
-									value="${0-duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
-						</c:otherwise>
-					</c:choose>
-					<td></td>
-				</tr>
+									value="${duLieuKeToan.coDauKy}" type="NUMBER"></fmt:formatNumber></td>
+							<td></td>
+						</tr>
+					</c:when>
+					<c:otherwise>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><i>Số dư đầu kỳ</i></td>
+							<td></td>
+							<c:if test="${duLieuKeToan.soDuDauKy>=0}">
+								<td class="text-right"><fmt:formatNumber
+										value="${duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+								<td class="text-right">0</td>
+							</c:if>
+							<c:if test="${duLieuKeToan.soDuDauKy<0}">
+								<td class="text-right">0</td>
+								<td class="text-right"><fmt:formatNumber
+										value="${0-duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+							</c:if>
+							<td></td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
 				<c:forEach items="${duLieuKeToan.nghiepVuKeToanDs}"
 					var="nghiepVuKeToan">
-					<tr>
-						<td><fmt:formatDate value="${nghiepVuKeToan.chungTu.ngayHt}"
-								pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" /></td>
-						<td><c:choose>
+					<c:if
+						test="${nghiepVuKeToan.taiKhoanNo.soTien.soTien>0 && nghiepVuKeToan.taiKhoanCo.soTien.soTien>0}">
+						<tr>
+							<td><fmt:formatDate value="${nghiepVuKeToan.chungTu.ngayHt}"
+									pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" /></td>
+							<td><c:choose>
+									<c:when
+										test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU}">
+										<a
+											href="${url}/chungtu/phieuthu/xem/${nghiepVuKeToan.chungTu.maCt}"
+											target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									</c:when>
+									<c:when
+										test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI}">
+										<a
+											href="${url}/chungtu/phieuchi/xem/${nghiepVuKeToan.chungTu.maCt}"
+											target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									</c:when>
+									<c:when
+										test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
+										<a
+											href="${url}/chungtu/baono/xem/${nghiepVuKeToan.chungTu.maCt}"
+											target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									</c:when>
+									<c:when
+										test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
+										<a
+											href="${url}/chungtu/baoco/xem/${nghiepVuKeToan.chungTu.maCt}"
+											target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									</c:when>
+									<c:when
+										test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH}">
+										<a
+											href="${url}/chungtu/ktth/xem/${nghiepVuKeToan.chungTu.maCt}"
+											target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									</c:when>
+									<c:when
+										test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">
+										<a
+											href="${url}/chungtu/muahang/xem/${nghiepVuKeToan.chungTu.maCt}"
+											target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									</c:when>
+									<c:when
+										test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAN_HANG}">
+										<a
+											href="${url}/chungtu/banhang/xem/${nghiepVuKeToan.chungTu.maCt}"
+											target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									</c:when>
+									<c:when
+										test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_KET_CHUYEN}">
+										<a
+											href="${url}/chungtu/ketchuyen/xem/${nghiepVuKeToan.chungTu.maCt}"
+											target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									</c:when>
+									<c:otherwise>${nghiepVuKeToan.chungTu.loaiCt}${chungTu.soCt}</c:otherwise>
+								</c:choose></td>
+							<c:choose>
 								<c:when
-									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU}">
-									<a
-										href="${url}/chungtu/phieuthu/xem/${nghiepVuKeToan.chungTu.maCt}"
-										target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									test="${nghiepVuKeToan.taiKhoanNo.soTien.soTien >= nghiepVuKeToan.taiKhoanCo.soTien.soTien}">
+									<td>${nghiepVuKeToan.taiKhoanCo.lyDo}</td>
+									<c:if
+										test="${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.trim().length() >= mainFinanceForm.taiKhoan.trim().length()
+										&& nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.trim().substring(0, mainFinanceForm.taiKhoan.trim().length()).equals(mainFinanceForm.taiKhoan.trim())}">
+										<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
+										<td class="text-right"><fmt:formatNumber
+												value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+												type="NUMBER"></fmt:formatNumber></td>
+										<td class="text-right">0</td>
+									</c:if>
+									<c:if
+										test="${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk.trim().length() >= mainFinanceForm.taiKhoan.trim().length()
+										&& nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk.trim().substring(0, mainFinanceForm.taiKhoan.trim().length()).equals(mainFinanceForm.taiKhoan.trim())}">
+										<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
+										<td class="text-right">0</td>
+										<td class="text-right"><fmt:formatNumber
+												value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+												type="NUMBER"></fmt:formatNumber></td>
+									</c:if>
+									<td></td>
 								</c:when>
 								<c:when
-									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI}">
-									<a
-										href="${url}/chungtu/phieuchi/xem/${nghiepVuKeToan.chungTu.maCt}"
-										target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									test="${nghiepVuKeToan.taiKhoanCo.soTien.soTien > nghiepVuKeToan.taiKhoanNo.soTien.soTien}">
+									<td>${nghiepVuKeToan.taiKhoanNo.lyDo}</td>
+									<c:if
+										test="${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.trim().length() >= mainFinanceForm.taiKhoan.trim().length()
+										&& nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.trim().substring(0, mainFinanceForm.taiKhoan.trim().length()).equals(mainFinanceForm.taiKhoan.trim())}">
+										<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
+										<td class="text-right"><fmt:formatNumber
+												value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+												type="NUMBER"></fmt:formatNumber></td>
+										<td class="text-right">0</td>
+									</c:if>
+									<c:if
+										test="${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk.trim().length() >= mainFinanceForm.taiKhoan.trim().length()
+										&& nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk.trim().substring(0, mainFinanceForm.taiKhoan.trim().length()).equals(mainFinanceForm.taiKhoan.trim())}">
+										<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
+										<td class="text-right">0</td>
+										<td class="text-right"><fmt:formatNumber
+												value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+												type="NUMBER"></fmt:formatNumber></td>
+									</c:if>
+									<td></td>
 								</c:when>
-								<c:when
-									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
-									<a
-										href="${url}/chungtu/baono/xem/${nghiepVuKeToan.chungTu.maCt}"
-										target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
-								</c:when>
-								<c:when
-									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
-									<a
-										href="${url}/chungtu/baoco/xem/${nghiepVuKeToan.chungTu.maCt}"
-										target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
-								</c:when>
-								<c:when
-									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH}">
-									<a
-										href="${url}/chungtu/ktth/xem/${nghiepVuKeToan.chungTu.maCt}"
-										target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
-								</c:when>
-								<c:when
-									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">
-									<a
-										href="${url}/chungtu/muahang/xem/${nghiepVuKeToan.chungTu.maCt}"
-										target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
-								</c:when>
-								<c:when
-									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAN_HANG}">
-									<a
-										href="${url}/chungtu/banhang/xem/${nghiepVuKeToan.chungTu.maCt}"
-										target="_blank">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
-								</c:when>
-								<c:otherwise>${nghiepVuKeToan.chungTu.loaiCt}${chungTu.soCt}</c:otherwise>
-							</c:choose></td>
-						<c:choose>
-							<c:when
-								test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU || nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO || (nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH && nghiepVuKeToan.taiKhoanNo.soTien.soTien >= nghiepVuKeToan.taiKhoanCo.soTien.soTien)}">
-								<td>${nghiepVuKeToan.taiKhoanCo.lyDo}</td>
-								<c:if
-									test="${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.contains(mainFinanceForm.taiKhoan)}">
-									<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
-									<td class="text-right"><fmt:formatNumber
-											value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-											type="NUMBER"></fmt:formatNumber></td>
-									<td class="text-right">0</td>
-								</c:if>
-								<c:if
-									test="${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk.contains(mainFinanceForm.taiKhoan)}">
-									<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
-									<td class="text-right">0</td>
-									<td class="text-right"><fmt:formatNumber
-											value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-											type="NUMBER"></fmt:formatNumber></td>
-								</c:if>
-								<td></td>
-							</c:when>
-							<c:when
-								test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI || nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO || (nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH && nghiepVuKeToan.taiKhoanCo.soTien.soTien > nghiepVuKeToan.taiKhoanNo.soTien.soTien)}">
-								<td>${nghiepVuKeToan.taiKhoanNo.lyDo}</td>
-								<c:if
-									test="${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.contains(mainFinanceForm.taiKhoan)}">
-									<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
-									<td class="text-right"><fmt:formatNumber
-											value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-											type="NUMBER"></fmt:formatNumber></td>
-									<td class="text-right">0</td>
-								</c:if>
-								<c:if
-									test="${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk.contains(mainFinanceForm.taiKhoan)}">
-									<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
-									<td class="text-right">0</td>
-									<td class="text-right"><fmt:formatNumber
-											value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-											type="NUMBER"></fmt:formatNumber></td>
-								</c:if>
-								<td></td>
-							</c:when>
-							<c:when
-								test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">
-								<td>${nghiepVuKeToan.taiKhoanCo.lyDo}</td>
-								<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
-								<td class="text-right"><fmt:formatNumber
-										value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-										type="NUMBER"></fmt:formatNumber></td>
-								<td class="text-right">0</td>
-								<td></td>
-							</c:when>
-							<c:when
-								test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAN_HANG}">
-								<td>${nghiepVuKeToan.taiKhoanNo.lyDo}</td>
-								<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
-								<td class="text-right">0</td>
-								<td class="text-right"><fmt:formatNumber
-										value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-										type="NUMBER"></fmt:formatNumber></td>
-								<td></td>
-							</c:when>
-							<c:otherwise>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</c:otherwise>
-						</c:choose>
-					</tr>
+							</c:choose>
+						</tr>
+					</c:if>
 				</c:forEach>
 				<tr>
 					<td></td>
@@ -230,25 +247,40 @@
 							value="${duLieuKeToan.tongCoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
 					<td></td>
 				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td><i>Số dư cuối kỳ</i></td>
-					<td></td>
-					<c:choose>
-						<c:when test="${duLieuKeToan.soDuCuoiKy>=0}">
+				<c:choose>
+					<c:when test="${loaiTaiKhoan.luongTinh}">
+						<tr>
+							<td></td>
+							<td></td>
+							<td><i>Số dư cuối kỳ</i></td>
+							<td></td>
 							<td class="text-right"><fmt:formatNumber
-									value="${duLieuKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
-							<td class="text-right">0</td>
-						</c:when>
-						<c:otherwise>
-							<td class="text-right">0</td>
+									value="${duLieuKeToan.noCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
 							<td class="text-right"><fmt:formatNumber
-									value="${0-duLieuKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
-						</c:otherwise>
-					</c:choose>
-					<td></td>
-				</tr>
+									value="${duLieuKeToan.coCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+							<td></td>
+						</tr>
+					</c:when>
+					<c:otherwise>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><i>Số dư cuối kỳ</i></td>
+							<td></td>
+							<c:if test="${duLieuKeToan.soDuCuoiKy>=0}">
+								<td class="text-right"><fmt:formatNumber
+										value="${duLieuKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+								<td class="text-right">0</td>
+							</c:if>
+							<c:if test="${duLieuKeToan.soDuCuoiKy<0}">
+								<td class="text-right">0</td>
+								<td class="text-right"><fmt:formatNumber
+										value="${0-duLieuKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+							</c:if>
+							<td></td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
 			</c:forEach>
 			<tr>
 				<td></td>
@@ -261,25 +293,40 @@
 						type="NUMBER"></fmt:formatNumber></td>
 				<td></td>
 			</tr>
-			<tr>
-				<td></td>
-				<td></td>
-				<td><b>Số dư cuối</b></td>
-				<td></td>
-				<c:choose>
-					<c:when test="${soDuCuoi>=0}">
-						<td class="text-right"><fmt:formatNumber value="${soDuCuoi}"
+			<c:choose>
+				<c:when test="${loaiTaiKhoan.luongTinh}">
+					<tr>
+						<td></td>
+						<td></td>
+						<td><b>Số dư cuối</b></td>
+						<td></td>
+						<td class="text-right"><fmt:formatNumber value="${noCuoi}"
 								type="NUMBER"></fmt:formatNumber></td>
-						<td class="text-right">0</td>
-					</c:when>
-					<c:otherwise>
-						<td class="text-right">0</td>
-						<td class="text-right"><fmt:formatNumber
-								value="${0-soDuCuoi}" type="NUMBER"></fmt:formatNumber></td>
-					</c:otherwise>
-				</c:choose>
-				<td></td>
-			</tr>
+						<td class="text-right"><fmt:formatNumber value="${coCuoi}"
+								type="NUMBER"></fmt:formatNumber></td>
+						<td></td>
+					</tr>
+				</c:when>
+				<c:otherwise>
+					<tr>
+						<td></td>
+						<td></td>
+						<td><b>Số dư cuối</b></td>
+						<td></td>
+						<c:if test="${soDuCuoi>=0}">
+							<td class="text-right"><fmt:formatNumber value="${soDuCuoi}"
+									type="NUMBER"></fmt:formatNumber></td>
+							<td class="text-right">0</td>
+						</c:if>
+						<c:if test="${soDuCuoi<0}">
+							<td class="text-right">0</td>
+							<td class="text-right"><fmt:formatNumber
+									value="${0-soDuCuoi}" type="NUMBER"></fmt:formatNumber></td>
+						</c:if>
+						<td></td>
+					</tr>
+				</c:otherwise>
+			</c:choose>
 		</tbody>
 	</table>
 </div>

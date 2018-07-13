@@ -89,6 +89,10 @@
 								<a href="${url}/chungtu/banhang/xem/${chungTu.maCt}"
 									target="_blank">${chungTu.loaiCt}${chungTu.soCt}</a>
 							</c:when>
+							<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_KET_CHUYEN}">
+								<a href="${url}/chungtu/ketchuyen/xem/${chungTu.maCt}"
+									target="_blank">${chungTu.loaiCt}${chungTu.soCt}</a>
+							</c:when>
 							<c:otherwise>${chungTu.loaiCt}${chungTu.soCt}</c:otherwise>
 						</c:choose></td>
 					<td style="color: blue;">${chungTu.lyDo}</td>
@@ -122,8 +126,7 @@
 						<c:otherwise>
 							<td></td>
 							<td></td>
-							<td align="right" style="color: blue;"><fmt:formatNumber
-									value="${chungTu.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td align="right" style="color: blue;"></td>
 						</c:otherwise>
 					</c:choose>
 					<td rowspan="${chungTu.soDongNkc}"></td>
@@ -280,13 +283,28 @@
 							test="${not empty chungTu.tkThueGtgt and not empty chungTu.tkThueGtgt.soTien and chungTu.tkThueGtgt.soTien.soTien>0}">
 							<tr>
 								<td></td>
-								<td>${chungTu.tkThueGtgt.loaiTaiKhoan.maTk}</td>
 								<td></td>
+								<td>${chungTu.tkThueGtgt.loaiTaiKhoan.maTk}</td>
 								<td align="right" style="color: blue;"><fmt:formatNumber
 										value="${chungTu.tkThueGtgt.soTien.giaTri}"
 										maxFractionDigits="2"></fmt:formatNumber></td>
 							</tr>
 						</c:if>
+					</c:when>
+					<c:when test="${chungTu.loaiCt==ChungTu.CHUNG_TU_KET_CHUYEN}">
+						<c:forEach items="${chungTu.kcbtDs}" var="kcbt">
+							<c:if
+								test="${kcbt.taiKhoanNo.soTien.soTien>0 and kcbt.taiKhoanCo.soTien.soTien>0}">
+								<tr>
+									<td></td>
+									<td>${kcbt.taiKhoanNo.loaiTaiKhoan.maTk}</td>
+									<td>${kcbt.taiKhoanCo.loaiTaiKhoan.maTk}</td>
+									<td align="right" style="color: blue;"><fmt:formatNumber
+											value="${kcbt.taiKhoanNo.soTien.giaTri}"
+											maxFractionDigits="2"></fmt:formatNumber></td>
+								</tr>
+							</c:if>
+						</c:forEach>
 					</c:when>
 				</c:choose>
 			</c:forEach>

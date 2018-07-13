@@ -5,22 +5,26 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class DuLieuKeToan {
+	private static final Logger logger = Logger.getLogger(DuLieuKeToan.class);
 	private KyKeToanCon kyKeToan;
 	private LoaiTaiKhoan loaiTaiKhoan;
 
 	private double soDuDauKy;
-	private double soDuCuoiKy;
-	private double tongNoPhatSinh;
-	private double tongCoPhatSinh;
-
 	private double noDauKy;
 	private double coDauKy;
+
+	private double soDuCuoiKy;
 	private double noCuoiKy;
 	private double coCuoiKy;
+
+	private double tongNoPhatSinh;
+	private double tongCoPhatSinh;
 
 	private DuLieuKeToan duLieuKeToan;
 	private List<DuLieuKeToan> duLieuKeToanDs;
@@ -63,36 +67,13 @@ public class DuLieuKeToan {
 		this.soDuDauKy = soDuDauKy;
 	}
 
-	public double getSoDuCuoiKy() {
-		return soDuCuoiKy;
-	}
-
-	public void setSoDuCuoiKy(double soDuCuoiKy) {
-		this.soDuCuoiKy = soDuCuoiKy;
-	}
-
-	public double getTongNoPhatSinh() {
-		return tongNoPhatSinh;
-	}
-
-	public void setTongNoPhatSinh(double tongNoPhatSinh) {
-		this.tongNoPhatSinh = tongNoPhatSinh;
-	}
-
-	public double getTongCoPhatSinh() {
-		return tongCoPhatSinh;
-	}
-
-	public void setTongCoPhatSinh(double tongCoPhatSinh) {
-		this.tongCoPhatSinh = tongCoPhatSinh;
-	}
-
 	public double getNoDauKy() {
 		return noDauKy;
 	}
 
 	public void setNoDauKy(double noDauKy) {
 		this.noDauKy = noDauKy;
+		capNhatNoCoCuoiKy();
 	}
 
 	public double getCoDauKy() {
@@ -101,6 +82,15 @@ public class DuLieuKeToan {
 
 	public void setCoDauKy(double coDauKy) {
 		this.coDauKy = coDauKy;
+		capNhatNoCoCuoiKy();
+	}
+
+	public double getSoDuCuoiKy() {
+		return soDuCuoiKy;
+	}
+
+	public void setSoDuCuoiKy(double soDuCuoiKy) {
+		this.soDuCuoiKy = soDuCuoiKy;
 	}
 
 	public double getNoCuoiKy() {
@@ -119,12 +109,38 @@ public class DuLieuKeToan {
 		this.coCuoiKy = coCuoiKy;
 	}
 
+	public double getTongNoPhatSinh() {
+		return tongNoPhatSinh;
+	}
+
+	public void setTongNoPhatSinh(double tongNoPhatSinh) {
+		this.tongNoPhatSinh = tongNoPhatSinh;
+		capNhatNoCoCuoiKy();
+	}
+
+	public double getTongCoPhatSinh() {
+		return tongCoPhatSinh;
+	}
+
+	public void setTongCoPhatSinh(double tongCoPhatSinh) {
+		this.tongCoPhatSinh = tongCoPhatSinh;
+		capNhatNoCoCuoiKy();
+	}
+
 	public List<NghiepVuKeToan> getNghiepVuKeToanDs() {
 		return nghiepVuKeToanDs;
 	}
 
 	public void setNghiepVuKeToanDs(List<NghiepVuKeToan> nghiepVuKeToanDs) {
 		this.nghiepVuKeToanDs = nghiepVuKeToanDs;
+	}
+
+	private void capNhatNoCoCuoiKy() {
+		noCuoiKy = noDauKy + tongNoPhatSinh;
+		coCuoiKy = coDauKy + tongCoPhatSinh;
+
+		soDuDauKy = noDauKy - coDauKy;
+		soDuCuoiKy = noCuoiKy - coCuoiKy;
 	}
 
 	public void themNghiepVuKeToan(NghiepVuKeToan nghiepVuKeToan) {
@@ -178,7 +194,11 @@ public class DuLieuKeToan {
 			duLieuKeToanDs = new ArrayList<>();
 		}
 
-		if (!duLieuKeToanDs.contains(duLieuKeToan)) {
+		int pos = duLieuKeToanDs.indexOf(duLieuKeToan);
+		if (pos > -1) {
+			DuLieuKeToan duLieuKeToanTmpl = duLieuKeToanDs.get(pos);
+			duLieuKeToanTmpl.tron(duLieuKeToan);
+		} else {
 			duLieuKeToanDs.add(duLieuKeToan);
 		}
 	}
@@ -194,10 +214,43 @@ public class DuLieuKeToan {
 		}
 	}
 
+	public void tron(DuLieuKeToan duLieuKeToan) {
+		if (duLieuKeToan == null) {
+			return;
+		}
+
+		if (kyKeToan == null) {
+			kyKeToan = duLieuKeToan.getKyKeToan();
+		}
+
+		if (loaiTaiKhoan == null) {
+			loaiTaiKhoan = duLieuKeToan.getLoaiTaiKhoan();
+		}
+
+		if (this.duLieuKeToan == null) {
+			this.duLieuKeToan = duLieuKeToan.getDuLieuKeToan();
+		}
+
+		noDauKy += duLieuKeToan.getNoDauKy();
+		coDauKy += duLieuKeToan.getCoDauKy();
+
+		tongNoPhatSinh += duLieuKeToan.getTongNoPhatSinh();
+		tongCoPhatSinh += duLieuKeToan.getTongCoPhatSinh();
+
+		noCuoiKy = noDauKy + tongNoPhatSinh;
+		coCuoiKy = coDauKy + tongCoPhatSinh;
+
+		soDuDauKy = noDauKy - coDauKy;
+		soDuCuoiKy = noCuoiKy - coCuoiKy;
+
+		themDuLieuKeToan(duLieuKeToan.getDuLieuKeToanDs());
+		themNghiepVuKeToan(duLieuKeToan.getNghiepVuKeToanDs());
+	}
+
 	@Override
 	public String toString() {
-		String out = kyKeToan + ":  " + loaiTaiKhoan + ": " + soDuDauKy + " " + tongNoPhatSinh + " " + tongCoPhatSinh
-				+ " " + soDuCuoiKy;
+		String out = kyKeToan + ":  " + loaiTaiKhoan + ": " + noDauKy + " " + coDauKy + " " + tongNoPhatSinh + " "
+				+ tongCoPhatSinh;
 		return out;
 	}
 
@@ -207,30 +260,27 @@ public class DuLieuKeToan {
 			return false;
 		}
 
-		if (!(obj instanceof KyKeToanCon)) {
+		if (!(obj instanceof DuLieuKeToan)) {
 			return false;
 		}
 
 		DuLieuKeToan item = (DuLieuKeToan) obj;
-		try {
-			if (kyKeToan == null) {
-				if (item.getKyKeToan() != null)
-					return false;
-			} else if (item.getKyKeToan() == null) {
-				return false;
-			} else if (!kyKeToan.equals(item.getKyKeToan())) {
-				return false;
-			}
 
-			if (loaiTaiKhoan == null) {
-				if (item.getLoaiTaiKhoan() != null)
-					return false;
-			} else if (item.getLoaiTaiKhoan() == null) {
+		if (kyKeToan == null) {
+			if (item.getKyKeToan() != null)
 				return false;
-			} else if (!loaiTaiKhoan.equals(item.getLoaiTaiKhoan())) {
+		} else if (item.getKyKeToan() == null) {
+			return false;
+		} else if (!kyKeToan.equals(item.getKyKeToan())) {
+			return false;
+		}
+
+		if (loaiTaiKhoan == null) {
+			if (item.getLoaiTaiKhoan() != null)
 				return false;
-			}
-		} catch (Exception e) {
+		} else if (item.getLoaiTaiKhoan() == null) {
+			return false;
+		} else if (!loaiTaiKhoan.equals(item.getLoaiTaiKhoan())) {
 			return false;
 		}
 

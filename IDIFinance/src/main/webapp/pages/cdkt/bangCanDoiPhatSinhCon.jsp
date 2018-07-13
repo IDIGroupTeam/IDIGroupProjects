@@ -11,35 +11,37 @@
 	<c:when test="${not empty duLieuKeToanDs}">
 		<c:forEach items="${duLieuKeToanDs}" var="duLieuKeToan">
 			<tr>
-				<td>${duLieuKeToan.loaiTaiKhoan.maTk}</td>
+				<td><a
+					href="${url}/soketoan/socai/${duLieuKeToanCon.loaiTaiKhoan.maTk}/${mainFinanceForm.kyKeToan.maKyKt}"
+					target="_blank">${duLieuKeToanCon.loaiTaiKhoan.maTk}</a></td>
 				<td>${duLieuKeToan.loaiTaiKhoan.tenTk}</td>
-				<c:choose>
-					<c:when test="${duLieuKeToan.soDuDauKy>=0}">
-						<td class="text-right"><fmt:formatNumber
-								value="${duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
-						<td class="text-right">0</td>
-					</c:when>
-					<c:otherwise>
-						<td class="text-right">0</td>
-						<td class="text-right"><fmt:formatNumber
-								value="${0-duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
-					</c:otherwise>
-				</c:choose>
+				<td class="text-right"><fmt:formatNumber
+						value="${duLieuKeToan.noDauKy}" type="NUMBER"></fmt:formatNumber></td>
+				<td class="text-right"><fmt:formatNumber
+						value="${duLieuKeToan.coDauKy}" type="NUMBER"></fmt:formatNumber></td>
 				<td class="text-right"><fmt:formatNumber
 						value="${duLieuKeToan.tongNoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
 				<td class="text-right"><fmt:formatNumber
 						value="${duLieuKeToan.tongCoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
 				<c:choose>
-					<c:when test="${duLieuKeToan.soDuCuoiKy>=0}">
+					<c:when test="${duLieuKeToan.loaiTaiKhoan.luongTinh}">
+						<td class="text-right"><fmt:formatNumber
+								value="${duLieuKeToan.noCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+						<td class="text-right"><fmt:formatNumber
+								value="${duLieuKeToan.coCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+					</c:when>
+					<c:when
+						test="${!duLieuKeToan.loaiTaiKhoan.luongTinh && duLieuKeToan.soDuCuoiKy>=0}">
 						<td class="text-right"><fmt:formatNumber
 								value="${duLieuKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
 						<td class="text-right">0</td>
 					</c:when>
-					<c:otherwise>
+					<c:when
+						test="${!duLieuKeToan.loaiTaiKhoan.luongTinh && duLieuKeToan.soDuCuoiKy<0}">
 						<td class="text-right">0</td>
 						<td class="text-right"><fmt:formatNumber
 								value="${0-duLieuKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
-					</c:otherwise>
+					</c:when>
 				</c:choose>
 			</tr>
 			<c:set var="duLieuKeToanDs" value="${duLieuKeToan.duLieuKeToanDs}"

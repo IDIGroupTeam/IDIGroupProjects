@@ -1,10 +1,14 @@
 package com.idi.finance.bean.soketoan;
 
 import com.idi.finance.bean.chungtu.ChungTu;
+import com.idi.finance.bean.chungtu.KetChuyenButToan;
 import com.idi.finance.bean.chungtu.TaiKhoan;
+import com.idi.finance.bean.hanghoa.HangHoa;
 
 public class NghiepVuKeToan implements Comparable<NghiepVuKeToan> {
 	private ChungTu chungTu;
+	private HangHoa hangHoa;
+	private KetChuyenButToan ketChuyenButToan;
 	private TaiKhoan taiKhoanNo;
 	private TaiKhoan taiKhoanCo;
 
@@ -14,6 +18,22 @@ public class NghiepVuKeToan implements Comparable<NghiepVuKeToan> {
 
 	public void setChungTu(ChungTu chungTu) {
 		this.chungTu = chungTu;
+	}
+
+	public HangHoa getHangHoa() {
+		return hangHoa;
+	}
+
+	public void setHangHoa(HangHoa hangHoa) {
+		this.hangHoa = hangHoa;
+	}
+
+	public KetChuyenButToan getKetChuyenButToan() {
+		return ketChuyenButToan;
+	}
+
+	public void setKetChuyenButToan(KetChuyenButToan ketChuyenButToan) {
+		this.ketChuyenButToan = ketChuyenButToan;
 	}
 
 	public TaiKhoan getTaiKhoanNo() {
@@ -97,6 +117,24 @@ public class NghiepVuKeToan implements Comparable<NghiepVuKeToan> {
 			} else if (item.getChungTu() == null) {
 				return false;
 			} else if (!chungTu.equals(item.getChungTu())) {
+				return false;
+			}
+
+			if (hangHoa == null) {
+				if (item.getHangHoa() != null)
+					return false;
+			} else if (item.getHangHoa() == null) {
+				return false;
+			} else if (!hangHoa.equals(item.getHangHoa())) {
+				return false;
+			}
+
+			if (ketChuyenButToan == null) {
+				if (item.getKetChuyenButToan() != null)
+					return false;
+			} else if (item.getKetChuyenButToan() == null) {
+				return false;
+			} else if (!ketChuyenButToan.equals(item.getKetChuyenButToan())) {
 				return false;
 			}
 

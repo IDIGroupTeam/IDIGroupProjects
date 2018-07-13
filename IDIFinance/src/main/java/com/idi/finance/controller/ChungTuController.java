@@ -133,9 +133,11 @@ public class ChungTuController {
 				return "koKyKeToanMacDinh";
 			}
 
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_THU);
+
 			// Lấy danh sách phiếu thu
-			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_PHIEU_THU,
-					kyKeToan.getBatDau(), kyKeToan.getKetThuc());
+			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTu(loaiCts, kyKeToan.getBatDau(), kyKeToan.getKetThuc());
 
 			model.addAttribute("phieuThuDs", phieuThuDs);
 			model.addAttribute("kyKeToan", kyKeToan);
@@ -345,9 +347,11 @@ public class ChungTuController {
 				return "koKyKeToanMacDinh";
 			}
 
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_CHI);
+
 			// Lấy danh sách phiếu chi
-			List<ChungTu> phieuChiDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_PHIEU_CHI,
-					kyKeToan.getBatDau(), kyKeToan.getKetThuc());
+			List<ChungTu> phieuChiDs = chungTuDAO.danhSachChungTu(loaiCts, kyKeToan.getBatDau(), kyKeToan.getKetThuc());
 
 			model.addAttribute("phieuChiDs", phieuChiDs);
 			model.addAttribute("kyKeToan", kyKeToan);
@@ -557,9 +561,11 @@ public class ChungTuController {
 				return "koKyKeToanMacDinh";
 			}
 
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_BAO_CO);
+
 			// Lấy danh sách phiếu chi
-			List<ChungTu> baoCoDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_BAO_CO, kyKeToan.getBatDau(),
-					kyKeToan.getKetThuc());
+			List<ChungTu> baoCoDs = chungTuDAO.danhSachChungTu(loaiCts, kyKeToan.getBatDau(), kyKeToan.getKetThuc());
 
 			model.addAttribute("baoCoDs", baoCoDs);
 			model.addAttribute("kyKeToan", kyKeToan);
@@ -769,9 +775,11 @@ public class ChungTuController {
 				return "koKyKeToanMacDinh";
 			}
 
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_BAO_NO);
+
 			// Lấy danh sách phiếu chi
-			List<ChungTu> baoNoDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_BAO_NO, kyKeToan.getBatDau(),
-					kyKeToan.getKetThuc());
+			List<ChungTu> baoNoDs = chungTuDAO.danhSachChungTu(loaiCts, kyKeToan.getBatDau(), kyKeToan.getKetThuc());
 
 			model.addAttribute("baoNoDs", baoNoDs);
 			model.addAttribute("kyKeToan", kyKeToan);
@@ -981,9 +989,12 @@ public class ChungTuController {
 				return "koKyKeToanMacDinh";
 			}
 
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_KT_TH);
+
 			// Lấy danh sách phiếu kế toán tổng hợp
-			List<ChungTu> keToanTongHopDs = chungTuDAO.danhSachChungTuTheoLoaiCt(ChungTu.CHUNG_TU_KT_TH,
-					kyKeToan.getBatDau(), kyKeToan.getKetThuc());
+			List<ChungTu> keToanTongHopDs = chungTuDAO.danhSachChungTu(loaiCts, kyKeToan.getBatDau(),
+					kyKeToan.getKetThuc());
 
 			model.addAttribute("keToanTongHopDs", keToanTongHopDs);
 			model.addAttribute("kyKeToan", kyKeToan);
@@ -1189,9 +1200,12 @@ public class ChungTuController {
 				return "koKyKeToanMacDinh";
 			}
 
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_MUA_HANG);
+
 			// Lấy danh sách chứng từ mua hàng
-			List<ChungTu> muaHangDs = chungTuDAO.danhSachChungTuKhoTheoLoaiCt(ChungTu.CHUNG_TU_MUA_HANG,
-					kyKeToan.getBatDau(), kyKeToan.getKetThuc());
+			List<ChungTu> muaHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, kyKeToan.getBatDau(),
+					kyKeToan.getKetThuc());
 
 			model.addAttribute("muaHangDs", muaHangDs);
 			model.addAttribute("kyKeToan", kyKeToan);
@@ -1358,6 +1372,7 @@ public class ChungTuController {
 			// Đảm bảo các trường dữ liệu đúng với ý nghĩa của nó
 			// Đảm bảo giá trị được tính thống nhất theo loại tiền đã chọn
 			// Với từng loại hàng hóa
+			int soHangHoa = chungTu.getHangHoaDs().size();
 			Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
 			while (hhIter.hasNext()) {
 				HangHoa hangHoa = hhIter.next();
@@ -1376,6 +1391,12 @@ public class ChungTuController {
 					hangHoa.getTkThueNk().getSoTien().setSoTien(thue);
 					hangHoa.getTkThueNk().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 					tongThue += thue;
+
+					if (soHangHoa > 1) {
+						hangHoa.getTkThueNk().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
+					} else {
+						hangHoa.getTkThueNk().setLyDo(chungTu.getLyDo());
+					}
 				}
 
 				if (hangHoa.getTkThueTtdb() != null && hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk() != null
@@ -1384,6 +1405,12 @@ public class ChungTuController {
 					hangHoa.getTkThueTtdb().getSoTien().setSoTien(thue);
 					hangHoa.getTkThueTtdb().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 					tongThue += thue;
+
+					if (soHangHoa > 1) {
+						hangHoa.getTkThueTtdb().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
+					} else {
+						hangHoa.getTkThueTtdb().setLyDo(chungTu.getLyDo());
+					}
 				}
 
 				if (hangHoa.getTkThueGtgt() != null && hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() != null
@@ -1393,6 +1420,12 @@ public class ChungTuController {
 					double thue = hangHoa.getTkThueGtgt().getSoTien().getSoTien() / chungTu.getLoaiTien().getBanRa();
 					hangHoa.getTkThueGtgt().getSoTien().setSoTien(thue);
 					hangHoa.getTkThueGtgt().getSoTien().setLoaiTien(chungTu.getLoaiTien());
+
+					if (soHangHoa > 1) {
+						hangHoa.getTkThueGtgt().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
+					} else {
+						hangHoa.getTkThueGtgt().setLyDo(chungTu.getLyDo());
+					}
 
 					if (hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						// Đây là trường hợp thuế Gtgt tính theo phương pháp trực tiếp
@@ -1415,6 +1448,12 @@ public class ChungTuController {
 				// Tính giá trị tài khoản kho
 				if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null) {
 					hangHoa.getTkKho().setSoTien(tongTien);
+
+					if (soHangHoa > 1) {
+						hangHoa.getTkKho().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
+					} else {
+						hangHoa.getTkKho().setLyDo(chungTu.getLyDo());
+					}
 				}
 
 				// Tính giá trị tài khoản thanh toán (công nợ)
@@ -1434,6 +1473,12 @@ public class ChungTuController {
 
 				if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null) {
 					hangHoa.getTkThanhtoan().setSoTien(thanhToan);
+
+					if (soHangHoa > 1) {
+						hangHoa.getTkThanhtoan().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
+					} else {
+						hangHoa.getTkThanhtoan().setLyDo(chungTu.getLyDo());
+					}
 				}
 			}
 
@@ -1521,9 +1566,12 @@ public class ChungTuController {
 				return "koKyKeToanMacDinh";
 			}
 
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_BAN_HANG);
+
 			// Lấy danh sách chứng từ mua hàng
-			List<ChungTu> banHangDs = chungTuDAO.danhSachChungTuKhoTheoLoaiCt(ChungTu.CHUNG_TU_BAN_HANG,
-					kyKeToan.getBatDau(), kyKeToan.getKetThuc());
+			List<ChungTu> banHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, kyKeToan.getBatDau(),
+					kyKeToan.getKetThuc());
 
 			model.addAttribute("banHangDs", banHangDs);
 			model.addAttribute("kyKeToan", kyKeToan);
@@ -1660,6 +1708,7 @@ public class ChungTuController {
 				// Đảm bảo các trường dữ liệu đúng với ý nghĩa của nó
 				// Đảm bảo giá trị được tính thống nhất theo loại tiền đã chọn
 				// Với từng loại hàng hóa
+				int soHangHoa = chungTu.getHangHoaDs().size();
 				Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
 				while (hhIter.hasNext()) {
 					HangHoa hangHoa = hhIter.next();
@@ -1675,6 +1724,12 @@ public class ChungTuController {
 						hangHoa.getTkThueGtgt().getSoTien().setSoTien(thue);
 						hangHoa.getTkThueGtgt().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 						tongThue += thue;
+
+						if (soHangHoa > 1) {
+							hangHoa.getTkThueGtgt().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
+						} else {
+							hangHoa.getTkThueGtgt().setLyDo(chungTu.getLyDo());
+						}
 					}
 
 					if (hangHoa.getTkThueXk() != null && hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null
@@ -1684,6 +1739,12 @@ public class ChungTuController {
 						hangHoa.getTkThueXk().getSoTien().setSoTien(thue);
 						hangHoa.getTkThueXk().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 						tongThue += thue;
+
+						if (soHangHoa > 1) {
+							hangHoa.getTkThueXk().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
+						} else {
+							hangHoa.getTkThueXk().setLyDo(chungTu.getLyDo());
+						}
 					}
 
 					// Tổng doanh thu
@@ -1696,6 +1757,12 @@ public class ChungTuController {
 					if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						hangHoa.getTkDoanhThu().setSoTien(doanhThu);
+
+						if (soHangHoa > 1) {
+							hangHoa.getTkDoanhThu().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
+						} else {
+							hangHoa.getTkDoanhThu().setLyDo(chungTu.getLyDo());
+						}
 					}
 
 					// Tổng thanh toán
@@ -1707,6 +1774,12 @@ public class ChungTuController {
 					if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						hangHoa.getTkThanhtoan().setSoTien(thanhToan);
+
+						if (soHangHoa > 1) {
+							hangHoa.getTkThanhtoan().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
+						} else {
+							hangHoa.getTkThanhtoan().setLyDo(chungTu.getLyDo());
+						}
 					}
 
 					// Tổng giá vốn
@@ -1718,11 +1791,25 @@ public class ChungTuController {
 					if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						hangHoa.getTkGiaVon().setSoTien(giaVon);
+						hangHoa.getTkGiaVon().setNhomDk(1);
+
+						if (soHangHoa > 1) {
+							hangHoa.getTkGiaVon().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
+						} else {
+							hangHoa.getTkGiaVon().setLyDo(chungTu.getLyDo());
+						}
 					}
 
 					if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						hangHoa.getTkKho().setSoTien(giaVon);
+						hangHoa.getTkKho().setNhomDk(1);
+
+						if (soHangHoa > 1) {
+							hangHoa.getTkKho().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
+						} else {
+							hangHoa.getTkKho().setLyDo(chungTu.getLyDo());
+						}
 					}
 				}
 
@@ -1739,8 +1826,8 @@ public class ChungTuController {
 				// Ta cũng có thể tách phần này thành một nút riêng
 				// giống phần mua hàng có nút nhập kho riêng
 				Iterator<HangHoa> iter = chungTu.getHangHoaDs().iterator();
-				while (hhIter.hasNext()) {
-					HangHoa hangHoa = hhIter.next();
+				while (iter.hasNext()) {
+					HangHoa hangHoa = iter.next();
 
 					// Kiểm tra số lượng tổn kho
 					double soLuong = khoHangDAO.laySoLuong(hangHoa);

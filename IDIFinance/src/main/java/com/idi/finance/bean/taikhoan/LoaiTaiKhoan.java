@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.idi.finance.bean.doitac.NganHangTaiKhoan;
 
 public class LoaiTaiKhoan {
+	private static final Logger logger = Logger.getLogger(LoaiTaiKhoan.class);
 	public static final int NO = -1;
 	public static final String NO_XAU = "NO";
 	public static final int CO = 1;
@@ -36,7 +39,7 @@ public class LoaiTaiKhoan {
 	private String maTkCha;
 	private int soDu;
 	private int soDuGiaTri;
-	private boolean luongTinh;
+	private boolean luongTinh = false;
 	private LoaiTaiKhoan loaiTaiKhoan;
 	private List<LoaiTaiKhoan> loaiTaiKhoanDs;
 	private boolean isNew = false;
@@ -180,16 +183,12 @@ public class LoaiTaiKhoan {
 		}
 
 		LoaiTaiKhoan item = (LoaiTaiKhoan) obj;
-		try {
-			if (maTk == null) {
-				if (item.getMaTk() != null)
-					return false;
-			} else if (item.getMaTk() == null) {
+		if (maTk == null) {
+			if (item.getMaTk() != null)
 				return false;
-			} else if (!maTk.trim().equals(item.getMaTk().trim())) {
-				return false;
-			}
-		} catch (Exception e) {
+		} else if (item.getMaTk() == null) {
+			return false;
+		} else if (!maTk.trim().equals(item.getMaTk().trim())) {
 			return false;
 		}
 

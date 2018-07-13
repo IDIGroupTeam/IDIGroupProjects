@@ -279,7 +279,8 @@ public class ChungTu {
 	}
 
 	public void setKcbtDs(List<KetChuyenButToan> kcbtDs) {
-		this.kcbtDs = kcbtDs;
+		this.kcbtDs = null;
+		themKetChuyenButToan(kcbtDs);
 	}
 
 	public void themKetChuyenButToan(KetChuyenButToan ketChuyenButToan) {
@@ -788,7 +789,20 @@ public class ChungTu {
 				soDongNkc++;
 			}
 		} else if (loaiCt.equals(CHUNG_TU_KET_CHUYEN)) {
+			if (kcbtDs != null && kcbtDs.size() > 0) {
+				Iterator<KetChuyenButToan> iter = kcbtDs.iterator();
+				while (iter.hasNext()) {
+					KetChuyenButToan ketChuyenButToan = iter.next();
 
+					try {
+						if (ketChuyenButToan.getTaiKhoanNo().getSoTien().getSoTien() > 0
+								&& ketChuyenButToan.getTaiKhoanCo().getSoTien().getSoTien() > 0) {
+							soDongNkc++;
+						}
+					} catch (Exception e) {
+					}
+				}
+			}
 		} else {
 			soDongNkc += getSoTkLonNhat();
 		}

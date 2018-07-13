@@ -8,9 +8,9 @@ import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;
 
 public interface ChungTuDAO {
-	public List<ChungTu> danhSachChungTuTheoLoaiCt(String loaiCt, Date batDau, Date ketThuc);
+	public List<ChungTu> danhSachChungTu(List<String> loaiCts, Date batDau, Date ketThuc);
 
-	public List<ChungTu> danhSachChungTuKhoTheoLoaiCt(String loaiCt, Date batDau, Date ketThuc);
+	public List<ChungTu> danhSachChungTuKho(List<String> loaiCts, Date batDau, Date ketThuc);
 
 	public ChungTu layChungTu(int maCt, String loaiCt);
 
@@ -53,6 +53,6 @@ public interface ChungTuDAO {
 	public Date layKetChuyenGanNhat(int loaiKc, Date batDau, Date ketThuc);
 
 	public void themChungTuKetChuyen(ChungTu chungTu);
-	
+
 	public void xoaKetChuyen(ChungTu chungTu);
 }
