@@ -28,7 +28,6 @@ import com.idi.finance.bean.cdkt.DuLieuKeToan;
 import com.idi.finance.bean.cdkt.KyKeToanCon;
 import com.idi.finance.bean.chungtu.TaiKhoan;
 import com.idi.finance.bean.chungtu.Tien;
-import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.kyketoan.SoDuKy;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BalanceSheetDAO;
@@ -199,9 +198,9 @@ public class BalanceSheetController {
 					+ " - " + form.getCuoi());
 			HashMap<Integer, String> kyDs = new HashMap<>();
 
-			kyDs.put(KyKeToanCon.WEEK, "Tuần");
+			// kyDs.put(KyKeToanCon.WEEK, "Tuần");
 			kyDs.put(KyKeToanCon.MONTH, "Tháng");
-			kyDs.put(KyKeToanCon.QUARTER, "Quý");
+			// kyDs.put(KyKeToanCon.QUARTER, "Quý");
 			kyDs.put(KyKeToanCon.YEAR, "Năm");
 
 			Iterator<Integer> kyIter = kyDs.keySet().iterator();
@@ -477,12 +476,10 @@ public class BalanceSheetController {
 		Iterator<TaiKhoan> dkIter = dauKyDs.iterator();
 		while (dkIter.hasNext()) {
 			TaiKhoan taiKhoan = dkIter.next();
-			logger.info("Tai khoan " + taiKhoan);
 
 			Iterator<SoDuKy> sdkIter = soDuKyDs.iterator();
 			while (sdkIter.hasNext()) {
 				SoDuKy soDuKy = sdkIter.next();
-				logger.info("So du ky " + soDuKy);
 
 				if (taiKhoan.getLoaiTaiKhoan().equals(soDuKy.getLoaiTaiKhoan())) {
 					Tien soTien = taiKhoan.getSoTien();
@@ -633,215 +630,6 @@ public class BalanceSheetController {
 			}
 		}
 
-		return duLieuKeToan;
-	}
-
-	public String bangCanDoiPhatSinh1(@ModelAttribute("mainFinanceForm") TkSoKeToanForm form, Model model) {
-		try {
-			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-
-			// Lấy kỳ kế toán mặc định
-			if (form.getKyKeToan() == null) {
-				form.setKyKeToan(dungChung.getKyKeToan());
-			} else {
-				form.setKyKeToan(kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt()));
-			}
-
-			Date homNay = new Date();
-			if (!form.getKyKeToan().getBatDau().after(homNay) && !form.getKyKeToan().getKetThuc().before(homNay)) {
-				// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của
-				// tháng hiện tại
-				if (form.getDau() == null) {
-					form.setDau(Utils.getStartDateOfMonth(homNay));
-				}
-
-				if (form.getCuoi() == null) {
-					form.setCuoi(Utils.getEndDateOfMonth(homNay));
-				}
-			} else {
-				// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của
-				// tháng hiện tại
-				if (form.getDau() == null) {
-					form.setDau(form.getKyKeToan().getBatDau());
-				}
-
-				if (form.getCuoi() == null) {
-					form.setCuoi(form.getKyKeToan().getKetThuc());
-				}
-			}
-
-			List<SoDuKy> soDuKyDs = kyKeToanDAO.danhSachSoDuKy(form.getKyKeToan().getMaKyKt());
-
-			// Lấy danh mục tài khoản các cấp
-			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.cayTaiKhoan();
-			LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
-			loaiTaiKhoan.themLoaiTaiKhoan(loaiTaiKhoanDs);
-
-			// Lấy dư nợ/có đầu kỳ, nợ phát sinh/có phát sinh và dư nợ/có cuối kỳ
-			HashMap<KyKeToanCon, DuLieuKeToan> duLieuKeToanMap = new HashMap<>();
-
-			// Lặp theo kỳ
-			KyKeToanCon kyKt = new KyKeToanCon(form.getDau(), form.getLoaiKy());
-
-			if (form.getLoaiKy() == KyKeToanCon.NAN) {
-				logger.info("KỲ: " + kyKt);
-				kyKt = new KyKeToanCon(form.getDau(), form.getCuoi());
-				KyKeToanCon kyKtTruoc = kyKt.kyTruoc();
-
-				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
-
-				// Tính tổng nợ/có đầu kỳ, phát sinh nợ/có trong kỳ và số dư nợ/có cuối kỳ
-				duLieuKeToan = tongPhatSinh(duLieuKeToan, duLieuKeToanMap.get(kyKtTruoc), form.getKyKeToan(), soDuKyDs);
-				duLieuKeToanMap.put(kyKt, duLieuKeToan);
-			} else {
-				while (!kyKt.getCuoi().after(form.getCuoi())) {
-					logger.info("KỲ: " + kyKt);
-
-					DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
-					KyKeToanCon kyKtTruoc = kyKt.kyTruoc();
-
-					// Tính tổng nợ/có đầu kỳ, phát sinh nợ/có trong kỳ và số dư nợ/có cuối kỳ
-					duLieuKeToan = tongPhatSinh(duLieuKeToan, duLieuKeToanMap.get(kyKtTruoc), form.getKyKeToan(),
-							soDuKyDs);
-					duLieuKeToanMap.put(kyKt, duLieuKeToan);
-
-					kyKt = Utils.nextPeriod(kyKt);
-				}
-			}
-
-			model.addAttribute("kyKeToanDs", kyKeToanDAO.danhSachKyKeToan());
-			model.addAttribute("duLieuKeToanMap", duLieuKeToanMap);
-			model.addAttribute("mainFinanceForm", form);
-
-			model.addAttribute("tab", "tabBCDPS");
-			return "bangCanDoiPhatSinh";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "error";
-		}
-	}
-
-	private DuLieuKeToan tongPhatSinh(DuLieuKeToan duLieuKeToan, DuLieuKeToan duLieuKeToanKyTruoc, KyKeToan kyKeToan,
-			List<SoDuKy> soDuKyDs) {
-		if (duLieuKeToan == null || duLieuKeToan.getKyKeToan() == null || duLieuKeToan.getLoaiTaiKhoan() == null)
-			return null;
-
-		// Chuyển đổi từ list sang map cho dễ thao tác
-		HashMap<LoaiTaiKhoan, DuLieuKeToan> duLieuKeToanKyTruocMap = null;
-		if (duLieuKeToanKyTruoc != null && duLieuKeToanKyTruoc.getDuLieuKeToanDs() != null
-				&& duLieuKeToanKyTruoc.getDuLieuKeToanDs().size() > 0) {
-			duLieuKeToanKyTruocMap = new HashMap<>();
-			Iterator<DuLieuKeToan> iter = duLieuKeToanKyTruoc.getDuLieuKeToanDs().iterator();
-			while (iter.hasNext()) {
-				DuLieuKeToan duLieuKeToanConKyTruoc = iter.next();
-				duLieuKeToanKyTruocMap.put(duLieuKeToanConKyTruoc.getLoaiTaiKhoan(), duLieuKeToanConKyTruoc);
-			}
-		}
-
-		double soDuDauKy = 0;
-		double noDauKy = 0;
-		double coDauKy = 0;
-		double soDuCuoiKy = 0;
-		double noCuoiKy = 0;
-		double coCuoiKy = 0;
-		double tongNoPhatSinh = 0;
-		double tongCoPhatSinh = 0;
-
-		// Tính nợ/có đầu kỳ của tài khoản hiện tại
-		if (duLieuKeToanKyTruoc != null) {
-			noDauKy = duLieuKeToanKyTruoc.getNoCuoiKy();
-			coDauKy = duLieuKeToanKyTruoc.getCoCuoiKy();
-		} else {
-			// Nếu không có dữ liệu kế toán kỳ trước
-			// Tính nợ/có đầu kỳ từ csdl
-			Date cuoiKyTruoc = Utils.prevPeriod(duLieuKeToan.getKyKeToan()).getCuoi();
-			noDauKy = soKeToanDAO.tongPhatSinh(duLieuKeToan.getLoaiTaiKhoan().getMaTk(), LoaiTaiKhoan.NO,
-					kyKeToan.getBatDau(), cuoiKyTruoc);
-			coDauKy = soKeToanDAO.tongPhatSinh(duLieuKeToan.getLoaiTaiKhoan().getMaTk(), LoaiTaiKhoan.CO,
-					kyKeToan.getBatDau(), cuoiKyTruoc);
-
-			try {
-				SoDuKy soDuKy = null;
-				Iterator<SoDuKy> iter = soDuKyDs.iterator();
-				while (iter.hasNext()) {
-					SoDuKy soDuKyCon = iter.next();
-					if (soDuKyCon.getLoaiTaiKhoan().equals(duLieuKeToan.getLoaiTaiKhoan())) {
-						soDuKy = soDuKyCon;
-						break;
-					}
-				}
-
-				noDauKy += soDuKy.getNoDauKy();
-				coDauKy += soDuKy.getCoDauKy();
-			} catch (Exception e) {
-			}
-		}
-
-		List<LoaiTaiKhoan> loaiTaiKhoanDs = duLieuKeToan.getLoaiTaiKhoan().getLoaiTaiKhoanDs();
-		if (loaiTaiKhoanDs != null && loaiTaiKhoanDs.size() > 0) {
-			// Tài khoản này có hệ thống tài khoản con
-			// Nên trước tiên tính dữ liệu kế toán của tài khoản con
-			List<DuLieuKeToan> duLieuKeToanDs = new ArrayList<>();
-			Iterator<LoaiTaiKhoan> iter = loaiTaiKhoanDs.iterator();
-			while (iter.hasNext()) {
-				LoaiTaiKhoan loaiTaiKhoan = iter.next();
-
-				DuLieuKeToan duLieuKeToanCon = new DuLieuKeToan(duLieuKeToan.getKyKeToan(), loaiTaiKhoan);
-				duLieuKeToanCon.setDuLieuKeToan(duLieuKeToan);
-
-				DuLieuKeToan duLieuKeToanConKyTruoc = null;
-				if (duLieuKeToanKyTruocMap != null) {
-					duLieuKeToanConKyTruoc = duLieuKeToanKyTruocMap.get(loaiTaiKhoan);
-				}
-
-				duLieuKeToanCon = tongPhatSinh(duLieuKeToanCon, duLieuKeToanConKyTruoc, kyKeToan, soDuKyDs);
-				duLieuKeToanDs.add(duLieuKeToanCon);
-
-				if (duLieuKeToan.getLoaiTaiKhoan().getMaTk() == null
-						|| duLieuKeToan.getLoaiTaiKhoan().getMaTk().trim().equals("")) {
-					// Giành cho dữ liệu kế toán cao nhất trong cây dữ liệu kế toán
-					// Tính nợ/có đầu kỳ
-					noDauKy += duLieuKeToanCon.getNoDauKy();
-					coDauKy += duLieuKeToanCon.getCoDauKy();
-
-					// Tính tổng nợ/có phát sinh
-					tongNoPhatSinh += duLieuKeToanCon.getTongNoPhatSinh();
-					tongCoPhatSinh += duLieuKeToanCon.getTongCoPhatSinh();
-				}
-			}
-			duLieuKeToan.themDuLieuKeToan(duLieuKeToanDs);
-		}
-
-		// Tính tổng nợ/có phát sinh
-		if (duLieuKeToan.getLoaiTaiKhoan().getMaTk() != null
-				&& !duLieuKeToan.getLoaiTaiKhoan().getMaTk().trim().equals("")) {
-			// Tính tổng nợ/có phát sinh cho tài khoản từ csdl
-			tongNoPhatSinh = soKeToanDAO.tongPhatSinh(duLieuKeToan.getLoaiTaiKhoan().getMaTk(), LoaiTaiKhoan.NO,
-					duLieuKeToan.getKyKeToan().getDau(), duLieuKeToan.getKyKeToan().getCuoi());
-			tongCoPhatSinh = soKeToanDAO.tongPhatSinh(duLieuKeToan.getLoaiTaiKhoan().getMaTk(), LoaiTaiKhoan.CO,
-					duLieuKeToan.getKyKeToan().getDau(), duLieuKeToan.getKyKeToan().getCuoi());
-		}
-
-		// Tính nợ/có cuối kỳ
-		noCuoiKy = noDauKy + tongNoPhatSinh;
-		coCuoiKy = coDauKy + tongCoPhatSinh;
-
-		// Tính số dư đầu kỳ/cuối kỳ
-		soDuDauKy = noDauKy - coDauKy;
-		soDuCuoiKy = noCuoiKy - coCuoiKy;
-
-		// Lưu vào dữ liệu kết toán
-		duLieuKeToan.setSoDuDauKy(soDuDauKy);
-		duLieuKeToan.setNoDauKy(noDauKy);
-		duLieuKeToan.setCoDauKy(coDauKy);
-		duLieuKeToan.setTongNoPhatSinh(tongNoPhatSinh);
-		duLieuKeToan.setTongCoPhatSinh(tongCoPhatSinh);
-		duLieuKeToan.setSoDuCuoiKy(soDuCuoiKy);
-		duLieuKeToan.setNoCuoiKy(noCuoiKy);
-		duLieuKeToan.setCoCuoiKy(coCuoiKy);
-
-		logger.info(duLieuKeToan);
 		return duLieuKeToan;
 	}
 }
