@@ -129,8 +129,7 @@
 				</c:choose>
 				<c:forEach items="${duLieuKeToan.nghiepVuKeToanDs}"
 					var="nghiepVuKeToan">
-					<c:if
-						test="${nghiepVuKeToan.taiKhoanNo.soTien.soTien>0 && nghiepVuKeToan.taiKhoanCo.soTien.soTien>0}">
+					
 						<tr>
 							<td><fmt:formatDate value="${nghiepVuKeToan.chungTu.ngayHt}"
 									pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" /></td>
@@ -234,7 +233,7 @@
 								</c:when>
 							</c:choose>
 						</tr>
-					</c:if>
+					
 				</c:forEach>
 				<tr>
 					<td></td>

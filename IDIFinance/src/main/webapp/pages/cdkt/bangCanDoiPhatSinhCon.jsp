@@ -12,13 +12,29 @@
 		<c:forEach items="${duLieuKeToanDs}" var="duLieuKeToan">
 			<tr>
 				<td><a
-					href="${url}/soketoan/socai/${duLieuKeToanCon.loaiTaiKhoan.maTk}/${mainFinanceForm.kyKeToan.maKyKt}"
-					target="_blank">${duLieuKeToanCon.loaiTaiKhoan.maTk}</a></td>
+					href="${url}/soketoan/socai/${duLieuKeToan.loaiTaiKhoan.maTk}/${mainFinanceForm.kyKeToan.maKyKt}"
+					target="_blank">${duLieuKeToan.loaiTaiKhoan.maTk}</a></td>
 				<td>${duLieuKeToan.loaiTaiKhoan.tenTk}</td>
-				<td class="text-right"><fmt:formatNumber
-						value="${duLieuKeToan.noDauKy}" type="NUMBER"></fmt:formatNumber></td>
-				<td class="text-right"><fmt:formatNumber
-						value="${duLieuKeToan.coDauKy}" type="NUMBER"></fmt:formatNumber></td>
+				<c:choose>
+					<c:when test="${duLieuKeToan.loaiTaiKhoan.luongTinh}">
+						<td class="text-right"><fmt:formatNumber
+								value="${duLieuKeToan.noDauKy}" type="NUMBER"></fmt:formatNumber></td>
+						<td class="text-right"><fmt:formatNumber
+								value="${duLieuKeToan.coDauKy}" type="NUMBER"></fmt:formatNumber></td>
+					</c:when>
+					<c:when
+						test="${!duLieuKeToan.loaiTaiKhoan.luongTinh && duLieuKeToan.soDuDauKy>=0}">
+						<td class="text-right"><fmt:formatNumber
+								value="${duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+						<td class="text-right">0</td>
+					</c:when>
+					<c:when
+						test="${!duLieuKeToan.loaiTaiKhoan.luongTinh && duLieuKeToan.soDuDauKy<0}">
+						<td class="text-right">0</td>
+						<td class="text-right"><fmt:formatNumber
+								value="${0-duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+					</c:when>
+				</c:choose>
 				<td class="text-right"><fmt:formatNumber
 						value="${duLieuKeToan.tongNoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
 				<td class="text-right"><fmt:formatNumber

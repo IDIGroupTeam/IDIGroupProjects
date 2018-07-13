@@ -477,10 +477,12 @@ public class BalanceSheetController {
 		Iterator<TaiKhoan> dkIter = dauKyDs.iterator();
 		while (dkIter.hasNext()) {
 			TaiKhoan taiKhoan = dkIter.next();
+			logger.info("Tai khoan " + taiKhoan);
 
 			Iterator<SoDuKy> sdkIter = soDuKyDs.iterator();
 			while (sdkIter.hasNext()) {
 				SoDuKy soDuKy = sdkIter.next();
+				logger.info("So du ky " + soDuKy);
 
 				if (taiKhoan.getLoaiTaiKhoan().equals(soDuKy.getLoaiTaiKhoan())) {
 					Tien soTien = taiKhoan.getSoTien();
@@ -501,41 +503,45 @@ public class BalanceSheetController {
 		while (sdkIter.hasNext()) {
 			SoDuKy soDuKy = sdkIter.next();
 
+			boolean daXuLy = false;
 			Iterator<TaiKhoan> iter = dauKyDs.iterator();
 			while (iter.hasNext()) {
 				TaiKhoan taiKhoan = iter.next();
 
 				if (soDuKy.getLoaiTaiKhoan().equals(taiKhoan.getLoaiTaiKhoan())) {
+					daXuLy = true;
 					break;
 				}
 			}
 
-			if (soDuKy.getNoDauKy() > 0) {
-				TaiKhoan taiKhoan = new TaiKhoan();
+			if (!daXuLy) {
+				if (soDuKy.getNoDauKy() > 0) {
+					TaiKhoan taiKhoan = new TaiKhoan();
 
-				Tien tien = new Tien();
-				tien.setGiaTri(soDuKy.getNoDauKy());
-				tien.setSoTien(tien.getGiaTri() / tien.getLoaiTien().getBanRa());
+					Tien tien = new Tien();
+					tien.setGiaTri(soDuKy.getNoDauKy());
+					tien.setSoTien(tien.getGiaTri() / tien.getLoaiTien().getBanRa());
 
-				taiKhoan.setLoaiTaiKhoan(soDuKy.getLoaiTaiKhoan());
-				taiKhoan.setSoTien(tien);
-				taiKhoan.setSoDu(LoaiTaiKhoan.NO);
+					taiKhoan.setLoaiTaiKhoan(soDuKy.getLoaiTaiKhoan());
+					taiKhoan.setSoTien(tien);
+					taiKhoan.setSoDu(LoaiTaiKhoan.NO);
 
-				dauKyDs.add(taiKhoan);
-			}
+					dauKyDs.add(taiKhoan);
+				}
 
-			if (soDuKy.getCoDauKy() > 0) {
-				TaiKhoan taiKhoan = new TaiKhoan();
+				if (soDuKy.getCoDauKy() > 0) {
+					TaiKhoan taiKhoan = new TaiKhoan();
 
-				Tien tien = new Tien();
-				tien.setGiaTri(soDuKy.getCoDauKy());
-				tien.setSoTien(tien.getGiaTri() / tien.getLoaiTien().getBanRa());
+					Tien tien = new Tien();
+					tien.setGiaTri(soDuKy.getCoDauKy());
+					tien.setSoTien(tien.getGiaTri() / tien.getLoaiTien().getBanRa());
 
-				taiKhoan.setLoaiTaiKhoan(soDuKy.getLoaiTaiKhoan());
-				taiKhoan.setSoTien(tien);
-				taiKhoan.setSoDu(LoaiTaiKhoan.CO);
+					taiKhoan.setLoaiTaiKhoan(soDuKy.getLoaiTaiKhoan());
+					taiKhoan.setSoTien(tien);
+					taiKhoan.setSoDu(LoaiTaiKhoan.CO);
 
-				dauKyDs.add(taiKhoan);
+					dauKyDs.add(taiKhoan);
+				}
 			}
 		}
 

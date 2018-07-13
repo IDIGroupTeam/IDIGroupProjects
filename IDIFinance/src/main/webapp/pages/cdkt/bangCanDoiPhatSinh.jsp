@@ -58,10 +58,26 @@
 							href="${url}/soketoan/socai/${duLieuKeToanCon.loaiTaiKhoan.maTk}/${mainFinanceForm.kyKeToan.maKyKt}"
 							target="_blank">${duLieuKeToanCon.loaiTaiKhoan.maTk}</a></td>
 						<td>${duLieuKeToanCon.loaiTaiKhoan.tenTk}</td>
-						<td class="text-right"><fmt:formatNumber
-								value="${duLieuKeToanCon.noDauKy}" type="NUMBER"></fmt:formatNumber></td>
-						<td class="text-right"><fmt:formatNumber
-								value="${duLieuKeToanCon.coDauKy}" type="NUMBER"></fmt:formatNumber></td>
+						<c:choose>
+							<c:when test="${duLieuKeToanCon.loaiTaiKhoan.luongTinh}">
+								<td class="text-right"><fmt:formatNumber
+										value="${duLieuKeToanCon.noDauKy}" type="NUMBER"></fmt:formatNumber></td>
+								<td class="text-right"><fmt:formatNumber
+										value="${duLieuKeToanCon.coDauKy}" type="NUMBER"></fmt:formatNumber></td>
+							</c:when>
+							<c:when
+								test="${!duLieuKeToanCon.loaiTaiKhoan.luongTinh && duLieuKeToanCon.soDuDauKy>=0}">
+								<td class="text-right"><fmt:formatNumber
+										value="${duLieuKeToanCon.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+								<td class="text-right">0</td>
+							</c:when>
+							<c:when
+								test="${!duLieuKeToanCon.loaiTaiKhoan.luongTinh && duLieuKeToanCon.soDuDauKy<0}">
+								<td class="text-right">0</td>
+								<td class="text-right"><fmt:formatNumber
+										value="${0-duLieuKeToanCon.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+							</c:when>
+						</c:choose>
 						<td class="text-right"><fmt:formatNumber
 								value="${duLieuKeToanCon.tongNoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
 						<td class="text-right"><fmt:formatNumber
