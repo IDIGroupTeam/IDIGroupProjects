@@ -41,26 +41,28 @@ tr:nth-child(even) {
 	<input type="hidden" name="employeeName" value="${tasks[0].ownerName}">
 	<table class="table table-striped">
 			<tr>
-				<th>Mã việc</th>
+				<th nowrap="nowrap">Mã việc</th>
 				<th>Tên việc</th>
 				<th>Người làm</th>
 				<th>Trạng thái</th>				
-				<th>Ngày cập nhật gần nhất</th>
-				<th>Ngày phải xong</th>
+				<th nowrap="nowrap">Cập nhật gần nhất</th>
+				<th nowrap="nowrap">Ngày phải xong</th>
+				<th>Nhận xét đánh giá</th>
 			</tr>
 			<c:forEach var="task" items="${tasks}">
 				<tr>
 					<td>${task.taskId}</td>
 					<td>${task.taskName}</td>
 					<c:if test="${task.ownedBy == 0}">
-						<td>Chưa giao cho ai</td>
+						<td nowrap="nowrap">Chưa giao cho ai</td>
 					</c:if>
 					<c:if test="${task.ownedBy > 0}">
-						<td>${task.ownerName}</td>
+						<td nowrap="nowrap">${task.ownerName}</td>
 					</c:if>
 					<td>${task.status}</td>
-					<td>${task.updateTS}</td>
+					<td nowrap="nowrap">${task.updateTS}</td>
 					<td>${task.dueDate}</td>
+					<td>${task.reviewComment}</td>
 				</tr>
 			</c:forEach>
 		</table>

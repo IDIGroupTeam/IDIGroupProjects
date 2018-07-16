@@ -51,6 +51,8 @@ CREATE TABLE `task` (
   `DESCRIPTION` text COLLATE utf8_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+ALTER TABLE `task` ADD `REVIEW_COMMENT` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL ;
+
 --
 -- Dumping data for table `task`
 --

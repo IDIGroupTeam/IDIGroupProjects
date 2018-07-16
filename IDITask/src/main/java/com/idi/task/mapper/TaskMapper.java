@@ -37,10 +37,12 @@ public class TaskMapper implements RowMapper<Task> {
 		String timeSpentType = rs.getString("TIME_SPENT_TYPE"); //h/d/w/m
 		String estimate = rs.getString("ESTIMATE");
 		String estimateTimeType = rs.getString("ESTIMATE_TIME_TYPE");//h/d/w/m
-		String description =rs.getString("DESCRIPTION");
+		String description = rs.getString("DESCRIPTION");
+		String reviewComment = rs.getString("REVIEW_COMMENT");
 
-		return new Task(taskId, taskName, createdBy, ownedBy, ownerName, secondOwned, subscriber, related, verifyBy, updateId, updateTS, resolvedBy, creationDate,
-				dueDate, resolutionDate, type, area, priority, status, plannedFor, timeSpent, estimate, timeSpentType, estimateTimeType, description);
+		return new Task(taskId, taskName, createdBy, ownedBy, ownerName, secondOwned, subscriber, related, verifyBy,
+				updateId, updateTS, resolvedBy, creationDate, dueDate, resolutionDate, type, area, priority, status, 
+				plannedFor, timeSpent, estimate, timeSpentType, estimateTimeType, description, reviewComment);
 	}
 
 }

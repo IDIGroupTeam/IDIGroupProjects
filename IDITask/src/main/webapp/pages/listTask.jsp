@@ -184,30 +184,30 @@ tr:nth-child(even) {
 	</form:form>		
 		<table class="table table-striped">
 			<tr>
-				<th>Mã việc</th>
-				<th>Tên việc</th>
-				<th>Phòng</th>
-				<th>Giao cho</th>
+				<th nowrap="nowrap">Mã cv</th>
+				<th>Tên công việc</th>
+				<th>Người làm</th>
+				<th>Phòng</th>				
 				<th>Trạng thái</th>
-				<th>Mức độ</th>
-				<th>Kế hoạch cho</th>
+				<th nowrap="nowrap">Độ ưu tiên</th>
+				<th nowrap="nowrap">Kế hoạch tháng</th>
 				<th>Ngày cập nhật</th>
 			</tr>
 			<c:forEach var="task" items="${tasks}">
 				<tr>
 					<td>${task.taskId}</td>
-					<td><a href="/IDITask/editTask?tab=1&taskId=${task.taskId}">${task.taskName}</a></td>
-					<td>${task.area}</td>
+					<td><a href="/IDITask/editTask?tab=1&taskId=${task.taskId}">${task.taskName}</a></td>					
 					<c:if test="${task.ownedBy == 0}">
-						<td>Chưa giao cho ai</td>
+						<td nowrap="nowrap">Chưa giao cho ai</td>
 					</c:if>
 					<c:if test="${task.ownedBy > 0}">
-						<td>${task.ownerName}</td>
+						<td nowrap="nowrap">${task.ownerName}</td>
 					</c:if>
-					<td>${task.status}</td>
-					<td>${task.priority}</td>
+					<td nowrap="nowrap">${task.area}</td>
+					<td nowrap="nowrap">${task.status}</td>
+					<td nowrap="nowrap">${task.priority}</td>
 					<td>${task.plannedFor}</td>
-					<td>${task.updateTS}</td>
+					<td nowrap="nowrap">${task.updateTS}</td>
 				</tr>
 			</c:forEach>
 		</table>

@@ -1,7 +1,7 @@
 package com.idi.task.form;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -35,6 +35,7 @@ public class TaskForm implements Serializable{
 	private String estimate;
 	private String estimateTimeType;
 	private String description;
+	private String reviewComment;
 	
 	private String subscriber;
 	private String forSubscriber;
@@ -234,6 +235,14 @@ public class TaskForm implements Serializable{
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getReviewComment() {
+		return reviewComment;
+	}
+
+	public void setReviewComment(String reviewComment) {
+		this.reviewComment = reviewComment;
 	}
 
 	public int getCommentIndex() {

@@ -171,10 +171,9 @@ public class TaskDAO extends JdbcDaoSupport {
 					task.getTimeSpent() +"|"+ task.getEstimate() +"|"+ task.getDescription() +"|"+ task.getTaskId());
 			
 			Object[] params = new Object[] { task.getTaskName(), task.getOwnedBy(), task.getSecondOwned(),
-					task.getVerifyBy(), task.getUpdateId(),
-					task.getResolvedBy(), task.getDueDate(), task.getResolutionDate(),
-					task.getType(), task.getArea(), task.getPriority(), task.getStatus(), task.getPlannedFor(),  
-					task.getTimeSpent(), task.getTimeSpentType(), task.getEstimate(), task.getEstimateTimeType(), task.getDescription(), task.getTaskId() };
+					task.getVerifyBy(), task.getUpdateId(),	task.getResolvedBy(), task.getDueDate(), task.getResolutionDate(),
+					task.getType(), task.getArea(), task.getPriority(), task.getStatus(), task.getPlannedFor(), task.getTimeSpent(),
+					task.getTimeSpentType(), task.getEstimate(), task.getEstimateTimeType(), task.getDescription(), task.getReviewComment(), task.getTaskId() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {

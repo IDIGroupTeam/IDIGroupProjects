@@ -222,7 +222,7 @@
 							<tr>
 								<td bgcolor="#FAFAFA">Mã công việc:</td>
 								<td>${taskForm.taskId}</td>
-								<td align="right">Trạng thái của công việc:</td>
+								<td nowrap="nowrap" align="right">Trạng thái của công việc:</td>
 								<td><form:select path="status"
 										class="form-control animated">
 										<form:option value="Mới tạo" label="Mới tạo" />
@@ -287,8 +287,13 @@
 
 							</tr>
 							<tr>
-								<td bgcolor="#FAFAFA"></td>
-								<td></td>
+								<td bgcolor="#FAFAFA">Người tạo:</td>
+								<c:if test="${taskForm.createdBy == 0}">
+									<td>(Cần xong phần phân quyền trước)</td>
+								</c:if>
+								<c:if test="${taskForm.createdBy > 0}">
+									<td>${taskForm.createdBy}</td>
+								</c:if>
 								<td bgcolor="#FAFAFA">Thời gian đã làm:</td>
 								<td><form:input path="timeSpent" type="number"
 										class="col-xs-4" /> &nbsp; <form:select path="timeSpentType">
@@ -299,17 +304,6 @@
 									</form:select></td>
 							</tr>
 							<tr>
-								<td bgcolor="#FAFAFA">Được tạo bởi:</td>
-								<c:if test="${taskForm.createdBy == 0}">
-									<td>(Cần xong phần phân quyền trước)</td>
-								</c:if>
-								<c:if test="${taskForm.createdBy > 0}">
-									<td>${taskForm.createdBy}</td>
-								</c:if>
-								<td bgcolor="#FAFAFA">Ngày tạo:</td>
-								<td>${taskForm.creationDate}</td>
-							</tr>
-							<tr>
 								<td bgcolor="#FAFAFA">Giao cho:</td>
 								<td><form:select path="ownedBy"
 										class="form-control animated">
@@ -317,10 +311,9 @@
 										<c:forEach items="${employeesList}" var="employee">
 											<form:option value="${employee.employeeId}">${employee.fullName},&nbsp;${employee.jobTitle}</form:option>
 										</c:forEach>
-									</form:select></td>
-								<td bgcolor="#FAFAFA">Ngày phải xong:</td>
-								<td><form:input path="dueDate" type="date"
-										class="form-control animated" /></td>
+									</form:select></td>								
+								<td bgcolor="#FAFAFA">Ngày tạo:</td>
+								<td>${taskForm.creationDate}</td>
 							</tr>
 							<tr>
 								<td bgcolor="#FAFAFA">Backup bởi:</td>
@@ -330,7 +323,12 @@
 										<c:forEach items="${employeesList}" var="employee">
 											<form:option value="${employee.employeeId}">${employee.fullName},&nbsp;${employee.jobTitle}</form:option>
 										</c:forEach>
-									</form:select></td>
+									</form:select></td>									
+								<td bgcolor="#FAFAFA">Ngày phải xong:</td>
+								<td><form:input path="dueDate" type="date"
+										class="form-control animated" /></td>
+							</tr>
+							<tr>
 								<td bgcolor="#FAFAFA">Người giám sát:</td>
 								<td><form:select path="verifyBy"
 										class="form-control animated">
@@ -338,7 +336,9 @@
 										<c:forEach items="${employeesList}" var="employee">
 											<form:option value="${employee.employeeId}">${employee.fullName},&nbsp;${employee.jobTitle}</form:option>
 										</c:forEach>
-									</form:select></td>
+									</form:select></td>	
+								<td bgcolor="#FAFAFA"></td>
+								<td></td>									
 							</tr>
 							<%--<tr>
 								<td bgcolor="#FAFAFA">Những người liên quan:</td>
@@ -354,6 +354,11 @@
 								<td bgcolor="#FAFAFA">Mô tả:</td>
 								<td colspan="3"><form:textarea path="description"
 										cols="110" class="form-control animatedArea" rows="3" /></td>
+							</tr>
+							<tr> <!-- sẽ update chỉ hiển thị nếu người login chính là người giám sát-->
+								<td bgcolor="#FAFAFA" title="Sẽ update chỉ hiển thị nếu người login chính là người giám sát">Nhận xét đánh giá <br/> của người giám sát:</td>
+								<td colspan="3"><form:textarea path="reviewComment"
+										cols="110" class="form-control animatedArea" rows="2" /></td>
 							</tr>
 						</tbody>
 					</table>

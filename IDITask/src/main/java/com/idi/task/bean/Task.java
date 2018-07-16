@@ -2,7 +2,7 @@ package com.idi.task.bean;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.sql.Date;
+import java.util.Date;
 
 public class Task implements Serializable {
 
@@ -36,6 +36,7 @@ public class Task implements Serializable {
 	private String estimate;
 	private String estimateTimeType;
 	private String description;
+	private String reviewComment;
 
 	public Task() {
 
@@ -44,7 +45,7 @@ public class Task implements Serializable {
 	public Task(int taskId, String taskName, int createdBy, int ownedBy, String ownerName, int secondOwned, String subscriber,
 			String related, int verifyBy, int updateId, Timestamp updateTS,	int resolvedBy, Timestamp creationDate, Date dueDate, 
 			Timestamp resolutionDate, String type, String area, String priority, String status, String plannedFor, 
-			String timeSpent, String estimate, String timeSpentType, String estimateTimeType, String description) {
+			String timeSpent, String estimate, String timeSpentType, String estimateTimeType, String description, String reviewComment) {
 
 		this.taskId = taskId;
 		this.taskName = taskName;
@@ -71,6 +72,7 @@ public class Task implements Serializable {
 		this.timeSpentType = timeSpentType;
 		this.estimateTimeType = estimateTimeType;
 		this.description = description;
+		this.reviewComment = reviewComment;
 	}
 
 	public int getTaskId() {
@@ -270,6 +272,14 @@ public class Task implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getReviewComment() {
+		return reviewComment;
+	}
+
+	public void setReviewComment(String reviewComment) {
+		this.reviewComment = reviewComment;
 	}
 
 }

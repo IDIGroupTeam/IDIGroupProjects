@@ -68,7 +68,7 @@ public class TaskController {
 	@Autowired
 	private TaskDAO taskDAO;
 
-	@Autowired
+	@Autowired 
 	private EmployeeDAO employeeDAO;
 
 	@Autowired
@@ -344,6 +344,7 @@ public class TaskController {
 			task.setEstimate(taskForm.getEstimate());
 			task.setEstimateTimeType(taskForm.getEstimateTimeType());
 			task.setDescription(taskForm.getDescription());
+			task.setReviewComment(taskForm.getReviewComment());
 
 			Task currentTask = new Task();
 			currentTask = taskDAO.getTask(taskForm.getTaskId());
@@ -358,28 +359,57 @@ public class TaskController {
 			if (taskForm.getDescription().equalsIgnoreCase(currentTask.getDescription())) {
 				//System.err.println("Ko thay doi description");
 				//System.err.println(
-				//		"Ko thay doi description:" + taskForm.getDescription() + "|" + currentTask.getDescription());
-				String htmlMsg = "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " + "Công việc thuộc phòng: "
-						+ taskForm.getArea() + " <br/>\n " + "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
-						+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " + "Độ ưu tiên: "
-						+ taskForm.getPriority() + "<br/> \n" + "<b>Người cập nhật " + taskForm.getCommentedBy()
-						+ " </b> <e-mail> lúc " + Calendar.getInstance().getTime() + " <br/>\n"
-						+ "<tabel border='1'><tr>" + "<td>Nội dung thảo luận: " + taskForm.getContent()
-						+ " </td></tr></table><br/> \n";
+				//"Ko thay doi description:" + taskForm.getDescription() + "|" + currentTask.getDescription());
+				String htmlMsg = "";
+				if(taskForm.getReviewComment() != null && taskForm.getReviewComment().length() > 0) {
+					htmlMsg = "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " + "Công việc thuộc phòng: "
+							+ taskForm.getArea() + " <br/>\n " + "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
+							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " + "Độ ưu tiên: "
+							+ taskForm.getPriority() + "<br/> \n" + "<b>Người cập nhật " + taskForm.getCommentedBy()
+							+ " </b> <e-mail> lúc " + Calendar.getInstance().getTime() + " <br/>\n"
+							+ "<tabel border='1'>"
+							+ "<tr></td></tr><br/> \n <tr><td>Nhận xét/đánh giá của người giám sát: </td><td>" + taskForm.getReviewComment() 
+							+ "</tr><tr><td><br/> \n Nội dung thảo luận: " + taskForm.getContent()
+							+ " </td></tr></table><br/> \n";
+				}else {
+					htmlMsg = "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " + "Công việc thuộc phòng: "
+							+ taskForm.getArea() + " <br/>\n " + "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
+							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " + "Độ ưu tiên: "
+							+ taskForm.getPriority() + "<br/> \n" + "<b>Người cập nhật " + taskForm.getCommentedBy()
+							+ " </b> <e-mail> lúc " + Calendar.getInstance().getTime() + " <br/>\n"
+							+ "<tabel border='1'><tr>" + "<td>Nội dung thảo luận: " + taskForm.getContent()
+							+ " </td></tr></table><br/> \n";
+				}
+
 				mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
 				// mimeMessage.setContent(new String(htmlMsg.getBytes("UTF-8"),
 				// "UTF-8"),"text/html; charset=UTF-8");
 				// mimeMessage.setContent(htmlMsg, "text/html");
 			} else {
 				//System.err.println("Thay doi description");
-				String htmlMsg = "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " + "Công việc thuộc phòng: "
-						+ taskForm.getArea() + " <br/>\n " + "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
-						+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " + "Độ ưu tiên: "
-						+ taskForm.getPriority() + "<br/> \n" + "<b>Người cập nhật " + taskForm.getCommentedBy()
-						+ " </b> <e-mail> lúc " + Calendar.getInstance().getTime() + " <br/>\n"
-						+ "<tabel border='1'><tr>" + "<td>Mô tả công việc: </td><td>" + taskForm.getDescription()
-						+ " </td></tr><br/> \n" + "<tr><td>Nội dung thảo luận: " + taskForm.getContent()
-						+ " </td></tr></table><br/> \n";
+				String htmlMsg = "";
+				if(taskForm.getReviewComment() != null && taskForm.getReviewComment().length() > 0) {
+					htmlMsg = "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " + "Công việc thuộc phòng: "
+							+ taskForm.getArea() + " <br/>\n " + "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
+							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " + "Độ ưu tiên: "
+							+ taskForm.getPriority() + "<br/> \n" + "<b>Người cập nhật " + taskForm.getCommentedBy()
+							+ " </b> <e-mail> lúc " + Calendar.getInstance().getTime() + " <br/>\n"
+							+ "<tabel border='1'><tr>" + "<td>Mô tả công việc: </td><td>" + taskForm.getDescription()
+							+ " </td></tr><br/> \n + <tr><td>Nhận xét/đánh giá của người giám sát: </td><td>" + taskForm.getReviewComment() 
+							+ " </td></tr><br/> \n "
+							+ "<tr><td>Nội dung thảo luận: " + taskForm.getContent()
+							+ " </td></tr></table><br/> \n";
+				}else {
+					htmlMsg = "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " + "Công việc thuộc phòng: "
+							+ taskForm.getArea() + " <br/>\n " + "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
+							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " + "Độ ưu tiên: "
+							+ taskForm.getPriority() + "<br/> \n" + "<b>Người cập nhật " + taskForm.getCommentedBy()
+							+ " </b> <e-mail> lúc " + Calendar.getInstance().getTime() + " <br/>\n"
+							+ "<tabel border='1'><tr>" + "<td>Mô tả công việc: </td><td>" + taskForm.getDescription()
+							+ " </td></tr><br/> \n" + "<tr><td>Nội dung thảo luận: " + taskForm.getContent()
+							+ " </td></tr></table><br/> \n";
+				}					
+				
 				mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
 				// mimeMessage.setContent(new String(htmlMsg.getBytes("UTF-8"),
 				// "UTF-8"),"text/html; charset=UTF-8");
@@ -471,7 +501,8 @@ public class TaskController {
 			taskForm.setTimeSpentType(task.getTimeSpentType());
 			taskForm.setEstimate(task.getEstimate());
 			taskForm.setEstimateTimeType(task.getEstimateTimeType());
-			taskForm.setDescription(task.getDescription());
+			taskForm.setDescription(task.getDescription());			
+			taskForm.setReviewComment(task.getReviewComment());
 			
 			// Get danh sach cv lien quan
 			List<Task> listTaskRelated;
@@ -725,7 +756,7 @@ public class TaskController {
 	}
 
 	private void addTableHeader(PdfPTable table, Font font) {//throws DocumentException, IOException {
-	    Stream.of("Mã việc", "Tên việc", "Người làm", "Trạng thái","Cập nhật gần nhất","Ngày phải xong")
+	    Stream.of("Mã việc", "Tên việc", "Người làm", "Trạng thái", "Ngày phải xong", "Nhận xét/đánh giá")
 	      .forEach(columnTitle -> {
 	        PdfPCell header = new PdfPCell();
 	        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
@@ -737,15 +768,23 @@ public class TaskController {
 	private void addRows(PdfPTable table, List<Task> tasks) throws DocumentException, IOException {
 		BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 	    Font font = new Font(bf,12); 
+	    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");        
+        
 		for(int i = 0; i < tasks.size(); i++) {
 			Task task = new Task();
 			task = (Task)tasks.get(i);
+			
+			String DateToStr = "";
+			if(task.getDueDate() !=null)
+				DateToStr = format.format(task.getDueDate());
+
 			table.addCell(String.valueOf(task.getTaskId()));
 		    table.addCell(new Paragraph(task.getTaskName(), font));
 		    table.addCell(new Paragraph(task.getOwnerName(), font));
 		    table.addCell(new Paragraph(task.getStatus(), font));
-		    table.addCell(String.valueOf(task.getUpdateTS()));
-		    table.addCell(String.valueOf(task.getDueDate()));	
+		   // table.addCell(String.valueOf(task.getUpdateTS()));
+		    table.addCell(String.valueOf(DateToStr));	
+		    table.addCell(new Paragraph(task.getReviewComment(), font));
 		}	        
 	}
 	
