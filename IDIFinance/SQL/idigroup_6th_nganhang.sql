@@ -26,6 +26,6 @@ INSERT INTO `NGAN_HANG` (`TEN_VT`, `TEN_DD`) VALUES('IVB', 'Ngân hàng TNHH Ind
 INSERT INTO `NGAN_HANG` (`TEN_VT`, `TEN_DD`) VALUES('VID Public Bank', 'Ngân hàng VID public');
 
 CREATE TABLE `idigroup`.`NGAN_HANG_TAI_KHOAN` ( `MA_TK` INT NOT NULL AUTO_INCREMENT , `SO_TK` VARCHAR(100) NOT NULL , `MA_NH` INT NOT NULL , `CHI_NHANH` VARCHAR(255) NULL , `DIA_CHI` VARCHAR(255) NULL , `CHU_TK` VARCHAR(255) NULL , `MO_TA` VARCHAR(255) NULL , PRIMARY KEY (`MA_TK`)) ENGINE = InnoDB;
-INSERT INTO `ngan_hang_tai_khoan` (`MA_TK`, `SO_TK`, `MA_NH`, `CHI_NHANH`, `DIA_CHI`, `CHU_TK`, `MO_TA`) VALUES (NULL, '123456789', '1', 'BIDV Cầu Giấy', 'Số 1, Đường Trần Đăng Ninh, Cầu Giấy, Hà Nội', 'Trần Đông Hải', '');
-INSERT INTO `ngan_hang_tai_khoan` (`MA_TK`, `SO_TK`, `MA_NH`, `CHI_NHANH`, `DIA_CHI`, `CHU_TK`, `MO_TA`) VALUES (NULL, '987654321', '2', 'VCB Mỹ Đình', 'Tòa nhà Toyota Mỹ Đình, Số 15, Đường Phạm Hùng, Nam Từ Liêm, Hà Nội', 'Trần Đông Hải', '');
+INSERT INTO `NGAN_HANG_TAI_KHOAN` (`MA_TK`, `SO_TK`, `MA_NH`, `CHI_NHANH`, `DIA_CHI`, `CHU_TK`, `MO_TA`) VALUES (NULL, '123456789', '1', 'BIDV Cầu Giấy', 'Số 1, Đường Trần Đăng Ninh, Cầu Giấy, Hà Nội', 'Trần Đông Hải', '');
+INSERT INTO `NGAN_HANG_TAI_KHOAN` (`MA_TK`, `SO_TK`, `MA_NH`, `CHI_NHANH`, `DIA_CHI`, `CHU_TK`, `MO_TA`) VALUES (NULL, '987654321', '2', 'VCB Mỹ Đình', 'Tòa nhà Toyota Mỹ Đình, Số 15, Đường Phạm Hùng, Nam Từ Liêm, Hà Nội', 'Trần Đông Hải', '');
 
