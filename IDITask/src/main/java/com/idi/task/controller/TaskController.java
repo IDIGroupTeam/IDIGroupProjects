@@ -276,7 +276,7 @@ public class TaskController {
 	public String insertNewTask(Model model, @ModelAttribute("taskForm") Task task,
 			final RedirectAttributes redirectAttributes) {
 		try {
-			// System.err.println("insert new task");
+			System.err.println("insert new task");
 			taskDAO.insertTask(task);
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Thêm thông tin công việc thành công!");

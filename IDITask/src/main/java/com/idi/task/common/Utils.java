@@ -1,5 +1,6 @@
 package com.idi.task.common;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -10,6 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 public class Utils {
+	
+	public static Date convertDate(String dateString) throws Exception {
+		DateFormat df = new SimpleDateFormat("dd-mm-yyyy");
+		Date date = df.parse(dateString);
+		return date;
+	}
 	
 	public static String format(String str) {
 		if (str != null) {

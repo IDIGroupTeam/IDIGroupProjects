@@ -2,7 +2,7 @@ package com.idi.task.bean;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Date;
+import java.sql.Date;
 
 public class Task implements Serializable {
 

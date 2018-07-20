@@ -1,6 +1,9 @@
+<%@page import="com.idi.task.form.ReportForm"%>
+<%@page import="com.idi.task.common.Utils"%>
 <%@page language="java" contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 <html>
@@ -61,6 +64,7 @@ tr:nth-child(even) {
 					</c:if>
 					<td>${task.status}</td>
 					<td nowrap="nowrap">${task.updateTS}</td>
+					<%-- <td><fmt:formatDate pattern="dd-MM-yyyy" value="${task.dueDate}" /></td> --%>
 					<td>${task.dueDate}</td>
 					<td>${task.reviewComment}</td>
 				</tr>
