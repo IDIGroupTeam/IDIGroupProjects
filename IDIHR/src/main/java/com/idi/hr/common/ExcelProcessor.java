@@ -186,22 +186,27 @@ public class ExcelProcessor {
 									}
 									
 									// check out soon afternoon
-									int soonAValue = 0;								
+									int soonAValue = 0;			
+									
+									//check time in > time out morning
+									//if(timekeeping.getTimeIn()) {
+									//}
 									if ((Integer.parseInt(h) > Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON_H")) 
-											|| (Integer.parseInt(h) == Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON_H")) 
-											    && Integer.parseInt(m) == Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON_M"))))
-											&& (Integer.parseInt(h) < Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON_H")) 
-											|| (Integer.parseInt(h) == Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON_H")) 
-											   && (Integer.parseInt(m) < Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON_M")))))){
+											|| (Integer.parseInt(h) == Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON_H")))											
+											    && Integer.parseInt(m) > Integer.parseInt(hr.getProperty("TIME_CHECK_IN_AFTERNOON_M")))
+											&& (Integer.parseInt(h) < Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_H")) 
+											|| (Integer.parseInt(h) == Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_H")) 
+											   && (Integer.parseInt(m) < Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_M")))))){
+										
 										if(Integer.parseInt(h) < Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_H"))) {									
 											soonAValue = Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_H"))	- (Integer.parseInt(h));
 											if(Integer.parseInt(m) >= Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_M"))) {
-												timekeeping.setLeaveSoonA(String.valueOf(soonAValue*60 + (Integer.parseInt(m) - Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_M")))));
+												timekeeping.setLeaveSoonA(String.valueOf((soonAValue - 1)*60 + ((60 - Integer.parseInt(m)) + Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_M")))));
 											}else {
-												timekeeping.setLeaveSoonA(String.valueOf((soonAValue-1)*60 + (60 - Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_M"))) + Integer.parseInt(m)));
+												timekeeping.setLeaveSoonA(String.valueOf((soonAValue)*60 + (Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_M")) - Integer.parseInt(m))));
 											}
-										}else if(Integer.parseInt(h) == Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_H")) && Integer.parseInt(m) > Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_M"))) {
-											timekeeping.setLeaveSoonA(String.valueOf(Integer.parseInt(m) - Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_M"))));
+										}else if(Integer.parseInt(h) == Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_H")) && Integer.parseInt(m) < Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_M"))) {
+											timekeeping.setLeaveSoonA(String.valueOf(Integer.parseInt(hr.getProperty("TIME_CHECK_OUT_AFTERNOON_M")) - Integer.parseInt(m)));
 										}
 									}
 									break;
