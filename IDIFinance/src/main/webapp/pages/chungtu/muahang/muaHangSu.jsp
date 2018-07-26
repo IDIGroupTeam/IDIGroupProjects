@@ -930,7 +930,7 @@
 </div>
 
 <div class="row form-group">
-	<div class="col-sm-2">
+	<div class="col-sm-12">
 		<a href="${url}/chungtu/muahang/xem/${mainFinanceForm.maCt}"
 			class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu</button>

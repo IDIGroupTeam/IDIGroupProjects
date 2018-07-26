@@ -229,11 +229,14 @@ public class BalanceSheetController {
 							bads.add(bad);
 						}
 
+						logger.info("Lấy toàn bộ giá trị của các chi tiêu cấp thấp nhất.");
+						List<BalanceAssetData> allBads = balanceSheetDAO.calculateBs(buocNhay, cuoi);
+
 						logger.info("Tính giá trị cây BalanceAssetData theo từng kỳ, sau đó cập nhật vào CSDL");
 						Iterator<BalanceAssetData> badIter = bads.iterator();
 						while (badIter.hasNext()) {
 							BalanceAssetData bad = badIter.next();
-							bad = calCulcateBs(bad);
+							bad = calCulcateBs(bad, allBads);
 						}
 
 						buocNhay = Utils.nextPeriod(buocNhay, ky);
@@ -271,7 +274,7 @@ public class BalanceSheetController {
 		return bad;
 	}
 
-	private BalanceAssetData calCulcateBs(BalanceAssetData bad) {
+	private BalanceAssetData calCulcateBs(BalanceAssetData bad, List<BalanceAssetData> allBads) {
 		if (bad == null)
 			return null;
 
@@ -287,16 +290,41 @@ public class BalanceSheetController {
 			Iterator<BalanceAssetData> iter = bad.getChilds().iterator();
 			while (iter.hasNext()) {
 				BalanceAssetData childBad = iter.next();
-				childBad = calCulcateBs(childBad);
+				childBad = calCulcateBs(childBad, allBads);
 				bad.setEndValue(bad.getEndValue() + childBad.getEndValue());
 			}
 		} else {
 			// Kết nối CSDL để tính giá trị cuối kỳ của chỉ tiêu cân đối kế toán theo các
 			// tài khoản kế toán với công thức xác định trước cho từng loại chỉ tiêu
 			try {
-				bad = balanceSheetDAO.calculateBs(bad);
+				// bad = balanceSheetDAO.calculateBs(bad);
 			} catch (Exception e) {
 				// logger.error("LỖI: " + e.getMessage());
+			}
+
+			if (bad.getAsset() != null && bad.getAsset().getTaiKhoanDs() != null) {
+				// Lấy thông tin chi tiết của chỉ tiêu hiện từ danh sách tổng thể đã lấy trước
+				Iterator<LoaiTaiKhoan> taiKhoanIter = bad.getAsset().getTaiKhoanDs().iterator();
+				while (taiKhoanIter.hasNext()) {
+					try {
+						LoaiTaiKhoan loaiTaiKhoan = taiKhoanIter.next();
+
+						Iterator<BalanceAssetData> iter = allBads.iterator();
+						while (iter.hasNext()) {
+							BalanceAssetData balanceAssetData = iter.next();
+							balanceAssetData.setPeriodType(bad.getPeriodType());
+							balanceAssetData.setPeriod(bad.getPeriod());
+
+							if (balanceAssetData.equals(bad)
+									&& balanceAssetData.getAsset().getTaiKhoanDs().contains(loaiTaiKhoan)) {
+								bad.setEndValue(bad.getEndValue() + bad.getAsset().getSoDu()
+										* loaiTaiKhoan.getSoDuGiaTri() * balanceAssetData.getEndValue());
+							}
+						}
+					} catch (Exception e) {
+
+					}
+				}
 			}
 		}
 

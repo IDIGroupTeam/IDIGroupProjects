@@ -52,4 +52,6 @@ public interface BalanceSheetDAO {
 	public BalanceAssetData getPeriodEndValue(BalanceAssetData bad);
 
 	public BalanceAssetData calculateBs(BalanceAssetData bad);
+
+	public List<BalanceAssetData> calculateBs(Date start, Date end);
 }

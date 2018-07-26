@@ -217,7 +217,7 @@
 </div>
 
 <div class="row form-group">
-	<div class="col-sm-5">
+	<div class="col-sm-12">
 		<a href="${url}/chungtu/ktth/danhsach" class="btn btn-info btn-sm">Danh
 			sách phiếu kế toán tổng hợp</a>
 

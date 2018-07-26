@@ -206,7 +206,7 @@
 </div>
 
 <div class="row form-group">
-	<div class="col-sm-4">
+	<div class="col-sm-12">
 		<a href="${url}/chungtu/phieuchi/danhsach" class="btn btn-info btn-sm">Danh
 			sách phiếu chi</a>
 

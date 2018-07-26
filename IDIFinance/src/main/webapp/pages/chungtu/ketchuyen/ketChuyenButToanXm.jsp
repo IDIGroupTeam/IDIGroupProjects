@@ -94,7 +94,7 @@
 </div>
 
 <div class="row form-group">
-	<div class="col-sm-4">
+	<div class="col-sm-12">
 		<a href="${url}/chungtu/ketchuyen/buttoan/danhsach"
 			class="btn btn-info btn-sm">Danh sách kết chuyển tự động</a>
 

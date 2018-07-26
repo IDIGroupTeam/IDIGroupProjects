@@ -698,4 +698,46 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 
 		return bad;
 	}
+
+	@Override
+	public List<BalanceAssetData> calculateBs(Date start, Date end) {
+		if (start == null || end == null) {
+			return null;
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		String batDau = sdf.format(start);
+		String ketThuc = sdf.format(end);
+
+		String query = TINH_CDKT_THEO_MATK;
+		logger.info("Tu " + batDau + " den " + ketThuc);
+		logger.info(query);
+
+		Object[] params = { batDau, ketThuc };
+		List<BalanceAssetData> bads = jdbcTmpl.query(query, params, new BalanceAssetDataMapper());
+
+		return bads;
+	}
+
+	public class BalanceAssetDataMapper implements RowMapper<BalanceAssetData> {
+		public BalanceAssetData mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+			LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+			loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
+			loaiTaiKhoan.setSoDuGiaTri(rs.getInt("SO_DU"));
+
+			BalanceAssetItem bai = new BalanceAssetItem();
+			bai.setAssetCode(rs.getString("ASSET_CODE"));
+			bai.themTaiKhoan(loaiTaiKhoan);
+
+			BalanceAssetData bad = new BalanceAssetData();
+			bad.setAsset(bai);
+			bad.setEndValue(rs.getDouble("SO_TIEN"));
+
+			logger.info("=== " + bai.getAssetCode() + " " + loaiTaiKhoan.getMaTk() + " " + loaiTaiKhoan.getSoDuGiaTri()
+					+ " " + bad.getEndValue());
+
+			return bad;
+		}
+	}
 }
