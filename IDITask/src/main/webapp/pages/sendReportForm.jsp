@@ -30,14 +30,16 @@
 		<input class="btn btn-lg btn-primary btn-sm" type="submit"
 			value="Gửi báo cáo" /> &nbsp;
 		<br />	<br />
+		<form:input type="hidden" path="fileName" value="${sendReportForm.fileName}" />
+		<form:input type="hidden" path="subject" value="${sendReportForm.subject}" />
 		<table class="table table-bordered table-hover">
 			<tr>
-				<td title="Nhập chính xác địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com, các email cách nhau bằng dấu ; ">Gửi tới:(*)</td>
+				<td nowrap="nowrap" title="Nhập chính xác địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com, các email cách nhau bằng dấu ; ">Gửi tới:(*)</td>
 				<td><form:input path="sendTo" required="required"
 						class="form-control animated" /></td>
 			</tr>
 			<tr>
-				<td title="Phần này khi hoàn thiên chức năng phân quyền sẽ không cần nữa hệ thống sẽ tự động sác định được người gửi ...">Người gửi:(**)</td>
+				<td nowrap="nowrap" title="Phần này khi hoàn thiên chức năng phân quyền sẽ không cần nữa hệ thống sẽ tự động sác định được người gửi ...">Người gửi:</td>
 				<td><form:input path="sendFrom" 
 						class="form-control animated" /></td>
 			</tr>
@@ -51,12 +53,12 @@
 				<td>
 					<table class="table table-striped">
 						<tr>
-							<th>Mã việc</th>
+							<th nowrap="nowrap">Mã việc</th>
 							<th>Tên việc</th>
 							<th>Người làm</th>
-							<th>Trạng thái</th>
-							<th>Ngày cập nhật gần nhất</th>
-							<th>Ngày phải xong</th>
+							<th nowrap="nowrap">Trạng thái</th>
+							<th nowrap="nowrap">Cập nhật gần nhất</th>
+							<th nowrap="nowrap">Ngày phải xong</th>
 						</tr>
 						<c:forEach var="task" items="${tasks}">
 							<tr>
@@ -66,7 +68,7 @@
 									<td>Chưa giao cho ai</td>
 								</c:if>
 								<c:if test="${task.ownedBy > 0}">
-									<td>${task.ownerName}</td>
+									<td nowrap="nowrap">${task.ownerName}</td>
 								</c:if>
 								<td>${task.status}</td>
 								<td>${task.updateTS}</td>

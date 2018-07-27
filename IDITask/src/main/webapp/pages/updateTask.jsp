@@ -420,7 +420,7 @@
 						<tr>
 							<c:if test="${sub != null}">
 								<td><form:select path="subscriber"
-										class="form-control animated" multiple="multiple" size="5">
+										class="form-control animated" multiple="multiple" size="10">
 										<c:forEach items="${subscriberList}" var="subscriber">
 											<form:option value="${subscriber.employeeId}">${subscriber.fullName},&nbsp;${subscriber.jobTitle}
 										</form:option>
@@ -431,7 +431,7 @@
 								<td><i>Chưa chọn ai</i></td>
 							</c:if>
 							<td><form:select path="forSubscriber"
-									class="form-control animated" multiple="multiple" size="5">
+									class="form-control animated" multiple="multiple" size="10">
 									<c:forEach items="${employeesListS}" var="employeeS">
 										<form:option value="${employeeS.employeeId}">${employeeS.fullName},&nbsp;${employeeS.jobTitle}
 									</form:option>

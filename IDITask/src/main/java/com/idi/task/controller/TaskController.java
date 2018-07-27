@@ -640,15 +640,16 @@ public class TaskController {
 		SendReportForm sendReportForm = new SendReportForm();
 		if(eId > 0)
 			if(dept != null && !dept.equalsIgnoreCase("all"))
-				sendReportForm.setSubject("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept);
+				sendReportForm.setFileName("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept);
 			else
-				sendReportForm.setSubject("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của " + eName);
+				sendReportForm.setFileName("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của " + eName);
 		else
 			if(dept != null && !dept.equalsIgnoreCase("all"))
-				sendReportForm.setSubject("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept);
+				sendReportForm.setFileName("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept);
 			else
-				sendReportForm.setSubject("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban");
+				sendReportForm.setFileName("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban");
 		
+		sendReportForm.setSubject(sendReportForm.getFileName() + " --> Gửi từ PM Quản lý công việc");
 		List<Task> list = null;
 		ReportForm taskReportForm = new ReportForm();
 		taskReportForm.setFromDate(fDate);
@@ -665,37 +666,44 @@ public class TaskController {
 	
 	@RequestMapping(value ="/sendReport")
 	public String sendReport(Model model, @ModelAttribute("sendReportForm") @Validated SendReportForm sendReportForm, @RequestParam(required=false, value="formTitle") String formTitle) throws Exception {
+		log.info("sending report");
 		if(formTitle == null) {
+			
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 			String path = properties.getProperty("REPORT_PATH");
-			File file = new File(path + sendReportForm.getSubject() + ".pdf");
+			
+			File file = new File(path + sendReportForm.getFileName() + ".pdf");
+		//	log.info("sending report 111111113: " + path +"|" + sendReportForm.getSubject()+"|"+sendReportForm.getFileName());
 			if(file.exists()) {
+				
 				mimeMessage.setFrom("IDITask-NotReply");
 				helper.setSubject(sendReportForm.getSubject());
-				mimeMessage.setContent(sendReportForm.getSubject(), "text/html; charset=UTF-8");
+				mimeMessage.setContent(sendReportForm.getFileName(), "text/html; charset=UTF-8");
 				
 				Multipart multipart = new MimeMultipart();
 				BodyPart attach = new MimeBodyPart();
-				DataSource source = new FileDataSource(path + sendReportForm.getSubject() + ".pdf");
+				DataSource source = new FileDataSource(path + sendReportForm.getFileName() + ".pdf");
 				attach.setDataHandler(new DataHandler(source));
-				attach.setFileName(path + sendReportForm.getSubject() + ".pdf");
+				attach.setFileName(path + sendReportForm.getFileName() + ".pdf");
 				
 				multipart.addBodyPart(attach);
 				BodyPart content = new MimeBodyPart();
-				content.setContent("Cáo cáo công việc", "text/html; charset=UTF-8");
+				content.setContent("Báo cáo công việc", "text/html; charset=UTF-8");
 				multipart.addBodyPart(content);
 				
 				mimeMessage.setContent(multipart, "text/html; charset=UTF-8");
 				
 				StringTokenizer st = new StringTokenizer(sendReportForm.getSendTo(), ";");
 				while(st.hasMoreTokens()) {
+					
 					String sendTo = st.nextToken(";");
 					if(sendTo != null && sendTo.length() > 0 && sendTo.contains("@") && sendTo.contains(".com")) {
 						log.info("send report cho " + sendTo);
-						helper.setTo(sendTo);						
+						helper.setTo(sendTo);			
+						
 						mailSender.send(mimeMessage);
-						//System.err.println("sent");
+					//System.err.println("sent");
 					}			
 				}
 				//model.addAttribute("isReload","Yes");
@@ -704,8 +712,10 @@ public class TaskController {
 			}else {
 				model.addAttribute("formTitle", "Vui lòng export file trước khi gửi báo cáo công việc");
 			}
-		}else
+		}else {
+			log.info("try to sending report again...");
 			model.addAttribute("formTitle", "Gửi báo cáo công việc");
+		}	
 		return "sentReport";
 	}
 	
@@ -783,22 +793,23 @@ public class TaskController {
 	private void addRows(PdfPTable table, List<Task> tasks) throws DocumentException, IOException {
 		BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 	    Font font = new Font(bf,12); 
-	    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");        
+	 
+	    //SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");        
         
 		for(int i = 0; i < tasks.size(); i++) {
 			Task task = new Task();
 			task = (Task)tasks.get(i);
 			
-			String DateToStr = "";
-			if(task.getDueDate() !=null)
-				DateToStr = format.format(task.getDueDate());
+			//String DateToStr = "";
+			//if(task.getDueDate() !=null)
+			//	DateToStr = format.format(task.getDueDate());
 
 			table.addCell(String.valueOf(task.getTaskId()));
 		    table.addCell(new Paragraph(task.getTaskName(), font));
 		    table.addCell(new Paragraph(task.getOwnerName(), font));
 		    table.addCell(new Paragraph(task.getStatus(), font));
 		   // table.addCell(String.valueOf(task.getUpdateTS()));
-		    table.addCell(String.valueOf(DateToStr));	
+		    table.addCell(task.getDueDate());	
 		    table.addCell(new Paragraph(task.getReviewComment(), font));
 		}	        
 	}

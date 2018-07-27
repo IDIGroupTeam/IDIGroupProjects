@@ -13,6 +13,7 @@ public class SendReportForm implements Serializable{
 	private String subject;
 	private String content;
 	private String sendFrom;
+	private String fileName;
 	
 	public String getSendTo() {
 		return sendTo;
@@ -38,6 +39,10 @@ public class SendReportForm implements Serializable{
 	public void setSendFrom(String sendFrom) {
 		this.sendFrom = sendFrom;
 	}
-	
-	
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}	
 }
