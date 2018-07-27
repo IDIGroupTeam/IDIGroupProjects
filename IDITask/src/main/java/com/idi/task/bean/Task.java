@@ -2,7 +2,6 @@ package com.idi.task.bean;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.sql.Date;
 
 public class Task implements Serializable {
 
@@ -24,7 +23,7 @@ public class Task implements Serializable {
 	private Timestamp updateTS;
 	private int resolvedBy; // auto not edit show only when completed
 	private Timestamp creationDate;
-	private Date dueDate;
+	private String dueDate;
 	private Timestamp resolutionDate; // auto not edit show only when completed
 	private String type;
 	private String area; // viec cua phong kt , cntt, ns, ...
@@ -43,7 +42,7 @@ public class Task implements Serializable {
 	}
 
 	public Task(int taskId, String taskName, int createdBy, int ownedBy, String ownerName, int secondOwned, String subscriber,
-			String related, int verifyBy, int updateId, Timestamp updateTS,	int resolvedBy, Timestamp creationDate, Date dueDate, 
+			String related, int verifyBy, int updateId, Timestamp updateTS,	int resolvedBy, Timestamp creationDate, String dueDate, 
 			Timestamp resolutionDate, String type, String area, String priority, String status, String plannedFor, 
 			String timeSpent, String estimate, String timeSpentType, String estimateTimeType, String description, String reviewComment) {
 
@@ -178,11 +177,11 @@ public class Task implements Serializable {
 		this.creationDate = creationDate;
 	}
 
-	public Date getDueDate() {
+	public String getDueDate() {
 		return dueDate;
 	}
 
-	public void setDueDate(Date dueDate) {
+	public void setDueDate(String dueDate) {
 		this.dueDate = dueDate;
 	}
 

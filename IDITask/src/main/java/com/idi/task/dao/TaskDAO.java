@@ -129,14 +129,14 @@ public class TaskDAO extends JdbcDaoSupport {
 			log.info("Thêm mới thông tin task ....");
 			String sql = properties.getProperty("INSERT_TASK").toString();
 			log.info("INSERT_TASK query: " + sql);
-			System.err.println(task.getTaskName() +"|"+ task.getCreatedBy() +"|"+ task.getOwnedBy() +"|"+ 
+/*			System.err.println(task.getTaskName() +"|"+ task.getCreatedBy() +"|"+ task.getOwnedBy() +"|"+ 
 					task.getDueDate() +"|"+ 
 					task.getType() +"|"+ task.getArea() +"|"+ task.getPriority() +"|"+ task.getPlannedFor() +"|"+
-					task.getEstimate() +"|"+ task.getDescription());
+					task.getEstimate() +"|"+ task.getDescription());*/
 			Object[] params = new Object[] { task.getTaskName(), task.getCreatedBy(), task.getOwnedBy(), 
 					task.getSecondOwned(),  task.getVerifyBy(),
-					task.getDueDate(), task.getType(), task.getArea(), task.getPriority(), task.getPlannedFor(),
-					task.getEstimate(), task.getEstimateTimeType(), task.getDescription()};
+					task.getDueDate(), task.getCreationDate(), task.getType(), task.getArea(), task.getPriority(), task.getPlannedFor(),
+					task.getUpdateTS(), task.getEstimate(), task.getEstimateTimeType(), task.getDescription()};
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -164,14 +164,14 @@ public class TaskDAO extends JdbcDaoSupport {
 			//}
 			if(task.getTimeSpent() != null && task.getTimeSpent().length() == 0)
 				task.setTimeSpent(null);
-			System.err.println(task.getTaskName()  +"|"+  task.getOwnedBy() +"| est type "+  task.getEstimateTimeType() +"| spent type "+
+/*			System.err.println(task.getTaskName()  +"|"+  task.getOwnedBy() +"| est type "+  task.getEstimateTimeType() +"| spent type "+
 					task.getTimeSpentType() +"|"+
 					task.getDueDate() +"|"+ task.getSecondOwned() + "|" + task.getVerifyBy() +"|"+ 
 					task.getType() +"|"+ task.getArea() +"|"+ task.getPriority() +"|"+ task.getPlannedFor() +"|"+
 					task.getTimeSpent() +"|"+ task.getEstimate() +"|"+ task.getDescription() +"|"+ task.getTaskId());
-			
+			*/
 			Object[] params = new Object[] { task.getTaskName(), task.getOwnedBy(), task.getSecondOwned(),
-					task.getVerifyBy(), task.getUpdateId(),	task.getResolvedBy(), task.getDueDate(), task.getResolutionDate(),
+					task.getVerifyBy(), task.getUpdateId(),	task.getUpdateTS(), task.getResolvedBy(), task.getDueDate(), task.getResolutionDate(),
 					task.getType(), task.getArea(), task.getPriority(), task.getStatus(), task.getPlannedFor(), task.getTimeSpent(),
 					task.getTimeSpentType(), task.getEstimate(), task.getEstimateTimeType(), task.getDescription(), task.getReviewComment(), task.getTaskId() };
 			jdbcTmpl.update(sql, params);
@@ -323,6 +323,32 @@ public class TaskDAO extends JdbcDaoSupport {
 		log.info("GET_EMAIL_LIST query: " + sql);
 		List<String> list = new ArrayList<String>();		
 		StringTokenizer st = new StringTokenizer(ids, ",");
+		while (st.hasMoreElements()) {
+			String id = st.nextToken();
+			//System.err.println("id"+id);
+			if(id != null && !id.equalsIgnoreCase("0") && !id.equalsIgnoreCase("null")) {
+				Object[] params = new Object[] {id};	
+				String email = jdbcTmpl.queryForObject(sql, params, String.class);
+				//System.err.println("email"+email);
+				list.add(email);
+			}
+		}		
+		//System.err.println("sql: "+jdbcTmpl.toString());
+		//System.err.println(list);
+		return list;
+	}
+	
+	/**
+	 * Get email by employee id
+	 * @param taskId
+	 * @return list email address
+	 */
+	public List<String> getEmail(String employeeIds){
+		
+		String sql = properties.getProperty("GET_EMAIL_LIST").toString();
+		log.info("GET_EMAIL_LIST query: " + sql);
+		List<String> list = new ArrayList<String>();		
+		StringTokenizer st = new StringTokenizer(employeeIds, ",");
 		while (st.hasMoreElements()) {
 			String id = st.nextToken();
 			//System.err.println("id"+id);

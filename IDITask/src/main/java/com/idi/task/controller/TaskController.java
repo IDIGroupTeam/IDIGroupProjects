@@ -3,6 +3,7 @@ package com.idi.task.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -276,7 +277,10 @@ public class TaskController {
 	public String insertNewTask(Model model, @ModelAttribute("taskForm") Task task,
 			final RedirectAttributes redirectAttributes) {
 		try {
-			System.err.println("insert new task");
+			//System.err.println("insert new task");
+			Timestamp ts = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+			task.setCreationDate(ts);
+			task.setUpdateTS(ts);
 			taskDAO.insertTask(task);
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Thêm thông tin công việc thành công!");
@@ -286,13 +290,23 @@ public class TaskController {
 			String htmlMsg = "Công việc thuộc phòng: " + task.getArea() + " <br/>\n " + "Trạng thái: Tạo mới <br/>\n "
 					+ "Kế hoạch cho tháng: " + task.getPlannedFor() + " <br/>\n " + "Độ ưu tiên: " + task.getPriority()
 					+ "<br/> <br/> \n" + "<b>Người tạo " + task.getCreatedBy() + " </b> <e-mail> lúc "
-					+ Calendar.getInstance().getTime() + " <br/>\n" + "Mô tả nội dung công việc: "
+					+ ts + " <br/>\n" + "Mô tả nội dung công việc: "
 					+ task.getDescription();
 			mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
-			helper.setTo("truongnv.idigroup@gmail.com");
-			helper.setSubject("[Tạo mới công việc] - " + task.getTaskName());
-			helper.setFrom("IDITaskNotReply");
-			mailSender.send(mimeMessage);
+			List<String> mailList = taskDAO.getEmail(task.getOwnedBy() + "," + task.getVerifyBy() + "," + task.getSecondOwned());
+			
+			for (int i = 0; i < mailList.size(); i++) {
+				String sendTo = mailList.get(i);
+				//System.err.println("chuan bi send mail");
+				if (sendTo != null && sendTo.length() > 0) {
+					//System.err.println("send mail cho " + sendTo);
+					helper.setTo(sendTo);
+					helper.setSubject("[Tạo mới công việc] - " + task.getTaskName());
+					helper.setFrom("IDITaskNotReply");
+					mailSender.send(mimeMessage);
+					//System.err.println("sent");
+				}
+			}
 
 		} catch (Exception e) {
 			log.error(e, e);
@@ -329,7 +343,7 @@ public class TaskController {
 			task.setSecondOwned(taskForm.getSecondOwned());
 			task.setVerifyBy(taskForm.getVerifyBy());
 			task.setUpdateId(taskForm.getUpdateId()); // auto not edit show only
-			task.setUpdateTS(taskForm.getUpdateTS());
+			task.setUpdateTS(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
 			task.setResolvedBy(taskForm.getResolvedBy()); // auto not edit show only when completed
 			task.setCreationDate(taskForm.getCreationDate());
 			task.setDueDate(taskForm.getDueDate());
@@ -470,6 +484,7 @@ public class TaskController {
 				model.addAttribute("subscriberList", employeesSub(sub));
 			else
 				model.addAttribute("subscriberList", null);
+			
 			// get toan bo sach sach nguoi co the lua chon
 			model.addAttribute("employeesListS", employeesForSub(sub));
 
@@ -792,7 +807,7 @@ public class TaskController {
 		List<EmployeeInfo> list = null;
 		
 		list = employeeDAO.getEmployeesForSub(subscriber);
-		//System.err.println("lít availabe for subs: "+ list.size());
+		//System.err.println("list available for subs: "+ list.size());
 		return list;
 	}
 

@@ -26,7 +26,7 @@ public class TaskMapper implements RowMapper<Task> {
 		Timestamp updateTS = rs.getTimestamp("UPDATE_TS");
 		int resolvedBy = rs.getInt("RESOLVED_BY"); // auto not edit show only when completed
 		Timestamp creationDate = rs.getTimestamp("CREATION_DATE");
-		Date dueDate = rs.getDate("DUE_DATE");
+		String dueDate = rs.getString("DUE_DATE");
 		Timestamp resolutionDate = rs.getTimestamp("RESOLUTION_DATE"); // auto not edit show only when completed
 		String type = rs.getString("TYPE");
 		String area = rs.getString("AREA"); // viec cua phong kt , cntt hoac ns, ...

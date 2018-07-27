@@ -1,7 +1,6 @@
 package com.idi.task.form;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class TaskForm implements Serializable{
 	private Timestamp updateTS;
 	private int resolvedBy; // auto not edit show only when completed
 	private Timestamp creationDate;
-	private Date dueDate;
+	private String dueDate;
 	private Timestamp resolutionDate; // auto not edit show only when completed
 	private String type;
 	private String area; // viec cua phong kt , cntt, ns, ...
@@ -141,11 +140,11 @@ public class TaskForm implements Serializable{
 		this.creationDate = creationDate;
 	}
 
-	public Date getDueDate() {
+	public String getDueDate() {
 		return dueDate;
 	}
 
-	public void setDueDate(Date dueDate) {
+	public void setDueDate(String dueDate) {
 		this.dueDate = dueDate;
 	}
 
