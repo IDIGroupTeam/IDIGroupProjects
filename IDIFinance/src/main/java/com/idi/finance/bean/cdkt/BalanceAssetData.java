@@ -103,7 +103,8 @@ public class BalanceAssetData {
 
 	@Override
 	public String toString() {
-		String out = asset + "  " + periodType + " " + period + " " + endValue;
+		// String out = asset + " " + periodType + " " + period + " " + endValue;
+		String out = asset + " " + endValue;
 		return out;
 	}
 

@@ -713,7 +713,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		logger.info("Tu " + batDau + " den " + ketThuc);
 		logger.info(query);
 
-		Object[] params = { batDau, ketThuc };
+		Object[] params = { batDau, ketThuc, batDau, ketThuc };
 		List<BalanceAssetData> bads = jdbcTmpl.query(query, params, new BalanceAssetDataMapper());
 
 		return bads;

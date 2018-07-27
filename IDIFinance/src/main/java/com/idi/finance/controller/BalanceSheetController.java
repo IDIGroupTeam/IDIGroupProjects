@@ -199,7 +199,7 @@ public class BalanceSheetController {
 			HashMap<Integer, String> kyDs = new HashMap<>();
 
 			// kyDs.put(KyKeToanCon.WEEK, "Tuần");
-			kyDs.put(KyKeToanCon.MONTH, "Tháng");
+			// kyDs.put(KyKeToanCon.MONTH, "Tháng");
 			// kyDs.put(KyKeToanCon.QUARTER, "Quý");
 			kyDs.put(KyKeToanCon.YEAR, "Năm");
 
@@ -284,7 +284,7 @@ public class BalanceSheetController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		logger.info("===== " + bad + " =====");
 		// Tính giá trị cuối kỳ
 		if (bad.getChilds() != null && bad.getChilds().size() > 0) {
 			Iterator<BalanceAssetData> iter = bad.getChilds().iterator();
@@ -293,6 +293,7 @@ public class BalanceSheetController {
 				childBad = calCulcateBs(childBad, allBads);
 				bad.setEndValue(bad.getEndValue() + childBad.getEndValue());
 			}
+			logger.info("bad " + bad);
 		} else {
 			// Kết nối CSDL để tính giá trị cuối kỳ của chỉ tiêu cân đối kế toán theo các
 			// tài khoản kế toán với công thức xác định trước cho từng loại chỉ tiêu
@@ -308,6 +309,7 @@ public class BalanceSheetController {
 				while (taiKhoanIter.hasNext()) {
 					try {
 						LoaiTaiKhoan loaiTaiKhoan = taiKhoanIter.next();
+						logger.info("ma_tk " + loaiTaiKhoan);
 
 						Iterator<BalanceAssetData> iter = allBads.iterator();
 						while (iter.hasNext()) {
@@ -319,6 +321,7 @@ public class BalanceSheetController {
 									&& balanceAssetData.getAsset().getTaiKhoanDs().contains(loaiTaiKhoan)) {
 								bad.setEndValue(bad.getEndValue() + bad.getAsset().getSoDu()
 										* loaiTaiKhoan.getSoDuGiaTri() * balanceAssetData.getEndValue());
+								logger.info(balanceAssetData.getEndValue());
 							}
 						}
 					} catch (Exception e) {
@@ -326,6 +329,7 @@ public class BalanceSheetController {
 					}
 				}
 			}
+			logger.info(bad);
 		}
 
 		// logger.info("Chỉ tiêu cân đối kế toán " + bad.getAsset().getAssetCode() + ":

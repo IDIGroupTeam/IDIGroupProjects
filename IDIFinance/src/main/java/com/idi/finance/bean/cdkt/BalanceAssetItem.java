@@ -157,7 +157,8 @@ public class BalanceAssetItem {
 
 	@Override
 	public String toString() {
-		String out = assetCode + "  " + assetName;
+		// String out = assetCode + " " + assetName;
+		String out = assetCode;
 		return out;
 	}
 
