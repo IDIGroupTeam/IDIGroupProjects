@@ -213,6 +213,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 		Object[] objs = { batDau, ketThuc, batDau, ketThuc, batDau, ketThuc };
 		List<NghiepVuKeToan> nghiepVuKeToanDs = jdbcTmpl.query(query, objs, new NghiepVuKeToanKhoMapper());
+
 		return nghiepVuKeToanDs;
 	}
 
@@ -291,6 +292,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 				return nghiepVuKeToan;
 			} catch (Exception e) {
+				e.printStackTrace();
 				return null;
 			}
 		}
@@ -312,6 +314,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 		Object[] objs = { batDau, ketThuc };
 		List<NghiepVuKeToan> nghiepVuKeToanDs = jdbcTmpl.query(query, objs, new NghiepVuKeToanKcMapper());
+
 		return nghiepVuKeToanDs;
 	}
 
