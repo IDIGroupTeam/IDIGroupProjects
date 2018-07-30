@@ -137,7 +137,7 @@
 									<form:option value="${employee.employeeId}">${employee.fullName},&nbsp;${employee.jobTitle}</form:option>
 								</c:forEach>
 							</form:select></td>
-						<td bgcolor="#FAFAFA">Ngày phải xong:(*)</td>
+						<td bgcolor="#FAFAFA">Ngày phải xong:</td>
 						<td><form:input path="dueDate" type="date"
 								class="form-control animated" /></td>
 					</tr>

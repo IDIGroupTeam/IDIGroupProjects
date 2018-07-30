@@ -287,11 +287,17 @@ public class TaskController {
 
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-			String htmlMsg = "Công việc thuộc phòng: " + task.getArea() + " <br/>\n " + "Trạng thái: Tạo mới <br/>\n "
-					+ "Kế hoạch cho tháng: " + task.getPlannedFor() + " <br/>\n " + "Độ ưu tiên: " + task.getPriority()
-					+ "<br/> <br/> \n" + "<b>Người tạo " + task.getCreatedBy() + " </b> <e-mail> lúc "
-					+ ts + " <br/>\n" + "Mô tả nội dung công việc: "
-					+ task.getDescription();
+			String htmlMsg = "Dear you, <br/>\n<br/>\n"
+					+ "Bạn nhận được mail này vì bạn có liên quan đến công việc này. <br/>\n"
+					+ "Công việc thuộc phòng: " + task.getArea() + " <br/>\n " 
+					+ "Trạng thái: Tạo mới <br/>\n "
+					+ "Kế hoạch cho tháng: " + task.getPlannedFor() + " <br/>\n " 
+					+ "Độ ưu tiên: " + task.getPriority()
+					+ "<br/> <br/> \n" 
+					+ "<b>Người tạo " + task.getCreatedBy() + " </b> <e-mail> lúc "	+ ts + " <br/>\n" 
+					+ "Mô tả nội dung công việc: "	+ task.getDescription()
+					+ "<br/> \n <br/> \n Trân trọng, <br/> \n"
+					+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" ;
 			mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
 			List<String> mailList = taskDAO.getEmail(task.getOwnedBy() + "," + task.getVerifyBy() + "," + task.getSecondOwned());
 			
@@ -376,23 +382,37 @@ public class TaskController {
 				//"Ko thay doi description:" + taskForm.getDescription() + "|" + currentTask.getDescription());
 				String htmlMsg = "";
 				if(taskForm.getReviewComment() != null && taskForm.getReviewComment().length() > 0) {
-					htmlMsg = "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " + "Công việc thuộc phòng: "
-							+ taskForm.getArea() + " <br/>\n " + "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
-							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " + "Độ ưu tiên: "
-							+ taskForm.getPriority() + "<br/> \n" + "<b>Người cập nhật " + taskForm.getCommentedBy()
-							+ " </b> <e-mail> lúc " + Calendar.getInstance().getTime() + " <br/>\n"
+					htmlMsg ="Dear you, <br/>\n <br/>\n"
+							+ "Bạn nhận được mail này vì bạn có liên quan đến công việc này. <br/><br/>\n"
+							+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
+							+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n " 
+							+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n " 
+							+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
+							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
+							+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" 
+							+ "<b>Người cập nhật " + taskForm.getCommentedBy()
+							+ " </b> <e-mail> lúc " + task.getUpdateTS() + " <br/>\n"
 							+ "<tabel border='1'>"
-							+ "<tr></td></tr><br/> \n <tr><td>Nhận xét/đánh giá của người giám sát: </td><td>" + taskForm.getReviewComment() 
-							+ "</tr><tr><td><br/> \n Nội dung thảo luận: " + taskForm.getContent()
+							+ "<br/>\n<tr><td>Nhận xét/đánh giá của người giám sát: </td><td>" + taskForm.getReviewComment() 
+							+ "</tr><tr><td><br/>Nội dung thảo luận: " + taskForm.getContent()
+							+ "<br/>\n<br/>Trân trọng, <br/> \n"
+							+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
 							+ " </td></tr></table><br/> \n";
 				}else {
-					htmlMsg = "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " + "Công việc thuộc phòng: "
-							+ taskForm.getArea() + " <br/>\n " + "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
-							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " + "Độ ưu tiên: "
-							+ taskForm.getPriority() + "<br/> \n" + "<b>Người cập nhật " + taskForm.getCommentedBy()
-							+ " </b> <e-mail> lúc " + Calendar.getInstance().getTime() + " <br/>\n"
-							+ "<tabel border='1'><tr>" + "<td>Nội dung thảo luận: " + taskForm.getContent()
-							+ " </td></tr></table><br/> \n";
+					htmlMsg = "Dear you, <br/>\n <br/>\n"
+							+ "Bạn nhận được mail này vì bạn có liên quan đến công việc này. <br/><br/>\n"
+							+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n "
+							+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "							
+							+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n "
+							+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
+							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
+							+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" + "<b>Người cập nhật " + taskForm.getCommentedBy()
+							+ "</b><e-mail> lúc " +  task.getUpdateTS() + " <br/>\n"
+							+ "<tabel border='1'>"
+							+ "<tr><td>Nội dung thảo luận: " + taskForm.getContent()
+							+ "<br/>\n<br/>Trân trọng, <br/> \n"
+							+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
+							+ "</td></tr></table><br/> \n";
 				}
 
 				mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
@@ -403,25 +423,43 @@ public class TaskController {
 				//System.err.println("Thay doi description");
 				String htmlMsg = "";
 				if(taskForm.getReviewComment() != null && taskForm.getReviewComment().length() > 0) {
-					htmlMsg = "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " + "Công việc thuộc phòng: "
-							+ taskForm.getArea() + " <br/>\n " + "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
-							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " + "Độ ưu tiên: "
-							+ taskForm.getPriority() + "<br/> \n" + "<b>Người cập nhật " + taskForm.getCommentedBy()
-							+ " </b> <e-mail> lúc " + Calendar.getInstance().getTime() + " <br/>\n"
-							+ "<tabel border='1'><tr>" + "<td>Mô tả công việc: </td><td>" + taskForm.getDescription()
-							+ " </td></tr><br/> \n + <tr><td>Nhận xét/đánh giá của người giám sát: </td><td>" + taskForm.getReviewComment() 
+					htmlMsg = "Dear you, <br/>\n <br/>\n"
+							+ "Bạn nhận được mail này vì bạn có liên quan đến công việc này. <br/><br/>\n" 
+							+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
+							+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "							
+							+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n " 
+							+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
+							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
+							+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" 
+							+ "<b>Người cập nhật " + taskForm.getCommentedBy()
+							+ "</b><e-mail> lúc " +  task.getUpdateTS() + " <br/>\n"
+							+ "<tabel border='1'><tr>" 
+							+ "<td>Mô tả công việc: </td><td>" + taskForm.getDescription()
 							+ " </td></tr><br/> \n "
+							+ "+ <tr><td>Nhận xét/đánh giá của người giám sát: " + taskForm.getReviewComment() 
+							+ "</td></tr><br/> \n "
 							+ "<tr><td>Nội dung thảo luận: " + taskForm.getContent()
-							+ " </td></tr></table><br/> \n";
+							+ "<br/>\n<br/>\n Trân trọng, <br/> \n"
+							+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
+							+ "</td></tr></table><br/> \n";
 				}else {
-					htmlMsg = "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " + "Công việc thuộc phòng: "
-							+ taskForm.getArea() + " <br/>\n " + "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
-							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " + "Độ ưu tiên: "
-							+ taskForm.getPriority() + "<br/> \n" + "<b>Người cập nhật " + taskForm.getCommentedBy()
-							+ " </b> <e-mail> lúc " + Calendar.getInstance().getTime() + " <br/>\n"
-							+ "<tabel border='1'><tr>" + "<td>Mô tả công việc: </td><td>" + taskForm.getDescription()
-							+ " </td></tr><br/> \n" + "<tr><td>Nội dung thảo luận: " + taskForm.getContent()
-							+ " </td></tr></table><br/> \n";
+					htmlMsg = "Dear you, <br/>\n <br/>\n"
+							+ "Bạn nhận được mail này vì bạn có liên quan đến công việc này. <br/><br/>\n" 
+							+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
+							+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "							
+							+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n " 
+							+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
+							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n "
+							+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n "
+							+ "<b>Người cập nhật " + taskForm.getCommentedBy()
+							+ "</b> <e-mail> lúc " +  task.getUpdateTS() + " <br/>\n"
+							+ "<tabel border='1'>"
+							+ "<tr><td>Mô tả công việc: </td><td>" + taskForm.getDescription()
+							+ "</td></tr><br/>\n "
+							+ "<tr><td>Nội dung thảo luận: " + taskForm.getContent()
+							+ "<br/>\n<br/>\n Trân trọng, <br/> \n"
+							+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
+							+ "</td></tr></table><br/> \n";
 				}					
 				
 				mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
