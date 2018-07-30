@@ -182,6 +182,9 @@ tr:nth-child(even) {
 		</tr>
 	</table>
 	</form:form>		
+		<c:if test="${not empty message}">
+			<div class="alert alert-success">${message}</div>
+		</c:if>
 		<table class="table table-striped">
 			<tr>
 				<th nowrap="nowrap">Mã cv</th>
@@ -211,9 +214,5 @@ tr:nth-child(even) {
 				</tr>
 			</c:forEach>
 		</table>
-
-		<c:if test="${not empty message}">
-			<div class="alert alert-success">${message}</div>
-		</c:if>
 </body>
 </html>

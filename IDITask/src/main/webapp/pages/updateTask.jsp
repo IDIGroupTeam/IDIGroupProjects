@@ -198,14 +198,12 @@
 	</a>
 	<br />
 	<br />
-	<div id="exTab2" class="container">
+	
+<!-- 	<div id="exTab2" class="container"> -->
 		<ul class="nav nav-tabs">
-			<li class="${active1}"><a href="#1" data-toggle="tab">Thông
-					tin chung</a></li>
-			<li class="${active2}"><a href="#2" data-toggle="tab">Người
-					liên quan</a></li>
-			<li class="${active3}"><a href="#3" data-toggle="tab">Công
-					việc liên quan</a></li>
+			<li class="${active1}"><a href="#1" data-toggle="tab">Thông tin chung</a></li>
+			<li class="${active2}"><a href="#2" data-toggle="tab">Người liên quan</a></li>
+			<li class="${active3}"><a href="#3" data-toggle="tab">Công việc liên quan</a></li>
 		</ul>
 		<div class="tab-content ">
 			<div class="${tabActive1}" id="1">
@@ -461,11 +459,11 @@
 						<div class="table-responsive">						
 						<table id="RESULTS_TABLE" class="table table-bordered table-hover">
 						<tr>
-							<td>
-								<c:if test="${tasksFound != null}">
+							<c:if test="${tasksFound != null}">
+								<td>								
 									<button class="btn btn-lg btn-primary btn-sm" onclick="javascript:saveTasksRelated()">Lưu</button>
-								</c:if>	
-							</td>	
+								</td>	
+							</c:if>	
 							<td colspan="3">Thêm công việc liên quan: Nhập mã/tên/người làm/trạng
 								thái/mã phòng/kế hoạch cho tháng</td>							
 							<td><form:input path="searchValue" required="required"
@@ -547,7 +545,7 @@
 
 			</div>
 		</div>
-	</div>
+	
 	<!-- Bootstrap core JavaScript ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
 	<!-- 	<script
