@@ -16,12 +16,19 @@
 </style>
 </head>
 <body>
+<a href="${pageContext.request.contextPath}/timekeeping/leaveInfo"><button class="btn btn-lg btn-primary btn-sm">Quay lại danh sách chấm công phát sinh</button></a>
+<br/><br/>
 	<form:form modelAttribute="leaveInfoForm" method="POST"
 		action="insertLeaveInfo">
 		<div class="table">
 			<table>
 				<tr>
-					<td><form:errors path="overLate" class="error-message" /></td>
+					<td><form:errors path="employeeId" class="error-message" /></td>
+					<td><form:errors path="date" class="error-message" /></td>
+					<td><form:errors path="leaveType" class="error-message" /></td>
+					<td><form:errors path="timeValue" class="error-message" /></td>
+					<td><form:errors path="comment" class="error-message" /></td>
+					
 					<td><form:errors path="overLeave" class="error-message" /></td>
 					<td><form:errors path="duplicate" class="error-message" /></td>						
 				</tr>
@@ -33,38 +40,37 @@
 					</tr>
 					<tr>
 						<td bgcolor="#FBEFF2">Chọn nhân viên(*):</td>
-						<td><form:select path="employeeId">
+						<td><form:select path="employeeId" class="form-control animated">
 								<form:options items="${employeeMap}" />
 							</form:select></td>						
 					</tr>
 					<tr>
 						<td bgcolor="#FBEFF2">Chọn ngày(*):</td>
-						<td><form:input path="date" type="date" required="required" /></td>
+						<td><form:input path="date" type="date" required="required" class="form-control animated"/></td>
 					</tr>	
 					<tr>
 						<td bgcolor="#FBEFF2">Chọn loại(*):</td>
 						<td>
-							<form:select path="leaveType">
+							<form:select path="leaveType" class="form-control animated">
 								<form:options items="${leaveTypeMap}" />								
 							</form:select>
 						</td>	
 					<tr>	
-						<td bgcolor="#FBEFF2">Điền số giờ nếu cần (Làm thêm giờ):</td>					
-						<td><form:input path="timeValue" step="0.5" type="number" min="0" max="24"/> (Mặc định cả ngày = 8h, nửa ngày = 4h)</td>
+						<td bgcolor="#FBEFF2">Điền số giờ với những t/h tính thời gian (*):</td>					
+						<td><form:input path="timeValue" step="0.5" type="number" min="0" max="24" class="form-control animated"  required="required"/> (Mặc định để 0 => cả ngày = 8h, nửa ngày = 4h)</td>
 					</tr>
 					<tr>
 						<td bgcolor="#FBEFF2">Ghi chú:</td>
-						<td colspan="3"><form:textarea path="comment" cols="64" /></td>
+						<td colspan="3"><form:textarea path="comment" cols="64" class="form-control animated"/></td>
 					<tr>
-					<tr>	
+<%-- 					<tr>	
 						<td>${timekeeping.leaveUsed}</td>
 						<td>${timekeeping.leaveRemain}</td>
-					<tr/>
+					<tr/> --%>
 				</tbody>
 			</table>
 			<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu" /> 			
 		</div>
-	</form:form>
-	<a href="${pageContext.request.contextPath}/timekeeping/leaveInfo"><button class="btn btn-lg btn-primary btn-sm">Quay lại danh sách chấm công phát sinh</button></a>
+	</form:form>	
 </body>
 </html>

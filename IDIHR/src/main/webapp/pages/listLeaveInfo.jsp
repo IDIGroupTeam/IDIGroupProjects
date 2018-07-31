@@ -85,8 +85,10 @@ tr:nth-child(even) {
 						<form:options items="${employeeMap}" var="eId"/>
 					</form:select>
 				</td>
-				<td align="center"><input class="btn btn-lg btn-primary btn-sm" type="submit"
-					value="Xem danh sách" /></td>
+				<td align="center">&nbsp;&nbsp;
+					<input class="btn btn-lg btn-primary btn-sm" type="submit"
+					value="Xem danh sách" />
+				</td>
 			</tr>
 		</table>
 			<br/>

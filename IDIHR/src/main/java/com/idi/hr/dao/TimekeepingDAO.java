@@ -73,6 +73,8 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 
 		TimekeepingMapper mapper = new TimekeepingMapper();
 		List<Timekeeping> list = jdbcTmpl.query(sql, params, mapper);
+		System.err.println(156/60);
+		System.err.println(156%60);
 		return list;
 
 	}
@@ -271,34 +273,48 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 		String sql = "";
 		if (leaveType.equalsIgnoreCase("DM")) {
 			sql = sqlCL;
-			if (month != null && month.length() > 0)
-				sql = sql.replaceAll("%MONTH%", " AND MONTH(DATE) = '" + month + "' ");
-			else
+			if (month != null && month.length() > 0) {
+				sql = sql.replaceAll("%MONTH%", " AND MONTH(T.DATE) = '" + month + "' ");
+				sql = sql.replaceAll("%MONTH1%", " AND MONTH(L.DATE) = '" + month + "' ");
+			}else {
 				sql = sql.replaceAll("%MONTH%", "");
-
-			if (employeeId > 0)
-				sql = sql.replaceAll("%EMPLOYEE_ID%"," AND EMPLOYEE_ID = " + employeeId + " ");
-			else
+				sql = sql.replaceAll("%MONTH1%", "");
+			}	
+			if (employeeId > 0) {
+				sql = sql.replaceAll("%EMPLOYEE_ID%"," AND T.EMPLOYEE_ID = " + employeeId + " ");
+				sql = sql.replaceAll("%EMPLOYEE_ID1%"," AND L.EMPLOYEE_ID = " + employeeId + " ");
+			}else {
 				sql = sql.replaceAll("%EMPLOYEE_ID%","");
-			
+				sql = sql.replaceAll("%EMPLOYEE_ID1%","");
+			}
 			log.info("GET_TIMEKEEPING_COME_LATE_FOR_REPORT query: " + sql);
 			
 		}else if (leaveType.equalsIgnoreCase("VS")) {
 			sql = sqlLS;
-			if (month != null && month.length() > 0)
-				sql = sql + " AND MONTH(DATE) = '" + month + "' ";
-
-			if (employeeId > 0)
-				sql = sql + " AND EMPLOYEE_ID = " + employeeId + " ";
-			
+			if (month != null && month.length() > 0) {
+				sql = sql.replaceAll("%MONTH%", " AND MONTH(T.DATE) = '" + month + "' ");
+				sql = sql.replaceAll("%MONTH1%", " AND MONTH(L.DATE) = '" + month + "' ");
+			}else {
+				sql = sql.replaceAll("%MONTH%", "");
+				sql = sql.replaceAll("%MONTH1%", "");
+			}
+			if (employeeId > 0) {
+				sql = sql.replaceAll("%EMPLOYEE_ID%"," AND T.EMPLOYEE_ID = " + employeeId + " ");
+				sql = sql.replaceAll("%EMPLOYEE_ID1%"," AND L.EMPLOYEE_ID = " + employeeId + " ");
+			}else {
+				sql = sql.replaceAll("%EMPLOYEE_ID%","");
+				sql = sql.replaceAll("%EMPLOYEE_ID1%","");
+			}
 			log.info("GET_TIMEKEEPING_LEAVE_SOON_FOR_REPORT query: " + sql);
 		}		
 
 		Object[] params = null;
+		
 		if (leaveType.equalsIgnoreCase("DM"))
-			params = new Object[] { year, maxTimeLate, maxTimeLate, year };
+			params = new Object[] {year, maxTimeLate, maxTimeLate, year};
 		else
-			params = new Object[] { year };
+			params = new Object[] {year, year};
+		
 		return jdbcTmpl.query(sql, params, new ResultSetExtractor<LeaveReport>() {
 			@Override
 			public LeaveReport extractData(ResultSet rs) throws SQLException, DataAccessException {
@@ -340,33 +356,51 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 		String sql = "";
 		if (leaveType.equalsIgnoreCase("DM")) {			
 			sql = sqlCL;			
-			if (month != null && month.length() > 0)
-				sql = sql.replaceAll("%MONTH%", " AND MONTH(DATE) = '" + month + "' ");
-			else
-				sql = sql.replaceAll("%MONTH%", "");
 			
-			if (employeeIds != null && employeeIds.length() > 0)
-				sql = sql.replaceAll("%EMPLOYEE_ID%", " AND EMPLOYEE_ID IN (" + employeeIds + ") " );
-			else
-				sql = sql.replaceAll("%EMPLOYEE_ID%", "" );
+			if (month != null && month.length() > 0) {
+				sql = sql.replaceAll("%MONTH%", " AND MONTH(T.DATE) = '" + month + "' ");
+				sql = sql.replaceAll("%MONTH1%", " AND MONTH(L.DATE) = '" + month + "' ");
+			}else {
+				sql = sql.replaceAll("%MONTH%", "");
+				sql = sql.replaceAll("%MONTH1%", "");
+			}	
+			if (employeeIds != null && employeeIds.length() > 0) {
+				sql = sql.replaceAll("%EMPLOYEE_ID%"," AND T.EMPLOYEE_ID IN (" + employeeIds + ")" );
+				sql = sql.replaceAll("%EMPLOYEE_ID1%"," AND L.EMPLOYEE_ID IN (" + employeeIds + ")" );
+			}else {
+				sql = sql.replaceAll("%EMPLOYEE_ID%","");
+				sql = sql.replaceAll("%EMPLOYEE_ID1%","");
+			}						
+
 			log.info("GET_TIMEKEEPING_COME_LATE_FOR_KPI query: " + sql);
 			
 		} else if (leaveType.equalsIgnoreCase("VS")) {			
 			sql = sqlLS;
 			
-			if (month != null && month.length() > 0)
-				sql = sql + " AND MONTH(DATE) = '" + month + "' ";
-
-			if (employeeIds != null && employeeIds.length() > 0)
-				sql = sql + " AND EMPLOYEE_ID IN (" + employeeIds + ") ";			
+			if (month != null && month.length() > 0) {
+				sql = sql.replaceAll("%MONTH%", " AND MONTH(T.DATE) = '" + month + "' ");
+				sql = sql.replaceAll("%MONTH1%", " AND MONTH(L.DATE) = '" + month + "' ");
+			}else {
+				sql = sql.replaceAll("%MONTH%", "");
+				sql = sql.replaceAll("%MONTH1%", "");
+			}	
+			if (employeeIds != null && employeeIds.length() > 0) {
+				sql = sql.replaceAll("%EMPLOYEE_ID%"," AND T.EMPLOYEE_ID IN (" + employeeIds + ")" );
+				sql = sql.replaceAll("%EMPLOYEE_ID1%"," AND L.EMPLOYEE_ID IN (" + employeeIds + ")" );
+			}else {
+				sql = sql.replaceAll("%EMPLOYEE_ID%","");
+				sql = sql.replaceAll("%EMPLOYEE_ID1%","");
+			}	
+			
 			log.info("GET_TIMEKEEPING_LEAVE_SOON_FOR_KPI query: " + sql);
 		}
 
 		Object[] params = null;
+		
 		if (leaveType.equalsIgnoreCase("DM"))
 			params = new Object[] { year, maxTimeLate, maxTimeLate, year };
 		else
-			params = new Object[] { year };
+			params = new Object[] { year, year };
 
 		countNumber = jdbcTmpl.queryForObject(sql, String.class, params);
 		System.err.println(leaveType + ": " + countNumber);
@@ -376,6 +410,7 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 
 	/**
 	 * Thong ke so lan di muon qua 60' tinh nghi ko phep nua ngay
+	 * Tru t/h di cong viec ben ngoai
 	 * 
 	 * @param year
 	 * @param month
@@ -387,15 +422,25 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 		int countNumber = 0;
 		String sql = hr.getProperty("GET_COME_LATE_OVER_FOR_REPORT").toString();
 		int maxTimeLate = Integer.parseInt(hr.getProperty("COME_LATE_TIME_OVER").toString());
-		if (month != null && month.length() > 0)
-			sql = sql + " AND MONTH(DATE) = '" + month + "' ";
 
-		if (employeeId > 0)
-			sql = sql + " AND EMPLOYEE_ID = " + employeeId + "";
+		if (month != null && month.length() > 0) {
+			sql = sql.replaceAll("%MONTH%", " AND MONTH(T.DATE) = '" + month + "' ");
+			sql = sql.replaceAll("%MONTH1%", " AND MONTH(L.DATE) = '" + month + "' ");
+		}else {
+			sql = sql.replaceAll("%MONTH%", "");
+			sql = sql.replaceAll("%MONTH1%", "");
+		}
+		if (employeeId > 0) {
+			sql = sql.replaceAll("%EMPLOYEE_ID%"," AND T.EMPLOYEE_ID = " + employeeId + " ");
+			sql = sql.replaceAll("%EMPLOYEE_ID1%"," AND L.EMPLOYEE_ID = " + employeeId + " ");
+		}else {
+			sql = sql.replaceAll("%EMPLOYEE_ID%","");
+			sql = sql.replaceAll("%EMPLOYEE_ID1%","");
+		}		
 
 		log.info("GET_COME_LATE_OVER_FOR_REPORT query: " + sql);
 
-		Object[] params = new Object[] { year, maxTimeLate, maxTimeLate };
+		Object[] params = new Object[] { year, maxTimeLate, maxTimeLate, year };
 
 		if (jdbcTmpl.queryForObject(sql, Integer.class, params) != null)
 			countNumber = jdbcTmpl.queryForObject(sql, Integer.class, params);
@@ -416,7 +461,7 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	 * @return
 	 * @throws Exception
 	 */
-	public int countComleLateOver(String year, String month, String employeeIds) throws Exception {
+/*	public int countComleLateOver(String year, String month, String employeeIds) throws Exception {
 		int countNumber = 0;
 		String sql = hr.getProperty("GET_COME_LATE_OVER_FOR_REPORT").toString();
 		String maxTimeLate = hr.getProperty("COME_LATE_TIME_OVER").toString();
@@ -438,7 +483,7 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 		System.err.println("month: " + month + ", year " + year + ", employeeIds: " + employeeIds + "|" + countNumber);
 
 		return countNumber;
-	}
+	}*/
 
 	/**
 	 * get half worked day

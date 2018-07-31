@@ -31,20 +31,20 @@
 						<td><form:select path="employeeId" class="form-control animated">
 								<form:options items="${employeeMap}" />
 							</form:select></td>
-						<td bgcolor="#E6E6E6">% Tỷ lệ đóng của công ty: </td>
+						<td bgcolor="#E6E6E6">% Tỷ lệ đóng của công ty:(*) </td>
 						<td><form:input path="percentSInsuC" size="6" maxlength="6"
 								required="required" class="form-control animated"/></td>
 					</tr>
 					<tr>
-						<td bgcolor="#E6E6E6">Số sổ BHXH:</td>
+						<td bgcolor="#E6E6E6">Số sổ BHXH:(*)</td>
 						<td><form:input path="socicalInsuNo" maxlength="12" size="12"
 								required="required" class="form-control animated"/></td>
-						<td bgcolor="#E6E6E6">% Tỷ lệ đóng của người LĐ: </td>
+						<td bgcolor="#E6E6E6">% Tỷ lệ đóng của người LĐ:(*) </td>
 						<td><form:input path="percentSInsuE" size="6" maxlength="6"
 								required="required" class="form-control animated"/></td>
 					</tr>
 					<tr>
-						<td bgcolor="#E6E6E6">Lương BH:</td>
+						<td bgcolor="#E6E6E6">Lương BH:(*)</td>
 						<td><form:input path="salarySocicalInsu" size="12" maxlength="12" class="form-control animated"
 								required="required" title="Lương BH ít nhất phải bằng lương tối thiểu vùng"/></td>
 						<td bgcolor="#E6E6E6">Vùng lương:</td>
@@ -59,7 +59,7 @@
 					<tr>
 <%-- 					<td bgcolor="#E6E6E6">Cty đóng:</td>
 						<td><form:input path="companyPay" maxlength="64"/></td> --%>
-						<td bgcolor="#E6E6E6">Nơi đóng:</td>
+						<td bgcolor="#E6E6E6">Nơi đóng:(*)</td>
 						<td><form:input path="place" required="required" maxlength="64" class="form-control animated"/></td>
 						<td bgcolor="#E6E6E6">Phương thức đóng:</td>
 						<td><form:select path="payType" class="form-control animated">
@@ -83,8 +83,8 @@
 							Bảo hiểm y tế</td>
 					</tr>
 					<tr>
-						<td bgcolor="#E6E6E6">Số thẻ BHYT:</td>
-						<td><form:input path="hInsuNo"  maxlength="12" class="form-control animated"/></td>
+						<td bgcolor="#E6E6E6">Số thẻ BHYT (*):</td>
+						<td><form:input path="hInsuNo" required="required" maxlength="12" class="form-control animated"/></td>
 						<td bgcolor="#E6E6E6">Nơi ĐK khám chữa bệnh:</td>
 						<td><form:input path="hInsuPlace" maxlength="64" class="form-control animated"/></td>
 					<tr>

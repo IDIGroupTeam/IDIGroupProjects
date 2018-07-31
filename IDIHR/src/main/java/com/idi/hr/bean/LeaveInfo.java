@@ -13,7 +13,7 @@ public class LeaveInfo implements Serializable {
 	private int employeeId;
 	private Date date;
 	private String leaveType;
-	private int timeValue;
+	private float timeValue;
 	private String comment;
 	private String leaveName;
 	private String employeeName;
@@ -26,7 +26,7 @@ public class LeaveInfo implements Serializable {
 	public LeaveInfo() {
 	}
 
-	public LeaveInfo(int employeeId, Date date, String leaveType, int timeValue, String comment, String employeeName,
+	public LeaveInfo(int employeeId, Date date, String leaveType, float timeValue, String comment, String employeeName,
 			String department, String title, String leaveName) {
 
 		this.employeeId = employeeId;
@@ -72,11 +72,11 @@ public class LeaveInfo implements Serializable {
 		this.leaveName = leaveName;
 	}
 
-	public int getTimeValue() {
+	public float getTimeValue() {
 		return timeValue;
 	}
 
-	public void setTimeValue(int timeValue) {
+	public void setTimeValue(float timeValue) {
 		this.timeValue = timeValue;
 	}
 

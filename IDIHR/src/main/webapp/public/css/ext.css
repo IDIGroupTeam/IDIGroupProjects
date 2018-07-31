@@ -1,0 +1,116 @@
+@CHARSET "ISO-8859-1";
+
+.pane {
+	filter: alpha(opacity = 60);
+	-moz-opacity: .6;;
+	opacity: .6;
+	background-color: #5555FF;
+	/*ckground-color: #89D551;*/
+
+	position: absolute;
+	width: 200px;
+	height: 100px;
+	/*border: 1px solid #330066; /*border color*/
+}
+
+.shadow {
+	filter: alpha(opacity = 30);
+	-moz-opacity: 0.3;;
+	opacity: 0.3;
+	background-color: #888888;
+	position: absolute;
+	width: 200px;
+	height: 100px;
+	left: 4px;
+	top: 4px;
+}
+
+.content {
+	FONT-FAMILY: Verdana, Arial;
+	FONT-WEIGHT: bolder;
+	FONT-SIZE: 10pt;
+	position: absolute;
+	top: 30px;
+	color: #FFFFFF;
+	text-align: center;
+	width: 100%;
+}
+
+.titlebar {
+	filter: alpha(opacity = 60);;
+	-moz-opacity: .8;;
+	opacity: .8;
+	position: absolute;
+	top: 3px;
+	left: -7px;
+	color: #FFFFFF;
+	text-align: right;
+	width: 100%;
+}
+
+.msgBox {
+	position: absolute;
+	width: 204px;
+	height: 104px;
+	left: -300;
+	top: -300; /*hidden*/
+	visibility: hidden;
+	/*display: none;*/ /*left: 50%; top:	50%;*/
+	/*margin-left: -102px; margin-top: -100px;*/
+}
+
+
+.msgBox_info { 
+	position: absolute;
+	float:none; 
+	width: 254px;
+	/*height: 154px;*/
+	left: 0;
+	top: 0; 
+	visibility: hidden;
+	/*display: none;*/ /*left: 50%; top:	50%;*/
+	/*margin-left: -102px; margin-top: -100px;*/
+	z-index: 100;
+}
+
+.msgBox_info_bar { 
+	background-color: #FFC000;
+	height: 16px;
+	font-size: x-small;
+	font-family: Verdana, Arial, serif, sans-serif;
+	font-weight:bold;
+}
+
+.msgBox_info_border { 
+	background-color: #FFC000;
+}
+
+.msgBox_info_content { 
+	background-color: #FFFFE2;
+}
+
+.transparent{
+	filter: alpha(opacity = 80);
+	-moz-opacity: 0.8;
+	opacity: 0.8;
+	background-color: #888888;
+	padding: 10 10 10 10;
+}
+
+.scrollbar
+{
+scrollbar-base-color: #FFC000;
+scrollbar-arrow-color: white;
+scrollbar-track-color: #FBF3AE;
+
+scrollbar-shadow-color: black;
+scrollbar-lightshadow-color: black; 
+scrollbar-darkshadow-color: gray;
+
+scrollbar-highlight-color: white;
+scrollbar-3dlight-color: black;
+}
+
+.search_form tr td{
+	padding: 2px;
+}

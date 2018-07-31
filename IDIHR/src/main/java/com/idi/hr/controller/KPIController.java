@@ -118,7 +118,7 @@ public class KPIController {
 			String typeReport = leaveReport.getLeaveTypeReport();
 			String department = leaveReport.getDepartment();
 			String employeeIds = "";
-			if (!department.equalsIgnoreCase("all")) {
+			if (!department.equalsIgnoreCase("all") && employeeId < 1) {
 				List<EmployeeInfo> list = null;
 				list = employeeDAO.getEmployeesByDepartment(department);
 				EmployeeInfo employee = new EmployeeInfo();
@@ -131,6 +131,8 @@ public class KPIController {
 						employeeIds = employeeIds + "," + id.toString();
 				}				
 				//System.err.println(employeeIds);
+			}else if (!department.equalsIgnoreCase("all") && employeeId > 0) {
+				employeeIds = String.valueOf(employeeId);
 			}
 			// get list department
 			Map<String, String> departmentMap = this.dataForDepartments();

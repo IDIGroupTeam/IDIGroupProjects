@@ -1,6 +1,5 @@
 package com.idi.hr.validator;
 
-//import org.apache.commons.validator.routines.FloatValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -42,10 +41,12 @@ public class LeaveValidator implements Validator {
 			String leaveType = leaveInfo.getLeaveType();
 			int lateQuataPerMonth = Integer.parseInt(hr.get("COME_LATE_PER_MONTH").toString());
 			System.err.println("validate leave info");
-			if(leaveDAO.getLeaveRequestUsed(leaveType, year, month + 1, employeeId) > lateQuataPerMonth) {
+			
+			if(leaveType.startsWith("DM") && leaveDAO.getRequestComeLateUsed(year, month + 1, employeeId) > lateQuataPerMonth) {
 				System.err.println("over late");
 				errors.rejectValue("overLate", "Pattern.leaveInfo.overLate");
 			}
+			
 			if(leaveDAO.getLeaveReport(String.valueOf(year), String.valueOf(month + 1), employeeId, leaveType) > 0) {
 				System.err.println("duplicate");
 				errors.rejectValue("duplicate", "Pattern.leaveInfo.duplicate");

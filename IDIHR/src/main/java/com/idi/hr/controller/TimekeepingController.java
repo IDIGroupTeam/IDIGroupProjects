@@ -46,6 +46,7 @@ import com.idi.hr.bean.LeaveInfo;
 import com.idi.hr.bean.LeaveReport;
 import com.idi.hr.bean.LeaveType;
 import com.idi.hr.bean.Timekeeping;
+import com.idi.hr.bean.ValueReport;
 import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.LeaveDAO;
@@ -420,13 +421,19 @@ public class TimekeepingController {
 							// số ngày nghỉ phép, đi công tác của tháng
 							// System.err.println(Float.toString((float)leaveDAO.getLeaveReport(year, month,
 							// id, "NP','CT','HT")/8));
-							log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: "
-									+ leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
+							//log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: "
+							//		+ leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
 							// gio cong thuc te
 						} else {
 							if (lT.startsWith("LT") || lT.startsWith("KCC"))	{//|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
 								lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
-							} else {
+							}
+							else if(lT.startsWith("CVBN")) {
+								ValueReport valueReport = null;	
+								valueReport = leaveDAO.getWorkCount(year, month, employeeId, lT);
+								lTV = valueReport.getCount() + "/" + valueReport.getValue();
+							}							
+							else {
 								if(lT.startsWith("NKP")) {
 									//System.err.println("Nghi khong phep");
 									int cameLateUnaccepted = timekeepingDAO.countComleLateOver(year, month, employeeId);
@@ -575,13 +582,19 @@ public class TimekeepingController {
 								// số ngày nghỉ phép, đi công tác của tháng
 								// System.err.println(Float.toString((float)leaveDAO.getLeaveReport(year, month,
 								// id, "NP','CT','HT")/8));
-								log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: "
-										+ leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
+								//log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: "
+								//		+ leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
 								// gio cong thuc te
 							} else {
 								if (lT.startsWith("LT") || lT.startsWith("KCC")) {//|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
 									lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
-								} else {
+								}							
+								else if(lT.startsWith("CVBN")) {
+									ValueReport valueReport = null;	
+									valueReport = leaveDAO.getWorkCount(year, month, id, lT);
+									lTV = valueReport.getCount() + "/" + valueReport.getValue();
+								}
+								else {
 									if(lT.startsWith("NKP")) {
 									//	System.err.println("Nghi khong phep");
 										int cameLateUnaccepted = timekeepingDAO.countComleLateOver(year, month, id);
@@ -735,12 +748,17 @@ public class TimekeepingController {
 								// số ngày nghỉ phép, đi công tác của tháng
 								// System.err.println(Float.toString((float)leaveDAO.getLeaveReport(year, month,
 								// id, "NP','CT','HT")/8));
-								log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: "
-										+ leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
+								//log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: "
+								//		+ leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
 								// gio cong thuc te
 							} else {
 								if (lT.startsWith("LT") || lT.startsWith("KCC"))	{//|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
 									lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
+								}
+								else if(lT.startsWith("CVBN")) {
+									ValueReport valueReport = null;	
+									valueReport = leaveDAO.getWorkCount(year, month, id, lT);
+									lTV = valueReport.getCount() + "/" + valueReport.getValue();								
 								} else {
 									if(lT.startsWith("NKP")) {
 										int cameLateUnaccepted = timekeepingDAO.countComleLateOver(year, month, id);
@@ -1034,7 +1052,7 @@ public class TimekeepingController {
 			System.err.println("delete leave info ");
 			leaveDAO.deleteLeaveInfo(employeeId, date, leaveType);
 			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Xóa thông tin ngày nghỉ thành công!");
+			redirectAttributes.addFlashAttribute("message", "Xóa thông tin phát sinh thành công!");
 		} catch (Exception e) {
 			log.error(e, e);
 		}

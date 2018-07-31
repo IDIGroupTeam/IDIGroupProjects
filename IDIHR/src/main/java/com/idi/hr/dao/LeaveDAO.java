@@ -1,5 +1,7 @@
 package com.idi.hr.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -7,12 +9,15 @@ import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.idi.hr.bean.LeaveInfo;
 import com.idi.hr.bean.LeaveReport;
 import com.idi.hr.bean.LeaveType;
+import com.idi.hr.bean.ValueReport;
 import com.idi.hr.common.PropertiesManager;
 import com.idi.hr.mapper.LeaveInfoMapper;
 import com.idi.hr.mapper.LeaveReportMapper;
@@ -123,29 +128,22 @@ public class LeaveDAO extends JdbcDaoSupport {
 	 * 
 	 * @param year
 	 * @param month
-	 * @param leave type
-	 * @param leaveId
+	 * @param id
 	 * @return
 	 */
-	public float getLeaveRequestUsed(String requestType, int year, int month, int id) {
+	public int getRequestComeLateUsed(int year, int month, int id) {
 
-		String sql = hr.get("COUNT_LEAVE_REQUEST_USED").toString();
-		if(requestType.startsWith("DM") || requestType.startsWith("VS")) {			
-			sql = sql + " AND LEAVE_TYPE IN ('DMS','DMC','VSS','VSC')";
-			if(month > 0)
-				sql = sql + " AND MONTH(DATE) = " + month;
-		}else {
-			sql = sql + " AND LEAVE_TYPE IN ('" + requestType +"') ";
-			if(month > 0)
-				sql = sql + " AND MONTH(DATE) < " + month;
-		}
-		log.info("COUNT_LEAVE_REQUEST_USED query: " + sql);
+		String sql = hr.get("COUNT_COME_LATE_USED").toString();
+		if(month > 0)
+			sql = sql + " AND MONTH(DATE) = " + month;
+		
+		log.info("COUNT_COME_LATE_USED query: " + sql);
 		Object[] params = new Object[] { id, year };
 
-		float numberDayLeaveTaken = 0;
-		if(jdbcTmpl.queryForObject(sql, float.class, params) != null)
-			numberDayLeaveTaken = jdbcTmpl.queryForObject(sql, float.class, params);
-		System.err.println(year + "|" + id + "|" + requestType + "|" + month + ": "+ numberDayLeaveTaken);
+		int numberDayLeaveTaken = 0;
+		if(jdbcTmpl.queryForObject(sql, Integer.class, params) != null)
+			numberDayLeaveTaken = jdbcTmpl.queryForObject(sql, Integer.class, params);
+		System.err.println(year + "|" + id + "|" + month + ": "+ numberDayLeaveTaken);
 		return numberDayLeaveTaken;
 	}
 
@@ -230,17 +228,21 @@ public class LeaveDAO extends JdbcDaoSupport {
 			String sql = hr.getProperty("INSERT_LEAVE_INFO").toString();
 			log.info("INSERT_LEAVE_INFO query: " + sql);
 			String leaveType = leaveInfo.getLeaveType();
-			if (leaveType.endsWith("2")) {
-				leaveInfo.setTimeValue(4);
-				leaveType = leaveType.substring(0, leaveType.length() - 1);
-			} else if (leaveType.equalsIgnoreCase("KCC"))
-				leaveInfo.setTimeValue(1);
-			else if (leaveType.equalsIgnoreCase("DMS") || leaveType.equalsIgnoreCase("DMC")
-				|| leaveType.equalsIgnoreCase("VSS")|| leaveType.equalsIgnoreCase("VSC")) {
-				leaveInfo.setTimeValue(1);
-				//dang can nhac luu leave type la gi
-			}else
-				leaveInfo.setTimeValue(8);
+			if(leaveInfo.getTimeValue() > 0) {
+				
+			}else {				
+				if (leaveType.endsWith("2")) {
+					leaveInfo.setTimeValue(4);
+					leaveType = leaveType.substring(0, leaveType.length() - 1);
+				} else if (leaveType.equalsIgnoreCase("KCC"))
+					leaveInfo.setTimeValue(1);
+				else if (leaveType.equalsIgnoreCase("DMS") || leaveType.equalsIgnoreCase("DMC")
+					|| leaveType.equalsIgnoreCase("VSS")|| leaveType.equalsIgnoreCase("VSC")) {
+					leaveInfo.setTimeValue(1);
+					//dang can nhac luu leave type la gi
+				}else
+					leaveInfo.setTimeValue(8);
+			}
 			Object[] params = new Object[] { leaveInfo.getEmployeeId(), leaveInfo.getDate(), leaveType,
 					leaveInfo.getTimeValue(), leaveInfo.getComment() };
 			jdbcTmpl.update(sql, params);
@@ -303,11 +305,53 @@ public class LeaveDAO extends JdbcDaoSupport {
 			countNumber = jdbcTmpl.queryForObject(sql, Integer.class, params);
 		else
 			countNumber = 0;
-		System.err.println("leaveType: " + leaveType + ", month: "+ month+ ", year " + year+", employeeId: " + employeeId + "|" + countNumber);
+		log.info("leaveType: " + leaveType + ", month: " + month + ", year " + year + ", employeeId: " + employeeId + "|" + countNumber);
 
 		return countNumber;
 	}
 
+	/**
+	 * count number time/value of working without keeping ... 
+	 * @param year
+	 * @param month
+	 * @param employeeId
+	 * @param leaveType
+	 * @return
+	 * @throws Exception
+	 */
+	public ValueReport getWorkCount(String year, String month, int employeeId, String leaveType)
+			throws Exception {
+
+		String sql = hr.getProperty("GET_WORK_COUNT_FOR_REPORT").toString();
+		if (month != null && month.length() > 0)
+			sql = sql + " AND MONTH(DATE) = '" + month + "' ";
+
+		if (employeeId > 0)
+			sql = sql + " AND EMPLOYEE_ID = " + employeeId + "";
+
+		sql = sql + " AND LEAVE_TYPE IN ('" + leaveType +"')";	
+		
+		log.info("GET_WORK_COUNT_FOR_REPORT query: " + sql);
+		
+		Object[] params = new Object[] { year };
+
+		return jdbcTmpl.query(sql, params, new ResultSetExtractor<ValueReport>() {
+			@Override
+			public ValueReport extractData(ResultSet rs) throws SQLException, DataAccessException {
+				if (rs.next()) {
+					
+					ValueReport valueReport = new ValueReport();
+					
+					valueReport.setCount(rs.getInt("COUNT"));
+					valueReport.setValue(rs.getFloat("TIME_VALUE"));
+					System.err.println(rs.getInt("COUNT")+"|"+ rs.getFloat("TIME_VALUE"));
+					return valueReport;
+				}
+				return null;
+			}
+		});
+	}
+	
 	/**
 	 * get leave info for report
 	 * 
@@ -330,14 +374,12 @@ public class LeaveDAO extends JdbcDaoSupport {
 
 		log.info("GET_LEAVES_INFO_FOR_REPORT query: " + sql);
 		
-		System.err.println("");
-
 		Object[] params = new Object[] { year, leaveType };
 		if (jdbcTmpl.queryForObject(sql, Integer.class, params) != null)
 			countNumber = jdbcTmpl.queryForObject(sql, Integer.class, params);
 		else
 			countNumber = 0;
-		System.err.println("leaveType:" + leaveType + ", " + countNumber);
+		log.info("leaveType:" + leaveType + ", " + countNumber);
 
 		return countNumber;
 	}
