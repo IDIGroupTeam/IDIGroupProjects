@@ -39,6 +39,9 @@ $(function() {
 			});
 });
 
+	function ConfirmDelete() {
+	  return confirm("Bạn có chắc chắn muốn xóa không?");
+	}
 </script>
 <title>Thông tin ngày nghỉ, công tác, làm thêm ...</title>
 <style>
@@ -131,7 +134,7 @@ tr:nth-child(even) {
 
 					<%-- <td bgcolor="#F5F6CE"><a href="editLeaveInfo?employeeId=${leaveInfo.employeeId}&date=${leaveInfo.date}&leaveType=${leaveInfo.leaveType}">Sửa</a></td> --%>
 					<td><a style="color: red;"
-						href="deleteLeaveInfo?employeeId=${leaveInfo.employeeId}&date=${leaveInfo.date}&leaveType=${leaveInfo.leaveType}">Xóa</a></td>
+						href="deleteLeaveInfo?employeeId=${leaveInfo.employeeId}&date=${leaveInfo.date}&leaveType=${leaveInfo.leaveType}" Onclick="return ConfirmDelete()">Xóa</a></td>
 				</tr>
 			</c:forEach>
 		</table>

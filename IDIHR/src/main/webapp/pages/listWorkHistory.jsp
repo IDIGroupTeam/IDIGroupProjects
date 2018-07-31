@@ -22,6 +22,11 @@ tr:nth-child(even) {
     background-color: #E8E3E3;
 }
 </style>
+<script type="text/javascript">
+	function ConfirmDelete() {
+	  return confirm("Bạn có chắc chắn muốn xóa không?");
+	}
+</script>
 </head>
 <body>
 	<a href="${pageContext.request.contextPath}/workHistory/addWorkHistory"><button
@@ -59,7 +64,7 @@ tr:nth-child(even) {
 					
 					<%-- <td><a href="listWorkHistorysByEmployee?employeeId=${workHistory.employeeId}">Xem</a></td> --%>
 					<td><a href="editWorkHistory?employeeId=${workHistory.employeeId}&fromDate=${workHistory.fromDate}">Sửa</a></td>
-					<td><a href="deleteWorkHistory?employeeId=${workHistory.employeeId}&fromDate=${workHistory.fromDate}">Xóa</a></td>
+					<td><a href="deleteWorkHistory?employeeId=${workHistory.employeeId}&fromDate=${workHistory.fromDate}" Onclick="return ConfirmDelete()">Xóa</a></td>
 				</tr>
 			</c:forEach>
 		</table>

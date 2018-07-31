@@ -39,7 +39,7 @@
 						<td bgcolor="#E6E6E6">Số sổ BHXH:(*)</td>
 						<td><form:input path="socicalInsuNo" maxlength="12" size="12"
 								required="required" class="form-control animated"/></td>
-						<td bgcolor="#E6E6E6">% Tỷ lệ dongd của người LĐ:(*) </td>
+						<td bgcolor="#E6E6E6">% Tỷ lệ đóng của người LĐ:(*) </td>
 						<td><form:input path="percentSInsuE" size="6" maxlength="6"
 								required="required" class="form-control animated"/></td>
 					</tr>
@@ -56,7 +56,7 @@
 							</form:select></td>	
 					</tr>
 					<tr>
-						<%-- 						<td bgcolor="#E6E6E6">Cty đóng:</td>
+						<%--<td bgcolor="#E6E6E6">Cty đóng:</td>
 						<td><form:input path="companyPay" maxlength="64"/></td> --%>
 						<td bgcolor="#E6E6E6">Nơi đóng:(*)</td>
 						<td><form:input path="place" required="required"

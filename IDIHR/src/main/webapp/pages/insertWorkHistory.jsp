@@ -30,15 +30,15 @@
 					<td><form:select path="employeeId" class="form-control animated">
 							<form:options items="${employeeMap}" />
 						</form:select></td>
-					<td bgcolor="#E6E6E6">Lương:</td>
+					<td bgcolor="#E6E6E6">Lương:(*)</td>
 					<td><form:input path="salary" maxlength="12"
 							required="required" class="form-control animated"/></td>
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Từ ngày:</td>
+					<td bgcolor="#E6E6E6">Từ ngày:(*)</td>
 					<td><form:input path="fromDate" type="date"
 							required="required" class="form-control animated"/></td>
-					<td bgcolor="#E6E6E6">Đến ngày:</td>
+					<td bgcolor="#E6E6E6">Đến ngày:(*)</td>
 					<td><form:input path="toDate" type="date" required="required" class="form-control animated"/></td>
 				</tr>
 				<tr>
@@ -53,7 +53,7 @@
 
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Thuộc cty:</td>
+					<td bgcolor="#E6E6E6">Thuộc cty:(*)</td>
 					<td><form:input path="company" required="required"
 							maxlength="32" class="form-control animated"/></td>
 					<td bgcolor="#E6E6E6">Thành tích:</td>

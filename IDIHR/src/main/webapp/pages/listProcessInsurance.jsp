@@ -22,6 +22,11 @@ tr:nth-child(even) {
     background-color: #E8E3E3;
 }
 </style>
+<script type="text/javascript">
+	function ConfirmDelete() {
+	  return confirm("Bạn có chắc chắn muốn xóa không?");
+	}
+</script>
 </head>
 <body>
 	<a
@@ -71,7 +76,7 @@ tr:nth-child(even) {
 						<td><a
 							href="${pageContext.request.contextPath}/processInsurance/editProcessInsuranceForm?socicalInsuNo=${socicalInsuNo}&employeeId=${employeeId}&fromDate=${insurance.fromDate}">Sửa</a></td>
 						<td><a
-							href="${pageContext.request.contextPath}/processInsurance/deleteProcessInsurance?socicalInsuNo=${socicalInsuNo}&employeeId=${employeeId}&fromDate=${insurance.fromDate}">Xóa</a></td>
+							href="${pageContext.request.contextPath}/processInsurance/deleteProcessInsurance?socicalInsuNo=${socicalInsuNo}&employeeId=${employeeId}&fromDate=${insurance.fromDate}" Onclick="return ConfirmDelete()">Xóa</a></td>
 					</tr>
 				</c:forEach>
 			</table>
