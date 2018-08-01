@@ -5,6 +5,53 @@
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 <html>
 <head>
+
+<!-- Initialize the plugin: -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+		// Khởi tạo action/method cho employeeForm form
+		$("#employeeForm").attr("action", "${url}/");
+		$("#employeeForm").attr("method", "POST");		
+		$("button[id^=page]").each(function(i, el) {
+			$(this).click(function() {
+				if($(this).text()!=${employeeForm.pageIndex}){
+					$("#pageIndex").val($(this).text());
+					$("#employeeForm").submit();
+				}
+			});
+		});
+		
+		$("#firstPage").click(function(){
+			$("#pageIndex").val(1);
+			$("#employeeForm").submit();
+		});
+		
+		$("#previousPage").click(function(){
+			$("#pageIndex").val(${employeeForm.pageIndex-1});
+			$("#employeeForm").submit();
+		});
+		
+		$("#nextPage").click(function(){
+			$("#pageIndex").val(${employeeForm.pageIndex+1});
+			$("#employeeForm").submit();	
+		});
+		
+		$("#lastPage").click(function(){
+			$("#pageIndex").val(${employeeForm.totalPages});
+			$("#employeeForm").submit();	
+		});
+		
+		$("#numberRecordsOfPage").change(function(){
+			$("#pageIndex").val(1);
+			$("#totalPages").val(0);
+			$("#totalRecords").val(0);
+			$("#employeeForm").submit();
+		});	
+
+	});
+</script>
+
 <title>Danh sách nhân viên</title>
 <style>
 table {
@@ -33,7 +80,7 @@ tr:nth-child(even) {
 			class="btn btn-primary btn-sm">Thống kê trạng thái LĐ</button></a>				
 	<br />
 	<br />
-	<form:form action="listEmployeeSearch" modelAttribute="employeeForm" method="GET">
+	<form:form modelAttribute="employeeForm" method="POST">
 	<table class="table">
 		<tr>
 			<td style="color: purple;"><i>Nhập thông tin nhân viên muốn tìm kiếm: Tên/Email/Account/Mã NV/Mã phòng/Mã chức vụ/trạng thái LĐ </i></td>
@@ -42,10 +89,109 @@ tr:nth-child(even) {
 			</td>
 			<td>
 				<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Tìm" />
-			</td>			
+			</td>	
 		</tr>
 	</table>
+	
+			<table class="table">
+		<tr>
+			<td><span>Tổng số ${employeeForm.totalRecords} công việc</span></td>
+			<td><span>Số trang: ${employeeForm.totalPages}</span></td>
+			<form:hidden path="pageIndex" /> 
+			<form:hidden path="totalPages" /> 
+			<form:hidden path="totalRecords" />			
+			<td>Trang:</td>
+			<td>
+				<div class="btn-group btn-group-md">
+					<c:choose>
+						<c:when test="${employeeForm.pageIndex==1}">
+							<button id="firstPage" type="button" class="btn btn-default disabled">Đầu</button>
+							<button id="previousPage" type="button"	class="btn btn-default disabled">Trước</button>
+						</c:when>
+						<c:otherwise>
+							<button id="firstPage" type="button" class="btn btn-default">Đầu</button>
+							<button id="previousPage" type="button" class="btn btn-default">Trước</button>
+						</c:otherwise>
+					</c:choose>
+					<c:choose>
+						<c:when test="${employeeForm.totalPages<=3}">
+							<c:forEach begin="1" end="${employeeForm.totalPages}"
+								varStatus="status">
+								<c:choose>
+									<c:when test="${status.index==employeeForm.pageIndex}">
+										<button id="page${status.index}" type="button"
+											class="btn btn-default active">${status.index}</button>
+									</c:when>
+									<c:otherwise>
+										<button id="page${status.index}" type="button"
+											class="btn btn-default">${status.index}</button>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
+						</c:when>
+						<c:otherwise>
+							<c:choose>
+								<c:when test="${employeeForm.pageIndex==1}">
+									<button id="page1" type="button" class="btn btn-default active">1</button>
+									<button id="page2" type="button" class="btn btn-default">2</button>
+									<button id="page3" type="button" class="btn btn-default">3</button>
+								</c:when>
+								<c:when
+									test="${employeeForm.pageIndex==employeeForm.totalPages}">
+									<button id="page${employeeForm.totalPages-2}" type="button"
+										class="btn btn-default">${employeeForm.totalPages-2}</button>
+									<button id="page${employeeForm.totalPages-1}" type="button"
+										class="btn btn-default">${employeeForm.totalPages-1}</button>
+									<button id="page${employeeForm.totalPages}" type="button"
+										class="btn btn-default active">${employeeForm.totalPages}</button>
+								</c:when>
+								<c:otherwise>
+									<c:forEach begin="${employeeForm.pageIndex - 1}"
+										end="${employeeForm.pageIndex + 1}" varStatus="status">
+										<c:choose>
+											<c:when test="${status.index==employeeForm.pageIndex}">
+												<button id="page${status.index}" type="button"
+													class="btn btn-default active">${status.index}</button>
+											</c:when>
+											<c:otherwise>
+												<button id="page${status.index}" type="button"
+													class="btn btn-default">${status.index}</button>
+											</c:otherwise>
+										</c:choose>
+									</c:forEach>
+								</c:otherwise>
+							</c:choose>
+						</c:otherwise>
+					</c:choose>
+					<c:choose>
+						<c:when
+							test="${employeeForm.pageIndex==employeeForm.totalPages}">
+							<button id="nextPage" type="button"
+								class="btn btn-default disabled">Sau</button>
+							<button id="lastPage" type="button"
+								class="btn btn-default disabled">Cuối</button>
+						</c:when>
+						<c:otherwise>
+							<button id="nextPage" type="button" class="btn btn-default">Sau</button>
+							<button id="lastPage" type="button" class="btn btn-default">Cuối</button>
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</td>
+			<td>Số bản ghi trong một trang:</td>
+			<td><form:select path="numberRecordsOfPage" class="form-control">					
+					<form:option value="25">25</form:option>
+					<form:option value="50">50</form:option>
+					<form:option value="100">100</form:option>
+					<form:option value="200">200</form:option>
+				</form:select></td>
+		</tr>
+	</table>
+	
 	</form:form>
+	<c:if test="${search}">
+		<a href="${url}"><button class="btn btn-primary btn-sm">Hiển thị tất cả nhân viên</button></a> <br/> <br/>
+	</c:if>
 	<div class="table-responsive">
 		<c:if test="${not empty message}">
 			<div class="alert alert-success">${message}</div>

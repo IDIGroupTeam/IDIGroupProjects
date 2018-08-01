@@ -54,7 +54,7 @@ import com.idi.hr.form.EmployeeForm;
 import com.idi.hr.validator.EmployeeValidator;
 
 @Controller
-public class EmployeeController {// extends BaseController {
+public class EmployeeController {
 
 	private static final Logger log = Logger.getLogger(EmployeeController.class.getName());
 
@@ -70,20 +70,79 @@ public class EmployeeController {// extends BaseController {
 	@Autowired
 	private EmployeeValidator employeeValidator;
 
-	@RequestMapping(value = { "/" }, method = RequestMethod.GET)
-	public String listEmployees(Model model) {
+	@RequestMapping(value = { "/" })
+	public String listEmployees(Model model, @ModelAttribute("employeeForm") EmployeeForm form) throws Exception {
 		try {
-			List<EmployeeInfo> list = employeeDAO.getAllEmployees();
-			model.addAttribute("employees", list);
+			
+			List<EmployeeInfo> list = null;
 
+			// Paging:
+			// Number records of a Page: Default: 25
+			// Page Index: Default: 1
+			// Total records
+			// Total of page
+			if (form.getNumberRecordsOfPage() == 0) {
+				form.setNumberRecordsOfPage(25);
+			}
+
+			if (form.getPageIndex() == 0) {
+				form.setPageIndex(1);
+			}
+			
+			boolean search = false;
+			if (form.getSearchValue() != null && form.getSearchValue().length() > 0) {
+				log.info("Searching for: " + form.getSearchValue());
+				search = true;
+				list = employeeDAO.getEmployeesBySearch(form.getSearchValue());
+			} else
+				list = employeeDAO.getAllEmployees();
+			form.setTotalRecords(list.size());
+			
+			int totalPages = form.getTotalRecords() % form.getNumberRecordsOfPage() > 0
+					? form.getTotalRecords() / form.getNumberRecordsOfPage() + 1
+					: form.getTotalRecords() / form.getNumberRecordsOfPage();
+			form.setTotalPages(totalPages);
+
+			List<EmployeeInfo> listEmployeesForPage = new ArrayList<EmployeeInfo>();
+			
+			if (form.getPageIndex() < totalPages) {
+				if (form.getPageIndex() == 1) {
+					for (int i = 0; i < form.getNumberRecordsOfPage(); i++) {
+						EmployeeInfo employee = new EmployeeInfo();
+						employee = list.get(i);
+						listEmployeesForPage.add(employee);
+					}
+				} else if (form.getPageIndex() > 1) {
+					for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form.getPageIndex()
+							* form.getNumberRecordsOfPage(); i++) {
+						EmployeeInfo employee = new EmployeeInfo();
+						employee = list.get(i);
+						listEmployeesForPage.add(employee);
+					}
+				}
+			} else if (form.getPageIndex() == totalPages) {
+				for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form
+						.getTotalRecords(); i++) {
+					EmployeeInfo employee = new EmployeeInfo();
+					employee = list.get(i);
+					listEmployeesForPage.add(employee);
+				}
+			}
+			
+			if (list != null && list.size() < 1 && !search)
+				model.addAttribute("message", "Chưa có thông tin nhân viên nào");
+			else if (list != null && list.size() < 1 && search)
+				model.addAttribute("message",
+						"Không có nhân viên nào khớp với thông tin: '" + form.getSearchValue() + "'");
+
+			model.addAttribute("employees", listEmployeesForPage);			
+			
 			Date date = new Date();// your date
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(date);		
-			//System.err.println("thang hien tai " + cal.get(Calendar.MONTH));
 			int currentQuarter = cal.get(Calendar.MONTH)/3 + 1;
-			//System.err.println(currentQuarter);
-			EmployeeForm employeeForm = new EmployeeForm();
-			model.addAttribute("employeeForm", employeeForm);
+			model.addAttribute("employeeForm", form);
+			model.addAttribute("search", search);
 			model.addAttribute("quarter", currentQuarter);
 			model.addAttribute("formTitle", "Danh sách nhân viên");
 		} catch (Exception e) {
@@ -93,8 +152,8 @@ public class EmployeeController {// extends BaseController {
 		return "listEmployee";
 	}
 
-	@RequestMapping(value = "/listEmployeeSearch", method = RequestMethod.GET)
-	public String listEmployeeSearch(Model model, @RequestParam("searchValue") String searchValue) {
+/*	@RequestMapping(value = "/listEmployeeSearch", method = RequestMethod.GET)
+	public String listEmployeeSearch(Model model, @RequestParam("searchValue") String searchValue) throws Exception{
 		try {			
 			Date date = new Date();// your date
 			Calendar cal = Calendar.getInstance();
@@ -114,11 +173,11 @@ public class EmployeeController {// extends BaseController {
 			e.printStackTrace();
 		}
 		return "listEmployee";
-	}
+	}*/
 	
 	@RequestMapping(value = "/listEmployeeBirth", method = RequestMethod.GET)
 	public String listEmployeeBirth(Model model, @RequestParam("quarter") int quarter,
-			@ModelAttribute("bithForm") EmployeeForm bith, final RedirectAttributes redirectAttributes) {
+			@ModelAttribute("bithForm") EmployeeForm bith, final RedirectAttributes redirectAttributes) throws Exception{
 		try {
 			System.err.println(bith.getQuarter());
 			List<EmployeeInfo> list = employeeDAO.getEmployeesBirth(quarter);
@@ -148,7 +207,7 @@ public class EmployeeController {// extends BaseController {
 	}
 
 	@RequestMapping(value = "/workStatusReport", method = RequestMethod.GET)
-	public String workStatusReport(Model model, HttpServletResponse response,  HttpServletRequest request) {
+	public String workStatusReport(Model model, HttpServletResponse response,  HttpServletRequest request) throws Exception {
 		Map<String, String> items = employeeDAO.getWorkStatusMap();
 		Map<String, Integer> memberWorkStatus = new LinkedHashMap<String, Integer>();
 		for (Map.Entry<String, String> entry : items.entrySet()) {
@@ -219,7 +278,7 @@ public class EmployeeController {// extends BaseController {
 
 	}*/
 
-	private JFreeChart createChart(PieDataset pdSet, String chartTitle) {
+	private JFreeChart createChart(PieDataset pdSet, String chartTitle)  throws Exception {
 
 		JFreeChart chart = ChartFactory.createPieChart3D(chartTitle, pdSet, true, true, false);
 		PiePlot3D plot = (PiePlot3D)chart.getPlot();
@@ -251,7 +310,7 @@ public class EmployeeController {// extends BaseController {
 	@RequestMapping(value = "/insertOrUpdateEmployee", method = RequestMethod.POST)
 	public String insertOrUpdateEmployee(Model model, HttpServletRequest request, @RequestParam MultipartFile image,
 			@ModelAttribute("employeeForm") @Validated EmployeeInfo employeeInfo, BindingResult result,
-			final RedirectAttributes redirectAttributes) {
+			final RedirectAttributes redirectAttributes) throws Exception {
 		try {
 			// Nếu validate có lỗi.
 			if (!(employeeInfo.getEmployeeId() > 0)) {
@@ -306,7 +365,7 @@ public class EmployeeController {// extends BaseController {
 	 * @param employeeInfo
 	 * @return
 	 */
-	private String employeeForm(Model model, EmployeeInfo employeeInfo) {
+	private String employeeForm(Model model, EmployeeInfo employeeInfo) throws Exception {
 		model.addAttribute("employeeForm", employeeInfo);
 
 		// get list title
@@ -328,12 +387,12 @@ public class EmployeeController {// extends BaseController {
 	}
 
 	@RequestMapping(value = { "/insertEmployee" })
-	public String insertEmployee(Model model) {
+	public String insertEmployee(Model model) throws Exception {
 		EmployeeInfo employeeInfo = new EmployeeInfo();
 		return this.employeeForm(model, employeeInfo);
 	}
 
-	private Map<String, String> dataForTitles() {
+	private Map<String, String> dataForTitles() throws Exception {
 		Map<String, String> titleMap = new LinkedHashMap<String, String>();
 		try {
 			List<JobTitle> list = jobTitleDAO.getJobTitles();
@@ -350,7 +409,7 @@ public class EmployeeController {// extends BaseController {
 		return titleMap;
 	}
 
-	private Map<String, String> dataForDepartments() {
+	private Map<String, String> dataForDepartments() throws Exception {
 		Map<String, String> departmentMap = new LinkedHashMap<String, String>();
 		try {
 			List<Department> list = departmentDAO.getDepartments();
@@ -368,7 +427,7 @@ public class EmployeeController {// extends BaseController {
 	}
 
 	@RequestMapping("/editEmployee")
-	public String editEmployee(Model model, @RequestParam("employeeId") String employeeId) {
+	public String editEmployee(Model model, @RequestParam("employeeId") String employeeId) throws Exception {
 		EmployeeInfo employeeInfo = null;
 		if (employeeId != null) {
 			employeeInfo = this.employeeDAO.getEmployee(employeeId);
@@ -381,7 +440,7 @@ public class EmployeeController {// extends BaseController {
 	}
 
 	@RequestMapping("/viewEmployee")
-	public String viewEmployee(Model model, @RequestParam("employeeId") String employeeId) {
+	public String viewEmployee(Model model, @RequestParam("employeeId") String employeeId) throws Exception {
 		EmployeeInfo employeeInfo = null;
 		if (employeeId != null) {
 			employeeInfo = this.employeeDAO.getEmployee(employeeId);
