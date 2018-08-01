@@ -9,6 +9,10 @@ import org.apache.log4j.Logger;
 public class ExpressionEval {
 	private static final Logger logger = Logger.getLogger(ExpressionEval.class);
 
+	public static final String KHOANG_CACH = " ";
+	public static final String DAU_AM = "-";
+	public static final String DAU_AM_TAM_THOI = "@";
+
 	public static void main(String[] args) {
 		ExpressionEval expEval = new ExpressionEval();
 		// String inFixExp = "A*B+C*((D-E)+F)/G";
@@ -42,10 +46,10 @@ public class ExpressionEval {
 		if (expression != null) {
 			String[] operators = { "+", "-", "*", "/", "%", "(", ")", "[", "]", "{", "}" };
 			for (int i = 0; i < operators.length; i++) {
-				expression = expression.replace(operators[i], " " + operators[i] + " ");
+				expression = expression.replace(operators[i], KHOANG_CACH + operators[i] + KHOANG_CACH);
 			}
 
-			expression = expression.replaceAll("\\s+", " ");
+			expression = expression.replaceAll("\\s+", KHOANG_CACH);
 			expression = expression.trim();
 		}
 		return expression;
@@ -67,7 +71,7 @@ public class ExpressionEval {
 		// Chuyển biểu thức trung tố thành hậu tố.
 		if (expression != null) {
 			// Tách biểu thức trung tố
-			String[] exps = expression.split(" ");
+			String[] exps = expression.split(KHOANG_CACH);
 
 			StringBuffer output = new StringBuffer();
 			Stack<String> stack = new Stack<>();
@@ -82,7 +86,7 @@ public class ExpressionEval {
 					// Gặp các dấu ngoặc đóng thì đưa toàn bộ toán tử ra output
 					// từ stack ra đến khi gặp dấu ngoặc mở đầu tiên
 					while (!isOpenBounder(stack.peek())) {
-						output.append(stack.pop() + " ");
+						output.append(stack.pop() + KHOANG_CACH);
 					}
 
 					// Xóa thẻ đóng khỏi stack
@@ -97,12 +101,12 @@ public class ExpressionEval {
 						// Nếu toán từ hiện tại có độ ưu tiên thấp hơn toán từ ở đầu stack
 						// thì lấy toán tự ở đầu stack đưa ra output và
 						// đẩy toán tử hiện tại vào stack
-						output.append(stack.pop() + " ");
+						output.append(stack.pop() + KHOANG_CACH);
 						stack.push(exps[i]);
 					}
 				} else {
 					// Nếu là toán hạng thì đưa ra output
-					output.append(exps[i] + " ");
+					output.append(exps[i] + KHOANG_CACH);
 				}
 				// logger.info(output);
 				// logger.info(" \t" + stack);
@@ -110,7 +114,7 @@ public class ExpressionEval {
 
 			// Lấy toàn bộ toán từ còn lại trong stack đưa ra output
 			while (!stack.empty()) {
-				output.append(stack.pop() + " ");
+				output.append(stack.pop() + KHOANG_CACH);
 			}
 
 			return formatExpression(output.toString());
@@ -134,7 +138,7 @@ public class ExpressionEval {
 		// Tính giá trị biểu thức hậu tố.
 		if (postFixExp != null) {
 			// Tách biểu thức hậu tố
-			String[] exps = postFixExp.split(" ");
+			String[] exps = postFixExp.split(KHOANG_CACH);
 
 			// Bắt đầu tính giá trị
 			Stack<Double> stack = new Stack<>();
@@ -176,6 +180,10 @@ public class ExpressionEval {
 				} else {
 					// Nếu là toán hạng thì đẩy vào stack, sau này lôi ra tính toán sau
 					try {
+						int pos = exps[i].indexOf(DAU_AM_TAM_THOI);
+						if (pos >= -1) {
+							exps[i] = exps[i].replaceAll(DAU_AM_TAM_THOI, DAU_AM);
+						}
 						Double operandValue = new Double(exps[i]);
 						stack.push(operandValue);
 					} catch (Exception e) {
@@ -219,7 +227,7 @@ public class ExpressionEval {
 		List<String> rs = new ArrayList<>();
 
 		expression = formatExpression(expression);
-		String[] splits = expression.split(" ");
+		String[] splits = expression.split(KHOANG_CACH);
 		for (int i = 0; i < splits.length; i++) {
 			if (!isOperator(splits[i]) && !isCloseBounder(splits[i]) && !isOpenBounder(splits[i])) {
 				rs.add(splits[i].trim());

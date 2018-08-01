@@ -34,8 +34,8 @@
 					hàng</a></li>
 			<li id="tabCTBH"><a href="${url}/chungtu/banhang/danhsach">Bán
 					hàng</a></li>
-			<li id="tabCTKC"><a
-				href="${url}/chungtu/ketchuyen/danhsach">Kết chuyển</a></li>
+			<li id="tabCTKC"><a href="${url}/chungtu/ketchuyen/danhsach">Kết
+					chuyển</a></li>
 		</ul></li>
 	<li class="dropdown"><a class="dropdown-toggle"
 		data-toggle="dropdown" href="#">Sổ kế toán<span class="caret"></span>
@@ -56,7 +56,8 @@
 					cân đối kế toán</a></li>
 			<li id="tabBCDPS"><a href="${url}/bctc/candoiphatsinh">Bảng
 					cân đối phát sinh</a></li>
-			<li><a href="#">Bảng kết quả SXKD</a></li>
+			<li id="tabBKQHDKD"><a href="${url}/cdkt/ketquahdkd">Bảng
+					kết quả HDKD</a></li>
 			<li><a href="#">Bảng lưu chuyển tiền tệ</a></li>
 
 		</ul></li>

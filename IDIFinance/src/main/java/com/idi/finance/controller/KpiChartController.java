@@ -407,7 +407,8 @@ public class KpiChartController {
 
 			double value = ExpressionEval.calExp(realExp);
 			values.put(date, value);
-			logger.info(date + ": " + realExp + " = " + value);
+			String realExpVl = realExp.replaceAll("\\" + ExpressionEval.DAU_AM_TAM_THOI, ExpressionEval.DAU_AM);
+			logger.info(date + ": " + realExpVl + " = " + value);
 		}
 
 		// Sorting by period (month)
@@ -445,7 +446,14 @@ public class KpiChartController {
 			operand = operand.replaceAll("\\s+", " ").trim();
 
 			if (expression != null && !operand.equals("")) {
-				expression = expression.replaceAll(operand, value + "");
+				String strValue = value + "";
+				int pos = strValue.indexOf(ExpressionEval.DAU_AM);
+				if (pos > -1) {
+					// Nếu là số âm thì đổi tạm thời dấu âm "-" thành "@"
+					// đề tránh nhầm với dấu "-" khi chuyển đổi biểu
+					strValue = strValue.replace(ExpressionEval.DAU_AM, ExpressionEval.DAU_AM_TAM_THOI);
+				}
+				expression = expression.replaceAll(operand, strValue);
 				expression = ExpressionEval.formatExpression(expression);
 			}
 

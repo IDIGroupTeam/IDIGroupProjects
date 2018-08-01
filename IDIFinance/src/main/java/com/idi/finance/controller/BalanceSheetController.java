@@ -199,7 +199,7 @@ public class BalanceSheetController {
 			HashMap<Integer, String> kyDs = new HashMap<>();
 
 			// kyDs.put(KyKeToanCon.WEEK, "Tuần");
-			// kyDs.put(KyKeToanCon.MONTH, "Tháng");
+			kyDs.put(KyKeToanCon.MONTH, "Tháng");
 			// kyDs.put(KyKeToanCon.QUARTER, "Quý");
 			kyDs.put(KyKeToanCon.YEAR, "Năm");
 
@@ -284,7 +284,7 @@ public class BalanceSheetController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		logger.info("===== " + bad + " =====");
+
 		// Tính giá trị cuối kỳ
 		if (bad.getChilds() != null && bad.getChilds().size() > 0) {
 			Iterator<BalanceAssetData> iter = bad.getChilds().iterator();
@@ -293,7 +293,6 @@ public class BalanceSheetController {
 				childBad = calCulcateBs(childBad, allBads);
 				bad.setEndValue(bad.getEndValue() + childBad.getEndValue());
 			}
-			logger.info("bad " + bad);
 		} else {
 			// Kết nối CSDL để tính giá trị cuối kỳ của chỉ tiêu cân đối kế toán theo các
 			// tài khoản kế toán với công thức xác định trước cho từng loại chỉ tiêu
@@ -309,7 +308,6 @@ public class BalanceSheetController {
 				while (taiKhoanIter.hasNext()) {
 					try {
 						LoaiTaiKhoan loaiTaiKhoan = taiKhoanIter.next();
-						logger.info("ma_tk " + loaiTaiKhoan);
 
 						Iterator<BalanceAssetData> iter = allBads.iterator();
 						while (iter.hasNext()) {
@@ -321,7 +319,6 @@ public class BalanceSheetController {
 									&& balanceAssetData.getAsset().getTaiKhoanDs().contains(loaiTaiKhoan)) {
 								bad.setEndValue(bad.getEndValue() + bad.getAsset().getSoDu()
 										* loaiTaiKhoan.getSoDuGiaTri() * balanceAssetData.getEndValue());
-								logger.info(balanceAssetData.getEndValue());
 							}
 						}
 					} catch (Exception e) {
@@ -329,7 +326,6 @@ public class BalanceSheetController {
 					}
 				}
 			}
-			logger.info(bad);
 		}
 
 		// logger.info("Chỉ tiêu cân đối kế toán " + bad.getAsset().getAssetCode() + ":
@@ -337,6 +333,250 @@ public class BalanceSheetController {
 
 		// Cập nhật vào cơ sở dữ liệu
 		balanceSheetDAO.insertOrUpdateBA(bad);
+
+		return bad;
+	}
+
+	@RequestMapping("/cdkt/ketquahdkd")
+	public String saleResults(@ModelAttribute("mainFinanceForm") BalanceAssetForm balanceSheetForm, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			// List balance assets:
+			if (balanceSheetForm == null)
+				balanceSheetForm = new BalanceAssetForm();
+
+			// Lấy kỳ kế toán mặc định
+			if (balanceSheetForm.getKyKeToan() == null) {
+				balanceSheetForm.setKyKeToan(dungChung.getKyKeToan());
+			} else {
+				balanceSheetForm.setKyKeToan(kyKeToanDAO.layKyKeToan(balanceSheetForm.getKyKeToan().getMaKyKt()));
+			}
+
+			// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của kỳ
+			if (balanceSheetForm.getDau() == null) {
+				balanceSheetForm.setDau(balanceSheetForm.getKyKeToan().getBatDau());
+			}
+
+			if (balanceSheetForm.getCuoi() == null) {
+				balanceSheetForm.setCuoi(balanceSheetForm.getKyKeToan().getKetThuc());
+			}
+
+			List<Date> selectedAssetPeriods = null;
+			if (balanceSheetForm.getAssetPeriods() != null) {
+				selectedAssetPeriods = Utils.convertArray2List(balanceSheetForm.getAssetPeriods());
+			} else if (!balanceSheetForm.isFirst()) {
+				// Đây là lần đầu vào tab, không phải do ấn nút form tìm kiếm,
+				// sẽ lấy dữ liệu tháng hiện tại
+				selectedAssetPeriods = new ArrayList<>();
+				Date period = Utils.getStartPeriod(balanceSheetForm.getKyKeToan().getBatDau(),
+						balanceSheetForm.getPeriodType());
+				selectedAssetPeriods.add(period);
+				balanceSheetForm.setFirst(true);
+
+				// Chuyển tháng từ List Date sang Array String
+				balanceSheetForm.setAssetPeriods(Utils.convertList2Array(selectedAssetPeriods));
+			}
+
+			// AssetCode
+			List<String> selectedAssetCodes = null;
+			if (balanceSheetForm.getAssetCodes() != null) {
+				selectedAssetCodes = Arrays.asList(balanceSheetForm.getAssetCodes());
+			}
+
+			List<BalanceAssetData> bads = balanceSheetDAO.listSRsByAssetCodesAndDates(selectedAssetCodes,
+					selectedAssetPeriods, balanceSheetForm.getPeriodType());
+			List<String> assetCodes = balanceSheetDAO.listSRAssetsCodes();
+			List<Date> assetPeriods = balanceSheetDAO.listSRAssetsPeriods(balanceSheetForm.getPeriodType());
+
+			// Paging:
+			// Number records of a Page: Default: 25
+			// Page Index: Default: 1
+			// Total records
+			// Total of page
+			if (balanceSheetForm.getNumberRecordsOfPage() == 0) {
+				balanceSheetForm.setNumberRecordsOfPage(25);
+			}
+			int numberRecordsOfPage = balanceSheetForm.getNumberRecordsOfPage();
+
+			if (balanceSheetForm.getPageIndex() == 0) {
+				balanceSheetForm.setPageIndex(1);
+			}
+			int pageIndex = balanceSheetForm.getPageIndex();
+			balanceSheetForm.setPageIndex(pageIndex);
+
+			int totalRecords = bads == null ? 0 : bads.size();
+			balanceSheetForm.setTotalRecords(totalRecords);
+
+			int totalPages = totalRecords % numberRecordsOfPage > 0 ? totalRecords / numberRecordsOfPage + 1
+					: totalRecords / numberRecordsOfPage;
+			balanceSheetForm.setTotalPages(totalPages);
+
+			List<BalanceAssetData> pagingBads = new ArrayList<>();
+			int max = pageIndex * numberRecordsOfPage < bads.size() ? pageIndex * numberRecordsOfPage : bads.size();
+			for (int i = (pageIndex - 1) * numberRecordsOfPage; i < max; i++) {
+				pagingBads.add(bads.get(i));
+			}
+
+			model.addAttribute("pageIndex", pageIndex);
+			model.addAttribute("numberRecordsOfPage", numberRecordsOfPage);
+			model.addAttribute("totalPages", totalPages);
+			model.addAttribute("totalRecords", totalRecords);
+
+			model.addAttribute("bads", pagingBads);
+			model.addAttribute("assetCodes", assetCodes);
+			model.addAttribute("assetPeriods", assetPeriods);
+			model.addAttribute("kyKeToanDs", kyKeToanDAO.danhSachKyKeToan());
+			model.addAttribute("tab", "tabBKQHDKD");
+
+			return "saleResult";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/cdkt/capnhatkqhdkd")
+	public String updateSR(@ModelAttribute("mainFinanceForm") BalanceAssetForm form, Model model) {
+		try {
+			// Lấy kỳ kế toán mặc định
+			if (form.getKyKeToan() == null) {
+				form.setKyKeToan(dungChung.getKyKeToan());
+			} else {
+				form.setKyKeToan(kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt()));
+			}
+
+			// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của kỳ
+			if (form.getDau() == null) {
+				form.setDau(form.getKyKeToan().getBatDau());
+			}
+
+			if (form.getCuoi() == null) {
+				form.setCuoi(form.getKyKeToan().getKetThuc());
+			}
+
+			logger.info("Lấy danh sách các chỉ tiêu KQHDKD");
+			List<BalanceAssetItem> bais = balanceSheetDAO.listSRBais();
+
+			logger.info("Cập nhật các chi tiêu KQHDKD cho tất cả các loại kỳ trong khoảng thời gian: " + form.getDau()
+					+ " - " + form.getCuoi());
+			HashMap<Integer, String> kyDs = new HashMap<>();
+
+			// kyDs.put(KyKeToanCon.WEEK, "Tuần");
+			kyDs.put(KyKeToanCon.MONTH, "Tháng");
+			// kyDs.put(KyKeToanCon.QUARTER, "Quý");
+			kyDs.put(KyKeToanCon.YEAR, "Năm");
+
+			Iterator<Integer> kyIter = kyDs.keySet().iterator();
+			while (kyIter.hasNext()) {
+				Integer ky = kyIter.next();
+				logger.info("Cập nhật chi tiêu KQHDKD cho loại kỳ: " + kyDs.get(ky));
+				try {
+					Date dauKy = Utils.getStartPeriod(form.getDau(), ky);
+					Date cuoiKy = Utils.getEndPeriod(form.getCuoi(), ky);
+					Date buocNhay = dauKy;
+
+					while (buocNhay.before(cuoiKy)) {
+						Date cuoi = Utils.getEndPeriod(buocNhay, ky);
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+						String batDau = sdf.format(buocNhay);
+						String ketThuc = sdf.format(cuoi);
+
+						logger.info("Kỳ " + batDau + " => " + ketThuc);
+
+						logger.info("Xây dựng cây SaleResultData từ cây SaleResultItem");
+						List<BalanceAssetData> bads = new ArrayList<>();
+						Iterator<BalanceAssetItem> baiIter = bais.iterator();
+						while (baiIter.hasNext()) {
+							BalanceAssetItem bai = baiIter.next();
+							BalanceAssetData bad = createBad(bai, ky, buocNhay);
+							bads.add(bad);
+						}
+
+						logger.info("Lấy toàn bộ giá trị của các chi tiêu cấp thấp nhất.");
+						List<BalanceAssetData> allBads = balanceSheetDAO.calculateBs(buocNhay, cuoi);
+
+						logger.info("Tính giá trị cây SaleResultData theo từng kỳ, sau đó cập nhật vào CSDL");
+						Iterator<BalanceAssetData> badIter = bads.iterator();
+						while (badIter.hasNext()) {
+							BalanceAssetData bad = badIter.next();
+							bad = calCulcateSRBs(bad, allBads);
+						}
+
+						buocNhay = Utils.nextPeriod(buocNhay, ky);
+					}
+				} catch (Exception e) {
+					// e.printStackTrace();
+				}
+			}
+
+			return "redirect:/cdkt/ketquahdkd";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	private BalanceAssetData calCulcateSRBs(BalanceAssetData bad, List<BalanceAssetData> allBads) {
+		if (bad == null)
+			return null;
+
+		try {
+			// Lấy giá trị kỳ trước làm giá trị đầu kỳ
+			bad = balanceSheetDAO.getSRPeriodEndValue(bad);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// Tính giá trị cuối kỳ
+		if (bad.getChilds() != null && bad.getChilds().size() > 0) {
+			Iterator<BalanceAssetData> iter = bad.getChilds().iterator();
+			while (iter.hasNext()) {
+				BalanceAssetData childBad = iter.next();
+				childBad = calCulcateSRBs(childBad, allBads);
+				bad.setEndValue(bad.getEndValue() + childBad.getEndValue());
+			}
+		} else {
+			// Kết nối CSDL để tính giá trị cuối kỳ của chỉ tiêu cân đối kế toán theo các
+			// tài khoản kế toán với công thức xác định trước cho từng loại chỉ tiêu
+			try {
+				// bad = balanceSheetDAO.calculateBs(bad);
+			} catch (Exception e) {
+				// logger.error("LỖI: " + e.getMessage());
+			}
+
+			if (bad.getAsset() != null && bad.getAsset().getTaiKhoanDs() != null) {
+				// Lấy thông tin chi tiết của chỉ tiêu hiện từ danh sách tổng thể đã lấy trước
+				Iterator<LoaiTaiKhoan> taiKhoanIter = bad.getAsset().getTaiKhoanDs().iterator();
+				while (taiKhoanIter.hasNext()) {
+					try {
+						LoaiTaiKhoan loaiTaiKhoan = taiKhoanIter.next();
+
+						Iterator<BalanceAssetData> iter = allBads.iterator();
+						while (iter.hasNext()) {
+							BalanceAssetData balanceAssetData = iter.next();
+							balanceAssetData.setPeriodType(bad.getPeriodType());
+							balanceAssetData.setPeriod(bad.getPeriod());
+
+							if (balanceAssetData.equals(bad)
+									&& balanceAssetData.getAsset().getTaiKhoanDs().contains(loaiTaiKhoan)) {
+								bad.setEndValue(bad.getEndValue() + bad.getAsset().getSoDu()
+										* loaiTaiKhoan.getSoDuGiaTri() * balanceAssetData.getEndValue());
+							}
+						}
+					} catch (Exception e) {
+
+					}
+				}
+			}
+		}
+
+		// logger.info("Chỉ tiêu cân đối kế toán " + bad.getAsset().getAssetCode() + ":
+		// " + bad.getEndValue());
+
+		// Cập nhật vào cơ sở dữ liệu
+		balanceSheetDAO.insertOrUpdateSR(bad);
 
 		return bad;
 	}

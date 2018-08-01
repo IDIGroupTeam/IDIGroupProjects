@@ -5,10 +5,6 @@ import java.util.List;
 
 import com.idi.finance.bean.cdkt.BalanceAssetData;
 import com.idi.finance.bean.cdkt.BalanceAssetItem;
-import com.idi.finance.bean.cdkt.DuLieuKeToan;
-import com.idi.finance.bean.cdkt.KyKeToanCon;
-import com.idi.finance.bean.chungtu.TaiKhoan;
-import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public interface BalanceSheetDAO {
@@ -23,11 +19,16 @@ public interface BalanceSheetDAO {
 	public List<BalanceAssetData> listBAsByAssetCodesAndDates(List<String> assetCodes, List<Date> assetPeriods,
 			int periodType);
 
+	public void insertOrUpdateSR(BalanceAssetData sr);
+
 	public void insertOrUpdateSRs(BalanceAssetData sr);
 
 	public void insertOrUpdateSRs(List<BalanceAssetData> srs);
 
 	public List<BalanceAssetData> listSRssByAssetsCodeAndYear(String assetCode, Date year, int periodType);
+
+	public List<BalanceAssetData> listSRsByAssetCodesAndDates(List<String> assetCodes, List<Date> assetPeriods,
+			int periodType);
 
 	public void insertOrUpdateCFs(BalanceAssetData cf);
 
@@ -41,7 +42,7 @@ public interface BalanceSheetDAO {
 
 	public List<String> listSRAssetsCodes();
 
-	public List<Date> listSRAssetsPeriods();
+	public List<Date> listSRAssetsPeriods(int periodType);
 
 	public List<LoaiTaiKhoan> danhSachTkktThuocNhieuChiTieu();
 
@@ -49,9 +50,15 @@ public interface BalanceSheetDAO {
 
 	public List<BalanceAssetItem> listBais();
 
+	public List<BalanceAssetItem> listSRBais();
+
 	public BalanceAssetData getPeriodEndValue(BalanceAssetData bad);
+
+	public BalanceAssetData getSRPeriodEndValue(BalanceAssetData bad);
 
 	public BalanceAssetData calculateBs(BalanceAssetData bad);
 
 	public List<BalanceAssetData> calculateBs(Date start, Date end);
+
+	public List<BalanceAssetData> calculateSRBs(Date start, Date end);
 }

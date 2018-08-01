@@ -305,6 +305,12 @@
 			value="/pages/cdkt/bangCanDoiPhatSinhTk.jsp" />
 		<put-attribute name="body" value="/pages/cdkt/bangCanDoiPhatSinh.jsp" />
 	</definition>
+	
+	<definition name="saleResult" extends="taichinh">
+		<put-attribute name="title" value="Bảng kết quả hoạt động kinh doanh" />
+		<put-attribute name="search" value="/pages/cdkt/saleResultTk.jsp" />
+		<put-attribute name="body" value="/pages/cdkt/saleResult.jsp" />
+	</definition>
 	<!-- Kết thúc Tab báo cáo tài chính -->
 
 	<!-- Bắt đầu Tab công việc -->
