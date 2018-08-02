@@ -181,15 +181,6 @@ public class BalanceAssetItem {
 			} else if (!assetCode.trim().equalsIgnoreCase(item.getAssetCode().trim())) {
 				return false;
 			}
-
-			// if (assetName == null) {
-			// if (item.getAssetName() != null)
-			// return false;
-			// } else if (item.getAssetName() == null) {
-			// return false;
-			// } else if (!assetName.trim().equalsIgnoreCase(item.getAssetName().trim())) {
-			// return false;
-			// }
 		} catch (Exception e) {
 			return false;
 		}

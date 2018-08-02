@@ -37,6 +37,7 @@ import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.form.BalanceAssetForm;
 import com.idi.finance.form.TkSoKeToanForm;
 import com.idi.finance.utils.ExcelProcessor;
+import com.idi.finance.utils.ExpressionEval;
 import com.idi.finance.utils.Utils;
 
 @Controller
@@ -495,7 +496,7 @@ public class BalanceSheetController {
 						}
 
 						logger.info("Lấy toàn bộ giá trị của các chi tiêu cấp thấp nhất.");
-						List<BalanceAssetData> allBads = balanceSheetDAO.calculateBs(buocNhay, cuoi);
+						List<BalanceAssetData> allBads = balanceSheetDAO.calculateSRBs(buocNhay, cuoi);
 
 						logger.info("Tính giá trị cây SaleResultData theo từng kỳ, sau đó cập nhật vào CSDL");
 						Iterator<BalanceAssetData> badIter = bads.iterator();
@@ -507,7 +508,7 @@ public class BalanceSheetController {
 						buocNhay = Utils.nextPeriod(buocNhay, ky);
 					}
 				} catch (Exception e) {
-					// e.printStackTrace();
+					e.printStackTrace();
 				}
 			}
 
@@ -531,21 +532,44 @@ public class BalanceSheetController {
 
 		// Tính giá trị cuối kỳ
 		if (bad.getChilds() != null && bad.getChilds().size() > 0) {
+			// Tính giá trị những chỉ tiêu
 			Iterator<BalanceAssetData> iter = bad.getChilds().iterator();
 			while (iter.hasNext()) {
 				BalanceAssetData childBad = iter.next();
 				childBad = calCulcateSRBs(childBad, allBads);
-				bad.setEndValue(bad.getEndValue() + childBad.getEndValue());
-			}
-		} else {
-			// Kết nối CSDL để tính giá trị cuối kỳ của chỉ tiêu cân đối kế toán theo các
-			// tài khoản kế toán với công thức xác định trước cho từng loại chỉ tiêu
-			try {
-				// bad = balanceSheetDAO.calculateBs(bad);
-			} catch (Exception e) {
-				// logger.error("LỖI: " + e.getMessage());
 			}
 
+			// Tính giá trị chỉ tiêu hiện tại từ các chỉ tiêu trước đó
+			String rule = bad.getAsset().getRule();
+			if (rule != null && !rule.trim().equals("")) {
+				List<String> toanHangDs = ExpressionEval.getOperands(rule);
+				if (toanHangDs != null) {
+					// Với mỗi toán hạng, đó là một tài khoản kết toán
+					// Cần tính giá trị của tài khoản kế toán
+					Iterator<String> toanHangIter = toanHangDs.iterator();
+					while (toanHangIter.hasNext()) {
+						String toanHang = toanHangIter.next();
+
+						iter = bad.getChilds().iterator();
+						while (iter.hasNext()) {
+							BalanceAssetData childBad = iter.next();
+
+							if (childBad.getAsset().getAssetCode().equals(toanHang)) {
+								String value = childBad.getEndValue() + "";
+								value = value.replace(ExpressionEval.DAU_AM, ExpressionEval.DAU_AM_TAM_THOI);
+								rule = rule.replaceAll(toanHang, value);
+								logger.info(toanHang + ": " + childBad.getEndValue());
+								break;
+							}
+						}
+					}
+
+					double ketQua = ExpressionEval.calExp(rule);
+					logger.info(bad + ": " + ketQua);
+					bad.setEndValue(ketQua);
+				}
+			}
+		} else {
 			if (bad.getAsset() != null && bad.getAsset().getTaiKhoanDs() != null) {
 				// Lấy thông tin chi tiết của chỉ tiêu hiện từ danh sách tổng thể đã lấy trước
 				Iterator<LoaiTaiKhoan> taiKhoanIter = bad.getAsset().getTaiKhoanDs().iterator();
@@ -561,8 +585,7 @@ public class BalanceSheetController {
 
 							if (balanceAssetData.equals(bad)
 									&& balanceAssetData.getAsset().getTaiKhoanDs().contains(loaiTaiKhoan)) {
-								bad.setEndValue(bad.getEndValue() + bad.getAsset().getSoDu()
-										* loaiTaiKhoan.getSoDuGiaTri() * balanceAssetData.getEndValue());
+								bad.setEndValue(bad.getEndValue() + balanceAssetData.getEndValue());
 							}
 						}
 					} catch (Exception e) {
@@ -576,7 +599,7 @@ public class BalanceSheetController {
 		// " + bad.getEndValue());
 
 		// Cập nhật vào cơ sở dữ liệu
-		balanceSheetDAO.insertOrUpdateSR(bad);
+		// balanceSheetDAO.insertOrUpdateSR(bad);
 
 		return bad;
 	}

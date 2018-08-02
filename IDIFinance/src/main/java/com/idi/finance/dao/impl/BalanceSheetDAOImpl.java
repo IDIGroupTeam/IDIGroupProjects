@@ -62,6 +62,9 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	@Value("${LAY_KQHDKD_KY_TRUOC}")
 	private String LAY_KQHDKD_KY_TRUOC;
 
+	@Value("${TINH_KQHDKD_THEO_MATK}")
+	private String TINH_KQHDKD_THEO_MATK;
+
 	private JdbcTemplate jdbcTmpl;
 
 	public JdbcTemplate getJdbcTmpl() {
@@ -291,7 +294,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		String updateBadsQry = "UPDATE SALE_RESULT_DATA SET START_VALUE=?, END_VALUE=?, CHANGED_RATIO=?, DESCRIPTION=? WHERE ASSET_CODE=? AND PERIOD=? AND PERIOD_TYPE=?";
 		String insertBadsQry = "INSERT INTO SALE_RESULT_DATA (ASSET_CODE, PERIOD_TYPE, PERIOD, START_VALUE, END_VALUE, CHANGED_RATIO, DESCRIPTION) VALUES(?, ?, ?, ?, ?, ?, ?)";
 
-		// Update to BALANCE_ASSET_DATA
+		// Update to SALE_RESULT_DATA
 		int count = 0;
 		try {
 			// update firstly, if now row is updated, we will be insert data
@@ -748,7 +751,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		// Đoạn này nếu sau này xử lý tốt phần hiển thị trang jsp thì có thể bỏ đi
 		if ((parent.getChilds() == null || parent.getChilds().size() == 0)
 				&& (parent.getTaiKhoanDs() == null || parent.getTaiKhoanDs().size() == 0)) {
-			parent = null;
+			// parent = null;
 		}
 
 		return parent;
@@ -947,11 +950,11 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		String batDau = sdf.format(start);
 		String ketThuc = sdf.format(end);
 
-		String query = TINH_CDKT_THEO_MATK;
+		String query = TINH_KQHDKD_THEO_MATK;
 		logger.info("Tu " + batDau + " den " + ketThuc);
 		logger.info(query);
 
-		Object[] params = { batDau, ketThuc, batDau, ketThuc };
+		Object[] params = { batDau, ketThuc };
 		List<BalanceAssetData> bads = jdbcTmpl.query(query, params, new BalanceAssetDataMapper());
 
 		return bads;
