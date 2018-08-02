@@ -474,8 +474,8 @@ public class SoKeToanController {
 		}
 	}
 
-	@RequestMapping("/soketoan/socongno")
-	public String sktSoCongNo(@ModelAttribute("mainFinanceForm") TkSoKeToanForm form, Model model) {
+	@RequestMapping("/soketoan/sothcongno")
+	public String sktSoTongHopCongNo(@ModelAttribute("mainFinanceForm") TkSoKeToanForm form, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
@@ -596,7 +596,7 @@ public class SoKeToanController {
 			model.addAttribute("mainFinanceForm", form);
 
 			model.addAttribute("tab", "tabSKTSCN");
-			return "sktSoCongNo";
+			return "sktSoTongHopCongNo";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";

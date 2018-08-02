@@ -285,9 +285,10 @@ public class BalanceSheetController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		logger.info(bad);
 		// Tính giá trị cuối kỳ
 		if (bad.getChilds() != null && bad.getChilds().size() > 0) {
+			logger.info("Tính chỉ tiêu " + bad.getAsset().getAssetCode() + " theo chỉ tiêu con");
 			Iterator<BalanceAssetData> iter = bad.getChilds().iterator();
 			while (iter.hasNext()) {
 				BalanceAssetData childBad = iter.next();
@@ -304,6 +305,7 @@ public class BalanceSheetController {
 			}
 
 			if (bad.getAsset() != null && bad.getAsset().getTaiKhoanDs() != null) {
+				logger.info("Tính chỉ tiêu " + bad.getAsset().getAssetCode() + " theo tài khoản");
 				// Lấy thông tin chi tiết của chỉ tiêu hiện từ danh sách tổng thể đã lấy trước
 				Iterator<LoaiTaiKhoan> taiKhoanIter = bad.getAsset().getTaiKhoanDs().iterator();
 				while (taiKhoanIter.hasNext()) {
@@ -320,6 +322,7 @@ public class BalanceSheetController {
 									&& balanceAssetData.getAsset().getTaiKhoanDs().contains(loaiTaiKhoan)) {
 								bad.setEndValue(bad.getEndValue() + bad.getAsset().getSoDu()
 										* loaiTaiKhoan.getSoDuGiaTri() * balanceAssetData.getEndValue());
+								logger.info(loaiTaiKhoan + ": " + balanceAssetData.getEndValue());
 							}
 						}
 					} catch (Exception e) {
@@ -329,8 +332,7 @@ public class BalanceSheetController {
 			}
 		}
 
-		// logger.info("Chỉ tiêu cân đối kế toán " + bad.getAsset().getAssetCode() + ":
-		// " + bad.getEndValue());
+		logger.info(bad);
 
 		// Cập nhật vào cơ sở dữ liệu
 		balanceSheetDAO.insertOrUpdateBA(bad);

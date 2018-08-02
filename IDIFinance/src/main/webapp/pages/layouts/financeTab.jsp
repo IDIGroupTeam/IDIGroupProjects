@@ -44,8 +44,10 @@
 			<li id="tabSKTNKC"><a href="${url}/soketoan/nhatkychung">Nhật
 					ký chung</a></li>
 			<li id="tabSKTSC"><a href="${url}/soketoan/socai">Sổ cái</a></li>
-			<li id="tabSKTSCN"><a href="${url}/soketoan/socongno">Sổ
-					công nợ</a></li>
+			<li id="tabSKTSCN"><a href="${url}/soketoan/sothcongno">Sổ
+					tổng hợp công nợ</a></li>
+			<li id="tabSKTSCN"><a href="${url}/soketoan/soctcongno">Sổ
+					chi tiết công nợ</a></li>
 		</ul></li>
 	<li class="dropdown"><a class="dropdown-toggle"
 		data-toggle="dropdown" href="#">Báo cáo tài chính<span

@@ -271,10 +271,10 @@
 		<put-attribute name="body" value="/pages/soketoan/sktSoTienMat.jsp" />
 	</definition>
 
-	<definition name="sktSoCongNo" extends="taichinh">
-		<put-attribute name="title" value="Sổ chi tiết công nợ" />
-		<put-attribute name="body" value="/pages/soketoan/sktSoCongNo.jsp" />
-		<put-attribute name="search" value="/pages/soketoan/sktSoCongNoTk.jsp" />
+	<definition name="sktSoTongHopCongNo" extends="taichinh">
+		<put-attribute name="title" value="Sổ tổng hợp công nợ" />
+		<put-attribute name="body" value="/pages/soketoan/sktSoThCongNo.jsp" />
+		<put-attribute name="search" value="/pages/soketoan/sktSoThCongNoTk.jsp" />
 	</definition>
 
 	<definition name="sktSoTienGuiNganHang" extends="taichinh">

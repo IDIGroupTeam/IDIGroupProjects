@@ -16,7 +16,7 @@
 	});
 </script>
 
-<h4>Sổ công nợ</h4>
+<h4>Sổ tổng hợp công nợ phải thu/trả</h4>
 <p>
 	<i>Tài khoản ${mainFinanceForm.taiKhoan}. Từ <fmt:formatDate
 			value="${mainFinanceForm.dau}" pattern="dd/M/yyyy" type="Date"
@@ -104,23 +104,28 @@
 						<td><c:choose>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_THU}">
-									<a href="${url}/chungtu/phieuthu/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									<a
+										href="${url}/chungtu/phieuthu/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_PHIEU_CHI}">
-									<a href="${url}/chungtu/phieuchi/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									<a
+										href="${url}/chungtu/phieuchi/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_NO}">
-									<a href="${url}/chungtu/baono/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									<a
+										href="${url}/chungtu/baono/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_BAO_CO}">
-									<a href="${url}/chungtu/baoco/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									<a
+										href="${url}/chungtu/baoco/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH}">
-									<a href="${url}/chungtu/ktth/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
+									<a
+										href="${url}/chungtu/ktth/xem/${nghiepVuKeToan.chungTu.maCt}">${nghiepVuKeToan.chungTu.loaiCt}${nghiepVuKeToan.chungTu.soCt}</a>
 								</c:when>
 								<c:otherwise>${nghiepVuKeToan.chungTu.loaiCt}${chungTu.soCt}</c:otherwise>
 							</c:choose></td>
