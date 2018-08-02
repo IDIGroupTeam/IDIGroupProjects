@@ -198,7 +198,6 @@
 	</a>
 	<br />
 	<br />
-	
 <!-- 	<div id="exTab2" class="container"> -->
 		<ul class="nav nav-tabs">
 			<li class="${active1}"><a href="#1" data-toggle="tab">Thông tin chung</a></li>
@@ -282,7 +281,6 @@
 										<form:option value="d" label="Ngày" />
 										<form:option value="w" label="Tuần" />
 									</form:select></td>
-
 							</tr>
 							<tr>
 								<td bgcolor="#FAFAFA">Người tạo:</td>
@@ -290,7 +288,7 @@
 									<td>(Cần xong phần phân quyền trước)</td>
 								</c:if>
 								<c:if test="${taskForm.createdBy > 0}">
-									<td>${taskForm.createdBy}</td>
+									<td>${taskForm.createdByName}</td>
 								</c:if>
 								<td bgcolor="#FAFAFA">Thời gian đã làm:</td>
 								<td><form:input path="timeSpent" type="number"
@@ -382,7 +380,7 @@
 										</td>
 									</c:if>
 									<c:if test="${taskComment.commentedBy > 0}">
-										<td>${taskComment.commentIndex}.&nbsp;${taskComment.commentedBy}&nbsp;${taskComment.commentTime}</td>
+										<td>${taskComment.commentIndex}.&nbsp;<b style="color: blue;">${taskComment.commentedByName}</b> &nbsp;${taskComment.commentTime}</td>
 									</c:if>
 								</tr>
 								<tr>

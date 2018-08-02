@@ -15,10 +15,11 @@ public class TaskCommentMapper implements RowMapper<TaskComment> {
 		int commentIndex = rs.getInt("COMMENT_INDEX");
 		int taskId = rs.getInt("TASK_ID");
 		int commentedBy = rs.getInt("COMMENTED_BY");
+		String commentedByName = rs.getString("COMMENTED_BY_NANE");
 		Timestamp commentTime = rs.getTimestamp("COMMENT_TIME");
 		String content = rs.getString("CONTENT");
 
-		return new TaskComment(commentIndex, taskId, commentedBy, commentTime, content);
+		return new TaskComment(commentIndex, taskId, commentedBy, commentedByName, commentTime, content);
 	}
 
 }

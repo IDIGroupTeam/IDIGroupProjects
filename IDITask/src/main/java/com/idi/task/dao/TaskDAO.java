@@ -308,7 +308,7 @@ public class TaskDAO extends JdbcDaoSupport {
 		Object[] params = new Object[] {taskId};		
 		
 		String listIds = jdbcTmpl.queryForObject(sql, params, mapper);
-		System.err.println(listIds);
+		//System.err.println(listIds);
 		return listIds;
 	}
 	
@@ -383,7 +383,7 @@ public class TaskDAO extends JdbcDaoSupport {
 	}
 	
 	/**
-	 * get max comment index currenly 
+	 * get max comment index currently 
 	 * @param taskId
 	 * @return number
 	 */
@@ -396,7 +396,7 @@ public class TaskDAO extends JdbcDaoSupport {
 			maxNunber = jdbcTmpl.queryForObject(sql, Integer.class, params);
 		}catch(Exception e) {
 			//lan dau se va day vi tra ve null
-			System.err.println("lan dau se va day vi tra ve null");
+			//System.err.println("lan dau se va day vi tra ve null");
 			return 0;
 		}
 		return maxNunber;

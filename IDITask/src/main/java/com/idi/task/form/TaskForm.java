@@ -15,6 +15,7 @@ public class TaskForm implements Serializable{
 	private int taskId;
 	private String taskName;
 	private int createdBy;
+	private String createdByName;
 	private int ownedBy;
 	private int secondOwned;
 	private int verifyBy;
@@ -45,6 +46,7 @@ public class TaskForm implements Serializable{
 	//For comment
 	private int commentIndex;
 	private int commentedBy;
+	private String commentedByName;
 	private Timestamp commentTime;
 	private String content;	
 	
@@ -178,6 +180,22 @@ public class TaskForm implements Serializable{
 
 	public void setPriority(String priority) {
 		this.priority = priority;
+	}
+
+	public String getCreatedByName() {
+		return createdByName;
+	}
+
+	public void setCreatedByName(String createdByName) {
+		this.createdByName = createdByName;
+	}
+
+	public String getCommentedByName() {
+		return commentedByName;
+	}
+
+	public void setCommentedByName(String commentedByName) {
+		this.commentedByName = commentedByName;
 	}
 
 	public String getStatus() {

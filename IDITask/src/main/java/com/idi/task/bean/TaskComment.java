@@ -13,6 +13,7 @@ public class TaskComment implements Serializable {
 	private int commentIndex;
 	private int taskId;
 	private int commentedBy;
+	private String commentedByName;
 	private Timestamp commentTime;
 	private String content;
 
@@ -20,10 +21,11 @@ public class TaskComment implements Serializable {
 		
 	}
 	
-	public TaskComment(int commentIndex, int taskId, int commentedBy, Timestamp commentTime, String content) {
+	public TaskComment(int commentIndex, int taskId, int commentedBy, String commentedByName, Timestamp commentTime, String content) {
 		this.commentIndex = commentIndex;
 		this.taskId = taskId;
 		this.commentedBy = commentedBy;
+		this.commentedByName = commentedByName;
 		this.commentTime = commentTime;
 		this.content = content;
 	}
@@ -50,6 +52,14 @@ public class TaskComment implements Serializable {
 
 	public void setCommentedBy(int commentedBy) {
 		this.commentedBy = commentedBy;
+	}
+
+	public String getCommentedByName() {
+		return commentedByName;
+	}
+
+	public void setCommentedByName(String commentedByName) {
+		this.commentedByName = commentedByName;
 	}
 
 	public Timestamp getCommentTime() {

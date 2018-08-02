@@ -35,6 +35,8 @@ public class EmployeeDAO extends JdbcDaoSupport {
 
 	PropertiesManager properties = new PropertiesManager("task.properties");
 
+	public EmployeeDAO() {}
+	
 	/**
 	 * Get employees from DB
 	 * 
@@ -44,6 +46,25 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	public List<EmployeeInfo> getEmployees() {
 
 		String sql = properties.getProperty("GET_EMPLOYEES").toString();
+		log.info("GET_EMPLOYEES query: " + sql);
+		
+		EmployeeMapper mapper = new EmployeeMapper();
+
+		List<EmployeeInfo> list = jdbcTmpl.query(sql, mapper);
+
+		return list;
+
+	}	
+	
+	/**
+	 * Get all employees from DB
+	 * 
+	 * @return List of employee
+	 * @throws Exception
+	 */
+	public List<EmployeeInfo> getAllEmployees() {
+
+		String sql = properties.getProperty("GET_ALL_EMPLOYEES").toString();
 		log.info("GET_EMPLOYEES query: " + sql);
 		
 		EmployeeMapper mapper = new EmployeeMapper();

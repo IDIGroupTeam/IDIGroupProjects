@@ -83,7 +83,7 @@ public class TaskController {
 	public static File fontFile = new File("/home/idi/properties/vuTimes.ttf");
 	
 	@RequestMapping(value = { "/" })
-	public String listTasks(Model model, @ModelAttribute("taskForm") TaskForm form) {
+	public String listTasks(Model model, @ModelAttribute("taskForm") TaskForm form) throws Exception {
 		try {
 			List<Task> list = null;
 
@@ -157,7 +157,7 @@ public class TaskController {
 	}
 
 	@RequestMapping(value = "/removeTaskRelated")
-	public String removeTaskRelated(Model model, @RequestParam("taskId") int taskId, @RequestParam("taskIdRemove") int taskIdRemove) {
+	public String removeTaskRelated(Model model, @RequestParam("taskId") int taskId, @RequestParam("taskIdRemove") int taskIdRemove) throws Exception{
 		try {
 
 			// Get danh sach cv lien quan
@@ -195,7 +195,7 @@ public class TaskController {
 	}
 
 	@RequestMapping(value = "/updateSub")
-	public String updateSub(Model model, @ModelAttribute("taskForm") TaskForm taskForm) {
+	public String updateSub(Model model, @ModelAttribute("taskForm") TaskForm taskForm) throws Exception {
 		try {
 			// get danh sach subscriber hien tai
 			String sub = taskDAO.getTaskSubscriber(taskForm.getTaskId());
@@ -226,20 +226,17 @@ public class TaskController {
 					} else {
 						log.info("Thông tin nguoi liên quan không có gì cập nhật ...");
 					}
-					//subUpdated = sub + "," + subAddNew;
-					
+					//subUpdated = sub + "," + subAddNew;					
 				}
 			} else {
 				if(subAddNew != null)
 					System.out.println("Chi add them, truoc chua co " + subUpdated);
 					subUpdated = subAddNew;
 			}
-
 			if(subUpdated != null  && subUpdated.length() > 0) {
 				 subUpdated = Utils.cutComma(subUpdated);
 				 taskDAO.updateSubscriber(subUpdated, taskForm.getTaskId());
-			}
-				
+			}				
 
 			/*
 			 * model.addAttribute("sub", sub); if(sub !=null && sub.length() > 0)
@@ -248,8 +245,7 @@ public class TaskController {
 			 * the lua chon model.addAttribute("employeesList", employeesForSub(sub));
 			 */
 
-			model.addAttribute("formTitle",
-					"Quản lý danh sách người liên quan đến công việc mã " + taskForm.getTaskId());
+			model.addAttribute("formTitle",	"Quản lý danh sách người liên quan đến công việc mã " + taskForm.getTaskId());
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -275,7 +271,7 @@ public class TaskController {
 
 	@RequestMapping(value = "/insertNewTask", method = RequestMethod.POST)
 	public String insertNewTask(Model model, @ModelAttribute("taskForm") Task task,
-			final RedirectAttributes redirectAttributes) {
+			final RedirectAttributes redirectAttributes) throws Exception {
 		try {
 			//System.err.println("insert new task");
 			Timestamp ts = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
@@ -322,7 +318,7 @@ public class TaskController {
 
 	@RequestMapping(value = "/updateTask", method = RequestMethod.POST)
 	public String updateTask(Model model, @ModelAttribute("taskForm") @Validated TaskForm taskForm,
-			final RedirectAttributes redirectAttributes) {
+			final RedirectAttributes redirectAttributes) throws Exception {
 		try {
 
 			// Xu ly cho task comment
@@ -491,7 +487,7 @@ public class TaskController {
 	}
 
 	@RequestMapping("/addNewTask")
-	public String addNewTask(Model model) {
+	public String addNewTask(Model model) throws Exception {
 		Task task = new Task();
 		model.addAttribute("formTitle", "Thêm mới thông tin công việc");
 
@@ -509,7 +505,8 @@ public class TaskController {
 
 	@RequestMapping("/editTask")
 	public String editTask(Model model, @RequestParam("taskId") int taskId, @RequestParam("tab") int tab,
-			@RequestParam(required=false, value="taskIds") String taskIds, @ModelAttribute("taskForm") @Validated TaskForm taskForm) throws Exception {
+			@RequestParam(required=false, value="taskIds") String taskIds, 
+			@ModelAttribute("taskForm") @Validated TaskForm taskForm) throws Exception {
 		//System.err.println("current tab "+ tab);
 		Task task = new Task();
 		//TaskForm taskForm = new TaskForm();
@@ -535,7 +532,14 @@ public class TaskController {
 			// get info from task bean put to task form
 			taskForm.setTaskId(task.getTaskId());
 			taskForm.setTaskName(task.getTaskName());
-			taskForm.setCreatedBy(task.getCreatedBy());
+			
+			int createBy = task.getCreatedBy();
+			taskForm.setCreatedBy(createBy);			
+			Map<Integer, String> employeeMap = this.allEmployeesMap();			
+			if(createBy > 0) {
+					taskForm.setCreatedByName(employeeMap.get(createBy));
+			}
+			//taskForm.setCommentedByName(commentedByName);
 			taskForm.setOwnedBy(task.getOwnedBy());
 			taskForm.setSecondOwned(task.getSecondOwned());
 			taskForm.setVerifyBy(task.getVerifyBy());
@@ -646,7 +650,7 @@ public class TaskController {
 	}	
 	
 	@RequestMapping("/prepareReport")
-	public String prepareReport(Model model) {
+	public String prepareReport(Model model) throws Exception {
 		ReportForm taskReportForm = new ReportForm();
 		model.addAttribute("formTitle", "Lựa chọn thông tin báo cáo công việc");
 
@@ -674,7 +678,7 @@ public class TaskController {
 		
 	@RequestMapping("/sendReportForm")
 	public String sendReportForm(Model model,  @ModelAttribute("fDate") String fDate, @ModelAttribute("tDate") String tDate,
-			@ModelAttribute("eName") String eName, @ModelAttribute("dept") String dept, @ModelAttribute("eId") int eId) {
+			@ModelAttribute("eName") String eName, @ModelAttribute("dept") String dept, @ModelAttribute("eId") int eId) throws Exception {
 		SendReportForm sendReportForm = new SendReportForm();
 		if(eId > 0)
 			if(dept != null && !dept.equalsIgnoreCase("all"))
@@ -818,7 +822,7 @@ public class TaskController {
 		return "taskExport";
 	}
 
-	private void addTableHeader(PdfPTable table, Font font) {//throws DocumentException, IOException {
+	private void addTableHeader(PdfPTable table, Font font) throws Exception {//throws DocumentException, IOException {
 	    Stream.of("Mã việc", "Tên việc", "Người làm", "Trạng thái", "Ngày phải xong", "Nhận xét/đánh giá")
 	      .forEach(columnTitle -> {
 	        PdfPCell header = new PdfPCell();
@@ -852,7 +856,7 @@ public class TaskController {
 		}	        
 	}
 	
-	private List<EmployeeInfo> employeesForSub(String subscriber) {
+	private List<EmployeeInfo> employeesForSub(String subscriber) throws Exception {
 		List<EmployeeInfo> list = null;
 		
 		list = employeeDAO.getEmployeesForSub(subscriber);
@@ -860,13 +864,13 @@ public class TaskController {
 		return list;
 	}
 
-	private List<EmployeeInfo> employeesSub(String subscriber) {
+	private List<EmployeeInfo> employeesSub(String subscriber) throws Exception {
 		List<EmployeeInfo> list = null;
 		list = employeeDAO.getEmployeesSub(subscriber);
 		return list;
 	}
 
-	private List<EmployeeInfo> employees(String department) {
+	private List<EmployeeInfo> employees(String department) throws Exception {
 		List<EmployeeInfo> list = null;
 		if (!department.equalsIgnoreCase("all"))
 			list = employeeDAO.getEmployeesByDepartment(department);
@@ -876,7 +880,22 @@ public class TaskController {
 		return list;
 	}
 	
-	private Map<String, String> employeesMap(String department) {
+	private Map<Integer, String> allEmployeesMap() throws Exception {
+		Map<Integer, String> employeeMap = new LinkedHashMap<Integer, String>();
+		List<EmployeeInfo> list = null;
+		list = employeeDAO.getAllEmployees();
+		
+		EmployeeInfo employee = new EmployeeInfo();
+		for (int i = 0; i < list.size(); i++) {
+			employee = (EmployeeInfo) list.get(i);
+			Integer id = employee.getEmployeeId();
+			employeeMap.put(id, employee.getFullName());
+		}
+		
+		return employeeMap;
+	}
+	
+	private Map<String, String> employeesMap(String department) throws Exception {
 		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
 		List<EmployeeInfo> list = null;
 		if (!department.equalsIgnoreCase("all"))
@@ -895,7 +914,7 @@ public class TaskController {
 		return employeeMap;
 	}
 
-	private Map<String, String> listDepartments() {
+	private Map<String, String> listDepartments() throws Exception {
 		Map<String, String> departmentMap = new LinkedHashMap<String, String>();
 		try {
 			List<Department> list = departmentDAO.getDepartments();
@@ -914,7 +933,7 @@ public class TaskController {
 
 	// For Ajax
 	@RequestMapping("/selection")
-	public @ResponseBody List<EmployeeInfo> employeesByDepartment(@RequestParam("department") String department) {
+	public @ResponseBody List<EmployeeInfo> employeesByDepartment(@RequestParam("department") String department) throws Exception {
 		System.out.println("AJax");
 		List<EmployeeInfo> list = null;
 		if (!department.equalsIgnoreCase("all"))
@@ -926,7 +945,7 @@ public class TaskController {
 	}
 
 	@RequestMapping("/selectionArea")
-	public @ResponseBody List<EmployeeInfo> employeesByArea(@RequestParam("area") String area) {
+	public @ResponseBody List<EmployeeInfo> employeesByArea(@RequestParam("area") String area) throws Exception {
 		System.out.println("AJax");
 		List<EmployeeInfo> list = null;
 		if (!area.equalsIgnoreCase(""))
@@ -938,7 +957,7 @@ public class TaskController {
 	}
 	
 	@RequestMapping("/lookingTask")
-	public @ResponseBody List<Task> getTaskForAddingRelated(@RequestParam("relatedAdding") String relatedAdding) {
+	public @ResponseBody List<Task> getTaskForAddingRelated(@RequestParam("relatedAdding") String relatedAdding) throws Exception {
 		System.err.println("AJax");
 		List<Task> list = null;
 		if (relatedAdding != null && relatedAdding.length() > 0)
