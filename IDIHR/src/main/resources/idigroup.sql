@@ -285,6 +285,8 @@ CREATE TABLE `idigroup`.`timekeeping` (
   `COMMENT` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+
+ ALTER TABLE `timekeeping` ADD `WORKED_TIME` VARCHAR(6) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL AFTER `TIME_OUT`;
 --
 -- Dumping data for table `timekeeping`
 --

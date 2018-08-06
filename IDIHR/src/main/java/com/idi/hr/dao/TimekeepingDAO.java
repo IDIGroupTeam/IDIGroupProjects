@@ -166,7 +166,7 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 									+ timekeepingDTO.getEmployeeName() + "|" + timekeepingDTO.getDate() + "|"
 									+ timekeepingDTO.getTimeIn());
 							Object[] params = new Object[] { timekeepingDTO.getEmployeeId(), timekeepingDTO.getDate(),
-									timekeepingDTO.getTimeIn(), timekeepingDTO.getTimeOut(),
+									timekeepingDTO.getTimeIn(), timekeepingDTO.getTimeOut(), timekeepingDTO.getWorkedTime(),
 									timekeepingDTO.getComeLateM(), timekeepingDTO.getLeaveSoonM(),
 									timekeepingDTO.getComeLateA(), timekeepingDTO.getLeaveSoonA() }; // ,
 																										// timekeepingDTO.getComment()
@@ -188,7 +188,6 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 							helper.setFrom("IDIHRNotReply");
 							mailSender.send(mimeMessage);
 						}
-
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

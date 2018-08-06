@@ -299,6 +299,7 @@
 				<th>Ngày</th>
 				<th>Giờ vào</th>
 				<th>Giờ ra</th>
+				<th>Tổng tgian</th> 
 				<th>ĐM sáng</th>
 				<th>ĐM chiều</th>
 				<th>VS sáng</th>
@@ -320,10 +321,11 @@
 					</c:if>
 					<c:if test="${not empty timekeeping.timeOut}">
 						<td>${timekeeping.timeOut}</td>
-					</c:if>
+					</c:if>																				
 					<c:if test="${empty timekeeping.timeOut}">
 						<td bgcolor="EDC7D0">${timekeeping.timeOut}</td>
 					</c:if>
+					<td>${timekeeping.workedTime}</td>
 					<c:if test="${not empty timekeeping.comeLateM}">
 						<td bgcolor="#F5F6CE">${timekeeping.comeLateM}'</td>
 						<%-- 						<c:if test="${timekeeping.comeLateM >= 30}">

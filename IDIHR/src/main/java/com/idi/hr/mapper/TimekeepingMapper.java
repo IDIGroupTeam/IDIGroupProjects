@@ -17,6 +17,7 @@ public class TimekeepingMapper implements RowMapper<Timekeeping> {
 		Date date = rs.getDate("DATE");
 		String timeIn = rs.getString("TIME_IN");
 		String timeOut = rs.getString("TIME_OUT");
+		String workedTime = rs.getString("WORKED_TIME");
 		String comment = rs.getString("COMMENT");
 		String department = rs.getString("DEPARTMENT");
 		String title = rs.getString("JOB_TITLE");
@@ -25,7 +26,7 @@ public class TimekeepingMapper implements RowMapper<Timekeeping> {
 		String comeLateA = rs.getString("COME_LATE_A");
 		String leaveSoonA = rs.getString("LEAVE_SOON_A");
 
-		return new Timekeeping(employeeId, employeeName, date, timeIn, timeOut, comment, department, title, comeLateM,
+		return new Timekeeping(employeeId, employeeName, date, timeIn, timeOut, workedTime, comment, department, title, comeLateM,
 				leaveSoonM, comeLateA, leaveSoonA);
 	}
 

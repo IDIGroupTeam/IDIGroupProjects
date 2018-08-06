@@ -18,6 +18,7 @@ public class Timekeeping implements Serializable {
 	private String title;
 	private String timeIn;
 	private String timeOut;
+	private String workedTime;
 	private Date date;
 	private String comment;
 
@@ -32,7 +33,7 @@ public class Timekeeping implements Serializable {
 	public Timekeeping() {
 	}
 
-	public Timekeeping(int employeeId, String employeeName, Date date, String timeIn, String timeOut,
+	public Timekeeping(int employeeId, String employeeName, Date date, String timeIn, String timeOut, String workedTime,
 			String comment, String department, String title, String comeLateM, String leaveSoonM, String comeLateA,
 			String leaveSoonA) {
 
@@ -41,6 +42,7 @@ public class Timekeeping implements Serializable {
 		this.date = date;
 		this.timeIn = timeIn;
 		this.timeOut = timeOut;
+		this.workedTime = workedTime;
 		this.comment = comment;
 		this.department = department;
 		this.title = title;
@@ -65,6 +67,14 @@ public class Timekeeping implements Serializable {
 
 	public void setTimeOut(String timeOut) {
 		this.timeOut = timeOut;
+	}
+
+	public String getWorkedTime() {
+		return workedTime;
+	}
+
+	public void setWorkedTime(String workedTime) {
+		this.workedTime = workedTime;
 	}
 
 	public int getEmployeeId() {
