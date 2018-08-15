@@ -1,5 +1,6 @@
 package com.idi.hr.controller;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.JobTitleDAO;
 import com.idi.hr.dao.WorkHistoryDAO;
+import com.idi.hr.form.WorkHistoryForm;
 
 @Controller
 public class WorkHistoryController {
@@ -40,11 +42,59 @@ public class WorkHistoryController {
 	@Autowired
 	private DepartmentDAO departmentDAO;
 
-	@RequestMapping(value = { "/workHistory/" }, method = RequestMethod.GET)
-	public String ListWorkHistorys(Model model) {
+	@RequestMapping(value = {"/workHistory/"})
+	public String ListWorkHistorys(Model model, @ModelAttribute("workHistoryForm") WorkHistoryForm form) {
 		try {
+			
+			// Paging:
+			// Number records of a Page: Default: 25
+			// Page Index: Default: 1
+			// Total records
+			// Total of page
+			if (form.getNumberRecordsOfPage() == 0) {
+				form.setNumberRecordsOfPage(25);
+			}
+
+			if (form.getPageIndex() == 0) {
+				form.setPageIndex(1);
+			}
+			
 			List<WorkHistory> list = workHistoryDAO.getWorkHistorys();
-			model.addAttribute("workHistorys", list);
+			
+			form.setTotalRecords(list.size());
+			
+			int totalPages = form.getTotalRecords() % form.getNumberRecordsOfPage() > 0
+					? form.getTotalRecords() / form.getNumberRecordsOfPage() + 1
+					: form.getTotalRecords() / form.getNumberRecordsOfPage();
+			form.setTotalPages(totalPages);
+
+			List<WorkHistory> listWorkHistoryForPage = new ArrayList<WorkHistory>();
+			
+			if (form.getPageIndex() < totalPages) {
+				if (form.getPageIndex() == 1) {
+					for (int i = 0; i < form.getNumberRecordsOfPage(); i++) {
+						WorkHistory workHistory = new WorkHistory();
+						workHistory = list.get(i);
+						listWorkHistoryForPage.add(workHistory);
+					}
+				} else if (form.getPageIndex() > 1) {
+					for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form.getPageIndex()
+							* form.getNumberRecordsOfPage(); i++) {
+						WorkHistory employee = new WorkHistory();
+						employee = list.get(i);
+						listWorkHistoryForPage.add(employee);
+					}
+				}
+			} else if (form.getPageIndex() == totalPages) {
+				for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form
+						.getTotalRecords(); i++) {
+					WorkHistory workHistory = new WorkHistory();
+					workHistory = list.get(i);
+					listWorkHistoryForPage.add(workHistory);
+				}
+			}
+			
+			model.addAttribute("workHistorys", listWorkHistoryForPage);
 			model.addAttribute("formTitle", "Danh sách lịch sử công tác ");
 		} catch (Exception e) {
 			log.error(e, e);

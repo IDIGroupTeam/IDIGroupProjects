@@ -195,7 +195,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	}
 	
 	/**
-	 * 
+	 * Get a map of work status
 	 * @return
 	 */
 	public Map<String, String> getWorkStatusMap(){

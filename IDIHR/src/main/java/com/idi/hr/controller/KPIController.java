@@ -99,7 +99,7 @@ public class KPIController {
 	@RequestMapping(value = "/KPI/generateReport", method = RequestMethod.POST)
 	public String generateReport(Model model, HttpServletResponse response, HttpServletRequest request,
 			@ModelAttribute("generateReport") @Validated LeaveReport leaveReport,
-			final RedirectAttributes redirectAttributes) {
+			final RedirectAttributes redirectAttributes) throws Exception{
 		try {
 			// ArrayList<LeaveReport> list = new ArrayList<>();
 			// DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -565,6 +565,9 @@ public class KPIController {
 		plot.setStartAngle(290);
 		plot.setDirection(Rotation.CLOCKWISE);
 		plot.setForegroundAlpha(0.5f);
+		plot.setBackgroundAlpha(1);
+		plot.setIgnoreZeroValues(true);
+		plot.setAutoPopulateSectionPaint(true);
 
 		return chart;
 	}
@@ -573,7 +576,7 @@ public class KPIController {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
 		for (Map.Entry<String, Float> entry : values.entrySet()) {
-			System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());
+			//System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());
 			dataset.addValue(entry.getValue(), entry.getKey(), "");
 		}
 		return dataset;

@@ -95,7 +95,7 @@ tr:nth-child(even) {
 	
 			<table class="table">
 		<tr>
-			<td><span>Tổng số ${employeeForm.totalRecords} công việc</span></td>
+			<td><span>Tổng số ${employeeForm.totalRecords} nhân viên</span></td>
 			<td><span>Số trang: ${employeeForm.totalPages}</span></td>
 			<form:hidden path="pageIndex" /> 
 			<form:hidden path="totalPages" /> 

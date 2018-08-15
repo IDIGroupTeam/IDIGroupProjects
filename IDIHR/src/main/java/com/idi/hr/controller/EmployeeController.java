@@ -223,7 +223,7 @@ public class EmployeeController {
 		//Map<String, String> items = workStatusMap();
 		DefaultPieDataset dpd = new DefaultPieDataset();
 		for (Map.Entry<String, String> entry : items.entrySet()) {
-			System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());
+			//System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());
 			dpd.setValue(entry.getValue() + ":" + employeeDAO.countMemberByWorkStatus(entry.getKey(),"all"), employeeDAO.countMemberByWorkStatus(entry.getKey(), "all"));
 		}
 		JFreeChart chart = createChart(dpd, "Biểu đồ trạng thái LĐ");
@@ -287,7 +287,9 @@ public class EmployeeController {
 		plot.setStartAngle(290);
 		plot.setDirection(Rotation.CLOCKWISE);
 		plot.setForegroundAlpha(0.5f);
-
+		plot.setBackgroundAlpha(1);
+		plot.setIgnoreZeroValues(true);
+		plot.setAutoPopulateSectionPaint(true);
 		return chart;
 	}
 
