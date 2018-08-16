@@ -80,9 +80,9 @@ public class WorkHistoryController {
 				} else if (form.getPageIndex() > 1) {
 					for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form.getPageIndex()
 							* form.getNumberRecordsOfPage(); i++) {
-						WorkHistory employee = new WorkHistory();
-						employee = list.get(i);
-						listWorkHistoryForPage.add(employee);
+						WorkHistory workHistory = new WorkHistory();
+						workHistory = list.get(i);
+						listWorkHistoryForPage.add(workHistory);
 					}
 				}
 			} else if (form.getPageIndex() == totalPages) {

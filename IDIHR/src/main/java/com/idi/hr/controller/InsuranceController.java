@@ -1,5 +1,6 @@
 package com.idi.hr.controller;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import com.idi.hr.bean.Insurance;
 import com.idi.hr.bean.ProcessInsurance;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.InsuranceDAO;
+import com.idi.hr.form.InsuranceForm;
 
 @Controller
 public class InsuranceController {
@@ -31,11 +33,59 @@ public class InsuranceController {
 	@Autowired
 	private EmployeeDAO employeeDAO;
 
-	@RequestMapping(value = { "/insurance/" }, method = RequestMethod.GET)
-	public String ListInsurances(Model model) {
+	@RequestMapping(value = { "/insurance/" })
+	public String ListInsurances(Model model, @ModelAttribute("insuranceForm") InsuranceForm form) throws Exception {
 		try {
+			
+			// Paging:
+			// Number records of a Page: Default: 25
+			// Page Index: Default: 1
+			// Total records
+			// Total of page
+			if (form.getNumberRecordsOfPage() == 0) {
+				form.setNumberRecordsOfPage(25);
+			}
+
+			if (form.getPageIndex() == 0) {
+				form.setPageIndex(1);
+			}
+			
 			List<Insurance> list = insuranceDAO.getInsurances();
-			model.addAttribute("insurances", list);
+			
+			form.setTotalRecords(list.size());
+			
+			int totalPages = form.getTotalRecords() % form.getNumberRecordsOfPage() > 0
+					? form.getTotalRecords() / form.getNumberRecordsOfPage() + 1
+					: form.getTotalRecords() / form.getNumberRecordsOfPage();
+			form.setTotalPages(totalPages);
+
+			List<Insurance> listInsuranceForPage = new ArrayList<Insurance>();
+			
+			if (form.getPageIndex() < totalPages) {
+				if (form.getPageIndex() == 1) {
+					for (int i = 0; i < form.getNumberRecordsOfPage(); i++) {
+						Insurance insurance = new Insurance();
+						insurance = list.get(i);
+						listInsuranceForPage.add(insurance);
+					}
+				} else if (form.getPageIndex() > 1) {
+					for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form.getPageIndex()
+							* form.getNumberRecordsOfPage(); i++) {
+						Insurance insurance = new Insurance();
+						insurance = list.get(i);
+						listInsuranceForPage.add(insurance);
+					}
+				}
+			} else if (form.getPageIndex() == totalPages) {
+				for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form
+						.getTotalRecords(); i++) {
+					Insurance insurance = new Insurance();
+					insurance = list.get(i);
+					listInsuranceForPage.add(insurance);
+				}
+			}					
+			
+			model.addAttribute("insurances", listInsuranceForPage);
 			model.addAttribute("formTitle", "Danh sách NV đóng bảo hiểm ");
 		} catch (Exception e) {
 			log.error(e, e);
