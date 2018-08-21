@@ -254,6 +254,90 @@ public class BalanceSheetController {
 		}
 	}
 
+	@RequestMapping("/cdkt/capnhatcandoiketoanold")
+	public String updateBSOld(@ModelAttribute("mainFinanceForm") BalanceAssetForm form, Model model) {
+		try {
+			// Lấy kỳ kế toán mặc định
+			if (form.getKyKeToan() == null) {
+				form.setKyKeToan(dungChung.getKyKeToan());
+			} else {
+				form.setKyKeToan(kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt()));
+			}
+
+			// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của kỳ
+			if (form.getDau() == null) {
+				form.setDau(form.getKyKeToan().getBatDau());
+			}
+
+			if (form.getCuoi() == null) {
+				form.setCuoi(form.getKyKeToan().getKetThuc());
+			}
+
+			logger.info("Cập nhật dữ liệu hạch toán trước đó");
+			// balanceSheetDAO.capNhatCanDoiKeToan(form.getTaiKhoanDs());
+
+			logger.info("Lấy danh sách các chỉ tiêu CDKT");
+			List<BalanceAssetItem> bais = balanceSheetDAO.listBais();
+
+			logger.info("Cập nhật các chi tiêu CĐKT cho tất cả các loại kỳ trong khoảng thời gian: " + form.getDau()
+					+ " - " + form.getCuoi());
+			HashMap<Integer, String> kyDs = new HashMap<>();
+
+			// kyDs.put(KyKeToanCon.WEEK, "Tuần");
+			kyDs.put(KyKeToanCon.MONTH, "Tháng");
+			// kyDs.put(KyKeToanCon.QUARTER, "Quý");
+			kyDs.put(KyKeToanCon.YEAR, "Năm");
+
+			Iterator<Integer> kyIter = kyDs.keySet().iterator();
+			while (kyIter.hasNext()) {
+				Integer ky = kyIter.next();
+				logger.info("Cập nhật chi tiêu CĐKT cho loại kỳ: " + kyDs.get(ky));
+				try {
+					Date dauKy = Utils.getStartPeriod(form.getDau(), ky);
+					Date cuoiKy = Utils.getEndPeriod(form.getCuoi(), ky);
+					Date buocNhay = dauKy;
+
+					while (buocNhay.before(cuoiKy)) {
+						Date cuoi = Utils.getEndPeriod(buocNhay, ky);
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+						String batDau = sdf.format(buocNhay);
+						String ketThuc = sdf.format(cuoi);
+
+						logger.info("Kỳ " + batDau + " => " + ketThuc);
+
+						logger.info("Xây dựng cây BalanceAssetData từ cây BalanceAssetItem");
+						List<BalanceAssetData> bads = new ArrayList<>();
+						Iterator<BalanceAssetItem> baiIter = bais.iterator();
+						while (baiIter.hasNext()) {
+							BalanceAssetItem bai = baiIter.next();
+							BalanceAssetData bad = createBad(bai, ky, buocNhay);
+							bads.add(bad);
+						}
+
+						logger.info("Lấy toàn bộ giá trị của các chi tiêu cấp thấp nhất.");
+						List<BalanceAssetData> allBads = balanceSheetDAO.calculateBs(buocNhay, cuoi);
+
+						logger.info("Tính giá trị cây BalanceAssetData theo từng kỳ, sau đó cập nhật vào CSDL");
+						Iterator<BalanceAssetData> badIter = bads.iterator();
+						while (badIter.hasNext()) {
+							BalanceAssetData bad = badIter.next();
+							bad = calCulcateBs(bad, allBads);
+						}
+
+						buocNhay = Utils.nextPeriod(buocNhay, ky);
+					}
+				} catch (Exception e) {
+					// e.printStackTrace();
+				}
+			}
+
+			return "redirect:/cdkt/candoiketoan";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
 	private BalanceAssetData createBad(BalanceAssetItem bai, int periodType, Date period) {
 		if (bai == null)
 			return null;
@@ -725,8 +809,11 @@ public class BalanceSheetController {
 			// Lặp theo kỳ
 			KyKeToanCon kyKt = new KyKeToanCon(form.getDau(), form.getLoaiKy());
 			if (form.getLoaiKy() == KyKeToanCon.NAN) {
-				logger.info("KỲ: " + kyKt);
 				kyKt = new KyKeToanCon(form.getDau(), form.getCuoi());
+			}
+
+			while (kyKt != null && kyKt.getCuoi() != null && !kyKt.getCuoi().after(form.getCuoi())) {
+				logger.info("KỲ: " + kyKt);
 				KyKeToanCon kyKtTruoc = kyKt.kyTruoc();
 
 				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
@@ -737,22 +824,7 @@ public class BalanceSheetController {
 				duLieuKeToan = tongPhatSinh(duLieuKeToan, tongPsDs, dauKyDs);
 
 				duLieuKeToanMap.put(kyKt, duLieuKeToan);
-			} else {
-				while (!kyKt.getCuoi().after(form.getCuoi())) {
-					logger.info("KỲ: " + kyKt);
-					KyKeToanCon kyKtTruoc = kyKt.kyTruoc();
-
-					DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
-					List<TaiKhoan> tongPsDs = soKeToanDAO.tongPhatSinh(kyKt.getDau(), kyKt.getCuoi());
-					List<TaiKhoan> dauKyDs = soKeToanDAO.tongPhatSinh(form.getKyKeToan().getBatDau(),
-							kyKtTruoc.getCuoi());
-
-					dauKyDs = tronNoCoDauKy(dauKyDs, soDuKyDs);
-					duLieuKeToan = tongPhatSinh(duLieuKeToan, tongPsDs, dauKyDs);
-
-					duLieuKeToanMap.put(kyKt, duLieuKeToan);
-					kyKt = Utils.nextPeriod(kyKt);
-				}
+				kyKt = Utils.nextPeriod(kyKt);
 			}
 
 			model.addAttribute("kyKeToanDs", kyKeToanDAO.danhSachKyKeToan());

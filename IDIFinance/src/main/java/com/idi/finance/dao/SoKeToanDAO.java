@@ -19,4 +19,8 @@ public interface SoKeToanDAO {
 	public double tongPhatSinh(String maTk, int soDu, Date dau, Date cuoi);
 
 	public List<TaiKhoan> tongPhatSinh(Date batDau, Date ketThuc);
+
+	public List<DuLieuKeToan> danhSachTongPhatSinhDoiTuong(String maTk, Date dau, Date cuoi);
+
+	public List<DuLieuKeToan> danhSachTongHopCongNo(String maTk, Date dau, Date cuoi);
 }

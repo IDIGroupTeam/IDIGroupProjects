@@ -60,3 +60,6 @@ INSERT INTO `idigroup`.`KQHDKD_TAIKHOAN` (`ASSET_CODE`, `MA_TK`, `SO_DU`) VALUES
 ('52', '8212', 1)
 
 
+
+
+

@@ -8,12 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.idi.finance.bean.chungtu.DoiTuong;
 import com.idi.finance.bean.doitac.KhachHang;
 import com.idi.finance.dao.KhachHangDAO;
 
 public class KhachHangDAOImpl implements KhachHangDAO {
 	private static final Logger logger = Logger.getLogger(KhachHangDAOImpl.class);
-	
+
 	@Value("${DANH_SACH_KHACH_HANG_THEO_MA_HOAC_TEN}")
 	private String DANH_SACH_KHACH_HANG_THEO_MA_HOAC_TEN;
 
@@ -28,8 +29,39 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 	}
 
 	@Override
+	public List<DoiTuong> danhSachDoiTuong() {
+		String query = "SELECT * FROM KHACH_HANG WHERE MA_KH!=1 ORDER BY TEN_KH";
+
+		logger.info("Danh sách khách hàng ...");
+		logger.info(query);
+
+		List<DoiTuong> doiTuongDs = jdbcTmpl.query(query, new DoiTuongMapper());
+		return doiTuongDs;
+	}
+
+	public class DoiTuongMapper implements RowMapper<DoiTuong> {
+		public DoiTuong mapRow(ResultSet rs, int rowNum) throws SQLException {
+			try {
+				DoiTuong doiTuong = new DoiTuong();
+
+				doiTuong.setMaDt(rs.getInt("MA_KH"));
+				doiTuong.setLoaiDt(DoiTuong.KHACH_HANG);
+				doiTuong.setTenDt(rs.getString("TEN_KH"));
+				doiTuong.setMaThue(rs.getString("MA_THUE"));
+				doiTuong.setDiaChi(rs.getString("DIA_CHI"));
+				doiTuong.setSdt(rs.getString("SDT"));
+				doiTuong.setEmail(rs.getString("EMAIL"));
+
+				return doiTuong;
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	}
+
+	@Override
 	public List<KhachHang> danhSachKhachHang() {
-		String query = "SELECT * FROM KHACH_HANG WHERE MA_KH!=1";
+		String query = "SELECT * FROM KHACH_HANG WHERE MA_KH!=1 ORDER BY TEN_KH";
 
 		logger.info("Danh sách khách hàng ...");
 		logger.info(query);
@@ -104,7 +136,7 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 		if (maHoacTen == null || maHoacTen.trim().equals("")) {
 			return null;
 		}
-		
+
 		String query = DANH_SACH_KHACH_HANG_THEO_MA_HOAC_TEN;
 		query = query.replaceAll("\\?", maHoacTen.trim());
 

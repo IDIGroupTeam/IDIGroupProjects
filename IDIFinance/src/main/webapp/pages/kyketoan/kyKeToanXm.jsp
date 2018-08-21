@@ -129,23 +129,13 @@
 <hr />
 <h4>Số dự đầu kỳ, cuối kỳ</h4>
 <div>
-	<!-- <ul class="nav nav-tabs nav-pills nav-justified">
-		<li class="active"><a data-toggle="tab" href="#tienMat">Tài
-				khoản tiền mặt</a></li>
-		<li><a data-toggle="tab" href="#tienGui">Tài khoản gửi ngân
-				hàng</a></li>
-		<li><a data-toggle="tab" href="#ccdv">Tài khoản CCDV, vật tư,
-				hàng hóa</a></li>
-		<li><a data-toggle="tab" href="#dt">Tài khoản theo đối tượng</a></li>
-	</ul> -->
 	<ul class="nav nav-tabs nav-pills nav-justified">
 		<li class="active"><a data-toggle="tab" href="#sdTaiKhoan">Số
 				dư tài khoản</a></li>
-		<!-- <li><a data-toggle="tab" href="#sdCongNoKH">Công nợ khách
+		<li><a data-toggle="tab" href="#sdCongNoKH">Công nợ khách
 				hàng</a></li>
-		<li><a data-toggle="tab" href="#sdCongNoNCC">Công nợ nhà cung
-				cấp</a></li>
-		<li><a data-toggle="tab" href="#sdCongNoNV">Công nợ nhân viên</a></li> -->
+		<li><a data-toggle="tab" href="#sdCongNoNCC">Công nợ NCC</a></li>
+		<li><a data-toggle="tab" href="#sdCongNoNV">Công nợ nhân viên</a></li>
 		<li><a data-toggle="tab" href="#sdTonKho">Tồn kho VTHH</a></li>
 		<li><a data-toggle="tab" href="#sdCCDC">Công cụ, dụng cụ</a></li>
 		<li><a data-toggle="tab" href="#sdTSCD">Tài sản cố định</a></li>
@@ -162,59 +152,63 @@
 						<th colspan="2" class="text-center">Cuối kỳ</th>
 					</tr>
 					<tr>
-						<th class="text-center">Nợ</th>
-						<th class="text-center">Có</th>
-						<th class="text-center">Nợ</th>
-						<th class="text-center">Có</th>
+						<th class="text-center" style="width: 120px;">Nợ</th>
+						<th class="text-center" style="width: 120px;">Có</th>
+						<th class="text-center" style="width: 120px;">Nợ</th>
+						<th class="text-center" style="width: 120px;">Có</th>
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${taiKhoanDs}" var="tienMat">
+					<c:forEach items="${taiKhoanDs}" var="taiKhoan">
 						<tr>
-							<td>${tienMat.loaiTaiKhoan.maTk}</td>
-							<td>${tienMat.loaiTaiKhoan.tenTk}</td>
-							<td class="text-right"><fmt:formatNumber
-									value="${tienMat.noDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
-							<td class="text-right"><fmt:formatNumber
-									value="${tienMat.coDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
-							<td class="text-right"><fmt:formatNumber
-									value="${tienMat.noCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
-							<td class="text-right"><fmt:formatNumber
-									value="${tienMat.coCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td>${taiKhoan.loaiTaiKhoan.maTk}</td>
+							<td>${taiKhoan.loaiTaiKhoan.tenTk}</td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${taiKhoan.noDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${taiKhoan.coDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${taiKhoan.noCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${taiKhoan.coCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
 						</tr>
 					</c:forEach>
 				</tbody>
 			</table>
 		</div>
-		<%-- <div id="sdCongNoKH" class="tab-pane fade">
+		<div id="sdCongNoKH" class="tab-pane fade">
 			<table class="table table-bordered table-hover">
 				<thead>
 					<tr>
+						<th rowspan="2" class="text-center">Mã khách hàng</th>
+						<th rowspan="2" class="text-center">Tên khách hàng</th>
 						<th rowspan="2" class="text-center">Mã TK</th>
 						<th rowspan="2" class="text-center">Tên TK</th>
 						<th colspan="2" class="text-center">Đầu kỳ</th>
 						<th colspan="2" class="text-center">Cuối kỳ</th>
 					</tr>
 					<tr>
-						<th class="text-center">Nợ</th>
-						<th class="text-center">Có</th>
-						<th class="text-center">Nợ</th>
-						<th class="text-center">Có</th>
+						<th class="text-center" style="width: 120px;">Nợ</th>
+						<th class="text-center" style="width: 120px;">Có</th>
+						<th class="text-center" style="width: 120px;">Nợ</th>
+						<th class="text-center" style="width: 120px;">Có</th>
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${tienGuiDs}" var="tienGui">
+					<c:forEach items="${khachHangDs}" var="khachHang">
 						<tr>
-							<td>${tienGui.loaiTaiKhoan.maTk}</td>
-							<td>${tienGui.loaiTaiKhoan.tenTk}</td>
-							<td class="text-right"><fmt:formatNumber
-									value="${tienGui.noDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
-							<td class="text-right"><fmt:formatNumber
-									value="${tienGui.coDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
-							<td class="text-right"><fmt:formatNumber
-									value="${tienGui.noCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
-							<td class="text-right"><fmt:formatNumber
-									value="${tienGui.coCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td>${khachHang.doiTuong.maDt}</td>
+							<td>${khachHang.doiTuong.tenDt}</td>
+							<td>${khachHang.loaiTaiKhoan.maTk}</td>
+							<td>${khachHang.loaiTaiKhoan.tenTk}</td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${khachHang.noDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${khachHang.coDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${khachHang.noCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${khachHang.coCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
 						</tr>
 					</c:forEach>
 				</tbody>
@@ -224,27 +218,37 @@
 			<table class="table table-bordered table-hover">
 				<thead>
 					<tr>
+						<th rowspan="2" class="text-center">Mã NCC</th>
+						<th rowspan="2" class="text-center">Tên NCC</th>
 						<th rowspan="2" class="text-center">Mã TK</th>
 						<th rowspan="2" class="text-center">Tên TK</th>
 						<th colspan="2" class="text-center">Đầu kỳ</th>
 						<th colspan="2" class="text-center">Cuối kỳ</th>
 					</tr>
 					<tr>
-						<th class="text-center">Nợ</th>
-						<th class="text-center">Có</th>
-						<th class="text-center">Nợ</th>
-						<th class="text-center">Có</th>
+						<th class="text-center" style="width: 120px;">Nợ</th>
+						<th class="text-center" style="width: 120px;">Có</th>
+						<th class="text-center" style="width: 120px;">Nợ</th>
+						<th class="text-center" style="width: 120px;">Có</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
+					<c:forEach items="${nhaCcDs}" var="nhaCc">
+						<tr>
+							<td>${nhaCc.doiTuong.maDt}</td>
+							<td>${nhaCc.doiTuong.tenDt}</td>
+							<td>${nhaCc.loaiTaiKhoan.maTk}</td>
+							<td>${nhaCc.loaiTaiKhoan.tenTk}</td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${nhaCc.noDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${nhaCc.coDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${nhaCc.noCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${nhaCc.coCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+						</tr>
+					</c:forEach>
 				</tbody>
 			</table>
 		</div>
@@ -252,30 +256,40 @@
 			<table class="table table-bordered table-hover">
 				<thead>
 					<tr>
+						<th rowspan="2" class="text-center">Mã NV</th>
+						<th rowspan="2" class="text-center">Tên NV</th>
 						<th rowspan="2" class="text-center">Mã TK</th>
 						<th rowspan="2" class="text-center">Tên TK</th>
 						<th colspan="2" class="text-center">Đầu kỳ</th>
 						<th colspan="2" class="text-center">Cuối kỳ</th>
 					</tr>
 					<tr>
-						<th class="text-center">Nợ</th>
-						<th class="text-center">Có</th>
-						<th class="text-center">Nợ</th>
-						<th class="text-center">Có</th>
+						<th class="text-center" style="width: 120px;">Nợ</th>
+						<th class="text-center" style="width: 120px;">Có</th>
+						<th class="text-center" style="width: 120px;">Nợ</th>
+						<th class="text-center" style="width: 120px;">Có</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
+					<c:forEach items="${nhanVienDs}" var="nhanVien">
+						<tr>
+							<td>${nhanVien.doiTuong.maDt}</td>
+							<td>${nhanVien.doiTuong.tenDt}</td>
+							<td>${nhanVien.loaiTaiKhoan.maTk}</td>
+							<td>${nhanVien.loaiTaiKhoan.tenTk}</td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${nhanVien.noDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${nhanVien.coDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${nhanVien.noCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+									value="${nhanVien.coCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+						</tr>
+					</c:forEach>
 				</tbody>
 			</table>
-		</div> --%>
+		</div>
 		<div id="sdTonKho" class="tab-pane fade">
 			<table class="table table-bordered table-hover">
 				<thead>

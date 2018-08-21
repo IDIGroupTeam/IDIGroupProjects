@@ -107,20 +107,6 @@
 			selectAllValue : 'ALL'
 		});
 
-		/* $("#assetPeriods").multiselect({
-			enableFiltering : true,
-			filterPlaceholder : 'Tìm kiếm',
-			maxHeight : 200,
-			buttonWidth : '180px',
-			nonSelectedText : 'Chọn kỳ',
-			nSelectedText : 'Được chọn',
-			numberDisplayed : 2,
-			includeSelectAllOption : true,
-			allSelectedText : 'Chọn tất cả',
-			selectAllText : 'Tất cả',
-			selectAllValue : 'ALL'
-		}); */
-
 		$("#updateBSBut").click(
 				function() {
 					$("#mainFinanceForm").attr("action",
@@ -131,13 +117,14 @@
 	});
 </script>
 
+<form:hidden id="first" path="first" />
+<form:hidden path="assetPeriods" />
+
 <div class="panel panel-default with-nav-tabs">
 	<div class="panel-heading">
 		<h4>Tìm kiếm</h4>
 	</div>
 	<div class="panel-body">
-		<form:hidden id="first" path="first" />
-
 		<div class="form-group">
 			<label for="dau">Kỳ:</label>
 			<div class="input-group smallform pull-right">
@@ -148,20 +135,6 @@
 				</form:select>
 			</div>
 		</div>
-
-		<%-- <div class="form-group">
-			<label for="periodType">Kỳ</label>
-			<div class="input-group smallform pull-right">
-				<form:select path="periodType" multiple="false"
-					class="form-control pull-right" cssStyle="width: 180px;">
-					<form:option value="${KyKeToanCon.NAN}">Toàn bộ</form:option>
-					<form:option value="${KyKeToanCon.WEEK}">Tuần</form:option>
-					<form:option value="${KyKeToanCon.MONTH}">Tháng</form:option>
-					<form:option value="${KyKeToanCon.QUARTER}">Quý</form:option>
-					<form:option value="${KyKeToanCon.YEAR}">Năm</form:option>
-				</form:select>
-			</div>
-		</div> --%>
 
 		<div class="form-group">
 			<label for="assetCodes">Mã số</label>
@@ -174,23 +147,6 @@
 				</form:select>
 			</div>
 		</div>
-
-		<%-- <div class="form-group">
-			<label for="assetPeriods">Tháng</label>
-			<div class="input-group smallform pull-right">
-				<form:select id="assetPeriods" path="assetPeriods"
-					multiple="multiple" class="form-control">
-					<c:forEach items="${assetPeriods}" var="assetPeriod">
-						<fmt:formatDate var="assetPeriodTmpl" value="${assetPeriod}"
-							pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" />
-						<form:option value="${assetPeriodTmpl}">
-						${assetPeriodTmpl}
-					</form:option>
-					</c:forEach>
-				</form:select>
-			</div>
-		</div> --%>
-		<form:hidden path="assetPeriods" />
 	</div>
 	<div class="panel-footer">
 		<button id="submitBut" type="button" class="btn btn-info btn-sm">Tìm

@@ -3,9 +3,12 @@ package com.idi.finance.bean.cdkt;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 import com.idi.finance.utils.Utils;
 
 public class KyKeToanCon {
+	private static final Logger logger = Logger.getLogger(KyKeToanCon.class);
 	public static final int NAN = -1;
 	public static final int WEEK = 0;
 	public static final int MONTH = 1;
@@ -97,8 +100,21 @@ public class KyKeToanCon {
 	@Override
 	public String toString() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
-		String batDau = sdf.format(dau);
-		String ketThuc = sdf.format(cuoi);
+
+		String batDau = null;
+		String ketThuc = null;
+		if (dau != null) {
+			try {
+				batDau = sdf.format(dau);
+			} catch (Exception e) {
+			}
+		}
+		if (cuoi != null) {
+			try {
+				ketThuc = sdf.format(cuoi);
+			} catch (Exception e) {
+			}
+		}
 
 		String out = loai + "  " + batDau + " " + ketThuc;
 		return out;

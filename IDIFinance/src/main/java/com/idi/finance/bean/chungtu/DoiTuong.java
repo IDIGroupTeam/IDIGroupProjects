@@ -1,11 +1,14 @@
 package com.idi.finance.bean.chungtu;
 
+import com.idi.finance.bean.cdkt.DuLieuKeToan;
+
 public class DoiTuong {
 	public static final int NHAN_VIEN = 1;
 	public static final int KHACH_HANG = 2;
 	public static final int NHA_CUNG_CAP = 3;
 	public static final int KHACH_VANG_LAI = 4;
 
+	private String khoaDt;
 	private int maDt;
 	private int loaiDt;
 	private String tenDt;
@@ -14,6 +17,17 @@ public class DoiTuong {
 	private String email;
 	private String maThue;
 	private String nguoiNop;
+
+	private DuLieuKeToan duLieuKeToan;
+
+	public String getKhoaDt() {
+		khoaDt = loaiDt + "_" + maDt;
+		return khoaDt;
+	}
+
+	public void setKhoaDt(String khoaDt) {
+		this.khoaDt = khoaDt;
+	}
 
 	public int getMaDt() {
 		return maDt;
@@ -71,18 +85,26 @@ public class DoiTuong {
 		this.maThue = maThue;
 	}
 
-	@Override
-	public String toString() {
-		String out = maDt + "  " + tenDt + " " + loaiDt;
-		return out;
-	}
-
 	public String getNguoiNop() {
 		return nguoiNop;
 	}
 
 	public void setNguoiNop(String nguoiNop) {
 		this.nguoiNop = nguoiNop;
+	}
+
+	public DuLieuKeToan getDuLieuKeToan() {
+		return duLieuKeToan;
+	}
+
+	public void setDuLieuKeToan(DuLieuKeToan duLieuKeToan) {
+		this.duLieuKeToan = duLieuKeToan;
+	}
+
+	@Override
+	public String toString() {
+		String out = maDt + "  " + tenDt + " " + loaiDt;
+		return out;
 	}
 
 	@Override
@@ -102,15 +124,6 @@ public class DoiTuong {
 
 			if (loaiDt != item.getLoaiDt())
 				return false;
-
-			if (tenDt == null) {
-				if (item.getTenDt() != null)
-					return false;
-			} else if (item.getTenDt() == null) {
-				return false;
-			} else if (!tenDt.trim().equals(item.getTenDt().trim())) {
-				return false;
-			}
 		} catch (Exception e) {
 			return false;
 		}

@@ -1,6 +1,7 @@
 package com.idi.finance.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -20,10 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.idi.finance.bean.DungChung;
+import com.idi.finance.bean.chungtu.DoiTuong;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.kyketoan.SoDuKy;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
+import com.idi.finance.dao.KhachHangDAO;
 import com.idi.finance.dao.KyKeToanDAO;
+import com.idi.finance.dao.NhaCungCapDAO;
+import com.idi.finance.dao.NhanVienDAO;
 import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.validator.KyKeToanValidator;
@@ -43,6 +48,15 @@ public class KyKeToanController {
 
 	@Autowired
 	KyKeToanDAO kyKeToanDAO;
+
+	@Autowired
+	KhachHangDAO khachHangDAO;
+
+	@Autowired
+	NhaCungCapDAO nhaCungCapDAO;
+
+	@Autowired
+	NhanVienDAO nhanVienDAO;
 
 	@Autowired
 	KyKeToanValidator kyKeToanValidator;
@@ -94,13 +108,29 @@ public class KyKeToanController {
 			model.addAttribute("kyKeToan", kyKeToan);
 
 			// Lấy số dư đầu và cuối kỳ của các nhóm tài khoản
-			// Nhóm tài khoản kế toán
+			// Nhóm tài khoản CCDC, VT, HH
+
+			// Nhóm tài khoản theo đối tượng (chỉ áp dụng với 131 và 331)
+			// Có 3 loại đối tượng: khách hàng, nhà cung cấp và nhân viên
+			// Với khách vãng lai thì không cần
+			// Số dư đầu kỳ khách hàng
+			List<SoDuKy> khachHangDs = kyKeToanDAO.danhSachSoDuKyTheoDoiTuong(maKyKt, DoiTuong.KHACH_HANG);
+
+			// Số dư đầu kỳ nhà cung cấp
+			List<SoDuKy> nhaCcDs = kyKeToanDAO.danhSachSoDuKyTheoDoiTuong(maKyKt, DoiTuong.NHA_CUNG_CAP);
+
+			// Số dư đầu kỳ công nợ nhân viên
+			List<SoDuKy> nhanVienDs = kyKeToanDAO.danhSachSoDuKyTheoDoiTuong(maKyKt, DoiTuong.NHAN_VIEN);
+
+			// Nhóm tài khoản tiền gửi ngân hàng: chi tiết theo từng ngân hàng
+
+			// Nhóm tài khoản kế toán khác như tiền mặt, ...
 			List<SoDuKy> taiKhoanDs = kyKeToanDAO.danhSachSoDuKy(maKyKt);
+
+			model.addAttribute("khachHangDs", khachHangDs);
+			model.addAttribute("nhaCcDs", nhaCcDs);
+			model.addAttribute("nhanVienDs", nhanVienDs);
 			model.addAttribute("taiKhoanDs", taiKhoanDs);
-
-			// Nhóm tài khoản CCDV, VT, HH
-
-			// Nhóm tài khoản theo đối tượng
 
 			model.addAttribute("tab", "tabKKT");
 			return "xemKyKeToan";
@@ -257,16 +287,17 @@ public class KyKeToanController {
 			KyKeToan kyKeToanTruoc = kyKeToanDAO.layKyKeToanTruoc(kyKeToan);
 			if (kyKeToanTruoc != null) {
 				// Nếu có kỳ trước thì mới chuyển số dư
+				logger.info("Chuyển số dư từ kỳ " + kyKeToanTruoc + " sang kỳ " + kyKeToan);
 
 				// Với số dư các tài khoản
 				// Lấy danh sách tài khoản
+				logger.info("Chuyển số dư các tài khoản ...");
 				List<LoaiTaiKhoan> taiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
 				Iterator<LoaiTaiKhoan> iter = taiKhoanDs.iterator();
 				while (iter.hasNext()) {
 					LoaiTaiKhoan loaiTaiKhoan = iter.next();
 
 					try {
-
 						if (loaiTaiKhoan.getMaTk().trim().equals(LoaiTaiKhoan.LOI_NHUAN_CHUA_PHAN_PHOI_KY_NAY)) {
 							// Riêng với tài khoản 4212 thì ko chuyển gì
 							continue;
@@ -309,30 +340,55 @@ public class KyKeToanController {
 							double coPhatSinh = soKeToanDAO.tongPhatSinh(loaiTaiKhoan.getMaTk(), LoaiTaiKhoan.CO,
 									kyKeToanTruoc.getBatDau(), kyKeToanTruoc.getKetThuc());
 
-							// Cộng số dư đầu kỳ trước để tính ra số dư cuối kỳ trước
-							SoDuKy soDuKyTruoc = kyKeToanDAO.laySoDuKy(loaiTaiKhoan.getMaTk(),
-									kyKeToanTruoc.getMaKyKt());
-							double noDauKy = noPhatSinh - coPhatSinh;
-							try {
-								noDauKy = soDuKyTruoc.getNoDauKy() - soDuKyTruoc.getCoDauKy() + noPhatSinh - coPhatSinh;
-							} catch (Exception e) {
-
-							}
-
-							logger.info(loaiTaiKhoan.getMaTk() + ": " + noDauKy);
 							SoDuKy soDuKy = new SoDuKy();
 							soDuKy.setKyKeToan(kyKeToan);
 							soDuKy.setLoaiTaiKhoan(loaiTaiKhoan);
-							if (noDauKy > 0) {
-								// Nếu số dư khác 0 thì mới cần chuyển
-								// copy số dư cuối kỳ trước sang thành số dư đầu kỳ mới
+
+							// Cộng số dư đầu kỳ trước để tính ra số dư cuối kỳ trước
+							SoDuKy soDuKyTruoc = kyKeToanDAO.laySoDuKy(loaiTaiKhoan.getMaTk(),
+									kyKeToanTruoc.getMaKyKt());
+
+							if (loaiTaiKhoan.isLuongTinh()) {
+								// Với tài khoản lưỡng tính
+								double noDauKy = noPhatSinh;
+								try {
+									noDauKy = soDuKyTruoc.getNoDauKy() + noPhatSinh;
+								} catch (Exception e) {
+
+								}
+								double coDauKy = coPhatSinh;
+								try {
+									coDauKy = soDuKyTruoc.getCoDauKy() + coPhatSinh;
+								} catch (Exception e) {
+
+								}
 
 								soDuKy.setNoDauKy(noDauKy);
-								soDuKy.setCoDauKy(0);
-								kyKeToanDAO.themSoDuDauKy(soDuKy);
-							} else if (noDauKy < 0) {
-								soDuKy.setNoDauKy(0);
-								soDuKy.setCoDauKy(noDauKy * -1);
+								soDuKy.setCoDauKy(coDauKy);
+							} else {
+								// Với tài khoản bình thường
+								double noDauKy = noPhatSinh - coPhatSinh;
+								try {
+									noDauKy = soDuKyTruoc.getNoDauKy() - soDuKyTruoc.getCoDauKy() + noPhatSinh
+											- coPhatSinh;
+								} catch (Exception e) {
+
+								}
+
+								if (noDauKy > 0) {
+									soDuKy.setNoDauKy(noDauKy);
+									soDuKy.setCoDauKy(0);
+								} else if (noDauKy < 0) {
+									soDuKy.setNoDauKy(0);
+									soDuKy.setCoDauKy(noDauKy * -1);
+								}
+							}
+
+							if (soDuKy.getNoDauKy() != 0 || soDuKy.getCoDauKy() != 0) {
+								// Nếu số dư khác 0 thì mới cần chuyển
+								// copy số dư cuối kỳ trước sang thành số dư đầu kỳ mới
+								logger.info(loaiTaiKhoan.getMaTk() + ": " + soDuKy.getNoDauKy() + " "
+										+ soDuKy.getCoDauKy());
 								kyKeToanDAO.themSoDuDauKy(soDuKy);
 							}
 						}
@@ -340,6 +396,46 @@ public class KyKeToanController {
 						logger.info(e.getMessage());
 					}
 				}
+
+				// Với số dự công nợ khách hàng, nhà cung cấp, nhân viên
+				// Công nợ khách hàng
+				logger.info("Chuyển số dư công nợ khách hàng ...");
+				List<SoDuKy> phaiThuKhDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToanTruoc, DoiTuong.KHACH_HANG,
+						LoaiTaiKhoan.PHAI_THU_KHACH_HANG);
+				List<SoDuKy> phaiTraKhDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToanTruoc, DoiTuong.KHACH_HANG,
+						LoaiTaiKhoan.PHAI_TRA_NGUOI_BAN);
+
+				// Công nợ nhà cung cấp
+				logger.info("Chuyển số dư công nợ nhà cung cấp ...");
+				List<SoDuKy> phaiThuNccDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToanTruoc, DoiTuong.NHA_CUNG_CAP,
+						LoaiTaiKhoan.PHAI_THU_KHACH_HANG);
+				List<SoDuKy> phaiTraNccDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToanTruoc, DoiTuong.NHA_CUNG_CAP,
+						LoaiTaiKhoan.PHAI_TRA_NGUOI_BAN);
+
+				// Công nợ nhân viên
+				logger.info("Chuyển số dư công nợ nhân viên ...");
+				List<SoDuKy> phaiTraNvDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToanTruoc, DoiTuong.NHAN_VIEN,
+						LoaiTaiKhoan.PHAI_THU_KHACH_HANG);
+				List<SoDuKy> phaiThuNvDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToanTruoc, DoiTuong.NHAN_VIEN,
+						LoaiTaiKhoan.PHAI_TRA_NGUOI_BAN);
+
+				// Thêm số dư kỳ công nợ vào csdl
+				List<SoDuKy> soDuKyDs = new ArrayList<>();
+				soDuKyDs.addAll(phaiThuKhDs);
+				soDuKyDs.addAll(phaiTraKhDs);
+				soDuKyDs.addAll(phaiThuNccDs);
+				soDuKyDs.addAll(phaiTraNccDs);
+				soDuKyDs.addAll(phaiTraNvDs);
+				soDuKyDs.addAll(phaiThuNvDs);
+				Iterator<SoDuKy> soDuKyIter = soDuKyDs.iterator();
+				while (soDuKyIter.hasNext()) {
+					SoDuKy soDuKy = soDuKyIter.next();
+					soDuKy.setKyKeToan(kyKeToan);
+					logger.info(soDuKy);
+					kyKeToanDAO.themSoDuDauKy(soDuKy);
+				}
+			} else {
+				logger.info("Không tồn tài kỳ kế toán trước đó, không cần chuyển số dư.");
 			}
 
 			return "redirect:/kyketoan/xem/" + maKyKt;

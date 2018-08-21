@@ -128,18 +128,6 @@
 					class="glyphicon glyphicon-calendar"></span></span>
 			</div>
 		</div>
-
-		<%-- <div class="form-group">
-			<label for="loaiKy">Khoảng:</label>
-			<form:select path="loaiKy" multiple="false"
-				class="form-control smallform pull-right">
-				<form:option value="${KyKeToanCon.NAN}">Toàn bộ</form:option>
-				<form:option value="${KyKeToanCon.WEEK}">Tuần</form:option>
-				<form:option value="${KyKeToanCon.MONTH}">Tháng</form:option>
-				<form:option value="${KyKeToanCon.QUARTER}">Quý</form:option>
-				<form:option value="${KyKeToanCon.YEAR}">Năm</form:option>
-			</form:select>
-		</div> --%>
 	</div>
 	<div class="panel-footer">
 		<button id="submitBut" type="button" class="btn btn-info btn-sm">Tìm

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 
 import com.idi.finance.bean.cdkt.KyKeToanCon;
+import com.idi.finance.bean.chungtu.DoiTuong;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 
 public class TkSoKeToanForm {
@@ -14,6 +15,7 @@ public class TkSoKeToanForm {
 	private String taiKhoan;
 	private int maDt;
 	private KyKeToan kyKeToan;
+	private String[] doiTuongDs;
 	private Date dau;
 	private Date cuoi;
 	private List<String> loaiCts;
@@ -51,6 +53,14 @@ public class TkSoKeToanForm {
 		this.kyKeToan = kyKeToan;
 	}
 
+	public String[] getDoiTuongDs() {
+		return doiTuongDs;
+	}
+
+	public void setDoiTuongDs(String[] doiTuongDs) {
+		this.doiTuongDs = doiTuongDs;
+	}
+
 	public Date getDau() {
 		return dau;
 	}
@@ -64,12 +74,12 @@ public class TkSoKeToanForm {
 			try {
 				Calendar cal = Calendar.getInstance(Locale.FRANCE);
 				cal.setTime(cuoi);
-				
+
 				cal.set(Calendar.HOUR_OF_DAY, 0);
 				cal.set(Calendar.MINUTE, 0);
 				cal.set(Calendar.SECOND, 0);
 				cal.set(Calendar.MILLISECOND, 0);
-				
+
 				cal.add(Calendar.DATE, 1);
 
 				cal.setTimeInMillis(cal.getTimeInMillis() - 1);

@@ -107,23 +107,22 @@
 			selectAllValue : 'ALL'
 		});
 
-		$("#updateSRBut").click(
-				function() {
-					$("#mainFinanceForm").attr("action",
-							"${url}/cdkt/capnhatkqhdkd");
-					$("#mainFinanceForm").attr("method", "POST");
-					$("#mainFinanceForm").submit();
-				});
+		$("#updateSRBut").click(function() {
+			$("#mainFinanceForm").attr("action", "${url}/cdkt/capnhatkqhdkd");
+			$("#mainFinanceForm").attr("method", "POST");
+			$("#mainFinanceForm").submit();
+		});
 	});
 </script>
+
+<form:hidden id="first" path="first" />
+<form:hidden path="assetPeriods" />
 
 <div class="panel panel-default with-nav-tabs">
 	<div class="panel-heading">
 		<h4>Tìm kiếm</h4>
 	</div>
 	<div class="panel-body">
-		<form:hidden id="first" path="first" />
-
 		<div class="form-group">
 			<label for="dau">Kỳ:</label>
 			<div class="input-group smallform pull-right">
@@ -146,7 +145,6 @@
 				</form:select>
 			</div>
 		</div>
-		<form:hidden path="assetPeriods" />
 	</div>
 	<div class="panel-footer">
 		<button id="submitBut" type="button" class="btn btn-info btn-sm">Tìm

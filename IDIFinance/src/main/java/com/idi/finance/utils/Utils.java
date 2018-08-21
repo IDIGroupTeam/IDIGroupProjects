@@ -206,9 +206,9 @@ public class Utils {
 		prevPeriod.setLoai(ky.getLoai());
 
 		if (ky.getLoai() == KyKeToanCon.NAN) {
-			prevPeriod.setDau(null);
 			Date cuoi = new Date();
 			cuoi.setTime(ky.getDau().getTime() - 1);
+			prevPeriod.setDau(null);
 			prevPeriod.setCuoi(cuoi);
 		} else {
 			prevPeriod.setDau(prevPeriod(ky.getDau(), ky.getLoai()));

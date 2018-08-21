@@ -51,11 +51,11 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 		if (loaiTaiKhoan == null)
 			return;
 
-		String insertTkQry = "INSERT INTO TAI_KHOAN_DANH_MUC (MA_TK, TEN_TK, MA_TK_CHA, SO_DU) VALUES(?, ?, ?, ?)";
+		String insertTkQry = "INSERT INTO TAI_KHOAN_DANH_MUC (MA_TK, TEN_TK, MA_TK_CHA, SO_DU, LUONG_TINH) VALUES(?, ?, ?, ?, ?)";
 		try {
 			if (loaiTaiKhoan.getMaTk() != null) {
 				jdbcTmpl.update(insertTkQry, loaiTaiKhoan.getMaTk(), loaiTaiKhoan.getTenTk(), loaiTaiKhoan.getMaTkCha(),
-						loaiTaiKhoan.getSoDu());
+						loaiTaiKhoan.getSoDu(), loaiTaiKhoan.isLuongTinh());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -83,8 +83,8 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 		if (loaiTaiKhoan == null)
 			return;
 
-		String updateTkQry = "UPDATE TAI_KHOAN_DANH_MUC SET TEN_TK=?, MA_TK_CHA=?, SO_DU=? WHERE MA_TK=?";
-		String insertTkQry = "INSERT INTO TAI_KHOAN_DANH_MUC (MA_TK, TEN_TK, MA_TK_CHA, SO_DU) VALUES(?, ?, ?, ?)";
+		String updateTkQry = "UPDATE TAI_KHOAN_DANH_MUC SET TEN_TK=?, MA_TK_CHA=?, SO_DU=?, LUONG_TINH=? WHERE MA_TK=?";
+		String insertTkQry = "INSERT INTO TAI_KHOAN_DANH_MUC (MA_TK, TEN_TK, MA_TK_CHA, SO_DU, LUONG_TINH) VALUES(?, ?, ?, ?, ?)";
 
 		// Update to DANH_MUC_TAI_KHOAN
 		int count = 0;
@@ -92,13 +92,13 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 
 			// update firstly, if now row is updated, we will be insert data
 			count = jdbcTmpl.update(updateTkQry, loaiTaiKhoan.getTenTk(), loaiTaiKhoan.getMaTkCha(),
-					loaiTaiKhoan.getSoDu(), loaiTaiKhoan.getMaTk());
+					loaiTaiKhoan.getSoDu(), loaiTaiKhoan.isLuongTinh(), loaiTaiKhoan.getMaTk());
 
 			// This is new data, so insert it.
 			if (count == 0) {
 				if (loaiTaiKhoan.getMaTk() != null) {
 					count = jdbcTmpl.update(insertTkQry, loaiTaiKhoan.getMaTk(), loaiTaiKhoan.getTenTk(),
-							loaiTaiKhoan.getMaTkCha(), loaiTaiKhoan.getSoDu());
+							loaiTaiKhoan.getMaTkCha(), loaiTaiKhoan.getSoDu(), loaiTaiKhoan.isLuongTinh());
 				}
 			}
 		} catch (Exception e) {
@@ -112,8 +112,8 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 		if (taiKhoanDs == null)
 			return;
 
-		String updateTkQry = "UPDATE TAI_KHOAN_DANH_MUC SET TEN_TK=?, MA_TK_CHA=?, SO_DU=? WHERE MA_TK=?";
-		String insertTkQry = "INSERT INTO TAI_KHOAN_DANH_MUC (MA_TK, TEN_TK, MA_TK_CHA, SO_DU) VALUES(?, ?, ?, ?)";
+		String updateTkQry = "UPDATE TAI_KHOAN_DANH_MUC SET TEN_TK=?, MA_TK_CHA=?, SO_DU=?, LUONG_TINH=? WHERE MA_TK=?";
+		String insertTkQry = "INSERT INTO TAI_KHOAN_DANH_MUC (MA_TK, TEN_TK, MA_TK_CHA, SO_DU, LUONG_TINH) VALUES(?, ?, ?, ?, ?)";
 
 		Iterator<LoaiTaiKhoan> iter = taiKhoanDs.iterator();
 		while (iter.hasNext()) {
@@ -125,13 +125,13 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 
 				// update firstly, if now row is updated, we will be insert data
 				count = jdbcTmpl.update(updateTkQry, taiKhoan.getTenTk(), taiKhoan.getMaTkCha(), taiKhoan.getSoDu(),
-						taiKhoan.getMaTk());
+						taiKhoan.isLuongTinh(), taiKhoan.getMaTk());
 
 				// This is new data, so insert it.
 				if (count == 0) {
 					if (taiKhoan.getMaTk() != null) {
 						count = jdbcTmpl.update(insertTkQry, taiKhoan.getMaTk(), taiKhoan.getTenTk(),
-								taiKhoan.getMaTkCha(), taiKhoan.getSoDu());
+								taiKhoan.getMaTkCha(), taiKhoan.getSoDu(), taiKhoan.isLuongTinh());
 					}
 				}
 			} catch (Exception e) {

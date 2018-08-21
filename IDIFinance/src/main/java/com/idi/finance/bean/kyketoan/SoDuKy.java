@@ -1,10 +1,12 @@
 package com.idi.finance.bean.kyketoan;
 
+import com.idi.finance.bean.chungtu.DoiTuong;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class SoDuKy {
 	private KyKeToan kyKeToan;
 	private LoaiTaiKhoan loaiTaiKhoan;
+	private DoiTuong doiTuong = new DoiTuong();
 	private double noDauKy;
 	private double coDauKy;
 	private double noCuoiKy;
@@ -24,6 +26,14 @@ public class SoDuKy {
 
 	public void setLoaiTaiKhoan(LoaiTaiKhoan loaiTaiKhoan) {
 		this.loaiTaiKhoan = loaiTaiKhoan;
+	}
+
+	public DoiTuong getDoiTuong() {
+		return doiTuong;
+	}
+
+	public void setDoiTuong(DoiTuong doiTuong) {
+		this.doiTuong = doiTuong;
 	}
 
 	public double getNoDauKy() {
@@ -58,6 +68,38 @@ public class SoDuKy {
 		this.coCuoiKy = coCuoiKy;
 	}
 
+	public void tron(SoDuKy soDuKy) {
+		if (soDuKy != null) {
+			if (this.kyKeToan == null) {
+				this.kyKeToan = soDuKy.getKyKeToan();
+			}
+
+			if (this.loaiTaiKhoan == null) {
+				this.loaiTaiKhoan = soDuKy.getLoaiTaiKhoan();
+			}
+
+			if (this.doiTuong == null) {
+				this.doiTuong = soDuKy.getDoiTuong();
+			}
+
+			if (this.noDauKy == 0) {
+				this.noDauKy = soDuKy.getNoDauKy();
+			}
+
+			if (this.coDauKy == 0) {
+				this.coDauKy = soDuKy.getCoDauKy();
+			}
+
+			if (this.noCuoiKy == 0) {
+				this.noCuoiKy = soDuKy.getNoCuoiKy();
+			}
+
+			if (this.coCuoiKy == 0) {
+				this.coCuoiKy = soDuKy.getCoCuoiKy();
+			}
+		}
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) {
@@ -87,6 +129,15 @@ public class SoDuKy {
 			} else if (!loaiTaiKhoan.equals(item.getLoaiTaiKhoan())) {
 				return false;
 			}
+
+			if (doiTuong == null) {
+				if (item.getDoiTuong() != null)
+					return false;
+			} else if (item.getDoiTuong() == null) {
+				return false;
+			} else if (!doiTuong.equals(item.getDoiTuong())) {
+				return false;
+			}
 		} catch (Exception e) {
 			return false;
 		}
@@ -96,7 +147,7 @@ public class SoDuKy {
 
 	@Override
 	public String toString() {
-		String out = kyKeToan + " " + loaiTaiKhoan + " " + noDauKy + " " + coDauKy;
+		String out = kyKeToan + " " + doiTuong + " " + loaiTaiKhoan + " " + noDauKy + " " + coDauKy;
 		return out;
 	}
 }
