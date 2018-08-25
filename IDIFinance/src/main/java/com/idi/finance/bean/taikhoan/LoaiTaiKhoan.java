@@ -43,6 +43,7 @@ public class LoaiTaiKhoan {
 	private LoaiTaiKhoan loaiTaiKhoan;
 	private List<LoaiTaiKhoan> loaiTaiKhoanDs;
 	private boolean isNew = false;
+	private String maTkGoc;
 	private NganHangTaiKhoan nganHangTaiKhoan;
 
 	public LoaiTaiKhoan() {
@@ -160,6 +161,14 @@ public class LoaiTaiKhoan {
 
 	public NganHangTaiKhoan getNganHangTaiKhoan() {
 		return nganHangTaiKhoan;
+	}
+
+	public String getMaTkGoc() {
+		return maTkGoc;
+	}
+
+	public void setMaTkGoc(String maTkGoc) {
+		this.maTkGoc = maTkGoc;
 	}
 
 	public void setNganHangTaiKhoan(NganHangTaiKhoan nganHangTaiKhoan) {

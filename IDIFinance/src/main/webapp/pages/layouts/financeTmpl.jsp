@@ -37,6 +37,8 @@
 <script src="${url}/public/js/jquery.formatCurrency-1.4.0.js"></script>
 <script src="${url}/public/js/jquery.formatCurrency.vi-VN.js"></script>
 <script src="${url}/public/js/accounting.min.js"></script>
+<%-- <script src="${url}/public/js/bootstable.js"></script> --%>
+<script src="${url}/public/js/celleditable.js"></script>
 <script src="${url}/public/js/script.js"></script>
 
 <title>Tập đoàn IDI - <tiles:getAsString name="title" /></title>

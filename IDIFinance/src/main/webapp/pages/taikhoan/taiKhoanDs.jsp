@@ -51,13 +51,16 @@
 		<thead>
 			<tr>
 				<!-- <th>STT</th> -->
-				<th>Mã tài khoản (Cấp 1)</th>
-				<th>Mã tài khoản (Cấp 2)</th>
-				<th>Mã tài khoản (Cấp 3)</th>
-				<th>Tên tài khoản</th>
-				<th>Số dư</th>
-				<th>Lưỡng tính</th>
-				<th></th>
+				<th class="text-center">Mã tài khoản<br />(Cấp 1)
+				</th>
+				<th class="text-center">Mã tài khoản<br />(Cấp 2)
+				</th>
+				<th class="text-center">Mã tài khoản<br />(Cấp 3)
+				</th>
+				<th class="text-center">Tên tài khoản</th>
+				<th class="text-center">Số dư</th>
+				<th class="text-center">Lưỡng tính</th>
+				<th class="text-center"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -91,7 +94,7 @@
 							<a href="${url}/taikhoan/sua/${taiKhoan.maTk}" class="btn"
 								title="Sửa"> <span class="glyphicon glyphicon-edit"></span>
 							</a><a href="${url}/taikhoan/xoa/${taiKhoan.maTk}" class="btn"
-								title="Sửa"
+								title="Xoá"
 								onclick="return xacNhanXoaTaiKhoan(${taiKhoan.maTk});"> <span
 								class="glyphicon glyphicon-remove"></span>
 							</a>

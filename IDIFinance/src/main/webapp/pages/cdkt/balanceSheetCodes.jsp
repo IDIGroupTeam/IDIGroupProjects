@@ -14,32 +14,53 @@
 		// Khởi tạo action/method cho mainFinanceForm form
 		$("#mainFinanceForm").attr("action", "${url}/cdkt/candoiketoan");
 		$("#mainFinanceForm").attr("method", "POST");
+
+		$(".table").cellEditable({
+			onLoad : function(param) {
+				// Parse param
+
+				// Load combobox list
+
+				return null;
+			},
+			onSave : function(data) {
+
+			}
+		});
 	});
 </script>
 
-<h4>Danh sách các mã số của bảng cân đối kế toán</h4>
+<h4>Danh sách các chỉ tiêu của bảng cân đối kế toán</h4>
+
+<div>
+	<span><i>Theo thông tư 200</i></span>
+</div>
 
 <div class="table-responsive">
 	<table class="table table-bordered table-hover">
 		<tbody>
 			<c:forEach items="${bais}" var="topBai">
 				<tr>
-					<th colspan="5" class="text-center">${topBai.assetName}<br />${topBai.assetCode}</th>
+					<th colspan="6" class="text-center">${topBai.assetName}<br />${topBai.assetCode}</th>
 				</tr>
 				<c:choose>
 					<c:when test="${topBai.childs.size()>0}">
 						<c:forEach items="${topBai.childs}" var="bai">
 							<tr>
-								<th colspan="5" class="text-center">${bai.assetName}<br />${bai.assetCode}</th>
+								<th colspan="6" class="text-center">${bai.assetName}<br />
+									${bai.assetCode}
+								</th>
 							</tr>
 							<tr>
-								<th rowspan="2" class="text-center">Chi tiêu</th>
-								<th rowspan="2" class="text-center">Tài khoản</th>
-								<th rowspan="2" class="text-center">Tài khoản</th>
-								<th colspan="2" class="text-center">Tài khoản</th>
+								<th rowspan="2" class="text-center">Chỉ tiêu</th>
+								<th rowspan="2" class="text-center">Chỉ tiêu</th>
+								<th rowspan="2" class="text-center">Chỉ tiêu</th>
+								<th colspan="3" class="text-center">Tài khoản</th>
+								<th></th>
 							</tr>
 							<tr>
 								<th class="text-center">Tải khoản</th>
+								<th class="text-center">Tải khoản gốc (TT200)</th>
 								<th class="text-center">Số dư</th>
 							</tr>
 
@@ -57,7 +78,8 @@
 															<td rowspan="${child.childs[0].childs[0].row}">
 																${child.childs[0].childs[0].assetCode}<br />${child.childs[0].childs[0].assetName}
 															</td>
-															<td>${child.childs[0].childs[0].taiKhoanDs[0].maTk}<br />${child.childs[0].childs[0].taiKhoanDs[0].tenTk}</td>
+															<td class="cell-editable" type="combobox" data="">${child.childs[0].childs[0].taiKhoanDs[0].maTk}<br />${child.childs[0].childs[0].taiKhoanDs[0].tenTk}</td>
+															<td>${child.childs[0].childs[0].taiKhoanDs[0].maTkGoc}</td>
 															<td><c:choose>
 																	<c:when
 																		test="${child.childs[0].childs[0].taiKhoanDs[0].soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
@@ -66,7 +88,8 @@
 														</c:when>
 														<c:otherwise>
 															<td></td>
-															<td>${child.childs[0].taiKhoanDs[0].maTk}<br />${child.childs[0].taiKhoanDs[0].tenTk}</td>
+															<td class="cell-editable" type="combobox" data="">${child.childs[0].taiKhoanDs[0].maTk}<br />${child.childs[0].taiKhoanDs[0].tenTk}</td>
+															<td>${child.childs[0].taiKhoanDs[0].maTkGoc}</td>
 															<td><c:choose>
 																	<c:when
 																		test="${child.childs[0].taiKhoanDs[0].soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
@@ -83,7 +106,8 @@
 															end="${child.childs[0].childs[0].taiKhoanDs.size()}"
 															var="child1">
 															<tr>
-																<td>${child1.maTk}<br />${child1.tenTk}</td>
+																<td class="cell-editable" type="combobox" data="">${child1.maTk}<br />${child1.tenTk}</td>
+																<td>${child1.maTkGoc}</td>
 																<td><c:choose>
 																		<c:when test="${child1.soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
 																		<c:otherwise>Có</c:otherwise>
@@ -95,7 +119,8 @@
 															<tr>
 																<td rowspan="${child1.row}">${child1.assetCode}<br />${child1.assetName}
 																</td>
-																<td>${child1.taiKhoanDs[0].maTk}<br />${child1.taiKhoanDs[0].tenTk}</td>
+																<td class="cell-editable" type="combobox" data="">${child1.taiKhoanDs[0].maTk}<br />${child1.taiKhoanDs[0].tenTk}</td>
+																<td>${child1.taiKhoanDs[0].maTkGoc}</td>
 																<td><c:choose>
 																		<c:when
 																			test="${child1.taiKhoanDs[0].soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
@@ -105,7 +130,8 @@
 															<c:forEach items="${child1.taiKhoanDs}" begin="1"
 																end="${child1.taiKhoanDs.size()}" var="child2">
 																<tr>
-																	<td>${child2.maTk}<br />${child2.tenTk}</td>
+																	<td class="cell-editable" type="combobox" data="">${child2.maTk}<br />${child2.tenTk}</td>
+																	<td>${child2.maTkGoc}</td>
 																	<td><c:choose>
 																			<c:when test="${child2.soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
 																			<c:otherwise>Có</c:otherwise>
@@ -119,7 +145,8 @@
 															end="${child.childs[0].taiKhoanDs.size()}" var="child1">
 															<tr>
 																<td></td>
-																<td>${child1.maTk}<br />${child1.tenTk}</td>
+																<td class="cell-editable" type="combobox" data="">${child1.maTk}<br />${child1.tenTk}</td>
+																<td>${child1.maTkGoc}</td>
 																<td><c:choose>
 																		<c:when test="${child1.soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
 																		<c:otherwise>Có</c:otherwise>
@@ -139,7 +166,8 @@
 																<td rowspan="${child1.childs[0].row}">
 																	${child1.childs[0].assetCode}<br />${child1.childs[0].assetName}
 																</td>
-																<td>${child1.childs[0].taiKhoanDs[0].maTk}<br />${child1.childs[0].taiKhoanDs[0].tenTk}</td>
+																<td class="cell-editable" type="combobox" data="">${child1.childs[0].taiKhoanDs[0].maTk}<br />${child1.childs[0].taiKhoanDs[0].tenTk}</td>
+																<td>${child1.childs[0].taiKhoanDs[0].maTkGoc}</td>
 																<td><c:choose>
 																		<c:when
 																			test="${child1.childs[0].taiKhoanDs[0].soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
@@ -148,7 +176,8 @@
 															</c:when>
 															<c:otherwise>
 																<td></td>
-																<td>${child1.taiKhoanDs[0].maTk}<br />${child1.taiKhoanDs[0].tenTk}</td>
+																<td class="cell-editable" type="combobox" data="">${child1.taiKhoanDs[0].maTk}<br />${child1.taiKhoanDs[0].tenTk}</td>
+																<td>${child1.taiKhoanDs[0].maTkGoc}</td>
 																<td><c:choose>
 																		<c:when
 																			test="${child1.taiKhoanDs[0].soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
@@ -163,7 +192,8 @@
 																begin="1" end="${child1.childs[0].taiKhoanDs.size()}"
 																var="child2">
 																<tr>
-																	<td>${child2.maTk}<br />${child2.tenTk}</td>
+																	<td class="cell-editable" type="combobox" data="">${child2.maTk}<br />${child2.tenTk}</td>
+																	<td>${child2.maTkGoc}</td>
 																	<td><c:choose>
 																			<c:when test="${child2.soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
 																			<c:otherwise>Có</c:otherwise>
@@ -175,7 +205,8 @@
 																<tr>
 																	<td rowspan="${child2.row}">${child2.assetCode}<br />${child2.assetName}
 																	</td>
-																	<td>${child2.taiKhoanDs[0].maTk}<br />${child2.taiKhoanDs[0].tenTk}</td>
+																	<td class="cell-editable" type="combobox" data="">${child2.taiKhoanDs[0].maTk}<br />${child2.taiKhoanDs[0].tenTk}</td>
+																	<td>${child2.taiKhoanDs[0].maTkGoc}</td>
 																	<td><c:choose>
 																			<c:when
 																				test="${child2.taiKhoanDs[0].soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
@@ -185,7 +216,8 @@
 																<c:forEach items="${child2.taiKhoanDs}" begin="1"
 																	end="${child2.taiKhoanDs.size()}" var="child3">
 																	<tr>
-																		<td>${child3.maTk}<br />${child3.tenTk}</td>
+																		<td class="cell-editable" type="combobox" data="">${child3.maTk}<br />${child3.tenTk}</td>
+																		<td>${child3.maTkGoc}</td>
 																		<td><c:choose>
 																				<c:when test="${child3.soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
 																				<c:otherwise>Có</c:otherwise>
@@ -199,7 +231,8 @@
 																end="${child1.taiKhoanDs.size()}" var="child2">
 																<tr>
 																	<td></td>
-																	<td>${child2.maTk}<br />${child2.tenTk}</td>
+																	<td class="cell-editable" type="combobox" data="">${child2.maTk}<br />${child2.tenTk}</td>
+																	<td>${child2.maTkGoc}</td>
 																	<td><c:choose>
 																			<c:when test="${child2.soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
 																			<c:otherwise>Có</c:otherwise>

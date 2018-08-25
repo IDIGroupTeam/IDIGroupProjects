@@ -672,7 +672,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 
 		query = DANH_SACH_CON_TKKT;
 
-		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, params, new TaiKhoanMapper());
+		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, params, new TaiKhoanBaiMapper());
 		if (taiKhoanDs != null && taiKhoanDs.size() > 0) {
 			parent.themTaiKhoan(taiKhoanDs);
 			row += taiKhoanDs.size();
@@ -778,6 +778,24 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 			}
 
 			return bai;
+		}
+	}
+
+	public class TaiKhoanBaiMapper implements RowMapper<LoaiTaiKhoan> {
+		public LoaiTaiKhoan mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+			LoaiTaiKhoan taiKhoan = new LoaiTaiKhoan();
+
+			taiKhoan.setMaTk(rs.getString("MA_TK"));
+			taiKhoan.setTenTk(rs.getString("TEN_TK"));
+			taiKhoan.setMaTenTk(rs.getString("MA_TK") + " - " + rs.getString("TEN_TK"));
+			taiKhoan.setMaTkCha(rs.getString("MA_TK_CHA"));
+			taiKhoan.setSoDu(rs.getInt("SO_DU"));
+			taiKhoan.setLuongTinh(rs.getBoolean("LUONG_TINH"));
+			taiKhoan.setSoDuGiaTri(rs.getInt("SO_DU_GIA_TRI"));
+			taiKhoan.setMaTkGoc(rs.getString("MA_TK_GOC"));
+
+			return taiKhoan;
 		}
 	}
 

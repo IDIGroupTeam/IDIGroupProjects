@@ -150,6 +150,45 @@ INSERT INTO `SALE_RESULT_ITEM` (`ASSET_CODE`, `ASSET_NAME`, `ASSET_PARENT`, `RUL
 CREATE TABLE `idigroup`.`SALE_RESULT_DATA` ( `ASSET_CODE` VARCHAR(10) NOT NULL , `START_VALUE` DOUBLE NULL, `END_VALUE` DOUBLE NULL , `CHANGED_RATIO` DOUBLE NULL , `PERIOD_TYPE` TINYINT(4) NOT NULL DEFAULT '1' , `PERIOD` DATE NOT NULL , `DESCRIPTION` VARCHAR(255) NULL, PRIMARY KEY (`ASSET_CODE`, `PERIOD_TYPE` , `PERIOD`) ) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE `idigroup`.`CASH_FLOW_ITEM` ( `ASSET_CODE` VARCHAR(10) NOT NULL , `ASSET_NAME` VARCHAR(255) NOT NULL , `ASSET_PARENT` VARCHAR(10) NULL, `RULE` VARCHAR(255) NULL, `NOTE` VARCHAR(255) NULL , SO_DU TINYINT(1) NOT NULL DEFAULT -1 , PRIMARY KEY (`ASSET_CODE`(10)) ) ENGINE = InnoDB;
+INSERT INTO `CASH_FLOW_ITEM` VALUES 
+('01','Lợi nhuận trước thuế',NULL,'',NULL,-1),
+('02','Khấu hao tscđ và bđsđt',NULL,'',NULL,-1),
+('03','Các khoản dự phòng',NULL,'',NULL,-1),
+('04','Lãi, lỗ chênh lệch tỷ giá hối đoái do đánh giá lại các khoản mục tiền tệ có gốc ngoại tệ',NULL,'',NULL,-1),
+('05','Lãi, lỗ từ hoạt động đầu tư',NULL,'',NULL,-1),
+('06','Chi phí lãi vay',NULL,'',NULL,-1),
+('07','Thu nhập từ thanh lý các khoản đầu tư trong công ty liên doanh',NULL,'',NULL,-1),
+('08','Lợi nhuận từ hoạt động kinh doanh trước thay đổi vốn lưu động',NULL,'',NULL,-1),
+('09','Tăng, giảm các khoản phải thu',NULL,'',NULL,-1),
+('10','Tăng, giảm hàng tồn kho',NULL,'',NULL,-1),
+('11','Tăng, giảm các khoản phải trả (không kể lãi vay phải trả, thuế thu nhập doanh nghiệp phải nộp)',NULL,'',NULL,-1),
+('12','Tăng, giảm chi phí trả trước',NULL,'',NULL,-1),
+('13','Tăng, giảm chứng khoán kinh doanh',NULL,'',NULL,-1),
+('14','Tiền lãi vay đã trả',NULL,'',NULL,-1),
+('15','Thuế thu nhập doanh nghiệp đã nộp',NULL,'',NULL,-1),
+('16','Tiền thu khác từ hoạt động kinh doanh',NULL,'',NULL,-1),
+('17','Tiền chi khác cho hoạt động kinh doanh',NULL,'',NULL,-1),
+('20','Lưu chuyển tiền thuần từ hoạt động kinh doanh',NULL,'',NULL,-1),
+('21','Tiền chi để mua sắm, xây dựng tscđ và các tài sản dài hạn khác',NULL,'',NULL,-1),
+('22','Tiền thu từ thanh lý, nhượng bán tscđ và các tài sản dài hạn khác',NULL,'',NULL,-1),
+('23','Tiền chi cho vay, mua các công cụ nợ của đơn vị khác',NULL,'',NULL,-1),
+('24','Tiền thu hồi cho vay, bán lại các công cụ nợ của đơn vị khác',NULL,'',NULL,-1),
+('25','Tiền chi đầu tư góp vốn vào đơn vị khác',NULL,'',NULL,-1),
+('26','Tiền thu hồi đầu tư góp vốn vào đơn vị khác',NULL,'',NULL,-1),
+('27','Tiền thu lãi cho vay, cổ tức và lợi nhuận được chia',NULL,'',NULL,-1),
+('28','Giảm/(tăng) tiền gửi ngân hàng có kỳ hạn',NULL,'',NULL,-1),
+('30','Lưu chuyển tiền thuần từ hoạt động đầu tư',NULL,'',NULL,-1),
+('31','Tiền thu từ phát hành cổ phiếu, nhận vốn góp của chủ sở hữu',NULL,'',NULL,-1),
+('32','Tiền trả lại vốn góp cho các chủ sở hữu, mua lại cổ phiếu của doanh nghiệp đã phát hành',NULL,'',NULL,-1),
+('33','Tiền thu từ đi vay',NULL,'',NULL,-1),
+('34','Tiền trả nợ gốc vay',NULL,'',NULL,-1),
+('35','Tiền trả nợ gốc thuê tài chính',NULL,'',NULL,-1),
+('36','Cổ tức, lợi nhuận đã trả cho chủ sở hữu',NULL,'',NULL,-1),
+('40','Lưu chuyển tiền thuần từ hoạt động tài chính',NULL,'',NULL,-1),
+('50','Lưu chuyển tiền thuần trong kỳ',NULL,'(50 = 20 + 30 + 40)',NULL,-1),
+('60','Tiền và tương đương tiền đầu kỳ',NULL,'',NULL,-1),
+('61','Ảnh hưởng của thay đổi tỷ giá hối đoái quy đổi ngoại tệ',NULL,'',NULL,-1),
+('70','Tiền và tương đương tiền cuối kỳ',NULL,'(70 = 50 + 60 + 61)','VII.34',-1);
 CREATE TABLE `idigroup`.`CASH_FLOW_DATA` ( `ASSET_CODE` VARCHAR(10) NOT NULL , `START_VALUE` DOUBLE NULL, `END_VALUE` DOUBLE NULL , `CHANGED_RATIO` DOUBLE NULL , `PERIOD_TYPE` TINYINT(4) NOT NULL DEFAULT '1', `PERIOD` DATE NOT NULL , `DESCRIPTION` VARCHAR(255) NULL, PRIMARY KEY (`ASSET_CODE`, `PERIOD_TYPE` , `PERIOD`) ) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE `idigroup`.`KPI_GROUP` ( `GROUP_ID` INT NOT NULL AUTO_INCREMENT , `GROUP_NAME` VARCHAR(255) NOT NULL , PRIMARY KEY (`GROUP_ID`) ) ENGINE = InnoDB;
