@@ -232,12 +232,39 @@ public class TaskDAO extends JdbcDaoSupport {
 	 * @return List of task
 	 * 
 	 */
-	public List<Task> getTasksBySearch(String value) {
+	public List<Task> getTasksBySearch(String value, String department, int owner) {
 		
 		String sql = properties.getProperty("GET_TASKS_BY_SEARCH").toString();
+		Object[] params = new Object[] {};
+		boolean first = true;
+		if(owner > 0) {
+			if(first)
+				sql = sql + " WHERE T.OWNED_BY = " + owner;
+			else
+				sql = sql + " AND T.OWNED_BY = " + owner;
+			first = false;
+		}
+		if(department != null && department.length() > 0) {
+			if(first)
+				sql = sql + " WHERE T.AREA ='" + department + "' ";
+			else
+				sql = sql + " AND T.AREA ='" + department +"' ";
+			first = false;
+		}
+		if(value != null && value.length() > 0) {
+			if(first)
+				sql = sql + " WHERE (E.FULL_NAME LIKE ? OR T.TASK_ID LIKE ? OR T.TASK_NAME LIKE ? OR T.AREA LIKE ? OR T.STATUS LIKE ? OR PLANED_FOR LIKE ? ) ";
+			else
+				sql = sql + " AND (E.FULL_NAME LIKE ? OR T.TASK_ID LIKE ? OR T.TASK_NAME LIKE ? OR T.AREA LIKE ? OR T.STATUS LIKE ? OR PLANED_FOR LIKE ? ) ";
+			first = false;
+			value = "%" + value + "%";
+			params = new Object[] {value, value, value, value, value, value};
+		}			
+		
+		sql = sql + " ORDER BY T.UPDATE_TS DESC ";
+		
 		log.info("GET_TASKS_BY_SEARCH query: " + sql);
-		value = "%" + value + "%";
-		Object[] params = new Object[] {value, value, value, value, value, value};
+		
 		TaskMapper mapper = new TaskMapper();
 
 		List<Task> list = jdbcTmpl.query(sql, params, mapper);

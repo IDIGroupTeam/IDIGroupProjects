@@ -86,7 +86,14 @@ public class TaskController {
 	public String listTasks(Model model, @ModelAttribute("taskForm") TaskForm form) throws Exception {
 		try {
 			List<Task> list = null;
+			
+			// get list department
+			Map<String, String> departmentMap = this.listDepartments();
+			model.addAttribute("departmentMap", departmentMap);
 
+			// get list employee id
+			model.addAttribute("employeesList", employees("all"));
+			
 			// Paging:
 			// Number records of a Page: Default: 25
 			// Page Index: Default: 1
@@ -101,10 +108,11 @@ public class TaskController {
 			}
 
 			boolean search = false;
-			if (form.getSearchValue() != null && form.getSearchValue().length() > 0) {
-				log.info("Searching for: " + form.getSearchValue());
+			if ((form.getSearchValue() != null && form.getSearchValue().length() > 0)
+					|| (form.getArea() != null && form.getArea() != "") || form.getOwnedBy() > 0 ){
+				log.info("Searching for: '" + form.getSearchValue()+ "', '" + form.getArea() + "','" + form.getOwnedBy());
 				search = true;
-				list = taskDAO.getTasksBySearch(form.getSearchValue());
+				list = taskDAO.getTasksBySearch(form.getSearchValue(), form.getArea(), form.getOwnedBy());
 			} else
 				list = taskDAO.getTasks();
 			form.setTotalRecords(list.size());
@@ -145,7 +153,8 @@ public class TaskController {
 				model.addAttribute("message", "Chưa có công việc nào được tạo");
 			else if (list != null && list.size() < 1 && search)
 				model.addAttribute("message",
-						"Không có công việc nào khớp với thông tin: '" + form.getSearchValue() + "'");
+						"Không có công việc nào khớp với thông tin: Mã việc/Tên việc/Người được giao/Trạng thái công việc/Mã phòng/Kế hoạch cho tháng = '"
+				+ form.getSearchValue() + "', người làm có id = " + form.getOwnedBy() + ", phòng ban có mã = '" + form.getArea() + "'.\n \n Note: id = 0 tức là không chọn ai");
 
 			model.addAttribute("tasks", listTaskForPage);
 			model.addAttribute("formTitle", "Danh sách công việc");
@@ -956,7 +965,7 @@ public class TaskController {
 		return list;
 	}
 	
-	@RequestMapping("/lookingTask")
+/*	@RequestMapping("/lookingTask")
 	public @ResponseBody List<Task> getTaskForAddingRelated(@RequestParam("relatedAdding") String relatedAdding) throws Exception {
 		System.err.println("AJax");
 		List<Task> list = null;
@@ -964,5 +973,5 @@ public class TaskController {
 			list = taskDAO.getTasksBySearch(relatedAdding);
 
 		return list;
-	}
+	}*/
 }

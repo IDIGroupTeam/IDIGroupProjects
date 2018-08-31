@@ -8,6 +8,36 @@
 <!-- Initialize the plugin: -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript">
+
+$(function() {
+	$("#area")
+		.change(
+			function() {
+				// Lấy dữ liệu của phòng
+				val = $(this).val();							
+				$
+					.ajax({
+						dataType : "json",
+						url : "${url}/selectionArea",
+						data : {											
+							area : val
+						},
+						success : function(obj) {
+							ownedBySel = "<option value='0'>Chưa giao cho ai</option>";
+							for (i = 0; i < obj.length; i++) {
+								ownedBySel += "<option value='" + obj[i].employeeId + "'>"
+										+ obj[i].fullName
+										+ ", chức vụ: "
+										+ obj[i].jobTitle
+										+ "</option>";
+							}
+							$("#ownedBy").html(ownedBySel);
+						}
+					});
+
+			});
+	});
+
 	$(function() {
 		// Khởi tạo action/method cho taskForm form
 		$("#taskForm").attr("action", "${url}/");
@@ -66,7 +96,7 @@ td, th {
 }
 
 tr:nth-child(even) {
-	background-color: #E8E3E3;
+	background-color: #efeded;
 }
 </style>
 </head>
@@ -78,13 +108,32 @@ tr:nth-child(even) {
 	<form:form modelAttribute="taskForm" method="POST">
 		<table class="table">
 			<tr>
-				<td style="color: background;"><i>Tìm công việc theo: Mã
-						việc/Tên việc/Người được giao/Trạng thái công việc/Mã phòng/Kế hoạch cho tháng </i></td>
-				<td align="center"><form:input path="searchValue"
-						required="required" class="form-control"/></td>
-				<td><input id="search" class="btn btn-lg btn-primary btn-sm" type="submit"
-					value="Tìm" /></td>
+				<td colspan="2" nowrap="nowrap"><i>Tìm công việc theo: Mã
+						việc/Tên việc/Người được giao/Trạng thái công việc/Mã phòng/Kế hoạch cho tháng </i>
+				</td>
+				<td align="center"><form:input path="searchValue" class="form-control"/>
+				</td>
+				<td> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+					<input id="search" class="btn btn-lg btn-primary btn-sm" type="submit" value="Tìm" />
+				</td>
 			</tr>
+			<tr>
+				<td nowrap="nowrap">Tìm theo phòng:</td>
+				<td><form:select path="area" class="form-control animated">
+						<form:option value="" label="- Chọn phòng ban -" />
+						<form:options items="${departmentMap}" />
+					</form:select>
+				</td>
+				<td nowrap="nowrap">Tìm theo người làm:</td>
+				<td><form:select path="ownedBy" class="form-control animated">
+						<form:option value="0" label="- Chọn người được giao -" />
+						<c:forEach items="${employeesList}" var="employee">
+							<form:option value="${employee.employeeId}">${employee.fullName},&nbsp;${employee.jobTitle}</form:option>
+						</c:forEach>
+					</form:select>
+				</td>
+			</tr>
+
 		</table>
 	
 		<table class="table">
