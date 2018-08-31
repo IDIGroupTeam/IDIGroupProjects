@@ -1,6 +1,6 @@
 package com.idi.finance.bean.chungtu;
 
-import com.idi.finance.bean.cdkt.BalanceAssetItem;
+import com.idi.finance.bean.bctc.BalanceAssetItem;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class TaiKhoan {

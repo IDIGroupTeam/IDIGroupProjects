@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import com.idi.finance.bean.cdkt.KyKeToanCon;
+import com.idi.finance.bean.bctc.KyKeToanCon;
 
 public class Utils {
 	public static String format(String str) {

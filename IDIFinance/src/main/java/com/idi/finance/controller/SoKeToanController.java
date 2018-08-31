@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.idi.finance.bean.DungChung;
-import com.idi.finance.bean.cdkt.DuLieuKeToan;
-import com.idi.finance.bean.cdkt.KyKeToanCon;
+import com.idi.finance.bean.bctc.DuLieuKeToan;
+import com.idi.finance.bean.bctc.KyKeToanCon;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.DoiTuong;
 import com.idi.finance.bean.kyketoan.KyKeToan;

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.idi.finance.bean.cdkt.KyKeToanCon;
+import com.idi.finance.bean.bctc.KyKeToanCon;
 import com.idi.finance.bean.chungtu.TaiKhoan;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 

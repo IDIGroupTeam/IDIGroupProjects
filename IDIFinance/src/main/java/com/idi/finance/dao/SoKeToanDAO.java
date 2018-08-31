@@ -3,7 +3,7 @@ package com.idi.finance.dao;
 import java.util.Date;
 import java.util.List;
 
-import com.idi.finance.bean.cdkt.DuLieuKeToan;
+import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.chungtu.TaiKhoan;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 

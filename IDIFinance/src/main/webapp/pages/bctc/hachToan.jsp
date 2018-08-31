@@ -11,14 +11,12 @@
 <script type="text/javascript">
 	// Shorthand for $( document ).ready()
 	$(function() {
-		$("#submitBt").click(
-				function() {
-					$("#mainFinanceForm").attr("action",
-							"${url}/cdkt/capnhatcandoiketoan");
-					$("#mainFinanceForm").attr("method", "POST");
+		$("#submitBt").click(function() {
+			$("#mainFinanceForm").attr("action", "${url}/bctc/cdkt/capnhat");
+			$("#mainFinanceForm").attr("method", "POST");
 
-					$("#mainFinanceForm").submit();
-				});
+			$("#mainFinanceForm").submit();
+		});
 	});
 </script>
 
@@ -99,7 +97,7 @@
 
 <div class="row form-group">
 	<div class="col-sm-4">
-		<a href="${url}/cdkt/candoiketoan" class="btn btn-info btn-sm">Hủy</a>
+		<a href="${url}/bctc/cdkt/danhsach" class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu
 			và Cập nhật bảng cân đối kế toán</button>
 	</div>

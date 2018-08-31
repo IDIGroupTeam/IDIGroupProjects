@@ -68,6 +68,11 @@
 								<form:option value="1121" label="1121 - Tiền Việt Nam"></form:option>
 								<form:option value="1122" label="1122 - Ngoại tệ"></form:option>
 								<form:option value="131" label="131 - Phải thu khách hàng"></form:option>
+								<form:option value="131" label="131 - Phải thu khách hàng"></form:option>
+								<form:option value="1311"
+									label="1311 - Phải thu khách hàng - ngắn hạn"></form:option>
+								<form:option value="1312"
+									label="1312- Phải thu khách hàng - dài hạn"></form:option>
 							</form:select> <form:errors
 								path="hangHoaDs[${status.index}].tkThanhtoan.loaiTaiKhoan.maTk"
 								cssClass="error" /></td>

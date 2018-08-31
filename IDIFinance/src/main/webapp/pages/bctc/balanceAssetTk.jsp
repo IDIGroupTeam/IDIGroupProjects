@@ -1,4 +1,4 @@
-<%@page import="com.idi.finance.bean.cdkt.KyKeToanCon"%>
+<%@page import="com.idi.finance.bean.bctc.KyKeToanCon"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -107,8 +107,8 @@
 			selectAllValue : 'ALL'
 		});
 
-		$("#updateSRBut").click(function() {
-			$("#mainFinanceForm").attr("action", "${url}/cdkt/capnhatkqhdkd");
+		$("#updateBSBut").click(function() {
+			$("#mainFinanceForm").attr("action", "${url}/bctc/cdkt/capnhat");
 			$("#mainFinanceForm").attr("method", "POST");
 			$("#mainFinanceForm").submit();
 		});
@@ -150,7 +150,7 @@
 		<button id="submitBut" type="button" class="btn btn-info btn-sm">Tìm
 			kiếm</button>
 		&nbsp;
-		<button id="updateSRBut" type="button" class="btn btn-info btn-sm">Cập
-			nhật bảng KQHDKD</button>
+		<button id="updateBSBut" type="button" class="btn btn-info btn-sm">Cập
+			nhật bảng CDKT</button>
 	</div>
 </div>

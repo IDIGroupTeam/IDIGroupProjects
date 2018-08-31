@@ -933,7 +933,6 @@
 	<div class="col-sm-12">
 		<a href="${url}/chungtu/banhang/xem/${mainFinanceForm.maCt}"
 			class="btn btn-info btn-sm">Hủy</a>
-		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Tạo
-			mới</button>
+		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu</button>
 	</div>
 </div>

@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.idi.finance.bean.cdkt.BalanceAssetData;
-import com.idi.finance.bean.cdkt.BalanceAssetItem;
+import com.idi.finance.bean.bctc.BalanceAssetData;
+import com.idi.finance.bean.bctc.BalanceAssetItem;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BalanceSheetDAO;
 import com.idi.finance.utils.Utils;
@@ -892,53 +892,6 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	}
 
 	@Override
-	public BalanceAssetData calculateBs(BalanceAssetData bad) {
-		if (bad == null || bad.getPeriod() == null || bad.getAsset() == null || bad.getAsset().getTaiKhoanDs() == null)
-			return bad;
-
-		String query = TINH_CDKT_THEO_MATK;
-
-		Date start = bad.getPeriod();
-		Date end = Utils.getEndPeriod(bad.getPeriod(), bad.getPeriodType());
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
-		String batDau = sdf.format(start);
-		String ketThuc = sdf.format(end);
-
-		Iterator<LoaiTaiKhoan> iter = bad.getAsset().getTaiKhoanDs().iterator();
-		while (iter.hasNext()) {
-			try {
-				LoaiTaiKhoan loaiTaiKhoan = iter.next();
-				String tmplQuery = query.replaceAll("\\$MA_TK\\$", loaiTaiKhoan.getMaTk());
-
-				java.sql.Date homNay = new java.sql.Date(new Date().getTime());
-				logger.info(bad.getAsset().getAssetCode() + " " + loaiTaiKhoan.getMaTk() + " "
-						+ loaiTaiKhoan.getSoDuGiaTri() + " " + batDau + " " + ketThuc + " " + homNay);
-				logger.info(tmplQuery);
-
-				Double value = new Double(0);
-				try {
-					Object[] params = { bad.getAsset().getAssetCode(), loaiTaiKhoan.getSoDuGiaTri(), batDau, ketThuc,
-							bad.getAsset().getAssetCode(), loaiTaiKhoan.getSoDuGiaTri(), batDau, ketThuc, homNay,
-							bad.getAsset().getAssetCode(), loaiTaiKhoan.getSoDuGiaTri(), batDau, ketThuc, homNay,
-							homNay, bad.getAsset().getAssetCode(), loaiTaiKhoan.getSoDuGiaTri(), batDau, ketThuc,
-							homNay, bad.getAsset().getAssetCode(), loaiTaiKhoan.getSoDuGiaTri(), batDau, ketThuc,
-							homNay };
-					value = jdbcTmpl.queryForObject(tmplQuery, params, Double.class);
-				} catch (Exception e) {
-					// logger.info(e.getMessage());
-				}
-
-				bad.setEndValue(bad.getEndValue() + bad.getAsset().getSoDu() * loaiTaiKhoan.getSoDuGiaTri() * value);
-				logger.info(value + " " + bad.getEndValue());
-			} catch (Exception e) {
-				// e.printStackTrace();
-			}
-		}
-
-		return bad;
-	}
-
-	@Override
 	public List<BalanceAssetData> calculateBs(Date start, Date end) {
 		if (start == null || end == null) {
 			return null;
@@ -949,10 +902,10 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		String ketThuc = sdf.format(end);
 
 		String query = TINH_CDKT_THEO_MATK;
-		logger.info("Tu " + batDau + " den " + ketThuc);
 		logger.info(query);
+		logger.info("Từ " + batDau + " đến " + ketThuc);
 
-		Object[] params = { batDau, ketThuc, batDau, ketThuc };
+		Object[] params = { batDau, ketThuc, batDau, ketThuc, batDau, ketThuc };
 		List<BalanceAssetData> bads = jdbcTmpl.query(query, params, new BalanceAssetDataMapper());
 
 		return bads;
@@ -980,7 +933,6 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 
 	public class BalanceAssetDataMapper implements RowMapper<BalanceAssetData> {
 		public BalanceAssetData mapRow(ResultSet rs, int rowNum) throws SQLException {
-
 			LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
 			loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
 			loaiTaiKhoan.setSoDuGiaTri(rs.getInt("SO_DU"));
@@ -993,8 +945,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 			bad.setAsset(bai);
 			bad.setEndValue(rs.getDouble("SO_TIEN"));
 
-			logger.info("=== " + bai.getAssetCode() + " " + loaiTaiKhoan.getMaTk() + " " + loaiTaiKhoan.getSoDuGiaTri()
-					+ " " + bad.getEndValue());
+			logger.info(bad);
 
 			return bad;
 		}

@@ -13,7 +13,7 @@
 		$("#mainFinanceForm").attr("enctype", "multipart/form-data");
 
 		$("#balanceAssetBut").click(function() {
-			$("#mainFinanceForm").attr("action", "${url}/cdkt/luutrudulieu");
+			$("#mainFinanceForm").attr("action", "${url}/bctc/luutrudulieu");
 			$("#mainFinanceForm").submit();
 		});
 

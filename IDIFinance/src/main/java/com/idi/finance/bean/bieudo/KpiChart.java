@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.SortedMap;
 
-import com.idi.finance.bean.cdkt.BalanceAssetItem;
+import com.idi.finance.bean.bctc.BalanceAssetItem;
 
 public class KpiChart {
 	private int chartId;

@@ -12,7 +12,7 @@
 	// Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		$("#mainFinanceForm").attr("action", "${url}/cdkt/candoiketoan");
+		$("#mainFinanceForm").attr("action", "${url}/bctc/cdkt/danhsach");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		$(".table").cellEditable({
@@ -33,8 +33,13 @@
 <h4>Danh sách các chỉ tiêu của bảng cân đối kế toán</h4>
 
 <div>
-	<span><i>Theo thông tư 200</i></span>
+	<span><i>Theo thông tư 200</i></span> <a
+		href="${url}/bctc/cdkt/chitieu/taomoi"
+		class="btn btn-info btn-sm pull-right"> <span
+		class="glyphicon glyphicon-plus"></span> Tạo mới
+	</a>
 </div>
+<br />
 
 <div class="table-responsive">
 	<table class="table table-bordered table-hover">

@@ -93,6 +93,8 @@
 								<form:option value="1121" label="1121"></form:option>
 								<form:option value="1122" label="1122"></form:option>
 								<form:option value="331" label="331"></form:option>
+								<form:option value="3311" label="3311"></form:option>
+								<form:option value="3312" label="3312"></form:option>
 							</form:select> <form:errors
 								path="hangHoaDs[${status.index}].tkThanhtoan.loaiTaiKhoan.maTk"
 								cssClass="error" /></td>

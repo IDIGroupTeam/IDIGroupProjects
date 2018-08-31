@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.idi.finance.bean.LoaiTien;
-import com.idi.finance.bean.cdkt.DuLieuKeToan;
+import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.DoiTuong;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;

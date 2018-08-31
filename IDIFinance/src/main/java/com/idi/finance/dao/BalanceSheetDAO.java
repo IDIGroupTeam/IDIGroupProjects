@@ -3,8 +3,8 @@ package com.idi.finance.dao;
 import java.util.Date;
 import java.util.List;
 
-import com.idi.finance.bean.cdkt.BalanceAssetData;
-import com.idi.finance.bean.cdkt.BalanceAssetItem;
+import com.idi.finance.bean.bctc.BalanceAssetData;
+import com.idi.finance.bean.bctc.BalanceAssetItem;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public interface BalanceSheetDAO {
@@ -55,8 +55,6 @@ public interface BalanceSheetDAO {
 	public BalanceAssetData getPeriodEndValue(BalanceAssetData bad);
 
 	public BalanceAssetData getSRPeriodEndValue(BalanceAssetData bad);
-
-	public BalanceAssetData calculateBs(BalanceAssetData bad);
 
 	public List<BalanceAssetData> calculateBs(Date start, Date end);
 

@@ -54,11 +54,11 @@
 			class="caret"></span>
 	</a>
 		<ul class="dropdown-menu">
-			<li id="tabBCDKT"><a href="${url}/cdkt/candoiketoan">Bảng
+			<li id="tabBCDKT"><a href="${url}/bctc/cdkt/danhsach">Bảng
 					cân đối kế toán</a></li>
 			<li id="tabBCDPS"><a href="${url}/bctc/candoiphatsinh">Bảng
 					cân đối phát sinh</a></li>
-			<li id="tabBKQHDKD"><a href="${url}/cdkt/ketquahdkd">Bảng
+			<li id="tabBKQHDKD"><a href="${url}/bctc/kqhdkd/danhsach">Bảng
 					kết quả HDKD</a></li>
 			<li><a href="#">Bảng lưu chuyển tiền tệ</a></li>
 
@@ -81,7 +81,7 @@
 
 			<li class="divider"></li>
 			<li id="tabDSNT"><a href="#">Danh sách ngoại tệ</a></li>
-			<li id="tabDSBCDKT"><a href="${url}/cdkt/danhsachtaikhoan">Danh
+			<li id="tabDSBCDKT"><a href="${url}/bctc/cdkt/chitieu/danhsach">Danh
 					sách BCDKT</a></li>
 			<li id="tabDMTK"><a href="${url}/taikhoan/danhsach">Danh
 					sách tài khoản</a></li>
@@ -102,7 +102,6 @@
 			<li id="tabDSNHTK"><a href="${url}/nganhang/taikhoan/danhsach">Danh
 					sách tài khoản ngân hàng</a></li>
 
-			<li id="tabCNDL"><a href="${url}/cdkt/capnhatdulieu">Cập
-					nhật dữ liệu</a></li>
+			<%-- <li id="tabCNDL"><a href="${url}/bctc/capnhatdulieu">Cập nhật dữ liệu</a></li> --%>
 		</ul></li>
 </ul>

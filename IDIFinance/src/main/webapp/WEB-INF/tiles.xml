@@ -334,34 +334,41 @@
 	<definition name="balanceAsset" extends="taichinh">
 		<put-attribute name="title" value="Bảng cân đối kế toán" />
 		<put-attribute name="search"
-			value="/pages/cdkt/balanceAssetTk.jsp" />
+			value="/pages/bctc/balanceAssetTk.jsp" />
 		<put-attribute name="body"
-			value="/pages/cdkt/balanceAsset.jsp" />
+			value="/pages/bctc/balanceAsset.jsp" />
 	</definition>
 
 	<definition name="balanceSheetCodes" extends="taichinh">
 		<put-attribute name="title"
-			value="Danh sách tài khoản kết toán" />
+			value="Danh sách chỉ tiêu cân đối kế toán" />
 		<put-attribute name="body"
-			value="/pages/cdkt/balanceSheetCodes.jsp" />
+			value="/pages/bctc/balanceSheetCodeDs.jsp" />
+	</definition>
+
+	<definition name="taoMoibalanceSheetCode" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới chỉ tiêu cân đối kế toán" />
+		<put-attribute name="body"
+			value="/pages/bctc/balanceSheetCodeTm.jsp" />
 	</definition>
 
 	<definition name="bangCanDoiPhatSinh" extends="taichinh">
 		<put-attribute name="title"
 			value="Bảng cân đối phát sinh" />
 		<put-attribute name="search"
-			value="/pages/cdkt/bangCanDoiPhatSinhTk.jsp" />
+			value="/pages/bctc/bangCanDoiPhatSinhTk.jsp" />
 		<put-attribute name="body"
-			value="/pages/cdkt/bangCanDoiPhatSinh.jsp" />
+			value="/pages/bctc/bangCanDoiPhatSinh.jsp" />
 	</definition>
 
 	<definition name="saleResult" extends="taichinh">
 		<put-attribute name="title"
 			value="Bảng kết quả hoạt động kinh doanh" />
 		<put-attribute name="search"
-			value="/pages/cdkt/saleResultTk.jsp" />
+			value="/pages/bctc/saleResultTk.jsp" />
 		<put-attribute name="body"
-			value="/pages/cdkt/saleResult.jsp" />
+			value="/pages/bctc/saleResult.jsp" />
 	</definition>
 	<!-- Kết thúc Tab báo cáo tài chính -->
 

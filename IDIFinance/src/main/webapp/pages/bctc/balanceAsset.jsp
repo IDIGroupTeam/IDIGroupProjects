@@ -1,4 +1,4 @@
-<%@page import="com.idi.finance.bean.cdkt.KyKeToanCon"%>
+<%@page import="com.idi.finance.bean.bctc.KyKeToanCon"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -12,7 +12,7 @@
 	// Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		$("#mainFinanceForm").attr("action", "${url}/cdkt/candoiketoan");
+		$("#mainFinanceForm").attr("action", "${url}/bctc/cdkt/danhsach");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		$("button[id^=page]").each(function(i, el) {

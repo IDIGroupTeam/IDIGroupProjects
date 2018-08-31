@@ -1,4 +1,4 @@
-package com.idi.finance.bean.cdkt;
+package com.idi.finance.bean.bctc;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -103,7 +103,7 @@ public class BalanceAssetData {
 
 	@Override
 	public String toString() {
-		String out = asset + " " + periodType + " " + period + " " + endValue;
+		String out = asset + " " + periodType + " " + period + " " + startValue + " " + endValue;
 		return out;
 	}
 

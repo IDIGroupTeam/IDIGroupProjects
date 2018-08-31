@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import com.idi.finance.bean.cdkt.KyKeToanCon;
+import com.idi.finance.bean.bctc.KyKeToanCon;
 import com.idi.finance.bean.chungtu.DoiTuong;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 

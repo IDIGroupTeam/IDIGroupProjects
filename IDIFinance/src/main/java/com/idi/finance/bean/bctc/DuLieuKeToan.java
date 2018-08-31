@@ -1,4 +1,4 @@
-package com.idi.finance.bean.cdkt;
+package com.idi.finance.bean.bctc;
 
 import java.util.ArrayList;
 import java.util.Collections;

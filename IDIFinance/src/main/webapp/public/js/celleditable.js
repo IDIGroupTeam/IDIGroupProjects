@@ -23,6 +23,9 @@ $.fn.cellEditable = function(options) {
 				+ '<button type="button" class="btn btn-sm btn-default bEdit" title="Edit">'
 				+ '<span class="glyphicon glyphicon-pencil" > </span>'
 				+ '</button>'
+				+ '<button type="button" class="btn btn-sm btn-default bRemove" title="Remove">'
+				+ '<span class="glyphicon glyphicon-trash" > </span>'
+				+ '</button>'
 				+ '<button type="button" class="btn btn-sm btn-default bSave" style="display:none;" title="Save">'
 				+ '<span class="glyphicon glyphicon-ok" > </span>'
 				+ '</button>'
@@ -45,6 +48,7 @@ $.fn.cellEditable = function(options) {
 	// Registry event for all elements
 	function registryEvent() {
 		$(".bEdit").click(rowEdit);
+		$(".bRemove").click(rowRemove);
 		$(".bSave").click(rowSave);
 		$(".bCancel").click(rowCancel);
 	}
@@ -53,12 +57,14 @@ $.fn.cellEditable = function(options) {
 		tr.find('.bSave').hide();
 		tr.find('.bCancel').hide();
 		tr.find('.bEdit').show();
+		tr.find('.bRemove').show();
 	}
 
 	function enableConfimButtons(tr) {
 		tr.find('.bSave').show();
 		tr.find('.bCancel').show();
 		tr.find('.bEdit').hide();
+		tr.find('.bRemove').hide();
 	}
 
 	function rowEdit() {
@@ -84,6 +90,10 @@ $.fn.cellEditable = function(options) {
 		});
 
 		enableConfimButtons($(this).parent());
+	}
+
+	function rowRemove() {
+
 	}
 
 	function rowSave() {

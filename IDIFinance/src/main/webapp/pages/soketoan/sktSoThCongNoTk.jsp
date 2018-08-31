@@ -1,4 +1,4 @@
-<%@page import="com.idi.finance.bean.cdkt.KyKeToanCon"%>
+<%@page import="com.idi.finance.bean.bctc.KyKeToanCon"%>
 <%@page import="com.idi.finance.bean.chungtu.ChungTu"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>

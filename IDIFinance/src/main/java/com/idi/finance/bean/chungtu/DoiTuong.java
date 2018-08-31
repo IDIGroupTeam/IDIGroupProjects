@@ -1,6 +1,6 @@
 package com.idi.finance.bean.chungtu;
 
-import com.idi.finance.bean.cdkt.DuLieuKeToan;
+import com.idi.finance.bean.bctc.DuLieuKeToan;
 
 public class DoiTuong {
 	public static final int NHAN_VIEN = 1;
