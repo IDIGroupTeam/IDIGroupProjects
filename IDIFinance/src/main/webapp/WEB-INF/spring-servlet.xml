@@ -51,6 +51,7 @@
 	<bean id="hangHoaValidator" class="com.idi.finance.validator.HangHoaValidator" />
 	<bean id="khoBaiValidator" class="com.idi.finance.validator.KhoBaiValidator" />
 	<bean id="ketChuyenButToanValidator" class="com.idi.finance.validator.KetChuyenButToanValidator" />
+	<bean id="balanceSheetValidator" class="com.idi.finance.validator.BalanceSheetValidator" />
 
 	<!-- Config for upload file feature -->
 	<bean id="multipartResolver"

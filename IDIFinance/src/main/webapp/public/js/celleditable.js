@@ -10,9 +10,15 @@ $.fn.cellEditable = function(options) {
 	// Initiate options
 	var defaults = {
 		cellClass : "cell-editable",
-		onSave : null, // Save new data to server
-		onLoad : null
-	// combobox: for a editable cell: load list of options
+		beforeLoad : null,
+		urlLoad : "",
+		afterLoad : null,
+		beforeRemove : null,
+		urlRemove : "",
+		afterRemove : null,
+		beforeSave : null,
+		urlSave : "",
+		afterSave : null
 	};
 	var params = $.extend(defaults, options);
 	var table = this;
@@ -33,7 +39,7 @@ $.fn.cellEditable = function(options) {
 				+ '<span class="glyphicon glyphicon-remove" > </span>'
 				+ '</button>' + '</div>';
 
-		var colEdicHtml = '<td style="width:90px;">' + newColHtml + '</td>';
+		var colEdicHtml = '<td style="width:85px;">' + newColHtml + '</td>';
 		var blankTd = "<td></td>";
 
 		// Append buttons columns
@@ -47,24 +53,34 @@ $.fn.cellEditable = function(options) {
 
 	// Registry event for all elements
 	function registryEvent() {
-		$(".bEdit").click(rowEdit);
-		$(".bRemove").click(rowRemove);
-		$(".bSave").click(rowSave);
-		$(".bCancel").click(rowCancel);
+		try {
+			$(".bEdit").click(rowEdit);
+			$(".bRemove").click(rowRemove);
+			$(".bSave").click(rowSave);
+			$(".bCancel").click(rowCancel);
+		} catch (e) {
+		}
 	}
 
 	function disableConfimButtons(tr) {
-		tr.find('.bSave').hide();
-		tr.find('.bCancel').hide();
-		tr.find('.bEdit').show();
-		tr.find('.bRemove').show();
+		try {
+			tr.find('.bSave').hide();
+			tr.find('.bCancel').hide();
+			tr.find('.bEdit').show();
+			tr.find('.bRemove').show();
+		} catch (e) {
+			// alert(e);
+		}
 	}
 
 	function enableConfimButtons(tr) {
-		tr.find('.bSave').show();
-		tr.find('.bCancel').show();
-		tr.find('.bEdit').hide();
-		tr.find('.bRemove').hide();
+		try {
+			tr.find('.bSave').show();
+			tr.find('.bCancel').show();
+			tr.find('.bEdit').hide();
+			tr.find('.bRemove').hide();
+		} catch (e) {
+		}
 	}
 
 	function rowEdit() {
@@ -76,8 +92,7 @@ $.fn.cellEditable = function(options) {
 				var div = '<div style="display: none;">' + content + '</div>';
 				var text = "";
 				if (type == "combobox") {
-					var param = $(this).attr("data");
-					text = createCombobox(param);
+					text = createCombobox($(this));
 				} else if (type == "textarea") {
 					text = createTextArea(content);
 				} else {
@@ -93,42 +108,96 @@ $.fn.cellEditable = function(options) {
 	}
 
 	function rowRemove() {
+		if (!confirm("Bạn muốn xoá chỉ tiêu CĐKT này không ?")) {
+			return;
+		}
 
+		$(this).parents("tr").find("." + params.cellClass).each(function() {
+			var cell = $(this);
+			var type = $(this).attr("type");
+
+			var inputData = "";
+			var key = $(cell).attr("data");
+
+			if (params.beforeSave != null) {
+				inputData = params.beforeRemove(key);
+			}
+
+			$.ajax({
+				url : params.urlRemove,
+				data : inputData,
+				dataType : "json",
+				type : "POST",
+				success : function(data) {
+					// Loading ...
+
+					// Save data to server ...
+					var obj = null;
+					if (params.afterRemove != null) {
+						obj = params.afterRemove(type, cell, data);
+					} else {
+
+					}
+
+					// Back to normal
+					disableConfimButtons($(cell).parent());
+				},
+				error : function(data) {
+					alert("Có lỗi " + data);
+				}
+			});
+		});
+
+		// Back to normal
+		disableConfimButtons($(this).parent());
 	}
 
 	function rowSave() {
-		try {
-			$(this).parents("tr").find("." + params.cellClass).each(function() {
-				var type = $(this).attr("type");
+		$(this).parents("tr").find("." + params.cellClass).each(function() {
+			var cell = $(this);
+			var type = $(this).attr("type");
 
-				var data = new Object();
-				data.type = type;
-				data.value = "";
+			var inputData = "";
+			var key = $(cell).attr("data");
+			var value = "";
+			if (type == "combobox") {
+				value = $(cell).find('select').val();
+			} else {
+				value = $(cell).find('input').val();
+			}
 
-				if (type == "combobox") {
+			if (params.beforeSave != null) {
+				inputData = params.beforeSave(key, value);
+			}
 
-				} else {
-					data.value = $(this).find('input').val();
-				}
+			$.ajax({
+				url : params.urlSave,
+				data : inputData,
+				dataType : "json",
+				type : "POST",
+				success : function(data) {
+					// Loading ...
 
-				if (params.onSave != null) {
-					// Save data to server
-					params.onSave(data);
-				}
+					// Save data to server ...
+					var obj = null;
+					if (params.afterSave != null) {
+						obj = params.afterSave(type, cell, data);
+					} else {
+						if (type == "combobox") {
+							// do nothing
+						} else {
+							$(cell).html(value);
+						}
+					}
 
-				// Update data to html pages
-				if (type == "combobox") {
-
-				} else {
-					$(this).html(data.value);
+					// Back to normal
+					disableConfimButtons($(cell).parent());
+				},
+				error : function(data) {
+					alert("Dữ liệu có thể trùng lặp " + data);
 				}
 			});
-
-			// Back to normal
-			disableConfimButtons($(this).parent());
-		} catch (e) {
-			alert("Error when save changes to server: " + e);
-		}
+		});
 	}
 
 	function rowCancel() {
@@ -145,45 +214,72 @@ $.fn.cellEditable = function(options) {
 		disableConfimButtons($(this).parent());
 	}
 
-	function createCombobox(param) {
-		var dataList = null;
+	function createCombobox(cell) {
+		// Tạo combobox
+		var result = '<select class="form-control input-sm"></select>';
+
+		// Lấy dữ liệu cho combobox vừa tạo
+		var inputData = "";
 		try {
-			// Load data from server
-			dataList = params.onLoad(param);
+			var param = $(cell).attr("data");
+			inputData = params.beforeLoad(param);
 		} catch (e) {
-			// alert(e);
 		}
 
-		var result = '<select class="form-control input-sm">';
-		try {
-			// append data to combobox
-			for (var i = 0; i < dataList.length; i++) {
+		$.ajax({
+			url : params.urlLoad,
+			data : inputData,
+			dataType : "json",
+			type : "POST",
+			success : function(data) {
+				var result = "";
 				try {
-					var option = '<option value="' + dataList[i].value + '">'
-							+ dataList[i].label + '</option>';
-					result += option;
+					var list = params.afterLoad(data);
+
+					// append data to combobox
+					for (var i = 0; i < list.length; i++) {
+						try {
+							var option = '<option value="' + list[i].value
+									+ '">' + list[i].label + '</option>';
+							result += option;
+						} catch (e) {
+							// alert(e);
+						}
+					}
 				} catch (e) {
-					// alert(e);
 				}
+
+				$(cell).find("select").html(result);
+			},
+			error : function(data) {
+				$(cell).find("select").html("");
 			}
-		} catch (e) {
-			// alert(e);
-		}
-		result += '</select>';
+		});
 
 		return result;
 	}
 
 	function createTextArea(content) {
-		var result = '<textarea class="form-control input-sm">' + content
-				+ '</textarea>';
-		return result;
+		try {
+			content = $.trim(content);
+			var result = '<textarea class="form-control input-sm">' + content
+					+ '</textarea>';
+			return result;
+		} catch (e) {
+			return "";
+		}
+
 	}
 
 	function createTextField(content) {
-		var result = '<input class="form-control input-sm" value="' + content
-				+ '"/>';
-		return result;
+		try {
+			content = $.trim(content);
+			var result = '<input class="form-control input-sm" value="'
+					+ content + '"/>';
+			return result;
+		} catch (e) {
+			return "";
+		}
 	}
 
 	createUI();

@@ -8,6 +8,14 @@ import com.idi.finance.bean.bctc.BalanceAssetItem;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public interface BalanceSheetDAO {
+	public BalanceAssetItem layBai(String assetCode, String maTk);
+
+	public int updateBai(BalanceAssetItem oldBai, BalanceAssetItem newBai);
+
+	public int insertBai(BalanceAssetItem bai);
+
+	public void xoaBai(BalanceAssetItem bai);
+
 	public void insertOrUpdateBA(BalanceAssetData bad);
 
 	public void insertOrUpdateBAs(BalanceAssetData bad);
@@ -49,6 +57,8 @@ public interface BalanceSheetDAO {
 	public List<BalanceAssetItem> danhSachCdktTheoTkkt(String maTk, int soDu);
 
 	public List<BalanceAssetItem> listBais();
+
+	public List<BalanceAssetItem> listBais(String assetCode);
 
 	public List<BalanceAssetItem> listSRBais();
 

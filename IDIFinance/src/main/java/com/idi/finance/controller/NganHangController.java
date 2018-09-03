@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.bieudo.KpiGroup;
 import com.idi.finance.bean.doitac.NganHang;
 import com.idi.finance.bean.doitac.NganHangTaiKhoan;
+import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.dao.NganHangDAO;
 import com.idi.finance.validator.NganHangTaiKhoanValidator;
@@ -28,7 +30,7 @@ public class NganHangController {
 	private static final Logger logger = Logger.getLogger(NganHangController.class);
 
 	@Autowired
-	KpiChartDAO kpiChartDAO;
+	DungChung dungChung;
 
 	@Autowired
 	NganHangDAO nganHangDAO;
@@ -75,8 +77,14 @@ public class NganHangController {
 	public String suaNganHang(@PathVariable("id") int maNh, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
+			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+				return "redirect:/nganhang/danhsach";
+			}
 
 			NganHang nganHang = nganHangDAO.layNganHang(maNh);
 			if (nganHang == null) {
@@ -94,8 +102,14 @@ public class NganHangController {
 	public String taoMoiNganHang(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
+			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+				return "redirect:/nganhang/danhsach";
+			}
 
 			NganHang nganHang = new NganHang();
 
@@ -179,8 +193,14 @@ public class NganHangController {
 	public String suaTaiKhoanNganHang(@PathVariable("id") int maTk, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
+			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+				return "redirect:/nganhang/taikhoan/danhsach";
+			}
 
 			NganHangTaiKhoan nganHangTaiKhoan = nganHangDAO.layTaiKhoanNganHang(maTk);
 
@@ -199,8 +219,14 @@ public class NganHangController {
 	public String taoMoiTaiKhoanNganHang(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
+			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+				return "redirect:/nganhang/taikhoan/danhsach";
+			}
 
 			NganHangTaiKhoan nganHangTaiKhoan = new NganHangTaiKhoan();
 

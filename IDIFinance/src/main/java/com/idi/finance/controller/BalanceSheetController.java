@@ -13,11 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.idi.finance.bean.DungChung;
@@ -28,6 +33,7 @@ import com.idi.finance.bean.bctc.KyKeToanCon;
 import com.idi.finance.bean.bieudo.KpiGroup;
 import com.idi.finance.bean.chungtu.TaiKhoan;
 import com.idi.finance.bean.chungtu.Tien;
+import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.kyketoan.SoDuKy;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BalanceSheetDAO;
@@ -39,6 +45,7 @@ import com.idi.finance.form.TkSoKeToanForm;
 import com.idi.finance.utils.ExcelProcessor;
 import com.idi.finance.utils.ExpressionEval;
 import com.idi.finance.utils.Utils;
+import com.idi.finance.validator.BalanceSheetValidator;
 
 @Controller
 public class BalanceSheetController {
@@ -59,10 +66,23 @@ public class BalanceSheetController {
 	@Autowired
 	KyKeToanDAO kyKeToanDAO;
 
+	@Autowired
+	private BalanceSheetValidator balanceSheetValidator;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+
+		// Form mục tiêu
+		Object target = binder.getTarget();
+		if (target == null) {
+			return;
+		}
+
+		if (target.getClass() == BalanceAssetItem.class) {
+			binder.setValidator(balanceSheetValidator);
+		}
 	}
 
 	@RequestMapping("/bctc/cdkt/danhsach")
@@ -704,10 +724,173 @@ public class BalanceSheetController {
 		}
 	}
 
-	@RequestMapping("/bctc/cdkt/chitieu/taomoi")
-	public String taoMoibalanceSheetCode(@ModelAttribute("mainFinanceForm") BalanceAssetForm form, Model model) {
+	@RequestMapping("/bctc/cdkt/chitieu/sua/{assetCode}/{maTk}")
+	public String suaBalanceSheetCode(@PathVariable("assetCode") String assetCode, @PathVariable("maTk") String maTk,
+			Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
+			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+				return "redirect:/bctc/cdkt/chitieu/danhsach";
+			}
 
-		return "taoMoibalanceSheetCode";
+			BalanceAssetItem bai = new BalanceAssetItem();
+
+			return chuanBiFormBalanceSheetCode(model, bai);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/bctc/cdkt/chitieu/taomoi")
+	public String taoMoiBalanceSheetCode(Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
+			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+				return "redirect:/bctc/cdkt/chitieu/danhsach";
+			}
+
+			BalanceAssetItem bai = new BalanceAssetItem();
+
+			return chuanBiFormBalanceSheetCode(model, bai);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/bctc/cdkt/chitieu/them", method = RequestMethod.POST)
+	public String themBalanceSheetCode(@ModelAttribute("mainFinanceForm") @Validated BalanceAssetItem bai,
+			BindingResult result, Model model) {
+		try {
+			if (result.hasErrors()) {
+				return chuanBiFormBalanceSheetCode(model, bai);
+			}
+
+			logger.info("Thêm chỉ tiêu cân đối kế toán: " + bai);
+			BalanceAssetItem baiTmpl = bai.getChilds().get(0);
+			if (baiTmpl.getAssetCode() == null || baiTmpl.getAssetCode().trim().equals("")) {
+				baiTmpl.setAssetCode(bai.getAssetCode());
+			}
+
+			int count = balanceSheetDAO.insertBai(baiTmpl);
+			if (count == -1) {
+				result.rejectValue("assetCode", "NotEmpty.Bai.Duplicate");
+				return chuanBiFormBalanceSheetCode(model, bai);
+			}
+
+			return "redirect:/bctc/cdkt/chitieu/danhsach";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	private String chuanBiFormBalanceSheetCode(Model model, BalanceAssetItem bai) {
+		try {
+			model.addAttribute("mainFinanceForm", bai);
+
+			// Lấy danh sách chỉ tiêu CĐKT cấp 4
+			List<BalanceAssetItem> baiDs = balanceSheetDAO.listBais();
+			List<BalanceAssetItem> baiDsRs = new ArrayList<>();
+
+			if (baiDs != null) {
+				Iterator<BalanceAssetItem> baiIter = baiDs.iterator();
+				while (baiIter.hasNext()) {
+					BalanceAssetItem baiTmpl = baiIter.next();// 270
+
+					if (baiTmpl != null && baiTmpl.getChilds() != null) {
+						Iterator<BalanceAssetItem> baiIter1 = baiTmpl.getChilds().iterator();
+						while (baiIter1.hasNext()) {
+							BalanceAssetItem baiTmpl1 = baiIter1.next();// 100
+
+							if (baiTmpl1 != null && baiTmpl1.getChilds() != null) {
+								Iterator<BalanceAssetItem> baiIter2 = baiTmpl1.getChilds().iterator();
+								while (baiIter2.hasNext()) {
+									BalanceAssetItem baiTmpl2 = baiIter2.next();// 110
+
+									if (baiTmpl2 != null && baiTmpl2.getChilds() != null) {
+										baiDsRs.addAll(baiTmpl2.getChilds());
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// Lấy danh sách tài khoản kế toán
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+
+			model.addAttribute("baiDs", baiDsRs);
+			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
+			model.addAttribute("tab", "tabDSBCDKT");
+
+			// Đây là trường hợp tạo mới CT CĐKT & TK
+			return "taoMoiBalanceSheetCode";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/bctc/cdkt/chitieu/xoa")
+	public @ResponseBody BalanceAssetItem xoaBalanceAssetItem(@RequestParam("assetCode") String assetCode,
+			@RequestParam("maTk") String maTk) {
+		logger.info("Xoá BalanceAssetItem từ CDKT_TAIKHOAN: assetCode: " + assetCode + ". maTk: " + maTk);
+		BalanceAssetItem bai = new BalanceAssetItem();
+		bai.setAssetCode(assetCode);
+		LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+		loaiTaiKhoan.setMaTk(maTk);
+		bai.themTaiKhoan(loaiTaiKhoan);
+
+		balanceSheetDAO.xoaBai(bai);
+
+		return bai;
+	}
+
+	@RequestMapping("/bctc/cdkt/chitieu/capnhat")
+	public @ResponseBody BalanceAssetItem luuBalanceAssetItem(@RequestParam("assetCode") String assetCode,
+			@RequestParam("maTkCu") String maTkCu, @RequestParam("maTk") String maTk) {
+		logger.info("assetCode: " + assetCode + ". maTkCu: " + maTkCu + ". maTk: " + maTk);
+		BalanceAssetItem oldBai = new BalanceAssetItem();
+		oldBai.setAssetCode(assetCode);
+		LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+		loaiTaiKhoan.setMaTk(maTkCu);
+		oldBai.themTaiKhoan(loaiTaiKhoan);
+
+		BalanceAssetItem newBai = new BalanceAssetItem();
+		newBai.setAssetCode(assetCode);
+		LoaiTaiKhoan loaiTaiKhoanTmpl = new LoaiTaiKhoan();
+		loaiTaiKhoanTmpl.setMaTk(maTk);
+		newBai.themTaiKhoan(loaiTaiKhoanTmpl);
+
+		int count = balanceSheetDAO.updateBai(oldBai, newBai);
+		logger.info("count " + count);
+
+		BalanceAssetItem rsBai = null;
+		if (count > 0) {
+			rsBai = balanceSheetDAO.layBai(assetCode, maTk);
+		}
+
+		return rsBai;
+	}
+
+	@RequestMapping("/bctc/cdkt/chitieu/danhsach/capduoi")
+	public @ResponseBody List<BalanceAssetItem> layDanhSachBalanceAssetItem(
+			@RequestParam("assetCode") String assetCode) {
+		logger.info("assetCode " + assetCode);
+		return balanceSheetDAO.listBais(assetCode);
 	}
 
 	@RequestMapping(value = "/bctc/candoiphatsinh", method = { RequestMethod.GET, RequestMethod.POST })

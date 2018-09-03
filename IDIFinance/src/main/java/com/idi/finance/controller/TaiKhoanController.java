@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.idi.finance.bean.bctc.BalanceAssetItem;
 import com.idi.finance.bean.bieudo.KpiGroup;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BalanceSheetDAO;
@@ -67,7 +70,7 @@ public class TaiKhoanController {
 		Iterator<LoaiTaiKhoan> iter = taiKhoanDs.iterator();
 		while (iter.hasNext()) {
 			LoaiTaiKhoan loaiTaiKhoan = iter.next();
-			
+
 		}
 
 		model.addAttribute("tab", "tabDMTK");
@@ -218,5 +221,11 @@ public class TaiKhoanController {
 			model.addAttribute("tab", "tabCNDL");
 			return "update";
 		}
+	}
+
+	@RequestMapping("/taikhoan/danhsach/capduoi")
+	public @ResponseBody List<LoaiTaiKhoan> layDanhSachLoaiTaiKhoan(@RequestParam("maTk") String maTk) {
+		logger.info("maTk " + maTk);
+		return taiKhoanDAO.danhSachTaiKhoanTheoCap1(maTk);
 	}
 }

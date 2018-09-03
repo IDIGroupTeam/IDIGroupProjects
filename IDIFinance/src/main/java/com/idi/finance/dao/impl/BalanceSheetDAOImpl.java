@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -50,6 +51,18 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	@Value("${TINH_CDKT_THEO_MATK}")
 	private String TINH_CDKT_THEO_MATK;
 
+	@Value("${THEM_CHI_TIEU_CDKT_TAI_KHOAN}")
+	private String THEM_CHI_TIEU_CDKT_TAI_KHOAN;
+
+	@Value("${CAP_NHAT_CHI_TIEU_CDKT_TAI_KHOAN}")
+	private String CAP_NHAT_CHI_TIEU_CDKT_TAI_KHOAN;
+
+	@Value("${LAY_CHI_TIEU_CDKT_TAI_KHOAN}")
+	private String LAY_CHI_TIEU_CDKT_TAI_KHOAN;
+
+	@Value("${XOA_CHI_TIEU_CDKT_TAI_KHOAN}")
+	private String XOA_CHI_TIEU_CDKT_TAI_KHOAN;
+
 	@Value("${DANH_SACH_GOC_BKQHDKD}")
 	private String DANH_SACH_GOC_BKQHDKD;
 
@@ -73,6 +86,104 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 
 	public void setJdbcTmpl(JdbcTemplate jdbcTmpl) {
 		this.jdbcTmpl = jdbcTmpl;
+	}
+
+	@Override
+	public BalanceAssetItem layBai(String assetCode, String maTk) {
+		if (assetCode == null || maTk == null) {
+			return null;
+		}
+
+		String query = LAY_CHI_TIEU_CDKT_TAI_KHOAN;
+		logger.info(query);
+
+		Object[] params = { assetCode, maTk };
+		try {
+			return jdbcTmpl.queryForObject(query, params, new BalanceAssetItemTaiKhoanMapper());
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public class BalanceAssetItemTaiKhoanMapper implements RowMapper<BalanceAssetItem> {
+		public BalanceAssetItem mapRow(ResultSet rs, int rowNum) throws SQLException {
+			BalanceAssetItem bai = new BalanceAssetItem();
+			bai.setAssetCode(rs.getString("ASSET_CODE"));
+			bai.setAssetName(rs.getString("ASSET_NAME"));
+			bai.setAssetCodeName(bai.getAssetCode() + " - " + bai.getAssetName());
+			bai.setSoDu(rs.getInt("SO_DU"));
+
+			LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+			loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
+			loaiTaiKhoan.setTenTk(rs.getString("TEN_TK"));
+			loaiTaiKhoan.setMaTenTk(loaiTaiKhoan.getMaTk() + " - " + loaiTaiKhoan.getTenTk());
+			loaiTaiKhoan.setMaTkGoc(rs.getString("MA_TK_GOC"));
+			loaiTaiKhoan.setSoDuGiaTri(rs.getInt("SO_DU_GIA_TRI"));
+
+			bai.themTaiKhoan(loaiTaiKhoan);
+
+			return bai;
+		}
+	}
+
+	@Override
+	public int updateBai(BalanceAssetItem oblBai, BalanceAssetItem newBai) {
+		if (oblBai == null || newBai == null) {
+			return 0;
+		}
+
+		String updateQuery = CAP_NHAT_CHI_TIEU_CDKT_TAI_KHOAN;
+		logger.info(updateQuery);
+
+		// Update to CDKT_TAIKHOAN
+		int count = 0;
+		try {
+			LoaiTaiKhoan loaiTaiKhoan = oblBai.getTaiKhoanDs().get(0);
+			LoaiTaiKhoan loaiTaiKhoanTmpl = newBai.getTaiKhoanDs().get(0);
+			count = jdbcTmpl.update(updateQuery, loaiTaiKhoanTmpl.getMaTk(), oblBai.getAssetCode(),
+					loaiTaiKhoan.getMaTk());
+		} catch (DuplicateKeyException e) {
+			count = -1;
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return count;
+	}
+
+	@Override
+	public int insertBai(BalanceAssetItem bai) {
+		if (bai == null) {
+			return 0;
+		}
+
+		String insertQuery = THEM_CHI_TIEU_CDKT_TAI_KHOAN;
+
+		// Insert to CDKT_TAIKHOAN
+		int count = 0;
+		try {
+			LoaiTaiKhoan loaiTaiKhoan = bai.getTaiKhoanDs().get(0);
+			count = jdbcTmpl.update(insertQuery, bai.getAssetCode(), loaiTaiKhoan.getMaTk(), loaiTaiKhoan.getMaTkGoc(),
+					loaiTaiKhoan.getSoDuGiaTri());
+		} catch (DuplicateKeyException e) {
+			count = -1;
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+
+		return count;
+	}
+
+	public void xoaBai(BalanceAssetItem bai) {
+		if (bai != null && bai.getAssetCode() != null && bai.getTaiKhoanDs() != null && bai.getTaiKhoanDs().size() > 0
+				&& bai.getTaiKhoanDs().get(0).getMaTk() != null) {
+			String query = XOA_CHI_TIEU_CDKT_TAI_KHOAN;
+			logger.info(query);
+			jdbcTmpl.update(query, bai.getAssetCode(), bai.getTaiKhoanDs().get(0).getMaTk());
+		}
 	}
 
 	@Override
@@ -636,6 +747,29 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 			bai = updateChilds(bai);
 			if (bai != null) {
 				baisRs.add(bai);
+			}
+		}
+
+		return baisRs;
+	}
+
+	public List<BalanceAssetItem> listBais(String assetCode) {
+		List<BalanceAssetItem> baisRs = new ArrayList<>();
+
+		if (assetCode == null || assetCode.trim().equals("")) {
+			baisRs = listBais();
+		} else {
+			String query = DANH_SACH_CON_BCDKT;
+
+			Object[] params = { assetCode };
+			List<BalanceAssetItem> bais = jdbcTmpl.query(query, params, new BalanceAssetItemMapper());
+			Iterator<BalanceAssetItem> iter = bais.iterator();
+			while (iter.hasNext()) {
+				BalanceAssetItem bai = iter.next();
+				bai = updateChilds(bai);
+				if (bai != null) {
+					baisRs.add(bai);
+				}
 			}
 		}
 

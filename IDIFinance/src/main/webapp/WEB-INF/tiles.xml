@@ -346,7 +346,7 @@
 			value="/pages/bctc/balanceSheetCodeDs.jsp" />
 	</definition>
 
-	<definition name="taoMoibalanceSheetCode" extends="taichinh">
+	<definition name="taoMoiBalanceSheetCode" extends="taichinh">
 		<put-attribute name="title"
 			value="Tạo mới chỉ tiêu cân đối kế toán" />
 		<put-attribute name="body"
