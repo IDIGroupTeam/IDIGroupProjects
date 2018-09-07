@@ -9,3 +9,16 @@
 .checkbox-teal [type="checkbox"]:checked+label:before {
     border-color: transparent #009688 #009688 transparent;
 }
+
+/* Paste this css to your style sheet file or under head tag */
+/* This only works with JavaScript, 
+if it's not present, don't show loader */
+.loader {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: url('${url}/public/images/loading1.gif') 50% 50% no-repeat rgb(249,249,249);
+}

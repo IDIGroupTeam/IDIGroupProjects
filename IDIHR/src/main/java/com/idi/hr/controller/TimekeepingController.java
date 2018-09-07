@@ -245,6 +245,7 @@ public class TimekeepingController {
 			model.addAttribute("leaveInfos", listL);
 			model.addAttribute("timekeepingForm", timekeeping);
 			model.addAttribute("leaveInfoForm", leaveInfoForm);
+			
 			if (leaveInfoForm.getDate() != null)
 				model.addAttribute("formTitle", "Dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate);
 			else
@@ -257,6 +258,259 @@ public class TimekeepingController {
 		return "formTimekeeping";
 	}
 
+	@RequestMapping(value = "/timekeeping/exportToExcel", method = RequestMethod.GET)
+	public String exportToExcel(Model model, @RequestParam("date") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("dept") String dept, @RequestParam("eId") String eId) {
+		try {
+
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = new Date();
+			String currentDate = dateFormat.format(date);
+			List<Timekeeping> list = null;
+			List<LeaveInfo> listL = null;
+			LeaveInfoForm leaveInfoForm = new LeaveInfoForm();
+			leaveInfoForm.setDate(fromDate);
+			leaveInfoForm.setToDate(toDate);
+			leaveInfoForm.setDept(dept);
+			leaveInfoForm.seteId(eId);
+			
+			// System.err.println(fromDate + "|" + toDate + "|" + dept + "|" + eId);
+			if (fromDate != null && toDate != null) {
+				if (fromDate != null && toDate.equalsIgnoreCase("viewDetail")) {
+					Calendar calendar = Calendar.getInstance();
+					// System.err.println(fromDate.substring(0, 4) + "|" + fromDate.substring(5,
+					// 7));
+					calendar.set(Integer.parseInt(fromDate.substring(0, 4)),
+							Integer.parseInt(fromDate.substring(5, 7)) - 1, 1);
+					int lastDate = calendar.getActualMaximum(calendar.DAY_OF_MONTH);
+					// calendar.set(Calendar.DATE, lastDate);
+					// int lastDay = calendar.get(Calendar.DAY_OF_WEEK);
+					// System.out.println("Last Date: " + lastDate +"|"+ calendar.getTime());
+					// System.out.println("Last Day : " + lastDay);
+					toDate = fromDate.substring(0, 4) + "-" + fromDate.substring(5, 7) + "-" + lastDate;
+					// System.out.println("to date " + toDate);
+				}
+				list = timekeepingDAO.getTimekeepings(fromDate, toDate, dept, eId);
+				listL = leaveDAO.getLeaves(fromDate, toDate, dept, eId);
+				if (list.size() == 0 && listL.size() == 0)
+					model.addAttribute("message",
+							"Không có dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate);
+				;
+			} else {
+				list = timekeepingDAO.getTimekeepings(currentDate, null, null, null);
+				listL = leaveDAO.getLeaves(currentDate, null, null, null);
+				if (list.size() == 0 && listL.size() == 0)
+					model.addAttribute("message", "Không có dữ liệu chấm công cho ngày " + currentDate);
+			}			
+			
+			String path = properties.getProperty("REPORT_PATH");
+			File dir = new File(path);
+			XSSFWorkbook workbook = new XSSFWorkbook();
+			XSSFSheet sheet = workbook.createSheet("Dữ liệu chấm công");
+	
+			CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+			Font font = sheet.getWorkbook().createFont();
+			font.setBold(true);
+			font.setFontHeightInPoints((short) 12);
+			cellStyle.setFont(font);
+	
+			Row row1 = sheet.createRow(0);
+			Cell cell = row1.createCell(3);
+
+			if (dept != null && dept.length() > 0) {
+				if (fromDate != null) {
+					cell.setCellStyle(cellStyle);
+					cell.setCellValue("Dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate + " của phòng " + dept);
+				}
+			}else {
+				if (fromDate != null) {
+					cell.setCellStyle(cellStyle);
+					cell.setCellValue("Dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate);
+				}
+			}
+			
+			int rowNum = 2;
+			Row row2 = sheet.createRow(rowNum);
+			Cell cell0 = row2.createCell(0);
+			CellStyle cellStyle1 = sheet.getWorkbook().createCellStyle();
+			Font font1 = sheet.getWorkbook().createFont();
+			font1.setBold(true);
+			font1.setFontHeightInPoints((short) 11);
+			cellStyle1.setFont(font1);
+			cell0.setCellStyle(cellStyle1);
+			cell0.setCellValue("Dữ liệu chấm công phát sinh");
+			
+			// Generate column name
+			rowNum = 3;
+			Row row = sheet.createRow(rowNum);
+			Cell cell11 = row.createCell(0);
+			cell11.setCellValue("Mã NV");
+			Cell cell21 = row.createCell(1);
+			cell21.setCellValue("Họ tên");
+			Cell cell31 = row.createCell(2);
+			cell31.setCellValue("Bộ phận");
+			Cell cell41 = row.createCell(3);
+			cell41.setCellValue("Chức vụ");
+			Cell cell51 = row.createCell(4);
+			cell51.setCellValue("Ngày");
+			Cell cell61 = row.createCell(5);
+			cell61.setCellValue("Loại");
+			Cell cell71 = row.createCell(6);
+			cell71.setCellValue("Số giờ/số lần");
+			Cell cell81 = row.createCell(7);
+			cell81.setCellValue("Ghi chú");
+	
+			// generate values
+			rowNum = 4;
+			for (int i = 0; i < listL.size(); i++) {
+				row = sheet.createRow(rowNum++);
+				int colNum = 0;
+				LeaveInfo leaveInfo = new LeaveInfo();
+				leaveInfo = listL.get(i);
+				Cell cell1 = row.createCell(colNum++);
+				cell1.setCellValue((Integer) leaveInfo.getEmployeeId());
+				Cell cell2 = row.createCell(colNum++);
+				cell2.setCellValue((String) leaveInfo.getEmployeeName());
+				Cell cell3 = row.createCell(colNum++);
+				cell3.setCellValue((String) leaveInfo.getDepartment());
+				Cell cell4 = row.createCell(colNum++);
+				cell4.setCellValue((String) leaveInfo.getTitle());
+				Cell cell5 = row.createCell(colNum++);
+				cell5.setCellValue(leaveInfo.getDate().toString());
+				Cell cell6 = row.createCell(colNum++);
+				cell6.setCellValue((String) leaveInfo.getLeaveName());
+				Cell cell7 = row.createCell(colNum++);
+				cell7.setCellValue((float) leaveInfo.getTimeValue());
+				Cell cell8 = row.createCell(colNum++);
+				cell8.setCellValue((String) leaveInfo.getComment());
+			}
+	
+			rowNum = 4 + listL.size() + 1;			
+			Row rowM = sheet.createRow(rowNum);
+			Cell cellM = rowM.createCell(0);
+			cellM.setCellStyle(cellStyle1);
+			cellM.setCellValue("Dữ liệu từ máy chấm công");			
+			
+			// Generate column name
+			rowNum = 4 + listL.size() + 2;
+			rowM = sheet.createRow(rowNum);
+			Cell cell12 = rowM.createCell(0);
+			cell12.setCellValue("Mã NV");
+			Cell cell22 = rowM.createCell(1);
+			cell22.setCellValue("Họ tên");
+			Cell cell32 = rowM.createCell(2);
+			cell32.setCellValue("Bộ phận");
+			Cell cell42 = rowM.createCell(3);
+			cell42.setCellValue("Chức vụ");
+			Cell cell52 = rowM.createCell(4);
+			cell52.setCellValue("Ngày");
+			Cell cell62 = rowM.createCell(5);
+			cell62.setCellValue("Giờ vào");
+			Cell cell72 = rowM.createCell(6);
+			cell72.setCellValue("Giờ ra");
+			Cell cell82 = rowM.createCell(7);
+			cell82.setCellValue("Tổng thời gian");		
+			Cell cell92 = rowM.createCell(8);
+			cell92.setCellValue("Đi muộn sáng");		
+			Cell cell102 = rowM.createCell(9);
+			cell102.setCellValue("Đi muộn chiều");		
+			Cell cell112 = rowM.createCell(10);
+			cell112.setCellValue("Về sớm sáng");		
+			Cell cell122 = rowM.createCell(11);
+			cell122.setCellValue("Về sớm chiều");		
+			Cell cell132 = rowM.createCell(12);
+			cell132.setCellValue("Ghi chú");
+			
+			// generate values
+			rowNum = 4 + listL.size() + 3;
+			for (int i = 0; i < list.size(); i++) {
+				row = sheet.createRow(rowNum++);
+				int colNum = 0;
+				Timekeeping timekeeping = new Timekeeping();
+				timekeeping = list.get(i);
+				Cell cell1 = row.createCell(colNum++);
+				cell1.setCellValue((Integer) timekeeping.getEmployeeId());
+				Cell cell2 = row.createCell(colNum++);
+				cell2.setCellValue((String) timekeeping.getEmployeeName());
+				Cell cell3 = row.createCell(colNum++);
+				cell3.setCellValue((String) timekeeping.getDepartment());
+				Cell cell4 = row.createCell(colNum++);
+				cell4.setCellValue((String) timekeeping.getTitle());
+				Cell cell5 = row.createCell(colNum++);
+				cell5.setCellValue(timekeeping.getDate().toString());
+				Cell cell6 = row.createCell(colNum++);
+				cell6.setCellValue((String) timekeeping.getTimeIn());
+				Cell cell7 = row.createCell(colNum++);
+				cell7.setCellValue((String) timekeeping.getTimeOut());
+				Cell cell8 = row.createCell(colNum++);
+				cell8.setCellValue((String) timekeeping.getWorkedTime());
+				Cell cell9 = row.createCell(colNum++);
+				if(timekeeping.getComeLateM() != null)
+					cell9.setCellValue(timekeeping.getComeLateM() + " phút");
+				else
+					cell9.setCellValue(timekeeping.getComeLateM());
+				Cell cell10 = row.createCell(colNum++);
+				if(timekeeping.getComeLateA() != null)
+					cell10.setCellValue(timekeeping.getComeLateA() + " phút");
+				else
+					cell10.setCellValue(timekeeping.getComeLateA());
+				Cell cell01 = row.createCell(colNum++);
+				if(timekeeping.getLeaveSoonM() != null)
+					cell01.setCellValue(timekeeping.getLeaveSoonM() + " phút");
+				else
+					cell01.setCellValue(timekeeping.getLeaveSoonM());
+				Cell cell02 = row.createCell(colNum++);
+				if(timekeeping.getLeaveSoonA() != null)
+				 cell02.setCellValue(timekeeping.getLeaveSoonA() + " phút");
+				else
+					cell02.setCellValue(timekeeping.getLeaveSoonA());
+				Cell cell03 = row.createCell(colNum++);
+				cell03.setCellValue((String) timekeeping.getComment());
+			}
+			
+			try {
+				if (!dir.exists()) {
+					dir.mkdirs();
+				}
+				FileOutputStream outputStream = new FileOutputStream(
+						dir + "/" + "/Dữ liệu chấm công từ ngày "+ fromDate + " đến ngày " + toDate + "_" + currentDate + ".xlsx");
+				workbook.write(outputStream);
+				workbook.close();
+				model.addAttribute("message", "Dữ liệu chấm công được export thành công ra file "+ dir + ":Dữ liệu chấm công từ ngày "+ fromDate + " đến ngày " + toDate + "_" + currentDate + ".xlsx");
+			} catch (FileNotFoundException e) {
+				model.addAttribute("message", "Vui lòng tắt file "+ dir + ":Dữ liệu chấm công từ ngày "+ fromDate + " đến ngày " + toDate + "_" + currentDate + ".xlsx trước khi export");
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	
+			// get list department
+			Map<String, String> departmentMap = this.dataForDepartments();
+			model.addAttribute("departmentMap", departmentMap);
+	
+			// get list employee id
+			Map<String, String> employeeMap = this.employees();
+			model.addAttribute("employeeMap", employeeMap);
+	
+			model.addAttribute("timekeepings", list);
+			model.addAttribute("leaveInfos", listL);
+			Timekeeping timekeepingForm = new Timekeeping();
+			model.addAttribute("timekeepingForm", timekeepingForm);
+			model.addAttribute("leaveInfoForm", leaveInfoForm);
+			
+			if (fromDate != null && toDate != null)
+				model.addAttribute("formTitle", "Dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate);
+			else
+				model.addAttribute("formTitle", "Dữ liệu chấm công ngày " + currentDate);
+	
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+	return "formTimekeeping";
+
+	}	
+	
 	@RequestMapping(value = { "/timekeeping/leaveInfo" }, method = RequestMethod.GET)
 	public String listLeaveInfo(Model model, @ModelAttribute("leaveInfoForm") LeaveInfoForm leaveInfoForm) {
 		try {

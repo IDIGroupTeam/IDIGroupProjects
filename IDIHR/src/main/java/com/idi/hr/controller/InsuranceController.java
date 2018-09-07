@@ -45,7 +45,6 @@ public class InsuranceController {
 			if (form.getNumberRecordsOfPage() == 0) {
 				form.setNumberRecordsOfPage(25);
 			}
-
 			if (form.getPageIndex() == 0) {
 				form.setPageIndex(1);
 			}

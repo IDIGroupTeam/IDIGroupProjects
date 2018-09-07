@@ -7,8 +7,8 @@
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 
 <html>
-<%-- <link href="${url}/public/css/Master.css" rel="stylesheet" type="text/css" />
-<link rel='stylesheet' type='text/css' media='all' href="${url}/public/css/calendar.css" />
+<link rel="stylesheet" href="${url}/public/css/bootstrap.min.css" />
+<%--<link rel='stylesheet' type='text/css' media='all' href="${url}/public/css/calendar.css" />
 <link rel='stylesheet' type='text/css' href="${url}/public/css/ext.css"/>
  --%>
 <head>
@@ -16,7 +16,20 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <%-- <script language="JavaScript1.2" src="<%=request.getContextPath()%>/js/drag.js" type="text/javascript"></script>
 <script type='text/javascript' src='./js/common.js' type="text/javascript"></script> --%>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+
 <script type="text/javascript">
+
+// Wait for window load
+$(window).load(function(){
+	// Animate loader off screen
+	//$("button").click(function(){
+		$(".loader").fadeOut("slow");
+	//});	
+});
+
 	$(function() {
 		$("#dept")
 				.change(
@@ -163,8 +176,7 @@
 	} */
 </script>
 <title>Dữ liệu chấm công nhân viên</title>
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
 </head>
 <body>
 	<%
@@ -213,8 +225,19 @@
 		</table>
 		<c:if test="${not empty message}">
 			<div class="alert alert-success">${message}</div>
-		</c:if>
+		</c:if>		
 	</form:form>
+	
+	<c:if test="${empty message}">
+		<a href="${url}/timekeeping/exportToExcel?date=${leaveInfoForm.date}&toDate=${leaveInfoForm.toDate}&dept=${leaveInfoForm.dept}&eId=${leaveInfoForm.eId}">
+		<button class="btn btn-lg btn-primary btn-sm">Export dữ liệu ra file excel</button>
+		</a>
+		<br/><br/>
+	</c:if>
+		
+	<div class="loader">
+		<img src="${url}/public/images/loading1.gif" align="middle" vspace="5" alt="Import dữ liệu" />
+	</div>
 <%-- 	<div id="waitingBox" class="msgBox"
 		onmousedown="dragStart(event, 'waitingBox')" style="cursor: move">
 		<div class="shadow"></div>
@@ -238,19 +261,9 @@
 			<tr>
 				<td><b><i>Cập nhật dữ liệu chấm công từ file excel:</i></b></td>
 				<td align="left"><input class="btn btn-lg btn-primary btn-sm"
-					name="timeKeepingFile" type="file" /></td>
-				<td align="left"><input class="btn btn-lg btn-primary btn-sm"
-					type="submit" value="Cập nhật" /></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+					name="timeKeepingFile" type="file"/>
+				</td><td align="right"> <button class="btn btn-lg btn-primary btn-sm">Cập nhật</button> &nbsp; &nbsp;</td>
+				
 			</tr>
 		</table>
 		<c:if test="${not empty comment}">
