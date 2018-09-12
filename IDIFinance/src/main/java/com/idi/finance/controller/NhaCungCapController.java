@@ -42,7 +42,7 @@ public class NhaCungCapController {
 		}
 	}
 
-	@RequestMapping("/danhsachnhacungcap")
+	@RequestMapping("/nhacungcap/danhsach")
 	public String danhSachNhaCungCap(Model model) {
 		try {
 			// Lấy danh sách nhà cung cấp
@@ -57,7 +57,7 @@ public class NhaCungCapController {
 		}
 	}
 
-	@RequestMapping("/xemnhacungcap/{id}")
+	@RequestMapping("/nhacungcap/xem/{id}")
 	public String xemNhaCungCap(@PathVariable("id") int maNcc, Model model) {
 		try {
 			NhaCungCap nhaCungCap = nhaCungCapDAO.layNhaCungCap(maNcc);
@@ -71,7 +71,7 @@ public class NhaCungCapController {
 		}
 	}
 
-	@RequestMapping("/suanhacungcap/{id}")
+	@RequestMapping("/nhacungcap/sua/{id}")
 	public String suaNhaCungCap(@PathVariable("id") int maNcc, Model model) {
 		try {
 			NhaCungCap nhaCungCap = nhaCungCapDAO.layNhaCungCap(maNcc);
@@ -85,7 +85,7 @@ public class NhaCungCapController {
 		}
 	}
 
-	@RequestMapping("/taomoinhacungcap")
+	@RequestMapping("/nhacungcap/taomoi")
 	public String taoMoiNhaCungCap(Model model) {
 		try {
 			NhaCungCap nhaCungCap = new NhaCungCap();
@@ -99,7 +99,7 @@ public class NhaCungCapController {
 		}
 	}
 
-	@RequestMapping("/luutaomoinhacungcap")
+	@RequestMapping("/nhacungcap/luu")
 	public String luuTaoMoiNhaCungCap(@ModelAttribute("mainFinanceForm") @Validated NhaCungCap nhaCungCap,
 			BindingResult result, Model model) {
 		try {
@@ -119,20 +119,27 @@ public class NhaCungCapController {
 
 			// Khi người dùng đã nhập đúng thông tin
 			nhaCungCapDAO.luuCapNhatNhaCungCap(nhaCungCap);
-			return "redirect:/danhsachnhacungcap";
+
+			if (nhaCungCap.getMaNcc() > 0) {
+				// Đây là trường hợp sửa NCC
+				return "redirect:/nhacungcap/xem/" + nhaCungCap.getMaNcc();
+			} else {
+				// Đây là trường hợp tạo mới NCC
+				return "redirect:/nhacungcap/danhsach";
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
 		}
 	}
 
-	@RequestMapping("/xoanhacungcap/{id}")
+	@RequestMapping("/nhacungcap/xoa/{id}")
 	public String xoaNhaCungCap(@PathVariable("id") int maNcc, Model model) {
 		try {
 			// Xóa nhà cung cấp có MA_NCC là maNcc
 			nhaCungCapDAO.xoaNhaCungCap(maNcc);
 
-			return "redirect:/danhsachnhacungcap";
+			return "redirect:/nhacungcap/danhsach";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";

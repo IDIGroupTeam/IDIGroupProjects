@@ -2,6 +2,7 @@ package com.idi.finance.bean.doitac;
 
 public class NhaCungCap {
 	private int maNcc;
+	private String khNcc;
 	private String tenNcc;
 	private String diaChi;
 	private String maThue;
@@ -15,6 +16,14 @@ public class NhaCungCap {
 
 	public void setMaNcc(int maNcc) {
 		this.maNcc = maNcc;
+	}
+
+	public String getKhNcc() {
+		return khNcc;
+	}
+
+	public void setKhNcc(String khNcc) {
+		this.khNcc = khNcc;
 	}
 
 	public String getTenNcc() {

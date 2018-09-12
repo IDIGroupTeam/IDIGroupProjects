@@ -38,11 +38,11 @@ public interface KyKeToanDAO {
 	// Các hàm về số dư đầu kỳ
 	public List<SoDuKy> danhSachSoDuKy(int maKkt);
 
+	public List<SoDuKy> danhSachSoDuKy(String maTk, int maKkt);
+
 	public List<SoDuKy> danhSachSoDuKyTheoDoiTuong(int maKkt, int loaiDt);
 
 	public List<SoDuKy> danhSachSoDuKyTheoDoiTuong(String maTk, int maKkt);
-
-	public List<SoDuKy> danhSachSoDuKy(String maTk, int maKkt);
 
 	public SoDuKy laySoDuKy(String maTk, int maKkt);
 

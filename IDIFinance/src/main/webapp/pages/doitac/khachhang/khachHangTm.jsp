@@ -11,7 +11,7 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		$("#mainFinanceForm").attr("action", "${url}/luutaomoikhachhang");
+		$("#mainFinanceForm").attr("action", "${url}/khachhang/luu");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		$("#luuNut").click(function() {
@@ -32,6 +32,17 @@
 			placeholder="Tên khách hàng" />
 		<br />
 		<form:errors path="tenKh" cssClass="error" />
+	</div>
+</div>
+
+<div class="row form-group">
+	<label class="control-label col-sm-2" for="khKh">Mã khách hàng
+		(*)</label>
+	<div class="col-sm-4">
+		<form:input path="khKh" cssClass="form-control"
+			placeholder="Mã khách hàng" />
+		<br />
+		<form:errors path="khKh" cssClass="error" />
 	</div>
 
 	<label class="control-label col-sm-2" for="maThue">Mã số thuế</label>
@@ -73,7 +84,7 @@
 
 <div class="row form-group">
 	<div class="col-sm-12">
-		<a href="${url}/danhsachkhachhang" class="btn btn-info btn-sm">Hủy</a>
+		<a href="${url}/khachhang/danhsach" class="btn btn-info btn-sm">Hủy</a>
 		<button id="luuNut" type="submit" class="btn btn-info btn-sm">Lưu</button>
 	</div>
 </div>

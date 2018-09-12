@@ -77,6 +77,7 @@ public class NhaCungCapDAOImpl implements NhaCungCapDAO {
 				NhaCungCap nhaCungCap = new NhaCungCap();
 
 				nhaCungCap.setMaNcc(rs.getInt("MA_NCC"));
+				nhaCungCap.setKhNcc(rs.getString("KH_NCC"));
 				nhaCungCap.setTenNcc(rs.getString("TEN_NCC"));
 				nhaCungCap.setMaThue(rs.getString("MA_THUE"));
 				nhaCungCap.setDiaChi(rs.getString("DIA_CHI"));
@@ -114,7 +115,7 @@ public class NhaCungCapDAOImpl implements NhaCungCapDAO {
 	public void luuCapNhatNhaCungCap(NhaCungCap nhaCungCap) {
 		int count = 0;
 		String capNhat = "UPDATE NHA_CUNG_CAP SET TEN_NCC=?, MA_THUE=?, DIA_CHI=?, EMAIL=?, SDT=?, WEBSITE=? WHERE MA_NCC=?";
-		String taoMoi = "INSERT INTO NHA_CUNG_CAP(TEN_NCC, MA_THUE, DIA_CHI, EMAIL, SDT, WEBSITE) VALUES(?,?,?,?,?,?)";
+		String taoMoi = "INSERT INTO NHA_CUNG_CAP(KH_NCC, TEN_NCC, MA_THUE, DIA_CHI, EMAIL, SDT, WEBSITE) VALUES(?,?,?,?,?,?,?)";
 		// TODO Auto-generated method stub
 		try {
 			// update firstly, if now row is updated, we will be insert data
@@ -123,9 +124,10 @@ public class NhaCungCapDAOImpl implements NhaCungCapDAO {
 
 			// This is new data, so insert it.
 			if (count == 0) {
-				if (nhaCungCap.getTenNcc() != null && !nhaCungCap.getTenNcc().trim().equals("")) {
-					count = jdbcTmpl.update(taoMoi, nhaCungCap.getTenNcc(), nhaCungCap.getMaThue(),
-							nhaCungCap.getDiaChi(), nhaCungCap.getEmail(), nhaCungCap.getSdt(),
+				if (nhaCungCap.getKhNcc() != null && !nhaCungCap.getKhNcc().trim().equals("")
+						&& nhaCungCap.getTenNcc() != null && !nhaCungCap.getTenNcc().trim().equals("")) {
+					count = jdbcTmpl.update(taoMoi, nhaCungCap.getKhNcc(), nhaCungCap.getTenNcc(),
+							nhaCungCap.getMaThue(), nhaCungCap.getDiaChi(), nhaCungCap.getEmail(), nhaCungCap.getSdt(),
 							nhaCungCap.getWebSite());
 				}
 			}
@@ -148,5 +150,21 @@ public class NhaCungCapDAOImpl implements NhaCungCapDAO {
 
 		List<NhaCungCap> nhaCungCapDs = jdbcTmpl.query(query, new NhaCungCapMapper());
 		return nhaCungCapDs;
+	}
+
+	public boolean kiemTraKhNhaCungCap(String khNcc) {
+		int rs = 0;
+		if (khNcc != null && !khNcc.trim().equals("")) {
+			String query = "SELECT COUNT(KH_NCC) AS RS FROM NHA_CUNG_CAP WHERE KH_NCC=?";
+
+			try {
+				Object[] params = { khNcc };
+				rs = jdbcTmpl.queryForObject(query, params, Integer.class);
+			} catch (Exception e) {
+
+			}
+		}
+
+		return rs > 0;
 	}
 }

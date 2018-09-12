@@ -11,6 +11,7 @@ public class DoiTuong {
 	private String khoaDt;
 	private int maDt;
 	private int loaiDt;
+	private String khDt;
 	private String tenDt;
 	private String diaChi;
 	private String sdt;
@@ -43,6 +44,14 @@ public class DoiTuong {
 
 	public void setLoaiDt(int loaiDt) {
 		this.loaiDt = loaiDt;
+	}
+
+	public String getKhDt() {
+		return khDt;
+	}
+
+	public void setKhDt(String khDt) {
+		this.khDt = khDt;
 	}
 
 	public String getTenDt() {

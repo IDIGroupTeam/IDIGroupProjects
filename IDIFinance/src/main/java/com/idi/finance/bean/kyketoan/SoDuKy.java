@@ -82,21 +82,10 @@ public class SoDuKy {
 				this.doiTuong = soDuKy.getDoiTuong();
 			}
 
-			if (this.noDauKy == 0) {
-				this.noDauKy = soDuKy.getNoDauKy();
-			}
-
-			if (this.coDauKy == 0) {
-				this.coDauKy = soDuKy.getCoDauKy();
-			}
-
-			if (this.noCuoiKy == 0) {
-				this.noCuoiKy = soDuKy.getNoCuoiKy();
-			}
-
-			if (this.coCuoiKy == 0) {
-				this.coCuoiKy = soDuKy.getCoCuoiKy();
-			}
+			this.noDauKy += soDuKy.getNoDauKy();
+			this.coDauKy += soDuKy.getCoDauKy();
+			this.noCuoiKy += soDuKy.getNoCuoiKy();
+			this.coCuoiKy += soDuKy.getCoCuoiKy();
 		}
 	}
 

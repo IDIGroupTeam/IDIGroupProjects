@@ -25,11 +25,16 @@ public class NhaCungCapValidator implements Validator {
 	public void validate(Object target, Errors errors) {
 		NhaCungCap nhaCungCap = (NhaCungCap) target;
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "tenNcc", "NotEmpty.NhaCungCap.tenNcc");
-		
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "khNcc", "NotEmpty.NhaCungCap.khNcc");
+
 		if (nhaCungCap.getEmail() != null && !nhaCungCap.getEmail().trim().equals("")) {
 			if (!emailValidator.isValid(nhaCungCap.getEmail())) {
 				errors.rejectValue("email", "Pattern.NhaCungCap.email");
 			}
+		}
+
+		if (nhaCungCap.getMaNcc() == 0 && nhaCungCapDAO.kiemTraKhNhaCungCap(nhaCungCap.getKhNcc())) {
+			errors.rejectValue("khNcc", "Duplicate.NhaCungCap.khNcc");
 		}
 	}
 }

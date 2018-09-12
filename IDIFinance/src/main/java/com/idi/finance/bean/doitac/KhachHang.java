@@ -2,6 +2,7 @@ package com.idi.finance.bean.doitac;
 
 public class KhachHang {
 	private int maKh;
+	private String khKh;
 	private String tenKh;
 	private String diaChi;
 	private String maThue;
@@ -15,6 +16,14 @@ public class KhachHang {
 
 	public void setMaKh(int maKh) {
 		this.maKh = maKh;
+	}
+
+	public String getKhKh() {
+		return khKh;
+	}
+
+	public void setKhKh(String khKh) {
+		this.khKh = khKh;
 	}
 
 	public String getTenKh() {

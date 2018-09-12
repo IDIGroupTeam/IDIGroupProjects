@@ -76,6 +76,7 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 				KhachHang khachHang = new KhachHang();
 
 				khachHang.setMaKh(rs.getInt("MA_KH"));
+				khachHang.setKhKh(rs.getString("KH_KH"));
 				khachHang.setTenKh(rs.getString("TEN_KH"));
 				khachHang.setMaThue(rs.getString("MA_THUE"));
 				khachHang.setDiaChi(rs.getString("DIA_CHI"));
@@ -113,7 +114,7 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 	public void luuCapNhatKhachHang(KhachHang khachHang) {
 		int count = 0;
 		String capNhat = "UPDATE KHACH_HANG SET TEN_KH=?, MA_THUE=?, DIA_CHI=?, EMAIL=?, SDT=?, WEBSITE=? WHERE MA_KH=?";
-		String taoMoi = "INSERT INTO KHACH_HANG(TEN_KH, MA_THUE, DIA_CHI, EMAIL, SDT, WEBSITE) VALUES(?,?,?,?,?,?)";
+		String taoMoi = "INSERT INTO KHACH_HANG(KH_KH, TEN_KH, MA_THUE, DIA_CHI, EMAIL, SDT, WEBSITE) VALUES(?,?,?,?,?,?,?)";
 		try {
 			// update firstly, if now row is updated, we will be insert data
 			count = jdbcTmpl.update(capNhat, khachHang.getTenKh(), khachHang.getMaThue(), khachHang.getDiaChi(),
@@ -121,9 +122,10 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 
 			// This is new data, so insert it.
 			if (count == 0) {
-				if (khachHang.getTenKh() != null && !khachHang.getTenKh().trim().equals("")) {
-					count = jdbcTmpl.update(taoMoi, khachHang.getTenKh(), khachHang.getMaThue(), khachHang.getDiaChi(),
-							khachHang.getEmail(), khachHang.getSdt(), khachHang.getWebSite());
+				if (khachHang.getKhKh() != null && !khachHang.getKhKh().trim().equals("")
+						&& khachHang.getTenKh() != null && !khachHang.getTenKh().trim().equals("")) {
+					count = jdbcTmpl.update(taoMoi, khachHang.getKhKh(), khachHang.getTenKh(), khachHang.getMaThue(),
+							khachHang.getDiaChi(), khachHang.getEmail(), khachHang.getSdt(), khachHang.getWebSite());
 				}
 			}
 		} catch (Exception e) {
@@ -145,5 +147,21 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 
 		List<KhachHang> khachHangDs = jdbcTmpl.query(query, new KhachHangMapper());
 		return khachHangDs;
+	}
+
+	public boolean kiemTraKhKhachHang(String khKh) {
+		int rs = 0;
+		if (khKh != null && !khKh.trim().equals("")) {
+			String query = "SELECT COUNT(KH_KH) AS RS FROM KHACH_HANG WHERE KH_KH=?";
+
+			try {
+				Object[] params = { khKh };
+				rs = jdbcTmpl.queryForObject(query, params, Integer.class);
+			} catch (Exception e) {
+
+			}
+		}
+
+		return rs > 0;
 	}
 }

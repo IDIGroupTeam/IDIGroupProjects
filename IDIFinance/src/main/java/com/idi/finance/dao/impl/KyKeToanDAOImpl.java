@@ -126,7 +126,8 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 				kyKeToan.setKetThuc(rs.getDate("KET_THUC"));
 				kyKeToan.setTrangThai(rs.getInt("TRANG_THAI"));
 				kyKeToan.setMacDinh(rs.getInt("MAC_DINH"));
-
+				logger.info(kyKeToan + " " + kyKeToan.getTrangThai() + " " + kyKeToan.getMacDinh() + " " + KyKeToan.MO
+						+ " " + KyKeToan.DONG);
 				return kyKeToan;
 			} catch (Exception e) {
 				return null;

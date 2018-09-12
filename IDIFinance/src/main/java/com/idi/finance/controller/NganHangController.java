@@ -16,11 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.idi.finance.bean.DungChung;
-import com.idi.finance.bean.bieudo.KpiGroup;
 import com.idi.finance.bean.doitac.NganHang;
 import com.idi.finance.bean.doitac.NganHangTaiKhoan;
 import com.idi.finance.bean.kyketoan.KyKeToan;
-import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.dao.NganHangDAO;
 import com.idi.finance.validator.NganHangTaiKhoanValidator;
 import com.idi.finance.validator.NganHangValidator;

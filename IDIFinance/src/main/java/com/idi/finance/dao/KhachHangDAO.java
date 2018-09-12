@@ -17,4 +17,6 @@ public interface KhachHangDAO {
 	public void luuCapNhatKhachHang(KhachHang khachHang);
 
 	public List<KhachHang> layKhachHangTheoMaHoacTen(String maHoacTen);
+
+	public boolean kiemTraKhKhachHang(String khKh);
 }

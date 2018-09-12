@@ -42,7 +42,7 @@ public class KhachHangController {
 		}
 	}
 
-	@RequestMapping("/danhsachkhachhang")
+	@RequestMapping("/khachhang/danhsach")
 	public String danhSachKhachHang(Model model) {
 		try {
 			// Lấy danh sách khách hàng
@@ -57,7 +57,7 @@ public class KhachHangController {
 		}
 	}
 
-	@RequestMapping("/xemkhachhang/{id}")
+	@RequestMapping("/khachhang/xem/{id}")
 	public String xemKhachHang(@PathVariable("id") int maKh, Model model) {
 		try {
 			KhachHang khachHang = khachHangDAO.layKhachHang(maKh);
@@ -71,7 +71,7 @@ public class KhachHangController {
 		}
 	}
 
-	@RequestMapping("/suakhachhang/{id}")
+	@RequestMapping("/khachhang/sua/{id}")
 	public String suaKhachHang(@PathVariable("id") int maKh, Model model) {
 		try {
 			KhachHang khachHang = khachHangDAO.layKhachHang(maKh);
@@ -85,7 +85,7 @@ public class KhachHangController {
 		}
 	}
 
-	@RequestMapping("/taomoikhachhang")
+	@RequestMapping("/khachhang/taomoi")
 	public String taoMoiKhachHang(Model model) {
 		try {
 			KhachHang khachHang = new KhachHang();
@@ -99,9 +99,9 @@ public class KhachHangController {
 		}
 	}
 
-	// @RequestMapping(value = "/luutaomoikhachhang", produces =
+	// @RequestMapping(value = "khachhang/luu", produces =
 	// "text/plain;charset=UTF-8")
-	@RequestMapping("/luutaomoikhachhang")
+	@RequestMapping("/khachhang/luu")
 	public String luuTaoMoiKhachHang(@ModelAttribute("mainFinanceForm") @Validated KhachHang khachHang,
 			BindingResult result, Model model) {
 		try {
@@ -120,20 +120,27 @@ public class KhachHangController {
 			}
 
 			khachHangDAO.luuCapNhatKhachHang(khachHang);
-			return "redirect:/danhsachkhachhang";
+
+			if (khachHang.getMaKh() > 0) {
+				// Đây là trường hợp sửa KH
+				return "redirect:/khachhang/xem/" + khachHang.getMaKh();
+			} else {
+				// Đây là trường hợp tạo mới KH
+				return "redirect:/khachhang/danhsach";
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
 		}
 	}
 
-	@RequestMapping("/xoakhachhang/{id}")
+	@RequestMapping("/khachhang/xoa/{id}")
 	public String xoaKhachHang(@PathVariable("id") int maKh, Model model) {
 		try {
 			// Xóa khách hàng có MA_KH là maKh
 			khachHangDAO.xoaKhachHang(maKh);
 
-			return "redirect:/danhsachkhachhang";
+			return "redirect:/khachhang/danhsach";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";

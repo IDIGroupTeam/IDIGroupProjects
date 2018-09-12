@@ -84,14 +84,23 @@
 		</c:choose>
 		<c:choose>
 			<c:when test="${kyKeToan.trangThai==1}">
-				<a href="#" class="btn btn-info btn-sm disabled"
-					title="Nhập số dư đầu kỳ">Nhập số dư đầu kỳ</a>
+				<a href="${url}/kyketoan/nhapsoduky/${kyKeToan.maKyKt}"
+					class="btn btn-info btn-sm" title="Nhập số dư đầu kỳ">Nhập số
+					dư đầu kỳ</a>
 			</c:when>
 		</c:choose>
 		<c:choose>
 			<c:when test="${kyKeToan.trangThai==1}">
 				<a href="#" class="btn btn-info btn-sm disabled"
-					title="Xuất số dư cuối kỳ">Xuất số dư cuối kỳ</a>
+					title="Kiểm tra dữ liệu trước khi xuất số dư cuối kỳ">Kiểm tra
+					dữ liệu</a>
+			</c:when>
+		</c:choose>
+		<c:choose>
+			<c:when test="${kyKeToan.trangThai==1}">
+				<a href="${url}/kyketoan/xuatsoduky/${kyKeToan.maKyKt}"
+					class="btn btn-info btn-sm" title="Xuất số dư cuối kỳ">Xuất số
+					dư cuối kỳ</a>
 			</c:when>
 		</c:choose>
 		<c:choose>

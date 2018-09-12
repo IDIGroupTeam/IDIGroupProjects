@@ -4,9 +4,9 @@
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 
 <ul class="main-tab nav nav-tabs nav-pills nav-justified">
-	<li id="tabDSKH"><a href="${url}/danhsachkhachhang">Danh sách
+	<li id="tabDSKH"><a href="${url}/khachhang/danhsach">Danh sách
 			khách hàng</a></li>
-	<li id="tabDSNCC"><a href="${url}/danhsachnhacungcap">Danh
+	<li id="tabDSNCC"><a href="${url}/nhacungcap/danhsach">Danh
 			sách nhà cung cấp</a></li>
 	<li class="dropdown"><a class="dropdown-toggle"
 		data-toggle="dropdown" href="#">Địa chỉ<span class="caret"></span>

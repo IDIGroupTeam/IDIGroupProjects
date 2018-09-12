@@ -17,4 +17,6 @@ public interface NhaCungCapDAO {
 	public void luuCapNhatNhaCungCap(NhaCungCap nhaCungCap);
 
 	public List<NhaCungCap> layNhaCungCapTheoMaHoacTen(String maHoacTen);
+
+	public boolean kiemTraKhNhaCungCap(String khNcc);
 }

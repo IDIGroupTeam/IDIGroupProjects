@@ -10,7 +10,8 @@
 		<ul class="nav nav-pills nav-stacked">
 			<li><a href="${url}">Quản lý tài chính</a></li>
 			<li><a href="/IDIHR">Quản lý Nhân sự</a></li>
-			<li class="active"><a href="${url}/danhsachkhachhang">Quản lý khách hàng</a></li>
+			<li class="active"><a href="${url}/khachhang/danhsach">Quản
+					lý khách hàng</a></li>
 			<li><a href="#">Quản lý xuất nhập kho</a></li>
 			<li><a href="#">Quản lý nguồn vốn</a></li>
 		</ul>

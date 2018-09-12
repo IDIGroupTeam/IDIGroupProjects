@@ -18,7 +18,7 @@
 							BootstrapDialog
 									.confirm({
 										title : 'Xác nhận',
-										message : 'Bạn muốn xóa khách hàng này không ?<br/>Mã: ${nhaCungCap.maNcc}<br /> Tên: ${nhaCungCap.tenNcc} <br /> Địa chỉ: ${nhaCungCap.diaChi}',
+										message : 'Bạn muốn xóa khách hàng này không ?<br/>Mã: ${khachHang.maKh}<br /> Tên: ${khachHang.tenKh} <br /> Địa chỉ: ${khachHang.diaChi}',
 										type : 'type-info',
 										closable : true,
 										draggable : true,
@@ -40,44 +40,48 @@
 	});
 </script>
 
-<h4>CHI TIẾT NHÀ CUNG CẤP</h4>
+<h4>CHI TIẾT KHÁCH HÀNG</h4>
 
 <hr />
 
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="tenKh">Tên nhà cung
-		cấp</label>
-	<div class="col-sm-4">${nhaCungCap.tenNcc}</div>
+	<label class="control-label col-sm-2" for="tenKh">Tên khách
+		hàng</label>
+	<div class="col-sm-4">${khachHang.tenKh}</div>
+</div>
+
+<div class="row form-group">
+	<label class="control-label col-sm-2" for="khKh">Mã khách hàng</label>
+	<div class="col-sm-4">${khachHang.khKh}</div>
 
 	<label class="control-label col-sm-2" for="maThue">Mã số thuế</label>
-	<div class="col-sm-4">${nhaCungCap.maThue}</div>
+	<div class="col-sm-4">${khachHang.maThue}</div>
 </div>
 
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="diaChi">Địa chỉ</label>
-	<div class="col-sm-4">${nhaCungCap.diaChi}</div>
+	<div class="col-sm-4">${khachHang.diaChi}</div>
 	<label class="control-label col-sm-2" for="email">Email</label>
-	<div class="col-sm-4">${nhaCungCap.email}</div>
+	<div class="col-sm-4">${khachHang.email}</div>
 </div>
 
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="sdt">Số điện thoại</label>
-	<div class="col-sm-4">${nhaCungCap.sdt}</div>
+	<div class="col-sm-4">${khachHang.sdt}</div>
 
 	<label class="control-label col-sm-2" for="webSite">Website</label>
-	<div class="col-sm-4">${nhaCungCap.webSite}</div>
+	<div class="col-sm-4">${khachHang.webSite}</div>
 </div>
 
 <hr />
 
 <div class="row form-group">
 	<div class="col-sm-12">
-		<a href="${url}/danhsachnhacungcap" class="btn btn-info btn-sm">Danh
-			sách nhà cung cấp</a> <a id="xoaNut"
-			href="${url}/xoanhacungcap/${nhaCungCap.maNcc}"
+		<a href="${url}/khachhang/danhsach" class="btn btn-info btn-sm">Danh
+			sách khách hàng</a> <a id="xoaNut"
+			href="${url}/khachhang/xoa/${khachHang.maKh}"
 			class="btn btn-info btn-sm">Xóa</a> <a
-			href="${url}/suanhacungcap/${nhaCungCap.maNcc}"
+			href="${url}/khachhang/sua/${khachHang.maKh}"
 			class="btn btn-info btn-sm">Sửa</a>
 	</div>
 </div>
-

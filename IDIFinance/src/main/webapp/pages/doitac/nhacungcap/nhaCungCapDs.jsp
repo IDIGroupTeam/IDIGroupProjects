@@ -13,10 +13,10 @@
 	});
 </script>
 
-<h4>Danh sách khách hàng</h4>
+<h4>Danh sách nhà cung cấp</h4>
 
 <div class="pull-right">
-	<a href="${url}/taomoikhachhang" class="btn btn-info btn-sm"> <span
+	<a href="${url}/nhacungcap/taomoi" class="btn btn-info btn-sm"> <span
 		class="glyphicon glyphicon-plus"></span> Tạo mới
 	</a>
 </div>
@@ -27,9 +27,8 @@
 	<table class="table table-bordered table-hover">
 		<thead>
 			<tr>
-				<!-- <th>STT</th> -->
 				<th>Mã</th>
-				<th>Tên khách hàng</th>
+				<th>Tên nhà cung cấp</th>
 				<th>Mã số thuế</th>
 				<th>Đại chỉ</th>
 				<th>Số điện thoại</th>
@@ -37,15 +36,15 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach items="${khachhangDs}" var="khachhang" varStatus="status">
+			<c:forEach items="${nhaCungCapDs}" var="nhaCungCap"
+				varStatus="status">
 				<tr>
-					<%-- <td>${status.index+1}</td> --%>
-					<td>${khachhang.maKh}</td>
-					<td><a href="${url}/xemkhachhang/${khachhang.maKh}">${khachhang.tenKh}</a></td>
-					<td>${khachhang.maThue}</td>
-					<td>${khachhang.diaChi}</td>
-					<td>${khachhang.sdt}</td>
-					<%-- <td>${khachhang.email}</td> --%>
+					<td>${nhaCungCap.khNcc}</td>
+					<td><a href="${url}/nhacungcap/xem/${nhaCungCap.maNcc}">${nhaCungCap.tenNcc}</a></td>
+					<td>${nhaCungCap.maThue}</td>
+					<td>${nhaCungCap.diaChi}</td>
+					<td>${nhaCungCap.sdt}</td>
+					<%-- <td>${nhaCungCap.email}</td> --%>
 				</tr>
 			</c:forEach>
 		</tbody>
