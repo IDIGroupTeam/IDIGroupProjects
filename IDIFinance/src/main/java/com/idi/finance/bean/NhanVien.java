@@ -2,6 +2,7 @@ package com.idi.finance.bean;
 
 public class NhanVien {
 	private int employeedId;
+	private String khNv;
 	private String fullName;
 	private String department;
 
@@ -11,6 +12,14 @@ public class NhanVien {
 
 	public void setEmployeedId(int employeedId) {
 		this.employeedId = employeedId;
+	}
+
+	public String getKhNv() {
+		return khNv;
+	}
+
+	public void setKhNv(String khNv) {
+		this.khNv = khNv;
 	}
 
 	public String getFullName() {
@@ -37,6 +46,19 @@ public class NhanVien {
 
 	@Override
 	public boolean equals(Object obj) {
-		return super.equals(obj);
+		if (obj == null) {
+			return false;
+		}
+
+		if (!(obj instanceof NhanVien)) {
+			return false;
+		}
+
+		NhanVien item = (NhanVien) obj;
+		if (employeedId != item.getEmployeedId()) {
+			return false;
+		}
+
+		return true;
 	}
 }

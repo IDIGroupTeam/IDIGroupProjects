@@ -1,12 +1,12 @@
 package com.idi.finance.form;
 
-import java.io.File;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.idi.finance.bean.kyketoan.KyKeToan;
 
 public class KyKeToanForm {
 	private KyKeToan kyKeToan;
-	private File file;
+	private MultipartFile soDuKyFile;
 
 	public KyKeToan getKyKeToan() {
 		return kyKeToan;
@@ -16,11 +16,11 @@ public class KyKeToanForm {
 		this.kyKeToan = kyKeToan;
 	}
 
-	public File getFile() {
-		return file;
+	public MultipartFile getSoDuKyFile() {
+		return soDuKyFile;
 	}
 
-	public void setFile(File file) {
-		this.file = file;
+	public void setSoDuKyFile(MultipartFile soDuKyFile) {
+		this.soDuKyFile = soDuKyFile;
 	}
 }

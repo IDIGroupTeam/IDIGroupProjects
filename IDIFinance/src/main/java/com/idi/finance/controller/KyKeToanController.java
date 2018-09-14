@@ -1,5 +1,6 @@
 package com.idi.finance.controller;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,7 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.chungtu.DoiTuong;
+import com.idi.finance.bean.doitac.KhachHang;
+import com.idi.finance.bean.doitac.NhaCungCap;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.kyketoan.SoDuKy;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
@@ -65,6 +76,9 @@ public class KyKeToanController {
 
 	@Autowired
 	KyKeToanValidator kyKeToanValidator;
+
+	@Value("${SO_DU_DAU_KY_EXCEL_TEN_FILE}")
+	private String SO_DU_DAU_KY_EXCEL_TEN_FILE;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -407,103 +421,13 @@ public class KyKeToanController {
 
 				logger.info("Công nợ khách hàng, nhà cung cấp, nhân viên");
 				logger.info("Công nợ khách hàng ...");
-				List<SoDuKy> khachHangDs = kyKeToanDAO.danhSachSoDuKyTheoDoiTuong(maKyKt, DoiTuong.KHACH_HANG);
-				List<SoDuKy> phaiThuKhDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, DoiTuong.KHACH_HANG,
-						LoaiTaiKhoan.PHAI_THU_KHACH_HANG);
-				List<SoDuKy> phaiTraKhDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, DoiTuong.KHACH_HANG,
-						LoaiTaiKhoan.PHAI_TRA_NGUOI_BAN);
-
-				List<SoDuKy> khachHangCNDs = new ArrayList<>();
-				khachHangCNDs.addAll(phaiThuKhDs);
-				khachHangCNDs.addAll(phaiTraKhDs);
-				Iterator<SoDuKy> kHIter = khachHangCNDs.iterator();
-				while (kHIter.hasNext()) {
-					SoDuKy soDuKy = kHIter.next();
-					soDuKy.setKyKeToan(kyKeToan);
-				}
-
-				if (khachHangDs != null) {
-					kHIter = khachHangDs.iterator();
-					while (kHIter.hasNext()) {
-						SoDuKy soDuKy = kHIter.next();
-
-						Iterator<SoDuKy> cnIter = khachHangCNDs.iterator();
-						while (cnIter.hasNext()) {
-							SoDuKy soDuKyTmpl = cnIter.next();
-
-							if (soDuKy.equals(soDuKyTmpl)) {
-								soDuKy.tron(soDuKyTmpl);
-								break;
-							}
-						}
-					}
-				}
+				List<SoDuKy> khachHangDs = layCongNoDoiTuong(kyKeToanTruoc, DoiTuong.KHACH_HANG);
 
 				logger.info("Công nợ nhà cung cấp ...");
-				List<SoDuKy> nhaCcDs = kyKeToanDAO.danhSachSoDuKyTheoDoiTuong(maKyKt, DoiTuong.NHA_CUNG_CAP);
-				List<SoDuKy> phaiThuNccDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, DoiTuong.NHA_CUNG_CAP,
-						LoaiTaiKhoan.PHAI_THU_KHACH_HANG);
-				List<SoDuKy> phaiTraNccDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, DoiTuong.NHA_CUNG_CAP,
-						LoaiTaiKhoan.PHAI_TRA_NGUOI_BAN);
-
-				List<SoDuKy> nhaCCCNDs = new ArrayList<>();
-				nhaCCCNDs.addAll(phaiThuNccDs);
-				nhaCCCNDs.addAll(phaiTraNccDs);
-				Iterator<SoDuKy> nhaCCIter = nhaCCCNDs.iterator();
-				while (nhaCCIter.hasNext()) {
-					SoDuKy soDuKy = nhaCCIter.next();
-					soDuKy.setKyKeToan(kyKeToan);
-				}
-
-				if (nhaCcDs != null) {
-					nhaCCIter = nhaCcDs.iterator();
-					while (nhaCCIter.hasNext()) {
-						SoDuKy soDuKy = nhaCCIter.next();
-
-						Iterator<SoDuKy> cnIter = nhaCCCNDs.iterator();
-						while (cnIter.hasNext()) {
-							SoDuKy soDuKyTmpl = cnIter.next();
-
-							if (soDuKy.equals(soDuKyTmpl)) {
-								soDuKy.tron(soDuKyTmpl);
-								break;
-							}
-						}
-					}
-				}
+				List<SoDuKy> nhaCcDs = layCongNoDoiTuong(kyKeToanTruoc, DoiTuong.NHA_CUNG_CAP);
 
 				logger.info("Công nợ nhân viên ...");
-				List<SoDuKy> nhanVienDs = kyKeToanDAO.danhSachSoDuKyTheoDoiTuong(maKyKt, DoiTuong.NHAN_VIEN);
-				List<SoDuKy> phaiThuNvDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, DoiTuong.NHAN_VIEN,
-						LoaiTaiKhoan.PHAI_THU_KHACH_HANG);
-				List<SoDuKy> phaiTraNvDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, DoiTuong.NHAN_VIEN,
-						LoaiTaiKhoan.PHAI_TRA_NGUOI_BAN);
-
-				List<SoDuKy> nhanVienCNDs = new ArrayList<>();
-				nhanVienCNDs.addAll(phaiThuNvDs);
-				nhanVienCNDs.addAll(phaiTraNvDs);
-				Iterator<SoDuKy> nhanVienIter = nhanVienCNDs.iterator();
-				while (nhanVienIter.hasNext()) {
-					SoDuKy soDuKy = nhanVienIter.next();
-					soDuKy.setKyKeToan(kyKeToan);
-				}
-
-				if (nhanVienDs != null) {
-					nhanVienIter = nhanVienDs.iterator();
-					while (nhanVienIter.hasNext()) {
-						SoDuKy soDuKy = nhanVienIter.next();
-
-						Iterator<SoDuKy> cnIter = nhanVienCNDs.iterator();
-						while (cnIter.hasNext()) {
-							SoDuKy soDuKyTmpl = cnIter.next();
-
-							if (soDuKy.equals(soDuKyTmpl)) {
-								soDuKy.tron(soDuKyTmpl);
-								break;
-							}
-						}
-					}
-				}
+				List<SoDuKy> nhanVienDs = layCongNoDoiTuong(kyKeToanTruoc, DoiTuong.NHAN_VIEN);
 
 				// Thêm số dư kỳ công nợ vào csdl
 				List<SoDuKy> soDuKyDs = new ArrayList<>();
@@ -513,7 +437,6 @@ public class KyKeToanController {
 				Iterator<SoDuKy> soDuKyIter = soDuKyDs.iterator();
 				while (soDuKyIter.hasNext()) {
 					SoDuKy soDuKy = soDuKyIter.next();
-					// soDuKy.setKyKeToan(kyKeToan);
 					logger.info(soDuKy);
 					kyKeToanDAO.themSoDuDauKy(soDuKy);
 				}
@@ -540,13 +463,12 @@ public class KyKeToanController {
 			return;
 		}
 
-		List<SoDuKy> soDuKyDs = new ArrayList<>();
-
 		try {
 			// Đọc dữ liệu về số dư cuối kỳ
 			// Với số dư các tài khoản
 			// Lấy danh sách tài khoản
 			logger.info("Chuyển số dư các tài khoản ...");
+			List<SoDuKy> soDuKyDs = new ArrayList<>();
 			List<LoaiTaiKhoan> taiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
 			Iterator<LoaiTaiKhoan> iter = taiKhoanDs.iterator();
 			while (iter.hasNext()) {
@@ -570,7 +492,6 @@ public class KyKeToanController {
 						// Tính số dư 4212 của kỳ này để ghi vào 4211 của kỳ sau
 						double noDauKy = noPhatSinh + soDuDauKy.getNoDauKy() - coPhatSinh - soDuDauKy.getCoDauKy();
 
-						logger.info(loaiTaiKhoan.getMaTk() + ": " + noDauKy);
 						SoDuKy soDuKy = new SoDuKy();
 						soDuKy.setKyKeToan(kyKeToan);
 						soDuKy.setLoaiTaiKhoan(loaiTaiKhoan);
@@ -652,120 +573,448 @@ public class KyKeToanController {
 				}
 			}
 
-			logger.info("Công nợ khách hàng, nhà cung cấp, nhân viên");
+			logger.info("Danh sách khách hàng ...");
+			List<DoiTuong> khachHangDs = khachHangDAO.danhSachDoiTuong();
+
 			logger.info("Công nợ khách hàng ...");
-			List<SoDuKy> khachHangDs = kyKeToanDAO.danhSachSoDuKyTheoDoiTuong(maKyKt, DoiTuong.KHACH_HANG);
-			List<SoDuKy> phaiThuKhDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, DoiTuong.KHACH_HANG,
-					LoaiTaiKhoan.PHAI_THU_KHACH_HANG);
-			List<SoDuKy> phaiTraKhDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, DoiTuong.KHACH_HANG,
-					LoaiTaiKhoan.PHAI_TRA_NGUOI_BAN);
+			List<SoDuKy> khachHangCNDs = layCongNoDoiTuong(kyKeToan, DoiTuong.KHACH_HANG);
 
-			List<SoDuKy> khachHangCNDs = new ArrayList<>();
-			khachHangCNDs.addAll(phaiThuKhDs);
-			khachHangCNDs.addAll(phaiTraKhDs);
-			Iterator<SoDuKy> kHIter = khachHangCNDs.iterator();
-			while (kHIter.hasNext()) {
-				SoDuKy soDuKy = kHIter.next();
-				soDuKy.setKyKeToan(kyKeToan);
-			}
-
-			if (khachHangDs != null) {
-				kHIter = khachHangDs.iterator();
-				while (kHIter.hasNext()) {
-					SoDuKy soDuKy = kHIter.next();
-
-					Iterator<SoDuKy> cnIter = khachHangCNDs.iterator();
-					while (cnIter.hasNext()) {
-						SoDuKy soDuKyTmpl = cnIter.next();
-
-						if (soDuKy.equals(soDuKyTmpl)) {
-							soDuKy.tron(soDuKyTmpl);
-							break;
-						}
-					}
-				}
-			}
+			logger.info("Danh sách nhà cung cấp ...");
+			List<DoiTuong> nhaCcDs = nhaCungCapDAO.danhSachDoiTuong();
 
 			logger.info("Công nợ nhà cung cấp ...");
-			List<SoDuKy> nhaCcDs = kyKeToanDAO.danhSachSoDuKyTheoDoiTuong(maKyKt, DoiTuong.NHA_CUNG_CAP);
-			List<SoDuKy> phaiThuNccDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, DoiTuong.NHA_CUNG_CAP,
-					LoaiTaiKhoan.PHAI_THU_KHACH_HANG);
-			List<SoDuKy> phaiTraNccDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, DoiTuong.NHA_CUNG_CAP,
-					LoaiTaiKhoan.PHAI_TRA_NGUOI_BAN);
-
-			List<SoDuKy> nhaCCCNDs = new ArrayList<>();
-			nhaCCCNDs.addAll(phaiThuNccDs);
-			nhaCCCNDs.addAll(phaiTraNccDs);
-			Iterator<SoDuKy> nhaCCIter = nhaCCCNDs.iterator();
-			while (nhaCCIter.hasNext()) {
-				SoDuKy soDuKy = nhaCCIter.next();
-				soDuKy.setKyKeToan(kyKeToan);
-			}
-
-			if (nhaCcDs != null) {
-				nhaCCIter = nhaCcDs.iterator();
-				while (nhaCCIter.hasNext()) {
-					SoDuKy soDuKy = nhaCCIter.next();
-
-					Iterator<SoDuKy> cnIter = nhaCCCNDs.iterator();
-					while (cnIter.hasNext()) {
-						SoDuKy soDuKyTmpl = cnIter.next();
-
-						if (soDuKy.equals(soDuKyTmpl)) {
-							soDuKy.tron(soDuKyTmpl);
-							break;
-						}
-					}
-				}
-			}
+			List<SoDuKy> nhaCcCNDs = layCongNoDoiTuong(kyKeToan, DoiTuong.NHA_CUNG_CAP);
 
 			logger.info("Công nợ nhân viên ...");
-			List<SoDuKy> nhanVienDs = kyKeToanDAO.danhSachSoDuKyTheoDoiTuong(maKyKt, DoiTuong.NHAN_VIEN);
-			List<SoDuKy> phaiThuNvDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, DoiTuong.NHAN_VIEN,
-					LoaiTaiKhoan.PHAI_THU_KHACH_HANG);
-			List<SoDuKy> phaiTraNvDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, DoiTuong.NHAN_VIEN,
-					LoaiTaiKhoan.PHAI_TRA_NGUOI_BAN);
+			List<SoDuKy> nhanVienCNDs = layCongNoDoiTuong(kyKeToan, DoiTuong.NHAN_VIEN);
 
-			List<SoDuKy> nhanVienCNDs = new ArrayList<>();
-			nhanVienCNDs.addAll(phaiThuNvDs);
-			nhanVienCNDs.addAll(phaiTraNvDs);
-			Iterator<SoDuKy> nhanVienIter = nhanVienCNDs.iterator();
-			while (nhanVienIter.hasNext()) {
-				SoDuKy soDuKy = nhanVienIter.next();
-				soDuKy.setKyKeToan(kyKeToan);
-			}
+			logger.info("Sau đó ghi ra file xlsx, mỗi loại dữ liệu một sheet");
+			// soDuKyDs, khachHangDs, khachHangCNDs, nhaCcDs, nhaCcCNDs, nhanVienCNDs
+			XSSFWorkbook wb = new XSSFWorkbook();
 
-			if (nhanVienDs != null) {
-				nhanVienIter = nhanVienDs.iterator();
-				while (nhanVienIter.hasNext()) {
-					SoDuKy soDuKy = nhanVienIter.next();
+			// Tạo font & cellstyle mặc định
+			XSSFFont font = wb.createFont();
+			font.setFontHeightInPoints((short) 10);
+			font.setFontName("Arial");
+			font.setItalic(false);
+			font.setBold(false);
 
-					Iterator<SoDuKy> cnIter = nhanVienCNDs.iterator();
-					while (cnIter.hasNext()) {
-						SoDuKy soDuKyTmpl = cnIter.next();
+			CellStyle style = wb.createCellStyle();
+			style.setFont(font);
 
-						if (soDuKy.equals(soDuKyTmpl)) {
-							soDuKy.tron(soDuKyTmpl);
-							break;
-						}
+			// Tạo font & cellstyle cho header
+			XSSFFont boldFont = wb.createFont();
+			boldFont.setFontHeightInPoints((short) 10);
+			boldFont.setFontName("Arial");
+			boldFont.setItalic(false);
+			boldFont.setBold(true);
+
+			CellStyle boldStyle = wb.createCellStyle();
+			boldStyle.setFont(boldFont);
+
+			logger.info("Tạo sheet số dư tài khoản ...");
+			XSSFSheet soDuTkSt = wb.createSheet("Số dư tài khoản");
+
+			// Tạo dòng header
+			XSSFRow row00 = soDuTkSt.createRow(0);
+
+			// Tạo các cột cho dòng đầu tiên
+			XSSFCell cell000 = row00.createCell(0);
+			cell000.setCellStyle(boldStyle);
+			cell000.setCellValue("Mã tài khoản");
+			XSSFCell cell002 = row00.createCell(1);
+			cell002.setCellStyle(boldStyle);
+			cell002.setCellValue("Nợ");
+			XSSFCell cell003 = row00.createCell(2);
+			cell003.setCellStyle(boldStyle);
+			cell003.setCellValue("Có");
+
+			// Tạo các dòng dữ liệu
+			if (soDuKyDs != null) {
+				int i = 1;
+				Iterator<SoDuKy> soDuTkIter = soDuKyDs.iterator();
+				while (soDuTkIter.hasNext()) {
+					SoDuKy soDuKy = soDuTkIter.next();
+
+					// Tạo dòng
+					XSSFRow row0i = soDuTkSt.createRow(i);
+
+					// Tạo các cột
+					XSSFCell cell0i0 = row0i.createCell(0);
+					cell0i0.setCellStyle(style);
+					if (soDuKy.getLoaiTaiKhoan() != null) {
+						cell0i0.setCellValue(soDuKy.getLoaiTaiKhoan().getMaTk());
+					} else {
+						cell0i0.setCellValue("");
 					}
+					XSSFCell cell0i1 = row0i.createCell(1);
+					cell0i1.setCellStyle(style);
+					cell0i1.setCellValue(soDuKy.getNoDauKy());
+					XSSFCell cell0i2 = row0i.createCell(2);
+					cell0i2.setCellStyle(style);
+					cell0i2.setCellValue(soDuKy.getCoDauKy());
+
+					i++;
 				}
 			}
 
-			// Sau đó ghi ra file xlsx
+			// Resize column's width
+			soDuTkSt.autoSizeColumn(0);
+			soDuTkSt.autoSizeColumn(1);
+			soDuTkSt.autoSizeColumn(2);
 
-			// Rồi trả về client
-			byte[] bytes = null;
+			logger.info("Tạo sheet danh sách khách hàng ...");
+			XSSFSheet khachHangSt = wb.createSheet("Khách hàng");
+
+			// Tạo dòng header
+			XSSFRow row10 = khachHangSt.createRow(0);
+			row10.setRowStyle(boldStyle);
+
+			// Tạo các cột cho dòng đầu tiên
+			XSSFCell cell100 = row10.createCell(0);
+			cell100.setCellStyle(boldStyle);
+			cell100.setCellValue("Mã KH");
+			XSSFCell cell101 = row10.createCell(1);
+			cell101.setCellStyle(boldStyle);
+			cell101.setCellValue("Tên KH");
+			XSSFCell cell102 = row10.createCell(2);
+			cell102.setCellStyle(boldStyle);
+			cell102.setCellValue("Mã số thuế");
+			XSSFCell cell103 = row10.createCell(3);
+			cell103.setCellStyle(boldStyle);
+			cell103.setCellValue("Địa chỉ");
+			XSSFCell cell104 = row10.createCell(4);
+			cell104.setCellStyle(boldStyle);
+			cell104.setCellValue("Email");
+			XSSFCell cell105 = row10.createCell(5);
+			cell105.setCellStyle(boldStyle);
+			cell105.setCellValue("Số điện thoại");
+			XSSFCell cell106 = row10.createCell(6);
+			cell106.setCellStyle(boldStyle);
+			cell106.setCellValue("Website");
+
+			// Tạo các dòng dữ liệu
+			if (khachHangDs != null) {
+				int i = 1;
+				Iterator<DoiTuong> khachHangIter = khachHangDs.iterator();
+				while (khachHangIter.hasNext()) {
+					DoiTuong khachHang = khachHangIter.next();
+
+					// Tạo dòng
+					XSSFRow row1i = khachHangSt.createRow(i);
+
+					// Tạo các cột
+					XSSFCell cell1i0 = row1i.createCell(0);
+					cell1i0.setCellStyle(style);
+					cell1i0.setCellValue(khachHang.getKhDt());
+					XSSFCell cell1i1 = row1i.createCell(1);
+					cell1i1.setCellStyle(style);
+					cell1i1.setCellValue(khachHang.getTenDt());
+					XSSFCell cell1i2 = row1i.createCell(2);
+					cell1i2.setCellStyle(style);
+					cell1i2.setCellValue(khachHang.getMaThue());
+					XSSFCell cell1i3 = row1i.createCell(3);
+					cell1i3.setCellStyle(style);
+					cell1i3.setCellValue(khachHang.getDiaChi());
+					XSSFCell cell1i4 = row1i.createCell(4);
+					cell1i4.setCellStyle(style);
+					cell1i4.setCellValue(khachHang.getEmail());
+					XSSFCell cell1i5 = row1i.createCell(5);
+					cell1i5.setCellStyle(style);
+					cell1i5.setCellValue(khachHang.getSdt());
+					XSSFCell cell1i6 = row1i.createCell(6);
+					cell1i6.setCellStyle(style);
+					cell1i6.setCellValue(khachHang.getWebSite());
+
+					i++;
+				}
+			}
+
+			// Resize column's width
+			khachHangSt.autoSizeColumn(0);
+			khachHangSt.autoSizeColumn(1);
+			khachHangSt.autoSizeColumn(2);
+			khachHangSt.autoSizeColumn(3);
+			khachHangSt.autoSizeColumn(4);
+			khachHangSt.autoSizeColumn(5);
+			khachHangSt.autoSizeColumn(6);
+
+			logger.info("Tạo sheet công nợ khách hàng ...");
+			XSSFSheet khachHangCnSt = wb.createSheet("Công nợ KH");
+
+			// Tạo dòng header
+			XSSFRow row20 = khachHangCnSt.createRow(0);
+			row20.setRowStyle(boldStyle);
+
+			// Tạo các cột cho dòng đầu tiên
+			XSSFCell cell200 = row20.createCell(0);
+			cell200.setCellStyle(boldStyle);
+			cell200.setCellValue("Mã KH");
+			XSSFCell cell201 = row20.createCell(1);
+			cell201.setCellStyle(boldStyle);
+			cell201.setCellValue("Mã tài khoản");
+			XSSFCell cell202 = row20.createCell(2);
+			cell202.setCellStyle(boldStyle);
+			cell202.setCellValue("Nợ");
+			XSSFCell cell203 = row20.createCell(3);
+			cell203.setCellStyle(boldStyle);
+			cell203.setCellValue("Có");
+
+			// Tạo các dòng dữ liệu
+			if (khachHangCNDs != null) {
+				int i = 1;
+				Iterator<SoDuKy> khachHangCNIter = khachHangCNDs.iterator();
+				while (khachHangCNIter.hasNext()) {
+					SoDuKy soDuKy = khachHangCNIter.next();
+
+					// Tạo dòng
+					XSSFRow row2i = khachHangCnSt.createRow(i);
+
+					// Tạo các cột
+					XSSFCell cell2i0 = row2i.createCell(0);
+					cell2i0.setCellStyle(style);
+					if (soDuKy.getDoiTuong() != null) {
+						cell2i0.setCellValue(soDuKy.getDoiTuong().getKhDt());
+					} else {
+						cell2i0.setCellValue("");
+					}
+					XSSFCell cell2i1 = row2i.createCell(1);
+					cell2i1.setCellStyle(style);
+					if (soDuKy.getLoaiTaiKhoan() != null) {
+						cell2i1.setCellValue(soDuKy.getLoaiTaiKhoan().getMaTk());
+					} else {
+						cell2i1.setCellValue("");
+					}
+					XSSFCell cell2i2 = row2i.createCell(2);
+					cell2i2.setCellStyle(style);
+					cell2i2.setCellValue(soDuKy.getNoDauKy());
+					XSSFCell cell2i3 = row2i.createCell(3);
+					cell2i3.setCellStyle(style);
+					cell2i3.setCellValue(soDuKy.getCoDauKy());
+
+					i++;
+				}
+			}
+
+			// Resize column's width
+			khachHangCnSt.autoSizeColumn(0);
+			khachHangCnSt.autoSizeColumn(1);
+			khachHangCnSt.autoSizeColumn(2);
+			khachHangCnSt.autoSizeColumn(3);
+
+			logger.info("Tạo sheet danh sách nhà cung cấp ...");
+			XSSFSheet nhaCcSt = wb.createSheet("Nhà cung cấp");
+
+			// Tạo dòng header
+			XSSFRow row30 = nhaCcSt.createRow(0);
+			row30.setRowStyle(boldStyle);
+
+			// Tạo các cột cho dòng đầu tiên
+			XSSFCell cell300 = row30.createCell(0);
+			cell300.setCellStyle(boldStyle);
+			cell300.setCellValue("Mã NCC");
+			XSSFCell cell301 = row30.createCell(1);
+			cell301.setCellStyle(boldStyle);
+			cell301.setCellValue("Tên NCC");
+			XSSFCell cell302 = row30.createCell(2);
+			cell302.setCellStyle(boldStyle);
+			cell302.setCellValue("Mã số thuế");
+			XSSFCell cell303 = row30.createCell(3);
+			cell303.setCellStyle(boldStyle);
+			cell303.setCellValue("Địa chỉ");
+			XSSFCell cell304 = row30.createCell(4);
+			cell304.setCellStyle(boldStyle);
+			cell304.setCellValue("Email");
+			XSSFCell cell305 = row30.createCell(5);
+			cell305.setCellStyle(boldStyle);
+			cell305.setCellValue("Số điện thoại");
+			XSSFCell cell306 = row30.createCell(6);
+			cell306.setCellStyle(boldStyle);
+			cell306.setCellValue("Website");
+
+			// Tạo các dòng dữ liệu
+			if (nhaCcDs != null) {
+				int i = 1;
+				Iterator<DoiTuong> nhaCcIter = nhaCcDs.iterator();
+				while (nhaCcIter.hasNext()) {
+					DoiTuong nhaCc = nhaCcIter.next();
+
+					// Tạo dòng
+					XSSFRow row3i = nhaCcSt.createRow(i);
+
+					// Tạo các cột
+					XSSFCell cell3i0 = row3i.createCell(0);
+					cell3i0.setCellStyle(style);
+					cell3i0.setCellValue(nhaCc.getKhDt());
+					XSSFCell cell3i1 = row3i.createCell(1);
+					cell3i1.setCellStyle(style);
+					cell3i1.setCellValue(nhaCc.getTenDt());
+					XSSFCell cell3i2 = row3i.createCell(2);
+					cell3i2.setCellStyle(style);
+					cell3i2.setCellValue(nhaCc.getMaThue());
+					XSSFCell cell3i3 = row3i.createCell(3);
+					cell3i3.setCellStyle(style);
+					cell3i3.setCellValue(nhaCc.getDiaChi());
+					XSSFCell cell3i4 = row3i.createCell(4);
+					cell3i4.setCellStyle(style);
+					cell3i4.setCellValue(nhaCc.getEmail());
+					XSSFCell cell3i5 = row3i.createCell(5);
+					cell3i5.setCellStyle(style);
+					cell3i5.setCellValue(nhaCc.getSdt());
+					XSSFCell cell3i6 = row3i.createCell(6);
+					cell3i6.setCellStyle(style);
+					cell3i6.setCellValue(nhaCc.getWebSite());
+
+					i++;
+				}
+			}
+
+			// Resize column's width
+			nhaCcSt.autoSizeColumn(0);
+			nhaCcSt.autoSizeColumn(1);
+			nhaCcSt.autoSizeColumn(2);
+			nhaCcSt.autoSizeColumn(3);
+			nhaCcSt.autoSizeColumn(4);
+			nhaCcSt.autoSizeColumn(5);
+			nhaCcSt.autoSizeColumn(6);
+
+			logger.info("Tạo sheet công nợ nhà cung cấp ...");
+			XSSFSheet nhaCcCnSt = wb.createSheet("Công nợ NCC");
+
+			// Tạo dòng header
+			XSSFRow row40 = nhaCcCnSt.createRow(0);
+			row40.setRowStyle(boldStyle);
+
+			// Tạo các cột cho dòng đầu tiên
+			XSSFCell cell400 = row40.createCell(0);
+			cell400.setCellStyle(boldStyle);
+			cell400.setCellValue("Mã NCC");
+			XSSFCell cell401 = row40.createCell(1);
+			cell401.setCellStyle(boldStyle);
+			cell401.setCellValue("Mã tài khoản");
+			XSSFCell cell402 = row40.createCell(2);
+			cell402.setCellStyle(boldStyle);
+			cell402.setCellValue("Nợ");
+			XSSFCell cell403 = row40.createCell(3);
+			cell403.setCellStyle(boldStyle);
+			cell403.setCellValue("Có");
+
+			// Tạo các dòng dữ liệu
+			if (nhaCcCNDs != null) {
+				int i = 1;
+				Iterator<SoDuKy> nhaCcCNIter = nhaCcCNDs.iterator();
+				while (nhaCcCNIter.hasNext()) {
+					SoDuKy soDuKy = nhaCcCNIter.next();
+
+					// Tạo dòng
+					XSSFRow row4i = nhaCcCnSt.createRow(i);
+
+					// Tạo các cột
+					XSSFCell cell4i0 = row4i.createCell(0);
+					cell4i0.setCellStyle(style);
+					if (soDuKy.getDoiTuong() != null) {
+						cell4i0.setCellValue(soDuKy.getDoiTuong().getKhDt());
+					} else {
+						cell4i0.setCellValue("");
+					}
+					XSSFCell cell4i1 = row4i.createCell(1);
+					cell4i1.setCellStyle(style);
+					if (soDuKy.getLoaiTaiKhoan() != null) {
+						cell4i1.setCellValue(soDuKy.getLoaiTaiKhoan().getMaTk());
+					} else {
+						cell4i1.setCellValue("");
+					}
+					XSSFCell cell4i2 = row4i.createCell(2);
+					cell4i2.setCellStyle(style);
+					cell4i2.setCellValue(soDuKy.getNoDauKy());
+					XSSFCell cell4i3 = row4i.createCell(3);
+					cell4i3.setCellStyle(style);
+					cell4i3.setCellValue(soDuKy.getCoDauKy());
+
+					i++;
+				}
+			}
+
+			// Resize column's width
+			nhaCcCnSt.autoSizeColumn(0);
+			nhaCcCnSt.autoSizeColumn(1);
+			nhaCcCnSt.autoSizeColumn(2);
+			nhaCcCnSt.autoSizeColumn(3);
+
+			logger.info("Tạo sheet công nợ nhân viên ...");
+			XSSFSheet nhanVienCnSt = wb.createSheet("Công nợ NV");
+
+			// Tạo dòng header
+			XSSFRow row50 = nhanVienCnSt.createRow(0);
+			row50.setRowStyle(boldStyle);
+
+			// Tạo các cột cho dòng đầu tiên
+			XSSFCell cell500 = row50.createCell(0);
+			cell500.setCellStyle(boldStyle);
+			cell500.setCellValue("Mã NV");
+			XSSFCell cell501 = row50.createCell(1);
+			cell501.setCellStyle(boldStyle);
+			cell501.setCellValue("Mã tài khoản");
+			XSSFCell cell502 = row50.createCell(2);
+			cell502.setCellStyle(boldStyle);
+			cell502.setCellValue("Nợ");
+			XSSFCell cell503 = row50.createCell(3);
+			cell503.setCellStyle(boldStyle);
+			cell503.setCellValue("Có");
+
+			// Tạo các dòng dữ liệu
+			if (nhanVienCNDs != null) {
+				int i = 1;
+				Iterator<SoDuKy> nhanVienCNIter = nhanVienCNDs.iterator();
+				while (nhanVienCNIter.hasNext()) {
+					SoDuKy soDuKy = nhanVienCNIter.next();
+
+					// Tạo dòng
+					XSSFRow row5i = nhanVienCnSt.createRow(i);
+
+					// Tạo các cột
+					XSSFCell cell5i0 = row5i.createCell(0);
+					cell5i0.setCellStyle(style);
+					if (soDuKy.getDoiTuong() != null) {
+						cell5i0.setCellValue(soDuKy.getDoiTuong().getMaDt());
+					} else {
+						cell5i0.setCellValue("");
+					}
+					XSSFCell cell5i1 = row5i.createCell(1);
+					cell5i1.setCellStyle(style);
+					if (soDuKy.getLoaiTaiKhoan() != null) {
+						cell5i1.setCellValue(soDuKy.getLoaiTaiKhoan().getMaTk());
+					} else {
+						cell5i1.setCellValue("");
+					}
+					XSSFCell cell5i2 = row5i.createCell(2);
+					cell5i2.setCellStyle(style);
+					cell5i2.setCellValue(soDuKy.getNoDauKy());
+					XSSFCell cell5i3 = row5i.createCell(3);
+					cell5i3.setCellStyle(style);
+					cell5i3.setCellValue(soDuKy.getCoDauKy());
+
+					i++;
+				}
+			}
+
+			// Resize column's width
+			nhanVienCnSt.autoSizeColumn(0);
+			nhanVienCnSt.autoSizeColumn(1);
+			nhanVienCnSt.autoSizeColumn(2);
+			nhanVienCnSt.autoSizeColumn(3);
+
+			logger.info("Trả kết quả về máy khác download ...");
 
 			res.reset();
 			res.resetBuffer();
-			res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-			res.setContentLength(bytes.length);
-			// res.setHeader("Content-disposition", "attachment; filename=" + fileName);
+			res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
+			res.setHeader("Content-disposition", "attachment; filename=" + SO_DU_DAU_KY_EXCEL_TEN_FILE);
 			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
+			wb.write(out);
 			out.flush();
 			out.close();
+			wb.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -779,11 +1028,14 @@ public class KyKeToanController {
 		// Tìm kỳ hiện tại
 		KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(maKyKt);
 		// Kiểm tra kỳ có mở không, chỉ có mở mới kết chuyển được
-		if (kyKeToan == null) {
+		if (kyKeToan == null || kyKeToan.getTrangThai() == KyKeToan.DONG) {
 			return "redirect:/kyketoan/danhsach";
 		}
 
-		model.addAttribute("kyKeToan", kyKeToan);
+		KyKeToanForm form = new KyKeToanForm();
+		form.setKyKeToan(kyKeToan);
+
+		model.addAttribute("mainFinanceForm", form);
 		model.addAttribute("tab", "tabKKT");
 		return "nhapSoDuKyKeToan";
 	}
@@ -795,12 +1047,409 @@ public class KyKeToanController {
 
 		// Tìm kỳ hiện tại
 		KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt());
-		if (kyKeToan == null) {
+		if (kyKeToan == null || kyKeToan.getTrangThai() == KyKeToan.DONG) {
 			return "redirect:/kyketoan/danhsach";
 		}
 
-		logger.info("Hi " + form.getFile());
+		if (form != null && form.getSoDuKyFile() != null && form.getSoDuKyFile().getSize() > 0) {
+			try {
+				XSSFWorkbook wb = new XSSFWorkbook(form.getSoDuKyFile().getInputStream());
 
-		return "redirect:/kyketoan/xem/" + kyKeToan.getMaKyKt();
+				logger.info("Xử lý dữ liệu tại sheet Số dư tài khoản ...");
+				XSSFSheet soDuTkSt = wb.getSheetAt(0);
+				List<SoDuKy> soDuTkDs = new ArrayList<>();
+
+				Iterator<Row> soDuTkIter = soDuTkSt.rowIterator();
+				while (soDuTkIter.hasNext()) {
+					try {
+						XSSFRow row0i = (XSSFRow) soDuTkIter.next();
+
+						// Đọc cột maTk
+						XSSFCell cell0i0 = row0i.getCell(0);
+						String maTk = cell0i0.getStringCellValue();
+
+						// Đọc cột nợ
+						XSSFCell cell0i1 = row0i.getCell(1);
+						double noDauKy = 0;
+						try {
+							noDauKy = cell0i1.getNumericCellValue();
+						} catch (Exception e) {
+						}
+
+						// Đọc cột có
+						XSSFCell cell0i2 = row0i.getCell(2);
+						double coDauKy = 0;
+						try {
+							coDauKy = cell0i2.getNumericCellValue();
+						} catch (Exception e) {
+						}
+
+						if (maTk != null && !maTk.trim().equals("")) {
+							SoDuKy soDuKy = new SoDuKy();
+
+							LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+							loaiTaiKhoan.setMaTk(maTk);
+
+							soDuKy.setLoaiTaiKhoan(loaiTaiKhoan);
+							soDuKy.setNoDauKy(noDauKy);
+							soDuKy.setCoDauKy(coDauKy);
+
+							soDuTkDs.add(soDuKy);
+							kyKeToanDAO.themSoDuDauKy(soDuKy);
+						}
+					} catch (Exception e) {
+					}
+				}
+
+				logger.info("Xử lý dữ liệu tại sheet Khách hàng ...");
+				XSSFSheet khachHangSt = wb.getSheetAt(1);
+				List<DoiTuong> khachHangDs = new ArrayList<>();
+
+				Iterator<Row> khachHangIter = khachHangSt.rowIterator();
+				while (khachHangIter.hasNext()) {
+					try {
+						XSSFRow row1i = (XSSFRow) khachHangIter.next();
+
+						// Đọc cột Mã KH
+						XSSFCell cell1i0 = row1i.getCell(0);
+						String khKh = cell1i0.getStringCellValue();
+
+						// Đọc cột Tên KH
+						XSSFCell cell1i1 = row1i.getCell(1);
+						String tenKh = cell1i1.getStringCellValue();
+
+						// Đọc cột Mã số thuế
+						XSSFCell cell1i2 = row1i.getCell(2);
+						String maThue = cell1i2.getStringCellValue();
+
+						// Đọc cột Địa chỉ
+						XSSFCell cell1i3 = row1i.getCell(3);
+						String diaChi = cell1i3.getStringCellValue();
+
+						// Đọc cột Email
+						XSSFCell cell1i4 = row1i.getCell(4);
+						String email = cell1i4.getStringCellValue();
+
+						// Đọc cột Số điện thoại
+						XSSFCell cell1i5 = row1i.getCell(5);
+						String sdt = cell1i5.getStringCellValue();
+
+						// Đọc cột Website
+						XSSFCell cell1i6 = row1i.getCell(6);
+						String webSite = cell1i6.getStringCellValue();
+
+						if (khKh != null && !khKh.trim().equals("")) {
+							KhachHang khachHang = new KhachHang();
+
+							khachHang.setKhKh(khKh);
+							khachHang.setTenKh(tenKh);
+							khachHang.setMaThue(maThue);
+							khachHang.setDiaChi(diaChi);
+							khachHang.setEmail(email);
+							khachHang.setSdt(sdt);
+							khachHang.setWebSite(webSite);
+
+							// khachHangDs.add(khachHang);
+							khachHangDAO.luuCapNhatKhachHang(khachHang);
+						}
+					} catch (Exception e) {
+					}
+				}
+
+				logger.info("Xử lý dữ liệu tại sheet Công nợ KH ...");
+				XSSFSheet khachHangCnSt = wb.getSheetAt(2);
+				List<SoDuKy> khachHangCnDs = new ArrayList<>();
+
+				Iterator<Row> khachHangCnIter = khachHangCnSt.rowIterator();
+				while (khachHangCnIter.hasNext()) {
+					try {
+						XSSFRow row2i = (XSSFRow) khachHangCnIter.next();
+
+						// Đọc cột Mã Kh
+						XSSFCell cell2i0 = row2i.getCell(0);
+						String khKh = cell2i0.getStringCellValue();
+
+						// Đọc cột Mã tài khoản
+						XSSFCell cell2i1 = row2i.getCell(1);
+						String maTk = cell2i1.getStringCellValue();
+
+						// Đọc cột nợ
+						XSSFCell cell2i2 = row2i.getCell(2);
+						double noDauKy = 0;
+						try {
+							noDauKy = cell2i2.getNumericCellValue();
+						} catch (Exception e) {
+						}
+
+						// Đọc cột có
+						XSSFCell cell2i3 = row2i.getCell(3);
+						double coDauKy = 0;
+						try {
+							coDauKy = cell2i3.getNumericCellValue();
+						} catch (Exception e) {
+						}
+
+						if (khKh != null && !khKh.trim().equals("") && maTk != null && !maTk.trim().equals("")) {
+							SoDuKy soDuKy = new SoDuKy();
+
+							DoiTuong doiTuong = new DoiTuong();
+							doiTuong.setKhDt(khKh);
+							doiTuong.setLoaiDt(DoiTuong.KHACH_HANG);
+
+							LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+							loaiTaiKhoan.setMaTk(maTk);
+
+							soDuKy.setDoiTuong(doiTuong);
+							soDuKy.setLoaiTaiKhoan(loaiTaiKhoan);
+							soDuKy.setNoDauKy(noDauKy);
+							soDuKy.setCoDauKy(coDauKy);
+
+							khachHangCnDs.add(soDuKy);
+							kyKeToanDAO.themSoDuDauKy(soDuKy);
+						}
+					} catch (Exception e) {
+					}
+				}
+
+				logger.info("Xử lý dữ liệu tại sheet Nhà cung cấp ...");
+				XSSFSheet nhaCcSt = wb.getSheetAt(3);
+				List<DoiTuong> nhaCcDs = new ArrayList<>();
+
+				Iterator<Row> nhaCcIter = nhaCcSt.rowIterator();
+				while (nhaCcIter.hasNext()) {
+					try {
+						XSSFRow row3i = (XSSFRow) nhaCcIter.next();
+
+						// Đọc cột Mã KH
+						XSSFCell cell3i0 = row3i.getCell(0);
+						String khNcc = cell3i0.getStringCellValue();
+
+						// Đọc cột Tên KH
+						XSSFCell cell3i1 = row3i.getCell(1);
+						String tenNcc = cell3i1.getStringCellValue();
+
+						// Đọc cột Mã số thuế
+						XSSFCell cell3i2 = row3i.getCell(2);
+						String maThue = cell3i2.getStringCellValue();
+
+						// Đọc cột Địa chỉ
+						XSSFCell cell3i3 = row3i.getCell(3);
+						String diaChi = cell3i3.getStringCellValue();
+
+						// Đọc cột Email
+						XSSFCell cell3i4 = row3i.getCell(4);
+						String email = cell3i4.getStringCellValue();
+
+						// Đọc cột Số điện thoại
+						XSSFCell cell3i5 = row3i.getCell(5);
+						String sdt = cell3i5.getStringCellValue();
+
+						// Đọc cột Website
+						XSSFCell cell3i6 = row3i.getCell(6);
+						String webSite = cell3i6.getStringCellValue();
+
+						if (khNcc != null && !khNcc.trim().equals("")) {
+							NhaCungCap nhaCc = new NhaCungCap();
+
+							nhaCc.setKhNcc(khNcc);
+							nhaCc.setTenNcc(tenNcc);
+							nhaCc.setMaThue(maThue);
+							nhaCc.setDiaChi(diaChi);
+							nhaCc.setEmail(email);
+							nhaCc.setSdt(sdt);
+							nhaCc.setWebSite(webSite);
+
+							// nhaCcDs.add(nhaCc);
+							nhaCungCapDAO.luuCapNhatNhaCungCap(nhaCc);
+						}
+					} catch (Exception e) {
+					}
+				}
+
+				logger.info("Xử lý dữ liệu tại sheet Công nợ NCC ...");
+				XSSFSheet nhaCcCnSt = wb.getSheetAt(4);
+				List<SoDuKy> nhaCcCnDs = new ArrayList<>();
+
+				Iterator<Row> nhaCcCnIter = nhaCcCnSt.rowIterator();
+				while (nhaCcCnIter.hasNext()) {
+					try {
+						XSSFRow row4i = (XSSFRow) nhaCcCnIter.next();
+
+						// Đọc cột Mã Kh
+						XSSFCell cell4i0 = row4i.getCell(0);
+						String khNcc = cell4i0.getStringCellValue();
+
+						// Đọc cột Mã tài khoản
+						XSSFCell cell4i1 = row4i.getCell(1);
+						String maTk = cell4i1.getStringCellValue();
+
+						// Đọc cột nợ
+						XSSFCell cell4i2 = row4i.getCell(2);
+						double noDauKy = 0;
+						try {
+							noDauKy = cell4i2.getNumericCellValue();
+						} catch (Exception e) {
+						}
+
+						// Đọc cột có
+						XSSFCell cell4i3 = row4i.getCell(3);
+						double coDauKy = 0;
+						try {
+							coDauKy = cell4i3.getNumericCellValue();
+						} catch (Exception e) {
+						}
+
+						if (khNcc != null && !khNcc.trim().equals("") && maTk != null && !maTk.trim().equals("")) {
+							SoDuKy soDuKy = new SoDuKy();
+
+							DoiTuong doiTuong = new DoiTuong();
+							doiTuong.setKhDt(khNcc);
+							doiTuong.setLoaiDt(DoiTuong.NHA_CUNG_CAP);
+
+							LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+							loaiTaiKhoan.setMaTk(maTk);
+
+							soDuKy.setDoiTuong(doiTuong);
+							soDuKy.setLoaiTaiKhoan(loaiTaiKhoan);
+							soDuKy.setNoDauKy(noDauKy);
+							soDuKy.setCoDauKy(coDauKy);
+
+							nhaCcCnDs.add(soDuKy);
+							kyKeToanDAO.themSoDuDauKy(soDuKy);
+						}
+					} catch (Exception e) {
+					}
+				}
+
+				logger.info("Xử lý dữ liệu tại sheet Công nợ NV ...");
+				XSSFSheet nhanVienCnSt = wb.getSheetAt(5);
+				List<SoDuKy> nhanVienCnDs = new ArrayList<>();
+
+				Iterator<Row> nhanVienCnIter = nhanVienCnSt.rowIterator();
+				while (nhanVienCnIter.hasNext()) {
+					try {
+						XSSFRow row5i = (XSSFRow) nhanVienCnIter.next();
+
+						// Đọc cột Mã Kh
+						XSSFCell cell5i0 = row5i.getCell(0);
+						String maNv = cell5i0.getStringCellValue();
+						int maNvNum = 0;
+						try {
+							maNvNum = Integer.parseInt(maNv);
+						} catch (Exception e) {
+						}
+
+						// Đọc cột Mã tài khoản
+						XSSFCell cell5i1 = row5i.getCell(1);
+						String maTk = cell5i1.getStringCellValue();
+
+						// Đọc cột nợ
+						XSSFCell cell5i2 = row5i.getCell(2);
+						double noDauKy = 0;
+						try {
+							noDauKy = cell5i2.getNumericCellValue();
+						} catch (Exception e) {
+						}
+
+						// Đọc cột có
+						XSSFCell cell5i3 = row5i.getCell(3);
+						double coDauKy = 0;
+						try {
+							coDauKy = cell5i3.getNumericCellValue();
+						} catch (Exception e) {
+						}
+
+						if (maNvNum != 0 && maTk != null && !maTk.trim().equals("")) {
+							SoDuKy soDuKy = new SoDuKy();
+
+							DoiTuong doiTuong = new DoiTuong();
+							doiTuong.setMaDt(maNvNum);
+							doiTuong.setLoaiDt(DoiTuong.NHAN_VIEN);
+
+							LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+							loaiTaiKhoan.setMaTk(maTk);
+
+							soDuKy.setDoiTuong(doiTuong);
+							soDuKy.setLoaiTaiKhoan(loaiTaiKhoan);
+							soDuKy.setNoDauKy(noDauKy);
+							soDuKy.setCoDauKy(coDauKy);
+
+							nhanVienCnDs.add(soDuKy);
+							kyKeToanDAO.themSoDuDauKy(soDuKy);
+						}
+					} catch (Exception e) {
+					}
+				}
+
+				wb.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			return "redirect:/kyketoan/xem/" + kyKeToan.getMaKyKt();
+		} else {
+			String comment = "Hãy chọn file exel số dư đâu kỳ dữ liệu kế toán.";
+			model.addAttribute("comment", comment);
+			model.addAttribute("mainFinanceForm", form);
+			model.addAttribute("tab", "tabKKT");
+
+			return "nhapSoDuKyKeToan";
+		}
+
+	}
+
+	private List<SoDuKy> layCongNoDoiTuong(KyKeToan kyKeToan, int loaiDt) {
+		if (kyKeToan == null) {
+			return null;
+		}
+
+		List<SoDuKy> doiTuongDs = kyKeToanDAO.danhSachSoDuKyTheoDoiTuong(kyKeToan.getMaKyKt(), loaiDt);
+		List<SoDuKy> phaiThuDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, loaiDt, LoaiTaiKhoan.PHAI_THU_KHACH_HANG);
+		List<SoDuKy> phaiTraDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, loaiDt, LoaiTaiKhoan.PHAI_TRA_NGUOI_BAN);
+
+		List<SoDuKy> doiTuongCNDs = new ArrayList<>();
+		doiTuongCNDs.addAll(phaiThuDs);
+		doiTuongCNDs.addAll(phaiTraDs);
+		Iterator<SoDuKy> doiTuongIter = doiTuongCNDs.iterator();
+		while (doiTuongIter.hasNext()) {
+			SoDuKy soDuKy = doiTuongIter.next();
+			soDuKy.setKyKeToan(kyKeToan);
+		}
+
+		if (doiTuongDs != null) {
+			doiTuongIter = doiTuongDs.iterator();
+			while (doiTuongIter.hasNext()) {
+				SoDuKy soDuKy = doiTuongIter.next();
+
+				Iterator<SoDuKy> cnDtIter = doiTuongCNDs.iterator();
+				while (cnDtIter.hasNext()) {
+					SoDuKy soDuKyTmpl = cnDtIter.next();
+
+					if (soDuKy.equals(soDuKyTmpl)) {
+						soDuKy.tron(soDuKyTmpl);
+						break;
+					}
+				}
+			}
+		}
+
+		List<SoDuKy> doiTuongTmplDs = new ArrayList<>();
+		Iterator<SoDuKy> cnDtIter = doiTuongCNDs.iterator();
+		while (cnDtIter.hasNext()) {
+			SoDuKy soDuKyTmpl = cnDtIter.next();
+
+			doiTuongIter = doiTuongDs.iterator();
+			while (doiTuongIter.hasNext()) {
+				SoDuKy soDuKy = doiTuongIter.next();
+
+				if (!soDuKyTmpl.equals(soDuKy)) {
+					doiTuongTmplDs.add(soDuKyTmpl);
+					break;
+				}
+			}
+		}
+		doiTuongDs.addAll(doiTuongTmplDs);
+
+		return doiTuongDs;
 	}
 }

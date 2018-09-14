@@ -226,6 +226,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 				DoiTuong doiTuong = new DoiTuong();
 				doiTuong.setMaDt(rs.getInt("MA_DT"));
+				doiTuong.setKhDt(rs.getString("KH_DT"));
 				doiTuong.setTenDt(rs.getString("TEN_DT"));
 				doiTuong.setLoaiDt(rs.getInt("LOAI_DT"));
 				doiTuong.setDiaChi(rs.getString("DIA_CHI"));
@@ -351,6 +352,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 				DoiTuong doiTuong = new DoiTuong();
 				doiTuong.setMaDt(rs.getInt("MA_DT"));
+				doiTuong.setKhDt(rs.getString("KH_DT"));
 				doiTuong.setTenDt(rs.getString("TEN_DT"));
 				doiTuong.setLoaiDt(rs.getInt("LOAI_DT"));
 				doiTuong.setDiaChi(rs.getString("DIA_CHI"));

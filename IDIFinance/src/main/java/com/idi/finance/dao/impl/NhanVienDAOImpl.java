@@ -49,6 +49,7 @@ public class NhanVienDAOImpl implements NhanVienDAO {
 
 				doiTuong.setMaDt(rs.getInt("EMPLOYEE_ID"));
 				doiTuong.setLoaiDt(DoiTuong.NHAN_VIEN);
+				doiTuong.setKhDt(rs.getString("KH_NV"));
 				doiTuong.setTenDt(rs.getString("FULL_NAME"));
 				doiTuong.setDiaChi(rs.getString("DEPARTMENT"));
 				doiTuong.setSdt(rs.getString("PHONE_NO"));
@@ -93,6 +94,7 @@ public class NhanVienDAOImpl implements NhanVienDAO {
 				NhanVien nhanVien = new NhanVien();
 
 				nhanVien.setEmployeedId(rs.getInt("EMPLOYEE_ID"));
+				nhanVien.setKhNv(rs.getString("KH_NV"));
 				nhanVien.setFullName(rs.getString("FULL_NAME"));
 				nhanVien.setDepartment(rs.getString("DEPARTMENT"));
 

@@ -18,26 +18,41 @@ $.fn.cellEditable = function(options) {
 		afterRemove : null,
 		beforeSave : null,
 		urlSave : "",
-		afterSave : null
+		afterSave : null,
+		removable : true
 	};
 	var params = $.extend(defaults, options);
 	var table = this;
 
 	// Create UI
 	function createUI() {
-		var newColHtml = '<div class="btn-group pull-right">'
-				+ '<button type="button" class="btn btn-sm btn-default bEdit" title="Edit">'
-				+ '<span class="glyphicon glyphicon-pencil" > </span>'
-				+ '</button>'
-				+ '<button type="button" class="btn btn-sm btn-default bRemove" title="Remove">'
-				+ '<span class="glyphicon glyphicon-trash" > </span>'
-				+ '</button>'
-				+ '<button type="button" class="btn btn-sm btn-default bSave" style="display:none;" title="Save">'
-				+ '<span class="glyphicon glyphicon-ok" > </span>'
-				+ '</button>'
-				+ '<button type="button" class="btn btn-sm btn-default bCancel" style="display:none;" title="Cancel">'
-				+ '<span class="glyphicon glyphicon-remove" > </span>'
-				+ '</button>' + '</div>';
+		var newColHtml = ""
+		if (params.removable) {
+			newColHtml = '<div class="btn-group pull-right">'
+					+ '<button type="button" class="btn btn-sm btn-default bEdit" title="Edit">'
+					+ '<span class="glyphicon glyphicon-pencil" > </span>'
+					+ '</button>'
+					+ '<button type="button" class="btn btn-sm btn-default bRemove" title="Remove">'
+					+ '<span class="glyphicon glyphicon-trash" > </span>'
+					+ '</button>'
+					+ '<button type="button" class="btn btn-sm btn-default bSave" style="display:none;" title="Save">'
+					+ '<span class="glyphicon glyphicon-ok" > </span>'
+					+ '</button>'
+					+ '<button type="button" class="btn btn-sm btn-default bCancel" style="display:none;" title="Cancel">'
+					+ '<span class="glyphicon glyphicon-remove" > </span>'
+					+ '</button>' + '</div>';
+		} else {
+			newColHtml = '<div class="btn-group pull-right">'
+					+ '<button type="button" class="btn btn-sm btn-default bEdit" title="Edit">'
+					+ '<span class="glyphicon glyphicon-pencil" > </span>'
+					+ '</button>'
+					+ '<button type="button" class="btn btn-sm btn-default bSave" style="display:none;" title="Save">'
+					+ '<span class="glyphicon glyphicon-ok" > </span>'
+					+ '</button>'
+					+ '<button type="button" class="btn btn-sm btn-default bCancel" style="display:none;" title="Cancel">'
+					+ '<span class="glyphicon glyphicon-remove" > </span>'
+					+ '</button>' + '</div>';
+		}
 
 		var colEdicHtml = '<td style="width:85px;">' + newColHtml + '</td>';
 		var blankTd = "<td></td>";
@@ -119,7 +134,7 @@ $.fn.cellEditable = function(options) {
 			var inputData = "";
 			var key = $(cell).attr("data");
 
-			if (params.beforeSave != null) {
+			if (params.beforeRemove != null) {
 				inputData = params.beforeRemove(key);
 			}
 

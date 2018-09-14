@@ -47,11 +47,13 @@ public class NhaCungCapDAOImpl implements NhaCungCapDAO {
 
 				doiTuong.setMaDt(rs.getInt("MA_NCC"));
 				doiTuong.setLoaiDt(DoiTuong.NHA_CUNG_CAP);
+				doiTuong.setKhDt(rs.getString("KH_NCC"));
 				doiTuong.setTenDt(rs.getString("TEN_NCC"));
 				doiTuong.setMaThue(rs.getString("MA_THUE"));
 				doiTuong.setDiaChi(rs.getString("DIA_CHI"));
 				doiTuong.setSdt(rs.getString("SDT"));
 				doiTuong.setEmail(rs.getString("EMAIL"));
+				doiTuong.setWebSite(rs.getString("WEBSITE"));
 
 				return doiTuong;
 			} catch (Exception e) {
@@ -113,8 +115,20 @@ public class NhaCungCapDAOImpl implements NhaCungCapDAO {
 
 	@Override
 	public void luuCapNhatNhaCungCap(NhaCungCap nhaCungCap) {
+		if (nhaCungCap == null) {
+			return;
+		}
+
 		int count = 0;
-		String capNhat = "UPDATE NHA_CUNG_CAP SET TEN_NCC=?, MA_THUE=?, DIA_CHI=?, EMAIL=?, SDT=?, WEBSITE=? WHERE MA_NCC=?";
+		String capNhat = "";
+		if (nhaCungCap.getMaNcc() > 0) {
+			capNhat = "UPDATE NHA_CUNG_CAP SET TEN_NCC=?, MA_THUE=?, DIA_CHI=?, EMAIL=?, SDT=?, WEBSITE=? WHERE MA_NCC=?";
+		} else if (nhaCungCap.getKhNcc() != null && !nhaCungCap.getKhNcc().trim().equals("")) {
+			capNhat = "UPDATE NHA_CUNG_CAP SET TEN_NCC=?, MA_THUE=?, DIA_CHI=?, EMAIL=?, SDT=?, WEBSITE=? WHERE KH_NCC=?";
+		} else {
+			return;
+		}
+
 		String taoMoi = "INSERT INTO NHA_CUNG_CAP(KH_NCC, TEN_NCC, MA_THUE, DIA_CHI, EMAIL, SDT, WEBSITE) VALUES(?,?,?,?,?,?,?)";
 		// TODO Auto-generated method stub
 		try {

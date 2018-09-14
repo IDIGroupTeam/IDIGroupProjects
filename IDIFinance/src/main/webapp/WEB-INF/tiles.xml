@@ -451,7 +451,12 @@
 			value="/pages/kyketoan/nhapSoDuKyKeToan.jsp" />
 	</definition>
 
-
+	<!-- Quản lý cấu hình -->
+	<definition name="danhSachCauHinh" extends="taichinh">
+		<put-attribute name="title" value="Danh sách cấu hình" />
+		<put-attribute name="body"
+			value="/pages/cauhinh/cauhinhDs.jsp" />
+	</definition>
 
 	<!-- Quản lý tài khoản kế toán -->
 	<definition name="danhSachTaiKhoan" extends="taichinh">
@@ -680,7 +685,7 @@
 		<put-attribute name="body"
 			value="/pages/doitac/diachi/diaChiDs.jsp" />
 		<put-attribute name="search"
-			value="/pages/doitac/diachi/diaChiDsTk.jsp" />
+			value="/pages/doitac/diachi/diaChiTk.jsp" />
 	</definition>
 
 	<definition name="capNhatDiaChi" extends="crm">

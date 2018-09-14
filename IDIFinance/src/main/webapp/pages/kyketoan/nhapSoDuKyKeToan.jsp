@@ -1,4 +1,5 @@
 <%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
+<%@page import="com.idi.finance.bean.kyketoan.KyKeToan"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
@@ -12,11 +13,12 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		$("#mainFinanceForm").attr("method", "POST");
-		$("#mainFinanceForm").attr("enctype", "multipart/form-data");
-
 		$("#KyKeToanBut").click(
 				function() {
+					$("#mainFinanceForm").attr("method", "POST");
+					$("#mainFinanceForm")
+							.attr("enctype", "multipart/form-data");
+
 					$("#mainFinanceForm").attr("action",
 							"${url}/kyketoan/soduky/luusoduky");
 					$("#mainFinanceForm").submit();
@@ -27,10 +29,14 @@
 <h4>Nhập số dư kỳ kế toán</h4>
 <span>Chọn file excel dữ liệu</span>
 <br />
+<form:hidden path="kyKeToan.maKyKt" />
+<span style="color: red;">${comment}</span>
+<br />
+<input name="soDuKyFile" type="file" />
+<br />
 
-<span style="color: red;">${balanceAssetComment}</span>
-<br />
-<input name="file" type="file" />
-<br />
+<a href="${url}/kyketoan/xem/${mainFinanceForm.kyKeToan.maKyKt}"
+	class="btn btn-info btn-sm">Hủy</a>
+
 <input id="KyKeToanBut" class="btn btn-info btn-sm" type="submit"
 	value="Cập nhật" />

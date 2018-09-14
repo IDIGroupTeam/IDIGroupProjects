@@ -126,8 +126,7 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 				kyKeToan.setKetThuc(rs.getDate("KET_THUC"));
 				kyKeToan.setTrangThai(rs.getInt("TRANG_THAI"));
 				kyKeToan.setMacDinh(rs.getInt("MAC_DINH"));
-				logger.info(kyKeToan + " " + kyKeToan.getTrangThai() + " " + kyKeToan.getMacDinh() + " " + KyKeToan.MO
-						+ " " + KyKeToan.DONG);
+
 				return kyKeToan;
 			} catch (Exception e) {
 				return null;
@@ -265,9 +264,10 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 		logger.info("loaiDt " + loaiDt);
 		logger.info("maTk " + maTk);
 
-		Object[] objs = { loaiDt, kyKeToan.getBatDau(), kyKeToan.getKetThuc() };
+		Object[] objs = { loaiDt, kyKeToan.getBatDau(), kyKeToan.getKetThuc(), loaiDt, kyKeToan.getBatDau(),
+				kyKeToan.getKetThuc(), loaiDt, kyKeToan.getBatDau(), kyKeToan.getKetThuc() };
 		List<SoDuKy> soDuKyDs = jdbcTmpl.query(query, objs, new SoDuKyTruocDoiTuongMapper());
-		logger.info("soDuKyDs " + soDuKyDs.size());
+
 		List<SoDuKy> ketQua = null;
 		if (soDuKyDs != null) {
 			ketQua = new ArrayList<>();
@@ -304,6 +304,8 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 				DoiTuong doiTuong = new DoiTuong();
 				doiTuong.setMaDt(rs.getInt("MA_DT"));
 				doiTuong.setLoaiDt(rs.getInt("LOAI_DT"));
+				doiTuong.setKhDt(rs.getString("KH_DT"));
+				doiTuong.setTenDt(rs.getString("TEN_DT"));
 				soDuKy.setDoiTuong(doiTuong);
 
 				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
@@ -521,6 +523,7 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 
 				DoiTuong doiTuong = new DoiTuong();
 				doiTuong.setMaDt(rs.getInt("MA_DT"));
+				doiTuong.setKhDt(rs.getString("KH_DT"));
 				doiTuong.setTenDt(rs.getString("TEN_DT"));
 				doiTuong.setLoaiDt(rs.getInt("LOAI_DT"));
 				doiTuong.setDiaChi(rs.getString("DIA_CHI"));

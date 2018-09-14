@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
@@ -8,7 +9,8 @@
 	<mvc:annotation-driven />
 	<mvc:resources mapping="/public/**" location="/public/" />
 	<mvc:default-servlet-handler />
-	<context:component-scan base-package="com.idi.finance" />
+	<context:component-scan
+		base-package="com.idi.finance" />
 
 	<!-- Config folder to load jsp page for view layer with apache tiles -->
 	<bean id="viewResolver"
@@ -27,7 +29,12 @@
 	<!-- Read idifinance.properties properties file -->
 	<bean id="properties"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="classpath:idifinance.properties" />
+		<property name="locations">
+			<list>
+				<value>classpath:idifinance.properties</value>
+				<value>classpath:idifinance_hangso.properties</value>
+			</list>
+		</property>
 		<property name="ignoreResourceNotFound" value="true" />
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 	</bean>
@@ -38,20 +45,34 @@
 		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
 
-	<bean id="khachHangValidator" class="com.idi.finance.validator.KhachHangValidator" />
-	<bean id="nhaCungCapValidator" class="com.idi.finance.validator.NhaCungCapValidator" />
-	<bean id="chungTuValidator" class="com.idi.finance.validator.ChungTuValidator" />
-	<bean id="loaiTaiKhoanValidator" class="com.idi.finance.validator.LoaiTaiKhoanValidator" />
-	<bean id="nghiepVuValidator" class="com.idi.finance.validator.NghiepVuValidator" />
-	<bean id="nganHangValidator" class="com.idi.finance.validator.NganHangValidator" />
-	<bean id="nganHangTaiKhoanValidator" class="com.idi.finance.validator.NganHangTaiKhoanValidator" />
-	<bean id="kyKeToanValidator" class="com.idi.finance.validator.KyKeToanValidator" />
-	<bean id="donViValidator" class="com.idi.finance.validator.DonViValidator" />
-	<bean id="nhomHangHoaValidator" class="com.idi.finance.validator.NhomHangHoaValidator" />
-	<bean id="hangHoaValidator" class="com.idi.finance.validator.HangHoaValidator" />
-	<bean id="khoBaiValidator" class="com.idi.finance.validator.KhoBaiValidator" />
-	<bean id="ketChuyenButToanValidator" class="com.idi.finance.validator.KetChuyenButToanValidator" />
-	<bean id="balanceSheetValidator" class="com.idi.finance.validator.BalanceSheetValidator" />
+	<bean id="khachHangValidator"
+		class="com.idi.finance.validator.KhachHangValidator" />
+	<bean id="nhaCungCapValidator"
+		class="com.idi.finance.validator.NhaCungCapValidator" />
+	<bean id="chungTuValidator"
+		class="com.idi.finance.validator.ChungTuValidator" />
+	<bean id="loaiTaiKhoanValidator"
+		class="com.idi.finance.validator.LoaiTaiKhoanValidator" />
+	<bean id="nghiepVuValidator"
+		class="com.idi.finance.validator.NghiepVuValidator" />
+	<bean id="nganHangValidator"
+		class="com.idi.finance.validator.NganHangValidator" />
+	<bean id="nganHangTaiKhoanValidator"
+		class="com.idi.finance.validator.NganHangTaiKhoanValidator" />
+	<bean id="kyKeToanValidator"
+		class="com.idi.finance.validator.KyKeToanValidator" />
+	<bean id="donViValidator"
+		class="com.idi.finance.validator.DonViValidator" />
+	<bean id="nhomHangHoaValidator"
+		class="com.idi.finance.validator.NhomHangHoaValidator" />
+	<bean id="hangHoaValidator"
+		class="com.idi.finance.validator.HangHoaValidator" />
+	<bean id="khoBaiValidator"
+		class="com.idi.finance.validator.KhoBaiValidator" />
+	<bean id="ketChuyenButToanValidator"
+		class="com.idi.finance.validator.KetChuyenButToanValidator" />
+	<bean id="balanceSheetValidator"
+		class="com.idi.finance.validator.BalanceSheetValidator" />
 
 	<!-- Config for upload file feature -->
 	<bean id="multipartResolver"
@@ -66,17 +87,25 @@
 	<!-- Config database connection -->
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+		<property name="driverClassName"
+			value="com.mysql.cj.jdbc.Driver" />
 		<property name="url"
 			value="jdbc:mysql://localhost:3306/idigroup?useUnicode=true&amp;characterEncoding=UTF-8" />
 		<property name="username" value="root" />
 		<property name="password" value="" />
 	</bean>
-	<bean id="jdbcTmpl" class="org.springframework.jdbc.core.JdbcTemplate">
+	<bean id="jdbcTmpl"
+		class="org.springframework.jdbc.core.JdbcTemplate">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 
-	<bean id="balanceSheetDAO" class="com.idi.finance.dao.impl.BalanceSheetDAOImpl">
+	<bean id="cauHinhDAO"
+		class="com.idi.finance.dao.impl.CauHinhDAOImpl">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+
+	<bean id="balanceSheetDAO"
+		class="com.idi.finance.dao.impl.BalanceSheetDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
@@ -84,55 +113,68 @@
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
-	<bean id="taiKhoanDAO" class="com.idi.finance.dao.impl.TaiKhoanDAOImpl">
+	<bean id="taiKhoanDAO"
+		class="com.idi.finance.dao.impl.TaiKhoanDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
-	<bean id="chungTuDAO" class="com.idi.finance.dao.impl.ChungTuDAOImpl">
+	<bean id="chungTuDAO"
+		class="com.idi.finance.dao.impl.ChungTuDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
-	<bean id="khachHangDAO" class="com.idi.finance.dao.impl.KhachHangDAOImpl">
+	<bean id="khachHangDAO"
+		class="com.idi.finance.dao.impl.KhachHangDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
-	<bean id="nhaCungCapDAO" class="com.idi.finance.dao.impl.NhaCungCapDAOImpl">
+	<bean id="nhaCungCapDAO"
+		class="com.idi.finance.dao.impl.NhaCungCapDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
-	<bean id="nhanVienDAO" class="com.idi.finance.dao.impl.NhanVienDAOImpl">
+	<bean id="nhanVienDAO"
+		class="com.idi.finance.dao.impl.NhanVienDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
-	<bean id="soKeToanDAO" class="com.idi.finance.dao.impl.SoKeToanDAOImpl">
+	<bean id="soKeToanDAO"
+		class="com.idi.finance.dao.impl.SoKeToanDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
-	<bean id="baoCaoDAO" class="com.idi.finance.dao.impl.BaoCaoDAOImpl">
+	<bean id="baoCaoDAO"
+		class="com.idi.finance.dao.impl.BaoCaoDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
-	<bean id="congViecDAO" class="com.idi.finance.dao.impl.CongViecDAOImpl">
+	<bean id="congViecDAO"
+		class="com.idi.finance.dao.impl.CongViecDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
-	<bean id="kyKeToanDAO" class="com.idi.finance.dao.impl.KyKeToanDAOImpl">
+	<bean id="kyKeToanDAO"
+		class="com.idi.finance.dao.impl.KyKeToanDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
-	<bean id="hangHoaDAO" class="com.idi.finance.dao.impl.HangHoaDAOImpl">
+	<bean id="hangHoaDAO"
+		class="com.idi.finance.dao.impl.HangHoaDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
-	<bean id="diaChiDAO" class="com.idi.finance.dao.impl.DiaChiDAOImpl">
+	<bean id="diaChiDAO"
+		class="com.idi.finance.dao.impl.DiaChiDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
-	<bean id="nganHangDAO" class="com.idi.finance.dao.impl.NganHangDAOImpl">
+	<bean id="nganHangDAO"
+		class="com.idi.finance.dao.impl.NganHangDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
-	<bean id="khoHangDAO" class="com.idi.finance.dao.impl.KhoHangDAOImpl">
+	<bean id="khoHangDAO"
+		class="com.idi.finance.dao.impl.KhoHangDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 </beans>

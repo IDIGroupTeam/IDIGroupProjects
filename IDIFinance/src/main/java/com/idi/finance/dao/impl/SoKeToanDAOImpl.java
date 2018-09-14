@@ -226,6 +226,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 				DoiTuong doiTuong = new DoiTuong();
 				doiTuong.setMaDt(rs.getInt("MA_DT"));
+				doiTuong.setKhDt(rs.getString("KH_DT"));
 				doiTuong.setTenDt(rs.getString("TEN_DT"));
 				doiTuong.setLoaiDt(rs.getInt("LOAI_DT"));
 				doiTuong.setDiaChi(rs.getString("DIA_CHI"));
@@ -338,6 +339,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 				DoiTuong doiTuong = new DoiTuong();
 				doiTuong.setMaDt(rs.getInt("MA_DT"));
+				doiTuong.setKhDt(rs.getString("KH_DT"));
 				doiTuong.setTenDt(rs.getString("TEN_DT"));
 				doiTuong.setLoaiDt(rs.getInt("LOAI_DT"));
 				doiTuong.setDiaChi(rs.getString("DIA_CHI"));
@@ -619,6 +621,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				DoiTuong doiTuong = new DoiTuong();
 				doiTuong.setLoaiDt(rs.getInt("LOAI_DT"));
 				doiTuong.setMaDt(rs.getInt("MA_DT"));
+				doiTuong.setKhDt(rs.getString("KH_DT"));
 				doiTuong.setTenDt(rs.getString("TEN_DT"));
 				doiTuong.setMaThue(rs.getString("MA_THUE"));
 				doiTuong.setDiaChi(rs.getString("DIA_CHI"));

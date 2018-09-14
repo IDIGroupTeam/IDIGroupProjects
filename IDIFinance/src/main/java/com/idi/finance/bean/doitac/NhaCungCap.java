@@ -96,14 +96,14 @@ public class NhaCungCap {
 				return false;
 			}
 
-			if (tenNcc == null) {
-				if (item.getTenNcc() != null)
-					return false;
-			} else if (item.getTenNcc() == null) {
-				return false;
-			} else if (!tenNcc.trim().equals(item.getTenNcc().trim())) {
-				return false;
-			}
+			// if (tenNcc == null) {
+			// if (item.getTenNcc() != null)
+			// return false;
+			// } else if (item.getTenNcc() == null) {
+			// return false;
+			// } else if (!tenNcc.trim().equals(item.getTenNcc().trim())) {
+			// return false;
+			// }
 		} catch (Exception e) {
 			return false;
 		}

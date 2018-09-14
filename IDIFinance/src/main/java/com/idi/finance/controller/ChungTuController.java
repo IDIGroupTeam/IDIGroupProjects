@@ -177,7 +177,8 @@ public class ChungTuController {
 			Model model) {
 		try {
 			JasperReport jasperReport = getCompiledFile("PhieuThu", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, maCt);
+			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, chungTu);
 
 			res.reset();
 			res.resetBuffer();
@@ -2314,6 +2315,7 @@ public class ChungTuController {
 		File reportFile = new File(jasper);
 		// If compiled file is not found, then compile XML template
 		if (!reportFile.exists()) {
+			logger.info("Compile Jasper report ...");
 			JasperCompileManager.compileReportToFile(jrxml, jasper);
 		}
 		JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(reportFile.getPath());

@@ -46,11 +46,13 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 
 				doiTuong.setMaDt(rs.getInt("MA_KH"));
 				doiTuong.setLoaiDt(DoiTuong.KHACH_HANG);
+				doiTuong.setKhDt(rs.getString("KH_KH"));
 				doiTuong.setTenDt(rs.getString("TEN_KH"));
 				doiTuong.setMaThue(rs.getString("MA_THUE"));
 				doiTuong.setDiaChi(rs.getString("DIA_CHI"));
 				doiTuong.setSdt(rs.getString("SDT"));
 				doiTuong.setEmail(rs.getString("EMAIL"));
+				doiTuong.setWebSite(rs.getString("WEBSITE"));
 
 				return doiTuong;
 			} catch (Exception e) {
@@ -112,8 +114,20 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 
 	@Override
 	public void luuCapNhatKhachHang(KhachHang khachHang) {
+		if (khachHang == null) {
+			return;
+		}
+		
 		int count = 0;
-		String capNhat = "UPDATE KHACH_HANG SET TEN_KH=?, MA_THUE=?, DIA_CHI=?, EMAIL=?, SDT=?, WEBSITE=? WHERE MA_KH=?";
+		String capNhat = "";
+		if (khachHang.getMaKh() > 0) {
+			capNhat = "UPDATE KHACH_HANG SET TEN_KH=?, MA_THUE=?, DIA_CHI=?, EMAIL=?, SDT=?, WEBSITE=? WHERE MA_KH=?";
+		} else if (khachHang.getKhKh() != null && !khachHang.getKhKh().trim().equals("")) {
+			capNhat = "UPDATE KHACH_HANG SET TEN_KH=?, MA_THUE=?, DIA_CHI=?, EMAIL=?, SDT=?, WEBSITE=? WHERE KH_KH=?";
+		} else {
+			return;
+		}
+
 		String taoMoi = "INSERT INTO KHACH_HANG(KH_KH, TEN_KH, MA_THUE, DIA_CHI, EMAIL, SDT, WEBSITE) VALUES(?,?,?,?,?,?,?)";
 		try {
 			// update firstly, if now row is updated, we will be insert data

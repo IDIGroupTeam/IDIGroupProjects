@@ -6,11 +6,14 @@ import java.util.HashMap;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.dao.BaoCaoDAO;
 
+import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 public class BaoCaoDAOImpl implements BaoCaoDAO {
 	private static final Logger logger = Logger.getLogger(BaoCaoDAOImpl.class);
@@ -37,6 +40,22 @@ public class BaoCaoDAOImpl implements BaoCaoDAO {
 		try {
 			return JasperRunManager.runReportToPdf(jasperReport, hmParams, jdbcTmpl.getDataSource().getConnection());
 		} catch (JRException | SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public byte[] taoBaoCaoChungTu(JasperReport jasperReport, ChungTu chungTu) {
+		if (jasperReport == null || chungTu == null) {
+			return null;
+		}
+
+		HashMap<String, Object> hmParams = new HashMap<>();
+		hmParams.put("chungTu", chungTu);
+
+		try {
+			return JasperRunManager.runReportToPdf(jasperReport, hmParams);
+		} catch (JRException e) {
 			e.printStackTrace();
 		}
 		return null;

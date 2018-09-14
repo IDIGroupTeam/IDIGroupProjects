@@ -96,14 +96,14 @@ public class KhachHang {
 				return false;
 			}
 
-			if (tenKh == null) {
-				if (item.getTenKh() != null)
-					return false;
-			} else if (item.getTenKh() == null) {
-				return false;
-			} else if (!tenKh.trim().equals(item.getTenKh().trim())) {
-				return false;
-			}
+			// if (tenKh == null) {
+			// if (item.getTenKh() != null)
+			// return false;
+			// } else if (item.getTenKh() == null) {
+			// return false;
+			// } else if (!tenKh.trim().equals(item.getTenKh().trim())) {
+			// return false;
+			// }
 		} catch (Exception e) {
 			return false;
 		}

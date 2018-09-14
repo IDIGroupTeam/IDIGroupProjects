@@ -17,6 +17,7 @@ public class DoiTuong {
 	private String sdt;
 	private String email;
 	private String maThue;
+	private String webSite;
 	private String nguoiNop;
 
 	private DuLieuKeToan duLieuKeToan;
@@ -94,6 +95,14 @@ public class DoiTuong {
 		this.maThue = maThue;
 	}
 
+	public String getWebSite() {
+		return webSite;
+	}
+
+	public void setWebSite(String webSite) {
+		this.webSite = webSite;
+	}
+
 	public String getNguoiNop() {
 		return nguoiNop;
 	}
@@ -133,6 +142,15 @@ public class DoiTuong {
 
 			if (loaiDt != item.getLoaiDt())
 				return false;
+
+			if (khDt == null) {
+				if (item.getKhDt() != null)
+					return false;
+			} else if (item.getKhDt() == null) {
+				return false;
+			} else if (!khDt.equals(item.getKhDt())) {
+				return false;
+			}
 		} catch (Exception e) {
 			return false;
 		}

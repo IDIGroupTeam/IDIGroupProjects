@@ -78,6 +78,7 @@
 		<ul class="dropdown-menu">
 			<li id="tabKKT"><a href="${url}/kyketoan/danhsach">Kỳ kế
 					toán</a></li>
+			<li id="tabDSCH"><a href="${url}/cauhinh/danhsach">Cấu hình</a></li>
 
 			<li class="divider"></li>
 			<li id="tabDSNT"><a href="#">Danh sách ngoại tệ</a></li>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PhieuThu" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cf8322ff-d79f-440b-abac-61aa6a86f6a7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySQL"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -15,17 +15,17 @@
 	<style name="Base" isDefault="true" fontName="Times New Roman" fontSize="13" isBold="false" isItalic="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 	<parameter name="MA_CT" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT CT.MA_CT, CT.SO_CT, CT.LOAI_CT, CT.NGAY_LAP, CT.NGAY_HT, CT.NGAY_TT, CT.LY_DO,  CT.SO_TIEN AS TONG_SO_TIEN, CT.LOAI_TIEN, CT.TY_GIA, CT.KEM_THEO, CT.MA_DT, CT.LOAI_DT, CT.NGUOI_NOP, CT_DT.FULL_NAME COLLATE utf8_general_ci AS TEN_DT , '' AS MA_THUE, CT_DT.DEPARTMENT COLLATE utf8_general_ci AS DIA_CHI, TK.MA_TK, TK.SO_TIEN, TK.SO_DU, TK.LY_DO AS TK_LY_DO, TKDM.TEN_TK, NT.TEN_NT 
-FROM CHUNG_TU AS CT, EMPLOYEE_INFO AS CT_DT, CHUNG_TU_TAI_KHOAN AS TK, TAI_KHOAN_DANH_MUC AS TKDM, NGOAI_TE AS NT 
-WHERE CT.MA_CT=$P{MA_CT} AND CT.MA_CT=TK.MA_CT AND CT.MA_DT=CT_DT.EMPLOYEE_ID AND TK.MA_TK=TKDM.MA_TK AND CT.LOAI_TIEN=NT.MA_NT AND CT.LOAI_DT=1 
+		<![CDATA[SELECT CT.MA_CT, CT.SO_CT, CT.LOAI_CT, CT.TINH_CHAT, CT.NGAY_LAP, CT.NGAY_HT, CT.NGAY_TT, CT.LY_DO, CT.KEM_THEO, CT.LOAI_TIEN, CT.TY_GIA, CT.MA_DT, CT.LOAI_DT, CT.NGUOI_NOP, '' AS KH_DT, CT_DT.FULL_NAME COLLATE utf8_general_ci AS TEN_DT , '' AS MA_THUE, CT_DT.DEPARTMENT COLLATE utf8_general_ci AS DIA_CHI, NVKT.MA_NVKT, NVKT.MA_TK, NVKT.SO_TIEN, NVKT.SO_DU, NVKT.LY_DO AS TK_LY_DO, TKDM.TEN_TK, NT.TEN_NT 
+FROM CHUNG_TU AS CT, EMPLOYEE_INFO AS CT_DT, CHUNG_TU_NVKT AS CTNVKT, NGHIEP_VU_KE_TOAN AS NVKT, TAI_KHOAN_DANH_MUC AS TKDM, NGOAI_TE AS NT 
+WHERE CT.MA_CT=$P{MA_CT} AND CT.MA_CT=CTNVKT.MA_CT AND CT.LOAI_CT='PT' AND CT.MA_DT=CT_DT.EMPLOYEE_ID AND CTNVKT.MA_NVKT=NVKT.MA_NVKT AND NVKT.MA_TK=TKDM.MA_TK AND CT.LOAI_TIEN=NT.MA_NT AND CT.LOAI_DT=1 
 UNION 
-SELECT CT.MA_CT, CT.SO_CT, CT.LOAI_CT, CT.NGAY_LAP, CT.NGAY_HT, CT.NGAY_TT, CT.LY_DO, CT.SO_TIEN AS TONG_SO_TIEN, CT.LOAI_TIEN, CT.TY_GIA, CT.KEM_THEO, CT.MA_DT, CT.LOAI_DT, CT.NGUOI_NOP, CT_DT.TEN_KH AS TEN_DT, CT_DT.MA_THUE, CT_DT.DIA_CHI, TK.MA_TK, TK.SO_TIEN, TK.SO_DU, TK.LY_DO AS TK_LY_DO, TKDM.TEN_TK, NT.TEN_NT 
-FROM CHUNG_TU AS CT, KHACH_HANG AS CT_DT, CHUNG_TU_TAI_KHOAN AS TK, TAI_KHOAN_DANH_MUC AS TKDM, NGOAI_TE AS NT 
-WHERE CT.MA_CT=$P{MA_CT} AND CT.MA_CT=TK.MA_CT AND CT.MA_DT=CT_DT.MA_KH AND TK.MA_TK=TKDM.MA_TK AND CT.LOAI_TIEN=NT.MA_NT AND (CT.LOAI_DT=2 OR CT.LOAI_DT=4) 
+SELECT CT.MA_CT, CT.SO_CT, CT.LOAI_CT, CT.TINH_CHAT, CT.NGAY_LAP, CT.NGAY_HT, CT.NGAY_TT, CT.LY_DO, CT.KEM_THEO, CT.LOAI_TIEN, CT.TY_GIA, CT.MA_DT, CT.LOAI_DT, CT.NGUOI_NOP, CT_DT.KH_KH AS KH_DT, CT_DT.TEN_KH AS TEN_DT, CT_DT.MA_THUE, CT_DT.DIA_CHI, NVKT.MA_NVKT, NVKT.MA_TK, NVKT.SO_TIEN, NVKT.SO_DU, NVKT.LY_DO AS TK_LY_DO, TKDM.TEN_TK, NT.TEN_NT 
+FROM CHUNG_TU AS CT, KHACH_HANG AS CT_DT, CHUNG_TU_NVKT AS CTNVKT, NGHIEP_VU_KE_TOAN AS NVKT, TAI_KHOAN_DANH_MUC AS TKDM, NGOAI_TE AS NT 
+WHERE CT.MA_CT=$P{MA_CT} AND CT.MA_CT=CTNVKT.MA_CT AND CT.LOAI_CT='PT' AND CT.MA_DT=CT_DT.MA_KH AND CTNVKT.MA_NVKT=NVKT.MA_NVKT AND NVKT.MA_TK=TKDM.MA_TK AND CT.LOAI_TIEN=NT.MA_NT AND CT.LOAI_DT IN (2, 4) 
 UNION 
-SELECT CT.MA_CT, CT.SO_CT, CT.LOAI_CT, CT.NGAY_LAP, CT.NGAY_HT, CT.NGAY_TT, CT.LY_DO, CT.SO_TIEN AS TONG_SO_TIEN, CT.LOAI_TIEN, CT.TY_GIA, CT.KEM_THEO, CT.MA_DT, CT.LOAI_DT, CT.NGUOI_NOP, CT_DT.TEN_NCC AS TEN_DT, CT_DT.MA_THUE, CT_DT.DIA_CHI, TK.MA_TK, TK.SO_TIEN, TK.SO_DU, TK.LY_DO AS TK_LY_DO, TKDM.TEN_TK, NT.TEN_NT 
-FROM CHUNG_TU AS CT, NHA_CUNG_CAP AS CT_DT, CHUNG_TU_TAI_KHOAN AS TK, TAI_KHOAN_DANH_MUC AS TKDM, NGOAI_TE AS NT 
-WHERE CT.MA_CT=$P{MA_CT} AND CT.MA_CT=TK.MA_CT AND CT.MA_DT=CT_DT.MA_NCC AND TK.MA_TK=TKDM.MA_TK AND CT.LOAI_TIEN=NT.MA_NT AND CT.LOAI_DT=3 
+SELECT CT.MA_CT, CT.SO_CT, CT.LOAI_CT, CT.TINH_CHAT, CT.NGAY_LAP, CT.NGAY_HT, CT.NGAY_TT, CT.LY_DO, CT.KEM_THEO, CT.LOAI_TIEN, CT.TY_GIA, CT.MA_DT, CT.LOAI_DT, CT.NGUOI_NOP, CT_DT.KH_NCC AS KH_DT, CT_DT.TEN_NCC AS TEN_DT, CT_DT.MA_THUE, CT_DT.DIA_CHI, NVKT.MA_NVKT, NVKT.MA_TK, NVKT.SO_TIEN, NVKT.SO_DU, NVKT.LY_DO AS TK_LY_DO, TKDM.TEN_TK, NT.TEN_NT 
+FROM CHUNG_TU AS CT, NHA_CUNG_CAP AS CT_DT, CHUNG_TU_NVKT AS CTNVKT, NGHIEP_VU_KE_TOAN AS NVKT, TAI_KHOAN_DANH_MUC AS TKDM, NGOAI_TE AS NT 
+WHERE CT.MA_CT=$P{MA_CT} AND CT.MA_CT=CTNVKT.MA_CT AND CT.LOAI_CT='PT' AND CT.MA_DT=CT_DT.MA_NCC AND CTNVKT.MA_NVKT=NVKT.MA_NVKT AND NVKT.MA_TK=TKDM.MA_TK AND CT.LOAI_TIEN=NT.MA_NT AND CT.LOAI_DT=3 
 ORDER BY NGAY_HT DESC, MA_CT]]>
 	</queryString>
 	<field name="MA_CT" class="java.lang.Integer">
@@ -48,9 +48,6 @@ ORDER BY NGAY_HT DESC, MA_CT]]>
 	</field>
 	<field name="LY_DO" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="LY_DO"/>
-	</field>
-	<field name="TONG_SO_TIEN" class="java.lang.Double">
-		<property name="com.jaspersoft.studio.field.label" value="TONG_SO_TIEN"/>
 	</field>
 	<field name="LOAI_TIEN" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="LOAI_TIEN"/>
@@ -267,7 +264,7 @@ ORDER BY NGAY_HT DESC, MA_CT]]>
 				<textElement>
 					<font fontName="Times New Roman" size="13"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TONG_SO_TIEN}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{SO_TIEN}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="60" width="180" height="20" uuid="93d597da-bdfb-4417-99cd-c52b506aa183">

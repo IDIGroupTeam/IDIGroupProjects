@@ -76,7 +76,7 @@
 			sách kỳ kế toán</a>
 		<c:choose>
 			<c:when test="${kyKeToan.trangThai==1}">
-				<a href="${url}/kyketoan/chuyensodu/${kyKeToan.maKyKt}"
+				<a href="${url}/kyketoan/soduky/chuyen/${kyKeToan.maKyKt}"
 					class="btn btn-info btn-sm"
 					title="Chuyển số dư cuối kỳ trước sang số dư đầu kỳ hiện tại">Chuyển
 					số dư từ kỳ trước</a>
@@ -84,7 +84,7 @@
 		</c:choose>
 		<c:choose>
 			<c:when test="${kyKeToan.trangThai==1}">
-				<a href="${url}/kyketoan/nhapsoduky/${kyKeToan.maKyKt}"
+				<a href="${url}/kyketoan/soduky/nhap/${kyKeToan.maKyKt}"
 					class="btn btn-info btn-sm" title="Nhập số dư đầu kỳ">Nhập số
 					dư đầu kỳ</a>
 			</c:when>
@@ -98,7 +98,7 @@
 		</c:choose>
 		<c:choose>
 			<c:when test="${kyKeToan.trangThai==1}">
-				<a href="${url}/kyketoan/xuatsoduky/${kyKeToan.maKyKt}"
+				<a href="${url}/kyketoan/soduky/xuat/${kyKeToan.maKyKt}"
 					class="btn btn-info btn-sm" title="Xuất số dư cuối kỳ">Xuất số
 					dư cuối kỳ</a>
 			</c:when>
@@ -145,9 +145,9 @@
 				hàng</a></li>
 		<li><a data-toggle="tab" href="#sdCongNoNCC">Công nợ NCC</a></li>
 		<li><a data-toggle="tab" href="#sdCongNoNV">Công nợ nhân viên</a></li>
-		<li><a data-toggle="tab" href="#sdTonKho">Tồn kho VTHH</a></li>
+		<!-- <li><a data-toggle="tab" href="#sdTonKho">Tồn kho VTHH</a></li>
 		<li><a data-toggle="tab" href="#sdCCDC">Công cụ, dụng cụ</a></li>
-		<li><a data-toggle="tab" href="#sdTSCD">Tài sản cố định</a></li>
+		<li><a data-toggle="tab" href="#sdTSCD">Tài sản cố định</a></li> -->
 	</ul>
 
 	<div class="tab-content table-responsive sub-content">
