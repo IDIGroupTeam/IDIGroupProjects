@@ -212,8 +212,8 @@
 		<c:choose>
 			<c:when
 				test="${kyKeToan!=null && kyKeToan.trangThai!= KyKeToan.DONG}">
-				<a href="${url}/chungtu/baono/pdf/${chungTu.maCt}"
-					class="btn btn-info btn-sm">Xuất Pdf </a>
+				<a href="${url}/chungtu/baono/pdf/${chungTu.maCt}" target="_blank"
+					class="btn btn-info btn-sm">Xuất báo nợ</a>
 				<a id="xoaNut" href="${url}/chungtu/baono/xoa/${chungTu.maCt}"
 					class="btn btn-info btn-sm">Xóa</a>
 				<a href="${url}/chungtu/baono/sua/${chungTu.maCt}"

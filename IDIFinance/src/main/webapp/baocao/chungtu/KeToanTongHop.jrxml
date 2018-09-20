@@ -13,6 +13,7 @@
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<import value="com.idi.finance.utils.ReportUtils"/>
+	<import value="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<import value="org.apache.commons.lang.WordUtils"/>
 	<style name="Base" isDefault="true" fontName="VU Times" fontSize="14" isBold="false" isItalic="false" isPdfEmbedded="true"/>
 	<parameter name="TEN_CONG_TY" class="com.idi.finance.bean.CauHinh" isForPrompting="false"/>
@@ -91,6 +92,7 @@
 	<field name="loaiTien.tenLt" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="loaiTien.tenLt"/>
 	</field>
+	<field name="taiKhoanNoDs" class="java.util.List"/>
 	<field name="taiKhoanCoDs" class="java.util.List"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -120,7 +122,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="VU Times" size="21" isBold="true"/>
 				</textElement>
-				<text><![CDATA[PHIẾU THU]]></text>
+				<text><![CDATA[PHIẾU KẾ TOÁN TỔNG HỢP]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="650" y="0" width="55" height="20" uuid="3107be7a-6749-4903-8c34-f9376f2d1b8b">
@@ -214,7 +216,7 @@
 			</textField>
 			<textField>
 				<reportElement x="705" y="40" width="50" height="20" uuid="a225a081-9bb3-4160-92f5-3447ffc04727"/>
-				<textFieldExpression><![CDATA[$F{taiKhoanNoDs[0].loaiTaiKhoan.maTk}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[ReportUtils.layDanhSachTaiKhoan($F{taiKhoanNoDs})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="725" y="0" width="20" height="20" uuid="4a26f557-6569-4587-a455-9bb5a9f53b2b"/>
@@ -230,7 +232,7 @@
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="125" splitType="Stretch">
+		<band height="200" splitType="Stretch">
 			<textField>
 				<reportElement x="180" y="0" width="620" height="20" uuid="88ec78c9-a458-466e-a405-f4f9f3fbd9b8">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="caa0ce22-c1a5-4019-ae9a-3aca26f3ede9"/>
@@ -248,7 +250,7 @@
 				<textElement>
 					<font fontName="VU Times" size="14"/>
 				</textElement>
-				<text><![CDATA[Họ và tên người nộp tiền:]]></text>
+				<text><![CDATA[Họ và tên đối tượng:]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="180" y="20" width="620" height="20" uuid="b67013ba-e1b7-45a9-b3a5-29722e721183">

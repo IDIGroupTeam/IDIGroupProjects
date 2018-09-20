@@ -220,7 +220,6 @@ public class ChungTu {
 				taiKhoanCoDs.add(taiKhoan);
 			}
 		}
-
 	}
 
 	public void themTaiKhoan(List<TaiKhoan> taiKhoanDs) {

@@ -1,11 +1,11 @@
 package com.idi.finance.bean;
 
 public class CauHinh {
-	public static final String CHU_TICH = "CHU_TICH";
+	public static final String TEN_CONG_TY = "TEN_CONG_TY";
 	public static final String DIA_CHI = "DIA_CHI";
+	public static final String CHU_TICH = "CHU_TICH";
 	public static final String GIAM_DOC = "GIAM_DOC";
 	public static final String KE_TOAN_TRUONG = "KE_TOAN_TRUONG";
-	public static final String TEN_CONG_TY = "TEN_CONG_TY";
 	public static final String THU_KHO = "THU_KHO";
 	public static final String THU_QUY = "THU_QUY";
 

@@ -120,7 +120,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="VU Times" size="21" isBold="true"/>
 				</textElement>
-				<text><![CDATA[PHIẾU THU]]></text>
+				<text><![CDATA[BÁO CÓ]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="650" y="0" width="55" height="20" uuid="3107be7a-6749-4903-8c34-f9376f2d1b8b">

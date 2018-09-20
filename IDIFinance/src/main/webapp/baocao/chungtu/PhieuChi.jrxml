@@ -120,7 +120,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="VU Times" size="21" isBold="true"/>
 				</textElement>
-				<text><![CDATA[PHIẾU THU]]></text>
+				<text><![CDATA[PHIẾU CHI]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="650" y="0" width="55" height="20" uuid="3107be7a-6749-4903-8c34-f9376f2d1b8b">
@@ -248,7 +248,7 @@
 				<textElement>
 					<font fontName="VU Times" size="14"/>
 				</textElement>
-				<text><![CDATA[Họ và tên người nộp tiền:]]></text>
+				<text><![CDATA[Họ và tên người nhận tiền:]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="180" y="20" width="620" height="20" uuid="b67013ba-e1b7-45a9-b3a5-29722e721183">
@@ -468,7 +468,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="VU Times" size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Người nộp tiền]]></text>
+				<text><![CDATA[Người nhận tiền]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="480" y="25" width="160" height="20" uuid="d0ace38a-0ff8-4923-b614-29cdb812ecde">
