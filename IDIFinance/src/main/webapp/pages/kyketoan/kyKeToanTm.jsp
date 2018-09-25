@@ -46,7 +46,7 @@
 	<label class="control-label col-sm-2" for="batDau">Bắt đầu</label>
 	<div class="col-sm-2">
 		<div class="input-group date datetime smallform">
-			<form:input path="batDau" class="form-control" readonly="true" />
+			<form:input path="batDau" class="form-control" />
 			<span class="input-group-addon"><span
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>
@@ -56,7 +56,7 @@
 	<label class="control-label col-sm-2" for="ketThuc">Kết thúc</label>
 	<div class="col-sm-2">
 		<div class="input-group date datetime smallform">
-			<form:input path="ketThuc" class="form-control" readonly="true" />
+			<form:input path="ketThuc" class="form-control" />
 			<span class="input-group-addon"><span
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>

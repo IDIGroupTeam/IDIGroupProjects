@@ -94,7 +94,7 @@
 			startDate : '${mainFinanceForm.kyKeToan.batDau}',
 			endDate : '${mainFinanceForm.kyKeToan.ketThuc}'
 		});
-		
+
 		$('#taiKhoan').combobox();
 	});
 </script>
@@ -128,7 +128,7 @@
 		<div class="form-group">
 			<label for="dau">Từ:</label>
 			<div class="input-group date datetime smallform pull-right">
-				<form:input path="dau" class="form-control" readonly="true" />
+				<form:input path="dau" class="form-control" />
 				<span class="input-group-addon"><span
 					class="glyphicon glyphicon-calendar"></span></span>
 			</div>
@@ -137,7 +137,7 @@
 		<div class="form-group">
 			<label for="cuoi">Đến:</label>
 			<div class="input-group date datetime smallform pull-right">
-				<form:input path="cuoi" class="form-control" readonly="true" />
+				<form:input path="cuoi" class="form-control" />
 				<span class="input-group-addon"><span
 					class="glyphicon glyphicon-calendar"></span></span>
 			</div>

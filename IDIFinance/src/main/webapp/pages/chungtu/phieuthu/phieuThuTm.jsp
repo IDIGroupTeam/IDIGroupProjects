@@ -179,11 +179,13 @@
 
 					$(newTr).insertBefore($(currentTr)).prop("id", newId);
 					soDongTk++;
-
+					
+					$("#"+newId).find(".combobox-container").remove();
+					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk").prop("name", "taiKhoanCoDs["+newId+"].loaiTaiKhoan.maTk");
 					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk").val("0");
-					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien").val("0.0");
-					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien").prop("placeholder", "0.0");
-					//$("#taiKhoanCoDs" + newId + "\\.lyDo").val("");
+					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk").combobox();
+					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien").val("0");
+					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien").prop("placeholder", "0");
 					$("#taiKhoanCoDs" + newId + "\\.lyDo").prop("placeholder", "Lý do");
 					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien\\.errors").remove();
 					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk\\.errors").remove();
@@ -245,6 +247,7 @@
 
 			$("input[id^='taiKhoanCoDs'][id$='\\.soTien\\.soTien']").change(
 					thayDoiDuLieu);
+			$("select[id^='taiKhoanCoDs'][id$='\\.loaiTaiKhoan\\.maTk']").combobox();
 			capNhatTongTienTxt();
 		}
 		khoiTao();
@@ -277,7 +280,7 @@
 		phiếu thu:</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
-			<form:input path="ngayLap" class="form-control" readonly="true" />
+			<form:input path="ngayLap" class="form-control" />
 			<span class="input-group-addon"><span
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>
@@ -302,7 +305,7 @@
 		toán:</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
-			<form:input path="ngayHt" class="form-control" readonly="true" />
+			<form:input path="ngayHt" class="form-control" />
 			<span class="input-group-addon"><span
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>
@@ -391,8 +394,9 @@
 			&nbsp;VND
 		</p>
 	</div>
-	
-	<label class="control-label col-sm-2" for=ngayLap>Ngày thanh toán</label>
+
+	<label class="control-label col-sm-2" for=ngayLap>Ngày thanh
+		toán</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
 			<form:input path="ngayTt" class="form-control" />
@@ -445,7 +449,7 @@
 					</c:choose>
 
 					<!-- Phần ghi Có -->
-					<td><form:select cssClass="form-control"
+					<td class="text-left"><form:select cssClass="form-control"
 							path="taiKhoanCoDs[${status.index}].loaiTaiKhoan.maTk"
 							multiple="false">
 							<form:option value="0">Tài khoản</form:option>

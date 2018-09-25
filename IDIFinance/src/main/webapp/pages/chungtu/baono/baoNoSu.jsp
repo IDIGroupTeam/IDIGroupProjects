@@ -179,36 +179,27 @@
 
 					$(newTr).insertBefore($(currentTr)).prop("id", newId);
 
-					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk").val(
-							"0");
-					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien")
-							.val("0.0");
-					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien").prop(
-							"placeholder", "0.0");
+					$("#"+newId).find(".combobox-container").remove();
+					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk").prop("name", "taiKhoanNoDs["+newId+"].loaiTaiKhoan.maTk");
+					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk").val("0");
+					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk").combobox();
+					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien").val("0");
+					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien").prop("placeholder", "0");
 					$("#taiKhoanNoDs" + newId + "\\.maNvkt").val("0");
-					//$("#taiKhoanNoDs" + newId + "\\.lyDo").val("");
-					$("#taiKhoanNoDs" + newId + "\\.lyDo").prop("placeholder",
-							"Lý do");
-					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien\\.errors")
-							.remove();
-					$(
-							"#taiKhoanNoDs" + newId
-									+ "\\.loaiTaiKhoan\\.maTk\\.errors")
-							.remove();
+					$("#taiKhoanNoDs" + newId + "\\.lyDo").prop("placeholder", "Lý do");
+					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien\\.errors").remove();
+					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk\\.errors").remove();
 
-					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk")
-							.remove();
+					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk").remove();
 					$("#taiKhoanCoDs" + newId + "\\.soDu").remove();
 					$("#taiKhoanCoDs" + newId + "\\.maNvkt").remove();
 					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien").remove();
-					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTienTxt")
-							.remove();
+					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTienTxt").remove();
 					$("#taiKhoanCoDs" + newId + "\\.lyDo").remove();
 
 					$("#xoaTkNo").removeClass("disabled");
 
-					$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']")
-							.change(thayDoiDuLieu);
+					$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']").change(thayDoiDuLieu);
 				});
 
 		$("#xoaTkNo").click(function() {
@@ -256,6 +247,7 @@
 
 			$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']").change(
 					thayDoiDuLieu);
+			$("select[id^='taiKhoanNoDs'][id$='\\.loaiTaiKhoan\\.maTk']").combobox();
 			capNhatTongTienTxt();
 		}
 		khoiTao();
@@ -288,7 +280,7 @@
 		nợ:</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
-			<form:input path="ngayLap" class="form-control" readonly="true" />
+			<form:input path="ngayLap" class="form-control" />
 			<span class="input-group-addon"><span
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>
@@ -313,7 +305,7 @@
 		toán:</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
-			<form:input path="ngayHt" class="form-control" readonly="true" />
+			<form:input path="ngayHt" class="form-control" />
 			<span class="input-group-addon"><span
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>
@@ -403,8 +395,9 @@
 			&nbsp;VND
 		</p>
 	</div>
-	
-	<label class="control-label col-sm-2" for=ngayLap>Ngày thanh toán</label>
+
+	<label class="control-label col-sm-2" for=ngayLap>Ngày thanh
+		toán</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
 			<form:input path="ngayTt" class="form-control" />
@@ -436,7 +429,7 @@
 				varStatus="status">
 				<tr id="${status.index}">
 					<!-- Phần ghi Nợ -->
-					<td><form:select cssClass="form-control"
+					<td class="text-left"><form:select cssClass="form-control"
 							path="taiKhoanNoDs[${status.index}].loaiTaiKhoan.maTk"
 							multiple="false">
 							<form:option value="0">Tài khoản</form:option>

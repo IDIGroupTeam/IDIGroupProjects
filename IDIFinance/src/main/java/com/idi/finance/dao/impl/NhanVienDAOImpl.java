@@ -98,7 +98,6 @@ public class NhanVienDAOImpl implements NhanVienDAO {
 				nhanVien.setFullName(rs.getString("FULL_NAME"));
 				nhanVien.setDepartment(rs.getString("DEPARTMENT"));
 
-				logger.info(nhanVien);
 				return nhanVien;
 			} catch (Exception e) {
 				return null;

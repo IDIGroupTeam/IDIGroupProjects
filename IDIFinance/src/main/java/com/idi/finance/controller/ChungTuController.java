@@ -2375,10 +2375,10 @@ public class ChungTuController {
 		logger.info("Path " + jasper);
 		File reportFile = new File(jasper);
 		// If compiled file is not found, then compile XML template
-		if (!reportFile.exists()) {
-			logger.info("Compile Jasper report ...");
-			JasperCompileManager.compileReportToFile(jrxml, jasper);
-		}
+		// if (!reportFile.exists()) {
+		logger.info("Compile Jasper report ...");
+		JasperCompileManager.compileReportToFile(jrxml, jasper);
+		// }
 		JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(reportFile.getPath());
 		return jasperReport;
 	}

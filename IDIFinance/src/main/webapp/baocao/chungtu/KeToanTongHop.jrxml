@@ -125,7 +125,7 @@
 				<text><![CDATA[PHIẾU KẾ TOÁN TỔNG HỢP]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="650" y="0" width="55" height="20" uuid="3107be7a-6749-4903-8c34-f9376f2d1b8b">
+				<reportElement x="645" y="0" width="55" height="20" uuid="3107be7a-6749-4903-8c34-f9376f2d1b8b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -136,7 +136,7 @@
 				<text><![CDATA[Số phiếu:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="650" y="20" width="55" height="20" uuid="3215cf3f-1eaa-40d1-8478-b0c26dd41875">
+				<reportElement x="645" y="20" width="55" height="20" uuid="3215cf3f-1eaa-40d1-8478-b0c26dd41875">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -147,7 +147,7 @@
 				<text><![CDATA[Số liên:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="650" y="40" width="55" height="20" uuid="5fbdc26a-a0e4-4f67-8638-32e40c12a0b8">
+				<reportElement x="645" y="40" width="55" height="20" uuid="5fbdc26a-a0e4-4f67-8638-32e40c12a0b8">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -158,7 +158,7 @@
 				<text><![CDATA[Nợ:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="650" y="60" width="55" height="20" uuid="2c388445-ab33-408c-883d-be3d94497835">
+				<reportElement x="645" y="60" width="55" height="20" uuid="2c388445-ab33-408c-883d-be3d94497835">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -211,19 +211,19 @@
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="705" y="0" width="20" height="20" uuid="cae970da-c82f-4199-a35d-ef603d7bc393"/>
+				<reportElement x="700" y="0" width="20" height="20" uuid="cae970da-c82f-4199-a35d-ef603d7bc393"/>
 				<textFieldExpression><![CDATA[$F{loaiCt}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="705" y="40" width="50" height="20" uuid="a225a081-9bb3-4160-92f5-3447ffc04727"/>
+				<reportElement x="700" y="40" width="100" height="20" uuid="a225a081-9bb3-4160-92f5-3447ffc04727"/>
 				<textFieldExpression><![CDATA[ReportUtils.layDanhSachTaiKhoan($F{taiKhoanNoDs})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="725" y="0" width="20" height="20" uuid="4a26f557-6569-4587-a455-9bb5a9f53b2b"/>
+				<reportElement x="720" y="0" width="20" height="20" uuid="4a26f557-6569-4587-a455-9bb5a9f53b2b"/>
 				<textFieldExpression><![CDATA[$F{soCt}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="705" y="60" width="100" height="20" uuid="1bfb6aa1-f016-4ee5-a5cc-9fc3c30adfae"/>
+				<reportElement x="700" y="60" width="100" height="20" uuid="1bfb6aa1-f016-4ee5-a5cc-9fc3c30adfae"/>
 				<textFieldExpression><![CDATA[ReportUtils.layDanhSachTaiKhoan($F{taiKhoanCoDs})]]></textFieldExpression>
 			</textField>
 		</band>
@@ -355,6 +355,11 @@
 				</textElement>
 				<text><![CDATA[Chứng từ gốc]]></text>
 			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="110" width="800" height="60" isRemoveLineWhenBlank="true" backcolor="#99CCFF" uuid="5c1304ef-46ba-4091-91fe-fbb0b0ef6400"/>
+				<dataSourceExpression><![CDATA[new JRBeanCollectionDataSource($F{taiKhoanNoDs})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[NghiepVuKeToan.jasper]]></subreportExpression>
+			</subreport>
 		</band>
 	</detail>
 	<columnFooter>

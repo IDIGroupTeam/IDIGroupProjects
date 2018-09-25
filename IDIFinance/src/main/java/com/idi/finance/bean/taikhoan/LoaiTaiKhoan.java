@@ -30,6 +30,7 @@ public class LoaiTaiKhoan {
 	public static final String PHAI_TRA_NGUOI_BAN = "331";
 
 	public static final String TAM_UNG = "141";
+	public static final String TRA_NGUOI_LAO_DONG = "334";
 
 	public static final String LOI_NHUAN_CHUA_PHAN_PHOI = "421";
 	public static final String LOI_NHUAN_CHUA_PHAN_PHOI_KY_TRUOC = "4211";

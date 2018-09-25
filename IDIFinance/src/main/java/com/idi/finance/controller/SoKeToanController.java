@@ -425,6 +425,8 @@ public class SoKeToanController {
 			List<LoaiTaiKhoan> loaiTaiKhoanDs = new ArrayList<>();
 			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.PHAI_THU_KHACH_HANG));
 			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.PHAI_TRA_NGUOI_BAN));
+			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.TAM_UNG));
+			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.TRA_NGUOI_LAO_DONG));
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
 			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định là 131
@@ -617,6 +619,8 @@ public class SoKeToanController {
 			List<LoaiTaiKhoan> loaiTaiKhoanDs = new ArrayList<>();
 			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.PHAI_THU_KHACH_HANG));
 			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.PHAI_TRA_NGUOI_BAN));
+			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.TAM_UNG));
+			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.TRA_NGUOI_LAO_DONG));
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
 			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định là 111

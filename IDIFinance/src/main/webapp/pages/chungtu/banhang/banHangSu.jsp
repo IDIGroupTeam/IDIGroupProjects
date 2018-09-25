@@ -783,7 +783,7 @@
 		chứng từ:</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
-			<form:input path="ngayLap" class="form-control" readonly="true" />
+			<form:input path="ngayLap" class="form-control" />
 			<span class="input-group-addon"><span
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>
@@ -804,7 +804,7 @@
 		toán:</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
-			<form:input path="ngayHt" class="form-control" readonly="true" />
+			<form:input path="ngayHt" class="form-control" />
 			<span class="input-group-addon"><span
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>

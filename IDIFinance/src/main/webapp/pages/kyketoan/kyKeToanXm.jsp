@@ -206,7 +206,7 @@
 				<tbody>
 					<c:forEach items="${khachHangDs}" var="khachHang">
 						<tr>
-							<td>${khachHang.doiTuong.maDt}</td>
+							<td>${khachHang.doiTuong.khDt}</td>
 							<td>${khachHang.doiTuong.tenDt}</td>
 							<td>${khachHang.loaiTaiKhoan.maTk}</td>
 							<td>${khachHang.loaiTaiKhoan.tenTk}</td>
@@ -244,7 +244,7 @@
 				<tbody>
 					<c:forEach items="${nhaCcDs}" var="nhaCc">
 						<tr>
-							<td>${nhaCc.doiTuong.maDt}</td>
+							<td>${nhaCc.doiTuong.khDt}</td>
 							<td>${nhaCc.doiTuong.tenDt}</td>
 							<td>${nhaCc.loaiTaiKhoan.maTk}</td>
 							<td>${nhaCc.loaiTaiKhoan.tenTk}</td>
