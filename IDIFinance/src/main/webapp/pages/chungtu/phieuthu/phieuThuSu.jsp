@@ -280,13 +280,14 @@
 	</div>
 
 	<label class="control-label col-sm-2" for=ngayLap>Ngày lập
-		phiếu thu:</label>
+		phiếu thu (*):</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
 			<form:input path="ngayLap" class="form-control" />
 			<span class="input-group-addon"><span
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>
+		<form:errors path="ngayLap" cssClass="error" />
 	</div>
 </div>
 
@@ -305,13 +306,14 @@
 	</div>
 
 	<label class="control-label col-sm-2" for=ngayHt>Ngày hạch
-		toán:</label>
+		toán (*):</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
 			<form:input path="ngayHt" class="form-control" />
 			<span class="input-group-addon"><span
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>
+		<form:errors path="ngayHt" cssClass="error" />
 	</div>
 </div>
 
@@ -398,7 +400,7 @@
 		</p>
 	</div>
 
-	<label class="control-label col-sm-2" for=ngayLap>Ngày thanh
+	<label class="control-label col-sm-2" for=ngayTt>Ngày thanh
 		toán</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
@@ -406,6 +408,7 @@
 			<span class="input-group-addon"><span
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>
+		<form:errors path="ngayTt" cssClass="error" />
 	</div>
 </div>
 

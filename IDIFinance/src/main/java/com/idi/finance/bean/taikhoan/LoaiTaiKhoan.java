@@ -178,6 +178,30 @@ public class LoaiTaiKhoan {
 		this.nganHangTaiKhoan = nganHangTaiKhoan;
 	}
 
+	public boolean isTrucHe(LoaiTaiKhoan loaiTaiKhoan) {
+		if (loaiTaiKhoan == null) {
+			return false;
+		}
+
+		boolean res = false;
+		if (maTk != null && loaiTaiKhoan.getMaTk() != null) {
+			try {
+				String maTkCha = maTk.trim();
+				String maTkCon = loaiTaiKhoan.getMaTk().trim();
+
+				if (maTkCha.length() > maTkCon.length()) {
+					res = maTkCha.substring(0, maTkCon.length()).equals(maTkCon);
+				} else {
+					res = maTkCon.substring(0, maTkCha.length()).equals(maTkCha);
+				}
+			} catch (Exception e) {
+				// e.printStackTrace();
+			}
+		}
+
+		return res;
+	}
+
 	@Override
 	public String toString() {
 		String out = maTk + " " + tenTk;

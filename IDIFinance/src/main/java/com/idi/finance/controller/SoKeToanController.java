@@ -1,5 +1,6 @@
 package com.idi.finance.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -67,14 +70,20 @@ public class SoKeToanController {
 	@Autowired
 	KyKeToanDAO kyKeToanDAO;
 
+	private WebDataBinder binder;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
+		dateFormat.setLenient(false);
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+
+		this.binder = binder;
 	}
 
 	@RequestMapping(value = "/soketoan/nhatkychung", method = { RequestMethod.GET, RequestMethod.POST })
-	public String sktNhatKyChung(@ModelAttribute("mainFinanceForm") TkSoKeToanForm form, Model model) {
+	public String sktNhatKyChung(@ModelAttribute("mainFinanceForm") @Validated TkSoKeToanForm form,
+			BindingResult result, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
@@ -202,20 +211,34 @@ public class SoKeToanController {
 		}
 	}
 
-	@RequestMapping(value = "/soketoan/socai/{maTk}/{maKyKt}", method = { RequestMethod.GET })
-	public String sktSoCaiMaTk(@PathVariable("maTk") String maTk, @PathVariable("maKyKt") int maKyKt, Model model) {
+	@RequestMapping(value = "/soketoan/socai/{maTk}/{maKyKt}/{dau}/{cuoi}", method = { RequestMethod.GET })
+	public String sktSoCaiMaTk(@PathVariable("maTk") String maTk, @PathVariable("maKyKt") int maKyKt,
+			@PathVariable("dau") String dau, @PathVariable("cuoi") String cuoi, Model model) {
 		KyKeToan kyKeToan = new KyKeToan();
 		kyKeToan.setMaKyKt(maKyKt);
+
+		Date batDau = null;
+		Date ketThuc = null;
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+			batDau = sdf.parse(dau);
+			ketThuc = sdf.parse(cuoi);
+		} catch (ParseException e) {
+		}
 
 		TkSoKeToanForm form = new TkSoKeToanForm();
 		form.setTaiKhoan(maTk);
 		form.setKyKeToan(kyKeToan);
+		form.setDau(batDau);
+		form.setCuoi(ketThuc);
 
-		return sktSoCai(form, model);
+		return sktSoCai(form, binder.getBindingResult(), model);
+
 	}
 
 	@RequestMapping(value = "/soketoan/socai", method = { RequestMethod.GET, RequestMethod.POST })
-	public String sktSoCai(@ModelAttribute("mainFinanceForm") TkSoKeToanForm form, Model model) {
+	public String sktSoCai(@ModelAttribute("mainFinanceForm") @Validated TkSoKeToanForm form, BindingResult result,
+			Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
@@ -344,6 +367,7 @@ public class SoKeToanController {
 				logger.info("Số dư đầu kỳ: " + soDuDauKy + ". Nợ phát sinh kỳ: " + noPhatSinhKy + ". Có phát sinh kỳ: "
 						+ coPhatSinhKy + ". Số dư cuối kỳ: " + duLieuKeToan.getSoDuCuoiKy());
 
+				duLieuKeToan.tinhSoTienTonNghiepVuKeToanDs(loaiTaiKhoan);
 				duLieuKeToanDs.add(duLieuKeToan);
 
 				kyKt = Utils.nextPeriod(kyKt);
@@ -379,7 +403,8 @@ public class SoKeToanController {
 	}
 
 	@RequestMapping("/soketoan/sothcongno")
-	public String sktSoTongHopCongNo(@ModelAttribute("mainFinanceForm") TkSoKeToanForm form, Model model) {
+	public String sktSoTongHopCongNo(@ModelAttribute("mainFinanceForm") @Validated TkSoKeToanForm form,
+			BindingResult result, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
@@ -559,23 +584,37 @@ public class SoKeToanController {
 		}
 	}
 
-	@RequestMapping(value = "/soketoan/soctcongno/{maKyKt}/{maTk}/{loaiDt}/{maDt}", method = { RequestMethod.GET })
+	@RequestMapping(value = "/soketoan/soctcongno/{maKyKt}/{maTk}/{loaiDt}/{maDt}/{dau}/{cuoi}", method = {
+			RequestMethod.GET })
 	public String sktSoChiTietCongNo(@PathVariable("maKyKt") int maKyKt, @PathVariable("maTk") String maTk,
-			@PathVariable("loaiDt") int loaiDt, @PathVariable("maDt") int maDt, Model model) {
+			@PathVariable("loaiDt") int loaiDt, @PathVariable("maDt") int maDt, @PathVariable("dau") String dau,
+			@PathVariable("cuoi") String cuoi, Model model) {
 		KyKeToan kyKeToan = new KyKeToan();
 		kyKeToan.setMaKyKt(maKyKt);
 		String[] doiTuongDs = { loaiDt + "_" + maDt };
+
+		Date batDau = null;
+		Date ketThuc = null;
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+			batDau = sdf.parse(dau);
+			ketThuc = sdf.parse(cuoi);
+		} catch (ParseException e) {
+		}
 
 		TkSoKeToanForm form = new TkSoKeToanForm();
 		form.setTaiKhoan(maTk);
 		form.setDoiTuongDs(doiTuongDs);
 		form.setKyKeToan(kyKeToan);
+		form.setDau(batDau);
+		form.setCuoi(ketThuc);
 
-		return sktSoChiTietCongNo(form, model);
+		return sktSoChiTietCongNo(form, binder.getBindingResult(), model);
 	}
 
 	@RequestMapping("/soketoan/soctcongno")
-	public String sktSoChiTietCongNo(@ModelAttribute("mainFinanceForm") TkSoKeToanForm form, Model model) {
+	public String sktSoChiTietCongNo(@ModelAttribute("mainFinanceForm") @Validated TkSoKeToanForm form,
+			BindingResult result, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
@@ -868,44 +907,6 @@ public class SoKeToanController {
 
 			model.addAttribute("tab", "tabSKTSCTCN");
 			return "sktSoChiTietCongNo";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "error";
-		}
-	}
-
-	@RequestMapping("/soketoan/sotienmat")
-	public String sktSoTienMat(Model model) {
-		try {
-			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-
-			String taiKhoan = LoaiTaiKhoan.TIEN_MAT;
-			List<NghiepVuKeToan> nghiepVuKeToanDs = soKeToanDAO.danhSachNghiepVuKeToanTheoLoaiTaiKhoan(taiKhoan);
-			model.addAttribute("taiKhoan", taiKhoan);
-			model.addAttribute("nghiepVuKeToanDs", nghiepVuKeToanDs);
-
-			model.addAttribute("tab", "tabSKTSTM");
-			return "sktSoTienMat";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "error";
-		}
-	}
-
-	@RequestMapping("/soketoan/sotienguinganhang")
-	public String sktSoTienGuiNganHang(Model model) {
-		try {
-			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-
-			String taiKhoan = LoaiTaiKhoan.TIEN_GUI_NGAN_HANG;
-			List<NghiepVuKeToan> nghiepVuKeToanDs = soKeToanDAO.danhSachNghiepVuKeToanTheoLoaiTaiKhoan(taiKhoan);
-			model.addAttribute("taiKhoan", taiKhoan);
-			model.addAttribute("nghiepVuKeToanDs", nghiepVuKeToanDs);
-
-			model.addAttribute("tab", "tabSKTSTGNH");
-			return "sktSoTienGuiNganHang";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";

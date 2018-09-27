@@ -188,6 +188,35 @@ public class DuLieuKeToan {
 		}
 	}
 
+	public void tinhSoTienTonNghiepVuKeToanDs(LoaiTaiKhoan loaiTaiKhoan) {
+		if (loaiTaiKhoan == null) {
+			return;
+		}
+
+		if (nghiepVuKeToanDs != null && nghiepVuKeToanDs.size() > 0) {
+			Collections.sort(nghiepVuKeToanDs);
+
+			double ton = soDuDauKy * loaiTaiKhoan.getSoDu() * -1;
+
+			Iterator<NghiepVuKeToan> iter = nghiepVuKeToanDs.iterator();
+			while (iter.hasNext()) {
+				try {
+					NghiepVuKeToan nghiepVuKeToan = iter.next();
+
+					if (nghiepVuKeToan.getTaiKhoanNo().getLoaiTaiKhoan().isTrucHe(loaiTaiKhoan)) {
+						ton += nghiepVuKeToan.getTaiKhoanNo().getSoTien().getGiaTri() * loaiTaiKhoan.getSoDu() * -1;
+					} else if (nghiepVuKeToan.getTaiKhoanCo().getLoaiTaiKhoan().isTrucHe(loaiTaiKhoan)) {
+						ton += nghiepVuKeToan.getTaiKhoanCo().getSoTien().getGiaTri() * loaiTaiKhoan.getSoDu();
+					}
+
+					nghiepVuKeToan.setTon(ton);
+				} catch (Exception e) {
+					// e.printStackTrace();
+				}
+			}
+		}
+	}
+
 	public DuLieuKeToan getDuLieuKeToan() {
 		return duLieuKeToan;
 	}

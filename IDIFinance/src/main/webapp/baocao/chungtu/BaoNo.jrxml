@@ -209,7 +209,7 @@
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="475" y="0" width="15" height="14" uuid="cae970da-c82f-4199-a35d-ef603d7bc393"/>
+				<reportElement x="475" y="0" width="17" height="14" uuid="cae970da-c82f-4199-a35d-ef603d7bc393"/>
 				<textFieldExpression><![CDATA[$F{loaiCt}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -217,7 +217,7 @@
 				<textFieldExpression><![CDATA[ReportUtils.layDanhSachTaiKhoan($F{taiKhoanNoDs})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="490" y="0" width="15" height="14" uuid="4a26f557-6569-4587-a455-9bb5a9f53b2b"/>
+				<reportElement x="492" y="0" width="15" height="14" uuid="4a26f557-6569-4587-a455-9bb5a9f53b2b"/>
 				<textFieldExpression><![CDATA[$F{soCt}]]></textFieldExpression>
 			</textField>
 			<textField>

@@ -3,6 +3,7 @@ package com.idi.finance.bean.soketoan;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;
 import com.idi.finance.bean.chungtu.TaiKhoan;
+import com.idi.finance.bean.chungtu.Tien;
 import com.idi.finance.bean.hanghoa.HangHoa;
 
 public class NghiepVuKeToan implements Comparable<NghiepVuKeToan> {
@@ -11,6 +12,7 @@ public class NghiepVuKeToan implements Comparable<NghiepVuKeToan> {
 	private KetChuyenButToan ketChuyenButToan;
 	private TaiKhoan taiKhoanNo;
 	private TaiKhoan taiKhoanCo;
+	private double ton;
 
 	public ChungTu getChungTu() {
 		return chungTu;
@@ -50,6 +52,14 @@ public class NghiepVuKeToan implements Comparable<NghiepVuKeToan> {
 
 	public void setTaiKhoanCo(TaiKhoan taiKhoanCo) {
 		this.taiKhoanCo = taiKhoanCo;
+	}
+
+	public double getTon() {
+		return ton;
+	}
+
+	public void setTon(double ton) {
+		this.ton = ton;
 	}
 
 	@Override

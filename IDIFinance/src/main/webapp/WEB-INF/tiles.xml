@@ -310,23 +310,6 @@
 		<put-attribute name="search"
 			value="/pages/soketoan/sktSoCtCongNoTk.jsp" />
 	</definition>
-
-	<definition name="sktSoTienMat" extends="taichinh">
-		<put-attribute name="title" value="Sổ tiền mặt" />
-		<!-- <put-attribute name="search" value="/pages/soketoan/sktSoTienMatTk.jsp" 
-			/> -->
-		<put-attribute name="body"
-			value="/pages/soketoan/sktSoTienMat.jsp" />
-	</definition>
-
-	<definition name="sktSoTienGuiNganHang" extends="taichinh">
-		<put-attribute name="title"
-			value="Sổ tiền gửi ngân hàng" />
-		<!-- <put-attribute name="search" value="/pages/soketoan/sktSoTienGuiNganHangTk.jsp" 
-			/> -->
-		<put-attribute name="body"
-			value="/pages/soketoan/sktSoTienGuiNganHang.jsp" />
-	</definition>
 	<!-- Kết thúc Tab sổ kế toán -->
 
 

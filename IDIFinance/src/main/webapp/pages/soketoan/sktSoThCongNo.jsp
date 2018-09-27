@@ -74,7 +74,7 @@
 					<tr>
 						<td style="width: 100px;">${duLieuKeToanCon.doiTuong.maDt}</td>
 						<td><a
-							href="${url}/soketoan/soctcongno/${mainFinanceForm.kyKeToan.maKyKt}/${mainFinanceForm.taiKhoan}/${duLieuKeToanCon.doiTuong.loaiDt}/${duLieuKeToanCon.doiTuong.maDt}"
+							href="${url}/soketoan/soctcongno/${mainFinanceForm.kyKeToan.maKyKt}/${mainFinanceForm.taiKhoan}/${duLieuKeToanCon.doiTuong.loaiDt}/${duLieuKeToanCon.doiTuong.maDt}/<fmt:formatDate value='${duLieuKeToan.kyKeToan.dau}' pattern='dd_MM_yyyy'/>/<fmt:formatDate value='${duLieuKeToan.kyKeToan.cuoi}' pattern='dd_MM_yyyy'/>"
 							target="_blank">${duLieuKeToanCon.doiTuong.tenDt}</a></td>
 						<td>${duLieuKeToanCon.doiTuong.diaChi}</td>
 						<td>${duLieuKeToanCon.loaiTaiKhoan.maTk}</td>

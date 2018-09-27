@@ -12,7 +12,9 @@
 		<c:forEach items="${duLieuKeToanDs}" var="duLieuKeToan">
 			<tr>
 				<td><a
-					href="${url}/soketoan/socai/${duLieuKeToan.loaiTaiKhoan.maTk}/${mainFinanceForm.kyKeToan.maKyKt}"
+					href="${url}/soketoan/socai/${duLieuKeToan.loaiTaiKhoan.maTk}/${mainFinanceForm.kyKeToan.maKyKt}/<fmt:formatDate
+							value='${duLieuKeToan.kyKeToan.dau}' pattern='dd_MM_yyyy' />/<fmt:formatDate
+							value='${duLieuKeToan.kyKeToan.cuoi}' pattern='dd_MM_yyyy' />"
 					target="_blank">${duLieuKeToan.loaiTaiKhoan.maTk}</a></td>
 				<td>${duLieuKeToan.loaiTaiKhoan.tenTk}</td>
 				<c:choose>

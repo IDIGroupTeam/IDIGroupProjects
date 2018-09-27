@@ -282,6 +282,7 @@
 			<span class="input-group-addon"><span
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>
+		<form:errors path="ngayLap" cssClass="error" />
 	</div>
 </div>
 
@@ -307,6 +308,7 @@
 			<span class="input-group-addon"><span
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>
+		<form:errors path="ngayHt" cssClass="error" />
 	</div>
 </div>
 
@@ -396,7 +398,7 @@
 		</p>
 	</div>
 
-	<label class="control-label col-sm-2" for=ngayLap>Ngày thanh
+	<label class="control-label col-sm-2" for=ngayTt>Ngày thanh
 		toán</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
@@ -404,6 +406,7 @@
 			<span class="input-group-addon"><span
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>
+		<form:errors path="ngayTt" cssClass="error" />
 	</div>
 </div>
 

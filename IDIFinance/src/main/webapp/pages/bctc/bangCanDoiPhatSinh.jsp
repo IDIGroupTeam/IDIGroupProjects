@@ -55,7 +55,9 @@
 					var="duLieuKeToanCon">
 					<tr style="font-weight: bold;">
 						<td><a
-							href="${url}/soketoan/socai/${duLieuKeToanCon.loaiTaiKhoan.maTk}/${mainFinanceForm.kyKeToan.maKyKt}"
+							href="${url}/soketoan/socai/${duLieuKeToanCon.loaiTaiKhoan.maTk}/${mainFinanceForm.kyKeToan.maKyKt}/<fmt:formatDate
+							value='${duLieuKeToan.key.dau}' pattern='dd_MM_yyyy' />/<fmt:formatDate
+							value='${duLieuKeToan.key.cuoi}' pattern='dd_MM_yyyy' />"
 							target="_blank">${duLieuKeToanCon.loaiTaiKhoan.maTk}</a></td>
 						<td>${duLieuKeToanCon.loaiTaiKhoan.tenTk}</td>
 						<c:choose>

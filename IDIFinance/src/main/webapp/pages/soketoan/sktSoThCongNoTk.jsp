@@ -130,6 +130,8 @@
 				<span class="input-group-addon"><span
 					class="glyphicon glyphicon-calendar"></span></span>
 			</div>
+			<br />
+			<form:errors path="dau" cssClass="error smallform pull-right" />
 		</div>
 
 		<div class="form-group">
@@ -139,6 +141,8 @@
 				<span class="input-group-addon"><span
 					class="glyphicon glyphicon-calendar"></span></span>
 			</div>
+			<br />
+			<form:errors path="cuoi" cssClass="error smallform pull-right" />
 		</div>
 	</div>
 	<div class="panel-footer">

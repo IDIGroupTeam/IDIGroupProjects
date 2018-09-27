@@ -241,6 +241,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				LoaiTaiKhoan loaiTaiKhoanNo = new LoaiTaiKhoan();
 				loaiTaiKhoanNo.setMaTk(rs.getString("MA_TK_NO"));
 				loaiTaiKhoanNo.setTenTk(rs.getString("TEN_TK_NO"));
+				loaiTaiKhoanNo.setSoDu(rs.getInt("SO_DU_GOC_NO"));
 				loaiTaiKhoanNo.setLuongTinh(rs.getBoolean("LUONG_TINH_NO"));
 				taiKhoanNo.setLoaiTaiKhoan(loaiTaiKhoanNo);
 
@@ -260,6 +261,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				LoaiTaiKhoan loaiTaiKhoanCo = new LoaiTaiKhoan();
 				loaiTaiKhoanCo.setMaTk(rs.getString("MA_TK_CO"));
 				loaiTaiKhoanCo.setTenTk(rs.getString("TEN_TK_CO"));
+				loaiTaiKhoanCo.setSoDu(rs.getInt("SO_DU_GOC_CO"));
 				loaiTaiKhoanCo.setLuongTinh(rs.getBoolean("LUONG_TINH_CO"));
 				taiKhoanCo.setLoaiTaiKhoan(loaiTaiKhoanCo);
 
@@ -357,6 +359,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				LoaiTaiKhoan loaiTaiKhoanNo = new LoaiTaiKhoan();
 				loaiTaiKhoanNo.setMaTk(rs.getString("MA_TK_NO"));
 				loaiTaiKhoanNo.setTenTk(rs.getString("TEN_TK_NO"));
+				loaiTaiKhoanNo.setSoDu(rs.getInt("SO_DU_GOC_NO"));
 				loaiTaiKhoanNo.setLuongTinh(rs.getBoolean("LUONG_TINH_NO"));
 				taiKhoanNo.setLoaiTaiKhoan(loaiTaiKhoanNo);
 
@@ -376,6 +379,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				LoaiTaiKhoan loaiTaiKhoanCo = new LoaiTaiKhoan();
 				loaiTaiKhoanCo.setMaTk(rs.getString("MA_TK_CO"));
 				loaiTaiKhoanCo.setTenTk(rs.getString("TEN_TK_CO"));
+				loaiTaiKhoanCo.setSoDu(rs.getInt("SO_DU_GOC_CO"));
 				loaiTaiKhoanCo.setLuongTinh(rs.getBoolean("LUONG_TINH_CO"));
 				taiKhoanCo.setLoaiTaiKhoan(loaiTaiKhoanCo);
 
@@ -465,6 +469,8 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				LoaiTaiKhoan loaiTaiKhoanNo = new LoaiTaiKhoan();
 				loaiTaiKhoanNo.setMaTk(rs.getString("MA_TK_NO"));
 				loaiTaiKhoanNo.setTenTk(rs.getString("TEN_TK_NO"));
+				loaiTaiKhoanNo.setSoDu(rs.getInt("SO_DU_GOC_NO"));
+				loaiTaiKhoanNo.setLuongTinh(rs.getBoolean("LUONG_TINH_NO"));
 				taiKhoanNo.setLoaiTaiKhoan(loaiTaiKhoanNo);
 
 				Tien tienNo = new Tien();
@@ -482,6 +488,8 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				LoaiTaiKhoan loaiTaiKhoanCo = new LoaiTaiKhoan();
 				loaiTaiKhoanCo.setMaTk(rs.getString("MA_TK_CO"));
 				loaiTaiKhoanCo.setTenTk(rs.getString("TEN_TK_CO"));
+				loaiTaiKhoanCo.setSoDu(rs.getInt("SO_DU_GOC_CO"));
+				loaiTaiKhoanCo.setLuongTinh(rs.getBoolean("LUONG_TINH_CO"));
 				taiKhoanCo.setLoaiTaiKhoan(loaiTaiKhoanCo);
 
 				Tien tienCo = new Tien();

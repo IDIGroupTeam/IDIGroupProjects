@@ -72,6 +72,7 @@ public class BalanceSheetController {
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
+		dateFormat.setLenient(false);
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 
 		// Form mục tiêu
@@ -894,7 +895,8 @@ public class BalanceSheetController {
 	}
 
 	@RequestMapping(value = "/bctc/candoiphatsinh", method = { RequestMethod.GET, RequestMethod.POST })
-	public String bangCanDoiPhatSinh(@ModelAttribute("mainFinanceForm") TkSoKeToanForm form, Model model) {
+	public String bangCanDoiPhatSinh(@ModelAttribute("mainFinanceForm") @Validated TkSoKeToanForm form,
+			BindingResult result, Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());

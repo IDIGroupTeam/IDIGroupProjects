@@ -8,6 +8,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+import com.ibm.icu.text.SimpleDateFormat;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;
 import com.idi.finance.bean.chungtu.TaiKhoan;
@@ -438,6 +439,16 @@ public class ChungTuValidator implements Validator {
 					}
 				}
 			}
+		}
+
+		// Validate ngay_ht & ngay_tt: dd/MM/yyyy: 12/09/2018
+		// đã được xử lý ở ChungTuController, do binder làm
+		// Phần validate dưới đây chỉ kiểm tra khi người dùng không nhập gì
+		if (chungTu.getNgayHt() == null && !errors.hasFieldErrors("ngayHt")) {
+			errors.rejectValue("ngayHt", "NotEmpty.mainFinanceForm.ngayHt");
+		}
+		if (chungTu.getNgayLap() == null && !errors.hasFieldErrors("ngayLap")) {
+			errors.rejectValue("ngayLap", "NotEmpty.mainFinanceForm.ngayLap");
 		}
 	}
 }

@@ -63,6 +63,7 @@
 			<span class="input-group-addon"><span
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>
+		<form:errors path="ngayHt" cssClass="error" />
 	</div>
 </div>
 

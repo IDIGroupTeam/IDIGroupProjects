@@ -112,6 +112,7 @@ public class ChungTuController {
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
+		dateFormat.setLenient(false);
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 
 		// Form mục tiêu
@@ -1747,7 +1748,6 @@ public class ChungTuController {
 			Model model) {
 		try {
 			if (result.hasErrors()) {
-				logger.info(result);
 				HangHoa hangHoa = new HangHoa();
 				chungTu.themHangHoa(hangHoa);
 
@@ -2372,13 +2372,12 @@ public class ChungTuController {
 		String jrxml = req.getSession().getServletContext().getRealPath("/baocao/chungtu/" + fileName + ".jrxml");
 		String jasper = req.getSession().getServletContext().getRealPath("/baocao/chungtu/" + fileName + ".jasper");
 
-		logger.info("Path " + jasper);
 		File reportFile = new File(jasper);
 		// If compiled file is not found, then compile XML template
-		// if (!reportFile.exists()) {
-		logger.info("Compile Jasper report ...");
-		JasperCompileManager.compileReportToFile(jrxml, jasper);
-		// }
+		if (!reportFile.exists()) {
+			logger.info("Compile Jasper report ...");
+			JasperCompileManager.compileReportToFile(jrxml, jasper);
+		}
 		JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(reportFile.getPath());
 		return jasperReport;
 	}
