@@ -99,4 +99,7 @@
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
+	<bean id="salaryDAO" class="com.idi.hr.dao.SalaryDAO">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
 </beans>

@@ -10,49 +10,49 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript">
 	$(function() {
-		// Khởi tạo action/method cho insuranceForm form
-		$("#insuranceForm").attr("action", "${url}/insurance/");
-		$("#insuranceForm").attr("method", "POST");		
+		// Khởi tạo action/method cho salaryForm form
+		$("#salaryForm").attr("action", "${url}/salary/");
+		$("#salaryForm").attr("method", "POST");		
 		$("button[id^=page]").each(function(i, el) {
 			$(this).click(function() {
-				if($(this).text()!=${insuranceForm.pageIndex}){
+				if($(this).text()!=${salaryForm.pageIndex}){
 					$("#pageIndex").val($(this).text());
-					$("#insuranceForm").submit();
+					$("#salaryForm").submit();
 				}
 			});
 		});
 		
 		$("#firstPage").click(function(){
 			$("#pageIndex").val(1);
-			$("#insuranceForm").submit();
+			$("#salaryForm").submit();
 		});
 		
 		$("#previousPage").click(function(){
-			$("#pageIndex").val(${insuranceForm.pageIndex-1});
-			$("#insuranceForm").submit();
+			$("#pageIndex").val(${salaryForm.pageIndex-1});
+			$("#salaryForm").submit();
 		});
 		
 		$("#nextPage").click(function(){
-			$("#pageIndex").val(${insuranceForm.pageIndex+1});
-			$("#insuranceForm").submit();	
+			$("#pageIndex").val(${salaryForm.pageIndex+1});
+			$("#salaryForm").submit();	
 		});
 		
 		$("#lastPage").click(function(){
-			$("#pageIndex").val(${insuranceForm.totalPages});
-			$("#insuranceForm").submit();	
+			$("#pageIndex").val(${salaryForm.totalPages});
+			$("#salaryForm").submit();	
 		});
 		
 		$("#numberRecordsOfPage").change(function(){
 			$("#pageIndex").val(1);
 			$("#totalPages").val(0);
 			$("#totalRecords").val(0);
-			$("#insuranceForm").submit();
+			$("#salaryForm").submit();
 		});	
 
 	});
 </script>
 
-<title>Danh sách BH của nhân viên</title>
+<title>Danh sách lương của nhân viên</title>
 <style>
 table {
     font-family: arial, sans-serif;
@@ -72,16 +72,18 @@ tr:nth-child(even) {
 </style>
 </head>
 <body>
-	<a href="${pageContext.request.contextPath}/insurance/insertInsurance"><button
-			class="btn btn-primary btn-sm">Thêm mới </button></a>
+	<a href="${pageContext.request.contextPath}/salary/insertSalary"><button
+			class="btn btn-primary btn-sm">Thêm mới thông tin lương nhân viên </button></a>
+	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary"><button
+			class="btn btn-primary btn-sm">Thông kê lương nhân viên </button></a>		
 	<br />
 	<br />
 	
-	<form:form modelAttribute="insuranceForm" method="POST">
+	<form:form modelAttribute="salaryForm" method="POST">
 		<table class="table">
 			<tr>
-				<td><span>Tổng số ${insuranceForm.totalRecords} bản ghi</span></td>
-				<td><span>Số trang: ${insuranceForm.totalPages}</span></td>
+				<td><span>Tổng số ${salaryForm.totalRecords} bản ghi</span></td>
+				<td><span>Số trang: ${salaryForm.totalPages}</span></td>
 				<form:hidden path="pageIndex" /> 
 				<form:hidden path="totalPages" /> 
 				<form:hidden path="totalRecords" />			
@@ -89,7 +91,7 @@ tr:nth-child(even) {
 				<td>
 					<div class="btn-group btn-group-md">
 						<c:choose>
-							<c:when test="${insuranceForm.pageIndex==1}">
+							<c:when test="${salaryForm.pageIndex==1}">
 								<button id="firstPage" type="button" class="btn btn-default disabled">Đầu</button>
 								<button id="previousPage" type="button"	class="btn btn-default disabled">Trước</button>
 							</c:when>
@@ -99,11 +101,11 @@ tr:nth-child(even) {
 							</c:otherwise>
 						</c:choose>
 						<c:choose>
-							<c:when test="${insuranceForm.totalPages<=3}">
-								<c:forEach begin="1" end="${insuranceForm.totalPages}"
+							<c:when test="${salaryForm.totalPages<=3}">
+								<c:forEach begin="1" end="${salaryForm.totalPages}"
 									varStatus="status">
 									<c:choose>
-										<c:when test="${status.index==insuranceForm.pageIndex}">
+										<c:when test="${status.index==salaryForm.pageIndex}">
 											<button id="page${status.index}" type="button"
 												class="btn btn-default active">${status.index}</button>
 										</c:when>
@@ -116,25 +118,25 @@ tr:nth-child(even) {
 							</c:when>
 							<c:otherwise>
 								<c:choose>
-									<c:when test="${insuranceForm.pageIndex==1}">
+									<c:when test="${salaryForm.pageIndex==1}">
 										<button id="page1" type="button" class="btn btn-default active">1</button>
 										<button id="page2" type="button" class="btn btn-default">2</button>
 										<button id="page3" type="button" class="btn btn-default">3</button>
 									</c:when>
 									<c:when
-										test="${insuranceForm.pageIndex==insuranceForm.totalPages}">
-										<button id="page${insuranceForm.totalPages-2}" type="button"
-											class="btn btn-default">${insuranceForm.totalPages-2}</button>
-										<button id="page${insuranceForm.totalPages-1}" type="button"
-											class="btn btn-default">${insuranceForm.totalPages-1}</button>
-										<button id="page${insuranceForm.totalPages}" type="button"
-											class="btn btn-default active">${insuranceForm.totalPages}</button>
+										test="${salaryForm.pageIndex==salaryForm.totalPages}">
+										<button id="page${salaryForm.totalPages-2}" type="button"
+											class="btn btn-default">${salaryForm.totalPages-2}</button>
+										<button id="page${salaryForm.totalPages-1}" type="button"
+											class="btn btn-default">${salaryForm.totalPages-1}</button>
+										<button id="page${salaryForm.totalPages}" type="button"
+											class="btn btn-default active">${salaryForm.totalPages}</button>
 									</c:when>
 									<c:otherwise>
-										<c:forEach begin="${insuranceForm.pageIndex - 1}"
-											end="${insuranceForm.pageIndex + 1}" varStatus="status">
+										<c:forEach begin="${salaryForm.pageIndex - 1}"
+											end="${salaryForm.pageIndex + 1}" varStatus="status">
 											<c:choose>
-												<c:when test="${status.index==insuranceForm.pageIndex}">
+												<c:when test="${status.index==salaryForm.pageIndex}">
 													<button id="page${status.index}" type="button"
 														class="btn btn-default active">${status.index}</button>
 												</c:when>
@@ -150,7 +152,7 @@ tr:nth-child(even) {
 						</c:choose>
 						<c:choose>
 							<c:when
-								test="${insuranceForm.pageIndex==insuranceForm.totalPages}">
+								test="${salaryForm.pageIndex==salaryForm.totalPages}">
 								<button id="nextPage" type="button"
 									class="btn btn-default disabled">Sau</button>
 								<button id="lastPage" type="button"
@@ -174,34 +176,28 @@ tr:nth-child(even) {
 		</table>	
 	</form:form>
 	
-	<div class="table-responsive">
-		
+	<div class="table-responsive">		
 		<table class="table table-striped">
 			<tr>
 				<th>Mã NV</th>
-				<th>Số sổ BHXH</th>
-				<th>Lương BH</th>				
-				<th>Đóng tại</th>
-				<th>Tình trạng</th>
-				<th>Số thẻ BHYT</th>
-				<th>Nơi ĐK khám bệnh</th>
-				<th>Xem chi tiết</th>
-				<th>Quá trình đóng</th>
-				
-				<th>Sửa</th>
+				<th>Họ tên</th>
+				<th>Phòng</th>
+				<th>Chức danh</th>
+				<th>Lương</th>				
+				<th>Sửa thông tin</th>
+				<th>Lương chi tiết</th>
+				<th>Ghi chú</th>
 			</tr>
-			<c:forEach var="insurance" items="${insurances}">
+			<c:forEach var="salary" items="${salarys}">
 				<tr>
-					<td>${insurance.employeeId}</td>
-					<td>${insurance.socicalInsuNo}</td>
-					<td><fmt:formatNumber value="${insurance.salarySocicalInsu}" type="number"/></td>
-					<td>${insurance.place}</td>
-					<td>${insurance.status}</td>
-					<td>${insurance.hInsuNo}</td>
-					<td>${insurance.hInsuPlace}</td>
-					<td><a href="viewInsurance?socicalInsuNo=${insurance.socicalInsuNo}">Xem chi tiết</a></td>
-					<td><a href="listProcessInsurance?socicalInsuNo=${insurance.socicalInsuNo}&employeeId=${insurance.employeeId}">Quá trình đóng</a></td>
-					<td><a href="editInsurance?socicalInsuNo=${insurance.socicalInsuNo}">Sửa</a></td>
+					<td>${salary.employeeId}</td>
+					<td>${salary.fullName}</td>
+					<td>${salary.department}</td>					
+					<td>${salary.jobTitle}</td>
+					<td><fmt:formatNumber value="${salary.salary}" type="number"/> đồng</td>					
+					<td><a href="editSalary?employeeId=${salary.employeeId}">Sửa</a></td>
+					<td><a href="listSalaryDetail?employeeId=${salary.employeeId}">Chi tiết</a></td>
+					<td>${salary.desc}</td>
 				</tr>
 			</c:forEach>
 		</table>
@@ -209,5 +205,7 @@ tr:nth-child(even) {
 			<div class="alert alert-success">${message}</div>
 		</c:if>
 	</div>
+	<a href="${pageContext.request.contextPath}/salary/insertSalary"><button
+			class="btn btn-primary btn-sm">Thêm mới thông tin lương nhân viên </button></a>
 </body>
 </html>

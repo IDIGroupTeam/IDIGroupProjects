@@ -95,7 +95,6 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		
 		String numberEmployee = jdbcTmpl.queryForObject(sql, String.class, params);
 		
-		//System.err.println(accountNumber);
 		return Integer.parseInt(numberEmployee);
 	}
 

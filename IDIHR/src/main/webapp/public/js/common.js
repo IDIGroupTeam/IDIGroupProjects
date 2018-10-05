@@ -111,3 +111,23 @@ function setTopLeft(id) {
 	el.style.left = 0;
 	el.style.top = 0;
 }
+
+function moneyConvert(id){
+	 $("#"+id).keyup(function(){
+			v = $(this).val();
+			//alert(v);
+			v = v.replace(/\D/g, "");
+			v = v.replace(/\s/g, "");
+			v = v.replace(/\t/g, "");
+			v = v.replace(/^[0]+/g, "");
+
+			v = v.replace(/(\d)(\d{15})$/, "$1,$2");
+			v = v.replace(/(\d)(\d{12})$/, "$1,$2");
+			v = v.replace(/(\d)(\d{9})$/, "$1,$2");
+			v = v.replace(/(\d)(\d{6})$/, "$1,$2");
+			v = v.replace(/(\d)(\d{3})$/, "$1,$2");
+			
+			$(this).val(v);
+			//alert("xx "+v);
+		});
+}
