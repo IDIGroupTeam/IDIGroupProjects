@@ -56,8 +56,7 @@ public class InsuranceDAO extends JdbcDaoSupport {
 	/**
 	 * get Insurance by Social Insurance No
 	 * 
-	 * @param Insurance
-	 *            No
+	 * @param Insurance No
 	 * @return Insurance object
 	 */
 	public Insurance getInsurance(String SocialInsuranceNo) {
@@ -86,7 +85,7 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			String sql = hr.getProperty("INSERT_INSURANCE").toString();
 			log.info("INSERT_INSURANCE query: " + sql);
 			Object[] params = new Object[] { insurance.getEmployeeId(), insurance.getSocicalInsuNo(),
-					insurance.getSalarySocicalInsu(), insurance.getPercentSInsuC(), insurance.getPercentSInsuE(),
+					insurance.getSalarySocicalInsu().replaceAll(",", ""), insurance.getPercentSInsuC(), insurance.getPercentSInsuE(),
 					insurance.getPayType(), insurance.getSalaryZone(), insurance.getPlace(), insurance.getStatus(),
 					insurance.gethInsuNo(), insurance.gethInsuPlace(), insurance.getComment() };
 			jdbcTmpl.update(sql, params);
@@ -109,7 +108,7 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			// update
 			String sql = hr.getProperty("UPDATE_INSURANCE").toString();
 			log.info("UPDATE_INSURANCE query: " + sql);
-			Object[] params = new Object[] { insurance.getEmployeeId(), insurance.getSalarySocicalInsu(),
+			Object[] params = new Object[] { insurance.getEmployeeId(), insurance.getSalarySocicalInsu().replaceAll(",", ""),
 					insurance.getPercentSInsuC(), insurance.getPercentSInsuE(), insurance.getPayType(),
 					insurance.getSalaryZone(), insurance.getPlace(), insurance.getStatus(), insurance.gethInsuNo(),
 					insurance.gethInsuPlace(), insurance.getComment(), insurance.getSocicalInsuNo() };
@@ -121,6 +120,26 @@ public class InsuranceDAO extends JdbcDaoSupport {
 		}
 	}
 
+	/**
+	 * Update SALARY Insurance into database
+	 * 
+	 * @param Insurance
+	 */
+	public void updateSalaryInsurance(Insurance insurance) throws Exception {
+		try {
+			log.info("Cập nhật lương bảo hiểm cho sổ BH số: " + insurance.getSocicalInsuNo() + " ....");
+			// update
+			String sql = hr.getProperty("UPDATE_INSURANCE_SALARY").toString();
+			log.info("UPDATE_INSURANCE_SALARY query: " + sql);
+			Object[] params = new Object[] {insurance.getSalarySocicalInsu().replaceAll(",", ""), insurance.getSocicalInsuNo() };
+			jdbcTmpl.update(sql, params);
+
+		} catch (Exception e) {
+			log.error(e, e);
+			throw e;
+		}
+	}
+	
 	// ------------------------------process insurance -------------------------//
 
 	/**
@@ -174,10 +193,15 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			String sql = hr.getProperty("INSERT_PROCESS_INSURANCE").toString();
 			log.info("INSERT_PROCESS_INSURANCE query: " + sql);
 			Object[] params = new Object[] { processInsurance.getSocicalInsuNo(),
-					processInsurance.getSalarySocicalInsu(), processInsurance.getCompanyPay(),
+					processInsurance.getSalarySocicalInsu().replaceAll(",", ""), processInsurance.getCompanyPay(),
 					processInsurance.getFromDate(), processInsurance.getToDate(), processInsurance.getComment() };
 			jdbcTmpl.update(sql, params);
-
+			
+			//update Insurance
+			Insurance insurance= new Insurance();
+			insurance.setSocicalInsuNo(processInsurance.getSocicalInsuNo());
+			insurance.setSalarySocicalInsu(processInsurance.getSalarySocicalInsu().replaceAll(",", ""));
+			updateSalaryInsurance(insurance);
 		} catch (Exception e) {
 			log.error(e, e);
 			throw e;
@@ -196,11 +220,15 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			// update
 			String sql = hr.getProperty("UPDATE_PROCESS_INSURANCE").toString();
 			log.info("UPDATE_PROCESS_INSURANCE query: " + sql);
-			Object[] params = new Object[] { processInsurance.getSalarySocicalInsu(), processInsurance.getCompanyPay(),
+			Object[] params = new Object[] { processInsurance.getSalarySocicalInsu().replaceAll(",", ""), processInsurance.getCompanyPay(),
 					processInsurance.getToDate(), processInsurance.getComment(), processInsurance.getSocicalInsuNo(),
 					processInsurance.getFromDate() };
 			jdbcTmpl.update(sql, params);
 
+			Insurance insurance= new Insurance();
+			insurance.setSocicalInsuNo(processInsurance.getSocicalInsuNo());
+			insurance.setSalarySocicalInsu(processInsurance.getSalarySocicalInsu().replaceAll(",", ""));
+			updateSalaryInsurance(insurance);			
 		} catch (Exception e) {
 			log.error(e, e);
 			throw e;

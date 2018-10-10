@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -37,7 +38,7 @@
 				</tr>
 				<tr>
 					<td bgcolor="#E6E6E6">Lương BH:</td>
-					<td><c:out value="${insuranceForm.salarySocicalInsu}" /></td>
+					<td><fmt:formatNumber value="${insuranceForm.salarySocicalInsu.replaceAll(',', '')}"/> đ</td>
 					<td bgcolor="#E6E6E6">Vùng lương:</td>
 					<td><c:out value="${insuranceForm.salaryZone}" /></td>
 				</tr>

@@ -194,7 +194,7 @@ tr:nth-child(even) {
 				<tr>
 					<td>${insurance.employeeId}</td>
 					<td>${insurance.socicalInsuNo}</td>
-					<td><fmt:formatNumber value="${insurance.salarySocicalInsu}" type="number"/></td>
+					<td><fmt:formatNumber value="${insurance.salarySocicalInsu.replaceAll(',', '')}" type="number"/></td>
 					<td>${insurance.place}</td>
 					<td>${insurance.status}</td>
 					<td>${insurance.hInsuNo}</td>

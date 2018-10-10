@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -14,9 +15,17 @@
 	font-style: italic;
 }
 </style>
+<!-- Initialize the plugin: -->
+<script src="${url}/public/js/jquery.min.js"></script>
+<script src="${url}/public/js/common.js"></script>
+<script type="text/javascript">
+	$(function() {
+		moneyConvert("salarySocicalInsu");
+	});
+</script>
 </head>
 <body>
-	<a href="${pageContext.request.contextPath}/insurance/listProcessInsurance?socicalInsuNo=${socicalInsuNo}&employeeId=${employeeId}"><button class="btn btn-primary btn-sm">Quay	lại danh sách</button></a>
+	<a href="${url}/insurance/listProcessInsurance?socicalInsuNo=${socicalInsuNo}&employeeId=${employeeId}"><button class="btn btn-primary btn-sm">Quay	lại danh sách</button></a>
 	<br/><br/>
 	<form:form modelAttribute="pInsuranceForm" method="POST"
 		action="insertProcessInsurance?employeeId=${employeeId}">
