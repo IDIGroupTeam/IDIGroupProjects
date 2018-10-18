@@ -289,11 +289,14 @@ public class TaskController {
 			taskDAO.insertTask(task);
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Thêm thông tin công việc thành công!");
-
+			String owner = "Chưa giao cho ai";
+			if(task.getOwnedBy() > 0)
+				owner = allEmployeesMap().get(task.getOwnedBy());
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 			String htmlMsg = "Dear you, <br/>\n<br/>\n"
-					+ "Bạn nhận được mail này vì bạn có liên quan đến công việc này. <br/>\n"
+					+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+					+ "<b>Người làm: " + owner + " </b><br/>\n"
 					+ "Công việc thuộc phòng: " + task.getArea() + " <br/>\n " 
 					+ "Trạng thái: Tạo mới <br/>\n "
 					+ "Kế hoạch cho tháng: " + task.getPlannedFor() + " <br/>\n " 
@@ -378,6 +381,9 @@ public class TaskController {
 
 			// Gui mail notification
 			// Lấy ds email can gui
+			String owner = "Chưa giao cho ai";
+			if(taskForm.getOwnedBy() > 0)
+				owner = allEmployeesMap().get(taskForm.getOwnedBy());
 			List<String> mailList = taskDAO.getMailList(taskForm.getTaskId());
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -388,7 +394,8 @@ public class TaskController {
 				String htmlMsg = "";
 				if(taskForm.getReviewComment() != null && taskForm.getReviewComment().length() > 0) {
 					htmlMsg ="Dear you, <br/>\n <br/>\n"
-							+ "Bạn nhận được mail này vì bạn có liên quan đến công việc này. <br/><br/>\n"
+							+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+							+ "<b>Người làm: " + owner + "</b><br/>\n"
 							+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
 							+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n " 
 							+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n " 
@@ -396,7 +403,7 @@ public class TaskController {
 							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
 							+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" 
 							+ "<b>Người cập nhật " + taskForm.getCommentedBy()
-							+ " </b> <e-mail> lúc " + task.getUpdateTS() + " <br/>\n"
+							+ "</b> <e-mail> lúc " + task.getUpdateTS() + " <br/>\n"
 							+ "<tabel border='1'>"
 							+ "<br/>\n<tr><td>Nhận xét/đánh giá của người giám sát: </td><td>" + taskForm.getReviewComment() 
 							+ "</tr><tr><td><br/>Nội dung thảo luận: " + taskForm.getContent()
@@ -405,7 +412,8 @@ public class TaskController {
 							+ " </td></tr></table><br/> \n";
 				}else {
 					htmlMsg = "Dear you, <br/>\n <br/>\n"
-							+ "Bạn nhận được mail này vì bạn có liên quan đến công việc này. <br/><br/>\n"
+							+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+							+ "<b>Người làm: " + owner + " </b><br/>\n"
 							+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n "
 							+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "							
 							+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n "
@@ -429,7 +437,8 @@ public class TaskController {
 				String htmlMsg = "";
 				if(taskForm.getReviewComment() != null && taskForm.getReviewComment().length() > 0) {
 					htmlMsg = "Dear you, <br/>\n <br/>\n"
-							+ "Bạn nhận được mail này vì bạn có liên quan đến công việc này. <br/><br/>\n" 
+							+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n" 
+							+ "<b>Người làm: " + owner + " </b><br/>\n"
 							+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
 							+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "							
 							+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n " 
@@ -449,7 +458,8 @@ public class TaskController {
 							+ "</td></tr></table><br/> \n";
 				}else {
 					htmlMsg = "Dear you, <br/>\n <br/>\n"
-							+ "Bạn nhận được mail này vì bạn có liên quan đến công việc này. <br/><br/>\n" 
+							+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n" 
+							+ "<b>Người làm: " + owner + " </b><br/>\n"
 							+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
 							+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "							
 							+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n " 
