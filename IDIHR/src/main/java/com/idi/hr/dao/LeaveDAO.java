@@ -1,5 +1,6 @@
 package com.idi.hr.dao;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -310,6 +311,35 @@ public class LeaveDAO extends JdbcDaoSupport {
 		return countNumber;
 	}
 
+	/**
+	 * check cham cong phat sinh da ton tai
+	 * @param date
+	 * @param employeeId
+	 * @param leaveType
+	 * @return
+	 * @throws Exception
+	 */
+	public int checkLeaveDuplicate(Date date, int employeeId, String leaveType) throws Exception {
+		int countNumber = 0;
+		String sql = hr.getProperty("GET_LEAVE_INFO_FOR_DUPLICATE").toString();
+
+		if (employeeId > 0)
+			sql = sql + " AND EMPLOYEE_ID = " + employeeId + "";
+
+		sql = sql + " AND LEAVE_TYPE IN ('" + leaveType +"')";
+		
+		log.info("GET_LEAVE_INFO_FOR_REPORT query: " + sql);
+
+		Object[] params = new Object[] { date };
+		if (jdbcTmpl.queryForObject(sql, Integer.class, params) != null)
+			countNumber = jdbcTmpl.queryForObject(sql, Integer.class, params);
+		else
+			countNumber = 0;
+		log.info("leaveType: " + leaveType + ", ngay: " + date + ", employeeId: " + employeeId + "|" + countNumber);
+
+		return countNumber;
+	}
+	
 	/**
 	 * count number time/value of working without keeping ... 
 	 * @param year

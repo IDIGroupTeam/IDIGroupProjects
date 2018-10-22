@@ -47,7 +47,8 @@ public class LeaveValidator implements Validator {
 				errors.rejectValue("overLate", "Pattern.leaveInfo.overLate");
 			}
 			
-			if(leaveDAO.getLeaveReport(String.valueOf(year), String.valueOf(month + 1), employeeId, leaveType) > 0) {
+			//check dulicate
+			if(leaveDAO.checkLeaveDuplicate(leaveInfo.getDate(), employeeId, leaveType) > 0) {
 				System.err.println("duplicate");
 				errors.rejectValue("duplicate", "Pattern.leaveInfo.duplicate");
 			}			
