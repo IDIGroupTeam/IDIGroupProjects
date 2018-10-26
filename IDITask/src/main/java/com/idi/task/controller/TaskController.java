@@ -39,6 +39,9 @@ import com.idi.task.dao.TaskDAO;
 import com.idi.task.form.ReportForm;
 import com.idi.task.form.SendReportForm;
 import com.idi.task.form.TaskForm;
+import com.idi.task.login.bean.UserLogin;
+import com.idi.task.login.dao.UserRoleDAO;
+
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -75,6 +78,9 @@ public class TaskController {
 	@Autowired
 	private DepartmentDAO departmentDAO;
 
+	@Autowired
+	private UserRoleDAO userRoleDAO;
+	
 	@Autowired
 	private JavaMailSender mailSender;
 	
@@ -283,6 +289,15 @@ public class TaskController {
 			final RedirectAttributes redirectAttributes) throws Exception {
 		try {
 			//System.err.println("insert new task");
+
+			//inject from Login account
+			String username = new LoginController().getPrincipal();
+		    log.info("Using usename =" + username +" in insert new task");
+		    if (username !=null && username.length() >0 ) {
+		    	UserLogin userLogin  =  userRoleDAO.getAUserLoginFull(username);
+		    	task.setCreatedBy(userLogin.getUserID());
+		    }
+			
 			Timestamp ts = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
 			task.setCreationDate(ts);
 			task.setUpdateTS(ts);
@@ -292,6 +307,9 @@ public class TaskController {
 			String owner = "Chưa giao cho ai";
 			if(task.getOwnedBy() > 0)
 				owner = allEmployeesMap().get(task.getOwnedBy());
+			String createdName = "";
+			if(task.getCreatedBy() > 0)
+				createdName = allEmployeesMap().get(task.getCreatedBy());
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 			String htmlMsg = "Dear you, <br/>\n<br/>\n"
@@ -302,7 +320,7 @@ public class TaskController {
 					+ "Kế hoạch cho tháng: " + task.getPlannedFor() + " <br/>\n " 
 					+ "Độ ưu tiên: " + task.getPriority()
 					+ "<br/> <br/> \n" 
-					+ "<b>Người tạo " + task.getCreatedBy() + " </b> <e-mail> lúc "	+ ts + " <br/>\n" 
+					+ "<b>Người tạo " + createdName + " </b> <e-mail> lúc "	+ ts + " <br/>\n" 
 					+ "Mô tả nội dung công việc: "	+ task.getDescription()
 					+ "<br/> \n <br/> \n Trân trọng, <br/> \n"
 					+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" ;
@@ -336,6 +354,7 @@ public class TaskController {
 			// Xu ly cho task comment
 			TaskComment taskComment = new TaskComment();
 			int currentMaxCommentIndex = 0;
+			 UserLogin userLogin = new UserLogin();
 			if (taskForm.getContent() != null && taskForm.getContent().length() > 0) {
 				currentMaxCommentIndex = taskDAO.getMaxCommentIndex(taskForm.getTaskId());
 				currentMaxCommentIndex = currentMaxCommentIndex + 1;
@@ -344,6 +363,15 @@ public class TaskController {
 				taskComment.setCommentedBy(taskForm.getCommentedBy());
 				taskComment.setContent(taskForm.getContent());
 
+				//inject from Login account
+				String username = new LoginController().getPrincipal();
+			    log.info("Using usename =" + username +" in insert new task");
+			   
+			    if (username !=null && username.length() >0 ) {
+			    	userLogin  =  userRoleDAO.getAUserLoginFull(username);
+			    	taskComment.setCommentedBy(userLogin.getUserID());
+			    }
+				
 				taskDAO.insertTaskComment(taskComment);
 			}
 
@@ -384,6 +412,11 @@ public class TaskController {
 			String owner = "Chưa giao cho ai";
 			if(taskForm.getOwnedBy() > 0)
 				owner = allEmployeesMap().get(taskForm.getOwnedBy());
+			
+			String updatedBy = "";
+			if(userLogin.getUserID() > 0)
+				updatedBy = allEmployeesMap().get(userLogin.getUserID());
+			
 			List<String> mailList = taskDAO.getMailList(taskForm.getTaskId());
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -402,7 +435,7 @@ public class TaskController {
 							+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
 							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
 							+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" 
-							+ "<b>Người cập nhật " + taskForm.getCommentedBy()
+							+ "<b>Người cập nhật: " + updatedBy
 							+ "</b> <e-mail> lúc " + task.getUpdateTS() + " <br/>\n"
 							+ "<tabel border='1'>"
 							+ "<br/>\n<tr><td>Nhận xét/đánh giá của người giám sát: </td><td>" + taskForm.getReviewComment() 
@@ -419,7 +452,8 @@ public class TaskController {
 							+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n "
 							+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
 							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
-							+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" + "<b>Người cập nhật " + taskForm.getCommentedBy()
+							+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" 
+							+ "<b>Người cập nhật: " + updatedBy
 							+ "</b><e-mail> lúc " +  task.getUpdateTS() + " <br/>\n"
 							+ "<tabel border='1'>"
 							+ "<tr><td>Nội dung thảo luận: " + taskForm.getContent()
@@ -445,7 +479,7 @@ public class TaskController {
 							+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
 							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
 							+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" 
-							+ "<b>Người cập nhật " + taskForm.getCommentedBy()
+							+ "<b>Người cập nhật: " + updatedBy
 							+ "</b><e-mail> lúc " +  task.getUpdateTS() + " <br/>\n"
 							+ "<tabel border='1'><tr>" 
 							+ "<td>Mô tả công việc: </td><td>" + taskForm.getDescription()
@@ -466,7 +500,7 @@ public class TaskController {
 							+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
 							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n "
 							+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n "
-							+ "<b>Người cập nhật " + taskForm.getCommentedBy()
+							+ "<b>Người cập nhật: " + updatedBy
 							+ "</b> <e-mail> lúc " +  task.getUpdateTS() + " <br/>\n"
 							+ "<tabel border='1'>"
 							+ "<tr><td>Mô tả công việc: </td><td>" + taskForm.getDescription()

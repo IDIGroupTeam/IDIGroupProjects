@@ -3,7 +3,7 @@ package com.idi.task.mapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.sql.Date;
+//import java.sql.Date;
 
 import org.springframework.jdbc.core.RowMapper;
 

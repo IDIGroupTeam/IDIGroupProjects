@@ -77,4 +77,10 @@
 	<bean id="departmentDAO" class="com.idi.task.dao.DepartmentDAO">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
+	<bean id="userDAO" class="com.idi.task.login.dao.impl.UserDAOImpl">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+	<bean id="userRoleDAO" class="com.idi.task.login.dao.impl.UserRoleDAOImpl">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
 </beans>
