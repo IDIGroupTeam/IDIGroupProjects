@@ -119,15 +119,15 @@ tr:nth-child(even) {
 			<c:forEach var="leaveInfo" items="${leaveInfos}">
 				<tr style="font-size: 10">
 					<td>${leaveInfo.employeeId}</td>
-					<td>${leaveInfo.employeeName}</td>
+					<td nowrap="nowrap">${leaveInfo.employeeName}</td>
 					<td>${leaveInfo.department}</td>
 					<td>${leaveInfo.title}</td>
-					<td>${leaveInfo.date}</td>
+					<td nowrap="nowrap">${leaveInfo.date}</td>
 					<c:if test="${leaveInfo.timeValue == 4}">
-						<td>${leaveInfo.leaveName} nửa ngày</td>
+						<td nowrap="nowrap">${leaveInfo.leaveName} nửa ngày</td>
 					</c:if>
 					<c:if test="${leaveInfo.timeValue != '4'}">
-						<td>${leaveInfo.leaveName}</td>
+						<td nowrap="nowrap">${leaveInfo.leaveName}</td>
 					</c:if>
 					<td>${leaveInfo.timeValue}</td>
 					<td>${leaveInfo.comment}</td>

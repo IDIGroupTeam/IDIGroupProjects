@@ -43,13 +43,18 @@ public class LeaveValidator implements Validator {
 			System.err.println("validate leave info");
 			
 			if(leaveType.startsWith("DM") && leaveDAO.getRequestComeLateUsed(year, month + 1, employeeId) > lateQuataPerMonth) {
-				System.err.println("over late");
+				System.err.println("Di muon qua so lan cho phep");
 				errors.rejectValue("overLate", "Pattern.leaveInfo.overLate");
+			}
+			
+			if(leaveInfo.getDate().compareTo(leaveInfo.getToDate()) >= 0) {
+				System.err.println("from date >= to date");
+				errors.rejectValue("toDateInvalid", "Pattern.leaveInfo.toDateInvalid");
 			}
 			
 			//check dulicate
 			if(leaveDAO.checkLeaveDuplicate(leaveInfo.getDate(), employeeId, leaveType) > 0) {
-				System.err.println("duplicate");
+				System.err.println("thong tin da ton tai");
 				errors.rejectValue("duplicate", "Pattern.leaveInfo.duplicate");
 			}			
 

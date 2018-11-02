@@ -3,6 +3,8 @@ package com.idi.hr.dao;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -145,9 +147,9 @@ public class LeaveDAO extends JdbcDaoSupport {
 		if(jdbcTmpl.queryForObject(sql, Integer.class, params) != null)
 			numberDayLeaveTaken = jdbcTmpl.queryForObject(sql, Integer.class, params);
 		System.err.println(year + "|" + id + "|" + month + ": "+ numberDayLeaveTaken);
+		
 		return numberDayLeaveTaken;
 	}
-
 	
 	/**
 	 * get number of time take leave with full day
@@ -213,8 +215,8 @@ public class LeaveDAO extends JdbcDaoSupport {
 		}			
 		LeaveInfoMapper mapper = new LeaveInfoMapper();		
 		List<LeaveInfo> list = jdbcTmpl.query(sql, params, mapper);
+		
 		return list;
-
 	}
 
 	/**
@@ -222,7 +224,7 @@ public class LeaveDAO extends JdbcDaoSupport {
 	 * 
 	 * @param LeaveInfo
 	 */
-	public void insertLeaveInfo(LeaveInfo leaveInfo) throws Exception {
+	public void insertLeaveInfo(LeaveInfo leaveInfo, List<java.util.Date> datesInRange) throws Exception {
 		try {
 
 			log.info("Insert new LeaveInfo ....");
@@ -244,10 +246,48 @@ public class LeaveDAO extends JdbcDaoSupport {
 				}else
 					leaveInfo.setTimeValue(8);
 			}
-			Object[] params = new Object[] { leaveInfo.getEmployeeId(), leaveInfo.getDate(), leaveType,
-					leaveInfo.getTimeValue(), leaveInfo.getComment() };
-			jdbcTmpl.update(sql, params);
-
+			
+			//xuly cho nhieu ngay
+			if(datesInRange != null && datesInRange.size() > 0) {
+				log.info("Cho nhieu ngay ....");
+				for(int i = 0; i < datesInRange.size(); i ++) {
+					java.util.Date date = null;
+					logger.info("Ngay: " + datesInRange.get(i).getDate() + "/" + (datesInRange.get(i).getMonth() + 1) + "/" + (1900 + datesInRange.get(i).getYear()));
+					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+					String d = datesInRange.get(i).getDate() + "/" + (datesInRange.get(i).getMonth() + 1) + "/" + (1900 + datesInRange.get(i).getYear());
+					date = df.parse(d);
+					
+					if(leaveType.equalsIgnoreCase("NKP") || leaveType.equalsIgnoreCase("NKL") 
+							|| leaveType.equalsIgnoreCase("NP") || leaveType.equalsIgnoreCase("O")) {
+						if(!datesInRange.get(i).toString().startsWith("Sat") 
+								&& !datesInRange.get(i).toString().startsWith("Sun")) {
+							Object[] params = new Object[] { leaveInfo.getEmployeeId(), date, leaveType,
+									leaveInfo.getTimeValue(), leaveInfo.getComment() };
+							jdbcTmpl.update(sql, params);							
+						}
+					}else if(leaveType.equalsIgnoreCase("HT")){
+						Object[] params = new Object[] { leaveInfo.getEmployeeId(), date, leaveType,
+								leaveInfo.getTimeValue(), leaveInfo.getComment() };
+						jdbcTmpl.update(sql, params);
+					}else if(leaveType.equalsIgnoreCase("CT")){
+						if(datesInRange.get(i).toString().startsWith("Sat") 
+								|| datesInRange.get(i).toString().startsWith("Sun")) {
+							String comment = leaveInfo.getComment() + " " + "Công tác vào cuối tuần";
+							Object[] params = new Object[] { leaveInfo.getEmployeeId(), date, "LTCT",
+									leaveInfo.getTimeValue(), comment };
+							jdbcTmpl.update(sql, params);
+						}else {
+							Object[] params = new Object[] { leaveInfo.getEmployeeId(), date, leaveType,
+									leaveInfo.getTimeValue(), leaveInfo.getComment() };
+							jdbcTmpl.update(sql, params);
+						}						
+					}
+				}
+			}else {
+				Object[] params = new Object[] { leaveInfo.getEmployeeId(), leaveInfo.getDate(), leaveType,
+						leaveInfo.getTimeValue(), leaveInfo.getComment() };
+				jdbcTmpl.update(sql, params);
+			}
 		} catch (Exception e) {
 			log.error(e, e);
 			throw e;
@@ -264,7 +304,7 @@ public class LeaveDAO extends JdbcDaoSupport {
 	 */
 	public void deleteLeaveInfo(int employeeId, String date, String leaveType) throws Exception {
 		try {
-			log.info("Xóa thông tin ngày nghỉ của MNV : " + employeeId + " ngày " + date);
+			log.info("Xóa thông tin chấm công phát sinh của NV : " + employeeId + " ngày " + date);
 			// delete
 			String sql = hr.getProperty("DELETE_LEAVE_INFO").toString();
 			log.info("DELETE_LEAVE_INFO query: " + sql);

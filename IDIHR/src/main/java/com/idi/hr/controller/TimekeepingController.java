@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,7 +16,6 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -1244,8 +1242,32 @@ public class TimekeepingController {
 				System.err.println("validate data is fail");
 				return this.addLeaveInfo(model, leaveInfo);
 			}
+			
+			List<Date> datesInRange = new ArrayList<>();
+			if(leaveInfo.getToDate() != null) {
+				String leaveType = leaveInfo.getLeaveType();
+				if(leaveType.equalsIgnoreCase("HT") || leaveType.equalsIgnoreCase("NKL") ||
+						leaveType.equalsIgnoreCase("NKP") || leaveType.equalsIgnoreCase("NP") ||
+						leaveType.equalsIgnoreCase("O") || leaveType.equalsIgnoreCase("CT")) {				
+				//	System.err.println("to date: " + leaveInfo.getToDate());
+				//	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+					
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(leaveInfo.getDate());				
+					Calendar endCalendar = Calendar.getInstance();
+					endCalendar.setTime(leaveInfo.getToDate());
+					endCalendar.add(Calendar.DAY_OF_YEAR, 1); //Add 1 day to endDate to make sure endDate is included into the final list
+					while (calendar.before(endCalendar)) {
+						Date resultDate = calendar.getTime();
+					//	System.err.println("date each:" + resultDate);
+						datesInRange.add(resultDate);
+						calendar.add(Calendar.DATE, 1);
+					//	System.err.println("date each:" + resultDate);
+					}
+				}
+			}
 
-			leaveDAO.insertLeaveInfo(leaveInfo);
+			leaveDAO.insertLeaveInfo(leaveInfo, datesInRange);
 
 /*			// add thong tin xin phep di muon ve som vao table timekeeping
 			PropertiesManager hr = new PropertiesManager("hr.properties");

@@ -12,6 +12,7 @@ public class LeaveInfo implements Serializable {
 
 	private int employeeId;
 	private Date date;
+	private Date toDate;
 	private String leaveType;
 	private float timeValue;
 	private String comment;
@@ -22,6 +23,7 @@ public class LeaveInfo implements Serializable {
 	private String overLate;
 	private String overLeave;
 	private String duplicate;
+	private String toDateInvalid;
 	
 	public LeaveInfo() {
 	}
@@ -50,6 +52,14 @@ public class LeaveInfo implements Serializable {
 
 	public Date getDate() {
 		return date;
+	}
+
+	public Date getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(Date toDate) {
+		this.toDate = toDate;
 	}
 
 	public void setDate(Date date) {
@@ -134,5 +144,14 @@ public class LeaveInfo implements Serializable {
 
 	public void setDuplicate(String duplicate) {
 		this.duplicate = duplicate;
+	}
+
+	public String getToDateInvalid() {
+		return toDateInvalid;
+	}
+
+	public void setToDateInvalid(String toDateInvalid) {
+		this.toDateInvalid = toDateInvalid;
 	}	
+	
 }
