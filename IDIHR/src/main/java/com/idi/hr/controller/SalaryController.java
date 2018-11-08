@@ -348,7 +348,7 @@ public class SalaryController {
 			overTimeSalary = Math.round(overTimeSalary);
 			salaryDetail.setOverTimeSalary(String.valueOf(overTimeSalary));
 			
-			if(salaryDetail.getSalaryInsurance() != null)
+			if(salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0)
 				salaryDetail.setPayedInsurance(String.valueOf(Float.parseFloat(salaryDetail.getSalaryInsurance())*10.5/100));
 			
 			salaryDAO.insertSalaryDetail(salaryDetail);
