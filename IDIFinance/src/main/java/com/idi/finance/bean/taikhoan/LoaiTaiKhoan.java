@@ -26,6 +26,8 @@ public class LoaiTaiKhoan {
 	public static final String TIEN_GUI_NGAN_HANG_VANG = "1123";
 	public static final String TIEN_DANG_CHUYEN_NT = "1132";
 
+	public static final String HANG_HOA = "156";
+
 	public static final String PHAI_THU_KHACH_HANG = "131";
 	public static final String PHAI_TRA_NGUOI_BAN = "331";
 
@@ -45,6 +47,7 @@ public class LoaiTaiKhoan {
 	private boolean luongTinh = false;
 	private LoaiTaiKhoan loaiTaiKhoan;
 	private List<LoaiTaiKhoan> loaiTaiKhoanDs;
+	private LoaiTaiKhoan doiUng;
 	private boolean isNew = false;
 	private String maTkGoc;
 	private NganHangTaiKhoan nganHangTaiKhoan;
@@ -154,6 +157,14 @@ public class LoaiTaiKhoan {
 		}
 	}
 
+	public LoaiTaiKhoan getDoiUng() {
+		return doiUng;
+	}
+
+	public void setDoiUng(LoaiTaiKhoan doiUng) {
+		this.doiUng = doiUng;
+	}
+
 	public boolean isNew() {
 		return isNew;
 	}
@@ -225,6 +236,19 @@ public class LoaiTaiKhoan {
 		} else if (item.getMaTk() == null) {
 			return false;
 		} else if (!maTk.trim().equals(item.getMaTk().trim())) {
+			return false;
+		}
+
+		// Cái này chỉ tạm thời cho chức năng lưu chuyển tiền tệ, sau phải sửa
+		if (doiUng == null) {
+			if (item.getDoiUng() != null)
+				return false;
+		} else if (item.getDoiUng() == null) {
+			return false;
+		} else if (!doiUng.equals(item.getDoiUng())) {
+			return false;
+		} else if (!(soDuGiaTri == item.getSoDuGiaTri())) {
+			// Cách cài đặt này là tạm thời do thiết kế ban đầu không chuẩn
 			return false;
 		}
 

@@ -50,15 +50,6 @@ public class DonVi {
 			if (maDv != item.getMaDv()) {
 				return false;
 			}
-
-			if (tenDv == null) {
-				if (item.getTenDv() != null)
-					return false;
-			} else if (item.getTenDv() == null) {
-				return false;
-			} else if (!tenDv.trim().equals(item.getTenDv().trim())) {
-				return false;
-			}
 		} catch (Exception e) {
 			return false;
 		}

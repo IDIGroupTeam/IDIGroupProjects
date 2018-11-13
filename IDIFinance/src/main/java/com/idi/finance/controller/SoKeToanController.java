@@ -28,12 +28,16 @@ import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.bctc.KyKeToanCon;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.DoiTuong;
+import com.idi.finance.bean.hanghoa.HangHoa;
+import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.kyketoan.SoDuKy;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.ChungTuDAO;
+import com.idi.finance.dao.HangHoaDAO;
 import com.idi.finance.dao.KhachHangDAO;
+import com.idi.finance.dao.KhoHangDAO;
 import com.idi.finance.dao.KyKeToanDAO;
 import com.idi.finance.dao.NhaCungCapDAO;
 import com.idi.finance.dao.NhanVienDAO;
@@ -69,6 +73,12 @@ public class SoKeToanController {
 
 	@Autowired
 	KyKeToanDAO kyKeToanDAO;
+
+	@Autowired
+	HangHoaDAO hangHoaDAO;
+
+	@Autowired
+	KhoHangDAO khoHangDAO;
 
 	private WebDataBinder binder;
 
@@ -907,6 +917,158 @@ public class SoKeToanController {
 
 			model.addAttribute("tab", "tabSKTSCTCN");
 			return "sktSoChiTietCongNo";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/soketoan/nhapxuatton/tonghop", method = { RequestMethod.GET, RequestMethod.POST })
+	public String sktSoThNhapXuatTon(@ModelAttribute("mainFinanceForm") @Validated TkSoKeToanForm form,
+			BindingResult result, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			// Lấy kỳ kế toán mặc định
+			if (form.getKyKeToan() == null) {
+				form.setKyKeToan(dungChung.getKyKeToan());
+			} else {
+				form.setKyKeToan(kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt()));
+			}
+
+			Date homNay = new Date();
+			if (!form.getKyKeToan().getBatDau().after(homNay) && !form.getKyKeToan().getKetThuc().before(homNay)) {
+				// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của
+				// tháng hiện tại
+				if (form.getDau() == null) {
+					form.setDau(Utils.getStartDateOfMonth(homNay));
+				}
+
+				if (form.getCuoi() == null) {
+					form.setCuoi(Utils.getEndDateOfMonth(homNay));
+				}
+			} else {
+				// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của
+				// tháng hiện tại
+				if (form.getDau() == null) {
+					form.setDau(form.getKyKeToan().getBatDau());
+				}
+
+				if (form.getCuoi() == null) {
+					form.setCuoi(form.getKyKeToan().getKetThuc());
+				}
+			}
+
+			// Nếu không có đầu vào loại chứng từ thì lấy tất cả các chứng từ
+			if (form.getLoaiCts() == null || form.getLoaiCts().size() == 0) {
+				form.themLoaiCt(ChungTu.TAT_CA);
+			}
+
+			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định là 111
+			if (form.getTaiKhoan() == null) {
+				form.setTaiKhoan(LoaiTaiKhoan.HANG_HOA);
+			}
+
+			// Lấy danh sách tài khoản
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			LoaiTaiKhoan loaiTaiKhoan = taiKhoanDAO.layTaiKhoan(form.getTaiKhoan());
+
+			// Lấy danh sách kho
+			List<KhoHang> khoHangDs = hangHoaDAO.danhSachKhoBai();
+
+			logger.info("Sổ tổng hợp nhập xuất tồn ... ");
+			logger.info("Tài khoản: " + form.getTaiKhoan());
+			// Lấy danh sách các nghiệp vụ kế toán theo tài khoản, loại chứng từ, và từng kỳ
+			List<DuLieuKeToan> duLieuKeToanDs = new ArrayList<>();
+
+			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
+			model.addAttribute("loaiTaiKhoan", loaiTaiKhoan);
+			model.addAttribute("khoHangDs", khoHangDs);
+			model.addAttribute("kyKeToanDs", kyKeToanDAO.danhSachKyKeToan());
+			model.addAttribute("duLieuKeToanDs", duLieuKeToanDs);
+			model.addAttribute("mainFinanceForm", form);
+
+			model.addAttribute("tab", "tabSKTSTHNXT");
+			return "sktSoThNhapXuatTon";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/soketoan/nhapxuatton/chitiet", method = { RequestMethod.GET, RequestMethod.POST })
+	public String sktSoCtNhapXuatTon(@ModelAttribute("mainFinanceForm") @Validated TkSoKeToanForm form,
+			BindingResult result, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			// Lấy kỳ kế toán mặc định
+			if (form.getKyKeToan() == null) {
+				form.setKyKeToan(dungChung.getKyKeToan());
+			} else {
+				form.setKyKeToan(kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt()));
+			}
+
+			Date homNay = new Date();
+			if (!form.getKyKeToan().getBatDau().after(homNay) && !form.getKyKeToan().getKetThuc().before(homNay)) {
+				// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của
+				// tháng hiện tại
+				if (form.getDau() == null) {
+					form.setDau(Utils.getStartDateOfMonth(homNay));
+				}
+
+				if (form.getCuoi() == null) {
+					form.setCuoi(Utils.getEndDateOfMonth(homNay));
+				}
+			} else {
+				// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của
+				// tháng hiện tại
+				if (form.getDau() == null) {
+					form.setDau(form.getKyKeToan().getBatDau());
+				}
+
+				if (form.getCuoi() == null) {
+					form.setCuoi(form.getKyKeToan().getKetThuc());
+				}
+			}
+
+			// Nếu không có đầu vào loại chứng từ thì lấy tất cả các chứng từ
+			if (form.getLoaiCts() == null || form.getLoaiCts().size() == 0) {
+				form.themLoaiCt(ChungTu.TAT_CA);
+			}
+
+			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định là 111
+			if (form.getTaiKhoan() == null) {
+				form.setTaiKhoan(LoaiTaiKhoan.HANG_HOA);
+			}
+
+			// Lấy danh sách tài khoản
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			LoaiTaiKhoan loaiTaiKhoan = taiKhoanDAO.layTaiKhoan(form.getTaiKhoan());
+
+			// Lấy danh sách kho
+			List<KhoHang> khoHangDs = hangHoaDAO.danhSachKhoBai();
+
+			// Lấy danh sách hàng hóa
+			List<HangHoa> hangHoaDs = hangHoaDAO.danhSachHangHoa();
+
+			logger.info("Sổ chi tiết nhập xuất tồn ... ");
+			logger.info("Tài khoản: " + form.getTaiKhoan());
+			// Lấy danh sách các nghiệp vụ kế toán theo tài khoản, loại chứng từ, và từng kỳ
+			List<DuLieuKeToan> duLieuKeToanDs = new ArrayList<>();
+
+			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
+			model.addAttribute("loaiTaiKhoan", loaiTaiKhoan);
+			model.addAttribute("khoHangDs", khoHangDs);
+			model.addAttribute("hangHoaDs", hangHoaDs);
+			model.addAttribute("kyKeToanDs", kyKeToanDAO.danhSachKyKeToan());
+			model.addAttribute("duLieuKeToanDs", duLieuKeToanDs);
+			model.addAttribute("mainFinanceForm", form);
+
+			model.addAttribute("tab", "tabSKTSCTNXT");
+			return "sktSoCtNhapXuatTon";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";

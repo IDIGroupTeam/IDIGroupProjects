@@ -10,6 +10,10 @@ import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class BalanceAssetItem {
 	private static final Logger logger = Logger.getLogger(BalanceAssetItem.class);
+
+	public static final String CDKT_CT_110 = "110";
+	public static final String LCTT_CT_60 = "60";
+
 	private String assetCode;
 	private String assetName;
 	private String assetCodeName;

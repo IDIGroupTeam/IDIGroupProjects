@@ -128,10 +128,12 @@
 			var tongGiaTri = 0;
 			$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']").each(
 					function() {
-						var giaTriTt = $.trim($(this).val());
+						var giaTri = $.trim($(this).val());
+						var giaTriSo = giaTri.replace(/,/g, "");
 
-						if (giaTriTt != '' && !isNaN(giaTriTt)) {
-							tongGiaTri += parseFloat(giaTriTt);
+						//var giaTriTt = $.trim($(this).val());
+						if (giaTriSo != '' && !isNaN(giaTriSo)) {
+							tongGiaTri += parseFloat(giaTriSo);
 						}
 					});
 
@@ -179,25 +181,43 @@
 
 					$(newTr).insertBefore($(currentTr)).prop("id", newId);
 
-					$("#"+newId).find(".combobox-container").remove();
-					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk").prop("name", "taiKhoanNoDs["+newId+"].loaiTaiKhoan.maTk");
-					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk").val("0");
-					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk").combobox();
+					$("#" + newId).find(".combobox-container").remove();
+					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk").prop(
+							"name",
+							"taiKhoanNoDs[" + newId + "].loaiTaiKhoan.maTk");
+					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk").val(
+							"0");
+					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk")
+							.combobox();
 					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien").val("0");
-					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien").prop("placeholder", "0");
-					$("#taiKhoanNoDs" + newId + "\\.lyDo").prop("placeholder", "Lý do");
-					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien\\.errors").remove();
-					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk\\.errors").remove();
+					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien").prop(
+							"placeholder", "0");
+					$("#taiKhoanNoDs" + newId + "\\.lyDo").prop("placeholder",
+							"Lý do");
+					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien\\.errors")
+							.remove();
+					$(
+							"#taiKhoanNoDs" + newId
+									+ "\\.loaiTaiKhoan\\.maTk\\.errors")
+							.remove();
 
-					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk").remove();
+					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk")
+							.remove();
 					$("#taiKhoanCoDs" + newId + "\\.soDu").remove();
 					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien").remove();
-					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTienTxt").remove();
+					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTienTxt")
+							.remove();
 					$("#taiKhoanCoDs" + newId + "\\.lyDo").remove();
 
 					$("#xoaTkNo").removeClass("disabled");
 
-					$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']").change(thayDoiDuLieu);
+					$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']")
+							.change(thayDoiDuLieu);
+					$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']")
+							.maskx({
+								maskxTo : 'simpleMoneyTo',
+								maskxFrom : 'simpleMoneyFrom'
+							});
 				});
 
 		$("#xoaTkNo").click(function() {
@@ -245,7 +265,12 @@
 
 			$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']").change(
 					thayDoiDuLieu);
-			$("select[id^='taiKhoanNoDs'][id$='\\.loaiTaiKhoan\\.maTk']").combobox();
+			$("select[id^='taiKhoanNoDs'][id$='\\.loaiTaiKhoan\\.maTk']")
+					.combobox();
+			$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']").maskx({
+				maskxTo : 'simpleMoneyTo',
+				maskxFrom : 'simpleMoneyFrom'
+			});
 			capNhatTongTienTxt();
 		}
 		khoiTao();
@@ -275,7 +300,7 @@
 	</div>
 
 	<label class="control-label col-sm-2" for=ngayLap>Ngày lập báo
-		nợ:</label>
+		nợ (*):</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
 			<form:input path="ngayLap" class="form-control" />
@@ -300,8 +325,8 @@
 		</form:select>
 	</div>
 
-	<label class="control-label col-sm-2" for=ngayHt>Ngày hạch
-		toán:</label>
+	<label class="control-label col-sm-2" for=ngayHt>Ngày hạch toán
+		(*):</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
 			<form:input path="ngayHt" class="form-control" />

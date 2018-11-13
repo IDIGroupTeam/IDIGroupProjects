@@ -181,8 +181,8 @@
 													value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
 													type="NUMBER"></fmt:formatNumber></td>
 										</c:if>
-										<td><fmt:formatNumber value="${nghiepVuKeToan.ton}"
-												type="NUMBER"></fmt:formatNumber></td>
+										<td class="text-right"><fmt:formatNumber
+												value="${nghiepVuKeToan.ton}" type="NUMBER"></fmt:formatNumber></td>
 										<td></td>
 									</c:when>
 									<c:when
@@ -206,8 +206,8 @@
 													value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
 													type="NUMBER"></fmt:formatNumber></td>
 										</c:if>
-										<td><fmt:formatNumber value="${nghiepVuKeToan.ton}"
-												type="NUMBER"></fmt:formatNumber></td>
+										<td class="text-right"><fmt:formatNumber
+												value="${nghiepVuKeToan.ton}" type="NUMBER"></fmt:formatNumber></td>
 										<td></td>
 									</c:when>
 								</c:choose>

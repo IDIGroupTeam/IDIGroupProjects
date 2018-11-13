@@ -3,7 +3,6 @@ package com.idi.finance.bean.soketoan;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;
 import com.idi.finance.bean.chungtu.TaiKhoan;
-import com.idi.finance.bean.chungtu.Tien;
 import com.idi.finance.bean.hanghoa.HangHoa;
 
 public class NghiepVuKeToan implements Comparable<NghiepVuKeToan> {

@@ -114,10 +114,10 @@
 </div>
 
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="tkDoanhThuMd.maTk">Tài
-		khoản doanh thu:</label>
+	<label class="control-label col-sm-2" for="tkChietKhauMd.maTk">Tài
+		khoản chiết khấu:</label>
 	<div class="col-sm-4">
-		<form:select path="tkDoanhThuMd.maTk" cssClass="form-control">
+		<form:select path="tkChietKhauMd.maTk" cssClass="form-control">
 			<form:option value="" label=""></form:option>
 			<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
 				itemLabel="maTenTk"></form:options>
@@ -133,10 +133,10 @@
 </div>
 
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="tkChiPhiMd.maTk">Tài
-		khoản chi phí:</label>
+	<label class="control-label col-sm-2" for="tkDoanhThuMd.maTk">Tài
+		khoản doanh thu:</label>
 	<div class="col-sm-4">
-		<form:select path="tkChiPhiMd.maTk" cssClass="form-control">
+		<form:select path="tkDoanhThuMd.maTk" cssClass="form-control">
 			<form:option value="" label=""></form:option>
 			<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
 				itemLabel="maTenTk"></form:options>
@@ -153,10 +153,10 @@
 </div>
 
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="tkChietKhauMd.maTk">Tài
-		khoản chiết khấu:</label>
+	<label class="control-label col-sm-2" for="tkChiPhiMd.maTk">Tài
+		khoản chi phí:</label>
 	<div class="col-sm-4">
-		<form:select path="tkChietKhauMd.maTk" cssClass="form-control">
+		<form:select path="tkChiPhiMd.maTk" cssClass="form-control">
 			<form:option value="" label=""></form:option>
 			<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
 				itemLabel="maTenTk"></form:options>

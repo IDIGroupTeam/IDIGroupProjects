@@ -13,7 +13,7 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		$("#mainFinanceForm").attr("action", "${url}/chungtu/baono/luu");
+		$("#mainFinanceForm").attr("action", "${url}/chungtu/ktth/luu");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		$("#submitBt").click(function() {
@@ -21,6 +21,11 @@
 		});
 
 		var soDongTk = '${mainFinanceForm.soTkLonNhat}';
+		var soDongTkNo = '${mainFinanceForm.taiKhoanNoDs.size()}';
+		var soDongTkCo = '${mainFinanceForm.taiKhoanCoDs.size()}';
+		var tongGiaTriNo = 0;
+		var tongGiaTriCo = 0;
+
 		var loaiTien = null;
 		var url = "${url}/chungtu/nhanvien/";
 		var loaiDt = 1;
@@ -124,120 +129,270 @@
 			}
 		}
 
-		function capNhapTongTien() {
-			var tongGiaTri = 0;
+		function capNhatTongNoTxt() {
+			$("#soTien\\.soTienNo").html(
+					accounting.formatNumber(tongGiaTriNo, 0, ","));
+			$("#soTien\\.giaTriTxt").html(
+					accounting.formatNumber(tongGiaTriNo * loaiTien.banRa, 0,
+							",")
+							+ " VND");
+		}
+
+		function capNhatTongNo() {
+			// Tính tổng các tài khoản nợ
+			tongGiaTriNo = 0;
 			$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']").each(
 					function() {
-						var giaTri = $.trim($(this).val());
-						var giaTriSo = giaTri.replace(/,/g, "");
+						var giaTriTt = $.trim($(this).val());
 
-						//var giaTriTt = $.trim($(this).val());
-						if (giaTriSo != '' && !isNaN(giaTriSo)) {
-							tongGiaTri += parseFloat(giaTriSo);
+						if (giaTriTt != '' && !isNaN(giaTriTt)) {
+							tongGiaTriNo += parseFloat(giaTriTt);
 						}
 					});
 
-			$("#taiKhoanCoDs0\\.soTien\\.soTien").val(tongGiaTri);
-			$("#taiKhoanCoDs0\\.soTien\\.soTienTxt").html(
-					accounting.formatNumber(tongGiaTri, 0, ","));
-
-			var tyGia = $.trim($("#loaiTien\\.banRa").val());
-			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTri * tyGia, 0, ",")
-							+ " VND");
+			// Cập nhật các vị trí txt nợ
+			capNhatTongNoTxt();
 		}
 
-		function capNhatTongTienTxt() {
-			// Quy ra tiền Việt Nam
-			var tongGiaTri = $("#taiKhoanCoDs0\\.soTien\\.soTien").val();
-			$("#soTien\\.giaTriTxt").html(
-					accounting
-							.formatNumber(tongGiaTri * loaiTien.banRa, 0, ",")
-							+ " VND");
+		function capNhatTongCoTxt() {
+			$("#soTien\\.soTienCo").html(
+					accounting.formatNumber(tongGiaTriCo, 0, ","));
 		}
 
-		function thayDoiDuLieu() {
-			var giaTri = $.trim($(this).val());
-			if (giaTri != '' && !isNaN(giaTri)) {
-				$(this).val(parseFloat(giaTri));
-			}
+		function capNhatTongCo() {
+			// Tính tổng các tài khoản có
+			tongGiaTriCo = 0;
+			$("input[id^='taiKhoanCoDs'][id$='\\.soTien\\.soTien']").each(
+					function() {
+						var giaTriTt = $.trim($(this).val());
 
-			capNhapTongTien();
+						if (giaTriTt != '' && !isNaN(giaTriTt)) {
+							tongGiaTriCo += parseFloat(giaTriTt);
+						}
+					});
+
+			// Cập nhật các vị trí txt có
+			capNhatTongCoTxt();
 		}
 
-		$("#themTkNo").click(
-				function() {
-					var currentTr = $(this).parent().parent();
-					var prevTr = $(currentTr).prev();
-					var prevId = $(prevTr).prop("id");
-					var newId = ++prevId;
-					--prevId;
+		function dangKyThayDoiNo() {
+			$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']").change(
+					function() {
+						var giaTri = $.trim($(this).val());
+						if (giaTri != '' && !isNaN(giaTri)) {
+							$(this).val(parseFloat(giaTri));
+						}
 
-					var newTr = "<tr>" + $(prevTr).html() + "</tr>";
-					var pat = new RegExp("\\[" + prevId + "\\]", "g");
-					var pat1 = new RegExp("Ds" + prevId, "g");
-					newTr = newTr.replace(pat, "[" + newId + "]");
-					newTr = newTr.replace(pat1, "Ds" + newId);
+						capNhatTongNo();
+					});
+		}
 
-					$(newTr).insertBefore($(currentTr)).prop("id", newId);
+		function dangKyThayDoiCo() {
+			$("input[id^='taiKhoanCoDs'][id$='\\.soTien\\.soTien']").change(
+					function() {
+						var giaTri = $.trim($(this).val());
+						if (giaTri != '' && !isNaN(giaTri)) {
+							$(this).val(parseFloat(giaTri));
+						}
 
-					$("#" + newId).find(".combobox-container").remove();
-					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk").prop(
-							"name",
-							"taiKhoanNoDs[" + newId + "].loaiTaiKhoan.maTk");
-					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk").val(
-							"0");
-					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk")
-							.combobox();
-					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien").val("0");
-					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien").prop(
-							"placeholder", "0");
-					$("#taiKhoanNoDs" + newId + "\\.maNvkt").val("0");
-					$("#taiKhoanNoDs" + newId + "\\.lyDo").prop("placeholder",
-							"Lý do");
-					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien\\.errors")
-							.remove();
-					$(
-							"#taiKhoanNoDs" + newId
-									+ "\\.loaiTaiKhoan\\.maTk\\.errors")
-							.remove();
+						capNhatTongCo();
+					});
+		}
 
-					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk")
-							.remove();
-					$("#taiKhoanCoDs" + newId + "\\.soDu").remove();
-					$("#taiKhoanCoDs" + newId + "\\.maNvkt").remove();
-					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien").remove();
-					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTienTxt")
-							.remove();
-					$("#taiKhoanCoDs" + newId + "\\.lyDo").remove();
+		function themTkNo(id, targetTr) {
+			// Clone từ dòng tài khoản nợ gần nhất
+			lyDo = $("#taiKhoanNoDs" + id + "\\.lyDo").clone();
+			maTk = $("#taiKhoanNoDs" + id + "\\.loaiTaiKhoan\\.maTk").clone();
+			soDu = $("#taiKhoanNoDs" + id + "\\.soDu").clone();
+			soTien = $("#taiKhoanNoDs" + id + "\\.soTien\\.soTien").clone();
 
-					$("#xoaTkNo").removeClass("disabled");
+			// Chèn vào tr mới nhất
+			targetTd = $(targetTr).children("td").first();
+			$(lyDo).appendTo($(targetTd));
+			$(maTk).appendTo($(targetTd).next());
+			$(soDu).appendTo($(targetTd).next());
+			$(soTien).appendTo($(targetTd).next().next());
 
-					$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']")
-							.change(thayDoiDuLieu);
-					$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']")
-							.maskx({
-								maskxTo : 'simpleMoneyTo',
-								maskxFrom : 'simpleMoneyFrom'
-							});
+			// Đổi id và name
+			id++;
+			$(lyDo).prop("id", "taiKhoanNoDs" + id + ".lyDo");
+			$(lyDo).prop("name", "taiKhoanNoDs[" + id + "].lyDo");
+			$(maTk).prop("id", "taiKhoanNoDs" + id + ".loaiTaiKhoan.maTk");
+			$(maTk).prop("name", "taiKhoanNoDs[" + id + "].loaiTaiKhoan.maTk");
+			$(soDu).prop("id", "taiKhoanNoDs" + id + ".soDu");
+			$(soDu).prop("name", "taiKhoanNoDs[" + id + "].soDu");
+			$(soTien).prop("id", "taiKhoanNoDs" + id + ".soTien.soTien");
+			$(soTien).prop("name", "taiKhoanNoDs[" + id + "].soTien.soTien");
+
+			// Làm sạch dữ liệu
+			$(maTk).val("0");
+			$(soTien).val("0");
+		}
+
+		function themTkCo(id, targetTr) {
+			// Clone từ dòng tài khoản nợ gần nhất
+			lyDo = $("#taiKhoanCoDs" + id + "\\.lyDo").clone();
+			maTk = $("#taiKhoanCoDs" + id + "\\.loaiTaiKhoan\\.maTk").clone();
+			soDu = $("#taiKhoanCoDs" + id + "\\.soDu").clone();
+			soTien = $("#taiKhoanCoDs" + id + "\\.soTien\\.soTien").clone();
+
+			// Chèn vào tr mới nhất
+			targetTd = $(targetTr).children("td").first().next().next().next();
+			$(lyDo).appendTo($(targetTd));
+			$(maTk).appendTo($(targetTd).next());
+			$(soDu).appendTo($(targetTd).next());
+			$(soTien).appendTo($(targetTd).next().next());
+
+			// Đổi id và name
+			id++;
+			$(lyDo).prop("id", "taiKhoanCoDs" + id + ".lyDo");
+			$(lyDo).prop("name", "taiKhoanCoDs[" + id + "].lyDo");
+			$(maTk).prop("id", "taiKhoanCoDs" + id + ".loaiTaiKhoan.maTk");
+			$(maTk).prop("name", "taiKhoanCoDs[" + id + "].loaiTaiKhoan.maTk");
+			$(soDu).prop("id", "taiKhoanCoDs" + id + ".soDu");
+			$(soDu).prop("name", "taiKhoanCoDs[" + id + "].soDu");
+			$(soTien).prop("id", "taiKhoanCoDs" + id + ".soTien.soTien");
+			$(soTien).prop("name", "taiKhoanCoDs[" + id + "].soTien.soTien");
+
+			// Làm sạch dữ liệu
+			$(maTk).val("0");
+			$(soTien).val("0");
+		}
+
+		function xoaTkNo(id) {
+			var targetTr = $("tr#" + id);
+			var td = $(targetTr).children("td").first();
+			$(td).html("");
+			$(td).next().html("");
+			$(td).next().next().html("");
+		}
+
+		function xoaTkCo(id) {
+			var targetTr = $("tr#" + id);
+			var td = $(targetTr).children("td").first().next().next().next();
+			$(td).html("");
+			$(td).next().html("");
+			$(td).next().next().html("");
+		}
+
+		$("#themTkNo").click(function() {
+			// Thêm giao diện tài khoản nợ
+			var targetTr;
+			var id = soDongTkNo - 1;
+			if (soDongTkNo == soDongTk) {
+				// Thêm dòng mới
+				var currentTr = $("tr#" + id);
+				targetTr = currentTr.clone();
+
+				// Làm sạch dòng targetTr
+				$(targetTr).find("td").each(function() {
+					$(this).html("");
 				});
 
-		$("#xoaTkNo").click(function() {
-			var removedTr = $(this).parent().parent().prev();
-			var id = $(removedTr).prop("id");
-			$(removedTr).remove();
+				// Đưa dòng mới vào tài liệu
+				$(targetTr).insertAfter($(currentTr)).prop("id", soDongTkNo);
 
-			if (id == 1) {
+				// Tăng số dòng
+				soDongTk++;
+			} else {
+				// Chèn tài khoản nợ vào dòng sẵn có
+				targetTr = $("tr#" + soDongTkNo);
+			}
+
+			// Thêm nội dùng vào dòng mới
+			themTkNo(id, targetTr);
+
+			// Đăng ký sự kiện thay đổi
+			dangKyThayDoiNo();
+
+			soDongTkNo++;
+
+			$("#xoaTkNo").removeClass("disabled");
+		});
+
+		$("#themTkCo").click(function() {
+			// Thêm giao diện tài khoản có
+			var targetTr;
+			var id = soDongTkCo - 1;
+			if (soDongTkCo == soDongTk) {
+				// Thêm dòng mới
+				var currentTr = $("tr#" + id);
+				targetTr = currentTr.clone();
+
+				// Làm sạch dòng targetTr
+				$(targetTr).find("td").each(function() {
+					$(this).html("");
+				});
+
+				// Đưa dòng mới vào tài liệu
+				$(targetTr).insertAfter($(currentTr)).prop("id", soDongTkCo);
+
+				// Tăng số dòng
+				soDongTk++;
+			} else {
+				// Chèn tài khoản nợ vào dòng sẵn có
+				targetTr = $("tr#" + soDongTkCo);
+			}
+
+			// Thêm nội dùng vào dòng mới
+			themTkCo(id, targetTr);
+
+			// Đăng ký sự kiện thay đổi
+			dangKyThayDoiCo()
+
+			soDongTkCo++;
+
+			$("#xoaTkCo").removeClass("disabled");
+		});
+
+		$("#xoaTkNo").click(function() {
+			// Xóa giao diện tài khoản nợ
+			xoaTkNo(soDongTkNo - 1);
+
+			// Xóa dòng nếu ko còn tài khoản bên nợ hay bên có
+			if (soDongTkNo == soDongTk && soDongTkCo < soDongTk) {
+				$("tr#" + (soDongTk - 1)).remove();
+				soDongTk--;
+			}
+
+			// Cập nhật giá trị tổng nợ
+			capNhatTongNo();
+
+			if (soDongTkNo == 2) {
 				$("#xoaTkNo").addClass("disabled");
 			}
 
-			capNhapTongTien();
+			soDongTkNo--;
+		});
+
+		$("#xoaTkCo").click(function() {
+			// Xóa giao diện tài khoản có
+			xoaTkCo(soDongTkCo - 1);
+
+			// Xóa dòng nếu ko còn tài khoản bên nợ hay bên có
+			if (soDongTkCo == soDongTk && soDongTkNo < soDongTk) {
+				$("tr#" + (soDongTk - 1)).remove();
+				soDongTk--;
+			}
+
+			// Cập nhật giá trị tổng có
+			capNhatTongCo();
+
+			if (soDongTkCo == 2) {
+				$("#xoaTkCo").addClass("disabled");
+			}
+
+			soDongTkCo--;
+			//soDongTk--;
 		});
 
 		$("#lyDo").change(function() {
-			$("#taiKhoanCoDs0\\.lyDo").val($(this).val());
 			for (i = 0; i < soDongTk; i++) {
 				$("#taiKhoanNoDs" + i + "\\.lyDo").val($(this).val());
+			}
+
+			for (i = 0; i < soDongTk; i++) {
+				$("#taiKhoanCoDs" + i + "\\.lyDo").val($(this).val());
 			}
 		});
 
@@ -252,28 +407,33 @@
 
 			// Cập nhật tỷ giá
 			$("#loaiTien\\.banRa").val(loaiTien.banRa);
-			capNhatTongTienTxt()
+
+			capNhatTongNoTxt();
+			capNhatTongCoTxt();
 		});
 
 		$("#loaiTien\\.banRa").change(function() {
 			loaiTien.banRa = $(this).val();
-			capNhatTongTienTxt();
+
+			capNhatTongNoTxt();
+			capNhatTongCoTxt();
 		});
 
 		function khoiTao() {
-			if (soDongTk > 1) {
+			if (soDongTkNo > 1) {
 				$("#xoaTkNo").removeClass("disabled");
 			}
+			if (soDongTkCo > 1) {
+				$("#xoaTkCo").removeClass("disabled");
+			}
 
-			$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']").change(
-					thayDoiDuLieu);
-			$("select[id^='taiKhoanNoDs'][id$='\\.loaiTaiKhoan\\.maTk']")
-					.combobox();
-			$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']").maskx({
-				maskxTo : 'simpleMoneyTo',
-				maskxFrom : 'simpleMoneyFrom'
-			});
-			capNhatTongTienTxt();
+			// Đăng ký sự kiện thay đổi
+			dangKyThayDoiNo();
+			dangKyThayDoiCo();
+
+			// Cập nhật tổng giá trị
+			capNhatTongNo();
+			capNhatTongCo();
 		}
 		khoiTao();
 
@@ -290,19 +450,19 @@
 	});
 </script>
 
-<h4>BÁO NỢ</h4>
+<h4>PHIẾU KẾ TOÁN TỔNG HỢP</h4>
 <hr />
-<form:hidden path="maCt" />
 <form:hidden path="loaiCt" />
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="soCt">Số báo nợ:</label>
+	<label class="control-label col-sm-2" for="soCt">Số phiếu dự
+		kiến:</label>
 	<div class="col-sm-4">
 		${mainFinanceForm.loaiCt}${mainFinanceForm.soCt}
 		<form:hidden path="soCt" />
 	</div>
 
-	<label class="control-label col-sm-2" for=ngayLap>Ngày lập báo
-		nợ (*):</label>
+	<label class="control-label col-sm-2" for=ngayLap>Ngày lập
+		phiếu:</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
 			<form:input path="ngayLap" class="form-control" />
@@ -327,8 +487,8 @@
 		</form:select>
 	</div>
 
-	<label class="control-label col-sm-2" for=ngayHt>Ngày hạch toán
-		(*):</label>
+	<label class="control-label col-sm-2" for=ngayHt>Ngày hạch
+		toán:</label>
 	<div class="col-sm-4">
 		<div class="input-group date datetime smallform">
 			<form:input path="ngayHt" class="form-control" />
@@ -373,6 +533,7 @@
 			cssClass="form-control" />
 	</div>
 </div>
+
 
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="lyDo">Lý do:(*)</label>
@@ -442,11 +603,12 @@
 		<thead>
 			<tr>
 				<th class="text-center" colspan="3">Nợ</th>
-				<th class="text-center" colspan="2">Có</th>
+				<th class="text-center" colspan="3">Có</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
+				<th class="text-center"><b>Lý do</b></th>
 				<th class="text-center"><b>Tài khoản</b></th>
 				<th class="text-center"><b>Giá trị</b></th>
 				<th class="text-center"><b>Lý do</b></th>
@@ -457,42 +619,57 @@
 				varStatus="status">
 				<tr id="${status.index}">
 					<!-- Phần ghi Nợ -->
-					<td class="text-left"><form:select cssClass="form-control"
-							path="taiKhoanNoDs[${status.index}].loaiTaiKhoan.maTk"
-							multiple="false">
-							<form:option value="0">Tài khoản</form:option>
-							<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
-								itemLabel="maTenTk" />
-						</form:select> <form:hidden path="taiKhoanNoDs[${status.index}].soDu" /> <form:hidden
-							path="taiKhoanNoDs[${status.index}].maNvkt" /> <form:errors
-							path="taiKhoanNoDs[${status.index}].loaiTaiKhoan.maTk"
-							cssClass="error" /></td>
-					<td><form:input cssClass="form-control"
-							path="taiKhoanNoDs[${status.index}].soTien.soTien"
-							placeholder="0.0" /> <form:errors
-							path="taiKhoanNoDs[${status.index}].soTien.soTien"
-							cssClass="error" /></td>
-					<td><form:input cssClass="form-control"
-							path="taiKhoanNoDs[${status.index}].lyDo" placeholder="Lý do" /></td>
+					<c:choose>
+						<c:when
+							test="${status.index < mainFinanceForm.taiKhoanNoDs.size()}">
+							<td><form:input cssClass="form-control"
+									path="taiKhoanNoDs[${status.index}].lyDo" placeholder="Lý do" /></td>
+							<td><form:select cssClass="form-control"
+									path="taiKhoanNoDs[${status.index}].loaiTaiKhoan.maTk"
+									multiple="false">
+									<form:option value="0">Tài khoản</form:option>
+									<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
+										itemLabel="maTenTk" />
+								</form:select> <form:hidden path="taiKhoanNoDs[${status.index}].soDu" /> <form:errors
+									path="taiKhoanNoDs[${status.index}].loaiTaiKhoan.maTk"
+									cssClass="error" /></td>
+							<td><form:input cssClass="form-control"
+									path="taiKhoanNoDs[${status.index}].soTien.soTien"
+									placeholder="0.0" /> <form:errors
+									path="taiKhoanNoDs[${status.index}].soTien.soTien"
+									cssClass="error" /></td>
+
+						</c:when>
+						<c:otherwise>
+							<td></td>
+							<td></td>
+							<td></td>
+						</c:otherwise>
+					</c:choose>
 
 					<!-- Phần ghi Có -->
 					<c:choose>
 						<c:when
 							test="${status.index < mainFinanceForm.taiKhoanCoDs.size()}">
+							<td><form:input cssClass="form-control"
+									path="taiKhoanCoDs[${status.index}].lyDo" placeholder="Lý do" /></td>
 							<td><form:select cssClass="form-control"
 									path="taiKhoanCoDs[${status.index}].loaiTaiKhoan.maTk"
 									multiple="false">
-									<form:options items="${loaiTaiKhoanTgnhDs}" itemValue="maTk"
+									<form:option value="0">Tài khoản</form:option>
+									<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
 										itemLabel="maTenTk" />
-								</form:select> <form:hidden path="taiKhoanCoDs[${status.index}].soDu" /> <form:hidden
-									path="taiKhoanCoDs[${status.index}].maNvkt" /></td>
-							<td><span id="taiKhoanCoDs${status.index}.soTien.soTienTxt"><fmt:formatNumber
-										value="${mainFinanceForm.taiKhoanCoDs[status.index].soTien.soTien}"></fmt:formatNumber>
-									${mainFinanceForm.loaiTien.maLt}</span> <form:hidden
-									path="taiKhoanCoDs[${status.index}].soTien.soTien" /> <form:hidden
-									path="taiKhoanCoDs[${status.index}].lyDo" /></td>
+								</form:select> <form:hidden path="taiKhoanCoDs[${status.index}].soDu" /> <form:errors
+									path="taiKhoanCoDs[${status.index}].loaiTaiKhoan.maTk"
+									cssClass="error" /></td>
+							<td><form:input cssClass="form-control"
+									path="taiKhoanCoDs[${status.index}].soTien.soTien"
+									placeholder="0.0" /> <form:errors
+									path="taiKhoanCoDs[${status.index}].soTien.soTien"
+									cssClass="error" /></td>
 						</c:when>
 						<c:otherwise>
+							<td></td>
 							<td></td>
 							<td></td>
 						</c:otherwise>
@@ -500,7 +677,14 @@
 				</tr>
 			</c:forEach>
 			<tr>
-				<td colspan="6">
+				<th colspan="3">Tổng nợ: <span id="soTien.soTienNo"
+					class="pull-right"></span> <form:errors path="soTien.soTien"
+						cssClass="error" /></th>
+				<th colspan="3">Tổng có: <span id="soTien.soTienCo"
+					class="pull-right"></span></th>
+			</tr>
+			<tr>
+				<td colspan="3">
 					<button id="themTkNo" type="button" class="btn btn-info btn-sm"
 						title="Thêm tài khoản ghi nợ">
 						<span class="glyphicon glyphicon-plus"></span> Thêm
@@ -511,6 +695,17 @@
 						<span class="glyphicon glyphicon-plus"></span> Xóa
 					</button>
 				</td>
+				<td colspan="3">
+					<button id="themTkCo" type="button" class="btn btn-info btn-sm"
+						title="Thêm tài khoản ghi có">
+						<span class="glyphicon glyphicon-plus"></span> Thêm
+					</button>
+					<button id="xoaTkCo" type="button"
+						class="btn btn-info btn-sm disabled"
+						title="Xóa tài khoản ghi có cuối cùng">
+						<span class="glyphicon glyphicon-plus"></span> Xóa
+					</button>
+				</td>
 			</tr>
 		</tbody>
 	</table>
@@ -518,9 +713,8 @@
 
 <div class="row form-group">
 	<div class="col-sm-12">
-		<a href="${url}/chungtu/baono/xem/${mainFinanceForm.maCt}"
-			class="btn btn-info btn-sm">Hủy</a>
-		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu
-			thay đổi</button>
+		<a href="${url}/chungtu/ktth/danhsach" class="btn btn-info btn-sm">Hủy</a>
+		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Tạo
+			mới</button>
 	</div>
 </div>

@@ -8,7 +8,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.ibm.icu.text.SimpleDateFormat;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;
 import com.idi.finance.bean.chungtu.TaiKhoan;
@@ -39,6 +38,8 @@ public class ChungTuValidator implements Validator {
 				// Validate cho phần phiếu thu hoặc báo có
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "doiTuong.tenDt", "NotEmpty.chungTu.doiTuong.tenDt");
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lyDo", "NotEmpty.chungTu.lyDo");
+
+				logger.info("Số tiền " + chungTu.getTaiKhoanCoDs().get(0).getSoTien().getSoTien());
 
 				if (chungTu.getLoaiTien().getBanRa() == 0) {
 					errors.rejectValue("loaiTien.banRa", "NotEmptyOrEqual0.chungTu.loaiTien.banRa");
@@ -239,7 +240,6 @@ public class ChungTuValidator implements Validator {
 						id++;
 					}
 				}
-				logger.info(errors);
 			} else if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_BAN_HANG)) {
 				// Validate cho chứng từ mua hàng
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "doiTuong.tenDt", "NotEmpty.chungTu.doiTuong.tenDt");
@@ -331,7 +331,6 @@ public class ChungTuValidator implements Validator {
 					}
 				}
 			} else if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_KT_TH)) {
-
 				// Validate cho phần kế toán tổng hợp
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "doiTuong.tenDt", "NotEmpty.chungTu.doiTuong.tenDt");
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lyDo", "NotEmpty.chungTu.lyDo");
@@ -340,83 +339,34 @@ public class ChungTuValidator implements Validator {
 					errors.rejectValue("loaiTien.banRa", "NotEmptyOrEqual0.chungTu.loaiTien.banRa");
 				}
 
-				// Giới hạn không để cả hai bên nợ có đề có số tài khoản lớn hơn 1
-				if (chungTu.getTaiKhoanNoDs() != null && chungTu.getTaiKhoanNoDs().size() > 1
-						&& chungTu.getTaiKhoanCoDs() != null && chungTu.getTaiKhoanCoDs().size() > 1) {
-					errors.rejectValue("soTien.soTien", "tooMany.taiKhoan.noCo");
-				}
-
 				// Kiểm tra dữ liệu phần định khoản
-				List<TaiKhoan> taiKhoanDs = chungTu.getTaiKhoanDs();
-				boolean coTkNo = true;
-				boolean coTkCo = true;
-				boolean coTrungLapTk = false;
-				double noSoTien = 0;
-				double coSoTien = 0;
-
-				Iterator<TaiKhoan> iter = taiKhoanDs.iterator();
+				Iterator<TaiKhoan> iter = chungTu.getTaiKhoanNoDs().iterator();
 				while (iter.hasNext()) {
 					TaiKhoan taiKhoan = iter.next();
+					int id = taiKhoan.getNhomDk();
 
-					if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO && taiKhoan.getLoaiTaiKhoan().getMaTk().equals("0")) {
-						coTkNo = false;
-					} else if (taiKhoan.getSoDu() == LoaiTaiKhoan.CO
-							&& taiKhoan.getLoaiTaiKhoan().getMaTk().equals("0")) {
-						coTkCo = false;
+					if (taiKhoan.getLyDo() == null || taiKhoan.getLyDo().trim().equals("")) {
+						errors.rejectValue("taiKhoanNoDs[" + id + "].lyDo", "NotEmpty.chungTu.lyDo");
 					}
-
-					if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO && !taiKhoan.getLoaiTaiKhoan().getMaTk().equals("0")) {
-						noSoTien += taiKhoan.getSoTien().getSoTien();
-					} else if (taiKhoan.getSoDu() == LoaiTaiKhoan.CO
-							&& !taiKhoan.getLoaiTaiKhoan().getMaTk().equals("0")) {
-						coSoTien += taiKhoan.getSoTien().getSoTien();
+					if (taiKhoan.getLoaiTaiKhoan() == null || taiKhoan.getLoaiTaiKhoan().getMaTk().trim().equals("")
+							|| taiKhoan.getLoaiTaiKhoan().getMaTk().equals("0")) {
+						errors.rejectValue("taiKhoanNoDs[" + id + "].loaiTaiKhoan.maTk",
+								"ThieuDinhKhoan.LoaiTaiKhoan.maTk");
 					}
 				}
 
-				if (!coTkNo) {
-					errors.rejectValue("taiKhoanNoDs[0].loaiTaiKhoan.maTk",
-							"NotEmpty.taiKhoanNoDs[0].loaiTaiKhoan.maTk");
-				} else if (!coTkCo) {
-					errors.rejectValue("taiKhoanCoDs[0].loaiTaiKhoan.maTk",
-							"NotEmpty.taiKhoanCoDs[0].loaiTaiKhoan.maTk");
-				} else {
-					if (noSoTien != coSoTien) {
-						errors.rejectValue("soTien.soTien", "NotEmpty.taiKhoanNoDs[0].soTien.soTien");
-					}
-				}
-
-				// Kiểm tra tài khoản trùng lặp
-				iter = taiKhoanDs.iterator();
+				iter = chungTu.getTaiKhoanCoDs().iterator();
 				while (iter.hasNext()) {
 					TaiKhoan taiKhoan = iter.next();
+					int id = taiKhoan.getNhomDk();
 
-					if (!taiKhoan.getLoaiTaiKhoan().getMaTk().equals("0")) {
-						boolean daGap = false;
-						Iterator<TaiKhoan> inIter = taiKhoanDs.iterator();
-						while (inIter.hasNext()) {
-							TaiKhoan taiKhoanKhac = inIter.next();
-
-							if (!taiKhoanKhac.getLoaiTaiKhoan().getMaTk().equals("0")) {
-								if (taiKhoan.getLoaiTaiKhoan().equals(taiKhoanKhac.getLoaiTaiKhoan())) {
-									if (!daGap) {
-										daGap = true;
-									} else {
-										coTrungLapTk = true;
-										break;
-									}
-								}
-							}
-						}
-
-						if (coTrungLapTk) {
-							break;
-						}
+					if (taiKhoan.getLoaiTaiKhoan() == null || taiKhoan.getLoaiTaiKhoan().getMaTk().trim().equals("")
+							|| taiKhoan.getLoaiTaiKhoan().getMaTk().equals("0")) {
+						errors.rejectValue("taiKhoanCoDs[" + id + "].loaiTaiKhoan.maTk",
+								"ThieuDinhKhoan.LoaiTaiKhoan.maTk");
 					}
 				}
-
-				if (coTrungLapTk) {
-					errors.rejectValue("soTien.soTien", "Duplicate.taiKhoanDs[0].loaiTaiKhoan.maTk");
-				}
+				logger.info(errors);
 			} else if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_KET_CHUYEN)) {
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lyDo", "NotEmpty.chungTu.tenKetChuyen");
 

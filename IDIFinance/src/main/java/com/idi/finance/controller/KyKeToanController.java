@@ -127,7 +127,8 @@ public class KyKeToanController {
 			model.addAttribute("kyKeToan", kyKeToan);
 
 			// Lấy số dư đầu và cuối kỳ của các nhóm tài khoản
-			// Nhóm tài khoản CCDC, VT, HH
+			// Nhóm tài khoản CCDC, VTHH
+			// Số dư đầu kỳ hàng VTHH
 
 			// Nhóm tài khoản theo đối tượng (chỉ áp dụng với 131 và 331)
 			// Có 3 loại đối tượng: khách hàng, nhà cung cấp và nhân viên

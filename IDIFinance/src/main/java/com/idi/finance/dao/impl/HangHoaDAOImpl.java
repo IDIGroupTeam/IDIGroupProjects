@@ -2,6 +2,7 @@ package com.idi.finance.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -284,19 +285,20 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 
 	@Override
 	public List<HangHoa> danhSachHangHoa(String tuKhoa) {
+		List<HangHoa> hangHoaDs = new ArrayList<>();
+
 		if (tuKhoa == null || tuKhoa.trim().equals("")) {
 			String query = DANH_SACH_HANG_HOA;
 
-			List<HangHoa> hangHoaDs = jdbcTmpl.query(query, new HangHoaMapper());
-			return hangHoaDs;
+			hangHoaDs = jdbcTmpl.query(query, new HangHoaMapper());
 		} else {
 			String query = DANH_SACH_HANG_HOA_THEO_TEN;
 			query = query.replaceAll("\\?", tuKhoa.trim());
 
-			List<HangHoa> hangHoaDs = jdbcTmpl.query(query, new HangHoaMapper());
-
-			return hangHoaDs;
+			hangHoaDs = jdbcTmpl.query(query, new HangHoaMapper());
 		}
+
+		return hangHoaDs;
 	}
 
 	public class HangHoaMapper implements RowMapper<HangHoa> {

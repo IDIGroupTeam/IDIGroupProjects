@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Locale;
 
 import com.idi.finance.bean.bctc.KyKeToanCon;
-import com.idi.finance.bean.chungtu.DoiTuong;
+import com.idi.finance.bean.hanghoa.HangHoa;
+import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 
 public class TkSoKeToanForm {
@@ -20,6 +21,8 @@ public class TkSoKeToanForm {
 	private Date cuoi;
 	private List<String> loaiCts;
 	private int doSau = 2;
+	private HangHoa hangHoa = new HangHoa();
+	private KhoHang kho = new KhoHang();
 
 	public int getLoaiKy() {
 		return loaiKy;
@@ -102,6 +105,22 @@ public class TkSoKeToanForm {
 
 	public void setDoSau(int doSau) {
 		this.doSau = doSau;
+	}
+
+	public HangHoa getHangHoa() {
+		return hangHoa;
+	}
+
+	public void setHangHoa(HangHoa hangHoa) {
+		this.hangHoa = hangHoa;
+	}
+
+	public KhoHang getKho() {
+		return kho;
+	}
+
+	public void setKho(KhoHang kho) {
+		this.kho = kho;
 	}
 
 	public List<String> getLoaiCts() {

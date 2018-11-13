@@ -21,7 +21,6 @@ import com.idi.finance.bean.bctc.BalanceAssetData;
 import com.idi.finance.bean.bctc.BalanceAssetItem;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BalanceSheetDAO;
-import com.idi.finance.utils.Utils;
 
 /**
  * @author haitd
@@ -45,8 +44,11 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	@Value("${DANH_SACH_CDKT_THEO_TKKT}")
 	private String DANH_SACH_CDKT_THEO_TKKT;
 
-	@Value("${LAY_CDKT_KY_TRUOC}")
-	private String LAY_CDKT_KY_TRUOC;
+	@Value("${LAY_CDKT_DAU_KY}")
+	private String LAY_CDKT_DAU_KY;
+
+	@Value("${LAY_CDKT_CUOI_KY}")
+	private String LAY_CDKT_CUOI_KY;
 
 	@Value("${TINH_CDKT_THEO_MATK}")
 	private String TINH_CDKT_THEO_MATK;
@@ -72,11 +74,32 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	@Value("${DANH_SACH_CON_KQHDKD_TKKT}")
 	private String DANH_SACH_CON_KQHDKD_TKKT;
 
-	@Value("${LAY_KQHDKD_KY_TRUOC}")
-	private String LAY_KQHDKD_KY_TRUOC;
+	@Value("${LAY_KQHDKD_DAU_KY}")
+	private String LAY_KQHDKD_DAU_KY;
+
+	@Value("${LAY_KQHDKD_CUOI_KY}")
+	private String LAY_KQHDKD_CUOI_KY;
 
 	@Value("${TINH_KQHDKD_THEO_MATK}")
 	private String TINH_KQHDKD_THEO_MATK;
+
+	@Value("${DANH_SACH_GOC_BLCTT}")
+	private String DANH_SACH_GOC_BLCTT;
+
+	@Value("${DANH_SACH_CON_BLCTT}")
+	private String DANH_SACH_CON_BLCTT;
+
+	@Value("${DANH_SACH_CON_BLCTT_TKKT}")
+	private String DANH_SACH_CON_BLCTT_TKKT;
+
+	@Value("${LAY_LCTT_DAU_KY}")
+	private String LAY_LCTT_DAU_KY;
+
+	@Value("${LAY_LCTT_CUOI_KY}")
+	private String LAY_LCTT_CUOI_KY;
+
+	@Value("${TINH_LCTT_THEO_MATK}")
+	private String TINH_LCTT_THEO_MATK;
 
 	private JdbcTemplate jdbcTmpl;
 
@@ -586,6 +609,34 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		return bads;
 	}
 
+	@Override
+	public void insertOrUpdateCF(BalanceAssetData bad) {
+		if (bad == null)
+			return;
+
+		String updateBadsQry = "UPDATE CASH_FLOW_DATA SET START_VALUE=?, END_VALUE=?, CHANGED_RATIO=?, DESCRIPTION=? WHERE ASSET_CODE=? AND PERIOD=? AND PERIOD_TYPE=?";
+		String insertBadsQry = "INSERT INTO CASH_FLOW_DATA (ASSET_CODE, PERIOD_TYPE, PERIOD, START_VALUE, END_VALUE, CHANGED_RATIO, DESCRIPTION) VALUES(?, ?, ?, ?, ?, ?, ?)";
+
+		// Update to CASH_FLOW_DATA
+		int count = 0;
+		try {
+			// update firstly, if now row is updated, we will be insert data
+			count = jdbcTmpl.update(updateBadsQry, bad.getStartValue(), bad.getEndValue(), bad.getChangedRatio(),
+					bad.getDescription(), bad.getAsset().getAssetCode(), bad.getPeriod(), bad.getPeriodType());
+
+			// This is new data, so insert it.
+			if (count == 0) {
+				if (bad.getAsset() != null && bad.getAsset().getAssetCode() != null && bad.getPeriod() != null) {
+					count = jdbcTmpl.update(insertBadsQry, bad.getAsset().getAssetCode(), bad.getPeriodType(),
+							bad.getPeriod(), bad.getStartValue(), bad.getEndValue(), bad.getChangedRatio(),
+							bad.getDescription());
+				}
+			}
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+	}
+
 	public void insertOrUpdateCFs(BalanceAssetData cf) {
 		if (cf == null)
 			return;
@@ -650,6 +701,126 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	}
 
 	@Override
+	public List<BalanceAssetItem> listCFBais() {
+		String query = DANH_SACH_GOC_BLCTT;
+
+		logger.info("Get list balance sheet item from CASH_FLOW_ITEM table ...");
+		logger.info(query);
+
+		List<BalanceAssetItem> baisRs = new ArrayList<>();
+		List<BalanceAssetItem> bais = jdbcTmpl.query(query, new BalanceAssetItemMapper());
+		Iterator<BalanceAssetItem> iter = bais.iterator();
+		while (iter.hasNext()) {
+			BalanceAssetItem bai = iter.next();
+			bai = updateCFChilds(bai);
+			if (bai != null) {
+				baisRs.add(bai);
+			}
+		}
+
+		return baisRs;
+	}
+
+	private BalanceAssetItem updateCFChilds(BalanceAssetItem parent) {
+		if (parent == null)
+			return null;
+
+		String query = DANH_SACH_CON_BLCTT;
+		int row = 0;
+
+		Object[] params = { parent.getAssetCode() };
+		List<BalanceAssetItem> bais = jdbcTmpl.query(query, params, new BalanceAssetItemMapper());
+		List<BalanceAssetItem> baisRs = new ArrayList<>();
+
+		if (bais != null && bais.size() > 0) {
+			Iterator<BalanceAssetItem> iter = bais.iterator();
+			while (iter.hasNext()) {
+				BalanceAssetItem bai = iter.next();
+				bai.setParent(parent);
+
+				bai = updateCFChilds(bai);
+
+				if (bai != null) {
+					row += bai.getRow();
+					baisRs.add(bai);
+				}
+			}
+
+			parent.addChild(baisRs);
+		}
+
+		query = DANH_SACH_CON_BLCTT_TKKT;
+		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, params, new TaiKhoanCFMapper());
+
+		if (taiKhoanDs != null && taiKhoanDs.size() > 0) {
+			parent.themTaiKhoan(taiKhoanDs);
+			row += taiKhoanDs.size();
+		}
+
+		parent.setRow(row);
+
+		// Đoạn này nếu sau này xử lý tốt phần hiển thị trang jsp thì có thể bỏ đi
+		if ((parent.getChilds() == null || parent.getChilds().size() == 0)
+				&& (parent.getTaiKhoanDs() == null || parent.getTaiKhoanDs().size() == 0)) {
+			// parent = null;
+		}
+
+		return parent;
+	}
+
+	public class TaiKhoanCFMapper implements RowMapper<LoaiTaiKhoan> {
+		public LoaiTaiKhoan mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+			LoaiTaiKhoan taiKhoan = new LoaiTaiKhoan();
+			taiKhoan.setMaTk(rs.getString("MA_TK"));
+			taiKhoan.setTenTk(rs.getString("TEN_TK"));
+			taiKhoan.setMaTenTk(rs.getString("MA_TK") + " - " + rs.getString("TEN_TK"));
+			taiKhoan.setMaTkCha(rs.getString("MA_TK_CHA"));
+			taiKhoan.setSoDu(rs.getInt("SO_DU"));
+			taiKhoan.setLuongTinh(rs.getBoolean("LUONG_TINH"));
+			taiKhoan.setSoDuGiaTri(rs.getInt("SO_DU_GIA_TRI"));
+
+			LoaiTaiKhoan taiKhoandU = new LoaiTaiKhoan();
+			taiKhoandU.setMaTk(rs.getString("MA_TK_DU"));
+			taiKhoandU.setTenTk(rs.getString("TEN_TK_DU"));
+			taiKhoandU.setMaTenTk(rs.getString("MA_TK_DU") + " - " + rs.getString("TEN_TK_DU"));
+			taiKhoandU.setMaTkCha(rs.getString("MA_TK_CHA_DU"));
+			taiKhoandU.setSoDu(rs.getInt("SO_DU_DU"));
+			taiKhoandU.setLuongTinh(rs.getBoolean("LUONG_TINH_DU"));
+			taiKhoandU.setSoDuGiaTri(rs.getInt("SO_DU_GIA_TRI_DU"));
+
+			taiKhoan.setDoiUng(taiKhoandU);
+
+			return taiKhoan;
+		}
+	}
+
+	@Override
+	public List<String> listCFAssetsCodes() {
+		String query = "SELECT DISTINCT ASSET_CODE FROM CASH_FLOW_ITEM ORDER BY ASSET_CODE";
+
+		logger.info("Get list of ASSET_CODE from CASH_FLOW_ITEM table ...");
+		logger.info(query);
+
+		List<String> assetsCodes = jdbcTmpl.query(query, new AssetsCodeMapper());
+
+		return assetsCodes;
+	}
+
+	@Override
+	public List<Date> listCFAssetsPeriods(int periodType) {
+		String query = "SELECT DISTINCT PERIOD FROM CASH_FLOW_DATA WHERE PERIOD_TYPE=? ORDER BY PERIOD";
+
+		logger.info("Get list of PERIOD from CASH_FLOW_DATA table ...");
+		logger.info(query);
+
+		Object[] params = { periodType };
+		List<Date> assetsPeriods = jdbcTmpl.query(query, params, new AssetsPeriodMapper());
+
+		return assetsPeriods;
+	}
+
+	@Override
 	public List<BalanceAssetData> listCFssByAssetsCodeAndYear(String assetCode, Date year, int periodType) {
 		if (assetCode == null || year == null)
 			return null;
@@ -667,6 +838,155 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		List<BalanceAssetData> cashFlows = jdbcTmpl.query(query, params, new BalanceAssetMapper());
 
 		return cashFlows;
+	}
+
+	@Override
+	public List<BalanceAssetData> listCFsByAssetCodesAndDates(List<String> assetCodes, List<Date> assetPeriods,
+			int periodType) {
+		String query = "SELECT ITEM.ASSET_CODE, PERIOD_TYPE, PERIOD, ITEM.ASSET_NAME, RULE, NOTE, START_VALUE, END_VALUE, CHANGED_RATIO, DESCRIPTION FROM CASH_FLOW_ITEM AS ITEM, CASH_FLOW_DATA AS DATA WHERE DATA.ASSET_CODE=ITEM.ASSET_CODE $assetCodesCondition$ $assetPeriodsCondition$ AND PERIOD_TYPE=?";
+
+		String assetCodesCondition = "";
+		String assetPeriodsCondition = "";
+
+		if (assetCodes != null && assetCodes.size() > 0) {
+			assetCodesCondition = "AND DATA.ASSET_CODE IN (?)";
+			String tmpl = "";
+			Iterator<String> iter = assetCodes.iterator();
+			while (iter.hasNext()) {
+				tmpl += "'" + iter.next() + "',";
+			}
+			if (!tmpl.equals("")) {
+				tmpl = tmpl.substring(0, tmpl.length() - 1);
+			}
+			assetCodesCondition = assetCodesCondition.replaceAll("\\?", tmpl);
+		}
+
+		if (assetPeriods != null && assetPeriods.size() > 0) {
+			assetPeriodsCondition = "AND MONTH(PERIOD) IN (?) AND YEAR(PERIOD) IN (?)";
+			String monthTmpl = "";
+			String yearTmpl = "";
+			Set<Integer> months = new LinkedHashSet<>();
+			Set<Integer> years = new LinkedHashSet<>();
+
+			Calendar cal = Calendar.getInstance();
+			Iterator<Date> iter = assetPeriods.iterator();
+			while (iter.hasNext()) {
+				Date period = iter.next();
+				cal.setTime(period);
+
+				try {
+					months.add(cal.get(Calendar.MONTH) + 1);
+				} catch (Exception e) {
+				}
+
+				try {
+					years.add(cal.get(Calendar.YEAR));
+				} catch (Exception e) {
+				}
+			}
+
+			Iterator<Integer> monthIter = months.iterator();
+			while (monthIter.hasNext()) {
+				monthTmpl += "'" + monthIter.next() + "',";
+			}
+
+			Iterator<Integer> yearIter = years.iterator();
+			while (yearIter.hasNext()) {
+				yearTmpl += "'" + yearIter.next() + "',";
+			}
+
+			if (!monthTmpl.equals("")) {
+				monthTmpl = monthTmpl.substring(0, monthTmpl.length() - 1);
+			}
+			if (!yearTmpl.equals("")) {
+				yearTmpl = yearTmpl.substring(0, yearTmpl.length() - 1);
+			}
+
+			assetPeriodsCondition = assetPeriodsCondition.replaceFirst("\\?", monthTmpl);
+			assetPeriodsCondition = assetPeriodsCondition.replaceFirst("\\?", yearTmpl);
+		}
+
+		query = query.replaceAll("\\$assetCodesCondition\\$", assetCodesCondition);
+		query = query.replaceAll("\\$assetPeriodsCondition\\$", assetPeriodsCondition);
+		query = query.replaceAll("\\s+", " ");
+		query += " ORDER BY PERIOD_TYPE, PERIOD, ASSET_CODE";
+
+		logger.info(query);
+		Object[] params = { periodType };
+		List<BalanceAssetData> bads = jdbcTmpl.query(query, params, new BalanceAssetMapper());
+
+		return bads;
+	}
+
+	@Override
+	public BalanceAssetData getCFPeriodStartValue(BalanceAssetData bad) {
+		if (bad == null || bad.getPeriod() == null || bad.getAsset() == null || bad.getAsset().getAssetCode() == null)
+			return bad;
+
+		String query = LAY_LCTT_DAU_KY;
+
+		try {
+			Object[] params = { bad.getAsset().getAssetCode(), bad.getPeriodType(), bad.getPeriod() };
+			Double value = jdbcTmpl.queryForObject(query, params, Double.class);
+			bad.setStartValue(value);
+		} catch (Exception e) {
+			bad.setStartValue(0);
+		}
+
+		return bad;
+	}
+
+	@Override
+	public BalanceAssetData getCFPeriodEndValue(BalanceAssetData bad) {
+		if (bad == null || bad.getPeriod() == null || bad.getAsset() == null || bad.getAsset().getAssetCode() == null)
+			return bad;
+
+		String query = LAY_LCTT_CUOI_KY;
+
+		try {
+			Object[] params = { bad.getAsset().getAssetCode(), bad.getPeriodType(), bad.getPeriod() };
+			Double value = jdbcTmpl.queryForObject(query, params, Double.class);
+			bad.setEndValue(value);
+		} catch (Exception e) {
+			bad.setEndValue(0);
+		}
+
+		return bad;
+	}
+
+	@Override
+	public List<BalanceAssetData> calculateCFBs(Date start, Date end) {
+		if (start == null || end == null) {
+			return null;
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		String batDau = sdf.format(start);
+		String ketThuc = sdf.format(end);
+
+		String query = TINH_LCTT_THEO_MATK;
+		logger.info("Tu " + batDau + " den " + ketThuc);
+		logger.info(query);
+
+		Object[] params = { batDau, ketThuc };
+		List<BalanceAssetData> bads = jdbcTmpl.query(query, params, new BalanceAssetDataSimpleMapper());
+
+		return bads;
+	}
+
+	public class BalanceAssetDataSimpleMapper implements RowMapper<BalanceAssetData> {
+		public BalanceAssetData mapRow(ResultSet rs, int rowNum) throws SQLException {
+			BalanceAssetItem bai = new BalanceAssetItem();
+			bai.setAssetCode(rs.getString("ASSET_CODE"));
+
+			BalanceAssetData bad = new BalanceAssetData();
+			bad.setAsset(bai);
+			bad.setEndValue(rs.getDouble("SO_TIEN"));
+
+			logger.info(bad);
+
+			return bad;
+		}
 	}
 
 	@Override
@@ -911,6 +1231,8 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 				bai.setParent(baiParent);
 			}
 
+			logger.info(bai);
+
 			return bai;
 		}
 	}
@@ -988,15 +1310,51 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	}
 
 	@Override
+	public BalanceAssetData getPeriodStartValue(BalanceAssetData bad) {
+		if (bad == null || bad.getPeriod() == null || bad.getAsset() == null || bad.getAsset().getAssetCode() == null)
+			return bad;
+
+		String query = LAY_CDKT_DAU_KY;
+		logger.info(query);
+
+		try {
+			Object[] params = { bad.getAsset().getAssetCode(), bad.getPeriodType(), bad.getPeriod() };
+			Double value = jdbcTmpl.queryForObject(query, params, Double.class);
+			bad.setStartValue(value);
+		} catch (Exception e) {
+			bad.setStartValue(0);
+		}
+
+		return bad;
+	}
+
+	@Override
 	public BalanceAssetData getPeriodEndValue(BalanceAssetData bad) {
 		if (bad == null || bad.getPeriod() == null || bad.getAsset() == null || bad.getAsset().getAssetCode() == null)
 			return bad;
 
-		String query = LAY_CDKT_KY_TRUOC;
+		String query = LAY_CDKT_CUOI_KY;
 
 		try {
-			Date prevPeriod = Utils.prevPeriod(bad.getPeriod(), bad.getPeriodType());
-			Object[] params = { bad.getAsset().getAssetCode(), bad.getPeriodType(), prevPeriod };
+			Object[] params = { bad.getAsset().getAssetCode(), bad.getPeriodType(), bad.getPeriod() };
+			Double value = jdbcTmpl.queryForObject(query, params, Double.class);
+			bad.setEndValue(value);
+		} catch (Exception e) {
+			bad.setEndValue(0);
+		}
+
+		return bad;
+	}
+
+	@Override
+	public BalanceAssetData getSRPeriodStartValue(BalanceAssetData bad) {
+		if (bad == null || bad.getPeriod() == null || bad.getAsset() == null || bad.getAsset().getAssetCode() == null)
+			return bad;
+
+		String query = LAY_KQHDKD_DAU_KY;
+
+		try {
+			Object[] params = { bad.getAsset().getAssetCode(), bad.getPeriodType(), bad.getPeriod() };
 			Double value = jdbcTmpl.queryForObject(query, params, Double.class);
 			bad.setStartValue(value);
 		} catch (Exception e) {
@@ -1011,15 +1369,14 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		if (bad == null || bad.getPeriod() == null || bad.getAsset() == null || bad.getAsset().getAssetCode() == null)
 			return bad;
 
-		String query = LAY_KQHDKD_KY_TRUOC;
+		String query = LAY_KQHDKD_CUOI_KY;
 
 		try {
-			Date prevPeriod = Utils.prevPeriod(bad.getPeriod(), bad.getPeriodType());
-			Object[] params = { bad.getAsset().getAssetCode(), bad.getPeriodType(), prevPeriod };
+			Object[] params = { bad.getAsset().getAssetCode(), bad.getPeriodType(), bad.getPeriod() };
 			Double value = jdbcTmpl.queryForObject(query, params, Double.class);
-			bad.setStartValue(value);
+			bad.setEndValue(value);
 		} catch (Exception e) {
-			bad.setStartValue(0);
+			bad.setEndValue(0);
 		}
 
 		return bad;
@@ -1060,7 +1417,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		logger.info(query);
 
 		Object[] params = { batDau, ketThuc };
-		List<BalanceAssetData> bads = jdbcTmpl.query(query, params, new BalanceAssetDataMapper());
+		List<BalanceAssetData> bads = jdbcTmpl.query(query, params, new BalanceAssetDataSimpleMapper());
 
 		return bads;
 	}

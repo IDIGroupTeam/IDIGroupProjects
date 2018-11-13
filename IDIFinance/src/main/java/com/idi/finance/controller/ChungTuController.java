@@ -1140,16 +1140,22 @@ public class ChungTuController {
 			chungTu.setNgayLap(ngayLap);
 			chungTu.setNgayHt(ngayLap);
 
-			// Tài khoản khác, ghi nợ
+			// Tài khoản ghi nợ
 			TaiKhoan taiKhoan = new TaiKhoan();
 			taiKhoan.setChungTu(chungTu);
 			taiKhoan.setSoDu(LoaiTaiKhoan.NO);
+			LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+			loaiTaiKhoan.setMaTk("0");
+			taiKhoan.setLoaiTaiKhoan(loaiTaiKhoan);
 			chungTu.themTaiKhoan(taiKhoan);
 
-			// Tài khoản tiềm gửi ngân hàng, ghi có
+			// Tài khoản ghi có
 			taiKhoan = new TaiKhoan();
 			taiKhoan.setChungTu(chungTu);
 			taiKhoan.setSoDu(LoaiTaiKhoan.CO);
+			loaiTaiKhoan = new LoaiTaiKhoan();
+			loaiTaiKhoan.setMaTk("0");
+			taiKhoan.setLoaiTaiKhoan(loaiTaiKhoan);
 			chungTu.themTaiKhoan(taiKhoan);
 
 			return chuanBiFormKeToanTongHop(model, chungTu);

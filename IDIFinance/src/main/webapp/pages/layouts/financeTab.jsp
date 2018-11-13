@@ -48,6 +48,12 @@
 					tổng hợp công nợ</a></li>
 			<li id="tabSKTSCTCN"><a href="${url}/soketoan/soctcongno">Sổ
 					chi tiết công nợ</a></li>
+			<li id="tabSKTSTHNXT"><a
+				href="${url}/soketoan/nhapxuatton/tonghop">Sổ tổng hợp nhập xuất
+					tồn</a></li>
+			<li id="tabSKTSCTNXT"><a
+				href="${url}/soketoan/nhapxuatton/chitiet">Sổ chi tiết nhập xuất
+					tồn</a></li>
 		</ul></li>
 	<li class="dropdown"><a class="dropdown-toggle"
 		data-toggle="dropdown" href="#">Báo cáo tài chính<span
@@ -60,7 +66,8 @@
 					cân đối phát sinh</a></li>
 			<li id="tabBKQHDKD"><a href="${url}/bctc/kqhdkd/danhsach">Bảng
 					kết quả HDKD</a></li>
-			<li><a href="#">Bảng lưu chuyển tiền tệ</a></li>
+			<li id="tabBLCTT"><a href="${url}/bctc/luuchuyentt/danhsach">Bảng
+					lưu chuyển tiền tệ</a></li>
 
 		</ul></li>
 	<%-- <li class="dropdown"><a class="dropdown-toggle"
@@ -83,7 +90,10 @@
 			<li class="divider"></li>
 			<li id="tabDSNT"><a href="#">Danh sách ngoại tệ</a></li>
 			<li id="tabDSBCDKT"><a href="${url}/bctc/cdkt/chitieu/danhsach">Danh
-					sách BCDKT</a></li>
+					sách chỉ tiêu CDKT</a></li>
+			<li id="tabDSBLCTT"><a
+				href="${url}/bctc/luuchuyentt/chitieu/danhsach">Danh sách chỉ
+					tiêu LCTT</a></li>
 			<li id="tabDMTK"><a href="${url}/taikhoan/danhsach">Danh
 					sách tài khoản</a></li>
 

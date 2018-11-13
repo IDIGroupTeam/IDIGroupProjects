@@ -310,6 +310,24 @@
 		<put-attribute name="search"
 			value="/pages/soketoan/sktSoCtCongNoTk.jsp" />
 	</definition>
+
+	<definition name="sktSoThNhapXuatTon" extends="taichinh">
+		<put-attribute name="title"
+			value="Sổ tổng hợp nhập xuất tồn" />
+		<put-attribute name="body"
+			value="/pages/soketoan/sktSoThNhapXuatTon.jsp" />
+		<put-attribute name="search"
+			value="/pages/soketoan/sktSoThNhapXuatTonTk.jsp" />
+	</definition>
+
+	<definition name="sktSoCtNhapXuatTon" extends="taichinh">
+		<put-attribute name="title"
+			value="Sổ chi tiết nhập xuất tồn" />
+		<put-attribute name="body"
+			value="/pages/soketoan/sktSoCtNhapXuatTon.jsp" />
+		<put-attribute name="search"
+			value="/pages/soketoan/sktSoCtNhapXuatTonTk.jsp" />
+	</definition>
 	<!-- Kết thúc Tab sổ kế toán -->
 
 
@@ -352,6 +370,29 @@
 			value="/pages/bctc/saleResultTk.jsp" />
 		<put-attribute name="body"
 			value="/pages/bctc/saleResult.jsp" />
+	</definition>
+
+	<definition name="cashFlow" extends="taichinh">
+		<put-attribute name="title"
+			value="Bảng lưu chuyển tiền tệ" />
+		<put-attribute name="search"
+			value="/pages/bctc/cashFlowTk.jsp" />
+		<put-attribute name="body"
+			value="/pages/bctc/cashFlow.jsp" />
+	</definition>
+	
+	<definition name="danhSachChiTieuLctt" extends="taichinh">
+		<put-attribute name="title"
+			value="Danh sách chỉ tiêu lưu chuyển tiền tệ" />
+		<put-attribute name="body"
+			value="/pages/bctc/cashFlowCodeDs.jsp" />
+	</definition>
+
+	<definition name="taoMoiChiTieuLctt" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới chỉ tiêu lưu chuyển tiền tệ" />
+		<put-attribute name="body"
+			value="/pages/bctc/cashFlowCodeTm.jsp" />
 	</definition>
 	<!-- Kết thúc Tab báo cáo tài chính -->
 

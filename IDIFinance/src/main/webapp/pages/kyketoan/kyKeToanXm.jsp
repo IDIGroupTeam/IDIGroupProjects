@@ -1,4 +1,5 @@
 <%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
+<%@page import="com.idi.finance.bean.kyketoan.KyKeToan"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
@@ -75,36 +76,24 @@
 		<a href="${url}/kyketoan/danhsach" class="btn btn-info btn-sm">Danh
 			sách kỳ kế toán</a>
 		<c:choose>
-			<c:when test="${kyKeToan.trangThai==1}">
+			<c:when test="${kyKeToan.trangThai==KyKeToan.MO}">
 				<a href="${url}/kyketoan/soduky/chuyen/${kyKeToan.maKyKt}"
 					class="btn btn-info btn-sm"
 					title="Chuyển số dư cuối kỳ trước sang số dư đầu kỳ hiện tại">Chuyển
 					số dư từ kỳ trước</a>
-			</c:when>
-		</c:choose>
-		<c:choose>
-			<c:when test="${kyKeToan.trangThai==1}">
 				<a href="${url}/kyketoan/soduky/nhap/${kyKeToan.maKyKt}"
 					class="btn btn-info btn-sm" title="Nhập số dư đầu kỳ">Nhập số
 					dư đầu kỳ</a>
-			</c:when>
-		</c:choose>
-		<c:choose>
-			<c:when test="${kyKeToan.trangThai==1}">
 				<a href="#" class="btn btn-info btn-sm disabled"
 					title="Kiểm tra dữ liệu trước khi xuất số dư cuối kỳ">Kiểm tra
 					dữ liệu</a>
-			</c:when>
-		</c:choose>
-		<c:choose>
-			<c:when test="${kyKeToan.trangThai==1}">
 				<a href="${url}/kyketoan/soduky/xuat/${kyKeToan.maKyKt}"
 					class="btn btn-info btn-sm" title="Xuất số dư cuối kỳ">Xuất số
 					dư cuối kỳ</a>
 			</c:when>
 		</c:choose>
 		<c:choose>
-			<c:when test="${kyKeToan.macDinh!=1}">
+			<c:when test="${kyKeToan.macDinh!=KyKeToan.MAC_DINH}">
 				<a href="${url}/kyketoan/macdinh/${kyKeToan.maKyKt}"
 					class="btn btn-info btn-sm" title="Đặt mặc định"
 					onclick="return xacNhanMacDinh(${kyKeToan.maKyKt});">Mặc định</span>
@@ -112,7 +101,7 @@
 			</c:when>
 		</c:choose>
 		<c:choose>
-			<c:when test="${kyKeToan.trangThai==1}">
+			<c:when test="${kyKeToan.trangThai==KyKeToan.MO}">
 				<a href="${url}/kyketoan/dong/${kyKeToan.maKyKt}"
 					class="btn btn-info btn-sm" title="Đóng kỳ"
 					onclick="return xacNhanDong(${kyKeToan.maKyKt});">Đóng kỳ</a>
@@ -123,15 +112,15 @@
 					onclick="return xacNhanMo(${kyKeToan.maKyKt});">Mở kỳ</a>
 			</c:otherwise>
 		</c:choose>
-		<c:choose>
-			<c:when test="${kyKeToan.trangThai==1}">
+		<%-- <c:choose>
+			<c:when test="${kyKeToan.trangThai==KyKeToan.MO}">
 				<a href="${url}/kyketoan/sua/${kyKeToan.maKyKt}"
 					class="btn btn-info btn-sm" title="Sửa"> Sửa </a>
 				<a href="${url}/kyketoan/xoa/${kyKeToan.maKyKt}"
 					class="btn btn-info btn-sm" title="Xóa"
 					onclick="return xacNhanXoa(${kyKeToan.maKyKt});">Xóa</a>
 			</c:when>
-		</c:choose>
+		</c:choose> --%>
 
 	</div>
 </div>
@@ -145,8 +134,8 @@
 				hàng</a></li>
 		<li><a data-toggle="tab" href="#sdCongNoNCC">Công nợ NCC</a></li>
 		<li><a data-toggle="tab" href="#sdCongNoNV">Công nợ nhân viên</a></li>
-		<!-- <li><a data-toggle="tab" href="#sdTonKho">Tồn kho VTHH</a></li>
-		<li><a data-toggle="tab" href="#sdCCDC">Công cụ, dụng cụ</a></li>
+		<li><a data-toggle="tab" href="#sdTonKho">Tồn kho VTHH</a></li>
+		<!-- <li><a data-toggle="tab" href="#sdCCDC">Công cụ, dụng cụ</a></li>
 		<li><a data-toggle="tab" href="#sdTSCD">Tài sản cố định</a></li> -->
 	</ul>
 
@@ -158,13 +147,13 @@
 						<th rowspan="2" class="text-center">Mã TK</th>
 						<th rowspan="2" class="text-center">Tên TK</th>
 						<th colspan="2" class="text-center">Đầu kỳ</th>
-						<th colspan="2" class="text-center">Cuối kỳ</th>
+						<!-- <th colspan="2" class="text-center">Cuối kỳ</th> -->
 					</tr>
 					<tr>
 						<th class="text-center" style="width: 120px;">Nợ</th>
 						<th class="text-center" style="width: 120px;">Có</th>
-						<th class="text-center" style="width: 120px;">Nợ</th>
-						<th class="text-center" style="width: 120px;">Có</th>
+						<!-- <th class="text-center" style="width: 120px;">Nợ</th>
+						<th class="text-center" style="width: 120px;">Có</th> -->
 					</tr>
 				</thead>
 				<tbody>
@@ -176,10 +165,10 @@
 									value="${taiKhoan.noDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
 							<td class="text-right" style="width: 120px;"><fmt:formatNumber
 									value="${taiKhoan.coDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
-							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+							<%-- <td class="text-right" style="width: 120px;"><fmt:formatNumber
 									value="${taiKhoan.noCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
 							<td class="text-right" style="width: 120px;"><fmt:formatNumber
-									value="${taiKhoan.coCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+									value="${taiKhoan.coCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td> --%>
 						</tr>
 					</c:forEach>
 				</tbody>
@@ -194,13 +183,13 @@
 						<th rowspan="2" class="text-center">Mã TK</th>
 						<th rowspan="2" class="text-center">Tên TK</th>
 						<th colspan="2" class="text-center">Đầu kỳ</th>
-						<th colspan="2" class="text-center">Cuối kỳ</th>
+						<!-- <th colspan="2" class="text-center">Cuối kỳ</th> -->
 					</tr>
 					<tr>
 						<th class="text-center" style="width: 120px;">Nợ</th>
 						<th class="text-center" style="width: 120px;">Có</th>
-						<th class="text-center" style="width: 120px;">Nợ</th>
-						<th class="text-center" style="width: 120px;">Có</th>
+						<!-- <th class="text-center" style="width: 120px;">Nợ</th>
+						<th class="text-center" style="width: 120px;">Có</th> -->
 					</tr>
 				</thead>
 				<tbody>
@@ -214,10 +203,10 @@
 									value="${khachHang.noDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
 							<td class="text-right" style="width: 120px;"><fmt:formatNumber
 									value="${khachHang.coDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
-							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+							<%-- <td class="text-right" style="width: 120px;"><fmt:formatNumber
 									value="${khachHang.noCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
 							<td class="text-right" style="width: 120px;"><fmt:formatNumber
-									value="${khachHang.coCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+									value="${khachHang.coCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td> --%>
 						</tr>
 					</c:forEach>
 				</tbody>
@@ -232,13 +221,13 @@
 						<th rowspan="2" class="text-center">Mã TK</th>
 						<th rowspan="2" class="text-center">Tên TK</th>
 						<th colspan="2" class="text-center">Đầu kỳ</th>
-						<th colspan="2" class="text-center">Cuối kỳ</th>
+						<!-- <th colspan="2" class="text-center">Cuối kỳ</th> -->
 					</tr>
 					<tr>
 						<th class="text-center" style="width: 120px;">Nợ</th>
 						<th class="text-center" style="width: 120px;">Có</th>
-						<th class="text-center" style="width: 120px;">Nợ</th>
-						<th class="text-center" style="width: 120px;">Có</th>
+						<!-- <th class="text-center" style="width: 120px;">Nợ</th>
+						<th class="text-center" style="width: 120px;">Có</th> -->
 					</tr>
 				</thead>
 				<tbody>
@@ -252,10 +241,10 @@
 									value="${nhaCc.noDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
 							<td class="text-right" style="width: 120px;"><fmt:formatNumber
 									value="${nhaCc.coDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
-							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+							<%-- <td class="text-right" style="width: 120px;"><fmt:formatNumber
 									value="${nhaCc.noCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
 							<td class="text-right" style="width: 120px;"><fmt:formatNumber
-									value="${nhaCc.coCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+									value="${nhaCc.coCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td> --%>
 						</tr>
 					</c:forEach>
 				</tbody>
@@ -270,13 +259,13 @@
 						<th rowspan="2" class="text-center">Mã TK</th>
 						<th rowspan="2" class="text-center">Tên TK</th>
 						<th colspan="2" class="text-center">Đầu kỳ</th>
-						<th colspan="2" class="text-center">Cuối kỳ</th>
+						<!-- <th colspan="2" class="text-center">Cuối kỳ</th> -->
 					</tr>
 					<tr>
 						<th class="text-center" style="width: 120px;">Nợ</th>
 						<th class="text-center" style="width: 120px;">Có</th>
-						<th class="text-center" style="width: 120px;">Nợ</th>
-						<th class="text-center" style="width: 120px;">Có</th>
+						<!-- <th class="text-center" style="width: 120px;">Nợ</th>
+						<th class="text-center" style="width: 120px;">Có</th> -->
 					</tr>
 				</thead>
 				<tbody>
@@ -290,10 +279,10 @@
 									value="${nhanVien.noDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
 							<td class="text-right" style="width: 120px;"><fmt:formatNumber
 									value="${nhanVien.coDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>
-							<td class="text-right" style="width: 120px;"><fmt:formatNumber
+							<%-- <td class="text-right" style="width: 120px;"><fmt:formatNumber
 									value="${nhanVien.noCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
 							<td class="text-right" style="width: 120px;"><fmt:formatNumber
-									value="${nhanVien.coCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td>
+									value="${nhanVien.coCuoiKy}" maxFractionDigits="2"></fmt:formatNumber></td> --%>
 						</tr>
 					</c:forEach>
 				</tbody>
@@ -303,25 +292,47 @@
 			<table class="table table-bordered table-hover">
 				<thead>
 					<tr>
-						<th rowspan="2" class="text-center">Mã TK</th>
-						<th rowspan="2" class="text-center">Tên TK</th>
-						<th colspan="2" class="text-center">Đầu kỳ</th>
-						<th colspan="2" class="text-center">Cuối kỳ</th>
+						<th colspan="2" class="text-center">Tài khoản</th>
+						<th colspan="2" class="text-center">Hàng hóa</th>
+						<th colspan="2" class="text-center">Kho hàng</th>
+						<th colspan="3" class="text-center">Tồn đầu kỳ</th>
+						<!-- <th colspan="2" class="text-center">Cuối kỳ</th> -->
 					</tr>
 					<tr>
-						<th class="text-center">Nợ</th>
-						<th class="text-center">Có</th>
-						<th class="text-center">Nợ</th>
-						<th class="text-center">Có</th>
+						<th class="text-center" style="width: 50px;">Mã</th>
+						<th class="text-center">Tên</th>
+						<th class="text-center" style="width: 50px;">Mã</th>
+						<th class="text-center">Tên</th>
+						<th class="text-center" style="width: 50px;">Mã</th>
+						<th class="text-center">Tên</th>
+						<th class="text-center" style="width: 120px;">Số lượng</th>
+						<th class="text-center" style="width: 120px;">Nợ</th>
+						<th class="text-center" style="width: 120px;">Có</th>
+						<!-- <th class="text-center" style="width: 120px;">Nợ</th>
+						<th class="text-center" style="width: 120px;">Có</th> -->
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
+						<td>156</td>
+						<td>Hàng hóa</td>
+						<td>TOYOTA</td>
+						<td>Xe toyota</td>
+						<td>1</td>
+						<td>Kho Cầu Giấy</td>
+						<td>10</td>
+						<td>20000</td>
 						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
+					</tr>
+					<tr>
+						<td>156</td>
+						<td>Hàng hóa</td>
+						<td>IPONE7</td>
+						<td>Điện thoại Ipone7</td>
+						<td>1</td>
+						<td>Kho Cầu Giấy</td>
+						<td>10</td>
+						<td>1000</td>
 						<td></td>
 					</tr>
 				</tbody>
@@ -334,13 +345,13 @@
 						<th rowspan="2" class="text-center">Mã TK</th>
 						<th rowspan="2" class="text-center">Tên TK</th>
 						<th colspan="2" class="text-center">Đầu kỳ</th>
-						<th colspan="2" class="text-center">Cuối kỳ</th>
+						<!-- <th colspan="2" class="text-center">Cuối kỳ</th> -->
 					</tr>
 					<tr>
 						<th class="text-center">Nợ</th>
 						<th class="text-center">Có</th>
-						<th class="text-center">Nợ</th>
-						<th class="text-center">Có</th>
+						<!-- <th class="text-center">Nợ</th>
+						<th class="text-center">Có</th> -->
 					</tr>
 				</thead>
 				<tbody>
@@ -349,8 +360,8 @@
 						<td></td>
 						<td></td>
 						<td></td>
-						<td></td>
-						<td></td>
+						<!-- <td></td>
+						<td></td> -->
 					</tr>
 				</tbody>
 			</table>
@@ -362,13 +373,13 @@
 						<th rowspan="2" class="text-center">Mã TK</th>
 						<th rowspan="2" class="text-center">Tên TK</th>
 						<th colspan="2" class="text-center">Đầu kỳ</th>
-						<th colspan="2" class="text-center">Cuối kỳ</th>
+						<!-- <th colspan="2" class="text-center">Cuối kỳ</th> -->
 					</tr>
 					<tr>
 						<th class="text-center">Nợ</th>
 						<th class="text-center">Có</th>
-						<th class="text-center">Nợ</th>
-						<th class="text-center">Có</th>
+						<!-- <th class="text-center">Nợ</th>
+						<th class="text-center">Có</th> -->
 					</tr>
 				</thead>
 				<tbody>
@@ -377,8 +388,8 @@
 						<td></td>
 						<td></td>
 						<td></td>
-						<td></td>
-						<td></td>
+						<!-- <td></td>
+						<td></td> -->
 					</tr>
 				</tbody>
 			</table>
