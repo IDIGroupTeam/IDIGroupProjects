@@ -85,8 +85,8 @@ public class SalaryDAO extends JdbcDaoSupport {
 			log.info("Thêm mới thông tin lương của nhân viên ....");
 			String sql = hr.getProperty("INSERT_SALARY_INFO").toString();
 			log.info("INSERT_SALARY_INFO query: " + sql);
-			Object[] params = new Object[] { salary.getEmployeeId(), salary.getSalary().replaceAll(",", ""), salary.getBankNo(),
-					salary.getBankName(), salary.getBankBranch(), salary.getDesc() };
+			Object[] params = new Object[] { salary.getEmployeeId(), salary.getSalary().replaceAll(",", ""), 
+					salary.getBankNo(),	salary.getBankName(), salary.getBankBranch(), salary.getDesc() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -106,8 +106,8 @@ public class SalaryDAO extends JdbcDaoSupport {
 			// update
 			String sql = hr.getProperty("UPDATE_SALARY_INFO").toString();
 			log.info("UPDATE_SALARY_INFO query: " + sql);
-			Object[] params = new Object[] { salary.getSalary().replaceAll(",", ""), salary.getBankNo(), salary.getBankName(),
-					salary.getBankBranch(), salary.getDesc(), salary.getEmployeeId() };
+			Object[] params = new Object[] { salary.getSalary().replaceAll(",", ""), salary.getBankNo(), 
+					salary.getBankName(), salary.getBankBranch(), salary.getDesc(), salary.getEmployeeId() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -137,8 +137,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 	/**
 	 * get SalaryDetail detail for month
 	 * 
-	 * @param employeeId,
-	 *            month, year
+	 * @param employeeId, month, year
 	 * @return SalaryDetail object
 	 */
 	public SalaryDetail getSalaryDetail(int employeeId, int month, int year) {
@@ -190,9 +189,13 @@ public class SalaryDAO extends JdbcDaoSupport {
 			log.info("Thêm thông tin chi tiết lương tháng của nhân viên....");
 			String sql = hr.getProperty("INSERT_SALARY_DETAIL").toString();
 			log.info("INSERT_SALARY_DETAIL query: " + sql);
-			System.err.println("salary " + salaryDetail.getSalary());
+			//System.err.println("salary " + salaryDetail.getSalary());
 			// Tính lương thực nhận
 			float finalSalary = Float.valueOf(salaryDetail.getSalary());
+			if(salaryDetail.getWorkComplete() > 0) {
+				finalSalary=finalSalary*salaryDetail.getWorkComplete()/100;
+				//System.err.println(8000000*120/100);
+			}
 			// Tăng
 			float salaryPerHour = 0;
 			if (salaryDetail.getSalaryPerHour() > 0)
@@ -220,13 +223,13 @@ public class SalaryDAO extends JdbcDaoSupport {
 
 			salaryDetail.setFinalSalary(String.valueOf(finalSalary));
 
-			System.err.println("OverTimeSalary " + salaryDetail.getOverTimeSalary());
+			//System.err.println("OverTimeSalary " + salaryDetail.getOverTimeSalary());
 
 			Object[] params = new Object[] { salaryDetail.getEmployeeId(), salaryDetail.getOverTimeN(),
 					salaryDetail.getOverTimeW(), salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(),
 					salaryDetail.getBounus(), salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(),
 					salaryDetail.getTaxPersonal(), salaryDetail.getFinalSalary(), salaryDetail.getMonth(),
-					salaryDetail.getYear(), salaryDetail.getDesc(), salaryDetail.getPayedInsurance() };
+					salaryDetail.getYear(), salaryDetail.getDesc(), salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -255,6 +258,9 @@ public class SalaryDAO extends JdbcDaoSupport {
 
 			// Tính lương thực nhận
 			float finalSalary = Float.valueOf(salaryDetail.getSalary());
+			if(salaryDetail.getWorkComplete() > 0) {
+				finalSalary=finalSalary*salaryDetail.getWorkComplete()/100;				
+			}
 			// Tang
 			float salaryPerHour = 0;
 			if (salaryDetail.getSalaryPerHour() > 0)
@@ -278,18 +284,18 @@ public class SalaryDAO extends JdbcDaoSupport {
 			if (salaryDetail.getAdvancePayed() != null && salaryDetail.getAdvancePayed().length() > 0)
 				finalSalary = finalSalary - Float.valueOf(salaryDetail.getAdvancePayed().replaceAll(",", ""));
 			if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0) {
-				System.err.println(salaryDetail.getSalaryInsurance());
+				//System.err.println(salaryDetail.getSalaryInsurance());
 				finalSalary = finalSalary - Float.valueOf(salaryDetail.getSalaryInsurance()) * (float) 10.5 / 100;
 			}
 
 			salaryDetail.setFinalSalary(String.valueOf(finalSalary));
-			System.err.println("year " + salaryDetail.getYear());
-			System.err.println("Luong thuc nhan " + finalSalary);
+			//System.err.println("year " + salaryDetail.getYear());
+			//System.err.println("Luong thuc nhan " + finalSalary);
 			Object[] params = new Object[] { salaryDetail.getOverTimeN(), salaryDetail.getOverTimeW(),
 					salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(),
 					salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(),
 					salaryDetail.getFinalSalary(), salaryDetail.getDesc(), salaryDetail.getPayedInsurance(),
-					salaryDetail.getEmployeeId(), salaryDetail.getMonth(), salaryDetail.getYear() };
+					salaryDetail.getWorkComplete(), salaryDetail.getEmployeeId(), salaryDetail.getMonth(), salaryDetail.getYear() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {

@@ -35,9 +35,10 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 		String salaryInsurance = rs.getString("SALA_SOCI_INSU");
 		String percentCompanyPay = rs.getString("PERCENT_SOCI_INSU_C");
 		String percentEmployeePay = rs.getString("PERCENT_SOCI_INSU_E");
+		int workcomplete = rs.getInt("WORK_COMPLETE");
 		return new SalaryDetail(employeeId, finalSalary, overTimeN, overTimeW, overTimeH, 
 				overTimeSalary, bounus, subsidize, advancePayed, taxPersonal, month, year, desc,
 				payedInsurance,fullName, phoneNo, bankNo, bankName, bankBranch, salary, department, 
-				jobTitle, salaryInsurance, percentCompanyPay, percentEmployeePay);
+				jobTitle, salaryInsurance, percentCompanyPay, percentEmployeePay, workcomplete);
 	}	
 }

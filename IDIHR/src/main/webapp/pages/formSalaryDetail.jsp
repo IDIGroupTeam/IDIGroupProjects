@@ -119,9 +119,11 @@
 
 						<c:if test="${empty salaryDetail.salaryInsurance}">
 							<td><i>Không tham gia BHXH</i></td> 
-						</c:if>
-						<td></td>
-						<td></td> 
+						</c:if>		
+						
+						<td nowrap="nowrap">Hệ số hoàn thành cv (%)</td>
+						<td><form:input path="workComplete" class="form-control bfh-number" min="1" max="999" type="number" value="100" size="4"/></td>
+										 
 					</tr>
 					<tr>
 						<td colspan="4" nowrap="nowrap" bgcolor="#E6E6E6">Các khoản thưởng/phụ cấp/thưởng/tăng ca</td>

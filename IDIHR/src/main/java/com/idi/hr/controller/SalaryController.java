@@ -402,7 +402,7 @@ public class SalaryController {
 			@ModelAttribute("salaryDetail") @Validated SalaryDetail salaryDetail,
 			final RedirectAttributes redirectAttributes) {
 		try {
-			System.err.println(salaryDetail.getSalary());
+			//System.err.println(salaryDetail.getSalary());
 			WorkingDay workingDay = null;
 			if(salaryDetail.getMonth() < 10)
 				workingDay = workingDayDAO.getWorkingDay(salaryDetail.getYear() + "-0" + salaryDetail.getMonth(), "IDI");
@@ -434,7 +434,7 @@ public class SalaryController {
 			
 			overTimeSalary = Math.round(overTimeSalary);
 			salaryDetail.setOverTimeSalary(String.valueOf(overTimeSalary));
-			if(salaryDetail.getSalaryInsurance() != null)
+			if(salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0)
 				salaryDetail.setPayedInsurance(String.valueOf(Float.parseFloat(salaryDetail.getSalaryInsurance())*10.5/100));
 			
 			model.addAttribute("salaryPerHour", salaryPerHour);

@@ -196,7 +196,7 @@ tr:nth-child(even) {
 					<td>${salary.jobTitle}</td>
 					<td><fmt:formatNumber value="${salary.salary}" type="number"/> đồng</td>					
 					<td><a href="editSalary?employeeId=${salary.employeeId}">Sửa</a></td>
-					<td><a href="listSalaryDetail?employeeId=${salary.employeeId}">Chi tiết</a></td>
+					<td><a href="listSalaryDetail?employeeId=${salary.employeeId}">Chi tiết theo tháng</a></td>
 					<td>${salary.desc}</td>
 				</tr>
 			</c:forEach>
