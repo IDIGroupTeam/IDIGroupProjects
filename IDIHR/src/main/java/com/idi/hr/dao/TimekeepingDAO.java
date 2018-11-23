@@ -22,6 +22,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import com.idi.hr.bean.LeaveReport;
 import com.idi.hr.bean.Timekeeping;
 import com.idi.hr.common.PropertiesManager;
+import com.idi.hr.mapper.TimekeepingDataMapper;
 import com.idi.hr.mapper.TimekeepingMapper;
 
 public class TimekeepingDAO extends JdbcDaoSupport {
@@ -54,29 +55,122 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	 * @return List of TIMEKEEPING object
 	 * @throws Exception
 	 */
-	public List<Timekeeping> getTimekeepings(String fromDate, String toDate, String dept, String eId) {
+	public List<Timekeeping> getTimekeepings(String fromDate, String toDate, String dept, String eId) throws Exception {
 		String sql = "";
 		Object[] params = null;
-		if (toDate != null) {
-			sql = hr.getProperty("GET_TIMEKEEPINGS").toString();
-			if (dept != null && !dept.equalsIgnoreCase("all"))
-				sql = sql + " AND E.DEPARTMENT = '" + dept + "'";
-			if (eId != null && Integer.parseInt(eId) > 0)
-				sql = sql + " AND E.EMPLOYEE_ID = " + eId;
-			log.info("GET_TIMEKEEPINGS query: " + sql);
-			params = new Object[] { fromDate, toDate };
-		} else {
-			sql = hr.getProperty("GET_TIMEKEEPING_INFO").toString();
-			log.info("GET_TIMEKEEPING_INFO query: " + sql);
-			params = new Object[] { fromDate };
-		}
+		List<Timekeeping> list = null;
+		try {
+			if (toDate != null) {
+				sql = hr.getProperty("GET_TIMEKEEPINGS").toString();
+				if (dept != null && !dept.equalsIgnoreCase("all"))
+					sql = sql + " AND E.DEPARTMENT = '" + dept + "'";
+				if (eId != null && Integer.parseInt(eId) > 0)
+					sql = sql + " AND E.EMPLOYEE_ID = " + eId;
+				log.info("GET_TIMEKEEPINGS query: " + sql);
+				params = new Object[] { fromDate, toDate };
+			} else {
+				sql = hr.getProperty("GET_TIMEKEEPING_INFO").toString();
+				log.info("GET_TIMEKEEPING_INFO query: " + sql);
+				params = new Object[] { fromDate };
+			}
 
-		TimekeepingMapper mapper = new TimekeepingMapper();
+			TimekeepingMapper mapper = new TimekeepingMapper();
+			list = jdbcTmpl.query(sql, params, mapper);
+			// System.err.println(156/60);
+			// System.err.println(156%60);
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+			throw e;
+		}
+		return list;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Timekeeping> getTimekeepingsData() throws Exception {
+		String sql = "";
+
+		List<Timekeeping> list = null;
+		try {
+			sql = hr.getProperty("GET_ALL_TIMEKEEPINGS_DATA").toString();
+			log.info("GET_ALL_TIMEKEEPINGS_DATA query: " + sql);
+			TimekeepingDataMapper mapper = new TimekeepingDataMapper();
+			list = jdbcTmpl.query(sql, mapper);
+			// System.err.println(156/60);
+			// System.err.println(156%60);
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+			throw e;
+		}
+		return list;
+	}
+
+	/**
+	 * Get TIMEKEEPING from DB
+	 * 
+	 * @return List of TIMEKEEPING object
+	 * @throws Exception
+	 */
+	public List<Timekeeping> getTimekeepingData(int employeeId, Date date) throws Exception {
+		String sql = "";
+		Object[] params = null;
+
+		sql = hr.getProperty("GET_TIMEKEEPINGS_DATA").toString();
+		// log.info("GET_TIMEKEEPINGS_DATA query: " + sql);
+		params = new Object[] { employeeId, date };
+
+		TimekeepingDataMapper mapper = new TimekeepingDataMapper();
 		List<Timekeeping> list = jdbcTmpl.query(sql, params, mapper);
-		System.err.println(156/60);
-		System.err.println(156%60);
+
 		return list;
 
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public void deleteTimekeepingsData() throws Exception {
+		try {
+			log.info("Xoa thong tin du lieu cham cong temp");
+			// delete
+			String sql = hr.getProperty("DELETE_TIMEKEEPINGS_DATA").toString();
+			log.info("DELETE_TIMEKEEPINGS_DATA query: " + sql);
+
+			jdbcTmpl.update(sql);
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	/**
+	 * 
+	 * @param employeeId
+	 * @param date
+	 * @throws Exception
+	 */
+	public void deleteTimekeepingData(int employeeId, Date date) throws Exception {
+		try {
+			log.info(
+					"Xoa thong tin du lieu cham cong cho nhung t/h cham cong > 4 lan 1 ngay de insert lai du lieu moi sau khi da xu ly");
+			// delete
+			Object[] params = null;
+			String sql = hr.getProperty("DELETE_TIMEKEEPING_DATA").toString();
+			log.info("DELETE_TIMEKEEPING_DATA query: " + sql);
+			params = new Object[] { employeeId, date };
+			jdbcTmpl.update(sql, params);
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	/**
@@ -86,17 +180,41 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	 *            Date, timeIn
 	 * @return Timekeeping object
 	 */
-	public Timekeeping getTimekeeping(int employeeId, Date date, String timeIn) {
+	public Timekeeping getTimekeeping(int employeeId, Date date, String timeIn) throws Exception {
+		try {
+			String sql = hr.get("GET_TIMEKEEPING").toString();
+			log.info("GET_TIMEKEEPING query: " + sql);
+			Object[] params = new Object[] { employeeId, date, timeIn };
+	
+			TimekeepingMapper mapper = new TimekeepingMapper();
+	
+			Timekeeping timekeeping = jdbcTmpl.queryForObject(sql, params, mapper);
+	
+			return timekeeping;
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+			throw e;
+		}
+	}
 
-		String sql = hr.get("GET_TIMEKEEPING").toString();
-		log.info("GET_TIMEKEEPING query: " + sql);
+	/**
+	 * CheckTimekeepingExisting
+	 * 
+	 * @param employeeId
+	 * @param date
+	 * @param timeIn
+	 * @return
+	 */
+	public String checkTimekeepingDataExisting(int employeeId, Date date, String timeIn) {
+
+		String sql = hr.get("CHECK_EXISTING_TIMEKEEPING_DATA").toString();
+		// log.info("CHECK_EXISTING_TIMEKEEPING_DATA query: " + sql);
 		Object[] params = new Object[] { employeeId, date, timeIn };
 
-		TimekeepingMapper mapper = new TimekeepingMapper();
+		String existing = jdbcTmpl.queryForObject(sql, String.class, params);
 
-		Timekeeping timekeeping = jdbcTmpl.queryForObject(sql, params, mapper);
-
-		return timekeeping;
+		return existing;
 
 	}
 
@@ -111,7 +229,7 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	public String checkTimekeepingExisting(int employeeId, Date date, String timeIn) {
 
 		String sql = hr.get("CHECK_EXISTING_TIMEKEEPING").toString();
-		log.info("CHECK_EXISTING_TIMEKEEPING query: " + sql);
+		// log.info("CHECK_EXISTING_TIMEKEEPING query: " + sql);
 		Object[] params = new Object[] { employeeId, date, timeIn };
 
 		String existing = jdbcTmpl.queryForObject(sql, String.class, params);
@@ -131,7 +249,7 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	public int isEmployee(int id, String name) {
 
 		String sql = hr.get("IS_EMPLOYEE").toString();
-		log.info("IS_EMPLOYEE query: " + sql);
+		// log.info("IS_EMPLOYEE query: " + sql);
 		Object[] params = new Object[] { id, name };
 
 		int number = jdbcTmpl.queryForObject(sql, Integer.class, params);
@@ -140,7 +258,87 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	}
 
 	/**
-	 * Insert list Timekeeping into database
+	 * Insert list Timekeeping data into database
+	 * 
+	 * @param timekeepings
+	 */
+	public void insertDataWork(List<Timekeeping> timekeepings) throws Exception {
+		try {
+			log.info("Load thông tin chấm công từ file excel ....");
+			String sql = hr.getProperty("INSERT_TIMEKEEPING_DATA").toString();
+			log.info("INSERT_TIMEKEEPING_DATA query: " + sql);
+			// System.err.println(timekeepings.size());
+			for (int i = 0; i < timekeepings.size(); i++) {
+				Timekeeping timekeepingDTO = new Timekeeping();
+				timekeepingDTO = timekeepings.get(i);
+				String timekeepingExist = checkTimekeepingDataExisting(timekeepingDTO.getEmployeeId(),
+						timekeepingDTO.getDate(), timekeepingDTO.getTimeIn());
+				if (Integer.parseInt(timekeepingExist) > 0) {
+					log.info("The record for employeeId=" + timekeepingDTO.getEmployeeId() + ", date="
+							+ timekeepingDTO.getDate() + ", check in time=" + timekeepingDTO.getTimeIn()
+							+ " is existing, do not insert ...");
+					// updating cho truong hop da ton tai
+					// update(timekeepingDTO);
+				} else {
+					if (isEmployee(timekeepingDTO.getEmployeeId(), timekeepingDTO.getEmployeeName()) > 0) {
+						// log.info("insert Ma NV: " + timekeepingDTO.getEmployeeId() + "|"
+						// + timekeepingDTO.getEmployeeName() + "|" + timekeepingDTO.getDate() + "|"
+						// + timekeepingDTO.getTimeIn());
+						Object[] params = new Object[] { timekeepingDTO.getEmployeeId(),
+								timekeepingDTO.getEmployeeName(), timekeepingDTO.getDate(), timekeepingDTO.getTimeIn(),
+								timekeepingDTO.getTimeOut(), timekeepingDTO.getComment() };
+						jdbcTmpl.update(sql, params);
+					} else { // Gửi mail thông báo thông tin nhân viên từ máy chấm công không khớp
+						MimeMessage mimeMessage = mailSender.createMimeMessage();
+						MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+						String htmlMsg = "Thông tin mã và tên nhân viên từ máy chấm công không khớp với thông tin được tạo trên hệ thống phần mềm. <br/>\n "
+								+ "Ngày: " + timekeepingDTO.getDate() + " <br/>\n " + "Mã nhân viên: "
+								+ timekeepingDTO.getEmployeeId() + " <br/>\n " + "Tên nhân viên: "
+								+ timekeepingDTO.getEmployeeName() + "<br/> <br/> \n"
+								+ "Được inport bởi: (lấy từ phần phân quyền) <e-mail> lúc "
+								+ Calendar.getInstance().getTime();
+						mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
+						helper.setTo("idigroupbsc@gmail.com");
+						helper.setSubject("Cảnh báo: Thông tin nhân viên không khớp");
+						helper.setFrom("IDIHRNotReply");
+						mailSender.send(mimeMessage);
+					}
+						 
+				}
+			}
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	/**
+	 * Update a Time keeping work into database
+	 * 
+	 * @param timekeepings
+	 */
+	public void updateDataWork(Timekeeping timekeeping) throws Exception {
+		try {
+			// .info("Cập nhật thông tin chấm công phát sinh....");
+			try {
+				String sql = hr.getProperty("UPDATE_TIMEKEEPING_DATA").toString();
+				log.info("UPDATE_TIMEKEEPING_DATA query: " + sql);
+				Object[] params = new Object[] { timekeeping.getComment(), timekeeping.getEmployeeId(),
+						timekeeping.getDate(), timekeeping.getTimeIn() };
+				jdbcTmpl.update(sql, params);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			log.error(e, e);
+			throw e;
+		}
+	}
+
+	/**
+	 * Insert list Time keeping into database
 	 * 
 	 * @param timekeepings
 	 */
@@ -159,40 +357,41 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 					if (Integer.parseInt(timekeepingExist) > 0) {
 						log.info("The record for employeeId=" + timekeepingDTO.getEmployeeId() + ", date="
 								+ timekeepingDTO.getDate() + ", check in time=" + timekeepingDTO.getTimeIn()
-								+ " is existing, do not insert ...");
+								+ " is existing, going to update ...");
+						update(timekeepingDTO);
+						// updating cho truong hop da ton tai
 					} else {
+						System.err.println(timekeepingDTO.getEmployeeId() + "|" + timekeepingDTO.getEmployeeName());
 						if (isEmployee(timekeepingDTO.getEmployeeId(), timekeepingDTO.getEmployeeName()) > 0) {
 							log.info("insert Ma NV: " + timekeepingDTO.getEmployeeId() + "|"
 									+ timekeepingDTO.getEmployeeName() + "|" + timekeepingDTO.getDate() + "|"
 									+ timekeepingDTO.getTimeIn());
 							Object[] params = new Object[] { timekeepingDTO.getEmployeeId(), timekeepingDTO.getDate(),
-									timekeepingDTO.getTimeIn(), timekeepingDTO.getTimeOut(), timekeepingDTO.getWorkedTime(),
-									timekeepingDTO.getComeLateM(), timekeepingDTO.getLeaveSoonM(),
-									timekeepingDTO.getComeLateA(), timekeepingDTO.getLeaveSoonA() }; // ,
-																										// timekeepingDTO.getComment()
-																										// };
+									timekeepingDTO.getTimeIn(), timekeepingDTO.getTimeOut(),
+									timekeepingDTO.getWorkedTime(), timekeepingDTO.getComeLateM(),
+									timekeepingDTO.getLeaveSoonM(), timekeepingDTO.getComeLateA(),
+									timekeepingDTO.getLeaveSoonA(), timekeepingDTO.getComment()}; 
 							jdbcTmpl.update(sql, params);
-						} else {
-							// Gửi mail thông báo thông tin nhân viên từ máy chấm công không khớp
-							MimeMessage mimeMessage = mailSender.createMimeMessage();
-							MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-							String htmlMsg = "Thông tin mã và tên nhân viên từ máy chấm công không khớp với thông tin được tạo trên hệ thống phần mềm. <br/>\n "
-									+ "Ngày: " + timekeepingDTO.getDate() + " <br/>\n " + "Mã nhân viên: "
-									+ timekeepingDTO.getEmployeeId() + " <br/>\n " + "Tên nhân viên: "
-									+ timekeepingDTO.getEmployeeName() + "<br/> <br/> \n"
-									+ "Được inport bởi: (lấy từ phần phân quyền) <e-mail> lúc "
-									+ Calendar.getInstance().getTime();
-							mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
-							helper.setTo("idigroupbsc@gmail.com");
-							helper.setSubject("Cảnh báo: Thông tin nhân viên không khớp");
-							helper.setFrom("IDIHRNotReply");
-							mailSender.send(mimeMessage);
 						}
+						// comment tam de test tren local
+						/*
+						 * else { // Gửi mail thông báo thông tin nhân viên từ máy chấm công không khớp
+						 * MimeMessage mimeMessage = mailSender.createMimeMessage(); MimeMessageHelper
+						 * helper = new MimeMessageHelper(mimeMessage, true, "UTF-8"); String htmlMsg =
+						 * "Thông tin mã và tên nhân viên từ máy chấm công không khớp với thông tin được tạo trên hệ thống phần mềm. <br/>\n "
+						 * + "Ngày: " + timekeepingDTO.getDate() + " <br/>\n " + "Mã nhân viên: " +
+						 * timekeepingDTO.getEmployeeId() + " <br/>\n " + "Tên nhân viên: " +
+						 * timekeepingDTO.getEmployeeName() + "<br/> <br/> \n" +
+						 * "Được inport bởi: (lấy từ phần phân quyền) <e-mail> lúc " +
+						 * Calendar.getInstance().getTime(); mimeMessage.setContent(htmlMsg,
+						 * "text/html; charset=UTF-8"); helper.setTo("idigroupbsc@gmail.com");
+						 * helper.setSubject("Cảnh báo: Thông tin nhân viên không khớp");
+						 * helper.setFrom("IDIHRNotReply"); mailSender.send(mimeMessage); }
+						 */
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-
 			}
 		} catch (Exception e) {
 			log.error(e, e);
@@ -207,7 +406,7 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	 */
 	public void update(Timekeeping timekeeping) throws Exception {
 		try {
-			log.info("Cập nhật thông tin chấm công phát sinh....");
+			// .info("Cập nhật thông tin chấm công phát sinh....");
 			try {
 				String timekeepingExist = checkTimekeepingExisting(timekeeping.getEmployeeId(), timekeeping.getDate(),
 						timekeeping.getTimeIn());
@@ -222,27 +421,35 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 							timekeeping.getComment(), timekeeping.getEmployeeId(), timekeeping.getDate(),
 							timekeeping.getTimeIn() };
 					jdbcTmpl.update(sql, params);
-				} else {
-					log.info("insert Ma NV: " + timekeeping.getEmployeeId() + "|" + timekeeping.getDate() + "|"
-							+ timekeeping.getTimeIn());
-					String sql = hr.getProperty("INSERT_TIMEKEEPING").toString();
-					log.info("INSERT_TIMEKEEPING query: " + sql);
-					if (timekeeping.getTimeIn() == null) {
-						PropertiesManager hr = new PropertiesManager("hr.properties");
-						if (timekeeping.getComment().equalsIgnoreCase("Request leave soon morning")) {
-							timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_MORNING").toString());
-							System.err.println("Request leave soon morning " + timekeeping.getTimeIn());
-						} else if (timekeeping.getComment().equalsIgnoreCase("Request leave soon afternoon")) {
-							timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_AFTERNOON").toString());
-							System.err.println("Request leave soon afternoon " + timekeeping.getTimeIn());
-						}
-					}
-					Object[] params = new Object[] { timekeeping.getEmployeeId(), timekeeping.getDate(),
-							timekeeping.getTimeIn(), // tam thoi bo 26/2/2018
-							timekeeping.getTimeOut(), timekeeping.getComeLateM(), timekeeping.getLeaveSoonM(),
-							timekeeping.getComeLateA(), timekeeping.getLeaveSoonA(), timekeeping.getComment() };
-					jdbcTmpl.update(sql, params);
 				}
+				// else {
+				// log.info("insert Ma NV: " + timekeeping.getEmployeeId() + "|" +
+				// timekeeping.getDate() + "|"
+				// + timekeeping.getTimeIn());
+				// String sql = hr.getProperty("INSERT_TIMEKEEPING").toString();
+				// log.info("INSERT_TIMEKEEPING query: " + sql);
+				// if (timekeeping.getTimeIn() == null) {
+				// PropertiesManager hr = new PropertiesManager("hr.properties");
+				// if (timekeeping.getComment().equalsIgnoreCase("Request leave soon morning"))
+				// {
+				// timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_MORNING").toString());
+				// System.err.println("Request leave soon morning " + timekeeping.getTimeIn());
+				// } else if (timekeeping.getComment().equalsIgnoreCase("Request leave soon
+				// afternoon")) {
+				// timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_AFTERNOON").toString());
+				// System.err.println("Request leave soon afternoon " +
+				// timekeeping.getTimeIn());
+				// }
+				// }
+				// Object[] params = new Object[] { timekeeping.getEmployeeId(),
+				// timekeeping.getDate(),
+				// timekeeping.getTimeIn(), // tam thoi bo 26/2/2018
+				// timekeeping.getTimeOut(), timekeeping.getComeLateM(),
+				// timekeeping.getLeaveSoonM(),
+				// timekeeping.getComeLateA(), timekeeping.getLeaveSoonA(),
+				// timekeeping.getComment() };
+				// jdbcTmpl.update(sql, params);
+				// }
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -275,45 +482,45 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 			if (month != null && month.length() > 0) {
 				sql = sql.replaceAll("%MONTH%", " AND MONTH(T.DATE) = '" + month + "' ");
 				sql = sql.replaceAll("%MONTH1%", " AND MONTH(L.DATE) = '" + month + "' ");
-			}else {
+			} else {
 				sql = sql.replaceAll("%MONTH%", "");
 				sql = sql.replaceAll("%MONTH1%", "");
-			}	
+			}
 			if (employeeId > 0) {
-				sql = sql.replaceAll("%EMPLOYEE_ID%"," AND T.EMPLOYEE_ID = " + employeeId + " ");
-				sql = sql.replaceAll("%EMPLOYEE_ID1%"," AND L.EMPLOYEE_ID = " + employeeId + " ");
-			}else {
-				sql = sql.replaceAll("%EMPLOYEE_ID%","");
-				sql = sql.replaceAll("%EMPLOYEE_ID1%","");
+				sql = sql.replaceAll("%EMPLOYEE_ID%", " AND T.EMPLOYEE_ID = " + employeeId + " ");
+				sql = sql.replaceAll("%EMPLOYEE_ID1%", " AND L.EMPLOYEE_ID = " + employeeId + " ");
+			} else {
+				sql = sql.replaceAll("%EMPLOYEE_ID%", "");
+				sql = sql.replaceAll("%EMPLOYEE_ID1%", "");
 			}
 			log.info("GET_TIMEKEEPING_COME_LATE_FOR_REPORT query: " + sql);
-			
-		}else if (leaveType.equalsIgnoreCase("VS")) {
+
+		} else if (leaveType.equalsIgnoreCase("VS")) {
 			sql = sqlLS;
 			if (month != null && month.length() > 0) {
 				sql = sql.replaceAll("%MONTH%", " AND MONTH(T.DATE) = '" + month + "' ");
 				sql = sql.replaceAll("%MONTH1%", " AND MONTH(L.DATE) = '" + month + "' ");
-			}else {
+			} else {
 				sql = sql.replaceAll("%MONTH%", "");
 				sql = sql.replaceAll("%MONTH1%", "");
 			}
 			if (employeeId > 0) {
-				sql = sql.replaceAll("%EMPLOYEE_ID%"," AND T.EMPLOYEE_ID = " + employeeId + " ");
-				sql = sql.replaceAll("%EMPLOYEE_ID1%"," AND L.EMPLOYEE_ID = " + employeeId + " ");
-			}else {
-				sql = sql.replaceAll("%EMPLOYEE_ID%","");
-				sql = sql.replaceAll("%EMPLOYEE_ID1%","");
+				sql = sql.replaceAll("%EMPLOYEE_ID%", " AND T.EMPLOYEE_ID = " + employeeId + " ");
+				sql = sql.replaceAll("%EMPLOYEE_ID1%", " AND L.EMPLOYEE_ID = " + employeeId + " ");
+			} else {
+				sql = sql.replaceAll("%EMPLOYEE_ID%", "");
+				sql = sql.replaceAll("%EMPLOYEE_ID1%", "");
 			}
 			log.info("GET_TIMEKEEPING_LEAVE_SOON_FOR_REPORT query: " + sql);
-		}		
+		}
 
 		Object[] params = null;
-		
+
 		if (leaveType.equalsIgnoreCase("DM"))
-			params = new Object[] {year, maxTimeLate, maxTimeLate, year};
+			params = new Object[] { year, maxTimeLate, maxTimeLate, year };
 		else
-			params = new Object[] {year, year};
-		
+			params = new Object[] { year, year };
+
 		return jdbcTmpl.query(sql, params, new ResultSetExtractor<LeaveReport>() {
 			@Override
 			public LeaveReport extractData(ResultSet rs) throws SQLException, DataAccessException {
@@ -347,55 +554,56 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	 * @return
 	 * @throws Exception
 	 */
-	public String getTimekeepingReport(String year, String month, String employeeIds, String leaveType)	throws Exception {
+	public String getTimekeepingReport(String year, String month, String employeeIds, String leaveType)
+			throws Exception {
 		String countNumber = "";
 		String sqlCL = hr.getProperty("GET_TIMEKEEPING_COME_LATE_FOR_KPI").toString();
 		String sqlLS = hr.getProperty("GET_TIMEKEEPING_LEAVE_SOON_FOR_KPI").toString();
 		String maxTimeLate = hr.getProperty("COME_LATE_TIME_OVER").toString();
 		String sql = "";
-		if (leaveType.equalsIgnoreCase("DM")) {			
-			sql = sqlCL;			
-			
+		if (leaveType.equalsIgnoreCase("DM")) {
+			sql = sqlCL;
+
 			if (month != null && month.length() > 0) {
 				sql = sql.replaceAll("%MONTH%", " AND MONTH(T.DATE) = '" + month + "' ");
 				sql = sql.replaceAll("%MONTH1%", " AND MONTH(L.DATE) = '" + month + "' ");
-			}else {
+			} else {
 				sql = sql.replaceAll("%MONTH%", "");
 				sql = sql.replaceAll("%MONTH1%", "");
-			}	
+			}
 			if (employeeIds != null && employeeIds.length() > 0) {
-				sql = sql.replaceAll("%EMPLOYEE_ID%"," AND T.EMPLOYEE_ID IN (" + employeeIds + ")" );
-				sql = sql.replaceAll("%EMPLOYEE_ID1%"," AND L.EMPLOYEE_ID IN (" + employeeIds + ")" );
-			}else {
-				sql = sql.replaceAll("%EMPLOYEE_ID%","");
-				sql = sql.replaceAll("%EMPLOYEE_ID1%","");
-			}						
+				sql = sql.replaceAll("%EMPLOYEE_ID%", " AND T.EMPLOYEE_ID IN (" + employeeIds + ")");
+				sql = sql.replaceAll("%EMPLOYEE_ID1%", " AND L.EMPLOYEE_ID IN (" + employeeIds + ")");
+			} else {
+				sql = sql.replaceAll("%EMPLOYEE_ID%", "");
+				sql = sql.replaceAll("%EMPLOYEE_ID1%", "");
+			}
 
 			log.info("GET_TIMEKEEPING_COME_LATE_FOR_KPI query: " + sql);
-			
-		} else if (leaveType.equalsIgnoreCase("VS")) {			
+
+		} else if (leaveType.equalsIgnoreCase("VS")) {
 			sql = sqlLS;
-			
+
 			if (month != null && month.length() > 0) {
 				sql = sql.replaceAll("%MONTH%", " AND MONTH(T.DATE) = '" + month + "' ");
 				sql = sql.replaceAll("%MONTH1%", " AND MONTH(L.DATE) = '" + month + "' ");
-			}else {
+			} else {
 				sql = sql.replaceAll("%MONTH%", "");
 				sql = sql.replaceAll("%MONTH1%", "");
-			}	
+			}
 			if (employeeIds != null && employeeIds.length() > 0) {
-				sql = sql.replaceAll("%EMPLOYEE_ID%"," AND T.EMPLOYEE_ID IN (" + employeeIds + ")" );
-				sql = sql.replaceAll("%EMPLOYEE_ID1%"," AND L.EMPLOYEE_ID IN (" + employeeIds + ")" );
-			}else {
-				sql = sql.replaceAll("%EMPLOYEE_ID%","");
-				sql = sql.replaceAll("%EMPLOYEE_ID1%","");
-			}	
-			
+				sql = sql.replaceAll("%EMPLOYEE_ID%", " AND T.EMPLOYEE_ID IN (" + employeeIds + ")");
+				sql = sql.replaceAll("%EMPLOYEE_ID1%", " AND L.EMPLOYEE_ID IN (" + employeeIds + ")");
+			} else {
+				sql = sql.replaceAll("%EMPLOYEE_ID%", "");
+				sql = sql.replaceAll("%EMPLOYEE_ID1%", "");
+			}
+
 			log.info("GET_TIMEKEEPING_LEAVE_SOON_FOR_KPI query: " + sql);
 		}
 
 		Object[] params = null;
-		
+
 		if (leaveType.equalsIgnoreCase("DM"))
 			params = new Object[] { year, maxTimeLate, maxTimeLate, year };
 		else
@@ -408,8 +616,8 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	}
 
 	/**
-	 * Thong ke so lan di muon qua 60' tinh nghi ko phep nua ngay
-	 * Tru t/h di cong viec ben ngoai
+	 * Thong ke so lan di muon qua 60' tinh nghi ko phep nua ngay Tru t/h di cong
+	 * viec ben ngoai
 	 * 
 	 * @param year
 	 * @param month
@@ -425,17 +633,17 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 		if (month != null && month.length() > 0) {
 			sql = sql.replaceAll("%MONTH%", " AND MONTH(T.DATE) = '" + month + "' ");
 			sql = sql.replaceAll("%MONTH1%", " AND MONTH(L.DATE) = '" + month + "' ");
-		}else {
+		} else {
 			sql = sql.replaceAll("%MONTH%", "");
 			sql = sql.replaceAll("%MONTH1%", "");
 		}
 		if (employeeId > 0) {
-			sql = sql.replaceAll("%EMPLOYEE_ID%"," AND T.EMPLOYEE_ID = " + employeeId + " ");
-			sql = sql.replaceAll("%EMPLOYEE_ID1%"," AND L.EMPLOYEE_ID = " + employeeId + " ");
-		}else {
-			sql = sql.replaceAll("%EMPLOYEE_ID%","");
-			sql = sql.replaceAll("%EMPLOYEE_ID1%","");
-		}		
+			sql = sql.replaceAll("%EMPLOYEE_ID%", " AND T.EMPLOYEE_ID = " + employeeId + " ");
+			sql = sql.replaceAll("%EMPLOYEE_ID1%", " AND L.EMPLOYEE_ID = " + employeeId + " ");
+		} else {
+			sql = sql.replaceAll("%EMPLOYEE_ID%", "");
+			sql = sql.replaceAll("%EMPLOYEE_ID1%", "");
+		}
 
 		log.info("GET_COME_LATE_OVER_FOR_REPORT query: " + sql);
 
@@ -460,29 +668,29 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	 * @return
 	 * @throws Exception
 	 */
-/*	public int countComleLateOver(String year, String month, String employeeIds) throws Exception {
-		int countNumber = 0;
-		String sql = hr.getProperty("GET_COME_LATE_OVER_FOR_REPORT").toString();
-		String maxTimeLate = hr.getProperty("COME_LATE_TIME_OVER").toString();
-		if (month != null && month.length() > 0)
-			sql = sql + " AND MONTH(DATE) = '" + month + "' ";
-
-		if (employeeIds != null && employeeIds.length() > 0)
-			sql = sql + " AND EMPLOYEE_ID IN (" + employeeIds + ")";
-
-		log.info("GET_COME_LATE_OVER_FOR_REPORT query: " + sql);
-
-		Object[] params = new Object[] { year, maxTimeLate, maxTimeLate };
-
-		if (jdbcTmpl.queryForObject(sql, Integer.class, params) != null)
-			countNumber = jdbcTmpl.queryForObject(sql, Integer.class, params);
-		else
-			countNumber = 0;
-
-		System.err.println("month: " + month + ", year " + year + ", employeeIds: " + employeeIds + "|" + countNumber);
-
-		return countNumber;
-	}*/
+	/*
+	 * public int countComleLateOver(String year, String month, String employeeIds)
+	 * throws Exception { int countNumber = 0; String sql =
+	 * hr.getProperty("GET_COME_LATE_OVER_FOR_REPORT").toString(); String
+	 * maxTimeLate = hr.getProperty("COME_LATE_TIME_OVER").toString(); if (month !=
+	 * null && month.length() > 0) sql = sql + " AND MONTH(DATE) = '" + month +
+	 * "' ";
+	 * 
+	 * if (employeeIds != null && employeeIds.length() > 0) sql = sql +
+	 * " AND EMPLOYEE_ID IN (" + employeeIds + ")";
+	 * 
+	 * log.info("GET_COME_LATE_OVER_FOR_REPORT query: " + sql);
+	 * 
+	 * Object[] params = new Object[] { year, maxTimeLate, maxTimeLate };
+	 * 
+	 * if (jdbcTmpl.queryForObject(sql, Integer.class, params) != null) countNumber
+	 * = jdbcTmpl.queryForObject(sql, Integer.class, params); else countNumber = 0;
+	 * 
+	 * System.err.println("month: " + month + ", year " + year + ", employeeIds: " +
+	 * employeeIds + "|" + countNumber);
+	 * 
+	 * return countNumber; }
+	 */
 
 	/**
 	 * get half worked day

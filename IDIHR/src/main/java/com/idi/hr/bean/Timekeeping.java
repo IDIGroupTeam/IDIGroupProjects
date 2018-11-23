@@ -52,6 +52,19 @@ public class Timekeeping implements Serializable {
 		this.leaveSoonA = leaveSoonA;
 
 	}
+	
+	public Timekeeping(int employeeId, String employeeName, Date date, String department, String title, String timeIn, String timeOut, String comment) {
+
+		this.employeeId = employeeId;
+		this.employeeName = employeeName;
+		this.date = date;
+		this.department= department;
+		this.title = title;
+		this.timeIn = timeIn;		
+		this.timeOut = timeOut;
+		this.comment = comment;	
+
+	}
 
 	public String getTimeIn() {
 		return timeIn;

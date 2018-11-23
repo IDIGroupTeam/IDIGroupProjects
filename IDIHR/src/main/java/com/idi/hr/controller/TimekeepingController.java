@@ -85,7 +85,7 @@ public class TimekeepingController {
 	ExcelProcessor xp = new ExcelProcessor();
 
 	PropertiesManager properties = new PropertiesManager("hr.properties");
-	
+
 	@InitBinder
 	protected void initBinder(WebDataBinder dataBinder) {
 
@@ -101,15 +101,14 @@ public class TimekeepingController {
 
 	@RequestMapping(value = "/timekeeping/updateData", method = RequestMethod.POST)
 	public String updateData(Model model, @RequestParam("timeKeepingFile") MultipartFile timeKeepingFile,
-			LeaveInfoForm leaveInfoForm) {
+			LeaveInfoForm leaveInfoForm) throws Exception {
 		// System.err.println("import excel file");
 		// System.err.println(timeKeepingFile.getName());
-		Timekeeping timekeeping = new Timekeeping();
-		model.addAttribute("timekeepingForm", timekeeping);
+
 		model.addAttribute("leaveInfoForm", leaveInfoForm);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
-		
+
 		String currentDate = dateFormat.format(date);
 		// get list department
 		Map<String, String> departmentMap = this.dataForDepartments();
@@ -119,17 +118,379 @@ public class TimekeepingController {
 		model.addAttribute("employeeMap", employeeMap);
 
 		model.addAttribute("departmentMap", departmentMap);
-		
+
 		if (timeKeepingFile != null && timeKeepingFile.getSize() > 0) {
 			log.info(timeKeepingFile.getOriginalFilename() + " - " + timeKeepingFile.getSize());
-			try {
+			try {				
+				// delete old timekeepingData first
+				timekeepingDAO.deleteTimekeepingsData();
+
 				// Read & insert time keeping data
 				List<Timekeeping> timekeepings = xp.loadTimekeepingDataFromExcel(timeKeepingFile.getInputStream());
-				timekeepingDAO.insert(timekeepings);
+				timekeepingDAO.insertDataWork(timekeepings);
 
-				List<Timekeeping> list = timekeepingDAO.getTimekeepings(currentDate, null, null, null);
+				// ------- Xu ly du lieu
+				for (int i = 0; i < timekeepings.size(); i++) {
+					Timekeeping timekeeping = new Timekeeping();
+					Timekeeping timekeepingData = new Timekeeping();
+					timekeepingData = timekeepings.get(i);
+					List<Timekeeping> timekeepingsData = timekeepingDAO
+							.getTimekeepingData(timekeepingData.getEmployeeId(), timekeepingData.getDate());
+					List<Timekeeping> timekeepingsDataTemp = new ArrayList<Timekeeping>();
+					// voi nhung truong hop cham cong > 4 lan mot ngay
+					// check giờ ra vào de can cu tinh thoi gian thich hop nhất
+					// boolean ran = false;
+					if (timekeepingsData.size() > 2) { 
+						Timekeeping timekeepingM = new Timekeeping();// cho buoi sang
+						Timekeeping timekeepingA = new Timekeeping();// cho buoi chieu
+						//String timeIn0 = timekeepingsData.get(0).getTimeIn();
+						//String timeOut0 = timekeepingsData.get(0).getTimeOut();
+						String timeIn1 = timekeepingsData.get(1).getTimeIn();
+						String outMorning = timeIn1;
+						String timeOut1 = timekeepingsData.get(1).getTimeOut();
+						String inAfternoon = timeOut1;
+						//String timeIn2 = timekeepingsData.get(2).getTimeIn();
+						//String timeOut2 = timekeepingsData.get(2).getTimeOut();
+						//System.err.println("0: " + timeIn0 + "|" + timeOut0);
+						//System.err.println("1: " + timeIn1 + "|" + timeOut1);
+						//System.err.println("2: " + timeIn2 + "|" + timeOut2);
+						// for(int j = 0; j < timekeepingsData.size(); j++) {
+						timekeepingM = timekeepingsData.get(0);
+						if (timekeepingsData.get(timekeepingsData.size() - 1).getTimeOut() == null) {
+							timekeepingA = timekeepingsData.get(timekeepingsData.size() - 2);
+							timekeepingA.setTimeOut(timekeepingsData.get(timekeepingsData.size() - 1).getTimeIn());
+						} else {
+							//System.err.println("check 6 lan");
+							String timeInTemp = timeIn1.replaceAll(":", ".");
+							if(Double.parseDouble(timeInTemp) > Double.parseDouble(properties.getProperty("TIME_CHECK_OUT_MORNING_H") + "." + properties.getProperty("TIME_CHECK_OUT_MORNING_M"))
+									&& Double.parseDouble(timeInTemp) < Double.parseDouble(properties.getProperty("TIME_CHECK_IN_AFTERNOON_H") + "." + properties.getProperty("TIME_CHECK_IN_AFTERNOON_M"))){
+								timekeepingA = timekeepingsData.get(timekeepingsData.size() - 1);
+							}else {
+								timekeepingA = timekeepingsData.get(timekeepingsData.size() - 2);
+								timekeepingA.setTimeOut(timekeepingsData.get(timekeepingsData.size() - 1).getTimeOut());
+							}									
+						}
+						//System.err.println("Sang xly gio ra: " + timekeepingM.getTimeIn() + "|" + timekeepingM.getTimeOut());
+						//System.err.println("Chieu xly gio ra chieu: " + timekeepingA.getTimeIn() + "|" + timekeepingA.getTimeOut());
+						
+						// check neu gio ra buoi sang la som
+						String timeOutM = timekeepingM.getTimeOut();
+						timeOutM = timeOutM.replaceAll(":", ".");
+						// neu gio vao lan 2 nam trong khoang thoi gian sau gio nghi trua va truoc gio
+						// lam chieu
+						// thi thay cho gio ra sang. Cong voi gio ra lan 2 cung van nam trong khoang toi
+						// gian do
+						if (Double.parseDouble(timeOutM) < Double.parseDouble(properties.getProperty("TIME_CHECK_OUT_MORNING_H") + "." + properties.getProperty("TIME_CHECK_OUT_MORNING_M"))) {
+							//System.err.println("ve som sang" + timekeepingM.getTimeOut());
+
+							timeOut1 = timeOut1.replaceAll(":", ".");
+							timeIn1 = timeIn1.replaceAll(":", ".");
+							if (Double.parseDouble(timeIn1) < Double.parseDouble(properties.getProperty("TIME_CHECK_IN_AFTERNOON_H") + "." + properties.getProperty("TIME_CHECK_IN_AFTERNOON_M"))) {
+								if (Double.parseDouble(timeOut1) < Double.parseDouble(properties.getProperty("TIME_CHECK_IN_AFTERNOON_H") + "."	+ properties.getProperty("TIME_CHECK_IN_AFTERNOON_M"))) {
+									
+									//System.err.println(" thay cho = ve sang som " + timeOutM);
+									//System.err.println(" thay cho = gio vao chieu " + timeIn1);
+									
+									timekeepingM.setTimeOut(outMorning);
+									//set gio ra lan 2 am gio vao chieu
+									timekeepingA.setTimeIn(inAfternoon);
+									//System.err.println(" thay cho = ve sang som " + timeIn1);
+									//System.err.println(" thay cho = gio vao chieu " + timeOut1);
+									
+									//System.err.println("Sang s xl: " + timekeepingM.getTimeIn() + "|" + outMorning);
+									//System.err.println("Chieu s xl: " +  inAfternoon + "|" + timekeepingA.getTimeOut());
+								}
+								
+							} /*else {
+								//ko thoa man dk de xuly tiep
+							}
+						} else {*/
+							//ko muon sang
+							/* timeOut1 = timeOut1.replaceAll(":", ".");
+							if (Double.parseDouble(timeOut1) < Double
+											.parseDouble(properties.getProperty("TIME_CHECK_IN_AFTERNOON_H") + "."
+													+ properties.getProperty("TIME_CHECK_IN_AFTERNOON_M"))) {
+								//thay cho sat gio vao chieu hon (cung ko can thiet)
+								timeOut1 = timeOut1.replaceAll(".", ":");
+								timekeepingA.setTimeIn(timeOut1);
+							}*/
+							// check in lan 2 van truoc gio nghi trua
+							// check out lan 2 van truoc gio lam chieu
+						}						
+						
+						// check xem neu co time in / time out trong khoang giua cua gio nghi trua va
+						// gio lam chieu lam gio ra sang
+						// check xem neu co time in / time out > gio ra sang và trong khoang giua cua
+						// gio lam chieu va ket thuc lam chieu la, gio vao chieu
+						// lấy lần check vân tay cuoi cùng là giờ ra cuối ngày
+						
+						//xoa du lieu cham cong ko chinh sac so lan
+						timekeepingDAO.deleteTimekeepingData(timekeepingData.getEmployeeId(), timekeepingData.getDate());
+						//insert du lieu da xu ly
+						timekeepingM.setComment("Chấm công quá số lần quy định, hệ thống đã tự xử lý dữ liệu");
+						timekeepingA.setComment("Chấm công quá số lần quy định, hệ thống đã tự xử lý dữ liệu");
+						timekeepingsDataTemp.add(timekeepingM);
+						timekeepingsDataTemp.add(timekeepingA);
+						timekeepingDAO.insertDataWork(timekeepingsDataTemp);
+					} else if(timekeepingsData.size() == 1 ){
+						//chi cham cong 1 lan vao, 1 lan ra 1 ngay
+						// Một ngày chỉ có 2 lần vào ra
+						// 1 -> không chấm công chiều/sáng/ - chi lv ở vp nửa ngày - ct/nghỉ/cvbn... nửa
+						// ngày
+						// 2 -> chấm công thiếu chi chấm đầu giờ sáng & cuối giờ chiều
+				
+						if(timekeepingsData.get(0).getTimeOut() == null) {
+							//System.out.println("chi cham cong 1 lan vao trong ngay");
+							timekeepingData.setComment("Chỉ chấm công 1/4 lần một ngày. Có thể nghỉ/công tác/công việc bên ngoài ... ");
+						}else {
+							timekeeping.setTimeOut(timekeepingData.getTimeOut());
+							//System.out.println("chi cham cong 1 lan vao, 1 lan ra /ngay");
+							timekeepingData.setComment("Chỉ chấm công 2/4 lần một ngày. Có thể nghỉ/công tác/công việc bên ngoài ... nửa ngày ...");
+						}					    
+						timekeepingDAO.updateDataWork(timekeepingData);
+					} else if(timekeepingsData.size() == 2 ){
+						// ko check out: cham cong 3 lan 1 ngay
+						// Chấm công 3 lần 1 ngày --> gio ra = null --> bo qua check di muon neu gio vao > gio ra quy dinh
+						// 1 -> ko chấm công 1 lần
+						// 2 -> Nghỉ/ct/cvbn, ...
+						String timeI = timekeepingsData.get(0).getTimeIn();
+						timeI = timeI.replaceAll(":", ".");						
+						if(timekeepingsData.get(1).getTimeOut() == null) {
+							if(Double.parseDouble(timeI) >=  Double.parseDouble(properties.getProperty("TIME_CHECK_OUT_MORNING_H") + "." + properties.getProperty("TIME_CHECK_OUT_MORNING_M"))) {
+								timekeeping.setEmployeeId(timekeepingData.getEmployeeId());
+								timekeeping.setEmployeeName(timekeepingData.getEmployeeName());
+								timekeeping.setDate(timekeepingData.getDate());
+								timekeeping.setTimeIn(timekeepingsData.get(0).getTimeIn());
+								timekeeping.setTimeOut(timekeepingsData.get(1).getTimeIn());
+								timekeeping.setComment("Không check vân tay đúng/đủ số lần quy định, 3/4 lần 1 ngày. Hệ thống đã kiểm tra và xử lý vì thấy chỉ chấm công/làm việc buổi chiều");
+								timekeepingsDataTemp.add(timekeeping);
+								timekeepingDAO.deleteTimekeepingData(timekeepingData.getEmployeeId(), timekeepingData.getDate());
+								timekeepingDAO.insertDataWork(timekeepingsDataTemp);								
+							}else {	
+								//System.err.println("ko check out");
+								timekeeping.setComment("Không check vân tay đúng/đủ số lần quy định, 3/4 lần 1 ngày");
+								timekeepingDAO.updateDataWork(timekeeping);
+							}
+						}								
+					}
+				}		
+				
+				// Xu ly du lieu inh thoi gian di muon, ve som, thoi gian lv
+				List<Timekeeping> listData = timekeepingDAO.getTimekeepingsData();
+				List<Timekeeping> listDataProcessed = new ArrayList<Timekeeping>();
+				for(int x = 0; x < listData.size(); x++) {
+					Timekeeping timekeepingData = new Timekeeping();
+					Timekeeping timekeeping = new Timekeeping();
+					timekeepingData = listData.get(x);					
+					StringTokenizer st = new StringTokenizer(timekeepingData.getTimeIn(), ":");
+					
+					timekeeping.setEmployeeId(timekeepingData.getEmployeeId());
+					timekeeping.setEmployeeName(timekeepingData.getEmployeeName());
+					timekeeping.setDate(timekeepingData.getDate());
+					timekeeping.setDepartment(timekeepingData.getDepartment());
+					timekeeping.setTitle(timekeepingData.getTitle());					
+					timekeeping.setTimeIn(timekeepingData.getTimeIn());
+					timekeeping.setTimeOut(timekeepingData.getTimeOut());
+					timekeeping.setComment(timekeepingData.getComment());
+					
+					int h = 0;
+					int m = 0;
+					while (st.hasMoreElements()) {
+						h = Integer.parseInt(st.nextToken());// System.out.println(h);
+						m = Integer.parseInt(st.nextToken());// System.out.println(s);
+					}
+
+					// check in late at morning
+					int lateMValue = 0;
+					int hRequireM = Integer.parseInt(properties.getProperty("TIME_CHECK_IN_MORNING_H"));
+					int mRequireM = Integer.parseInt(properties.getProperty("TIME_CHECK_IN_MORNING_M"));
+					if ((h > hRequireM && h < Integer.parseInt(properties.getProperty("TIME_CHECK_OUT_MORNING_H")))
+							|| (h > hRequireM
+									&& h == Integer.parseInt(properties.getProperty("TIME_CHECK_OUT_MORNING_H"))
+									&& m < Integer.parseInt(properties.getProperty("TIME_CHECK_OUT_MORNING_M")))) {
+
+						lateMValue = (h - hRequireM);
+						if (m >= mRequireM)
+							timekeeping.setComeLateM(String.valueOf(lateMValue * 60 + (m - mRequireM)));
+						else
+							timekeeping.setComeLateM(String.valueOf((lateMValue - 1) * 60 + ((60 - mRequireM) + m)));
+						// timekeeping.setComeLateM("0" + lateMValue + ":" + s);
+					} else if (h == Integer.parseInt(properties.getProperty("TIME_CHECK_IN_MORNING_H"))
+							&& m > mRequireM) {
+						// System.err.println("Muon sang: " + 0 + ":" + m);
+						timekeeping.setComeLateM(String.valueOf(m - mRequireM));
+					}
+
+					// check in late at afternoon
+					int lateAValue = 0;
+					int hRequireA = Integer.parseInt(properties.getProperty("TIME_CHECK_IN_AFTERNOON_H"));
+					int mRequireA = Integer.parseInt(properties.getProperty("TIME_CHECK_IN_AFTERNOON_M"));
+
+					// can nhac care them dam bao ko tinh di muon cho t/h check in sau gio ve, vi se
+					// tinh la nghi ko phep buoi chieu
+					if (h > hRequireA && (h < Integer.parseInt(properties.getProperty("TIME_CHECK_OUT_AFTERNOON_H"))
+							|| (h == Integer.parseInt(properties.getProperty("TIME_CHECK_OUT_AFTERNOON_H"))
+									&& m < Integer
+											.parseInt(properties.getProperty("TIME_CHECK_OUT_AFTERNOON_M"))))) {
+						lateAValue = h - hRequireA;
+						// System.err.println("Muon chieu: " + lateAValue + ":" + m);
+						// System.err.println(String.valueOf(lateAValue*60 + m));
+						if (m >= mRequireA) {
+							timekeeping.setComeLateA(String.valueOf(lateAValue * 60 + (m - mRequireA)));
+						} else {
+							timekeeping.setComeLateA(String.valueOf((lateAValue - 1) * 60 + (60 - mRequireA) + m));
+						}
+					} else if (h == hRequireA
+							&& m > Integer.parseInt(properties.getProperty("TIME_CHECK_IN_AFTERNOON_M"))) {
+						// System.err.println("Muon chieu: " + 0 + ":" + m);
+						timekeeping.setComeLateA(String.valueOf(
+								m - Integer.parseInt(properties.getProperty("TIME_CHECK_IN_AFTERNOON_M"))));
+					}
+					
+					// giờ ra
+					if (timekeepingData.getTimeOut() != null && timekeepingData.getTimeOut().length() > 0) {
+						//System.err.println(timekeepingData.getTimeOut());
+						//timekeeping.setTimeOut(timekeepingData.getTimeOut());
+						StringTokenizer sto = new StringTokenizer(timekeepingData.getTimeOut(), ":");
+						String ho = "0";
+						String mo = "0";
+						while (sto.hasMoreElements()) {
+							ho = sto.nextToken();// System.out.println(h);
+							mo = sto.nextToken();// System.out.println(s);
+						}
+
+						// check out soon morning
+						int soonMValue = 0;
+						if (Integer.parseInt(ho) < Integer
+								.parseInt(properties.getProperty("TIME_CHECK_OUT_MORNING_H"))) {
+							soonMValue = Integer.parseInt(properties.getProperty("TIME_CHECK_OUT_MORNING_H"))
+									- (Integer.parseInt(ho));
+							if (Integer.parseInt(mo) <= Integer
+									.parseInt(properties.getProperty("TIME_CHECK_OUT_MORNING_M"))) {
+								timekeeping.setLeaveSoonM(String.valueOf((soonMValue * 60 + Integer.parseInt(mo))));
+							} else {
+								timekeeping.setLeaveSoonM(
+										String.valueOf(((soonMValue - 1) * 60 + ((60 - Integer.parseInt(mo)) + Integer
+												.parseInt(properties.getProperty("TIME_CHECK_OUT_MORNING_M"))))));
+							}
+						} else if (Integer.parseInt(ho) == Integer
+								.parseInt(properties.getProperty("TIME_CHECK_OUT_MORNING_H"))
+								&& Integer.parseInt(mo) < Integer
+										.parseInt(properties.getProperty("TIME_CHECK_OUT_MORNING_M"))) {
+							timekeeping.setLeaveSoonM(
+									String.valueOf(Integer.parseInt(properties.getProperty("TIME_CHECK_OUT_MORNING_M"))
+											- Integer.parseInt(mo)));
+						}
+
+						// check out soon afternoon
+						int soonAValue = 0;
+						// check time in > time out morning
+						// if(timekeeping.getTimeIn()) {
+						// }
+						if (timekeepingData.getTimeIn() != null && timekeepingData.getTimeOut() != null) {
+							// System.err.println("thoi gian lv: " + timekeeping.getTimeIn() + "|" +
+							// timekeeping.getTimeOut());
+							StringTokenizer sti = new StringTokenizer(timekeepingData.getTimeIn(), ":");
+							int hi = 0;
+							int mi = 0;
+							while (sti.hasMoreElements()) {
+								hi = Integer.valueOf(sti.nextToken());// System.out.println(h);
+								mi = Integer.valueOf(sti.nextToken());// System.out.println(s);
+							}
+							if (hi > Integer.parseInt(properties.getProperty("TIME_CHECK_OUT_MORNING_H"))
+									|| (hi == Integer.parseInt(properties.getProperty("TIME_CHECK_OUT_MORNING_H"))
+											&& mi > Integer
+													.parseInt(properties.getProperty("TIME_CHECK_OUT_MORNING_M")))) {
+								if ((Integer.parseInt(ho) > Integer
+										.parseInt(properties.getProperty("TIME_CHECK_IN_AFTERNOON_H"))
+										|| (Integer.parseInt(ho) == Integer
+												.parseInt(properties.getProperty("TIME_CHECK_IN_AFTERNOON_H")))
+												&& Integer.parseInt(mo) > Integer
+														.parseInt(properties.getProperty("TIME_CHECK_IN_AFTERNOON_M")))
+										&& (Integer.parseInt(ho) < Integer
+												.parseInt(properties.getProperty("TIME_CHECK_OUT_AFTERNOON_H"))
+												|| (Integer.parseInt(ho) == Integer
+														.parseInt(properties.getProperty("TIME_CHECK_OUT_AFTERNOON_H"))
+														&& (Integer.parseInt(mo) < Integer.parseInt(properties
+																.getProperty("TIME_CHECK_OUT_AFTERNOON_M")))))) {
+
+									if (Integer.parseInt(ho) < Integer
+											.parseInt(properties.getProperty("TIME_CHECK_OUT_AFTERNOON_H"))) {
+										soonAValue = Integer
+												.parseInt(properties.getProperty("TIME_CHECK_OUT_AFTERNOON_H"))
+												- (Integer.parseInt(ho));
+										if (Integer.parseInt(mo) >= Integer
+												.parseInt(properties.getProperty("TIME_CHECK_OUT_AFTERNOON_M"))) {
+											timekeeping.setLeaveSoonA(String.valueOf((soonAValue - 1) * 60
+													+ ((60 - Integer.parseInt(mo)) + Integer.parseInt(
+															properties.getProperty("TIME_CHECK_OUT_AFTERNOON_M")))));
+										} else {
+											timekeeping.setLeaveSoonA(String.valueOf((soonAValue) * 60 + (Integer
+													.parseInt(properties.getProperty("TIME_CHECK_OUT_AFTERNOON_M"))
+													- Integer.parseInt(mo))));
+										}
+									} else if (Integer.parseInt(ho) == Integer
+											.parseInt(properties.getProperty("TIME_CHECK_OUT_AFTERNOON_H"))
+											&& Integer.parseInt(mo) < Integer
+													.parseInt(properties.getProperty("TIME_CHECK_OUT_AFTERNOON_M"))) {
+										timekeeping.setLeaveSoonA(String.valueOf(
+												Integer.parseInt(properties.getProperty("TIME_CHECK_OUT_AFTERNOON_M"))
+														- Integer.parseInt(mo)));
+									}
+								}
+							}
+						}
+					}
+				
+					// tinh thoi gian lv/ o trong vp
+					if (timekeepingData.getTimeIn() != null && timekeepingData.getTimeOut() != null) {
+						// System.err.println("thoi gian lv: " + timekeeping.getTimeIn() + "|" +
+						// timekeeping.getTimeOut());
+						StringTokenizer sti = new StringTokenizer(timekeepingData.getTimeIn(), ":");
+						int hi = 0;
+						int mi = 0;
+						while (sti.hasMoreElements()) {
+							hi = Integer.valueOf(sti.nextToken());// System.out.println(h);
+							mi = Integer.valueOf(sti.nextToken());// System.out.println(s);
+						}
+						// System.err.println("thoi gian lv: " + hi + "|" + mi);
+						StringTokenizer sto = new StringTokenizer(timekeepingData.getTimeOut(), ":");
+						int ho = 0;
+						int mo = 0;
+						while (sto.hasMoreElements()) {
+							ho = Integer.valueOf(sto.nextToken());// System.out.println(h);
+							mo = Integer.valueOf(sto.nextToken());// System.out.println(s);
+						}
+						//System.err.println("thoi gian lv: " + ho + "|" + mo);
+						int totalHours = ho - hi;
+						int totalMins;
+						if (mo >= mi)
+							totalMins = mo - mi;
+						else {
+							totalHours = totalHours - 1;
+							totalMins = (60 - mi) + mo;
+						}
+		
+						String totalTime;
+						if (totalMins < 10)
+							totalTime = totalHours + ":0" + totalMins;
+						else
+							totalTime = totalHours + ":" + totalMins;
+						//System.err.println("totalTime: " + totalTime);
+						timekeeping.setWorkedTime(totalTime);
+					}
+					listDataProcessed.add(timekeeping);
+				}
+				
+				//insert/update ...
+				timekeepingDAO.insert(listDataProcessed);
+				
+				List<Timekeeping> list = listDataProcessed;//timekeepingDAO.getTimekeepings(currentDate, currentDate, null, null);
+				List<LeaveInfo> listL = leaveDAO.getLeaves(currentDate, currentDate, null, null);
+				if (list.size() == 0 && listL.size() == 0)
+					model.addAttribute("message", "Không có dữ liệu chấm công ngày " + currentDate);
 				model.addAttribute("timekeepings", list);
-				model.addAttribute("formTitle", "Dữ liệu chấm công ngày " + currentDate);
+				model.addAttribute("leaveInfos", listL);
 
 				return "formTimekeeping";
 			} catch (Exception e) {
@@ -243,7 +604,7 @@ public class TimekeepingController {
 			model.addAttribute("leaveInfos", listL);
 			model.addAttribute("timekeepingForm", timekeeping);
 			model.addAttribute("leaveInfoForm", leaveInfoForm);
-			
+
 			if (leaveInfoForm.getDate() != null)
 				model.addAttribute("formTitle", "Dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate);
 			else
@@ -271,7 +632,7 @@ public class TimekeepingController {
 			leaveInfoForm.setToDate(toDate);
 			leaveInfoForm.setDept(dept);
 			leaveInfoForm.seteId(eId);
-			
+
 			// System.err.println(fromDate + "|" + toDate + "|" + dept + "|" + eId);
 			if (fromDate != null && toDate != null) {
 				if (fromDate != null && toDate.equalsIgnoreCase("viewDetail")) {
@@ -299,34 +660,35 @@ public class TimekeepingController {
 				listL = leaveDAO.getLeaves(currentDate, null, null, null);
 				if (list.size() == 0 && listL.size() == 0)
 					model.addAttribute("message", "Không có dữ liệu chấm công cho ngày " + currentDate);
-			}			
-			
+			}
+
 			String path = properties.getProperty("REPORT_PATH");
 			File dir = new File(path);
 			XSSFWorkbook workbook = new XSSFWorkbook();
 			XSSFSheet sheet = workbook.createSheet("Dữ liệu chấm công");
-	
+
 			CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
 			Font font = sheet.getWorkbook().createFont();
 			font.setBold(true);
 			font.setFontHeightInPoints((short) 12);
 			cellStyle.setFont(font);
-	
+
 			Row row1 = sheet.createRow(0);
 			Cell cell = row1.createCell(3);
 
 			if (dept != null && dept.length() > 0) {
 				if (fromDate != null) {
 					cell.setCellStyle(cellStyle);
-					cell.setCellValue("Dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate + " của phòng " + dept);
+					cell.setCellValue(
+							"Dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate + " của phòng " + dept);
 				}
-			}else {
+			} else {
 				if (fromDate != null) {
 					cell.setCellStyle(cellStyle);
 					cell.setCellValue("Dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate);
 				}
 			}
-			
+
 			int rowNum = 2;
 			Row row2 = sheet.createRow(rowNum);
 			Cell cell0 = row2.createCell(0);
@@ -337,7 +699,7 @@ public class TimekeepingController {
 			cellStyle1.setFont(font1);
 			cell0.setCellStyle(cellStyle1);
 			cell0.setCellValue("Dữ liệu chấm công phát sinh");
-			
+
 			// Generate column name
 			rowNum = 3;
 			Row row = sheet.createRow(rowNum);
@@ -357,7 +719,7 @@ public class TimekeepingController {
 			cell71.setCellValue("Số giờ/số lần");
 			Cell cell81 = row.createCell(7);
 			cell81.setCellValue("Ghi chú");
-	
+
 			// generate values
 			rowNum = 4;
 			for (int i = 0; i < listL.size(); i++) {
@@ -382,13 +744,13 @@ public class TimekeepingController {
 				Cell cell8 = row.createCell(colNum++);
 				cell8.setCellValue((String) leaveInfo.getComment());
 			}
-	
-			rowNum = 4 + listL.size() + 1;			
+
+			rowNum = 4 + listL.size() + 1;
 			Row rowM = sheet.createRow(rowNum);
 			Cell cellM = rowM.createCell(0);
 			cellM.setCellStyle(cellStyle1);
-			cellM.setCellValue("Dữ liệu từ máy chấm công");			
-			
+			cellM.setCellValue("Dữ liệu từ máy chấm công");
+
 			// Generate column name
 			rowNum = 4 + listL.size() + 2;
 			rowM = sheet.createRow(rowNum);
@@ -407,18 +769,18 @@ public class TimekeepingController {
 			Cell cell72 = rowM.createCell(6);
 			cell72.setCellValue("Giờ ra");
 			Cell cell82 = rowM.createCell(7);
-			cell82.setCellValue("Tổng thời gian");		
+			cell82.setCellValue("Tổng thời gian");
 			Cell cell92 = rowM.createCell(8);
-			cell92.setCellValue("Đi muộn sáng");		
+			cell92.setCellValue("Đi muộn sáng");
 			Cell cell102 = rowM.createCell(9);
-			cell102.setCellValue("Đi muộn chiều");		
+			cell102.setCellValue("Đi muộn chiều");
 			Cell cell112 = rowM.createCell(10);
-			cell112.setCellValue("Về sớm sáng");		
+			cell112.setCellValue("Về sớm sáng");
 			Cell cell122 = rowM.createCell(11);
-			cell122.setCellValue("Về sớm chiều");		
+			cell122.setCellValue("Về sớm chiều");
 			Cell cell132 = rowM.createCell(12);
 			cell132.setCellValue("Ghi chú");
-			
+
 			// generate values
 			rowNum = 4 + listL.size() + 3;
 			for (int i = 0; i < list.size(); i++) {
@@ -443,72 +805,75 @@ public class TimekeepingController {
 				Cell cell8 = row.createCell(colNum++);
 				cell8.setCellValue((String) timekeeping.getWorkedTime());
 				Cell cell9 = row.createCell(colNum++);
-				if(timekeeping.getComeLateM() != null)
+				if (timekeeping.getComeLateM() != null)
 					cell9.setCellValue(timekeeping.getComeLateM() + " phút");
 				else
 					cell9.setCellValue(timekeeping.getComeLateM());
 				Cell cell10 = row.createCell(colNum++);
-				if(timekeeping.getComeLateA() != null)
+				if (timekeeping.getComeLateA() != null)
 					cell10.setCellValue(timekeeping.getComeLateA() + " phút");
 				else
 					cell10.setCellValue(timekeeping.getComeLateA());
 				Cell cell01 = row.createCell(colNum++);
-				if(timekeeping.getLeaveSoonM() != null)
+				if (timekeeping.getLeaveSoonM() != null)
 					cell01.setCellValue(timekeeping.getLeaveSoonM() + " phút");
 				else
 					cell01.setCellValue(timekeeping.getLeaveSoonM());
 				Cell cell02 = row.createCell(colNum++);
-				if(timekeeping.getLeaveSoonA() != null)
-				 cell02.setCellValue(timekeeping.getLeaveSoonA() + " phút");
+				if (timekeeping.getLeaveSoonA() != null)
+					cell02.setCellValue(timekeeping.getLeaveSoonA() + " phút");
 				else
 					cell02.setCellValue(timekeeping.getLeaveSoonA());
 				Cell cell03 = row.createCell(colNum++);
 				cell03.setCellValue((String) timekeeping.getComment());
 			}
-			
+
 			try {
 				if (!dir.exists()) {
 					dir.mkdirs();
 				}
-				FileOutputStream outputStream = new FileOutputStream(
-						dir + "/" + "/Dữ liệu chấm công từ ngày "+ fromDate + " đến ngày " + toDate + "_" + currentDate + ".xlsx");
+				FileOutputStream outputStream = new FileOutputStream(dir + "/" + "/Dữ liệu chấm công từ ngày "
+						+ fromDate + " đến ngày " + toDate + "_" + currentDate + ".xlsx");
 				workbook.write(outputStream);
 				workbook.close();
-				model.addAttribute("message", "Dữ liệu chấm công được export thành công ra file "+ dir + ":Dữ liệu chấm công từ ngày "+ fromDate + " đến ngày " + toDate + "_" + currentDate + ".xlsx");
+				model.addAttribute("message",
+						"Dữ liệu chấm công được export thành công ra file " + dir + ":Dữ liệu chấm công từ ngày "
+								+ fromDate + " đến ngày " + toDate + "_" + currentDate + ".xlsx");
 			} catch (FileNotFoundException e) {
-				model.addAttribute("message", "Vui lòng tắt file "+ dir + ":Dữ liệu chấm công từ ngày "+ fromDate + " đến ngày " + toDate + "_" + currentDate + ".xlsx trước khi export");
+				model.addAttribute("message", "Vui lòng tắt file " + dir + ":Dữ liệu chấm công từ ngày " + fromDate
+						+ " đến ngày " + toDate + "_" + currentDate + ".xlsx trước khi export");
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-	
+
 			// get list department
 			Map<String, String> departmentMap = this.dataForDepartments();
 			model.addAttribute("departmentMap", departmentMap);
-	
+
 			// get list employee id
 			Map<String, String> employeeMap = this.employees();
 			model.addAttribute("employeeMap", employeeMap);
-	
+
 			model.addAttribute("timekeepings", list);
 			model.addAttribute("leaveInfos", listL);
 			Timekeeping timekeepingForm = new Timekeeping();
 			model.addAttribute("timekeepingForm", timekeepingForm);
 			model.addAttribute("leaveInfoForm", leaveInfoForm);
-			
+
 			if (fromDate != null && toDate != null)
 				model.addAttribute("formTitle", "Dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate);
 			else
 				model.addAttribute("formTitle", "Dữ liệu chấm công ngày " + currentDate);
-	
+
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
 		}
-	return "formTimekeeping";
+		return "formTimekeeping";
 
-	}	
-	
+	}
+
 	@RequestMapping(value = { "/timekeeping/leaveInfo" }, method = RequestMethod.GET)
 	public String listLeaveInfo(Model model, @ModelAttribute("leaveInfoForm") LeaveInfoForm leaveInfoForm) {
 		try {
@@ -593,7 +958,8 @@ public class TimekeepingController {
 			String year = leaveReport.getYearReport();
 			String month = leaveReport.getMonthReport();
 			int employeeId = leaveReport.getEmployeeId();
-			//System.err.println(leaveReport.getLeaveTypeReport());// use only for display, get all types from DB
+			// System.err.println(leaveReport.getLeaveTypeReport());// use only for display,
+			// get all types from DB
 			if (leaveReport.getLeaveTypeReport() == null) {
 				model.addAttribute("message", "Vui lòng chọn thông tin cần báo cáo!");
 				redirectAttributes.addFlashAttribute("message", "Vui lòng chọn thông tin cần báo cáo!");
@@ -673,26 +1039,27 @@ public class TimekeepingController {
 							// số ngày nghỉ phép, đi công tác của tháng
 							// System.err.println(Float.toString((float)leaveDAO.getLeaveReport(year, month,
 							// id, "NP','CT','HT")/8));
-							//log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: "
-							//		+ leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
+							// log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: "
+							// + leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
 							// gio cong thuc te
 						} else {
-							if (lT.startsWith("LT") || lT.startsWith("KCC"))	{//|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
+							if (lT.startsWith("LT") || lT.startsWith("KCC")) {// || leaveDAO.getLeaveReport(year, month,
+																				// id, lT) == 0) {
 								lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
-							}
-							else if(lT.startsWith("CVBN")) {
-								ValueReport valueReport = null;	
+							} else if (lT.startsWith("CVBN")) {
+								ValueReport valueReport = null;
 								valueReport = leaveDAO.getWorkCount(year, month, employeeId, lT);
 								lTV = valueReport.getCount() + "/" + valueReport.getValue();
-							}							
-							else {
-								if(lT.startsWith("NKP")) {
-									//System.err.println("Nghi khong phep");
+							} else {
+								if (lT.startsWith("NKP")) {
+									// System.err.println("Nghi khong phep");
 									int cameLateUnaccepted = timekeepingDAO.countComleLateOver(year, month, employeeId);
-									//System.err.println("so lan di muon qua 60': " + cameLateUnaccepted);
-									//System.err.println("so lan di muon qua 60/2': " + (float)cameLateUnaccepted/2);
-									lTV = Float.toString((float) leaveDAO.getLeaveReport(year, month, id, lT) / 8 + (float)cameLateUnaccepted/2);									
-								}else {
+									// System.err.println("so lan di muon qua 60': " + cameLateUnaccepted);
+									// System.err.println("so lan di muon qua 60/2': " +
+									// (float)cameLateUnaccepted/2);
+									lTV = Float.toString((float) leaveDAO.getLeaveReport(year, month, id, lT) / 8
+											+ (float) cameLateUnaccepted / 2);
+								} else {
 									if (leaveDAO.getLeaveReport(year, month, id, lT) > 0)
 										lTV = Float.toString((float) leaveDAO.getLeaveReport(year, month, id, lT) / 8);
 									else
@@ -770,7 +1137,7 @@ public class TimekeepingController {
 						String joinDate = employee.getJoinDate();
 						leaveForGenReport.setJoinDate(joinDate);
 						int seniority = Utils.monthsBetween(dateFormat.parse(joinDate), dateFormat.parse(currentDate));
-						//System.err.println("tham nien " + seniority);
+						// System.err.println("tham nien " + seniority);
 						leaveForGenReport.setSeniority(String.valueOf(seniority));
 
 						// tinh so ngay phep
@@ -783,7 +1150,7 @@ public class TimekeepingController {
 
 						if (seniority >= 108)
 							quataLeave = 15;
-						//System.err.println(quataLeave);
+						// System.err.println(quataLeave);
 						leaveForGenReport.setQuataLeave(String.valueOf(quataLeave));
 
 						// tinh toan de lay gia tri va gen thong tin leave info theo cac chi so dc nguoi
@@ -834,28 +1201,30 @@ public class TimekeepingController {
 								// số ngày nghỉ phép, đi công tác của tháng
 								// System.err.println(Float.toString((float)leaveDAO.getLeaveReport(year, month,
 								// id, "NP','CT','HT")/8));
-								//log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: "
-								//		+ leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
+								// log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: "
+								// + leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
 								// gio cong thuc te
 							} else {
-								if (lT.startsWith("LT") || lT.startsWith("KCC")) {//|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
+								if (lT.startsWith("LT") || lT.startsWith("KCC")) {// || leaveDAO.getLeaveReport(year,
+																					// month, id, lT) == 0) {
 									lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
-								}							
-								else if(lT.startsWith("CVBN")) {
-									ValueReport valueReport = null;	
+								} else if (lT.startsWith("CVBN")) {
+									ValueReport valueReport = null;
 									valueReport = leaveDAO.getWorkCount(year, month, id, lT);
 									lTV = valueReport.getCount() + "/" + valueReport.getValue();
-								}
-								else {
-									if(lT.startsWith("NKP")) {
-									//	System.err.println("Nghi khong phep");
+								} else {
+									if (lT.startsWith("NKP")) {
+										// System.err.println("Nghi khong phep");
 										int cameLateUnaccepted = timekeepingDAO.countComleLateOver(year, month, id);
-									//	System.err.println("so lan di muon qua 60': " + cameLateUnaccepted);
-									//	System.err.println("so lan di muon qua 60/2': " + (float)cameLateUnaccepted/2);
-										lTV = Float.toString((float) leaveDAO.getLeaveReport(year, month, id, lT) / 8 + (float)cameLateUnaccepted/2);									
-									}else {
+										// System.err.println("so lan di muon qua 60': " + cameLateUnaccepted);
+										// System.err.println("so lan di muon qua 60/2': " +
+										// (float)cameLateUnaccepted/2);
+										lTV = Float.toString((float) leaveDAO.getLeaveReport(year, month, id, lT) / 8
+												+ (float) cameLateUnaccepted / 2);
+									} else {
 										if (leaveDAO.getLeaveReport(year, month, id, lT) > 0)
-											lTV = Float.toString((float) leaveDAO.getLeaveReport(year, month, id, lT) / 8);
+											lTV = Float
+													.toString((float) leaveDAO.getLeaveReport(year, month, id, lT) / 8);
 										else
 											lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
 									}
@@ -909,7 +1278,7 @@ public class TimekeepingController {
 
 						model.addAttribute("leaveInfos", leaveInfos);
 						leaveForGenReport.setLeaveTypes(leaveInfos);
-						//System.out.println("leave info size: " + leaveInfos.size());
+						// System.out.println("leave info size: " + leaveInfos.size());
 
 						list.add(leaveForGenReport);
 					}
@@ -964,15 +1333,15 @@ public class TimekeepingController {
 								if (lT.equalsIgnoreCase("VS")) {
 									leaveForReport.put(lT, "SL Về sớm/tổng tg(p)");
 									// leaveForReport.put("TGVS", "TG Về sớm");
-									//System.err.println("ve som: " + comeLLeaveS.getLeaveSoonAValue() + "|"
-									//		+ comeLLeaveS.getLeaveSoonMValue());
+									// System.err.println("ve som: " + comeLLeaveS.getLeaveSoonAValue() + "|"
+									// + comeLLeaveS.getLeaveSoonMValue());
 									lTV = String.valueOf(comeLLeaveS.getLeaveSoon()) + "/"
 											+ (comeLLeaveS.getLeaveSoonAValue() + comeLLeaveS.getLeaveSoonMValue());
 								} else {
 									leaveForReport.put(lT, "SL Đi muộn/tổng tg(p)");
 									// leaveForReport.put("TGDM", "TG Đi muộn");
-									//System.err.println("di muon: " + comeLLeaveS.getLateAValue() + "|"
-									//		+ comeLLeaveS.getLateMValue());
+									// System.err.println("di muon: " + comeLLeaveS.getLateAValue() + "|"
+									// + comeLLeaveS.getLateMValue());
 									lTV = String.valueOf(comeLLeaveS.getComeLate()) + "/"
 											+ (comeLLeaveS.getLateAValue() + comeLLeaveS.getLateMValue());
 								}
@@ -1000,26 +1369,29 @@ public class TimekeepingController {
 								// số ngày nghỉ phép, đi công tác của tháng
 								// System.err.println(Float.toString((float)leaveDAO.getLeaveReport(year, month,
 								// id, "NP','CT','HT")/8));
-								//log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: "
-								//		+ leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
+								// log.info("Số ngày nghỉ phép, công tác và học tập trong tháng: "
+								// + leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT"));
 								// gio cong thuc te
 							} else {
-								if (lT.startsWith("LT") || lT.startsWith("KCC"))	{//|| leaveDAO.getLeaveReport(year, month, id, lT) == 0) {
+								if (lT.startsWith("LT") || lT.startsWith("KCC")) {// || leaveDAO.getLeaveReport(year,
+																					// month, id, lT) == 0) {
 									lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
-								}
-								else if(lT.startsWith("CVBN")) {
-									ValueReport valueReport = null;	
+								} else if (lT.startsWith("CVBN")) {
+									ValueReport valueReport = null;
 									valueReport = leaveDAO.getWorkCount(year, month, id, lT);
-									lTV = valueReport.getCount() + "/" + valueReport.getValue();								
+									lTV = valueReport.getCount() + "/" + valueReport.getValue();
 								} else {
-									if(lT.startsWith("NKP")) {
+									if (lT.startsWith("NKP")) {
 										int cameLateUnaccepted = timekeepingDAO.countComleLateOver(year, month, id);
-										//System.err.println("so lan di muon qua 60': " + cameLateUnaccepted);
-										//System.err.println("so lan di muon qua 60/2': " + (float)cameLateUnaccepted/2);
-										lTV = Float.toString((float) leaveDAO.getLeaveReport(year, month, id, lT) / 8 + (float)cameLateUnaccepted/2);									
-									}else {
+										// System.err.println("so lan di muon qua 60': " + cameLateUnaccepted);
+										// System.err.println("so lan di muon qua 60/2': " +
+										// (float)cameLateUnaccepted/2);
+										lTV = Float.toString((float) leaveDAO.getLeaveReport(year, month, id, lT) / 8
+												+ (float) cameLateUnaccepted / 2);
+									} else {
 										if (leaveDAO.getLeaveReport(year, month, id, lT) > 0)
-											lTV = Float.toString((float) leaveDAO.getLeaveReport(year, month, id, lT) / 8);
+											lTV = Float
+													.toString((float) leaveDAO.getLeaveReport(year, month, id, lT) / 8);
 										else
 											lTV = String.valueOf(leaveDAO.getLeaveReport(year, month, id, lT));
 									}
@@ -1082,7 +1454,7 @@ public class TimekeepingController {
 
 						model.addAttribute("leaveInfos", leaveInfos);
 						leaveForGenReport.setLeaveTypes(leaveInfos);
-						//System.out.println("leave info size: " + leaveInfos.size());
+						// System.out.println("leave info size: " + leaveInfos.size());
 						list.add(leaveForGenReport);
 					}
 				}
@@ -1220,8 +1592,9 @@ public class TimekeepingController {
 			e.printStackTrace();
 		}
 
-		//System.out.println("Done");
-		model.addAttribute("message", "Dữ liệu đã được export ra file "+ path + "Thong ke du lieu chuyen can " + currentDate + ".xlsx!");
+		// System.out.println("Done");
+		model.addAttribute("message",
+				"Dữ liệu đã được export ra file " + path + "Thong ke du lieu chuyen can " + currentDate + ".xlsx!");
 		model.addAttribute("leaveForReport", leaveForReport);
 		model.addAttribute("leaveReports", list);
 		model.addAttribute("formTitle", "Xuất ra file excel thống kê dữ liệu chuyên cần");
@@ -1242,58 +1615,59 @@ public class TimekeepingController {
 				System.err.println("validate data is fail");
 				return this.addLeaveInfo(model, leaveInfo);
 			}
-			
+
 			List<Date> datesInRange = new ArrayList<>();
-			if(leaveInfo.getToDate() != null) {
+			if (leaveInfo.getToDate() != null) {
 				String leaveType = leaveInfo.getLeaveType();
-				if(leaveType.equalsIgnoreCase("HT") || leaveType.equalsIgnoreCase("NKL") ||
-						leaveType.equalsIgnoreCase("NKP") || leaveType.equalsIgnoreCase("NP") ||
-						leaveType.equalsIgnoreCase("O") || leaveType.equalsIgnoreCase("CT")) {				
-				//	System.err.println("to date: " + leaveInfo.getToDate());
-				//	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-					
+				if (leaveType.equalsIgnoreCase("HT") || leaveType.equalsIgnoreCase("NKL")
+						|| leaveType.equalsIgnoreCase("NKP") || leaveType.equalsIgnoreCase("NP")
+						|| leaveType.equalsIgnoreCase("O") || leaveType.equalsIgnoreCase("CT")) {
+					// System.err.println("to date: " + leaveInfo.getToDate());
+					// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
 					Calendar calendar = Calendar.getInstance();
-					calendar.setTime(leaveInfo.getDate());				
+					calendar.setTime(leaveInfo.getDate());
 					Calendar endCalendar = Calendar.getInstance();
 					endCalendar.setTime(leaveInfo.getToDate());
-					endCalendar.add(Calendar.DAY_OF_YEAR, 1); //Add 1 day to endDate to make sure endDate is included into the final list
+					endCalendar.add(Calendar.DAY_OF_YEAR, 1); // Add 1 day to endDate to make sure endDate is included
+																// into the final list
 					while (calendar.before(endCalendar)) {
 						Date resultDate = calendar.getTime();
-					//	System.err.println("date each:" + resultDate);
+						// System.err.println("date each:" + resultDate);
 						datesInRange.add(resultDate);
 						calendar.add(Calendar.DATE, 1);
-					//	System.err.println("date each:" + resultDate);
+						// System.err.println("date each:" + resultDate);
 					}
 				}
 			}
 
 			leaveDAO.insertLeaveInfo(leaveInfo, datesInRange);
 
-/*			// add thong tin xin phep di muon ve som vao table timekeeping
-			PropertiesManager hr = new PropertiesManager("hr.properties");
-			String leaveType = leaveInfo.getLeaveType();
-			Timekeeping timekeeping = new Timekeeping();
-			timekeeping.setEmployeeId(leaveInfo.getEmployeeId());
-			timekeeping.setEmployeeName(leaveInfo.getEmployeeName());
-			timekeeping.setDepartment(leaveInfo.getDepartment());
-			timekeeping.setTitle(leaveInfo.getTitle());
-			timekeeping.setDate(leaveInfo.getDate());
-			timekeeping.setComment(leaveInfo.getComment());
-			if (leaveType.equalsIgnoreCase("DMS")) {
-				timekeeping.setComment(hr.getProperty("LATE_M_REASON"));
-				//timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_MORNING").toString());
-			} else if (leaveType.equalsIgnoreCase("DMC")) {
-				timekeeping.setComment(hr.getProperty("LATE_A_REASON"));
-				//timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_AFTERNOON").toString());
-			} else if (leaveType.equalsIgnoreCase("VSS")) {
-				//timekeeping.setTimeOut(hr.getProperty("TIME_CHECK_OUT_MORNING").toString());
-				timekeeping.setComment(hr.getProperty("SOON_M_REASON"));
-			} else if (leaveType.equalsIgnoreCase("VSC")) {
-				//timekeeping.setTimeOut(hr.getProperty("TIME_CHECK_OUT_AFTERNOON").toString());
-				timekeeping.setComment(hr.getProperty("SOON_A_REASON"));
-			}
-
-			timekeepingDAO.update(timekeeping);*/
+			/*
+			 * // add thong tin xin phep di muon ve som vao table timekeeping
+			 * PropertiesManager hr = new PropertiesManager("hr.properties"); String
+			 * leaveType = leaveInfo.getLeaveType(); Timekeeping timekeeping = new
+			 * Timekeeping(); timekeeping.setEmployeeId(leaveInfo.getEmployeeId());
+			 * timekeeping.setEmployeeName(leaveInfo.getEmployeeName());
+			 * timekeeping.setDepartment(leaveInfo.getDepartment());
+			 * timekeeping.setTitle(leaveInfo.getTitle());
+			 * timekeeping.setDate(leaveInfo.getDate());
+			 * timekeeping.setComment(leaveInfo.getComment()); if
+			 * (leaveType.equalsIgnoreCase("DMS")) {
+			 * timekeeping.setComment(hr.getProperty("LATE_M_REASON"));
+			 * //timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_MORNING").toString());
+			 * } else if (leaveType.equalsIgnoreCase("DMC")) {
+			 * timekeeping.setComment(hr.getProperty("LATE_A_REASON"));
+			 * //timekeeping.setTimeIn(hr.getProperty("TIME_CHECK_IN_AFTERNOON").toString())
+			 * ; } else if (leaveType.equalsIgnoreCase("VSS")) {
+			 * //timekeeping.setTimeOut(hr.getProperty("TIME_CHECK_OUT_MORNING").toString())
+			 * ; timekeeping.setComment(hr.getProperty("SOON_M_REASON")); } else if
+			 * (leaveType.equalsIgnoreCase("VSC")) {
+			 * //timekeeping.setTimeOut(hr.getProperty("TIME_CHECK_OUT_AFTERNOON").toString(
+			 * )); timekeeping.setComment(hr.getProperty("SOON_A_REASON")); }
+			 * 
+			 * timekeepingDAO.update(timekeeping);
+			 */
 
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Thêm thông tin ngày nghỉ thành công!");

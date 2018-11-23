@@ -51,6 +51,136 @@ public class ExcelProcessor {
 						// Đọc ngay o cot C
 						if (columnStrIndex.equalsIgnoreCase("C")) {
 							// CellType cellType = cell.getCellTypeEnum();
+							//System.err.println(cell.CELL_TYPE_BLANK + cell.toString());
+							if (cell.CELL_TYPE_BLANK > 1 && !cell.toString().startsWith("Ng") && DateUtil.isCellDateFormatted(cell)) {
+								Date date = cell.getDateCellValue();
+								logger.info("Ngay: " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + (1900 + date.getYear()));
+								DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+								String d = date.getDate() + "/" + (date.getMonth() + 1) + "/" + (1900 + date.getYear());
+								timekeeping.setDate(df.parse(d));
+							}
+						}
+
+						// Đọc mã NV
+						if (columnStrIndex.equalsIgnoreCase("E")) {
+							String value = cell.getStringCellValue();
+							if (value != null && !value.trim().equals("") && !value.startsWith("Mã")) {
+								value = value.trim();
+								if (value.length() > 3) {
+									value = value.substring(2, value.length());
+									timekeeping.setEmployeeId(Integer.parseInt(value));
+									logger.info("Mã NV: " + value);
+								}
+							}
+						}
+						
+						// Đọc tên NV
+						if (columnStrIndex.equalsIgnoreCase("F")) {
+							String value = cell.getStringCellValue();
+							if (value != null && !value.trim().equals("")) {
+								value = value.trim();
+								timekeeping.setEmployeeName(value);
+								logger.info("Tên NV: " + value);								
+							}
+						}
+
+						// Đọc giờ vào
+						if (columnStrIndex.equalsIgnoreCase("L")) {
+							CellType cellType = cell.getCellTypeEnum();
+							switch (cellType) {
+							case STRING:
+								String value = cell.getStringCellValue();
+								if(value != null && !value.trim().equals("") && !value.startsWith("Giờ")) {
+									timekeeping.setTimeIn(value);
+									logger.info("Giờ vào: " + value);	
+									break;
+								}
+							case NUMERIC:
+								if (cell.CELL_TYPE_BLANK > 1 && !cell.toString().startsWith("Giờ")){
+									Double doubleValue = cell.getNumericCellValue();
+									if (!(doubleValue > 0)) {
+										timekeeping.setTimeIn(doubleValue.toString());
+										logger.info("Gio vao: " + doubleValue.toString());
+										break;
+									}
+								}
+							}
+						}
+						// Đọc giờ ra
+						if (columnStrIndex.equalsIgnoreCase("M")) {
+							CellType cellType = cell.getCellTypeEnum();
+							switch (cellType) {
+							case STRING:
+								String value = cell.getStringCellValue();
+								if(value != null && !value.trim().equals("") && !value.startsWith("Giờ")) {
+									timekeeping.setTimeOut(value);
+									logger.info("Gio ra: " + value);
+									break;	
+								}
+							case NUMERIC:
+								if (cell.CELL_TYPE_BLANK > 1 && !cell.toString().startsWith("Giờ")){
+									Double doubleValue = cell.getNumericCellValue();
+									if (!(doubleValue > 0)) {
+										timekeeping.setTimeOut(doubleValue.toString());
+										logger.info("Gio ra: " + doubleValue.toString());
+										break;
+									}
+								}
+							}	
+						}
+
+					// Đọc ghi chú
+					/* Comment lai chi update khi co update = tay*/
+ 					if (columnStrIndex.equalsIgnoreCase("P")) {
+							// CellType cellType = cell.getCellTypeEnum();
+							String value = cell.getStringCellValue();
+							if (value != null && !value.trim().equals("")) {
+								timekeeping.setComment(value.trim());
+								logger.info("Comment: " + value.trim());
+							}
+						}
+					}
+							
+					// logger.info(time keeping);
+					if (timekeeping.getEmployeeId() > 0 && timekeeping.getTimeIn() != null) {
+						//System.err.println(timekeeping.getEmployeeId() + "/" + timekeeping.getTimeIn());
+						timekeepings.add(timekeeping);
+					}
+				}
+			}
+			workbook.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return timekeepings;
+	}
+	///
+	public List<Timekeeping> loadTimekeepingDataFromExcelOld(InputStream in) throws IOException {
+		List<Timekeeping> timekeepings = new ArrayList<Timekeeping>();
+		try {
+			// Reading xlsx file
+			XSSFWorkbook workbook = new XSSFWorkbook(in);
+			// Reading sheet 1
+			XSSFSheet sheet = workbook.getSheetAt(0);
+			// logger.info(sheet.getSheetName());
+
+			// Reading each row
+			Iterator<Row> rowIter = sheet.iterator();
+			while (rowIter.hasNext()) {
+				Row row = rowIter.next();
+				if (row.getRowNum() >= 8) {
+					// continue;
+					logger.info("Row number: " + row.getRowNum());
+					Timekeeping timekeeping = new Timekeeping();
+					// Read by shell
+					Iterator<Cell> cellIter = row.iterator();
+					while (cellIter.hasNext()) {
+						Cell cell = cellIter.next();
+						String columnStrIndex = CellReference.convertNumToColString(cell.getColumnIndex());
+
+						// Đọc ngay o cot C
+						if (columnStrIndex.equalsIgnoreCase("C")) {
+							// CellType cellType = cell.getCellTypeEnum();
 							System.err.println(cell.CELL_TYPE_BLANK + cell.toString());
 							if (cell.CELL_TYPE_BLANK > 1 && !cell.toString().startsWith("Ng") && DateUtil.isCellDateFormatted(cell)) {
 								Date date = cell.getDateCellValue();
