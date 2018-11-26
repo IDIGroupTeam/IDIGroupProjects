@@ -24,6 +24,7 @@
 <link rel="stylesheet" href="${url}/public/css/style.css" />
 
 <script src="${url}/public/js/jquery.min.js"></script>
+<script src="${url}/public/js/script.js"></script>
 <script src="${url}/public/js/bootstrap.min.js"></script>
 <script src="${url}/public/js/bootstrap-dialog.min.js"></script>
 <script src="${url}/public/js/bootstrap-combobox.js"></script>
@@ -40,7 +41,6 @@
 <%-- <script src="${url}/public/js/bootstable.js"></script> --%>
 <script src="${url}/public/js/jquery.maskx.js"></script>
 <script src="${url}/public/js/celleditable.js"></script>
-<script src="${url}/public/js/script.js"></script>
 
 <title>Tập đoàn IDI - <tiles:getAsString name="title" /></title>
 <script type="text/javascript">

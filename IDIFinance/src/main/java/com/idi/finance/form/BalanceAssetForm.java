@@ -16,7 +16,7 @@ public class BalanceAssetForm {
 	private String[] assetPeriods;
 	private int periodType = KyKeToanCon.YEAR;
 
-	private boolean first;
+	private boolean first=true;
 	private int numberRecordsOfPage;
 	private int pageIndex;
 	private int totalPages;

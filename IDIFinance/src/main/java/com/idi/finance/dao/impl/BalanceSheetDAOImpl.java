@@ -53,6 +53,21 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	@Value("${TINH_CDKT_THEO_MATK}")
 	private String TINH_CDKT_THEO_MATK;
 
+	@Value("${TINH_CDKT_DAU_KY}")
+	private String TINH_CDKT_DAU_KY;
+
+	@Value("${TINH_CDKT_PHAT_SINH}")
+	private String TINH_CDKT_PHAT_SINH;
+
+	@Value("${TINH_CDKT_CUOI_KY}")
+	private String TINH_CDKT_CUOI_KY;
+
+	@Value("${KIEM_TRA_SINH_BS_1}")
+	private String KIEM_TRA_SINH_BS_1;
+
+	@Value("${KIEM_TRA_SINH_BS_2}")
+	private String KIEM_TRA_SINH_BS_2;
+
 	@Value("${THEM_CHI_TIEU_CDKT_TAI_KHOAN}")
 	private String THEM_CHI_TIEU_CDKT_TAI_KHOAN;
 
@@ -411,6 +426,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 			BalanceAssetData bad = new BalanceAssetData();
 			bad.setAsset(bai);
 			bad.setPeriod(rs.getDate("PERIOD"));
+			bad.setPeriodType(rs.getInt("PERIOD_TYPE"));
 			bad.setStartValue(rs.getDouble("START_VALUE"));
 			bad.setEndValue(rs.getDouble("END_VALUE"));
 			bad.setChangedRatio(rs.getDouble("CHANGED_RATIO"));
@@ -1403,6 +1419,78 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	}
 
 	@Override
+	public List<BalanceAssetData> calculateStartBs(Date start, Date end) {
+		if (start == null || end == null) {
+			return null;
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		String batDau = sdf.format(start);
+		String ketThuc = sdf.format(end);
+
+		String query = TINH_CDKT_DAU_KY;
+		logger.info(query);
+		logger.info("Từ " + batDau + " đến " + ketThuc);
+
+		return null;
+	}
+
+	@Override
+	public List<BalanceAssetData> calculateInBs(Date start, Date end) {
+		if (start == null || end == null) {
+			return null;
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		String batDau = sdf.format(start);
+		String ketThuc = sdf.format(end);
+
+		String query = TINH_CDKT_PHAT_SINH;
+		logger.info(query);
+		logger.info("Từ " + batDau + " đến " + ketThuc);
+
+		return null;
+	}
+
+	@Override
+	public List<BalanceAssetData> calculateEndBs(Date start, Date end, int maKkt) {
+		if (start == null || end == null) {
+			return null;
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		String batDau = sdf.format(start);
+		String ketThuc = sdf.format(end);
+
+		String query = TINH_CDKT_CUOI_KY;
+		logger.info(query);
+		logger.info("Từ " + batDau + " đến " + ketThuc);
+
+		Object[] params = { batDau, ketThuc, batDau, ketThuc, batDau, ketThuc, maKkt, maKkt, maKkt, maKkt };
+		List<BalanceAssetData> bads = jdbcTmpl.query(query, params, new BalanceAssetDataSimpleMapper());
+
+		return bads;
+	}
+
+	@Override
+	public boolean kiemTraBs(Date period, int periodType) {
+
+		String query1 = KIEM_TRA_SINH_BS_1;
+		String query2 = KIEM_TRA_SINH_BS_2;
+
+		try {
+			int count1 = jdbcTmpl.queryForObject(query1, Integer.class);
+			int count2 = jdbcTmpl.queryForObject(query2, Integer.class);
+
+			if (count1 == count2 & count2 > 0) {
+				return true;
+			}
+		} catch (Exception e) {
+		}
+		return false;
+	}
+
+	@Override
 	public List<BalanceAssetData> calculateSRBs(Date start, Date end) {
 		if (start == null || end == null) {
 			return null;
@@ -1441,4 +1529,5 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 			return bad;
 		}
 	}
+
 }

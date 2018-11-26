@@ -340,6 +340,13 @@
 			value="/pages/bctc/balanceAsset.jsp" />
 	</definition>
 
+	<definition name="showUpdateBS" extends="taichinh">
+		<put-attribute name="title"
+			value="Sinh bảng cân đối kế toán" />
+		<put-attribute name="body"
+			value="/pages/bctc/balanceAssetUpdate.jsp" />
+	</definition>
+
 	<definition name="balanceSheetCodes" extends="taichinh">
 		<put-attribute name="title"
 			value="Danh sách chỉ tiêu cân đối kế toán" />
@@ -372,6 +379,13 @@
 			value="/pages/bctc/saleResult.jsp" />
 	</definition>
 
+	<definition name="showUpdateSR" extends="taichinh">
+		<put-attribute name="title"
+			value="Sinh bảng kết quả hoạt động kinh doanh" />
+		<put-attribute name="body"
+			value="/pages/bctc/saleResultUpdate.jsp" />
+	</definition>
+
 	<definition name="cashFlow" extends="taichinh">
 		<put-attribute name="title"
 			value="Bảng lưu chuyển tiền tệ" />
@@ -380,7 +394,14 @@
 		<put-attribute name="body"
 			value="/pages/bctc/cashFlow.jsp" />
 	</definition>
-	
+
+	<definition name="showUpdateCF" extends="taichinh">
+		<put-attribute name="title"
+			value="Sinh bảng lưu chuyển tiền tệ" />
+		<put-attribute name="body"
+			value="/pages/bctc/cashFlowUpdate.jsp" />
+	</definition>
+
 	<definition name="danhSachChiTieuLctt" extends="taichinh">
 		<put-attribute name="title"
 			value="Danh sách chỉ tiêu lưu chuyển tiền tệ" />

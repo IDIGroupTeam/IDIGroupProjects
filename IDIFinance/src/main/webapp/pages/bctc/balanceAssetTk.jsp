@@ -17,81 +17,73 @@
 			$("#mainFinanceForm").submit();
 		});
 
-		function docKyKeToanDs(kyKeToanDsStr) {
-			kyKeToanDsStr = $.trim(kyKeToanDsStr);
-			kyKeToanDsStr = kyKeToanDsStr
-					.substring(1, kyKeToanDsStr.length - 1);
-
-			var kyKeToanDsTmpl = kyKeToanDsStr.split(", ");
-			var kyKeToanDs = new Array();
-			for (var i = 0; i < kyKeToanDsTmpl.length; i++) {
-				var kyKeToan = new Object();
-				var kyKeToanTmpl = kyKeToanDsTmpl[i].split(" ");
-				kyKeToan.maKyKt = $.trim(kyKeToanTmpl[0]);
-				kyKeToan.batDau = $.trim(kyKeToanTmpl[1]);
-				kyKeToan.ketThuc = $.trim(kyKeToanTmpl[2]);
-				kyKeToanDs[i] = kyKeToan;
-			}
-
-			return kyKeToanDs;
-		}
-
 		var kyKeToanDsStr = '${kyKeToanDs}';
 		var kyKeToanDs = docKyKeToanDs(kyKeToanDsStr);
 
-		$("#kyKeToan\\.maKyKt").change(
-				function() {
-					var kyKeToan;
-					var id = $(this).val();
+		$("#kyKeToan\\.maKyKt")
+				.change(
+						function() {
+							var kyKeToan;
+							var id = $(this).val();
 
-					for (var i = 0; i < kyKeToanDs.length; i++) {
-						if (kyKeToanDs[i].maKyKt == id) {
-							kyKeToan = kyKeToanDs[i];
-							break;
-						}
-					}
+							for (var i = 0; i < kyKeToanDs.length; i++) {
+								if (kyKeToanDs[i].maKyKt == id) {
+									kyKeToan = kyKeToanDs[i];
+									break;
+								}
+							}
 
-					$('.datetime').datetimepicker('setStartDate',
-							kyKeToan.batDau);
-					$('.datetime').datetimepicker('setEndDate',
-							kyKeToan.ketThuc);
+							var homNay = new Date();
+							var batDau = new Date(kyKeToan.batDau);
+							var ketThuc = new Date(kyKeToan.ketThuc);
 
-					var homNay = new Date();
-					var batDau = new Date(kyKeToan.batDau);
-					var ketThuc = new Date(kyKeToan.ketThuc);
+							assetPeriods = "<select id='assetPeriods' name='assetPeriods' class='form-control' multiple='multiple'>";
+							count = batDau;
+							while (count.getTime() <= ketThuc.getTime()) {
+								templ = count.getDate() + "/"
+										+ (count.getMonth() + 1) + "/"
+										+ count.getFullYear();
 
-					if (homNay.getTime() >= batDau.getTime()
-							&& homNay.getTime() <= ketThuc.getTime()) {
-						y = homNay.getFullYear();
-						m = homNay.getMonth();
+								if (homNay.getFullYear() == count.getFullYear()
+										&& homNay.getMonth() == count
+												.getMonth()) {
+									assetPeriods += "<option value='"+templ+"' selected>"
+											+ templ + "</option>";
+								} else {
+									assetPeriods += "<option value='"+templ+"'>"
+											+ templ + "</option>";
+								}
 
-						batDau = new Date();
-						batDau.setFullYear(y, m, 1);
-						ketThuc = new Date();
-						ketThuc.setFullYear(y, m + 1, 0);
-					}
+								count.setMonth(count.getMonth() + 1);
+							}
+							assetPeriods += "</select><input type='hidden' name='_assetPeriods' value='1'>";
 
-					$("#dau").val(
-							batDau.getDate() + "/" + (batDau.getMonth() + 1)
-									+ "/" + batDau.getFullYear());
-					$("#cuoi").val(
-							ketThuc.getDate() + "/" + (ketThuc.getMonth() + 1)
-									+ "/" + ketThuc.getFullYear());
+							$("#assetPeriodsSpace").html(assetPeriods);
+							$("#assetPeriods").multiselect({
+								enableFiltering : true,
+								filterPlaceholder : 'Tìm kiếm',
+								maxHeight : 200,
+								buttonWidth : '180px',
+								nonSelectedText : 'Chọn tháng',
+								nSelectedText : 'Được chọn',
+								includeSelectAllOption : true,
+								allSelectedText : 'Chọn tất cả',
+								selectAllText : 'Tất cả',
+								selectAllValue : 'ALL'
+							});
+						});
 
-					$('.datetime').datetimepicker('update');
-				});
-
-		$(".datetime").datetimepicker({
-			language : 'vi',
-			todayBtn : 1,
-			autoclose : 1,
-			todayHighlight : 1,
-			startView : 2,
-			minView : 2,
-			forceParse : 0,
-			pickerPosition : "top-left",
-			startDate : '${mainFinanceForm.kyKeToan.batDau}',
-			endDate : '${mainFinanceForm.kyKeToan.ketThuc}'
+		$("#assetPeriods").multiselect({
+			enableFiltering : true,
+			filterPlaceholder : 'Tìm kiếm',
+			maxHeight : 200,
+			buttonWidth : '180px',
+			nonSelectedText : 'Chọn tháng',
+			nSelectedText : 'Được chọn',
+			includeSelectAllOption : true,
+			allSelectedText : 'Chọn tất cả',
+			selectAllText : 'Tất cả',
+			selectAllValue : 'ALL'
 		});
 
 		$("#assetCodes").multiselect({
@@ -116,7 +108,7 @@
 </script>
 
 <form:hidden id="first" path="first" />
-<form:hidden path="assetPeriods" />
+<%-- <form:hidden path="assetPeriods" /> --%>
 
 <div class="panel panel-default with-nav-tabs">
 	<div class="panel-heading">
@@ -124,7 +116,7 @@
 	</div>
 	<div class="panel-body">
 		<div class="form-group">
-			<label for="dau">Kỳ:</label>
+			<label for="kyKeToan.maKyKt">Kỳ:</label>
 			<div class="input-group smallform pull-right">
 				<form:select path="kyKeToan.maKyKt" class="form-control"
 					cssStyle="width: 180px;">
@@ -135,13 +127,21 @@
 		</div>
 
 		<div class="form-group">
+			<label for="assetPeriods">Thời gian</label>
+			<div id="assetPeriodsSpace" class="input-group smallform pull-right">
+				<form:select path="assetPeriods" multiple="multiple"
+					class="form-control">
+					<form:options items="${assetPeriods}" />
+				</form:select>
+			</div>
+		</div>
+
+		<div class="form-group">
 			<label for="assetCodes">Mã số</label>
 			<div class="input-group smallform pull-right">
-				<form:select id="assetCodes" path="assetCodes" multiple="multiple"
+				<form:select path="assetCodes" multiple="multiple"
 					class="form-control">
-					<c:forEach items="${assetCodes}" var="assetCode">
-						<form:option value="${assetCode}">${assetCode}</form:option>
-					</c:forEach>
+					<form:options items="${assetCodes}" />
 				</form:select>
 			</div>
 		</div>

@@ -42,6 +42,14 @@ public interface BalanceSheetDAO {
 
 	public List<BalanceAssetData> calculateBs(Date start, Date end);
 
+	public List<BalanceAssetData> calculateStartBs(Date start, Date end);
+
+	public List<BalanceAssetData> calculateInBs(Date start, Date end);
+
+	public List<BalanceAssetData> calculateEndBs(Date start, Date end, int maKkt);
+
+	public boolean kiemTraBs(Date period, int periodType);
+
 	// SR
 	public void insertOrUpdateSR(BalanceAssetData sr);
 

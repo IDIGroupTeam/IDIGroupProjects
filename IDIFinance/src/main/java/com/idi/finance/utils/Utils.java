@@ -217,4 +217,20 @@ public class Utils {
 
 		return prevPeriod;
 	}
+
+	public static List<Date> listStartPeriods(Date start, Date end, int periodType) {
+		if (start == null || end == null)
+			return null;
+
+		List<Date> rs = new ArrayList<>();
+
+		Date startPeriod = Utils.getStartPeriod(start, periodType);
+		Date count = startPeriod;
+		while (count.before(end)) {
+			rs.add(count);
+			count = Utils.nextPeriod(count, periodType);
+		}
+
+		return rs;
+	}
 }
