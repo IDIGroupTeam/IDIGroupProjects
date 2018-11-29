@@ -261,13 +261,17 @@ public class SalaryController {
 	}
 	
 	@RequestMapping(value = "/salary/insertSalaryDetailForm")
-	public String insertSalaryDetailForm(Model model, @RequestParam("employeeId") int employeeId) {
+	public String insertSalaryDetailForm(Model model, @RequestParam("employeeId") int employeeId, SalaryDetail salaryDetail) {
 		try {
-			Calendar now = Calendar.getInstance();			
+			Calendar now = Calendar.getInstance();
 			int month = now.get(Calendar.MONTH) + 1;
+			if(salaryDetail.getMonth() > 0) 
+				month = salaryDetail.getMonth();
 			int year = now.get(Calendar.YEAR);
+			if(salaryDetail.getYear() > 0)
+				year = salaryDetail.getYear();
 			System.out.println("Current Month is: " + month + ", year: " + year);
-			SalaryDetail salaryDetail = new SalaryDetail();	
+			//SalaryDetail salaryDetail = new SalaryDetail();	
 			try {
 				salaryDetail = salaryDAO.getSalaryDetail(employeeId, month, year);
 			}catch(Exception e) {

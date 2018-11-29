@@ -41,11 +41,11 @@
  					<form:hidden path="employeeId"/>
 					<form:hidden path="salary"/>
 					<form:hidden path="fullName"/>
-					<form:hidden path="month"/>
+					<%-- <form:hidden path="month"/> --%>
 					<form:hidden path="phoneNo"/>
 					<form:hidden path="department"/>
 					<form:hidden path="jobTitle"/>
-					<form:hidden path="year"/>
+					<%-- <form:hidden path="year"/> --%>
 					<form:hidden path="bankNo"/>
 					<form:hidden path="bankName"/>
 					<form:hidden path="bankBranch"/>
