@@ -12,7 +12,7 @@ public class LeaveInfo implements Serializable {
 
 	private int employeeId;
 	private Date date;
-	private Date toDate;
+	private String toDate;
 	private String leaveType;
 	private float timeValue;
 	private String comment;
@@ -54,11 +54,11 @@ public class LeaveInfo implements Serializable {
 		return date;
 	}
 
-	public Date getToDate() {
+	public String getToDate() {
 		return toDate;
 	}
 
-	public void setToDate(Date toDate) {
+	public void setToDate(String toDate) {
 		this.toDate = toDate;
 	}
 

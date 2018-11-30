@@ -18,20 +18,19 @@
 </style>
 
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <link href="https://rawgit.com/danielfarrell/bootstrap-combobox/master/css/bootstrap-combobox.css" rel="stylesheet"/>
-<script src="https://rawgit.com/danielfarrell/bootstrap-combobox/master/js/bootstrap-combobox.js"></script>
 
-<%-- 
-<script src="${url}/public/js/jquery.min.js"></script>
-<script src="${url}/public/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<%-- <script src="${url}/public/js/jquery-3.3.1.js"></script> --%>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="${url}/public/js/bootstrap-combobox.js"></script>
-
-<link href="${url}/public/js/bootstrap.min.css" rel="stylesheet" /> --%>
-
-<script type="text/javascript">
+<script>
+/*     var $x = jQuery.noConflict(true);
+    alert($x.fn.jquery);
 	$(function() {
-		//alert("xxxx1");			
+		//alert("xxxx");
 		$('#employeeId').on('change', function(){
 			if($(this).val()){
 			  console.log("You selected: "+$(this).val());
@@ -39,13 +38,48 @@
 		  }
 		});
 		
-		$('#employeeId').btComboBox();
+		$('#leaveType').combobox();
+		$('#employeeId').combobox();
 		//alert("yyyy");
-	});
-</script>
+	}); */
+	
+/* 	$(function() {
+	$('.combobox').on('click', function(){
+	  var option = $(this).find('option:selected');
+		if(option.length){
+	    alert('Value is ' + option.val());
+	  }
+	})
+	}); */
+</script> 
+<!-- 
+<script src="https://rawgit.com/danielfarrell/bootstrap-combobox/master/js/bootstrap-combobox.js"></script>
 
-</head>
-<body>
+<script src="${url}/public/js/jquery.min.js"></script>
+<script src="${url}/public/js/bootstrap.min.js"></script>
+<script src="${url}/public/js/bootstrap-combobox.js"></script>
+
+<link href="${url}/public/js/bootstrap.min.css" rel="stylesheet" /> 
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" type="text/javascript"></script>
+<script>
+    var $i = jQuery.noConflict();
+    alert($i.fn.jquery);
+</script> 
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+    var $j = jQuery.noConflict();
+    alert($j.fn.jquery);
+</script> 
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script>
+    var $k = jQuery.noConflict();
+    alert($k.fn.jquery);
+</script> 
+-->
+
 <a href="${pageContext.request.contextPath}/timekeeping/leaveInfo"><button class="btn btn-lg btn-primary btn-sm">Quay lại danh sách chấm công phát sinh</button></a>
 <br/><br/>
 	<form:form modelAttribute="leaveInfoForm" method="POST"
@@ -53,14 +87,17 @@
 		<div class="table">
 			<table class="table">
 				<tr>
-					<td><form:errors path="employeeId" class="error-message" /></td>
-					<td><form:errors path="date" class="error-message" /></td>
-					<td><form:errors path="leaveType" class="error-message" /></td>
-					<td><form:errors path="timeValue" class="error-message" /></td>
-					<td><form:errors path="comment" class="error-message" /></td>
-					<td><form:errors path="toDateInvalid" class="error-message" /></td>
-					<td><form:errors path="overLeave" class="error-message" /></td>
-					<td><form:errors path="duplicate" class="error-message" /></td>						
+					<td>
+						<form:errors path="employeeId" class="error-message" /><br/>
+						<form:errors path="date" class="error-message" /><br/>
+						<form:errors path="toDate" class="error-message" /><br/>
+						<form:errors path="leaveType" class="error-message" /><br/>
+						<form:errors path="timeValue" class="error-message" /><br/>
+						<form:errors path="comment" class="error-message" /><br/>
+						<form:errors path="toDateInvalid" class="error-message" /><br/>
+						<form:errors path="overLeave" class="error-message" /><br/>
+						<form:errors path="duplicate" class="error-message" /><br/>		
+					</td>			
 				</tr>
 			</table>
 			<table class="table table-bordered">
@@ -70,9 +107,8 @@
 					</tr>
 					<tr>
 						<td bgcolor="#FBEFF2">Chọn nhân viên(*):</td>
-						<td>
-						
-						<form:select path="employeeId" class="combobox form-control" id="employeeId" var="employeeId">
+						<td>						
+						<form:select path="employeeId" class="combobox">
 								<!-- option>Nhập hoặc chọn nhân viên</option> -->
 								<form:options items="${employeeMap}" />
 							</form:select></td>						
@@ -86,8 +122,17 @@
 						</td>
 					</tr>
 					<tr>
-						<td bgcolor="#FBEFF2">Chọn ngày/Từ ngày(*):</td>
-						<td><form:input path="date" type="date" required="required" class="form-control animated"/></td>
+						<td bgcolor="#FBEFF2">Chọn ngày/Từ ngày(*):						
+						</td>
+						<td><%-- <div class="form-group">
+								<div class="input-group date datetime smallform">
+									<form:input path="date" class="form-control" readonly="true" />
+									<span class="input-group-addon"><span
+										class="glyphicon glyphicon-calendar"></span></span>
+								</div>
+							</div> --%>
+							<form:input path="date" type="date" required="required" class="form-control animated"/>
+						</td>
 					</tr>	
 					<tr>
 						<td bgcolor="#FBEFF2">Đến ngày(chỉ chọn khi nghỉ/công tác/học tập nhiều ngày):</td>

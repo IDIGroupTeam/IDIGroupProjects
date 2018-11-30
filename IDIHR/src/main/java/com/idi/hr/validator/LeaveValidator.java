@@ -1,5 +1,8 @@
 package com.idi.hr.validator;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -47,9 +50,13 @@ public class LeaveValidator implements Validator {
 				errors.rejectValue("overLate", "Pattern.leaveInfo.overLate");
 			}
 			
-			if(leaveInfo.getDate().compareTo(leaveInfo.getToDate()) >= 0) {
-				System.err.println("from date >= to date");
-				errors.rejectValue("toDateInvalid", "Pattern.leaveInfo.toDateInvalid");
+			if(leaveInfo.getToDate() != null && leaveInfo.getToDate().length() > 0) {
+				System.err.println("nhap cho nhieu ngay");
+				Date toDate = new SimpleDateFormat("yyyy-MM-dd").parse(leaveInfo.getToDate());
+				if(leaveInfo.getDate().compareTo(toDate) >= 0) {
+					System.err.println("from date >= to date");
+					errors.rejectValue("toDateInvalid", "Pattern.leaveInfo.toDateInvalid");
+				}
 			}
 			
 			//check dulicate
