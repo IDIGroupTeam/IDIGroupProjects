@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.idi.finance.bean.CauHinh;
 import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.LoaiTien;
 import com.idi.finance.bean.NhanVien;
@@ -183,7 +182,7 @@ public class ChungTuController {
 	public void pdfPhieuThu(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
 			Model model) {
 		try {
-			HashMap<String, Object> hmParams = layDanhSachCauHinh();
+			HashMap<String, Object> hmParams = dungChung.getParams();
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -404,7 +403,7 @@ public class ChungTuController {
 	public void pdfPhieuChi(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
 			Model model) {
 		try {
-			HashMap<String, Object> hmParams = layDanhSachCauHinh();
+			HashMap<String, Object> hmParams = dungChung.getParams();
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_CHI);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -624,7 +623,7 @@ public class ChungTuController {
 	@RequestMapping(value = "/chungtu/baoco/pdf/{id}", method = RequestMethod.GET)
 	public void pdfBaoCo(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt, Model model) {
 		try {
-			HashMap<String, Object> hmParams = layDanhSachCauHinh();
+			HashMap<String, Object> hmParams = dungChung.getParams();
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_CO);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -845,7 +844,7 @@ public class ChungTuController {
 	@RequestMapping(value = "/chungtu/baono/pdf/{id}", method = RequestMethod.GET)
 	public void pdfBaoNo(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt, Model model) {
 		try {
-			HashMap<String, Object> hmParams = layDanhSachCauHinh();
+			HashMap<String, Object> hmParams = dungChung.getParams();
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_NO);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -1068,7 +1067,7 @@ public class ChungTuController {
 	public void pdfKeToanTongHop(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
 			Model model) {
 		try {
-			HashMap<String, Object> hmParams = layDanhSachCauHinh();
+			HashMap<String, Object> hmParams = dungChung.getParams();
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_KT_TH);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -1291,7 +1290,7 @@ public class ChungTuController {
 	@RequestMapping(value = "/chungtu/muahang/pdf/{id}", method = RequestMethod.GET)
 	public void pdfMuaHang(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt, Model model) {
 		try {
-			HashMap<String, Object> hmParams = layDanhSachCauHinh();
+			HashMap<String, Object> hmParams = dungChung.getParams();
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -1664,7 +1663,7 @@ public class ChungTuController {
 	@RequestMapping(value = "/chungtu/banhang/pdf/{id}", method = RequestMethod.GET)
 	public void pdfBanHang(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt, Model model) {
 		try {
-			HashMap<String, Object> hmParams = layDanhSachCauHinh();
+			HashMap<String, Object> hmParams = dungChung.getParams();
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -2194,7 +2193,7 @@ public class ChungTuController {
 	public void pdfKetChuyenButToan(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
 			Model model) {
 		try {
-			HashMap<String, Object> hmParams = layDanhSachCauHinh();
+			HashMap<String, Object> hmParams = dungChung.getParams();
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -2386,53 +2385,5 @@ public class ChungTuController {
 		}
 		JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(reportFile.getPath());
 		return jasperReport;
-	}
-
-	private HashMap<String, Object> layDanhSachCauHinh() {
-		HashMap<String, Object> params = new HashMap<>();
-
-		// Lấy tên công ty
-		CauHinh tenCt = cauHinhDAO.layCauHinh(CauHinh.TEN_CONG_TY);
-		if (tenCt != null) {
-			params.put(CauHinh.TEN_CONG_TY, tenCt);
-		}
-
-		// Lấy địa chỉ
-		CauHinh diaChi = cauHinhDAO.layCauHinh(CauHinh.DIA_CHI);
-		if (diaChi != null) {
-			params.put(CauHinh.DIA_CHI, diaChi);
-		}
-
-		// Lấy chủ tịch
-		CauHinh chuTich = cauHinhDAO.layCauHinh(CauHinh.CHU_TICH);
-		if (chuTich != null) {
-			params.put(CauHinh.CHU_TICH, chuTich);
-		}
-
-		// Lấy giám đốc
-		CauHinh giamDoc = cauHinhDAO.layCauHinh(CauHinh.GIAM_DOC);
-		if (giamDoc != null) {
-			params.put(CauHinh.GIAM_DOC, giamDoc);
-		}
-
-		// Lấy kế toán trưởng
-		CauHinh ktt = cauHinhDAO.layCauHinh(CauHinh.KE_TOAN_TRUONG);
-		if (ktt != null) {
-			params.put(CauHinh.KE_TOAN_TRUONG, ktt);
-		}
-
-		// Lấy thủ quỹ
-		CauHinh thuQuy = cauHinhDAO.layCauHinh(CauHinh.THU_QUY);
-		if (thuQuy != null) {
-			params.put(CauHinh.THU_QUY, thuQuy);
-		}
-
-		// Lấy thủ kho
-		CauHinh thuKho = cauHinhDAO.layCauHinh(CauHinh.THU_KHO);
-		if (thuKho != null) {
-			params.put(CauHinh.THU_KHO, thuKho);
-		}
-
-		return params;
 	}
 }

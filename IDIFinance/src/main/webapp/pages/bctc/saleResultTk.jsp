@@ -104,6 +104,12 @@
 			$("#mainFinanceForm").attr("method", "POST");
 			$("#mainFinanceForm").submit();
 		});
+		
+		$("#exportPdfBut").click(function() {
+			$("#mainFinanceForm").attr("action", "${url}/bctc/kqhdkd/xuat");
+			$("#mainFinanceForm").attr("method", "POST");
+			$("#mainFinanceForm").submit();
+		});
 	});
 </script>
 
@@ -150,7 +156,8 @@
 	<div class="panel-footer">
 		<button id="submitBut" type="button" class="btn btn-info btn-sm">Tìm
 			kiếm</button>
-		&nbsp;
+		<button id="exportPdfBut" class="btn btn-info btn-sm">Xuất
+			pdf</button>
 		<button id="updateSRBut" type="button" class="btn btn-info btn-sm">Cập
 			nhật bảng KQHDKD</button>
 	</div>

@@ -1,5 +1,7 @@
 package com.idi.finance.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,6 +9,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +43,7 @@ import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.kyketoan.SoDuKy;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BalanceSheetDAO;
+import com.idi.finance.dao.BaoCaoDAO;
 import com.idi.finance.dao.KyKeToanDAO;
 import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
@@ -46,6 +53,11 @@ import com.idi.finance.utils.ExcelProcessor;
 import com.idi.finance.utils.ExpressionEval;
 import com.idi.finance.utils.Utils;
 import com.idi.finance.validator.BalanceSheetValidator;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 @Controller
 public class BalanceSheetController {
@@ -59,6 +71,9 @@ public class BalanceSheetController {
 
 	@Autowired
 	TaiKhoanDAO taiKhoanDAO;
+
+	@Autowired
+	BaoCaoDAO baoCaoDAO;
 
 	@Autowired
 	SoKeToanDAO soKeToanDAO;
@@ -339,6 +354,80 @@ public class BalanceSheetController {
 		}
 	}
 
+	@RequestMapping(value = "/bctc/cdkt/xuat", method = RequestMethod.POST)
+	public void exportBalanceAsset(HttpServletRequest req, HttpServletResponse res,
+			@ModelAttribute("mainFinanceForm") BalanceAssetForm form, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			// List balance assets:
+			if (form == null)
+				form = new BalanceAssetForm();
+
+			// Lấy kỳ kế toán mặc định
+			if (form.getKyKeToan() == null) {
+				form.setKyKeToan(dungChung.getKyKeToan());
+			} else {
+				form.setKyKeToan(kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt()));
+			}
+
+			// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của kỳ
+			if (form.getDau() == null) {
+				form.setDau(form.getKyKeToan().getBatDau());
+			}
+
+			if (form.getCuoi() == null) {
+				form.setCuoi(form.getKyKeToan().getKetThuc());
+			}
+
+			form.setPeriodType(KyKeToanCon.MONTH);
+
+			List<Date> selectedAssetPeriods = null;
+			if (form.getAssetPeriods() != null) {
+				selectedAssetPeriods = Utils.convertArray2List(form.getAssetPeriods());
+			} else if (form.isFirst()) {
+				// Đây là lần đầu vào tab, không phải do ấn nút form tìm kiếm,
+				// sẽ lấy dữ liệu tháng hiện tại
+				selectedAssetPeriods = new ArrayList<>();
+				Date period = Utils.getStartPeriod(new Date(), form.getPeriodType());
+				selectedAssetPeriods.add(period);
+				form.setFirst(false);
+
+				// Chuyển tháng từ List Date sang Array String
+				form.setAssetPeriods(Utils.convertList2Array(selectedAssetPeriods));
+			}
+
+			// AssetCode
+			List<String> selectedAssetCodes = null;
+			if (form.getAssetCodes() != null) {
+				selectedAssetCodes = Arrays.asList(form.getAssetCodes());
+			}
+
+			List<BalanceAssetData> bads = balanceSheetDAO.listBAsByAssetCodesAndDates(selectedAssetCodes,
+					selectedAssetPeriods, form.getPeriodType());
+
+			// Sinh bảng cân đối kế toán ra pdf
+			HashMap<String, Object> params = dungChung.getParams();
+			JasperReport jasperReport = getCompiledFile("CDKT", req);
+			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bads);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=BangCdkt.pdf");
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private BalanceAssetData createBad(BalanceAssetItem bai, int periodType, Date period) {
 		if (bai == null)
 			return null;
@@ -504,6 +593,80 @@ public class BalanceSheetController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/bctc/kqhdkd/xuat", method = RequestMethod.POST)
+	public void exportsaleResults(HttpServletRequest req, HttpServletResponse res,
+			@ModelAttribute("mainFinanceForm") BalanceAssetForm form, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			// List balance assets:
+			if (form == null)
+				form = new BalanceAssetForm();
+
+			// Lấy kỳ kế toán mặc định
+			if (form.getKyKeToan() == null) {
+				form.setKyKeToan(dungChung.getKyKeToan());
+			} else {
+				form.setKyKeToan(kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt()));
+			}
+
+			// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của kỳ
+			if (form.getDau() == null) {
+				form.setDau(form.getKyKeToan().getBatDau());
+			}
+
+			if (form.getCuoi() == null) {
+				form.setCuoi(form.getKyKeToan().getKetThuc());
+			}
+
+			form.setPeriodType(KyKeToanCon.MONTH);
+
+			List<Date> selectedAssetPeriods = null;
+			if (form.getAssetPeriods() != null) {
+				selectedAssetPeriods = Utils.convertArray2List(form.getAssetPeriods());
+			} else if (form.isFirst()) {
+				// Đây là lần đầu vào tab, không phải do ấn nút form tìm kiếm,
+				// sẽ lấy dữ liệu tháng hiện tại
+				selectedAssetPeriods = new ArrayList<>();
+				Date period = Utils.getStartPeriod(new Date(), form.getPeriodType());
+				selectedAssetPeriods.add(period);
+				form.setFirst(false);
+
+				// Chuyển tháng từ List Date sang Array String
+				form.setAssetPeriods(Utils.convertList2Array(selectedAssetPeriods));
+			}
+
+			// AssetCode
+			List<String> selectedAssetCodes = null;
+			if (form.getAssetCodes() != null) {
+				selectedAssetCodes = Arrays.asList(form.getAssetCodes());
+			}
+
+			List<BalanceAssetData> bads = balanceSheetDAO.listSRsByAssetCodesAndDates(selectedAssetCodes,
+					selectedAssetPeriods, form.getPeriodType());
+
+			// Sinh bảng cân đối kế toán ra pdf
+			HashMap<String, Object> params = dungChung.getParams();
+			JasperReport jasperReport = getCompiledFile("KQHDKD", req);
+			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bads);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=BangKqhdkd.pdf");
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -1074,6 +1237,80 @@ public class BalanceSheetController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/bctc/luuchuyentt/xuat", method = RequestMethod.POST)
+	public void exportcashFlow(HttpServletRequest req, HttpServletResponse res,
+			@ModelAttribute("mainFinanceForm") BalanceAssetForm form, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			// List balance assets:
+			if (form == null)
+				form = new BalanceAssetForm();
+
+			// Lấy kỳ kế toán mặc định
+			if (form.getKyKeToan() == null) {
+				form.setKyKeToan(dungChung.getKyKeToan());
+			} else {
+				form.setKyKeToan(kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt()));
+			}
+
+			// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của kỳ
+			if (form.getDau() == null) {
+				form.setDau(form.getKyKeToan().getBatDau());
+			}
+
+			if (form.getCuoi() == null) {
+				form.setCuoi(form.getKyKeToan().getKetThuc());
+			}
+
+			form.setPeriodType(KyKeToanCon.MONTH);
+
+			List<Date> selectedAssetPeriods = null;
+			if (form.getAssetPeriods() != null) {
+				selectedAssetPeriods = Utils.convertArray2List(form.getAssetPeriods());
+			} else if (form.isFirst()) {
+				// Đây là lần đầu vào tab, không phải do ấn nút form tìm kiếm,
+				// sẽ lấy dữ liệu tháng hiện tại
+				selectedAssetPeriods = new ArrayList<>();
+				Date period = Utils.getStartPeriod(new Date(), form.getPeriodType());
+				selectedAssetPeriods.add(period);
+				form.setFirst(false);
+
+				// Chuyển tháng từ List Date sang Array String
+				form.setAssetPeriods(Utils.convertList2Array(selectedAssetPeriods));
+			}
+
+			// AssetCode
+			List<String> selectedAssetCodes = null;
+			if (form.getAssetCodes() != null) {
+				selectedAssetCodes = Arrays.asList(form.getAssetCodes());
+			}
+
+			List<BalanceAssetData> bads = balanceSheetDAO.listCFsByAssetCodesAndDates(selectedAssetCodes,
+					selectedAssetPeriods, form.getPeriodType());
+
+			// Sinh bảng cân đối kế toán ra pdf
+			HashMap<String, Object> params = dungChung.getParams();
+			JasperReport jasperReport = getCompiledFile("LCTT", req);
+			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bads);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=BangLctt.pdf");
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -1692,6 +1929,87 @@ public class BalanceSheetController {
 		}
 	}
 
+	@RequestMapping(value = "/bctc/candoiphatsinh/xuat", method = { RequestMethod.GET, RequestMethod.POST })
+	public void exportBangCanDoiPhatSinh(HttpServletRequest req, HttpServletResponse res,
+			@ModelAttribute("mainFinanceForm") @Validated TkSoKeToanForm form, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			// Lấy kỳ kế toán mặc định
+			if (form.getKyKeToan() == null) {
+				form.setKyKeToan(dungChung.getKyKeToan());
+			} else {
+				form.setKyKeToan(kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt()));
+			}
+
+			Date homNay = new Date();
+			if (!form.getKyKeToan().getBatDau().after(homNay) && !form.getKyKeToan().getKetThuc().before(homNay)) {
+				// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của
+				// tháng hiện tại
+				if (form.getDau() == null) {
+					form.setDau(Utils.getStartDateOfMonth(homNay));
+				}
+
+				if (form.getCuoi() == null) {
+					form.setCuoi(Utils.getEndDateOfMonth(homNay));
+				}
+			} else {
+				// Nếu không có đầu vào ngày tháng, lấy ngày đầu tiên và ngày cuối cùng của
+				// tháng hiện tại
+				if (form.getDau() == null) {
+					form.setDau(form.getKyKeToan().getBatDau());
+				}
+
+				if (form.getCuoi() == null) {
+					form.setCuoi(form.getKyKeToan().getKetThuc());
+				}
+			}
+
+			form.setLoaiKy(KyKeToanCon.NAN);
+
+			List<SoDuKy> soDuKyDs = kyKeToanDAO.danhSachSoDuKy(form.getKyKeToan().getMaKyKt());
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.cayTaiKhoan();
+			LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+			loaiTaiKhoan.themLoaiTaiKhoan(loaiTaiKhoanDs);
+
+			// Lặp theo kỳ
+			KyKeToanCon kyKt = new KyKeToanCon(form.getDau(), form.getCuoi());
+			KyKeToanCon kyKtTruoc = kyKt.kyTruoc();
+
+			DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
+			List<TaiKhoan> tongPsDs = soKeToanDAO.tongPhatSinh(kyKt.getDau(), kyKt.getCuoi());
+			List<TaiKhoan> dauKyDs = soKeToanDAO.tongPhatSinh(form.getKyKeToan().getBatDau(), kyKtTruoc.getCuoi());
+			dauKyDs = tronNoCoDauKy(dauKyDs, soDuKyDs);
+
+			duLieuKeToan = tongPhatSinh(duLieuKeToan, tongPsDs, dauKyDs);
+
+			// Sinh bảng cân đối phát sinh ra pdf
+			JasperReport jasperReport = getCompiledFile("CDPS", req);
+
+			HashMap<String, Object> params = dungChung.getParams();
+			params.put("KY_KE_TOAN", kyKt);
+			String path = req.getSession().getServletContext().getRealPath("/baocao/bctc/");
+			params.put("SUBREPORT_DIR", path);
+
+			byte[] bytes = baoCaoDAO.taoBangCdps(jasperReport, params, duLieuKeToan);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=BangCdps.pdf");
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private List<TaiKhoan> tronNoCoDauKy(List<TaiKhoan> dauKyDs, List<SoDuKy> soDuKyDs) {
 		if (dauKyDs == null || soDuKyDs == null) {
 			return dauKyDs;
@@ -1856,5 +2174,19 @@ public class BalanceSheetController {
 		}
 
 		return duLieuKeToan;
+	}
+
+	private JasperReport getCompiledFile(String fileName, HttpServletRequest req) throws JRException {
+		String jrxml = req.getSession().getServletContext().getRealPath("/baocao/bctc/" + fileName + ".jrxml");
+		String jasper = req.getSession().getServletContext().getRealPath("/baocao/bctc/" + fileName + ".jasper");
+
+		File reportFile = new File(jasper);
+		// If compiled file is not found, then compile XML template
+		// if (!reportFile.exists()) {
+		logger.info("Compile Jasper report ... " + fileName);
+		JasperCompileManager.compileReportToFile(jrxml, jasper);
+		// }
+		JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(reportFile.getPath());
+		return jasperReport;
 	}
 }

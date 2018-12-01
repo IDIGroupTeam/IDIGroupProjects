@@ -152,16 +152,17 @@
 	</table>
 </div>
 
-<i class="pull-right">(**): Một kỳ: <c:choose>
-		<c:when test="${mainFinanceForm.periodType==KyKeToanCon.WEEK}">Tuần</c:when>
-		<c:when test="${mainFinanceForm.periodType==KyKeToanCon.MONTH}">Tháng</c:when>
-		<c:when test="${mainFinanceForm.periodType==KyKeToanCon.QUARTER}">Quý</c:when>
-		<c:when test="${mainFinanceForm.periodType==KyKeToanCon.YEAR}">Năm</c:when>
-		<c:otherwise>Tháng</c:otherwise>
-	</c:choose>
-</i>
-
-<i class="pull-right">(*): Đơn vị: VND.&nbsp;&nbsp;&nbsp;&nbsp;</i>
+<div>
+	 <i class="pull-right">(**): Một
+		kỳ: <c:choose>
+			<c:when test="${mainFinanceForm.periodType==KyKeToanCon.WEEK}">Tuần</c:when>
+			<c:when test="${mainFinanceForm.periodType==KyKeToanCon.MONTH}">Tháng</c:when>
+			<c:when test="${mainFinanceForm.periodType==KyKeToanCon.QUARTER}">Quý</c:when>
+			<c:when test="${mainFinanceForm.periodType==KyKeToanCon.YEAR}">Năm</c:when>
+			<c:otherwise>Tháng</c:otherwise>
+		</c:choose>
+	</i> <i class="pull-right">(*): Đơn vị: VND.&nbsp;&nbsp;&nbsp;&nbsp;</i>
+</div>
 <div class="table-responsive">
 	<table id="balanceAssetTbl"
 		class="table table-bordered table-hover balance-list">

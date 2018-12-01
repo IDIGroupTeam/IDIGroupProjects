@@ -8,6 +8,7 @@ public class CauHinh {
 	public static final String KE_TOAN_TRUONG = "KE_TOAN_TRUONG";
 	public static final String THU_KHO = "THU_KHO";
 	public static final String THU_QUY = "THU_QUY";
+	public static final String MST = "MST";
 
 	private String ma;
 	private String ten;

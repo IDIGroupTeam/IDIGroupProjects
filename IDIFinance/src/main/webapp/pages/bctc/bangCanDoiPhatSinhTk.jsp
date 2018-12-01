@@ -13,7 +13,14 @@
 	$(function() {
 		$("#mainFinanceForm").addClass("form-horizontal");
 		$("#submitBut").click(function() {
+			$("#mainFinanceForm").attr("action", "${url}/bctc/candoiphatsinh");
 			$("#mainFinanceForm").prop("method", "POST");
+			$("#mainFinanceForm").submit();
+		});
+
+		$("#exportPdfBut").click(function() {
+			$("#mainFinanceForm").attr("action", "${url}/bctc/candoiphatsinh/xuat");
+			$("#mainFinanceForm").attr("method", "POST");
 			$("#mainFinanceForm").submit();
 		});
 
@@ -117,5 +124,7 @@
 	<div class="panel-footer">
 		<button id="submitBut" type="button" class="btn btn-info btn-sm">Tìm
 			kiếm</button>
+		<button id="exportPdfBut" class="btn btn-info btn-sm">Xuất
+			pdf</button>
 	</div>
 </div>
