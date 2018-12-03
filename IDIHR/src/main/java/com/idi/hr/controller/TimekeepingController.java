@@ -1617,7 +1617,7 @@ public class TimekeepingController {
 			}
 
 			List<Date> datesInRange = new ArrayList<>();
-			if (leaveInfo.getToDate() != null) {
+			if (leaveInfo.getToDate() != null && leaveInfo.getToDate().length() > 0) {
 				String leaveType = leaveInfo.getLeaveType();
 				if (leaveType.equalsIgnoreCase("HT") || leaveType.equalsIgnoreCase("NKL")
 						|| leaveType.equalsIgnoreCase("NKP") || leaveType.equalsIgnoreCase("NP")
@@ -1628,7 +1628,7 @@ public class TimekeepingController {
 					Calendar calendar = Calendar.getInstance();
 					calendar.setTime(leaveInfo.getDate());
 					Calendar endCalendar = Calendar.getInstance();
-					endCalendar.setTime(leaveInfo.getToDate());
+					endCalendar.setTime(new SimpleDateFormat("yyyy-MM-dd").parse(leaveInfo.getToDate()));
 					endCalendar.add(Calendar.DAY_OF_YEAR, 1); // Add 1 day to endDate to make sure endDate is included
 																// into the final list
 					while (calendar.before(endCalendar)) {
