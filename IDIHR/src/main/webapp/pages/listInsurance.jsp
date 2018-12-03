@@ -179,6 +179,7 @@ tr:nth-child(even) {
 		<table class="table table-striped">
 			<tr>
 				<th>Mã NV</th>
+				<th>Họ tên</th>
 				<th>Số sổ BHXH</th>
 				<th>Lương BH</th>				
 				<th>Đóng tại</th>
@@ -186,13 +187,13 @@ tr:nth-child(even) {
 				<th>Số thẻ BHYT</th>
 				<th>Nơi ĐK khám bệnh</th>
 				<th>Xem chi tiết</th>
-				<th>Quá trình đóng</th>
-				
+				<th>Quá trình đóng</th>				
 				<th>Sửa</th>
 			</tr>
 			<c:forEach var="insurance" items="${insurances}">
 				<tr>
 					<td>${insurance.employeeId}</td>
+					<td>${insurance.employeeName}</td>
 					<td>${insurance.socicalInsuNo}</td>
 					<td><fmt:formatNumber value="${insurance.salarySocicalInsu.replaceAll(',', '')}" type="number"/></td>
 					<td>${insurance.place}</td>

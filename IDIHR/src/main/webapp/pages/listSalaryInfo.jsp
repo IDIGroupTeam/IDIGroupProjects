@@ -72,13 +72,12 @@ tr:nth-child(even) {
 </style>
 </head>
 <body>
+	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary"><button
+			class="btn btn-primary btn-sm">Thông kê lương nhân viên </button></a>	
 	<a href="${pageContext.request.contextPath}/salary/insertSalary"><button
 			class="btn btn-primary btn-sm">Thêm mới thông tin lương nhân viên </button></a>
-	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary"><button
-			class="btn btn-primary btn-sm">Thông kê lương nhân viên </button></a>		
 	<br />
 	<br />
-	
 	<form:form modelAttribute="salaryForm" method="POST">
 		<table class="table">
 			<tr>
@@ -205,6 +204,8 @@ tr:nth-child(even) {
 			<div class="alert alert-success">${message}</div>
 		</c:if>
 	</div>
+	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary"><button
+			class="btn btn-primary btn-sm">Thông kê lương nhân viên </button></a>		
 	<a href="${pageContext.request.contextPath}/salary/insertSalary"><button
 			class="btn btn-primary btn-sm">Thêm mới thông tin lương nhân viên </button></a>
 </body>

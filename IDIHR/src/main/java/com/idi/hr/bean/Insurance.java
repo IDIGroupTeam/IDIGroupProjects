@@ -10,6 +10,7 @@ public class Insurance implements Serializable {
 	private static final long serialVersionUID = -4987687152953100642L;
 
 	private int employeeId;
+	private String employeeName;
 	private String socicalInsuNo;
 	private String salarySocicalInsu;	
 	private String percentSInsuC;
@@ -26,10 +27,11 @@ public class Insurance implements Serializable {
 
 	}
 
-	public Insurance(int employeeId, String socicalInsuNo, String salarySocicalInsu, String percentSInsuC, String percentSInsuE,
+	public Insurance(int employeeId, String employeeName, String socicalInsuNo, String salarySocicalInsu, String percentSInsuC, String percentSInsuE,
 			String payType, String salaryZone, String place, String status, String hInsuNo, String hInsuPlace, String comment) {
 
 		this.employeeId = employeeId;		
+		this.employeeName = employeeName;
 		this.socicalInsuNo = socicalInsuNo;
 		this.salarySocicalInsu = salarySocicalInsu;
 		this.percentSInsuC = percentSInsuC;
@@ -50,6 +52,14 @@ public class Insurance implements Serializable {
 
 	public void setEmployeeId(int employeeId) {
 		this.employeeId = employeeId;
+	}
+
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
 	}
 
 	public String getSalarySocicalInsu() {

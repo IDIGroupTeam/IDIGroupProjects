@@ -35,7 +35,7 @@
 				<td><fmt:formatNumber value="${salaryReport.advancePayed}" /> đ</td>
 			</tr>
 			<tr>					
-				<td bgcolor="#FAFAFA">Tổng tiền trợ cấp/lương chách nhiệm:</td>
+				<td bgcolor="#FAFAFA">Tổng tiền trợ cấp/lương trách nhiệm:</td>
 				<td><fmt:formatNumber value="${salaryReport.subsidize}" /> đ</td>
 				<td bgcolor="#FAFAFA">Tổng tiền thuế thu nhập cá nhân:</td>
 				<td><fmt:formatNumber value="${salaryReport.taxPersonal}" /> đ</td>
