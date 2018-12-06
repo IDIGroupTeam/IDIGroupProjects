@@ -11,7 +11,7 @@
 <script type="text/javascript">
 	$(function() {
 		// Khởi tạo action/method cho salaryForm form
-		$("#salaryForm").attr("action", "${url}/salary/");
+		$("#salaryForm").attr("action", "${url}/salary/listSalaryDetail");
 		$("#salaryForm").attr("method", "POST");		
 		$("button[id^=page]").each(function(i, el) {
 			$(this).click(function() {
@@ -88,6 +88,7 @@ tr:nth-child(even) {
 				<form:hidden path="pageIndex" /> 
 				<form:hidden path="totalPages" /> 
 				<form:hidden path="totalRecords" />			
+				<form:hidden path="employeeId" />
 				<td>Trang:</td>
 				<td>
 					<div class="btn-group btn-group-md">

@@ -10,7 +10,7 @@ import com.idi.hr.bean.SalaryDetail;
 public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 
 	public SalaryDetail mapRow(ResultSet rs, int nowNum) throws SQLException {
-		int employeeId = rs.getInt("EMPLOYEE_ID");; 
+		int employeeId = rs.getInt("EMPLOYEE_ID");
 		String finalSalary = rs.getString("ACTUAL_SALARY");
 		String overTimeN = rs.getString("OVER_TIME_N");
 		String overTimeW = rs.getString("OVER_TIME_W");

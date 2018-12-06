@@ -12,10 +12,12 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import com.idi.hr.bean.Salary;
 import com.idi.hr.bean.SalaryDetail;
 import com.idi.hr.bean.SalaryReport;
+import com.idi.hr.bean.SalaryReportPerEmployee;
 import com.idi.hr.common.PropertiesManager;
 import com.idi.hr.mapper.SalaryDetailMapper;
 import com.idi.hr.mapper.SalaryMapper;
 import com.idi.hr.mapper.SalaryReportMapper;
+import com.idi.hr.mapper.SalaryReportPerEmployeeMapper;
 
 public class SalaryDAO extends JdbcDaoSupport {
 
@@ -159,6 +161,13 @@ public class SalaryDAO extends JdbcDaoSupport {
 		return salaryDetail;
 	}
 
+	/**
+	 * 
+	 * @param employeeId
+	 * @param month
+	 * @param year
+	 * @return
+	 */
 	public SalaryReport getSalaryReport(int employeeId, String month, String year) {
 
 		SalaryReport salaryReport = null;
@@ -178,6 +187,41 @@ public class SalaryDAO extends JdbcDaoSupport {
 		return salaryReport;
 	}
 
+	/**
+	 * 
+	 * @param year
+	 * @return
+	 */
+	public List<SalaryReportPerEmployee> getSalaryReportDetail(String year) {
+
+		String sql = hr.get("GET_SUMMARY_SALARY_DETAIL_FOR_YEAR").toString();
+		log.info("GET_SUMMARY_SALARY_DETAIL_FOR_YEAR query: " + sql);
+		
+		Object[] params = new Object[] { year };
+		SalaryReportPerEmployeeMapper mapper = new SalaryReportPerEmployeeMapper();
+		List<SalaryReportPerEmployee> list = jdbcTmpl.query(sql, params, mapper); 
+
+		return list;
+	}
+	
+	/**
+	 * 
+	 * @param month
+	 * @param year
+	 * @return
+	 */
+	public List<SalaryDetail> getSalaryReportDetail(String month, String year) {
+
+		String sql = hr.get("GET_SUMMARY_SALARY_DETAIL").toString();
+		log.info("GET_SUMMARY_SALARY_DETAIL query: " + sql);
+		
+		Object[] params = new Object[] { month, year };
+		SalaryDetailMapper mapper = new SalaryDetailMapper();
+		List<SalaryDetail> list = jdbcTmpl.query(sql, params, mapper); 
+
+		return list;
+	}
+	
 	/**
 	 * Insert a SalaryDetail into database
 	 * 
@@ -225,6 +269,14 @@ public class SalaryDAO extends JdbcDaoSupport {
 
 			//System.err.println("OverTimeSalary " + salaryDetail.getOverTimeSalary());
 
+			if(salaryDetail.getBounus() != null && salaryDetail.getBounus().length() > 0)
+				salaryDetail.setBounus(salaryDetail.getBounus().replaceAll(",", ""));
+			if(salaryDetail.getSubsidize() != null && salaryDetail.getSubsidize().length() > 0)
+				salaryDetail.setSubsidize(salaryDetail.getSubsidize().replaceAll(",", ""));
+			if(salaryDetail.getAdvancePayed() != null && salaryDetail.getAdvancePayed().length() > 0)
+				salaryDetail.setAdvancePayed(salaryDetail.getAdvancePayed().replaceAll(",", ""));
+			if(salaryDetail.getTaxPersonal() != null && salaryDetail.getTaxPersonal().length() > 0)
+				salaryDetail.setTaxPersonal(salaryDetail.getTaxPersonal().replaceAll(",", ""));
 			Object[] params = new Object[] { salaryDetail.getEmployeeId(), salaryDetail.getOverTimeN(),
 					salaryDetail.getOverTimeW(), salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(),
 					salaryDetail.getBounus(), salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(),
@@ -291,6 +343,16 @@ public class SalaryDAO extends JdbcDaoSupport {
 			salaryDetail.setFinalSalary(String.valueOf(finalSalary));
 			//System.err.println("year " + salaryDetail.getYear());
 			//System.err.println("Luong thuc nhan " + finalSalary);
+			
+			if(salaryDetail.getBounus() != null && salaryDetail.getBounus().length() > 0)
+				salaryDetail.setBounus(salaryDetail.getBounus().replaceAll(",", ""));
+			if(salaryDetail.getSubsidize() != null && salaryDetail.getSubsidize().length() > 0)
+				salaryDetail.setSubsidize(salaryDetail.getSubsidize().replaceAll(",", ""));
+			if(salaryDetail.getAdvancePayed() != null && salaryDetail.getAdvancePayed().length() > 0)
+				salaryDetail.setAdvancePayed(salaryDetail.getAdvancePayed().replaceAll(",", ""));
+			if(salaryDetail.getTaxPersonal() != null && salaryDetail.getTaxPersonal().length() > 0)
+				salaryDetail.setTaxPersonal(salaryDetail.getTaxPersonal().replaceAll(",", ""));
+			
 			Object[] params = new Object[] { salaryDetail.getOverTimeN(), salaryDetail.getOverTimeW(),
 					salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(),
 					salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(),

@@ -25,6 +25,7 @@ import com.idi.hr.bean.LeaveReport;
 import com.idi.hr.bean.Salary;
 import com.idi.hr.bean.SalaryDetail;
 import com.idi.hr.bean.SalaryReport;
+import com.idi.hr.bean.SalaryReportPerEmployee;
 import com.idi.hr.bean.WorkingDay;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.SalaryDAO;
@@ -93,7 +94,7 @@ public class SalaryController {
 					listSalaryForPage.add(salary);
 				}
 			}					
-			
+			model.addAttribute("salaryForm", form);
 			model.addAttribute("salarys", listSalaryForPage);
 			model.addAttribute("formTitle", "Danh sách lương của nhân viên ");
 		} catch (Exception e) {
@@ -187,7 +188,7 @@ public class SalaryController {
 	}
 
 	// ------ Tính lương thực nhận cho NV theo tháng  --------//
-	@RequestMapping(value = "/salary/listSalaryDetail", method = RequestMethod.GET)
+	@RequestMapping(value = "/salary/listSalaryDetail")
 	public String listSalaryDetail(Model model,	@RequestParam("employeeId") int employeeId,
 			@ModelAttribute("salaryForm") SalaryForm form) {
 		try {
@@ -238,7 +239,7 @@ public class SalaryController {
 					listSalaryForPage.add(salary);
 				}
 			}					
-			
+			model.addAttribute("salaryForm", form);
 			model.addAttribute("employeeId", employeeId);
 			Map<String, String> employeeMap = this.employees();
 			String name = "";
@@ -479,7 +480,7 @@ public class SalaryController {
 	@RequestMapping(value = "/salary/generateSalaryReport", method = RequestMethod.POST)
 	public String generateSalaryReport(Model model, HttpServletResponse response, HttpServletRequest request,
 			@ModelAttribute("salaryReportForm") @Validated LeaveReport leaveReport,
-			final RedirectAttributes redirectAttributes) throws Exception{
+			@ModelAttribute("salaryForm") SalaryForm form, final RedirectAttributes redirectAttributes) throws Exception{
 		try {
 			Map<String, String> employeeMap = this.employees();
 			String name = "";
@@ -488,22 +489,124 @@ public class SalaryController {
 					String id= String.valueOf(leaveReport.getEmployeeId());
 					name = employeeMap.get(id);
 					model.addAttribute("formTitle", "Thông tin thông kê lương của " + name + " năm " + leaveReport.getYearReport());
-				}else	
+					SalaryReport salaryReport = new SalaryReport();
+					salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(), leaveReport.getMonthReport(), leaveReport.getYearReport());
+					model.addAttribute("salaryReport", salaryReport);
+					return "summarySalaryReport";
+				}else {	
+					List<SalaryReportPerEmployee> list = salaryDAO.getSalaryReportDetail(leaveReport.getYearReport());
 					model.addAttribute("formTitle", "Thông tin thông kê lương nhân viên năm " + leaveReport.getYearReport());
+					//System.err.println("fan trang");
+					//System.err.println("fan trang" + form.getYearReport());
+					//System.err.println("fan trang" + leaveReport.getYearReport());
+					if (form.getNumberRecordsOfPage() == 0) {
+						form.setNumberRecordsOfPage(25);
+					}
+					if (form.getPageIndex() == 0) {
+						form.setPageIndex(1);
+					}		
+					
+					form.setTotalRecords(list.size());
+					
+					int totalPages = form.getTotalRecords() % form.getNumberRecordsOfPage() > 0
+							? form.getTotalRecords() / form.getNumberRecordsOfPage() + 1
+							: form.getTotalRecords() / form.getNumberRecordsOfPage();
+					form.setTotalPages(totalPages);
+
+					List<SalaryReportPerEmployee> listSalaryForPage = new ArrayList<SalaryReportPerEmployee>();
+					
+					if (form.getPageIndex() < totalPages) {
+						if (form.getPageIndex() == 1) {
+							for (int i = 0; i < form.getNumberRecordsOfPage(); i++) {
+								SalaryReportPerEmployee salary = new SalaryReportPerEmployee();
+								salary = list.get(i);
+								listSalaryForPage.add(salary);
+							}
+						} else if (form.getPageIndex() > 1) {
+							for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form.getPageIndex()
+									* form.getNumberRecordsOfPage(); i++) {
+								SalaryReportPerEmployee salary = new SalaryReportPerEmployee();
+								salary = list.get(i);
+								listSalaryForPage.add(salary);
+							}
+						}
+					} else if (form.getPageIndex() == totalPages) {
+						for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form
+								.getTotalRecords(); i++) {
+							SalaryReportPerEmployee salary = new SalaryReportPerEmployee();
+							salary = list.get(i);
+							listSalaryForPage.add(salary);
+						}
+					}	
+					//form.setYearReport(Integer.parseInt(leaveReport.getYearReport()));
+					model.addAttribute("salaryForm", form);
+					model.addAttribute("salaryDetails", listSalaryForPage);					
+					model.addAttribute("formTitle", "Thông tin thông kê lương nhân viên tổng cả năm " + leaveReport.getYearReport());
+					//model.addAttribute("listSalaryReportDetail", listSalaryReportDetail);
+					SalaryReport salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(), leaveReport.getMonthReport(), leaveReport.getYearReport());
+					model.addAttribute("salaryReport", salaryReport);
+					//model.addAttribute("yearReport", leaveReport.getYearReport());
+					return "listSalarySumaryDetail";
+				}	
 			}else {
 				if(leaveReport.getEmployeeId() > 0) {					
 					String id= String.valueOf(leaveReport.getEmployeeId());
 					name = employeeMap.get(id);
 					model.addAttribute("formTitle", "Thông tin thông kê lương của " + name + " tháng " + leaveReport.getMonthReport() + ", năm " + leaveReport.getYearReport());
-				}else
+					SalaryReport salaryReport = new SalaryReport();
+					salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(), leaveReport.getMonthReport(), leaveReport.getYearReport());
+					model.addAttribute("salaryReport", salaryReport);
+					
+					return "summarySalaryReport";
+				}else {
+					List<SalaryDetail> list = salaryDAO.getSalaryReportDetail(leaveReport.getMonthReport(), leaveReport.getYearReport());
+					
+					if (form.getNumberRecordsOfPage() == 0) {
+						form.setNumberRecordsOfPage(25);
+					}
+					if (form.getPageIndex() == 0) {
+						form.setPageIndex(1);
+					}		
+					
+					form.setTotalRecords(list.size());
+					
+					int totalPages = form.getTotalRecords() % form.getNumberRecordsOfPage() > 0
+							? form.getTotalRecords() / form.getNumberRecordsOfPage() + 1
+							: form.getTotalRecords() / form.getNumberRecordsOfPage();
+					form.setTotalPages(totalPages);
+
+					List<SalaryDetail> listSalaryForPage = new ArrayList<SalaryDetail>();
+					
+					if (form.getPageIndex() < totalPages) {
+						if (form.getPageIndex() == 1) {
+							for (int i = 0; i < form.getNumberRecordsOfPage(); i++) {
+								SalaryDetail salary = new SalaryDetail();
+								salary = list.get(i);
+								listSalaryForPage.add(salary);
+							}
+						} else if (form.getPageIndex() > 1) {
+							for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form.getPageIndex()
+									* form.getNumberRecordsOfPage(); i++) {
+								SalaryDetail salary = new SalaryDetail();
+								salary = list.get(i);
+								listSalaryForPage.add(salary);
+							}
+						}
+					} else if (form.getPageIndex() == totalPages) {
+						for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form
+								.getTotalRecords(); i++) {
+							SalaryDetail salary = new SalaryDetail();
+							salary = list.get(i);
+							listSalaryForPage.add(salary);
+						}
+					}	
+					model.addAttribute("salaryForm", form);
+					model.addAttribute("salaryDetails", listSalaryForPage);					
 					model.addAttribute("formTitle", "Thông tin thông kê lương nhân viên tháng " + leaveReport.getMonthReport() + ", năm " + leaveReport.getYearReport());
-			}
-			System.out.println("1" + leaveReport.getYearReport());
-			System.out.println("1" + leaveReport.getMonthReport());
-			System.out.println("1" + leaveReport.getEmployeeId());
-			SalaryReport salaryReport = new SalaryReport();
-			salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(), leaveReport.getMonthReport(), leaveReport.getYearReport());
-			model.addAttribute("salaryReport", salaryReport);
+					//model.addAttribute("listSalaryReportDetail", listSalaryReportDetail);
+					return "listSalarySumaryDetail";
+				}	
+			}		
 		}catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();

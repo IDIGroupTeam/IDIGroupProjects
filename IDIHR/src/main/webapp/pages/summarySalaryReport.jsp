@@ -19,7 +19,7 @@
 </style>
 </head>
 	<body>
-		<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary"><button class="btn btn-primary btn-sm">Quay	lại lựa chọn thông tin cần thống kê</button></a>
+		<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary"><button class="btn btn-primary btn-sm">Quay lại lựa chọn thông tin cần thống kê</button></a>
 		<br/><br/>
 		<table class="table table-bordered">
 			<tr>
