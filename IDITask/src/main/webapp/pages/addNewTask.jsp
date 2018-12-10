@@ -61,10 +61,16 @@
 						});
 	});
 
-	  	$(function(){
-			$('.normal').autosize();		
-			$('.animatedArea').autosize({append: "\n"});
-		});
+  	$(function(){
+		$('.normal').autosize();		
+		$('.animatedArea').autosize({append: "\n"});
+	});
+  	
+  	$(function () {
+           $('#plannedFor').datetimepicker({
+               viewMode: 'years'
+           });
+       });
 </script>
 <title>Tập đoàn IDI - Quản lý công việc</title>
 <style>
@@ -100,8 +106,18 @@
 								<form:options items="${departmentMap}" />
 							</form:select></td>
 						<td bgcolor="#FAFAFA">Kế hoạch cho tháng:</td>
-						<td><form:input path="plannedFor" type="month"
-								class="form-control animated" /></td>
+						<td>
+			                <form:input path="plannedFor" id="plannedFor" class="form-control"/>
+			                <span class="input-group-addon">
+			                    <span class="glyphicon glyphicon-calendar">
+			                    </span>
+			                </span>
+						</td>
+						   
+						
+						
+					<%-- 	<td><form:input path="plannedFor" type="month"
+								class="form-control animated" /></td> --%>
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Độ ưu tiên:</td>

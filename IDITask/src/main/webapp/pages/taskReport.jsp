@@ -47,10 +47,10 @@ tr:nth-child(even) {
 				<th nowrap="nowrap">Mã việc</th>
 				<th>Tên việc</th>
 				<th>Người làm</th>
-				<th>Trạng thái</th>				
+				<th nowrap="nowrap">Trạng thái</th>				
 				<th nowrap="nowrap">Cập nhật gần nhất</th>
 				<th nowrap="nowrap">Ngày phải xong</th>
-				<th>Nhận xét đánh giá</th>
+				<th nowrap="nowrap">Nhận xét đánh giá</th>
 			</tr>
 			<c:forEach var="task" items="${tasks}">
 				<tr>

@@ -827,7 +827,7 @@ public class TaskController {
 		}
 		
 		String fileName = "";
-		if(eId > 0 && dept.equalsIgnoreCase("all"))
+		if(eId > 0 && !dept.equalsIgnoreCase("all"))
 			fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
 			+ " của " + eName + " phòng " + dept + ".pdf";
 		else if (eId < 1 && !dept.equalsIgnoreCase("all"))
@@ -837,7 +837,7 @@ public class TaskController {
 			fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
 			+ " của " + eName + ".pdf";
 		else
-			fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate + ".pdf";
+			fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate + " của tất cả các phòng ban.pdf";
 		
 		PdfWriter.getInstance(document, new FileOutputStream(dir + "/" + fileName));
 		BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
