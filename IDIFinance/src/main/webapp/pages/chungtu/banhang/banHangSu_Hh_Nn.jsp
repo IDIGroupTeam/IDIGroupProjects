@@ -63,15 +63,8 @@
 							<form:select cssClass="form-control"
 								path="hangHoaDs[${status.index}].tkThanhtoan.loaiTaiKhoan.maTk">
 								<form:option value="" label=""></form:option>
-								<form:option value="1111" label="1111 - Tiền Việt Nam"></form:option>
-								<form:option value="1112" label="1112 - Ngoại tệ"></form:option>
-								<form:option value="1121" label="1121 - Tiền Việt Nam"></form:option>
-								<form:option value="1122" label="1122 - Ngoại tệ"></form:option>
-								<form:option value="131" label="131 - Phải thu khách hàng"></form:option>
-								<form:option value="1311"
-									label="1311 - Phải thu khách hàng - ngắn hạn"></form:option>
-								<form:option value="1312"
-									label="1312- Phải thu khách hàng - dài hạn"></form:option>
+								<form:options items="${loaiTaiKhoanThanhToanDs}"
+									itemValue="maTk" itemLabel="maTenTk" />
 							</form:select> <form:errors
 								path="hangHoaDs[${status.index}].tkThanhtoan.loaiTaiKhoan.maTk"
 								cssClass="error" /></td>
@@ -81,7 +74,8 @@
 								cssClass="form-control"
 								path="hangHoaDs[${status.index}].tkDoanhThu.loaiTaiKhoan.maTk">
 								<form:option value="" label=""></form:option>
-								<form:option value="5111" label="5111 - Doanh thu bán hàng hóa"></form:option>
+								<form:options items="${loaiTaiKhoanDoanhThuDs}" itemValue="maTk"
+									itemLabel="maTenTk" />
 							</form:select> <form:errors
 								path="hangHoaDs[${status.index}].tkDoanhThu.loaiTaiKhoan.maTk"
 								cssClass="error" /></td>
@@ -129,7 +123,8 @@
 								cssClass="form-control"
 								path="hangHoaDs[${status.index}].tkGiaVon.loaiTaiKhoan.maTk">
 								<form:option value="" label=""></form:option>
-								<form:option value="632" label="632 - Giá vốn bán hàng"></form:option>
+								<form:options items="${loaiTaiKhoanGiaVonDs}" itemValue="maTk"
+									itemLabel="maTenTk" />
 							</form:select> <form:errors
 								path="hangHoaDs[${status.index}].tkGiaVon.loaiTaiKhoan.maTk"
 								cssClass="error" /></td>
@@ -139,9 +134,8 @@
 								cssClass="form-control"
 								path="hangHoaDs[${status.index}].tkKho.loaiTaiKhoan.maTk">
 								<form:option value="" label=""></form:option>
-								<form:option value="152" label="152 - Nguyên liệu, vật liệu"></form:option>
-								<form:option value="156" label="156 - Hàng hóa"></form:option>
-								<form:option value="1561" label="1561 - Giá mua hàng hóa"></form:option>
+								<form:options items="${loaiTaiKhoanKhoDs}" itemValue="maTk"
+									itemLabel="maTenTk" />
 							</form:select> <form:errors
 								path="hangHoaDs[${status.index}].tkKho.loaiTaiKhoan.maTk"
 								cssClass="error" /></td>
@@ -195,7 +189,8 @@
 						<td><form:select cssClass="form-control"
 								path="hangHoaDs[${status.index}].tkThueXk.loaiTaiKhoan.maTk">
 								<form:option value="" label=""></form:option>
-								<form:option value="3333" label="3333 - Thuế xuất nhập khẩu"></form:option>
+								<form:options items="${loaiTaiKhoanXkDs}" itemValue="maTk"
+									itemLabel="maTenTk" />
 							</form:select> <form:errors
 								path="hangHoaDs[${status.index}].tkThueXk.loaiTaiKhoan.maTk"
 								cssClass="error" /></td>

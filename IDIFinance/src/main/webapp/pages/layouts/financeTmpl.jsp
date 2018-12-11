@@ -30,15 +30,12 @@
 <script src="${url}/public/js/bootstrap-combobox.js"></script>
 <script src="${url}/public/js/bootstrap-multiselect.js"></script>
 <script src="${url}/public/js/jquery.bootcomplete.js"></script>
-<%-- <script src="${url}/public/js/bootstrap3-typeahead.js"></script> --%>
-<%-- <script src="${url}/public/js/jquery.tabledit.js"></script> --%>
 <script src="${url}/public/js/jquery.treetable.js"></script>
 <script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
 <script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
 <script src="${url}/public/js/jquery.formatCurrency-1.4.0.js"></script>
 <script src="${url}/public/js/jquery.formatCurrency.vi-VN.js"></script>
 <script src="${url}/public/js/accounting.min.js"></script>
-<%-- <script src="${url}/public/js/bootstable.js"></script> --%>
 <script src="${url}/public/js/jquery.maskx.js"></script>
 <script src="${url}/public/js/celleditable.js"></script>
 

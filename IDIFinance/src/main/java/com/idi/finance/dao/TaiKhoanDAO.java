@@ -20,8 +20,10 @@ public interface TaiKhoanDAO {
 	public List<LoaiTaiKhoan> danhSachTaiKhoan();
 
 	public List<LoaiTaiKhoan> danhSachTaiKhoanTheoCap1(String maTkCap1);
-	
+
+	public List<LoaiTaiKhoan> danhSachTaiKhoan(List<String> maTkDs);
+
 	public List<LoaiTaiKhoan> cayTaiKhoan();
-	
+
 	public LoaiTaiKhoan capNhatTaiKhoanNganHang(LoaiTaiKhoan loaiTaiKhoan);
 }

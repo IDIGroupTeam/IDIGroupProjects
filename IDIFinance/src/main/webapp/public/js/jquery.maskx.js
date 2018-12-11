@@ -14,7 +14,6 @@
 		var _execmascara = function() {
 			$(input).val(maskTo($(input).val()));
 			$(hiddenInput).val(maskFrom($(input).val()));
-			alert("val " + $(input).val() + " - " + $(hiddenInput).val());
 		};
 		var _mascara = function(o1, o2, to, from) {
 			input = o1;
@@ -25,7 +24,6 @@
 		};
 		return this.each(function() {
 			var inputName = $(this).prop("name");
-			alert("id "+$(this).prop("id"))
 			$(this).removeAttr("name");
 			var inputHtml = "<input type='hidden' name='" + inputName
 					+ "' value=''/>";
@@ -149,7 +147,6 @@
 	};
 
 	plugin.simpleMoneyTo = function(v) {
-		// alert("simpleMoneyTo1 " + v);
 		v = v.replace(/\D/g, "");
 		v = v.replace(/\s/g, "");
 		v = v.replace(/\t/g, "");
@@ -165,13 +162,11 @@
 		v = v.replace(/(\d)(\d{9})$/, "$1,$2");
 		v = v.replace(/(\d)(\d{6})$/, "$1,$2");
 		v = v.replace(/(\d)(\d{3})$/, "$1,$2");
-		// alert("simpleMoneyTo2 " + v);
+
 		return v;
 	};
 	plugin.simpleMoneyFrom = function(v) {
-		// alert("simpleMoneyFrom1 " + v);
 		v = v.replace(/,/g, "");
-		// alert("simpleMoneyFrom2 " + v);
 		return v;
 	};
 

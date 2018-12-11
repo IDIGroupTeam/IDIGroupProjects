@@ -63,15 +63,8 @@
 								cssClass="form-control"
 								path="hangHoaDs[${status.index}].tkKho.loaiTaiKhoan.maTk">
 								<form:option value="" label=""></form:option>
-								<form:option value="152" label="152"></form:option>
-								<%-- <form:option value="153" label="153"></form:option> --%>
-								<form:option value="1531" label="1531"></form:option>
-								<form:option value="1532" label="1532"></form:option>
-								<form:option value="1533" label="1533"></form:option>
-								<form:option value="1534" label="1534"></form:option>
-								<%-- <form:option value="156" label="156"></form:option> --%>
-								<form:option value="1561" label="1561"></form:option>
-								<%-- <form:option value="1562" label="1562"></form:option> --%>
+								<form:options items="${loaiTaiKhoanKhoDs}" itemValue="maTk"
+									itemLabel="maTenTk" />
 							</form:select> <form:errors
 								path="hangHoaDs[${status.index}].tkKho.loaiTaiKhoan.maTk"
 								cssClass="error" /></td>
@@ -80,14 +73,9 @@
 							<form:hidden path="hangHoaDs[${status.index}].tkThanhtoan.maNvkt" />
 							<form:select cssClass="form-control"
 								path="hangHoaDs[${status.index}].tkThanhtoan.loaiTaiKhoan.maTk">
-								<%-- <form:option value="" label=""></form:option> --%>
-								<form:option value="1111" label="1111"></form:option>
-								<form:option value="1112" label="1112"></form:option>
-								<form:option value="1121" label="1121"></form:option>
-								<form:option value="1122" label="1122"></form:option>
-								<form:option value="331" label="331"></form:option>
-								<form:option value="3311" label="3311"></form:option>
-								<form:option value="3312" label="3312"></form:option>
+								<form:option value="" label=""></form:option>
+								<form:options items="${loaiTaiKhoanThanhToanDs}"
+									itemValue="maTk" itemLabel="maTenTk" />
 							</form:select> <form:errors
 								path="hangHoaDs[${status.index}].tkThanhtoan.loaiTaiKhoan.maTk"
 								cssClass="error" /></td>
@@ -134,11 +122,8 @@
 								path="hangHoaDs[${status.index}].tkThueGtgt.loaiTaiKhoan.maTk">
 								<form:option value="" label=""></form:option>
 								<form:option value="0" label="Thuế GTGT tính trực tiếp"></form:option>
-								<form:option value="133" label="133 - Thuế GTGT được khấu trừ"></form:option>
-								<form:option value="1331"
-									label="1331 - Thuế GTGT được khấu trừ của h/hóa, dịch vụ"></form:option>
-								<form:option value="1332"
-									label="1332 - Thuế GTGT được khấu trừ của TSCĐ"></form:option>
+								<form:options items="${loaiTaiKhoanGtgtDs}" itemValue="maTk"
+									itemLabel="maTenTk" />
 							</form:select> <form:errors
 								path="hangHoaDs[${status.index}].tkThueGtgt.loaiTaiKhoan.maTk"
 								cssClass="error" /></td>

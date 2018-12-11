@@ -173,7 +173,7 @@
 					tong += eval(thueNk);
 				}
 			} catch (e) {
-				alert("nk " + e);
+				// alert("nk " + e);
 			}
 
 			// Cập nhật tiền thuế ttdb
@@ -195,7 +195,7 @@
 					tong += eval(thueTtdb);
 				}
 			} catch (e) {
-				alert("ttdb " + e);
+				// alert("ttdb " + e);
 			}
 
 			// Tính tiền thuế giá trị gia tăng
@@ -295,7 +295,7 @@
 				$("#hangHoaDs" + i + "\\.giaKho\\.tongSoTienTxt").html(
 						tongGiaKhoTxt);
 			} catch (e) {
-				alert(e);
+				// alert(e);
 			}
 		}
 

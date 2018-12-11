@@ -87,7 +87,7 @@
 								try {
 									window.location.href = "${url}/bctc/luuchuyentt/chitieu/danhsach";
 								} catch (e) {
-									alert(e);
+									// alert(e);
 								}
 							}
 						});

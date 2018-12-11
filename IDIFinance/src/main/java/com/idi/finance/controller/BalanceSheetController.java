@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.idi.finance.bean.CauHinh;
 import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.bctc.BalanceAssetData;
 import com.idi.finance.bean.bctc.BalanceAssetItem;
@@ -51,6 +52,7 @@ import com.idi.finance.form.BalanceAssetForm;
 import com.idi.finance.form.TkSoKeToanForm;
 import com.idi.finance.utils.ExcelProcessor;
 import com.idi.finance.utils.ExpressionEval;
+import com.idi.finance.utils.PropCont;
 import com.idi.finance.utils.Utils;
 import com.idi.finance.validator.BalanceSheetValidator;
 
@@ -65,6 +67,9 @@ public class BalanceSheetController {
 
 	@Autowired
 	DungChung dungChung;
+
+	@Autowired
+	PropCont props;
 
 	@Autowired
 	BalanceSheetDAO balanceSheetDAO;
@@ -408,7 +413,7 @@ public class BalanceSheetController {
 					selectedAssetPeriods, form.getPeriodType());
 
 			// Sinh bảng cân đối kế toán ra pdf
-			HashMap<String, Object> params = dungChung.getParams();
+			HashMap<String, Object> params = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 			JasperReport jasperReport = getCompiledFile("CDKT", req);
 			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bads);
 
@@ -650,7 +655,7 @@ public class BalanceSheetController {
 					selectedAssetPeriods, form.getPeriodType());
 
 			// Sinh bảng cân đối kế toán ra pdf
-			HashMap<String, Object> params = dungChung.getParams();
+			HashMap<String, Object> params = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 			JasperReport jasperReport = getCompiledFile("KQHDKD", req);
 			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bads);
 
@@ -1294,7 +1299,7 @@ public class BalanceSheetController {
 					selectedAssetPeriods, form.getPeriodType());
 
 			// Sinh bảng cân đối kế toán ra pdf
-			HashMap<String, Object> params = dungChung.getParams();
+			HashMap<String, Object> params = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 			JasperReport jasperReport = getCompiledFile("LCTT", req);
 			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bads);
 
@@ -1987,7 +1992,7 @@ public class BalanceSheetController {
 			// Sinh bảng cân đối phát sinh ra pdf
 			JasperReport jasperReport = getCompiledFile("CDPS", req);
 
-			HashMap<String, Object> params = dungChung.getParams();
+			HashMap<String, Object> params = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 			params.put("KY_KE_TOAN", kyKt);
 			String path = req.getSession().getServletContext().getRealPath("/baocao/bctc/");
 			params.put("SUBREPORT_DIR", path);

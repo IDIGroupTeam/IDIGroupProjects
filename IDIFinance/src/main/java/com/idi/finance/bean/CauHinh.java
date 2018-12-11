@@ -1,18 +1,16 @@
 package com.idi.finance.bean;
 
 public class CauHinh {
-	public static final String TEN_CONG_TY = "TEN_CONG_TY";
-	public static final String DIA_CHI = "DIA_CHI";
-	public static final String CHU_TICH = "CHU_TICH";
-	public static final String GIAM_DOC = "GIAM_DOC";
-	public static final String KE_TOAN_TRUONG = "KE_TOAN_TRUONG";
-	public static final String THU_KHO = "THU_KHO";
-	public static final String THU_QUY = "THU_QUY";
-	public static final String MST = "MST";
+	// File này quản lý nhóm cấu hình đọc từ csdl
+	// Người dùng được phép thay đổi giá trị
+	public static final int NHOM_MAC_DINH = 0;
+	public static final int NHOM_CHUNG = 1;
+	public static final int NHOM_TK = 2;
 
 	private String ma;
 	private String ten;
 	private String giaTri;
+	private int nhom = NHOM_MAC_DINH;
 
 	public String getMa() {
 		return ma;
@@ -45,6 +43,14 @@ public class CauHinh {
 			giaTri = giaTri.trim();
 		}
 		this.giaTri = giaTri;
+	}
+
+	public int getNhom() {
+		return nhom;
+	}
+
+	public void setNhom(int nhom) {
+		this.nhom = nhom;
 	}
 
 	@Override

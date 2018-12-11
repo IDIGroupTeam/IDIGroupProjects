@@ -18,6 +18,9 @@ public class CauHinhDAOImpl implements CauHinhDAO {
 	@Value("${DANH_SACH_CAU_HINH}")
 	private String DANH_SACH_CAU_HINH;
 
+	@Value("${DANH_SACH_CAU_HINH_NHOM}")
+	private String DANH_SACH_CAU_HINH_NHOM;
+
 	@Value("${CAP_NHAT_CAU_HINH}")
 	private String CAP_NHAT_CAU_HINH;
 
@@ -45,6 +48,20 @@ public class CauHinhDAOImpl implements CauHinhDAO {
 		}
 	}
 
+	@Override
+	public List<CauHinh> danhSachCauHinh(int nhom) {
+		String query = DANH_SACH_CAU_HINH_NHOM;
+		logger.info(query);
+		logger.info("nhom " + nhom);
+		try {
+			Object[] objs = { nhom };
+			return jdbcTmpl.query(query, objs, new CauHinhMapper());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	public class CauHinhMapper implements RowMapper<CauHinh> {
 		public CauHinh mapRow(ResultSet rs, int rowNum) throws SQLException {
 			CauHinh cauHinh = new CauHinh();
@@ -52,6 +69,7 @@ public class CauHinhDAOImpl implements CauHinhDAO {
 			cauHinh.setMa(rs.getString("MA"));
 			cauHinh.setTen(rs.getString("TEN"));
 			cauHinh.setGiaTri(rs.getString("GIA_TRI"));
+			cauHinh.setNhom(rs.getInt("NHOM"));
 
 			return cauHinh;
 		}
@@ -67,6 +85,7 @@ public class CauHinhDAOImpl implements CauHinhDAO {
 		try {
 			res = jdbcTmpl.update(query, cauHinh.getGiaTri(), cauHinh.getMa());
 		} catch (Exception e) {
+
 		}
 		return res;
 	}
@@ -76,8 +95,9 @@ public class CauHinhDAOImpl implements CauHinhDAO {
 			return null;
 		}
 
-		String query = LAY_CAU_HINH;
 		try {
+			// Lấy từ csdl trước
+			String query = LAY_CAU_HINH;
 			Object[] objs = { maCh };
 			return jdbcTmpl.queryForObject(query, objs, new CauHinhMapper());
 		} catch (Exception e) {

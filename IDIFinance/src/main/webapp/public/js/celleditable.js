@@ -158,7 +158,7 @@ $.fn.cellEditable = function(options) {
 					disableConfimButtons($(cell).parent());
 				},
 				error : function(data) {
-					alert("Có lỗi " + data);
+					//alert("Có lỗi " + data);
 				}
 			});
 		});
@@ -209,7 +209,7 @@ $.fn.cellEditable = function(options) {
 					disableConfimButtons($(cell).parent());
 				},
 				error : function(data) {
-					alert("Dữ liệu có thể trùng lặp " + data);
+					//alert("Dữ liệu có thể trùng lặp " + data);
 				}
 			});
 		});

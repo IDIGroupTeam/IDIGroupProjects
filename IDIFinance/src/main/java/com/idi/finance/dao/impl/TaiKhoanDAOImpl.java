@@ -20,6 +20,9 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 	@Value("${DANH_SACH_TAI_KHOAN_THEO_CAP1}")
 	private String DANH_SACH_TAI_KHOAN_THEO_CAP1;
 
+	@Value("${DANH_SACH_TAI_KHOAN_THEO_MA_TK}")
+	private String DANH_SACH_TAI_KHOAN_THEO_MA_TK;
+
 	@Value("${LAY_LOAI_TAI_KHOAN_THEO_MA_TK}")
 	private String LAY_LOAI_TAI_KHOAN_THEO_MA_TK;
 
@@ -224,6 +227,27 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 	}
 
 	@Override
+	public List<LoaiTaiKhoan> danhSachTaiKhoan(List<String> maTkDs) {
+		if (maTkDs == null)
+			return null;
+
+		String condition = "";
+		for (String maTk : maTkDs) {
+			condition += "'" + maTk + "',";
+		}
+		if (!condition.trim().isEmpty()) {
+			condition = condition.substring(0, condition.length() - 1);
+		}
+
+		String query = DANH_SACH_TAI_KHOAN_THEO_MA_TK;
+		query = query.replaceAll("\\$MA_TK_LIST\\$", condition);
+
+		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, new LoaiTaiKhoanMapper());
+
+		return taiKhoanDs;
+	}
+
+	@Override
 	public LoaiTaiKhoan capNhatTaiKhoanNganHang(LoaiTaiKhoan loaiTaiKhoan) {
 		if (loaiTaiKhoan != null && loaiTaiKhoan.getMaTk() != null) {
 			String query = "SELECT * FROM NGAN_HANG_TAI_KHOAN WHERE MA_TK=?";
@@ -231,4 +255,5 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 		}
 		return loaiTaiKhoan;
 	}
+
 }

@@ -83,7 +83,7 @@
 				try {
 					window.location.href = "${url}/bctc/cdkt/chitieu/danhsach";
 				} catch (e) {
-					alert(e);
+					// alert(e);
 				}
 			}
 		});

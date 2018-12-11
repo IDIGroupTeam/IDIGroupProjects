@@ -20,7 +20,6 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,6 +46,7 @@ import com.idi.finance.dao.NhanVienDAO;
 import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.form.KyKeToanForm;
+import com.idi.finance.utils.PropCont;
 import com.idi.finance.validator.KyKeToanValidator;
 
 @Controller
@@ -76,9 +76,6 @@ public class KyKeToanController {
 
 	@Autowired
 	KyKeToanValidator kyKeToanValidator;
-
-	@Value("${SO_DU_DAU_KY_EXCEL_TEN_FILE}")
-	private String SO_DU_DAU_KY_EXCEL_TEN_FILE;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -1010,7 +1007,7 @@ public class KyKeToanController {
 			res.reset();
 			res.resetBuffer();
 			res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
-			res.setHeader("Content-disposition", "attachment; filename=" + SO_DU_DAU_KY_EXCEL_TEN_FILE);
+			res.setHeader("Content-disposition", "attachment; filename=" + PropCont.SO_DU_DAU_KY_EXCEL_TEN_FILE);
 			ServletOutputStream out = res.getOutputStream();
 			wb.write(out);
 			out.flush();

@@ -11,6 +11,23 @@ import java.util.Locale;
 import com.idi.finance.bean.bctc.KyKeToanCon;
 
 public class Utils {
+	public static List<String> parseString(String str) {
+		if (str == null) {
+			return null;
+		}
+
+		List<String> rs = new ArrayList<>();
+		String[] tmp = str.split(";");
+		for (int i = 0; i < tmp.length; i++) {
+			if (!tmp[i].trim().isEmpty()) {
+				rs.add(tmp[i].trim());
+			}
+		}
+
+		return rs;
+
+	}
+
 	public static String format(String str) {
 		if (str != null) {
 			str = str.replaceAll("\\s+", " ");

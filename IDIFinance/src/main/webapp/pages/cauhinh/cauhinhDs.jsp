@@ -22,26 +22,51 @@
 	});
 </script>
 
-<h4>Cấu hình</h4>
+<h4>Cấu hình chung</h4>
 
 <div class="table-responsive">
 	<table class="table table-bordered table-hover">
 		<thead>
 			<tr>
 				<!-- <th class="text-center">Mã</th> -->
-				<th class="text-center" style="width: 200px;">Tên</th>
+				<th class="text-center" style="width: 300px;">Tên</th>
 				<th class="text-center">Giá trị</th>
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach items="${cauHinhDs}" var="cauHinh">
+			<c:forEach items="${cauHinhChungDs}" var="cauHinh">
 				<tr>
 					<%-- <td>${cauHinh.ma}</td> --%>
-					<td style="width: 200px;">${cauHinh.ten}</td>
+					<td style="width: 300px;">${cauHinh.ten}</td>
 					<td class="cell-editable" data="${cauHinh.ma}">${cauHinh.giaTri}</td>
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
 </div>
+
+<h4>Cấu hình tài khoản các chứng từ</h4>
+<div class="table-responsive">
+	<table class="table table-bordered table-hover">
+		<thead>
+			<tr>
+				<!-- <th class="text-center">Mã</th> -->
+				<th class="text-center" style="width: 300px;">Tên</th>
+				<th class="text-center">Giá trị <br />
+				<i>(Các tài khoản cách nhau dấu chấm phẩy)</i>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach items="${cauHinhTkDs}" var="cauHinh">
+				<tr>
+					<%-- <td>${cauHinh.ma}</td> --%>
+					<td style="width: 300px;">${cauHinh.ten}</td>
+					<td class="cell-editable" data="${cauHinh.ma}">${cauHinh.giaTri}</td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+</div>
+
 

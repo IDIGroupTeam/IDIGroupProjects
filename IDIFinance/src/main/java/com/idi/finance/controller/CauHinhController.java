@@ -6,9 +6,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.idi.finance.bean.CauHinh;
 import com.idi.finance.bean.DungChung;
+import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.CauHinhDAO;
+import com.idi.finance.dao.TaiKhoanDAO;
 
 @Controller
 public class CauHinhController {
@@ -28,6 +31,51 @@ public class CauHinhController {
 
 	@Autowired
 	CauHinhDAO cauHinhDAO;
+
+	@Autowired
+	TaiKhoanDAO taiKhoanDAO;
+
+	@Value("${PHIEU_THU_DS_TK_NO}")
+	private String PHIEU_THU_DS_TK_NO;
+
+	@Value("${PHIEU_CHI_DS_TK_CO}")
+	private String PHIEU_CHI_DS_TK_CO;
+
+	@Value("${BAO_NO_DS_TK_NO}")
+	private String BAO_NO_DS_TK_NO;
+
+	@Value("${BAO_CO_DS_TK_CO}")
+	private String BAO_CO_DS_TK_CO;
+
+	@Value("${MUA_HANG_DS_TK_KHO_NO}")
+	private String MUA_HANG_DS_TK_KHO_NO;
+
+	@Value("${MUA_HANG_DS_TK_CONG_NO_CO}")
+	private String MUA_HANG_DS_TK_CONG_NO_CO;
+
+	@Value("${MUA_HANG_DS_TK_GTGT_NO}")
+	private String MUA_HANG_DS_TK_GTGT_NO;
+
+	@Value("${MUA_HANG_DS_TK_TTDB_CO}")
+	private String MUA_HANG_DS_TK_TTDB_CO;
+
+	@Value("${BAN_HANG_DS_TK_CONG_NO_NO}")
+	private String BAN_HANG_DS_TK_CONG_NO_NO;
+
+	@Value("${BAN_HANG_DS_TK_DOANH_THU_CO}")
+	private String BAN_HANG_DS_TK_DOANH_THU_CO;
+
+	@Value("${BAN_HANG_DS_TK_GIA_VON_NO}")
+	private String BAN_HANG_DS_TK_GIA_VON_NO;
+
+	@Value("${BAN_HANG_DS_TK_KHO_NO}")
+	private String BAN_HANG_DS_TK_KHO_NO;
+
+	@Value("${BAN_HANG_DS_TK_GTGT_CO}")
+	private String BAN_HANG_DS_TK_GTGT_CO;
+
+	@Value("${BAN_HANG_DS_TK_XK_CO}")
+	private String BAN_HANG_DS_TK_XK_CO;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -51,9 +99,15 @@ public class CauHinhController {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
-			List<CauHinh> cauHinhDs = cauHinhDAO.danhSachCauHinh();
+			List<CauHinh> cauHinhChungDs = cauHinhDAO.danhSachCauHinh(CauHinh.NHOM_CHUNG);
 
-			model.addAttribute("cauHinhDs", cauHinhDs);
+			List<CauHinh> cauHinhTkDs = cauHinhDAO.danhSachCauHinh(CauHinh.NHOM_TK);
+
+			// List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+
+			model.addAttribute("cauHinhChungDs", cauHinhChungDs);
+			model.addAttribute("cauHinhTkDs", cauHinhTkDs);
+			// model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 			model.addAttribute("tab", "tabDSCH");
 			return "danhSachCauHinh";
 		} catch (Exception e) {

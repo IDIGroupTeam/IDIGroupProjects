@@ -173,7 +173,7 @@
 					tong += eval(thueXk);
 				}
 			} catch (e) {
-				alert("nk " + e);
+				// alert("nk " + e);
 			}
 
 			// Tính tiền thuế giá trị gia tăng
