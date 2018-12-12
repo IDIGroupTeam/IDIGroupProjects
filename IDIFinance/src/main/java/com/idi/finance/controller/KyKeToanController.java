@@ -125,9 +125,10 @@ public class KyKeToanController {
 
 			// Lấy số dư đầu và cuối kỳ của các nhóm tài khoản
 			// Nhóm tài khoản CCDC, VTHH
-			// Số dư đầu kỳ hàng VTHH
+			// Số dư đầu kỳ VTHH
 
-			// Nhóm tài khoản theo đối tượng (chỉ áp dụng với 131 và 331)
+			// Nhóm tài khoản theo đối tượng
+			// (chỉ áp dụng với các tài khoản công nợ như 131, 331, 141, 334)
 			// Có 3 loại đối tượng: khách hàng, nhà cung cấp và nhân viên
 			// Với khách vãng lai thì không cần
 			// Số dư đầu kỳ khách hàng

@@ -88,14 +88,13 @@
 			<li id="tabDSCH"><a href="${url}/cauhinh/danhsach">Cấu hình</a></li>
 
 			<li class="divider"></li>
-			<li id="tabDSNT"><a href="#">Danh sách ngoại tệ</a></li>
+			<li id="tabDMTK"><a href="${url}/taikhoan/danhsach">Danh
+					sách tài khoản</a></li>
 			<li id="tabDSBCDKT"><a href="${url}/bctc/cdkt/chitieu/danhsach">Danh
 					sách chỉ tiêu CDKT</a></li>
 			<li id="tabDSBLCTT"><a
 				href="${url}/bctc/luuchuyentt/chitieu/danhsach">Danh sách chỉ
 					tiêu LCTT</a></li>
-			<li id="tabDMTK"><a href="${url}/taikhoan/danhsach">Danh
-					sách tài khoản</a></li>
 
 			<li class="divider"></li>
 			<li id="tabDSHH"><a href="${url}/hanghoa/danhsach">Danh sách
@@ -108,10 +107,14 @@
 					bãi</a></li>
 
 			<li class="divider"></li>
+			<li id="tabDSHH"><a href="#">Danh sách tài sản</a></li>
+
+			<li class="divider"></li>
 			<li id="tabDSNH"><a href="${url}/nganhang/danhsach">Danh
 					sách ngân hàng</a></li>
 			<li id="tabDSNHTK"><a href="${url}/nganhang/taikhoan/danhsach">Danh
 					sách tài khoản ngân hàng</a></li>
+			<li id="tabDSNT"><a href="#">Danh sách ngoại tệ</a></li>
 
 			<%-- <li id="tabCNDL"><a href="${url}/bctc/capnhatdulieu">Cập nhật dữ liệu</a></li> --%>
 		</ul></li>

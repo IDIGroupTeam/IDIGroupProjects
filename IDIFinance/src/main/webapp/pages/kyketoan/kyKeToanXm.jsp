@@ -295,7 +295,7 @@
 						<th colspan="2" class="text-center">Tài khoản</th>
 						<th colspan="2" class="text-center">Hàng hóa</th>
 						<th colspan="2" class="text-center">Kho hàng</th>
-						<th colspan="3" class="text-center">Tồn đầu kỳ</th>
+						<th colspan="4" class="text-center">Tồn đầu kỳ</th>
 						<!-- <th colspan="2" class="text-center">Cuối kỳ</th> -->
 					</tr>
 					<tr>
@@ -305,9 +305,10 @@
 						<th class="text-center">Tên</th>
 						<th class="text-center" style="width: 50px;">Mã</th>
 						<th class="text-center">Tên</th>
-						<th class="text-center" style="width: 120px;">Số lượng</th>
-						<th class="text-center" style="width: 120px;">Nợ</th>
-						<th class="text-center" style="width: 120px;">Có</th>
+						<th class="text-center" style="width: 100px;">Số lượng</th>
+						<th class="text-center" style="width: 100px;">Đơn vị</th>
+						<th class="text-center" style="width: 100px;">Nợ</th>
+						<th class="text-center" style="width: 100px;">Có</th>
 						<!-- <th class="text-center" style="width: 120px;">Nợ</th>
 						<th class="text-center" style="width: 120px;">Có</th> -->
 					</tr>
@@ -321,6 +322,7 @@
 						<td>1</td>
 						<td>Kho Cầu Giấy</td>
 						<td>10</td>
+						<td>Chiếc</td>
 						<td>20000</td>
 						<td></td>
 					</tr>
@@ -332,6 +334,7 @@
 						<td>1</td>
 						<td>Kho Cầu Giấy</td>
 						<td>10</td>
+						<td>Chiếc</td>
 						<td>1000</td>
 						<td></td>
 					</tr>
