@@ -31,6 +31,8 @@ public class Task implements Serializable {
 	private String status;
 	private String plannedFor;
 	private String timeSpent;
+	private String month;
+	private String year;
 	private String timeSpentType;
 	private String estimate;
 	private String estimateTimeType;
@@ -72,6 +74,22 @@ public class Task implements Serializable {
 		this.estimateTimeType = estimateTimeType;
 		this.description = description;
 		this.reviewComment = reviewComment;
+	}
+
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
 	}
 
 	public int getTaskId() {

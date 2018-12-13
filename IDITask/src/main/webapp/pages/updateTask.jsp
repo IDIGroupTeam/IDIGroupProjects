@@ -252,8 +252,38 @@
 										<form:options items="${departmentMap}" />
 									</form:select></td>
 								<td bgcolor="#FAFAFA">Kế hoạch cho tháng:</td>
-								<td><form:input path="plannedFor" type="Month"
+									<c:if test="${empty taskForm.plannedFor}">
+										<td><form:select path="month">
+										<form:option value="0" label="Chọn tháng" />
+										<form:option value="1" label="Tháng 1" />
+										<form:option value="2" label="Tháng 2" />
+										<form:option value="3" label="Tháng 3" />
+										<form:option value="4" label="Tháng 4" />
+										<form:option value="5" label="Tháng 5" />
+										<form:option value="6" label="Tháng 6" />
+										<form:option value="7" label="Tháng 7" />
+										<form:option value="8" label="Tháng 8" />
+										<form:option value="9" label="Tháng 9" />
+										<form:option value="10" label="Tháng 10" />
+										<form:option value="11" label="Tháng 11" />
+										<form:option value="12" label="Tháng 12" />
+									</form:select>
+									 &nbsp;Năm&nbsp; 
+									<jsp:useBean id="now" class="java.util.Date" />
+									<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
+									<form:select path="year">
+										<c:forEach begin="0" end="2" varStatus="loop">
+											<c:set var="currentYear" value="${year + loop.index}" />
+											<option value="${currentYear}"
+												${form.yearReport == currentYear ? 'selected="selected"' : ''}>${currentYear}</option>
+										</c:forEach>
+									</form:select>	
+								</td>
+								</c:if>
+								<c:if test="${ not empty taskForm.plannedFor}">
+									<td><form:input path="plannedFor" type="Month"
 										class="form-control animated" /></td>
+								</c:if>		
 							</tr>
 							<tr>
 								<td bgcolor="#FAFAFA">Độ ưu tiên:</td>
@@ -320,7 +350,7 @@
 											<form:option value="${employee.employeeId}">${employee.fullName},&nbsp;${employee.jobTitle}</form:option>
 										</c:forEach>
 									</form:select></td>									
-								<td bgcolor="#FAFAFA">Ngày phải xong:</td>
+								<td bgcolor="#FAFAFA">Ngày phải xong:(12/24/2018)</td>
 								<td><form:input path="dueDate" type="date"
 										class="form-control animated" /></td>
 							</tr>

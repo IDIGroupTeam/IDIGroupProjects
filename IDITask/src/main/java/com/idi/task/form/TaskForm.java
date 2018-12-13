@@ -30,6 +30,8 @@ public class TaskForm implements Serializable{
 	private String priority;
 	private String status;
 	private String plannedFor;
+	private String month;
+	private String year;
 	private String timeSpent;
 	private String timeSpentType;
 	private String estimate;
@@ -61,6 +63,22 @@ public class TaskForm implements Serializable{
 	private int totalRecords;
 	private int numberRecordsOfPage;
 	private int totalPages;
+	
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
 	
 	public int getTaskId() {
 		return taskId;

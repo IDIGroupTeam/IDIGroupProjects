@@ -299,6 +299,13 @@ public class TaskController {
 		    }
 			
 			Timestamp ts = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+			
+			
+			System.out.println("M:"+ task.getMonth() +"Y:" + task.getYear());
+			if(Integer.parseInt(task.getMonth()) < 10 && Integer.parseInt(task.getMonth()) > 0)
+				task.setPlannedFor(task.getYear() + "-0" + task.getMonth());
+			else if(Integer.parseInt(task.getMonth()) > 9)
+				task.setPlannedFor(task.getYear() + "-" + task.getMonth());
 			task.setCreationDate(ts);
 			task.setUpdateTS(ts);
 			taskDAO.insertTask(task);
@@ -394,7 +401,14 @@ public class TaskController {
 			task.setArea(taskForm.getArea()); // viec cua phong kt , cntt, ns, ...
 			task.setPriority(taskForm.getPriority());
 			task.setStatus(taskForm.getStatus());
-			task.setPlannedFor(taskForm.getPlannedFor());
+			if(taskForm.getPlannedFor() != null && taskForm.getPlannedFor().length() > 0)
+				task.setPlannedFor(taskForm.getPlannedFor());
+			else {
+				if(Integer.parseInt(taskForm.getMonth()) < 10 && Integer.parseInt(taskForm.getMonth()) > 0)
+					task.setPlannedFor(taskForm.getYear() + "-0" + taskForm.getMonth());
+				else if(Integer.parseInt(taskForm.getMonth()) > 9)
+					task.setPlannedFor(taskForm.getYear() + "-" + taskForm.getMonth());
+			}
 			task.setTimeSpent(taskForm.getTimeSpent());
 			task.setTimeSpentType(taskForm.getTimeSpentType());
 			task.setEstimate(taskForm.getEstimate());
