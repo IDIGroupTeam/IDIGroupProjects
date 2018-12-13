@@ -16,23 +16,24 @@
 </style>
 </head>
 <body>
-	<br />
+<a href="${pageContext.request.contextPath}/department/"><button class="btn btn-primary btn-sm">Quay lại danh sách phòng ban</button></a>
+	<br /><br />
 	<form:form modelAttribute="departmentForm" method="POST"
 		action="updateDepartment">
 		<div class="table table-bordered">	
 			<table class="table">
 				<tbody>
 					<tr>
-						<td bgcolor="#E6E6E6">Mã phòng:</td>
-						<td><form:input path="departmentId" size="12" required="required"/>	</td>						
+						<td bgcolor="#FAFAFA">Mã phòng:</td>
+						<td><form:input path="departmentId" size="12" required="required" class="form-control animated"/>	</td>						
 					</tr>
 					<tr>
-						<td bgcolor="#E6E6E6">Tên phòng:</td>
-						<td><form:input path="departmentName" size="24" required="required"/></td>
+						<td bgcolor="#FAFAFA">Tên phòng:</td>
+						<td><form:input path="departmentName" size="24" required="required" class="form-control animated"/></td>
 					</tr>	
 					<tr>
-						<td bgcolor="#E6E6E6">Ghi chú:</td>
-						<td colspan="5"><form:textarea path="desc" cols="45"/></td>
+						<td bgcolor="#FAFAFA">Ghi chú:</td>
+						<td colspan="5"><form:textarea path="desc" cols="45" class="form-control animated"/></td>
 					</tr>
 				</tbody>
 			</table>

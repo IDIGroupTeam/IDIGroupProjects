@@ -188,6 +188,8 @@ public class WorkHistoryController {
 	public String updateWorkHistory(Model model, @ModelAttribute("workHistoryForm") @Validated WorkHistory workHistory,
 			final RedirectAttributes redirectAttributes) {
 		try {
+			System.err.println(workHistory.getAchievement());
+			System.err.println(workHistory.getAppraise());
 			workHistoryDAO.updateWorkHistory(workHistory);
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin lịch sử công tác thành công!");

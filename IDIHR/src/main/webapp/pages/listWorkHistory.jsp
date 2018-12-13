@@ -182,6 +182,7 @@ tr:nth-child(even) {
 		<table class="table table-striped">
 			<tr>
 				<th>Mã NV</th>
+				<th>Họ tên</th>
 				<th>Từ ngày</th>
 				<th>Đến ngày</th>				
 				<th>Chức vụ</th>
@@ -189,8 +190,7 @@ tr:nth-child(even) {
 				<th>Công ty</th>
 				<th>Lương</th>
 				<th>Thành tích</th>
-				<th>Nhận xét</th>	
-							
+				<th>Nhận xét</th>								
 				<!-- <th>Lịch sử từng NV</th>	 -->			
 				<th>Sửa</th>
 				<th>Xóa</th>
@@ -198,6 +198,7 @@ tr:nth-child(even) {
 			<c:forEach var="workHistory" items="${workHistorys}">
 				<tr>
 					<td>${workHistory.employeeId}</td>
+					<td>${workHistory.employeeName}</td>
 					<td>${workHistory.fromDate}</td>
 					<td>${workHistory.toDate}</td>					
 					<td>${workHistory.title}</td>

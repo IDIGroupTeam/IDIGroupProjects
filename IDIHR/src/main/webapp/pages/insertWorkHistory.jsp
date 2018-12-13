@@ -20,47 +20,47 @@
 <br/><br/>
 	<form:form modelAttribute="workHistoryForm" method="POST"
 		action="insertWorkHistory">
-		<table class="table">
+		<table class="table table-bordered">
 			<tbody>
 				<tr>
-					<td colspan="4" nowrap="nowrap" bgcolor="#F6CED8">Thông tin lịch sử công tác</td>
+					<td colspan="4" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin lịch sử công tác</td>
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Chọn NV:</td>
+					<td bgcolor="#FAFAFA">Chọn NV:</td>
 					<td><form:select path="employeeId" class="form-control animated">
 							<form:options items="${employeeMap}" />
 						</form:select></td>
-					<td bgcolor="#E6E6E6">Lương:(*)</td>
+					<td bgcolor="#FAFAFA">Lương:(*)</td>
 					<td><form:input path="salary" maxlength="12"
 							required="required" class="form-control animated"/></td>
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Từ ngày:(*)</td>
+					<td bgcolor="#FAFAFA">Từ ngày:(*)</td>
 					<td><form:input path="fromDate" type="date"
 							required="required" class="form-control animated"/></td>
-					<td bgcolor="#E6E6E6">Đến ngày:(*)</td>
+					<td bgcolor="#FAFAFA">Đến ngày:(*)</td>
 					<td><form:input path="toDate" type="date" required="required" class="form-control animated"/></td>
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Chức vụ:</td>
+					<td bgcolor="#FAFAFA">Chức vụ:</td>
 					<td><form:select path="title" class="form-control animated">
 							<form:options items="${titleMap}" />
 						</form:select></td>
-					<td bgcolor="#E6E6E6">Phòng:</td>
+					<td bgcolor="#FAFAFA">Phòng:</td>
 					<td><form:select path="department" class="form-control animated">
 							<form:options items="${departmentMap}" />
 						</form:select></td>
 
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Thuộc cty:(*)</td>
+					<td bgcolor="#FAFAFA">Thuộc cty:(*)</td>
 					<td><form:input path="company" required="required"
 							maxlength="32" class="form-control animated"/></td>
-					<td bgcolor="#E6E6E6">Thành tích:</td>
+					<td bgcolor="#FAFAFA">Thành tích:</td>
 					<td><form:input path="achievement" maxlength="32" class="form-control animated"/></td>		
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Nhận xét:</td>
+					<td bgcolor="#FAFAFA">Nhận xét:</td>
 					<td colspan="4"><form:textarea path="appraise" cols="64" maxlength="64" class="form-control animated"/></td>
 				</tr>
 			</tbody>

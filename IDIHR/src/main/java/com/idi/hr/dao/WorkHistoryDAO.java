@@ -129,6 +129,8 @@ public class WorkHistoryDAO extends JdbcDaoSupport {
 			// update
 			String sql = hr.getProperty("UPDATE_WORK_HISTORY").toString();
 			log.info("UPDATE_WORK_HISTORY query: " + sql);
+			System.err.println(workHistory.getAchievement());
+			System.err.println(workHistory.getAppraise());
 			Object[] params = new Object[] { workHistory.getToDate(), workHistory.getTitle(),
 					workHistory.getDepartment(), workHistory.getCompany(), workHistory.getSalary(),
 					workHistory.getAchievement(), workHistory.getAppraise(), workHistory.getEmployeeId(),
