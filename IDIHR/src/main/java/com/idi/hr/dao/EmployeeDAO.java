@@ -194,6 +194,31 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	}
 	
 	/**
+	 * Get employees from DB that not create for salary info 
+	 * 
+	 * @return List of employee
+	 * @throws Exception
+	 */
+	public List<EmployeeInfo> getEmployeesForInsertSalary() {
+
+		String sql = hr.getProperty("GET_EMPLOYEES_NO_SALARY_INFO").toString();
+		String sqlUnicode = "";
+		try {
+			byte[] ptext = sql.getBytes(ISO_8859_1); 
+			sqlUnicode = new String(ptext, UTF_8); 
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		log.info("GET_EMPLOYEES_NO_SALARY_INFO query: " + sqlUnicode);
+		Object[] params = new Object[] {};
+		EmployeeMapper mapper = new EmployeeMapper();
+
+		List<EmployeeInfo> list = jdbcTmpl.query(sqlUnicode, params, mapper);
+
+		return list;
+	}
+	
+	/**
 	 * Get a map of work status
 	 * @return
 	 */

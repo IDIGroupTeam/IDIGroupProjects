@@ -184,7 +184,7 @@ tr:nth-child(even) {
 				<th>Họ tên</th>
 				<th>Phòng</th>
 				<th>Chức danh</th>
-				<th>Lương</th>				
+				<!-- <th>Lương</th>				 -->
 				<th>Sửa thông tin</th>
 				<th>Lương chi tiết</th>
 				<th>Ghi chú</th>
@@ -195,7 +195,7 @@ tr:nth-child(even) {
 					<td>${salary.fullName}</td>
 					<td>${salary.department}</td>					
 					<td>${salary.jobTitle}</td>
-					<td><fmt:formatNumber value="${salary.salary}" type="number"/> đồng</td>					
+					<%-- <td><fmt:formatNumber value="${salary.salary}" type="number"/> đồng</td> --%>				
 					<td><a href="editSalary?employeeId=${salary.employeeId}">Sửa</a></td>
 					<td><a href="listSalaryDetail?employeeId=${salary.employeeId}">Chi tiết theo tháng</a></td>
 					<td>${salary.desc}</td>

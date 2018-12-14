@@ -123,6 +123,25 @@ public class SalaryController {
 		return employeeMap;
 	}
 	
+	private Map<String, String> employeesNoInfo() {
+		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
+		try {			
+			List<EmployeeInfo> list = employeeDAO.getEmployeesForInsertSalary();
+			EmployeeInfo employee = new EmployeeInfo();
+			for (int i = 0; i < list.size(); i++) {
+				employee = (EmployeeInfo) list.get(i);
+				Integer id = employee.getEmployeeId();
+				employeeMap.put(id.toString(),
+						employee.getFullName() + ", phòng " + employee.getDepartment());
+			}
+
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return employeeMap;
+	}
+	
 	@RequestMapping(value = "/salary/insertSalary", method = RequestMethod.POST)
 	public String addSalary(Model model, @ModelAttribute("salaryForm") @Validated Salary salary,
 			final RedirectAttributes redirectAttributes) {
@@ -154,7 +173,7 @@ public class SalaryController {
 	private String salaryForm(Model model, Salary salary) {
 		model.addAttribute("salaryForm", salary);
 		// get list employee id
-		Map<String, String> employeeMap = this.employees();
+		Map<String, String> employeeMap = this.employeesNoInfo();
 		model.addAttribute("employeeMap", employeeMap);
 
 		String actionform = "";

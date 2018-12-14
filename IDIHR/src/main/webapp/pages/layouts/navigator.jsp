@@ -11,7 +11,7 @@
 			<li><a href="/IDIHR/department/">Phòng ban</a></li>
 			<li><a href="/IDIHR/insurance/">Bảo hiểm</a></li>			
 			<li><a href="/IDIHR/timekeeping/">Chấm công</a></li>
-			<li><a href="/IDIHR/salary/">Tiền lương</a></li>
+			<li><a href="/IDIHR/salary/prepareSummarySalary">Tiền lương</a></li>
 			<li><a href="/IDIHR/workHistory/">Lịch sử công tác</a></li>
 			<li><a href="#">TNCN</a></li>
 			<li><a href="#">Khen thưởng/Kỷ luật</a></li>

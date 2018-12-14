@@ -35,8 +35,8 @@
 						lương nhân viên</td>
 				</tr>
 				<tr>
-					<td bgcolor="#FAFAFA">Chọn NV:</td>
-					<td colspan="3"><form:select path="employeeId" class="form-control animated">
+					<td bgcolor="#FAFAFA">Họ tên NV:</td>
+					<td colspan="3"><form:select path="employeeId" class="form-control animated" disabled="true">
 							<form:options items="${employeeMap}" />
 						</form:select></td>						
 				</tr>
