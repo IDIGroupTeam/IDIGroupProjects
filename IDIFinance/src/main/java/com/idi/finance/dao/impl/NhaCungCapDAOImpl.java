@@ -132,9 +132,15 @@ public class NhaCungCapDAOImpl implements NhaCungCapDAO {
 		String taoMoi = "INSERT INTO NHA_CUNG_CAP(KH_NCC, TEN_NCC, MA_THUE, DIA_CHI, EMAIL, SDT, WEBSITE) VALUES(?,?,?,?,?,?,?)";
 		// TODO Auto-generated method stub
 		try {
-			// update firstly, if now row is updated, we will be insert data
-			count = jdbcTmpl.update(capNhat, nhaCungCap.getTenNcc(), nhaCungCap.getMaThue(), nhaCungCap.getDiaChi(),
-					nhaCungCap.getEmail(), nhaCungCap.getSdt(), nhaCungCap.getWebSite(), nhaCungCap.getMaNcc());
+			if (nhaCungCap.getMaNcc() > 0) {
+				// update firstly, if now row is updated, we will be insert data
+				count = jdbcTmpl.update(capNhat, nhaCungCap.getTenNcc(), nhaCungCap.getMaThue(), nhaCungCap.getDiaChi(),
+						nhaCungCap.getEmail(), nhaCungCap.getSdt(), nhaCungCap.getWebSite(), nhaCungCap.getMaNcc());
+			} else if (nhaCungCap.getKhNcc() != null && !nhaCungCap.getKhNcc().trim().equals("")) {
+				// update firstly, if now row is updated, we will be insert data
+				count = jdbcTmpl.update(capNhat, nhaCungCap.getTenNcc(), nhaCungCap.getMaThue(), nhaCungCap.getDiaChi(),
+						nhaCungCap.getEmail(), nhaCungCap.getSdt(), nhaCungCap.getWebSite(), nhaCungCap.getKhNcc());
+			}
 
 			// This is new data, so insert it.
 			if (count == 0) {

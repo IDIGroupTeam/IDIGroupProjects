@@ -1,5 +1,5 @@
 CREATE TABLE `CAU_HINH` ( `MA` VARCHAR(255) NOT NULL , `TEN` VARCHAR(255) NOT NULL , `GIA_TRI` VARCHAR(255) NOT NULL , `NHOM` INT NOT NULL, PRIMARY KEY (`MA`)) ENGINE = InnoDB;
-INSERT INTO `cau_hinh` (`MA`, `TEN`, `GIA_TRI`, `NHOM`) VALUES
+INSERT INTO `CAU_HINH` (`MA`, `TEN`, `GIA_TRI`, `NHOM`) VALUES
 ('CHU_TICH', 'Chủ tịch Hội đồng quản trị', 'NGUYỄN CÔNG ĐIỂM', 1),
 ('DIA_CHI', 'Địa chỉ', 'Số 10, Võng Thị, Quận Tây Hồ, Thành phố Hà Nội', 1),
 ('GIAM_DOC', 'Tổng giám đốc', 'NGUYỄN CÔNG ĐIỂM', 1),
@@ -8,7 +8,7 @@ INSERT INTO `cau_hinh` (`MA`, `TEN`, `GIA_TRI`, `NHOM`) VALUES
 ('THU_KHO', 'Thủ kho', 'ĐỖ HẢI', 1),
 ('THU_QUY', 'Thủ quỹ', 'ĐỖ VINH', 1);
 
-INSERT INTO `cau_hinh` (`MA`, `TEN`, `GIA_TRI`, `NHOM`) VALUES 
+INSERT INTO `CAU_HINH` (`MA`, `TEN`, `GIA_TRI`, `NHOM`) VALUES 
 ('PHIEU_THU_DS_TK_NO', 'Phiếu thu: tài khoản tiền mặt, nợ', '111;1111;1112;1113', 2), 
 ('PHIEU_CHI_DS_TK_CO', 'Phiếu chi: tài khoản tiền mặt, có', '111;1111;1112;1113', 2), 
 ('BAO_NO_DS_TK_NO', 'Báo nợ: tài khoản ngân hàng, nợ', '112;1121;1122;1123', 2), 

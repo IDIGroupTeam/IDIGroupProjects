@@ -30,7 +30,6 @@ public class NhaCungCapController {
 
 	@InitBinder
 	protected void initBinder(WebDataBinder dataBinder) {
-
 		// Form mục tiêu
 		Object target = dataBinder.getTarget();
 		if (target == null) {

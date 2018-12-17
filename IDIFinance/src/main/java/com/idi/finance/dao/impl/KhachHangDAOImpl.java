@@ -117,7 +117,7 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 		if (khachHang == null) {
 			return;
 		}
-		
+
 		int count = 0;
 		String capNhat = "";
 		if (khachHang.getMaKh() > 0) {
@@ -130,9 +130,15 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 
 		String taoMoi = "INSERT INTO KHACH_HANG(KH_KH, TEN_KH, MA_THUE, DIA_CHI, EMAIL, SDT, WEBSITE) VALUES(?,?,?,?,?,?,?)";
 		try {
-			// update firstly, if now row is updated, we will be insert data
-			count = jdbcTmpl.update(capNhat, khachHang.getTenKh(), khachHang.getMaThue(), khachHang.getDiaChi(),
-					khachHang.getEmail(), khachHang.getSdt(), khachHang.getWebSite(), khachHang.getMaKh());
+			if (khachHang.getMaKh() > 0) {
+				// update firstly, if now row is updated, we will be insert data
+				count = jdbcTmpl.update(capNhat, khachHang.getTenKh(), khachHang.getMaThue(), khachHang.getDiaChi(),
+						khachHang.getEmail(), khachHang.getSdt(), khachHang.getWebSite(), khachHang.getMaKh());
+			} else if (khachHang.getKhKh() != null && !khachHang.getKhKh().trim().equals("")) {
+				// update firstly, if now row is updated, we will be insert data
+				count = jdbcTmpl.update(capNhat, khachHang.getTenKh(), khachHang.getMaThue(), khachHang.getDiaChi(),
+						khachHang.getEmail(), khachHang.getSdt(), khachHang.getWebSite(), khachHang.getKhKh());
+			}
 
 			// This is new data, so insert it.
 			if (count == 0) {
