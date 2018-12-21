@@ -27,6 +27,8 @@ import com.idi.hr.bean.SalaryDetail;
 import com.idi.hr.bean.SalaryReport;
 import com.idi.hr.bean.SalaryReportPerEmployee;
 import com.idi.hr.bean.WorkingDay;
+import com.idi.hr.common.PropertiesManager;
+import com.idi.hr.common.Utils;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.SalaryDAO;
 import com.idi.hr.dao.WorkingDayDAO;
@@ -45,6 +47,8 @@ public class SalaryController {
 	@Autowired
 	private WorkingDayDAO workingDayDAO;
 
+	PropertiesManager hr = new PropertiesManager("hr.properties");
+	
 	@RequestMapping(value = { "/salary/" })
 	public String ListSalarys(Model model, @ModelAttribute("salaryForm") SalaryForm form) throws Exception {
 		try {			
@@ -290,13 +294,14 @@ public class SalaryController {
 			int year = now.get(Calendar.YEAR);
 			if(salaryDetail.getYear() > 0)
 				year = salaryDetail.getYear();
-			System.out.println("Current Month is: " + month + ", year: " + year);
+			//System.out.println("Current Month is: " + month + ", year: " + year);
+			//System.out.println("tinh luong cho Month is: " + salaryDetail.getMonth() + ", year: " + year);
 			//SalaryDetail salaryDetail = new SalaryDetail();	
 			try {
 				salaryDetail = salaryDAO.getSalaryDetail(employeeId, month, year);
 			}catch(Exception e) {
 				salaryDetail = salaryDAO.getSalaryDetail(employeeId, 0, 0);
-				System.err.println("thang moi");
+				log.info("Tinh cho thang moi");
 				salaryDetail.setMonth(month);
 				salaryDetail.setYear(year);
 				salaryDetail.setAdvancePayed("");
@@ -314,15 +319,28 @@ public class SalaryController {
 				workingDay = workingDayDAO.getWorkingDay(year + "-0" + month, "IDI");
 			else
 				workingDay = workingDayDAO.getWorkingDay(year + "-" + month, "IDI");
+			
 			float salaryPerHour = 0;
 			if(workingDay.getWorkDayOfMonth() != null) {
 				float workingDayOfMonth = workingDay.getWorkDayOfMonth();
-				System.err.println(workingDayOfMonth);
+				
+				String carDriver = "";
+				carDriver = hr.getProperty("WORK_SATURDAY");
+				//System.err.println(workingDayOfMonth + " thang " + month);
+				//System.err.println(employeeDAO.getEmployee(String.valueOf(employeeId)).getJobTitle() +"|" + carDriver);
+				if(carDriver.contains(employeeDAO.getEmployee(String.valueOf(employeeId)).getJobTitle())) {
+					log.info(salaryDetail.getFullName() + " la lai xe");
+					log.info("Thang " + month + " co " + Utils.countWeekendDays(year, month) + " ngay thu 7 ");
+					workingDayOfMonth = workingDayOfMonth + Utils.countWeekendDays(year, month);
+					log.info( "Cong them " + Utils.countWeekendDays(year, month) + " vao ngay cong chuan");
+				}
+				
+				//System.err.println(workingDayOfMonth);
 				if(salaryDetail.getSalary() != null && salaryDetail.getSalary().length() > 0) {
 					salaryPerHour = Float.valueOf(salaryDetail.getSalary())/workingDayOfMonth/8;
 					salaryPerHour = Math.round((salaryPerHour*10)/10);
 				}	
-				System.err.println("luong/gio" + salaryPerHour);
+				//System.err.println("luong/gio" + salaryPerHour);
 			}			
 			salaryDetail.setSalaryPerHour(salaryPerHour);
 			model.addAttribute("salaryPerHour", salaryPerHour);
@@ -347,28 +365,61 @@ public class SalaryController {
 			@ModelAttribute("salaryDetailForm") @Validated SalaryDetail salaryDetail,
 			final RedirectAttributes redirectAttributes) {
 		try {
-			System.err.println(salaryDetail.getMonth());
+			//System.err.println(salaryDetail.getMonth());
+			
+			WorkingDay workingDay = null;
+			int month = salaryDetail.getMonth();
+			int year = salaryDetail.getYear();
+			int employeeId = salaryDetail.getEmployeeId();
+			if(month < 10)
+				workingDay = workingDayDAO.getWorkingDay(year + "-0" + month, "IDI");
+			else
+				workingDay = workingDayDAO.getWorkingDay(year + "-" + month, "IDI");
+			
+			float salaryPerHour = 0;
+			if(workingDay.getWorkDayOfMonth() != null) {
+				float workingDayOfMonth = workingDay.getWorkDayOfMonth();
+				
+				String carDriver = "";
+				carDriver = hr.getProperty("WORK_SATURDAY");
+				//System.err.println(workingDayOfMonth + " thang " + month);
+				//System.err.println(employeeDAO.getEmployee(String.valueOf(employeeId)).getJobTitle() +"|" + carDriver);
+				if(carDriver.contains(employeeDAO.getEmployee(String.valueOf(employeeId)).getJobTitle())) {
+					log.info(salaryDetail.getFullName() + " la lai xe");
+					log.info("Thang " + month + " co " + Utils.countWeekendDays(year, month) + " ngay thu 7 ");
+					workingDayOfMonth = workingDayOfMonth + Utils.countWeekendDays(year, month);
+					log.info( "Cong them " + Utils.countWeekendDays(year, month) + " vao ngay cong chuan");
+				}
+				
+				//System.err.println(workingDayOfMonth);
+				if(salaryDetail.getSalary() != null && salaryDetail.getSalary().length() > 0) {
+					salaryPerHour = Float.valueOf(salaryDetail.getSalary())/workingDayOfMonth/8;
+					salaryPerHour = Math.round((salaryPerHour*10)/10);
+				}	
+				//System.err.println("luong/gio" + salaryPerHour);
+			}			
+			salaryDetail.setSalaryPerHour(salaryPerHour);			
 			
 			//ting toan luong over time
 			double overTimeSalary = 0;
-			float salaryPerHour = salaryDetail.getSalaryPerHour();
+			//float salaryPerHour = salaryDetail.getSalaryPerHour();
 			String overTimeN = salaryDetail.getOverTimeN();
 			if(overTimeN != null && overTimeN.length() > 0 && Float.parseFloat(overTimeN) > 0) {
 				overTimeSalary = overTimeSalary + Float.parseFloat(overTimeN)*salaryPerHour*1.5;
-				System.err.println(overTimeSalary + " overTime N controller " + overTimeN);
+				//System.err.println(overTimeSalary + " overTime N controller " + overTimeN);
 			}
 			String overTimeW = salaryDetail.getOverTimeW();
 			if(overTimeW != null && overTimeW.length() > 0 && Float.parseFloat(overTimeW) > 0) {
 				overTimeSalary = overTimeSalary + Float.parseFloat(overTimeW)*salaryPerHour*2;
-				System.err.println(overTimeSalary + " overTime W controller " + overTimeW);
+				//System.err.println(overTimeSalary + " overTime W controller " + overTimeW);
 			}
 			String overTimeH = salaryDetail.getOverTimeH();
 			if(overTimeH != null && overTimeH.length() > 0 && Float.parseFloat(overTimeH) > 0) {
 				overTimeSalary = overTimeSalary + Float.parseFloat(overTimeH)*salaryPerHour*3;
-				System.err.println(overTimeSalary + " overTime H controller " + overTimeH);
+				//System.err.println(overTimeSalary + " overTime H controller " + overTimeH);
 			}
 						
-			System.err.println("salaryPerHour: " + salaryPerHour + " overTimeSalary: " + overTimeSalary);
+			//System.err.println("salaryPerHour: " + salaryPerHour + " overTimeSalary: " + overTimeSalary);
 			overTimeSalary = Math.round(overTimeSalary);
 			salaryDetail.setOverTimeSalary(String.valueOf(overTimeSalary));
 			
@@ -390,27 +441,38 @@ public class SalaryController {
 	public String editSalaryDetailForm(Model model,	@ModelAttribute("salaryDetail") @Validated SalaryDetail salaryDetail) {
 		try {
 			//SalaryDetail salaryDetail = new SalaryDetail();
-			salaryDetail = salaryDAO.getSalaryDetail(salaryDetail.getEmployeeId(), salaryDetail.getMonth(), salaryDetail.getYear());
-			
-			WorkingDay workingDay = null;
-			if(salaryDetail.getMonth() < 10)
-				workingDay = workingDayDAO.getWorkingDay(salaryDetail.getYear() + "-0" + salaryDetail.getMonth(), "IDI");
+					
+			WorkingDay workingDay = null;			
+			int month = salaryDetail.getMonth();
+			int year = salaryDetail.getYear();
+			int employeeId = salaryDetail.getEmployeeId();
+			salaryDetail = salaryDAO.getSalaryDetail(employeeId, month, year);
+			if(month < 10)
+				workingDay = workingDayDAO.getWorkingDay(year + "-0" + month, "IDI");
 			else
-				workingDay = workingDayDAO.getWorkingDay(salaryDetail.getYear() + "-" + salaryDetail.getMonth(), "IDI");
+				workingDay = workingDayDAO.getWorkingDay(year + "-" + month, "IDI");
+			
 			float salaryPerHour = 0;
 			if(workingDay.getWorkDayOfMonth() != null) {
 				float workingDayOfMonth = workingDay.getWorkDayOfMonth();
-				System.err.println(workingDayOfMonth);
+				
+				String carDriver = "";
+				carDriver = hr.getProperty("WORK_SATURDAY");
+				//System.err.println(workingDayOfMonth + " thang " + month);
+				//System.err.println(employeeDAO.getEmployee(String.valueOf(employeeId)).getJobTitle() +"|" + carDriver);
+				if(carDriver.contains(employeeDAO.getEmployee(String.valueOf(employeeId)).getJobTitle())) {
+					log.info(salaryDetail.getFullName() + " la lai xe");
+					log.info("Thang " + month + " co " + Utils.countWeekendDays(year, month) + " ngay thu 7 ");
+					workingDayOfMonth = workingDayOfMonth + Utils.countWeekendDays(year, month);
+					log.info( "Cong them " + Utils.countWeekendDays(year, month) + " vao ngay cong chuan");
+				}			
 				if(salaryDetail.getSalary() != null && salaryDetail.getSalary().length() > 0) {
 					salaryPerHour = Float.valueOf(salaryDetail.getSalary())/workingDayOfMonth/8;
 					salaryPerHour = Math.round((salaryPerHour*10)/10);
-					
-					System.err.println("Luong theo gio: " + Math.round(salaryPerHour));
 				}
-			}			
+			}	
 			salaryDetail.setSalaryPerHour(salaryPerHour);
-			model.addAttribute("salaryPerHour", salaryPerHour);
-			
+			model.addAttribute("salaryPerHour", salaryPerHour);			
 			model.addAttribute("salaryDetail", salaryDetail);
 			model.addAttribute("employeeId", salaryDetail.getEmployeeId());
 	
@@ -427,19 +489,34 @@ public class SalaryController {
 			final RedirectAttributes redirectAttributes) {
 		try {
 			//System.err.println(salaryDetail.getSalary());
-			WorkingDay workingDay = null;
-			if(salaryDetail.getMonth() < 10)
-				workingDay = workingDayDAO.getWorkingDay(salaryDetail.getYear() + "-0" + salaryDetail.getMonth(), "IDI");
+			WorkingDay workingDay = null;			
+			int month = salaryDetail.getMonth();
+			int year = salaryDetail.getYear();
+			int employeeId = salaryDetail.getEmployeeId();
+			if(month < 10)
+				workingDay = workingDayDAO.getWorkingDay(year + "-0" + month, "IDI");
 			else
-				workingDay = workingDayDAO.getWorkingDay(salaryDetail.getYear() + "-" + salaryDetail.getMonth(), "IDI");
+				workingDay = workingDayDAO.getWorkingDay(year + "-" + month, "IDI");
+			
 			float salaryPerHour = 0;
 			if(workingDay.getWorkDayOfMonth() != null) {
 				float workingDayOfMonth = workingDay.getWorkDayOfMonth();
-				System.err.println(workingDayOfMonth);
+				
+				String carDriver = "";
+				carDriver = hr.getProperty("WORK_SATURDAY");
+				//System.err.println(workingDayOfMonth + " thang " + month);
+				//System.err.println(employeeDAO.getEmployee(String.valueOf(employeeId)).getJobTitle() +"|" + carDriver);
+				if(carDriver.contains(employeeDAO.getEmployee(String.valueOf(employeeId)).getJobTitle())) {
+					log.info(salaryDetail.getFullName() + " la lai xe");
+					log.info("Thang " + month + " co " + Utils.countWeekendDays(year, month) + " ngay thu 7 ");
+					workingDayOfMonth = workingDayOfMonth + Utils.countWeekendDays(year, month);
+					log.info( "Cong them " + Utils.countWeekendDays(year, month) + " vao ngay cong chuan");
+				}			
+		
 				if(salaryDetail.getSalary() != null && salaryDetail.getSalary().length() > 0) {
 					salaryPerHour = Float.valueOf(salaryDetail.getSalary())/workingDayOfMonth/8;
 					salaryPerHour = Math.round(salaryPerHour);
-					System.err.println("Lương theo giờ: " + Math.round(salaryPerHour));
+					//System.err.println("Lương theo giờ: " + Math.round(salaryPerHour));
 				}
 			}			
 			salaryDetail.setSalaryPerHour(salaryPerHour);
@@ -476,7 +553,7 @@ public class SalaryController {
 	@RequestMapping(value = "/salary/prepareSummarySalary", method = RequestMethod.GET)
 	public String pepareSummarySalary(Model model, LeaveReport leaveReport) {
 		try {
-			System.out.println("PepareSummarySalary 0");
+			//System.out.println("PepareSummarySalary 0");
 			model.addAttribute("salaryReportForm", leaveReport);
 
 			// get list department
@@ -488,7 +565,7 @@ public class SalaryController {
 			model.addAttribute("employeeMap", employeeMap);
 
 			model.addAttribute("formTitle", "Tùy chọn phạm vi cần thống kê lương");
-			System.out.println("PepareSummarySalary 1");
+			//System.out.println("PepareSummarySalary 1");
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
