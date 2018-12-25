@@ -397,6 +397,16 @@ public class SalaryController {
 					salaryPerHour = Math.round((salaryPerHour*10)/10);
 				}	
 				//System.err.println("luong/gio" + salaryPerHour);
+				
+				//Không lv đủ cả tháng
+				String workedDay = salaryDetail.getWorkedDay(); 
+				if(workedDay != null && workedDay.length() > 0) {
+					float currentSalary = (Float.parseFloat(workedDay)/workingDayOfMonth)*Float.valueOf(Float.parseFloat(salaryDetail.getSalary()));
+					log.info("Ngay lv thuc te trong thang: " + workedDay + "/" + workingDayOfMonth);
+					salaryDetail.setSalaryForWorkedDay(String.valueOf(currentSalary));
+				}
+			}else {
+				model.addAttribute("workDayDefine", "Vui lòng định nghĩa ngày công chuẩn cho tháng trước để việc tính lương được chính sác!");
 			}			
 			salaryDetail.setSalaryPerHour(salaryPerHour);			
 			
@@ -499,6 +509,7 @@ public class SalaryController {
 				workingDay = workingDayDAO.getWorkingDay(year + "-" + month, "IDI");
 			
 			float salaryPerHour = 0;
+			//System.err.println(workingDay.getWorkDayOfMonth());
 			if(workingDay.getWorkDayOfMonth() != null) {
 				float workingDayOfMonth = workingDay.getWorkDayOfMonth();
 				
@@ -518,7 +529,17 @@ public class SalaryController {
 					salaryPerHour = Math.round(salaryPerHour);
 					//System.err.println("Lương theo giờ: " + Math.round(salaryPerHour));
 				}
-			}			
+				
+				//Không lv đủ cả tháng
+				String workedDay = salaryDetail.getWorkedDay(); 
+				log.info("Ngay lv thuc te trong thang: " + workedDay + "/" + workingDayOfMonth);
+				if(workedDay != null && workedDay.length() > 0) {
+					float currentSalary = (Float.parseFloat(workedDay)/workingDayOfMonth)*Float.valueOf(Float.parseFloat(salaryDetail.getSalary()));
+					salaryDetail.setSalaryForWorkedDay(String.valueOf(currentSalary));
+				}
+			}else {
+				model.addAttribute("workDayDefine", "Vui lòng định nghĩa ngày công chuẩn cho tháng trước để việc tính lương được chính sác!");
+			}
 			salaryDetail.setSalaryPerHour(salaryPerHour);
 			
 			//ting toan luong over time
@@ -542,7 +563,7 @@ public class SalaryController {
 			model.addAttribute("employeeId", salaryDetail.getEmployeeId());
 			salaryDAO.updateSalaryDetail(salaryDetail);
 			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Sửa thông tin tính lương thành công!");
+			redirectAttributes.addFlashAttribute("message", "Tính lại lương thành công!");
 
 		} catch (Exception e) {
 			log.error(e, e);

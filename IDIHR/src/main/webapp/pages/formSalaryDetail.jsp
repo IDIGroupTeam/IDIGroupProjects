@@ -36,6 +36,11 @@
 		action="insertSalaryDetail" enctype="multipart/form-data">
 		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Tính lương thực nhận" name="Tính lương thực nhận" /><br/><br/>
 		<div class="table table-bordered">
+			<c:if test="${not empty workDayDefine}">
+				<div class="alert alert-warning">
+			     	${workDayDefine}
+			    </div>
+		    </c:if>
 			<table class="table">
 				<tbody>
  					<form:hidden path="employeeId"/>
@@ -120,11 +125,15 @@
 						<c:if test="${empty salaryDetail.salaryInsurance}">
 							<td><i>Không tham gia BHXH</i></td> 
 						</c:if>		
-						
-						<td nowrap="nowrap">Hệ số hoàn thành cv (%)</td>
-						<td><form:input path="workComplete" class="form-control bfh-number" min="1" max="999" type="number" value="100" size="4"/></td>
-										 
+						<td></td><td></td>	 
 					</tr>
+					<tr>
+						<td bgcolor="#FAFAFA" nowrap="nowrap">Hệ số hoàn thành cv (%):</td>
+						<td><form:input path="workComplete" class="form-control bfh-number" min="0" max="999" type="number" value="100" size="4"/></td>
+						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng">Số ngày lv thực tế:</td>
+						<td><form:input path="workedDay" class="form-control bfh-number" min="0.5" max="31" step="0.5" type="number" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng"/></td>
+						<td></td><td></td>
+					</tr>				 
 					<tr>
 						<td colspan="4" nowrap="nowrap" bgcolor="#E6E6E6">Các khoản thưởng/phụ cấp/thưởng/tăng ca</td>
 						<td colspan="2" nowrap="nowrap" bgcolor="#E6E6E6">Các khoản giảm trừ vào lương</td>

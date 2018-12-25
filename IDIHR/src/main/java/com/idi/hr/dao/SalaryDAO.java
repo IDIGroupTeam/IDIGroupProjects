@@ -235,7 +235,12 @@ public class SalaryDAO extends JdbcDaoSupport {
 			log.info("INSERT_SALARY_DETAIL query: " + sql);
 			//System.err.println("salary " + salaryDetail.getSalary());
 			// Tính lương thực nhận
-			float finalSalary = Float.valueOf(salaryDetail.getSalary());
+			float finalSalary = 0;
+			if(salaryDetail.getSalaryForWorkedDay() != null) {
+				finalSalary = Float.valueOf(salaryDetail.getSalaryForWorkedDay());
+			}else {
+				 finalSalary = Float.valueOf(salaryDetail.getSalary());
+			}
 			if(salaryDetail.getWorkComplete() > 0) {
 				finalSalary=finalSalary*salaryDetail.getWorkComplete()/100;
 				//System.err.println(8000000*120/100);
@@ -281,7 +286,8 @@ public class SalaryDAO extends JdbcDaoSupport {
 					salaryDetail.getOverTimeW(), salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(),
 					salaryDetail.getBounus(), salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(),
 					salaryDetail.getTaxPersonal(), salaryDetail.getFinalSalary(), salaryDetail.getMonth(),
-					salaryDetail.getYear(), salaryDetail.getDesc(), salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete() };
+					salaryDetail.getYear(), salaryDetail.getDesc(), salaryDetail.getPayedInsurance(), 
+					salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -291,7 +297,6 @@ public class SalaryDAO extends JdbcDaoSupport {
 				log.error(ex, ex);
 				throw ex;
 			}
-
 		}
 	}
 
@@ -309,7 +314,13 @@ public class SalaryDAO extends JdbcDaoSupport {
 			log.info("UPDATE_SALARY_DETAIL query: " + sql);
 
 			// Tính lương thực nhận
-			float finalSalary = Float.valueOf(salaryDetail.getSalary());
+			float finalSalary = 0;
+			if(salaryDetail.getSalaryForWorkedDay() != null) {
+				finalSalary = Float.valueOf(salaryDetail.getSalaryForWorkedDay());
+			}else {
+				 finalSalary = Float.valueOf(salaryDetail.getSalary());
+			}
+			
 			if(salaryDetail.getWorkComplete() > 0) {
 				finalSalary=finalSalary*salaryDetail.getWorkComplete()/100;				
 			}
@@ -357,7 +368,8 @@ public class SalaryDAO extends JdbcDaoSupport {
 					salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(),
 					salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(),
 					salaryDetail.getFinalSalary(), salaryDetail.getDesc(), salaryDetail.getPayedInsurance(),
-					salaryDetail.getWorkComplete(), salaryDetail.getEmployeeId(), salaryDetail.getMonth(), salaryDetail.getYear() };
+					salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(), salaryDetail.getEmployeeId(), 
+					salaryDetail.getMonth(), salaryDetail.getYear() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {

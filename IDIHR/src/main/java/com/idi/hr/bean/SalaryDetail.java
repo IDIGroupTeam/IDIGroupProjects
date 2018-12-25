@@ -36,6 +36,8 @@ public class SalaryDetail implements Serializable {
 	private String percentCompanyPay;
 	private String percentEmployeePay;
 	private int workComplete;
+	private String workedDay;
+	private String salaryForWorkedDay;
 	
 	public SalaryDetail() {
 		
@@ -44,7 +46,8 @@ public class SalaryDetail implements Serializable {
 	public SalaryDetail(int employeeId, String finalSalary, String overTimeN, String overTimeW, String overTimeH, String overTimeSalary,
 		String bounus, String subsidize, String advancePayed, String taxPersonal, int month, int year,	String description,
 		String payedInsurance, String fullName, String phoneNo, String bankNo, String bankName, String bankBranch, String salary, 
-		String department, String jobTitle, String salaryInsurance, String percentCompanyPay, String percentEmployeePay, int workComplete) {
+		String department, String jobTitle, String salaryInsurance, String percentCompanyPay, String percentEmployeePay, 
+		int workComplete, String workedDay) {
 		
 		this.employeeId = employeeId;
 		this.finalSalary = finalSalary;
@@ -73,6 +76,7 @@ public class SalaryDetail implements Serializable {
 		this.percentCompanyPay = percentCompanyPay;
 		this.percentEmployeePay = percentEmployeePay;
 		this.workComplete = workComplete;
+		this.workedDay = workedDay;
 		
 	}	
 
@@ -296,4 +300,19 @@ public class SalaryDetail implements Serializable {
 		this.workComplete = workComplete;
 	}
 
+	public String getWorkedDay() {
+		return workedDay;
+	}
+
+	public void setWorkedDay(String workedDay) {
+		this.workedDay = workedDay;
+	}
+
+	public String getSalaryForWorkedDay() {
+		return salaryForWorkedDay;
+	}
+
+	public void setSalaryForWorkedDay(String salaryForWorkedDay) {
+		this.salaryForWorkedDay = salaryForWorkedDay;
+	}
 }
