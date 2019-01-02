@@ -17,7 +17,6 @@
 <link rel="stylesheet"
 	href="${url}/public/css/bootstrap-multiselect.css" />
 <link rel="stylesheet" href="${url}/public/css/bootcomplete.css" />
-<link rel="stylesheet" href="${url}/public/css/tabledit.css" />
 <link rel="stylesheet"
 	href="${url}/public/css/bootstrap-datetimepicker.min.css" />
 <link rel="stylesheet" href="${url}/public/css/style.css" />
@@ -28,8 +27,6 @@
 <script src="${url}/public/js/bootstrap-dialog.min.js"></script>
 <script src="${url}/public/js/bootstrap-multiselect.js"></script>
 <script src="${url}/public/js/jquery.bootcomplete.js"></script>
-<script src="${url}/public/js/jquery.tabledit.js"></script>
-<script src="${url}/public/js/jquery.treetable.js"></script>
 <script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
 <script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
 <script src="${url}/public/js/jquery.formatCurrency-1.4.0.js"></script>

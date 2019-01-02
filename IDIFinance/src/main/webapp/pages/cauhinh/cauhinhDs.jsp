@@ -12,9 +12,8 @@
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
 		$(".table").cellEditable({
-			beforeSave : function(key, data) {
-				return "maCh=" + key + "&giaTri=" + data;
-				;
+			beforeSave : function(key, cells) {
+				return "maCh=" + key.ma + "&giaTri=" + cells[0].value;
 			},
 			urlSave : "${url}/cauhinh/capnhat",
 			removable : false
@@ -35,10 +34,10 @@
 		</thead>
 		<tbody>
 			<c:forEach items="${cauHinhChungDs}" var="cauHinh">
-				<tr>
+				<tr data-ma="${cauHinh.ma}">
 					<%-- <td>${cauHinh.ma}</td> --%>
 					<td style="width: 300px;">${cauHinh.ten}</td>
-					<td class="cell-editable" data="${cauHinh.ma}">${cauHinh.giaTri}</td>
+					<td class="cell-editable" data-field="giaTri">${cauHinh.giaTri}</td>
 				</tr>
 			</c:forEach>
 		</tbody>
@@ -52,21 +51,19 @@
 			<tr>
 				<!-- <th class="text-center">Mã</th> -->
 				<th class="text-center" style="width: 300px;">Tên</th>
-				<th class="text-center">Giá trị <br />
-				<i>(Các tài khoản cách nhau dấu chấm phẩy)</i>
+				<th class="text-center">Giá trị <br /> <i>(Các tài khoản
+						cách nhau dấu chấm phẩy)</i>
 				</th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:forEach items="${cauHinhTkDs}" var="cauHinh">
-				<tr>
+				<tr data-ma="${cauHinh.ma}">
 					<%-- <td>${cauHinh.ma}</td> --%>
 					<td style="width: 300px;">${cauHinh.ten}</td>
-					<td class="cell-editable" data="${cauHinh.ma}">${cauHinh.giaTri}</td>
+					<td class="cell-editable" data-field="giaTri">${cauHinh.giaTri}</td>
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
 </div>
-
-

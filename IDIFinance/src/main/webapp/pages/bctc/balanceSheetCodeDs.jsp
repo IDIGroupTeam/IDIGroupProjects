@@ -1,4 +1,5 @@
 <%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
+<%@page import="com.idi.finance.utils.PropCont"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -16,12 +17,14 @@
 				"${url}/bctc/cdkt/chitieu/danhsach");
 		$("#mainFinanceForm").attr("method", "POST");
 
-		$(".table").cellEditable({
-			beforeLoad : function(param) {
+		$('#treeTable').treeTable();
+
+		$('#treeTable').cellEditable({
+			beforeLoad : function(key, cellDatas) {
 				try {
-					var rs = param.split(",");
-					return "maTk=" + rs[2];
+					return "maTk=" + cellDatas.matkgoc;
 				} catch (e) {
+					console.log("beforeLoad", e)
 				}
 				return "";
 			},
@@ -39,11 +42,11 @@
 				}
 				return list;
 			},
-			beforeSave : function(key, data) {
+			beforeSave : function(key, cells) {
 				try {
-					var rs = key.split(",");
-					res = "assetCode=" + rs[0] + "&maTkCu=" + rs[1];
-					res += "&maTk=" + data;
+					var res = "assetCode=" + key.assetcode;
+					res += "&maTkCu=" + key.matk;
+					res += "&maTk=" + cells[0].value;
 
 					return res;
 				} catch (e) {
@@ -51,35 +54,16 @@
 				return "";
 			},
 			urlSave : "${url}/bctc/cdkt/chitieu/capnhat",
-			afterSave : function(type, cell, data) {
-				if (cell == null || data == null) {
-					return;
-				}
-
-				if (type == "combobox") {
-					var dataStr = data.assetCode;
-					dataStr += "," + data.taiKhoanDs[0].maTk;
-					dataStr += "," + data.taiKhoanDs[0].maTkGoc;
-					$(cell).attr("data", dataStr);
-
-					var res = data.taiKhoanDs[0].maTenTk;
-					res = res.replace("-", "<br/>");
-					$(cell).html(res);
-				}
-			},
-			beforeRemove : function(key) {
+			beforeRemove : function(key, cells) {
 				try {
-					var rs = key.split(",");
-					res = "assetCode=" + rs[0] + "&maTk=" + rs[1];
-
-					return res;
+					return "assetCode=" + key.assetcode + "&maTk=" + key.matk;
 				} catch (e) {
 				}
 
 				return "";
 			},
 			urlRemove : "${url}/bctc/cdkt/chitieu/xoa",
-			afterRemove : function(type, cell, data) {
+			afterRemove : function(data) {
 				try {
 					window.location.href = "${url}/bctc/cdkt/chitieu/danhsach";
 				} catch (e) {
@@ -93,7 +77,7 @@
 <h4>Danh sách các chỉ tiêu của bảng cân đối kế toán</h4>
 
 <div>
-	<span><i>Theo thông tư 200</i></span> <a
+	<span><i>${props.getCauHinh(PropCont.CHE_DO_KE_TOAN).giaTri}</i></span> <a
 		href="${url}/bctc/cdkt/chitieu/taomoi"
 		class="btn btn-info btn-sm pull-right"> <span
 		class="glyphicon glyphicon-plus"></span> Tạo mới
@@ -102,240 +86,31 @@
 <br />
 
 <div class="table-responsive">
-	<table class="table table-bordered table-hover">
-		<tbody>
-			<c:forEach items="${bais}" var="topBai">
-				<tr>
-					<th colspan="7" class="text-center">${topBai.assetName}<br />${topBai.assetCode}</th>
+	<table id="treeTable" class="table table-bordered table-hover">
+		<thead>
+			<tr>
+				<th class="text-center" rowspan="2">Chỉ tiêu</th>
+				<th class="text-center" colspan="2">Tài khoản</th>
+			</tr>
+			<tr>
+				<th class="text-center">Số dư</th>
+				<th class="text-center">Tài khoản gốc</th>
+			</tr>
+		</thead>
+		<tbody class="form-inline">
+			<c:forEach items="${bais}" var="bai">
+				<tr id="${bai.assetCode}">
+					<td>${bai.assetCode}&nbsp;-&nbsp;<span
+						class="cell-editable dis-editable dis-removable">${bai.assetName}</span></td>
+					<td></td>
+					<td></td>
 				</tr>
-				<c:choose>
-					<c:when test="${topBai.childs.size()>0}">
-						<c:forEach items="${topBai.childs}" var="bai">
-							<tr>
-								<th colspan="7" class="text-center">${bai.assetName}<br />
-									${bai.assetCode}
-								</th>
-							</tr>
-							<tr>
-								<th rowspan="2" class="text-center">Chỉ tiêu</th>
-								<th rowspan="2" class="text-center">Chỉ tiêu</th>
-								<th rowspan="2" class="text-center">Chỉ tiêu</th>
-								<th colspan="3" class="text-center">Tài khoản</th>
-								<th rowspan="2"></th>
-							</tr>
-							<tr>
-								<th class="text-center">Tải khoản</th>
-								<th class="text-center">Tải khoản gốc (TT200)</th>
-								<th class="text-center">Số dư</th>
-							</tr>
 
-							<c:choose>
-								<c:when test="${bai.childs.size()>0}">
-									<c:forEach items="${bai.childs}" var="child">
-										<c:choose>
-											<c:when test="${child.childs.size()>0}">
-												<!-- Dòng đầu tiên của dữ liệu cấp 1 -->
-												<tr>
-													<td rowspan="${child.row}">${child.assetCode}<br />${child.assetName}</td>
-													<td rowspan="${child.childs[0].row}">${child.childs[0].assetCode}<br />${child.childs[0].assetName}</td>
-													<c:choose>
-														<c:when test="${child.childs[0].childs.size()>0}">
-															<td rowspan="${child.childs[0].childs[0].row}">
-																${child.childs[0].childs[0].assetCode}<br />${child.childs[0].childs[0].assetName}
-															</td>
-															<td class="cell-editable" type="combobox"
-																data="${child.childs[0].childs[0].assetCode},${child.childs[0].childs[0].taiKhoanDs[0].maTk},${child.childs[0].childs[0].taiKhoanDs[0].maTkGoc}">${child.childs[0].childs[0].taiKhoanDs[0].maTk}<br />${child.childs[0].childs[0].taiKhoanDs[0].tenTk}</td>
-															<td>${child.childs[0].childs[0].taiKhoanDs[0].maTkGoc}</td>
-															<td><c:choose>
-																	<c:when
-																		test="${child.childs[0].childs[0].taiKhoanDs[0].soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
-																	<c:otherwise>Có</c:otherwise>
-																</c:choose></td>
-														</c:when>
-														<c:otherwise>
-															<td></td>
-															<td class="cell-editable" type="combobox"
-																data="${child.childs[0].assetCode},${child.childs[0].taiKhoanDs[0].maTk},${child.childs[0].taiKhoanDs[0].maTkGoc}">${child.childs[0].taiKhoanDs[0].maTk}<br />${child.childs[0].taiKhoanDs[0].tenTk}</td>
-															<td>${child.childs[0].taiKhoanDs[0].maTkGoc}</td>
-															<td><c:choose>
-																	<c:when
-																		test="${child.childs[0].taiKhoanDs[0].soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
-																	<c:otherwise>Có</c:otherwise>
-																</c:choose></td>
-														</c:otherwise>
-													</c:choose>
-												</tr>
-
-												<c:choose>
-													<c:when test="${child.childs[0].childs.size()>0}">
-														<c:forEach items="${child.childs[0].childs[0].taiKhoanDs}"
-															begin="1"
-															end="${child.childs[0].childs[0].taiKhoanDs.size()}"
-															var="child1">
-															<tr>
-																<td class="cell-editable" type="combobox"
-																	data="${child.childs[0].childs[0].assetCode},${child1.maTk},${child1.maTkGoc}">${child1.maTk}<br />${child1.tenTk}</td>
-																<td>${child1.maTkGoc}</td>
-																<td><c:choose>
-																		<c:when test="${child1.soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
-																		<c:otherwise>Có</c:otherwise>
-																	</c:choose></td>
-															</tr>
-														</c:forEach>
-														<c:forEach items="${child.childs[0].childs}" begin="1"
-															end="${child.childs[0].childs.size()}" var="child1">
-															<tr>
-																<td rowspan="${child1.row}">${child1.assetCode}<br />${child1.assetName}
-																</td>
-																<td class="cell-editable" type="combobox"
-																	data="${child1.assetCode},${child1.taiKhoanDs[0].maTk},${child1.taiKhoanDs[0].maTkGoc}">${child1.taiKhoanDs[0].maTk}<br />${child1.taiKhoanDs[0].tenTk}</td>
-																<td>${child1.taiKhoanDs[0].maTkGoc}</td>
-																<td><c:choose>
-																		<c:when
-																			test="${child1.taiKhoanDs[0].soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
-																		<c:otherwise>Có</c:otherwise>
-																	</c:choose></td>
-															</tr>
-															<c:forEach items="${child1.taiKhoanDs}" begin="1"
-																end="${child1.taiKhoanDs.size()}" var="child2">
-																<tr>
-																	<td class="cell-editable" type="combobox"
-																		data="${child1.assetCode},${child2.maTk},${child2.maTkGoc}">${child2.maTk}<br />${child2.tenTk}</td>
-																	<td>${child2.maTkGoc}</td>
-																	<td><c:choose>
-																			<c:when test="${child2.soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
-																			<c:otherwise>Có</c:otherwise>
-																		</c:choose></td>
-																</tr>
-															</c:forEach>
-														</c:forEach>
-													</c:when>
-													<c:otherwise>
-														<c:forEach items="${child.childs[0].taiKhoanDs}" begin="1"
-															end="${child.childs[0].taiKhoanDs.size()}" var="child1">
-															<tr>
-																<td></td>
-																<td class="cell-editable" type="combobox"
-																	data="${child.childs[0].assetCode},${child1.maTk},${child1.maTkGoc}">${child1.maTk}<br />${child1.tenTk}</td>
-																<td>${child1.maTkGoc}</td>
-																<td><c:choose>
-																		<c:when test="${child1.soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
-																		<c:otherwise>Có</c:otherwise>
-																	</c:choose></td>
-															</tr>
-														</c:forEach>
-													</c:otherwise>
-												</c:choose>
-
-												<!--  Các dòng tiếp theo -->
-												<c:forEach items="${child.childs}" begin="1"
-													end="${child.childs.size()}" var="child1">
-													<tr>
-														<td rowspan="${child1.row}">${child1.assetCode}<br />${child1.assetName}</td>
-														<c:choose>
-															<c:when test="${child1.childs.size()>0}">
-																<td rowspan="${child1.childs[0].row}">
-																	${child1.childs[0].assetCode}<br />${child1.childs[0].assetName}
-																</td>
-																<td class="cell-editable" type="combobox"
-																	data="${child1.childs[0].assetCode},${child1.childs[0].taiKhoanDs[0].maTk},${child1.childs[0].taiKhoanDs[0].maTkGoc}">${child1.childs[0].taiKhoanDs[0].maTk}<br />${child1.childs[0].taiKhoanDs[0].tenTk}</td>
-																<td>${child1.childs[0].taiKhoanDs[0].maTkGoc}</td>
-																<td><c:choose>
-																		<c:when
-																			test="${child1.childs[0].taiKhoanDs[0].soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
-																		<c:otherwise>Có</c:otherwise>
-																	</c:choose></td>
-															</c:when>
-															<c:otherwise>
-																<td></td>
-																<td class="cell-editable" type="combobox"
-																	data="${child1.assetCode},${child1.taiKhoanDs[0].maTk},${child1.taiKhoanDs[0].maTkGoc}">${child1.taiKhoanDs[0].maTk}<br />${child1.taiKhoanDs[0].tenTk}</td>
-																<td>${child1.taiKhoanDs[0].maTkGoc}</td>
-																<td><c:choose>
-																		<c:when
-																			test="${child1.taiKhoanDs[0].soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
-																		<c:otherwise>Có</c:otherwise>
-																	</c:choose></td>
-															</c:otherwise>
-														</c:choose>
-													</tr>
-													<c:choose>
-														<c:when test="${child1.childs.size()>0}">
-															<c:forEach items="${child1.childs[0].taiKhoanDs}"
-																begin="1" end="${child1.childs[0].taiKhoanDs.size()}"
-																var="child2">
-																<tr>
-																	<td class="cell-editable" type="combobox"
-																		data="${child1.childs[0].assetCode},${child2.maTk},${child2.maTkGoc}">${child2.maTk}<br />${child2.tenTk}</td>
-																	<td>${child2.maTkGoc}</td>
-																	<td><c:choose>
-																			<c:when test="${child2.soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
-																			<c:otherwise>Có</c:otherwise>
-																		</c:choose></td>
-																</tr>
-															</c:forEach>
-															<c:forEach items="${child1.childs}" begin="1"
-																end="${child1.childs.size()}" var="child2">
-																<tr>
-																	<td rowspan="${child2.row}">${child2.assetCode}<br />${child2.assetName}
-																	</td>
-																	<td class="cell-editable" type="combobox"
-																		data="${child2.assetCode},${child2.taiKhoanDs[0].maTk},${child2.taiKhoanDs[0].maTkGoc}">${child2.taiKhoanDs[0].maTk}<br />${child2.taiKhoanDs[0].tenTk}</td>
-																	<td>${child2.taiKhoanDs[0].maTkGoc}</td>
-																	<td><c:choose>
-																			<c:when
-																				test="${child2.taiKhoanDs[0].soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
-																			<c:otherwise>Có</c:otherwise>
-																		</c:choose></td>
-																</tr>
-																<c:forEach items="${child2.taiKhoanDs}" begin="1"
-																	end="${child2.taiKhoanDs.size()}" var="child3">
-																	<tr>
-																		<td class="cell-editable" type="combobox"
-																			data="${child2.assetCode},${child3.maTk},${child3.maTkGoc}">${child3.maTk}<br />${child3.tenTk}</td>
-																		<td>${child3.maTkGoc}</td>
-																		<td><c:choose>
-																				<c:when test="${child3.soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
-																				<c:otherwise>Có</c:otherwise>
-																			</c:choose></td>
-																	</tr>
-																</c:forEach>
-															</c:forEach>
-														</c:when>
-														<c:otherwise>
-															<c:forEach items="${child1.taiKhoanDs}" begin="1"
-																end="${child1.taiKhoanDs.size()}" var="child2">
-																<tr>
-																	<td></td>
-																	<td class="cell-editable" type="combobox"
-																		data="${child1.assetCode},${child2.maTk},${child2.maTkGoc}">${child2.maTk}<br />${child2.tenTk}</td>
-																	<td>${child2.maTkGoc}</td>
-																	<td><c:choose>
-																			<c:when test="${child2.soDuGiaTri==LoaiTaiKhoan.NO}">Nợ</c:when>
-																			<c:otherwise>Có</c:otherwise>
-																		</c:choose></td>
-																</tr>
-															</c:forEach>
-														</c:otherwise>
-													</c:choose>
-												</c:forEach>
-											</c:when>
-											<c:otherwise>
-												<tr>
-													<td>${child.assetCode}<br />${child.assetName}</td>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td></td>
-												</tr>
-											</c:otherwise>
-										</c:choose>
-									</c:forEach>
-								</c:when>
-							</c:choose>
-						</c:forEach>
-					</c:when>
-				</c:choose>
+				<c:set var="parentId" value="${bai.assetCode}" scope="request" />
+				<c:set var="assetCode" value="${bai.assetCode}" scope="request" />
+				<c:set var="taiKhoanDs" value="${bai.taiKhoanDs}" scope="request" />
+				<c:set var="bais" value="${bai.childs}" scope="request" />
+				<jsp:include page="balanceSheetCodeDsCon.jsp" />
 			</c:forEach>
 		</tbody>
 	</table>

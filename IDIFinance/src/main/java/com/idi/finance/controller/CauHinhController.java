@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.idi.finance.bean.CauHinh;
 import com.idi.finance.bean.DungChung;
-import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.CauHinhDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
 

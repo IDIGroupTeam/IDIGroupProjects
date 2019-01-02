@@ -23,8 +23,10 @@ public class LoaiTaiKhoanValidator implements Validator {
 	@Override
 	public void validate(Object target, Errors errors) {
 		LoaiTaiKhoan loaiTaiKhoan = (LoaiTaiKhoan) target;
-		
+
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "maTk", "NotEmpty.LoaiTaiKhoan.maTk");
+		// ValidationUtils.rejectIfEmptyOrWhitespace(errors, "maTkCha",
+		// "NotEmpty.LoaiTaiKhoan.maTkCha");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "tenTk", "NotEmpty.LoaiTaiKhoan.tenTk");
 
 		if (taiKhoanDAO.layTaiKhoan(loaiTaiKhoan.getMaTk()) != null && loaiTaiKhoan.isNew()) {
@@ -37,6 +39,22 @@ public class LoaiTaiKhoanValidator implements Validator {
 					errors.rejectValue("maTk", "LoaiTaiKhoan.QuaNganCha");
 				} else if (!maTk.substring(0, maTkCha.length()).equals(maTkCha)) {
 					errors.rejectValue("maTk", "LoaiTaiKhoan.DungChuan");
+				}
+
+				LoaiTaiKhoan taiKhoanCha = taiKhoanDAO.layTaiKhoan(maTkCha);
+
+				if (taiKhoanCha == null) {
+					// Tài khoản cha không tồn tại
+					errors.rejectValue("maTkCha", "LoaiTaiKhoan.maTkCha.khongTonTai");
+				} else {
+					if (taiKhoanCha.isLuongTinh() != loaiTaiKhoan.isLuongTinh()) {
+						// Tính lưỡng tính của tài khoản cha con phải giống nhau
+						errors.rejectValue("luongTinh", "LoaiTaiKhoan.luongTinh.sai");
+					}
+					if (taiKhoanCha.getSoDu() != loaiTaiKhoan.getSoDu()) {
+						// Tính lưỡng tính của tài khoản cha con phải giống nhau
+						errors.rejectValue("soDu", "LoaiTaiKhoan.soDu.sai");
+					}
 				}
 			} else {
 				if (loaiTaiKhoan.getMaTk().trim().length() < 3) {

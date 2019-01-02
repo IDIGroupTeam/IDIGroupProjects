@@ -24,7 +24,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -413,7 +412,7 @@ public class BalanceSheetController {
 					selectedAssetPeriods, form.getPeriodType());
 
 			// Sinh bảng cân đối kế toán ra pdf
-			HashMap<String, Object> params = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 			JasperReport jasperReport = getCompiledFile("CDKT", req);
 			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bads);
 
@@ -655,7 +654,7 @@ public class BalanceSheetController {
 					selectedAssetPeriods, form.getPeriodType());
 
 			// Sinh bảng cân đối kế toán ra pdf
-			HashMap<String, Object> params = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 			JasperReport jasperReport = getCompiledFile("KQHDKD", req);
 			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bads);
 
@@ -965,33 +964,12 @@ public class BalanceSheetController {
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			List<BalanceAssetItem> bais = balanceSheetDAO.listBais();
+
 			model.addAttribute("bais", bais);
+			model.addAttribute("props", props);
 			model.addAttribute("tab", "tabDSBCDKT");
 
 			return "balanceSheetCodes";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "error";
-		}
-	}
-
-	@RequestMapping("/bctc/cdkt/chitieu/sua/{assetCode}/{maTk}")
-	public String suaBalanceSheetCode(@PathVariable("assetCode") String assetCode, @PathVariable("maTk") String maTk,
-			Model model) {
-		try {
-			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-			KyKeToan kyKeToan = dungChung.getKyKeToan();
-			if (kyKeToan == null) {
-				return "koKyKeToanMacDinh";
-			}
-			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
-				return "redirect:/bctc/cdkt/chitieu/danhsach";
-			}
-
-			BalanceAssetItem bai = new BalanceAssetItem();
-
-			return chuanBiFormBalanceSheetCode(model, bai);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
@@ -1029,12 +1007,7 @@ public class BalanceSheetController {
 			}
 
 			logger.info("Thêm chỉ tiêu cân đối kế toán: " + bai);
-			BalanceAssetItem baiTmpl = bai.getChilds().get(0);
-			if (baiTmpl.getAssetCode() == null || baiTmpl.getAssetCode().trim().equals("")) {
-				baiTmpl.setAssetCode(bai.getAssetCode());
-			}
-
-			int count = balanceSheetDAO.insertBai(baiTmpl);
+			int count = balanceSheetDAO.insertBSBai(bai);
 			if (count == -1) {
 				result.rejectValue("assetCode", "NotEmpty.Bai.Duplicate");
 				return chuanBiFormBalanceSheetCode(model, bai);
@@ -1049,34 +1022,19 @@ public class BalanceSheetController {
 
 	private String chuanBiFormBalanceSheetCode(Model model, BalanceAssetItem bai) {
 		try {
+			model.addAttribute("props", props);
 			model.addAttribute("mainFinanceForm", bai);
+			bai.setType(BalanceAssetItem.BCTC_CDKT);
 
-			// Lấy danh sách chỉ tiêu CĐKT cấp 4
+			// Lấy danh sách chỉ tiêu CDKT
 			List<BalanceAssetItem> baiDs = balanceSheetDAO.listBais();
 			List<BalanceAssetItem> baiDsRs = new ArrayList<>();
 
 			if (baiDs != null) {
+				// Lấy danh sách chỉ tiêu CDKT cấp thấp nhất
 				Iterator<BalanceAssetItem> baiIter = baiDs.iterator();
 				while (baiIter.hasNext()) {
-					BalanceAssetItem baiTmpl = baiIter.next();// 270
-
-					if (baiTmpl != null && baiTmpl.getChilds() != null) {
-						Iterator<BalanceAssetItem> baiIter1 = baiTmpl.getChilds().iterator();
-						while (baiIter1.hasNext()) {
-							BalanceAssetItem baiTmpl1 = baiIter1.next();// 100
-
-							if (baiTmpl1 != null && baiTmpl1.getChilds() != null) {
-								Iterator<BalanceAssetItem> baiIter2 = baiTmpl1.getChilds().iterator();
-								while (baiIter2.hasNext()) {
-									BalanceAssetItem baiTmpl2 = baiIter2.next();// 110
-
-									if (baiTmpl2 != null && baiTmpl2.getChilds() != null) {
-										baiDsRs.addAll(baiTmpl2.getChilds());
-									}
-								}
-							}
-						}
-					}
+					baiDsRs.addAll(lineUpLowestBai(baiIter.next()));
 				}
 			}
 
@@ -1095,6 +1053,25 @@ public class BalanceSheetController {
 		}
 	}
 
+	private List<BalanceAssetItem> lineUpLowestBai(BalanceAssetItem bai) {
+		if (bai == null) {
+			return null;
+		}
+
+		List<BalanceAssetItem> baiDsRs = new ArrayList<>();
+
+		if (bai.getChilds() != null) {
+			Iterator<BalanceAssetItem> iter = bai.getChilds().iterator();
+			while (iter.hasNext()) {
+				baiDsRs.addAll(lineUpLowestBai(iter.next()));
+			}
+		} else {
+			baiDsRs.add(bai);
+		}
+
+		return baiDsRs;
+	}
+
 	@RequestMapping("/bctc/cdkt/chitieu/xoa")
 	public @ResponseBody BalanceAssetItem xoaBalanceAssetItem(@RequestParam("assetCode") String assetCode,
 			@RequestParam("maTk") String maTk) {
@@ -1105,7 +1082,7 @@ public class BalanceSheetController {
 		loaiTaiKhoan.setMaTk(maTk);
 		bai.themTaiKhoan(loaiTaiKhoan);
 
-		balanceSheetDAO.xoaBai(bai);
+		balanceSheetDAO.deleteBSBai(bai);
 
 		return bai;
 	}
@@ -1126,12 +1103,12 @@ public class BalanceSheetController {
 		loaiTaiKhoanTmpl.setMaTk(maTk);
 		newBai.themTaiKhoan(loaiTaiKhoanTmpl);
 
-		int count = balanceSheetDAO.updateBai(oldBai, newBai);
+		int count = balanceSheetDAO.updateBSBai(oldBai, newBai);
 		logger.info("count " + count);
 
 		BalanceAssetItem rsBai = null;
 		if (count > 0) {
-			rsBai = balanceSheetDAO.layBai(assetCode, maTk);
+			rsBai = balanceSheetDAO.findBSBai(assetCode, maTk);
 		}
 
 		return rsBai;
@@ -1299,7 +1276,7 @@ public class BalanceSheetController {
 					selectedAssetPeriods, form.getPeriodType());
 
 			// Sinh bảng cân đối kế toán ra pdf
-			HashMap<String, Object> params = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 			JasperReport jasperReport = getCompiledFile("LCTT", req);
 			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bads);
 
@@ -1627,33 +1604,12 @@ public class BalanceSheetController {
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			List<BalanceAssetItem> bais = balanceSheetDAO.listCFBais();
+
 			model.addAttribute("bais", bais);
+			model.addAttribute("props", props);
 			model.addAttribute("tab", "tabDSBLCTT");
 
 			return "danhSachChiTieuLctt";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "error";
-		}
-	}
-
-	@RequestMapping("/bctc/luuchuyentt/chitieu/sua/{assetCode}/{maTk}")
-	public String suaChiTieuLctt(@PathVariable("assetCode") String assetCode, @PathVariable("maTk") String maTk,
-			Model model) {
-		try {
-			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-			KyKeToan kyKeToan = dungChung.getKyKeToan();
-			if (kyKeToan == null) {
-				return "koKyKeToanMacDinh";
-			}
-			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
-				return "redirect:/bctc/luuchuyentt/chitieu/danhsach";
-			}
-
-			BalanceAssetItem bai = new BalanceAssetItem();
-
-			return chuanBiFormChiTieuLctt(model, bai);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
@@ -1691,12 +1647,8 @@ public class BalanceSheetController {
 			}
 
 			logger.info("Thêm chỉ tiêu cân đối kế toán: " + bai);
-			BalanceAssetItem baiTmpl = bai.getChilds().get(0);
-			if (baiTmpl.getAssetCode() == null || baiTmpl.getAssetCode().trim().equals("")) {
-				baiTmpl.setAssetCode(bai.getAssetCode());
-			}
 
-			int count = balanceSheetDAO.insertBai(baiTmpl);
+			int count = balanceSheetDAO.insertCFBai(bai);
 			if (count == -1) {
 				result.rejectValue("assetCode", "NotEmpty.Bai.Duplicate");
 				return chuanBiFormChiTieuLctt(model, bai);
@@ -1711,34 +1663,19 @@ public class BalanceSheetController {
 
 	private String chuanBiFormChiTieuLctt(Model model, BalanceAssetItem bai) {
 		try {
+			model.addAttribute("props", props);
 			model.addAttribute("mainFinanceForm", bai);
+			bai.setType(BalanceAssetItem.BCTC_LCTT);
 
-			// Lấy danh sách chỉ tiêu CĐKT cấp 4
-			List<BalanceAssetItem> baiDs = balanceSheetDAO.listBais();
+			// Lấy danh sách chỉ tiêu LCTT
+			List<BalanceAssetItem> baiDs = balanceSheetDAO.listCFBais();
 			List<BalanceAssetItem> baiDsRs = new ArrayList<>();
 
 			if (baiDs != null) {
+				// Lấy danh sách chỉ tiêu LCTT cấp thấp nhất
 				Iterator<BalanceAssetItem> baiIter = baiDs.iterator();
 				while (baiIter.hasNext()) {
-					BalanceAssetItem baiTmpl = baiIter.next();// 270
-
-					if (baiTmpl != null && baiTmpl.getChilds() != null) {
-						Iterator<BalanceAssetItem> baiIter1 = baiTmpl.getChilds().iterator();
-						while (baiIter1.hasNext()) {
-							BalanceAssetItem baiTmpl1 = baiIter1.next();// 100
-
-							if (baiTmpl1 != null && baiTmpl1.getChilds() != null) {
-								Iterator<BalanceAssetItem> baiIter2 = baiTmpl1.getChilds().iterator();
-								while (baiIter2.hasNext()) {
-									BalanceAssetItem baiTmpl2 = baiIter2.next();// 110
-
-									if (baiTmpl2 != null && baiTmpl2.getChilds() != null) {
-										baiDsRs.addAll(baiTmpl2.getChilds());
-									}
-								}
-							}
-						}
-					}
+					baiDsRs.addAll(lineUpLowestBai(baiIter.next()));
 				}
 			}
 
@@ -1759,50 +1696,27 @@ public class BalanceSheetController {
 
 	@RequestMapping("/bctc/luuchuyentt/chitieu/xoa")
 	public @ResponseBody BalanceAssetItem xoaChiTieuLctt(@RequestParam("assetCode") String assetCode,
-			@RequestParam("maTk") String maTk) {
-		logger.info("Xoá BalanceAssetItem từ CDKT_TAIKHOAN: assetCode: " + assetCode + ". maTk: " + maTk);
+			@RequestParam("maTk") String maTk, @RequestParam("soDu") int soDu,
+			@RequestParam("doiUngMaTk") String doiUngMaTk) {
+		logger.info("Xoá BalanceAssetItem từ CASH_FLOW_TAIKHOAN: assetCode: " + assetCode + ". maTk: " + maTk
+				+ ". soDu: " + soDu + ". doiUngMaTk: " + doiUngMaTk);
 		BalanceAssetItem bai = new BalanceAssetItem();
 		bai.setAssetCode(assetCode);
+
 		LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
 		loaiTaiKhoan.setMaTk(maTk);
+		loaiTaiKhoan.setSoDuGiaTri(soDu);
+
+		LoaiTaiKhoan loaiTaiKhoanDu = new LoaiTaiKhoan();
+		loaiTaiKhoanDu.setMaTk(doiUngMaTk);
+
+		loaiTaiKhoan.setDoiUng(loaiTaiKhoanDu);
+
 		bai.themTaiKhoan(loaiTaiKhoan);
 
-		balanceSheetDAO.xoaBai(bai);
+		balanceSheetDAO.deleteCFBai(bai);
 
 		return bai;
-	}
-
-	@RequestMapping("/bctc/luuchuyentt/chitieu/capnhat")
-	public @ResponseBody BalanceAssetItem luuChiTieuLctt(@RequestParam("assetCode") String assetCode,
-			@RequestParam("maTkCu") String maTkCu, @RequestParam("maTk") String maTk) {
-		logger.info("assetCode: " + assetCode + ". maTkCu: " + maTkCu + ". maTk: " + maTk);
-		BalanceAssetItem oldBai = new BalanceAssetItem();
-		oldBai.setAssetCode(assetCode);
-		LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
-		loaiTaiKhoan.setMaTk(maTkCu);
-		oldBai.themTaiKhoan(loaiTaiKhoan);
-
-		BalanceAssetItem newBai = new BalanceAssetItem();
-		newBai.setAssetCode(assetCode);
-		LoaiTaiKhoan loaiTaiKhoanTmpl = new LoaiTaiKhoan();
-		loaiTaiKhoanTmpl.setMaTk(maTk);
-		newBai.themTaiKhoan(loaiTaiKhoanTmpl);
-
-		int count = balanceSheetDAO.updateBai(oldBai, newBai);
-		logger.info("count " + count);
-
-		BalanceAssetItem rsBai = null;
-		if (count > 0) {
-			rsBai = balanceSheetDAO.layBai(assetCode, maTk);
-		}
-
-		return rsBai;
-	}
-
-	@RequestMapping("/bctc/luuchuyentt/chitieu/danhsach/capduoi")
-	public @ResponseBody List<BalanceAssetItem> layDanhSachChiTieuLctt(@RequestParam("assetCode") String assetCode) {
-		logger.info("assetCode " + assetCode);
-		return balanceSheetDAO.listBais(assetCode);
 	}
 
 	@RequestMapping("/bctc/capnhatdulieu")
@@ -1992,7 +1906,7 @@ public class BalanceSheetController {
 			// Sinh bảng cân đối phát sinh ra pdf
 			JasperReport jasperReport = getCompiledFile("CDPS", req);
 
-			HashMap<String, Object> params = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 			params.put("KY_KE_TOAN", kyKt);
 			String path = req.getSession().getServletContext().getRealPath("/baocao/bctc/");
 			params.put("SUBREPORT_DIR", path);

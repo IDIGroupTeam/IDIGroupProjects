@@ -49,6 +49,7 @@
 			<form:options items="${taiKhoanDs}" itemLabel="maTenTk"
 				itemValue="maTk" />
 		</form:select>
+		<form:errors path="maTkCha" cssClass="error"></form:errors>
 	</div>
 	<i class="col-sm-6">Chọn tài khoản cha từ các các tài khoản trước
 		đó</i>
@@ -77,12 +78,14 @@
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="soDu">Lưỡng tính</label>
 	<div class="col-sm-4">
-		<form:select path="luongTinh" cssClass="form-control" placeholder="Lưỡng tính">
+		<form:select path="luongTinh" cssClass="form-control"
+			placeholder="Lưỡng tính">
 			<form:option value="0" label="Không" />
 			<form:option value="1" label="Có" />
 		</form:select>
 	</div>
-	<i class="col-sm-6">Tài khoản lưỡng tính hay không</i>
+	<i class="col-sm-6">Tài khoản lưỡng tính hay không, tính lưỡng tính
+		của tài khoản con phải giống tài khoản cha</i>
 </div>
 
 <div class="row form-group">

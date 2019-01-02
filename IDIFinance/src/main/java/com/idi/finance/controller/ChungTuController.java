@@ -188,7 +188,7 @@ public class ChungTuController {
 	public void pdfPhieuThu(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
 			Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -314,7 +314,7 @@ public class ChungTuController {
 			model.addAttribute("loaiTienDs", loaiTienDs);
 
 			// Lấy danh sách tài khoản tiền mặt, dùng cho bên nợ
-			CauHinh taiKhoanDs = props.layCauHinh(PropCont.PHIEU_THU_DS_TK_NO);
+			CauHinh taiKhoanDs = props.getCauHinh(PropCont.PHIEU_THU_DS_TK_NO);
 			List<String> maTkDs = Utils.parseString(taiKhoanDs.getGiaTri());
 			List<LoaiTaiKhoan> loaiTaiKhoanTmDs = taiKhoanDAO.danhSachTaiKhoan(maTkDs);
 			model.addAttribute("loaiTaiKhoanTmDs", loaiTaiKhoanTmDs);
@@ -411,7 +411,7 @@ public class ChungTuController {
 	public void pdfPhieuChi(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
 			Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_CHI);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -537,7 +537,7 @@ public class ChungTuController {
 			model.addAttribute("loaiTienDs", loaiTienDs);
 
 			// Lấy danh sách tài khoản tiền mặt, dùng cho bên có
-			CauHinh taiKhoanDs = props.layCauHinh(PropCont.PHIEU_CHI_DS_TK_CO);
+			CauHinh taiKhoanDs = props.getCauHinh(PropCont.PHIEU_CHI_DS_TK_CO);
 			List<String> maTkDs = Utils.parseString(taiKhoanDs.getGiaTri());
 			List<LoaiTaiKhoan> loaiTaiKhoanTmDs = taiKhoanDAO.danhSachTaiKhoan(maTkDs);
 			model.addAttribute("loaiTaiKhoanTmDs", loaiTaiKhoanTmDs);
@@ -633,7 +633,7 @@ public class ChungTuController {
 	@RequestMapping(value = "/chungtu/baoco/pdf/{id}", method = RequestMethod.GET)
 	public void pdfBaoCo(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt, Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_CO);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -761,7 +761,7 @@ public class ChungTuController {
 			// Lấy danh sách tài khoản tiền gửi ngân hàng, dùng cho bên nợ
 			List<LoaiTaiKhoan> loaiTaiKhoanTgnhDs = taiKhoanDAO
 					.danhSachTaiKhoanTheoCap1(LoaiTaiKhoan.TIEN_GUI_NGAN_HANG);
-			CauHinh taiKhoanDs = props.layCauHinh(PropCont.BAO_CO_DS_TK_CO);
+			CauHinh taiKhoanDs = props.getCauHinh(PropCont.BAO_CO_DS_TK_CO);
 			List<String> maTkDs = Utils.parseString(taiKhoanDs.getGiaTri());
 			loaiTaiKhoanTgnhDs = taiKhoanDAO.danhSachTaiKhoan(maTkDs);
 			model.addAttribute("loaiTaiKhoanTgnhDs", loaiTaiKhoanTgnhDs);
@@ -857,7 +857,7 @@ public class ChungTuController {
 	@RequestMapping(value = "/chungtu/baono/pdf/{id}", method = RequestMethod.GET)
 	public void pdfBaoNo(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt, Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_NO);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -985,7 +985,7 @@ public class ChungTuController {
 			// Lấy danh sách tài khoản tiền gửi ngân hàng, dùng cho bên có
 			List<LoaiTaiKhoan> loaiTaiKhoanTgnhDs = taiKhoanDAO
 					.danhSachTaiKhoanTheoCap1(LoaiTaiKhoan.TIEN_GUI_NGAN_HANG);
-			CauHinh taiKhoanDs = props.layCauHinh(PropCont.BAO_NO_DS_TK_NO);
+			CauHinh taiKhoanDs = props.getCauHinh(PropCont.BAO_NO_DS_TK_NO);
 			List<String> maTkDs = Utils.parseString(taiKhoanDs.getGiaTri());
 			loaiTaiKhoanTgnhDs = taiKhoanDAO.danhSachTaiKhoan(maTkDs);
 			model.addAttribute("loaiTaiKhoanTgnhDs", loaiTaiKhoanTgnhDs);
@@ -1083,7 +1083,7 @@ public class ChungTuController {
 	public void pdfKeToanTongHop(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
 			Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_KT_TH);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -1306,7 +1306,7 @@ public class ChungTuController {
 	@RequestMapping(value = "/chungtu/muahang/pdf/{id}", method = RequestMethod.GET)
 	public void pdfMuaHang(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt, Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -1570,27 +1570,27 @@ public class ChungTuController {
 		try {
 			model.addAttribute("mainFinanceForm", chungTu);
 
-			CauHinh taiKhoanKhoDs = props.layCauHinh(PropCont.MUA_HANG_DS_TK_KHO_NO);
+			CauHinh taiKhoanKhoDs = props.getCauHinh(PropCont.MUA_HANG_DS_TK_KHO_NO);
 			List<String> maTkKhoDs = Utils.parseString(taiKhoanKhoDs.getGiaTri());
 			List<LoaiTaiKhoan> loaiTaiKhoanKhoDs = taiKhoanDAO.danhSachTaiKhoan(maTkKhoDs);
 			model.addAttribute("loaiTaiKhoanKhoDs", loaiTaiKhoanKhoDs);
 
-			CauHinh taiKhoanThanhToanDs = props.layCauHinh(PropCont.MUA_HANG_DS_TK_THANH_TOAN_CO);
+			CauHinh taiKhoanThanhToanDs = props.getCauHinh(PropCont.MUA_HANG_DS_TK_THANH_TOAN_CO);
 			List<String> maTkThanhToanDs = Utils.parseString(taiKhoanThanhToanDs.getGiaTri());
 			List<LoaiTaiKhoan> loaiTaiKhoanThanhToanDs = taiKhoanDAO.danhSachTaiKhoan(maTkThanhToanDs);
 			model.addAttribute("loaiTaiKhoanThanhToanDs", loaiTaiKhoanThanhToanDs);
 
-			CauHinh taiKhoanGtgtDs = props.layCauHinh(PropCont.MUA_HANG_DS_TK_GTGT_NO);
+			CauHinh taiKhoanGtgtDs = props.getCauHinh(PropCont.MUA_HANG_DS_TK_GTGT_NO);
 			List<String> maTkGtgtDs = Utils.parseString(taiKhoanGtgtDs.getGiaTri());
 			List<LoaiTaiKhoan> loaiTaiKhoanGtgtDs = taiKhoanDAO.danhSachTaiKhoan(maTkGtgtDs);
 			model.addAttribute("loaiTaiKhoanGtgtDs", loaiTaiKhoanGtgtDs);
 
-			CauHinh taiKhoanTtdbDs = props.layCauHinh(PropCont.MUA_HANG_DS_TK_TTDB_CO);
+			CauHinh taiKhoanTtdbDs = props.getCauHinh(PropCont.MUA_HANG_DS_TK_TTDB_CO);
 			List<String> maTkTtdbDs = Utils.parseString(taiKhoanTtdbDs.getGiaTri());
 			List<LoaiTaiKhoan> loaiTaiKhoanTtdbDs = taiKhoanDAO.danhSachTaiKhoan(maTkTtdbDs);
 			model.addAttribute("loaiTaiKhoanTtdbDs", loaiTaiKhoanTtdbDs);
 
-			CauHinh taiKhoanNkDs = props.layCauHinh(PropCont.MUA_HANG_DS_TK_NK_CO);
+			CauHinh taiKhoanNkDs = props.getCauHinh(PropCont.MUA_HANG_DS_TK_NK_CO);
 			List<String> maTkNkDs = Utils.parseString(taiKhoanNkDs.getGiaTri());
 			List<LoaiTaiKhoan> loaiTaiKhoanNkDs = taiKhoanDAO.danhSachTaiKhoan(maTkNkDs);
 			model.addAttribute("loaiTaiKhoanNkDs", loaiTaiKhoanNkDs);
@@ -1704,7 +1704,7 @@ public class ChungTuController {
 	@RequestMapping(value = "/chungtu/banhang/pdf/{id}", method = RequestMethod.GET)
 	public void pdfBanHang(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt, Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -1956,32 +1956,32 @@ public class ChungTuController {
 		try {
 			model.addAttribute("mainFinanceForm", chungTu);
 
-			CauHinh taiKhoanThanhToanDs = props.layCauHinh(PropCont.BAN_HANG_DS_TK_THANH_TOAN_NO);
+			CauHinh taiKhoanThanhToanDs = props.getCauHinh(PropCont.BAN_HANG_DS_TK_THANH_TOAN_NO);
 			List<String> maTkThanhToanDs = Utils.parseString(taiKhoanThanhToanDs.getGiaTri());
 			List<LoaiTaiKhoan> loaiTaiKhoanThanhToanDs = taiKhoanDAO.danhSachTaiKhoan(maTkThanhToanDs);
 			model.addAttribute("loaiTaiKhoanThanhToanDs", loaiTaiKhoanThanhToanDs);
 
-			CauHinh taiKhoanDoanhThuDs = props.layCauHinh(PropCont.BAN_HANG_DS_TK_DOANH_THU_CO);
+			CauHinh taiKhoanDoanhThuDs = props.getCauHinh(PropCont.BAN_HANG_DS_TK_DOANH_THU_CO);
 			List<String> maTkDoanhThuDs = Utils.parseString(taiKhoanDoanhThuDs.getGiaTri());
 			List<LoaiTaiKhoan> loaiTaiKhoanDoanhThuDs = taiKhoanDAO.danhSachTaiKhoan(maTkDoanhThuDs);
 			model.addAttribute("loaiTaiKhoanDoanhThuDs", loaiTaiKhoanDoanhThuDs);
 
-			CauHinh taiKhoanGiaVonDs = props.layCauHinh(PropCont.BAN_HANG_DS_TK_GIA_VON_NO);
+			CauHinh taiKhoanGiaVonDs = props.getCauHinh(PropCont.BAN_HANG_DS_TK_GIA_VON_NO);
 			List<String> maTkGiaVonDs = Utils.parseString(taiKhoanGiaVonDs.getGiaTri());
 			List<LoaiTaiKhoan> loaiTaiKhoanGiaVonDs = taiKhoanDAO.danhSachTaiKhoan(maTkGiaVonDs);
 			model.addAttribute("loaiTaiKhoanGiaVonDs", loaiTaiKhoanGiaVonDs);
 
-			CauHinh taiKhoanKhoDs = props.layCauHinh(PropCont.BAN_HANG_DS_TK_KHO_NO);
+			CauHinh taiKhoanKhoDs = props.getCauHinh(PropCont.BAN_HANG_DS_TK_KHO_NO);
 			List<String> maTkKhoDs = Utils.parseString(taiKhoanKhoDs.getGiaTri());
 			List<LoaiTaiKhoan> loaiTaiKhoanKhoDs = taiKhoanDAO.danhSachTaiKhoan(maTkKhoDs);
 			model.addAttribute("loaiTaiKhoanKhoDs", loaiTaiKhoanKhoDs);
 
-			CauHinh taiKhoanGtgtDs = props.layCauHinh(PropCont.BAN_HANG_DS_TK_GTGT_CO);
+			CauHinh taiKhoanGtgtDs = props.getCauHinh(PropCont.BAN_HANG_DS_TK_GTGT_CO);
 			List<String> maTkGtgtDs = Utils.parseString(taiKhoanGtgtDs.getGiaTri());
 			List<LoaiTaiKhoan> loaiTaiKhoanGtgtDs = taiKhoanDAO.danhSachTaiKhoan(maTkGtgtDs);
 			model.addAttribute("loaiTaiKhoanGtgtDs", loaiTaiKhoanGtgtDs);
 
-			CauHinh taiKhoanXkDs = props.layCauHinh(PropCont.BAN_HANG_DS_TK_XK_CO);
+			CauHinh taiKhoanXkDs = props.getCauHinh(PropCont.BAN_HANG_DS_TK_XK_CO);
 			List<String> maTkXkDs = Utils.parseString(taiKhoanXkDs.getGiaTri());
 			List<LoaiTaiKhoan> loaiTaiKhoanXkDs = taiKhoanDAO.danhSachTaiKhoan(maTkXkDs);
 			model.addAttribute("loaiTaiKhoanXkDs", loaiTaiKhoanXkDs);
@@ -2264,7 +2264,7 @@ public class ChungTuController {
 	public void pdfKetChuyenButToan(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
 			Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.layCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> chungTuDs = new ArrayList<>();

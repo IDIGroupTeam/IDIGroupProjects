@@ -10,6 +10,8 @@ $.fn.cellEditable = function(options) {
 	// Initiate options
 	var defaults = {
 		cellClass : "cell-editable",
+		disEditableClass : "dis-editable",
+		disRemovableClass : "dis-removable",
 		beforeLoad : null,
 		urlLoad : "",
 		afterLoad : null,
@@ -19,7 +21,8 @@ $.fn.cellEditable = function(options) {
 		beforeSave : null,
 		urlSave : "",
 		afterSave : null,
-		removable : true
+		removable : true,
+		editable : true
 	};
 	var params = $.extend(defaults, options);
 	var table = this;
@@ -27,7 +30,7 @@ $.fn.cellEditable = function(options) {
 	// Create UI
 	function createUI() {
 		var newColHtml = ""
-		if (params.removable) {
+		if (params.removable && params.editable) {
 			newColHtml = '<div class="btn-group pull-right">'
 					+ '<button type="button" class="btn btn-sm btn-default bEdit" title="Edit">'
 					+ '<span class="glyphicon glyphicon-pencil" > </span>'
@@ -42,19 +45,28 @@ $.fn.cellEditable = function(options) {
 					+ '<span class="glyphicon glyphicon-remove" > </span>'
 					+ '</button>' + '</div>';
 		} else {
-			newColHtml = '<div class="btn-group pull-right">'
-					+ '<button type="button" class="btn btn-sm btn-default bEdit" title="Edit">'
-					+ '<span class="glyphicon glyphicon-pencil" > </span>'
-					+ '</button>'
-					+ '<button type="button" class="btn btn-sm btn-default bSave" style="display:none;" title="Save">'
-					+ '<span class="glyphicon glyphicon-ok" > </span>'
-					+ '</button>'
-					+ '<button type="button" class="btn btn-sm btn-default bCancel" style="display:none;" title="Cancel">'
-					+ '<span class="glyphicon glyphicon-remove" > </span>'
-					+ '</button>' + '</div>';
+			if (params.editable) {
+				newColHtml = '<div class="btn-group pull-right">'
+						+ '<button type="button" class="btn btn-sm btn-default bEdit" title="Edit">'
+						+ '<span class="glyphicon glyphicon-pencil" > </span>'
+						+ '</button>'
+						+ '<button type="button" class="btn btn-sm btn-default bSave" style="display:none;" title="Save">'
+						+ '<span class="glyphicon glyphicon-ok" > </span>'
+						+ '</button>'
+						+ '<button type="button" class="btn btn-sm btn-default bCancel" style="display:none;" title="Cancel">'
+						+ '<span class="glyphicon glyphicon-remove" > </span>'
+						+ '</button>' + '</div>';
+			} else if (params.removable) {
+				newColHtml = '<div class="btn-group pull-right">'
+						+ '<button type="button" class="btn btn-sm btn-default bRemove" title="Remove">'
+						+ '<span class="glyphicon glyphicon-trash" > </span>'
+						+ '</button>';
+			} else {
+				newColHtml = '';
+			}
 		}
 
-		var colEdicHtml = '<td style="width:85px;">' + newColHtml + '</td>';
+		var colEdicHtml = '<td>' + newColHtml + '</td>';
 		var blankTd = "<td></td>";
 
 		// Append buttons columns
@@ -62,6 +74,17 @@ $.fn.cellEditable = function(options) {
 		table.find('tbody tr').has("." + params.cellClass).append(colEdicHtml);
 		table.find('tbody tr').not("tbody tr").has("." + params.cellClass)
 				.append(blankTd);
+
+		table.find("." + params.cellClass).each(function() {
+			var tr = $(this).parents('tr');
+			if ($(this).hasClass(params.disEditableClass)) {
+				$(tr).find('.bEdit').addClass('hide');
+			}
+
+			if ($(this).hasClass(params.disRemovableClass)) {
+				$(tr).find('.bRemove').addClass('hide');
+			}
+		});
 
 		registryEvent();
 	}
@@ -99,23 +122,26 @@ $.fn.cellEditable = function(options) {
 	}
 
 	function rowEdit() {
-		$(this).parents("tr").find("." + params.cellClass).each(function() {
+		var tr = $(this).parents("tr");
+		var keyRow = $(tr).data();
+
+		$(tr).find("." + params.cellClass).each(function() {
 			try {
-				var content = $(this).html();
-				var type = $(this).attr("type");
+				content = $(this).html();
+				var type = $(this).data("type");
 
 				var div = '<div style="display: none;">' + content + '</div>';
 				var text = "";
 				if (type == "combobox") {
-					text = createCombobox($(this));
+					text = createCombobox(keyRow, $(this));
 				} else if (type == "textarea") {
-					text = createTextArea(content);
+					text = createTextArea(keyRow, content);
 				} else {
-					text = createTextField(content);
+					text = createTextField(keyRow, content);
 				}
 				$(this).html(div + text);
 			} catch (e) {
-				// alert(e);
+				console.log("Create editable cell", "error", e);
 			}
 		});
 
@@ -123,100 +149,132 @@ $.fn.cellEditable = function(options) {
 	}
 
 	function rowRemove() {
-		if (!confirm("Bạn muốn xoá chỉ tiêu CĐKT này không ?")) {
+		if (!confirm("Bạn muốn xoá dòng dữ liệu này không ?")) {
 			return;
 		}
 
-		$(this).parents("tr").find("." + params.cellClass).each(function() {
+		var tr = $(this).parents("tr");
+		var keyRow = $(tr).data();
+		var inputData = "";
+		var cells = new Array();
+
+		$(tr).find("." + params.cellClass).each(function() {
 			var cell = $(this);
-			var type = $(this).attr("type");
+			var data = $(this).data();
 
-			var inputData = "";
-			var key = $(cell).attr("data");
-
-			if (params.beforeRemove != null) {
-				inputData = params.beforeRemove(key);
-			}
-
-			$.ajax({
-				url : params.urlRemove,
-				data : inputData,
-				dataType : "json",
-				type : "POST",
-				success : function(data) {
-					// Loading ...
-
-					// Save data to server ...
-					var obj = null;
-					if (params.afterRemove != null) {
-						obj = params.afterRemove(type, cell, data);
-					} else {
-
-					}
-
-					// Back to normal
-					disableConfimButtons($(cell).parent());
-				},
-				error : function(data) {
-					//alert("Có lỗi " + data);
-				}
-			});
-		});
-
-		// Back to normal
-		disableConfimButtons($(this).parent());
-	}
-
-	function rowSave() {
-		$(this).parents("tr").find("." + params.cellClass).each(function() {
-			var cell = $(this);
-			var type = $(this).attr("type");
-
-			var inputData = "";
-			var key = $(cell).attr("data");
 			var value = "";
-			if (type == "combobox") {
+			if (data.type == "combobox") {
 				value = $(cell).find('select').val();
+			} else if (data.type == "textarea") {
+				value = $(cell).find('textarea').val();
 			} else {
 				value = $(cell).find('input').val();
 			}
 
-			if (params.beforeSave != null) {
-				inputData = params.beforeSave(key, value);
+			data.value = value;
+			cells.push(data);
+		});
+
+		if (params.beforeRemove != null) {
+			inputData = params.beforeRemove(keyRow, cells);
+		}
+
+		$.ajax({
+			url : params.urlRemove,
+			data : inputData,
+			dataType : "json",
+			type : "POST",
+			success : function(data) {
+				var obj = null;
+				if (params.afterRemove != null) {
+					obj = params.afterRemove(data);
+				}
+			},
+			error : function(data) {
+				console.log("Error while remove row " + data);
+			}
+		});
+	}
+
+	function rowSave() {
+		var tr = $(this).parents("tr");
+		var keyRow = $(tr).data();
+		var inputData = "";
+		var cells = new Array();
+
+		$(tr).find("." + params.cellClass).each(function() {
+			var cell = $(this);
+			var data = $(this).data();
+
+			var value = "";
+			var label = null;
+			if (data.type == "combobox") {
+				value = $(cell).find('select').val();
+				label = $(cell).find('select option:selected').text();
+			} else if (data.type == "textarea") {
+				value = $(cell).find('textarea').val();
+			} else {
+				value = $(cell).find('input').val();
 			}
 
-			$.ajax({
-				url : params.urlSave,
-				data : inputData,
-				dataType : "json",
-				type : "POST",
-				success : function(data) {
-					// Loading ...
+			data.value = value;
+			data.label = label;
+			cells.push(data);
+		});
 
-					// Save data to server ...
-					var obj = null;
-					if (params.afterSave != null) {
-						obj = params.afterSave(type, cell, data);
-					} else {
-						if (type == "combobox") {
-							// do nothing
-						} else {
-							$(cell).html(value);
+		if (params.beforeSave != null) {
+			inputData = params.beforeSave(keyRow, cells);
+		}
+		console.log("rowSave", "inputData", inputData);
+
+		$.ajax({
+			url : params.urlSave,
+			data : inputData,
+			dataType : "json",
+			type : "POST",
+			success : function(data) {
+				// Update row's key
+				$.each(keyRow, function(key, value) {
+					for (var i = 0; i < cells.length; i++) {
+						if (cells[i].field == key) {
+							$(tr).data(key, cells[i].value);
 						}
 					}
+				})
 
-					// Back to normal
-					disableConfimButtons($(cell).parent());
-				},
-				error : function(data) {
-					//alert("Dữ liệu có thể trùng lặp " + data);
+				// Update each cell's value
+				$(tr).find("." + params.cellClass).each(function() {
+					var cell = $(this);
+					var cellData = $(cell).data();
+
+					for (var i = 0; i < cells.length; i++) {
+						if (cells[i].field == cellData.field) {
+							if (cellData.type == "combobox") {
+								$(cell).html(cells[i].label);
+							} else {
+								$(cell).html(cells[i].value);
+							}
+						}
+					}
+				});
+
+				if (params.afterSave != null) {
+					obj = params.afterSave(tr, cells);
 				}
-			});
+
+				// Back to normal
+				disableConfimButtons($(tr));
+			},
+			error : function(data) {
+				console.log("Saving row", "error", data);
+				alert("Lỗi khi lưu thay đổi, xin hãy thử lại");
+			}
 		});
 	}
 
 	function rowCancel() {
-		$(this).parents("tr").find("." + params.cellClass).each(function() {
+		var tr = $(this).parents("tr");
+		$(tr).find("." + params.cellClass).each(function() {
 			try {
 				var content = $(this).find('div').html();
 				$(this).html(content);
@@ -226,19 +284,20 @@ $.fn.cellEditable = function(options) {
 		});
 
 		// Back to normal
-		disableConfimButtons($(this).parent());
+		disableConfimButtons($(tr));
 	}
 
-	function createCombobox(cell) {
+	function createCombobox(key, cell) {
 		// Tạo combobox
 		var result = '<select class="form-control input-sm"></select>';
 
 		// Lấy dữ liệu cho combobox vừa tạo
 		var inputData = "";
 		try {
-			var param = $(cell).attr("data");
-			inputData = params.beforeLoad(param);
+			var cellDatas = $(cell).data();
+			inputData = params.beforeLoad(key, cellDatas);
 		} catch (e) {
+			console.log("createCombobox", e);
 		}
 
 		$.ajax({
@@ -274,7 +333,7 @@ $.fn.cellEditable = function(options) {
 		return result;
 	}
 
-	function createTextArea(content) {
+	function createTextArea(key, content) {
 		try {
 			content = $.trim(content);
 			var result = '<textarea class="form-control input-sm">' + content
@@ -286,7 +345,7 @@ $.fn.cellEditable = function(options) {
 
 	}
 
-	function createTextField(content) {
+	function createTextField(key, content) {
 		try {
 			content = $.trim(content);
 			var result = '<input class="form-control input-sm" value="'

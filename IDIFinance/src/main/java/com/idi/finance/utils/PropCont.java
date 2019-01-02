@@ -40,6 +40,8 @@ public class PropCont {
 	private String VALUE_THU_KHO;
 	@Value("${THU_QUY}")
 	private String VALUE_THU_QUY;
+	@Value("${CHE_DO_KE_TOAN}")
+	private String VALUE_CHE_DO_KE_TOAN;
 
 	// Giá trị mặc định cho danh sách một số tài khoản của các chứng từ
 	// Đã có cấu hình trong db, ở đây lưu giá trị mặc định nếu db ko có
@@ -88,6 +90,7 @@ public class PropCont {
 	public static final String THU_KHO = "THU_KHO";
 	public static final String THU_QUY = "THU_QUY";
 	public static final String MST = "MST";
+	public static final String CHE_DO_KE_TOAN = "CHE_DO_KE_TOAN";
 
 	public static final String PHIEU_THU_DS_TK_NO = "PHIEU_THU_DS_TK_NO";
 	public static final String PHIEU_CHI_DS_TK_CO = "PHIEU_CHI_DS_TK_CO";
@@ -123,6 +126,7 @@ public class PropCont {
 		propConts.put(THU_KHO, VALUE_THU_KHO);
 		propConts.put(THU_QUY, VALUE_THU_QUY);
 		propConts.put(MST, VALUE_MST);
+		propConts.put(CHE_DO_KE_TOAN, CHE_DO_KE_TOAN);
 
 		propConts.put(PHIEU_THU_DS_TK_NO, VALUE_PHIEU_THU_DS_TK_NO);
 		propConts.put(PHIEU_CHI_DS_TK_CO, VALUE_PHIEU_CHI_DS_TK_CO);
@@ -144,7 +148,7 @@ public class PropCont {
 		propConts.put(BAN_HANG_DS_TK_XK_CO, VALUE_BAN_HANG_DS_TK_XK_CO);
 	}
 
-	public HashMap<String, Object> layCauHinhTheoNhom(int nhom) {
+	public HashMap<String, Object> getCauHinhTheoNhom(int nhom) {
 		HashMap<String, Object> rsMap = null;
 
 		List<CauHinh> cauHinhDs = cauHinhDAO.danhSachCauHinh(nhom);
@@ -160,7 +164,7 @@ public class PropCont {
 		return rsMap;
 	}
 
-	public CauHinh layCauHinh(String key) {
+	public CauHinh getCauHinh(String key) {
 		// Lấy từ csdl
 		CauHinh cauHinh = cauHinhDAO.layCauHinh(key);
 

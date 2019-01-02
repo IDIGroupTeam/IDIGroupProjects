@@ -33,14 +33,14 @@
 		<form:input path="maTk" class="form-control" />
 		<form:errors path="maTk" cssClass="error"></form:errors>
 	</div>
-	<i class="col-sm-6">Mã tài khoản con bao gồm mã tài khoản cha sau
-		đó là các ký tự 1, 2 ..., a, b ... Ví dụ, mã TK cha 111, mã Tk con
-		1111</i>
+	<i class="col-sm-6">Mã tài khoản cấp dưới bao gồm mã tài khoản cấp
+		trên sau đó là các ký tự 1, 2 ..., a, b ... Ví dụ, mã TK cấp trên 111,
+		mã Tk cấp dưới 1111</i>
 </div>
 
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="maTkCha">Tài khoản
-		cha</label>
+		cấp trên</label>
 	<div class="col-sm-4">
 		<form:select path="maTkCha" cssClass="form-control"
 			placeholder="Loại tài khoản cha">
@@ -48,9 +48,10 @@
 			<form:options items="${taiKhoanDs}" itemLabel="maTenTk"
 				itemValue="maTk" />
 		</form:select>
+		<form:errors path="maTkCha" cssClass="error"></form:errors>
 	</div>
-	<i class="col-sm-6">Chọn tài khoản cha từ các các tài khoản trước
-		đó</i>
+	<i class="col-sm-6">Chọn tài khoản cấp trên từ các các tài khoản
+		trước đó</i>
 </div>
 
 <div class="row form-group">
@@ -69,19 +70,24 @@
 			<form:option value="${LoaiTaiKhoan.NO}" label="Nợ" />
 			<form:option value="${LoaiTaiKhoan.CO}" label="Có" />
 		</form:select>
+		<form:errors path="soDu" cssClass="error"></form:errors>
 	</div>
-	<i class="col-sm-6">Chọn nợ hoặc có khi tài khoản tăng</i>
+	<i class="col-sm-6">Chọn nợ hoặc có khi tài khoản tăng, số dư của
+		tài khoản cấp dưới phải giống tài khoản cấp trên </i>
 </div>
 
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="soDu">Lưỡng tính</label>
 	<div class="col-sm-4">
-		<form:select path="luongTinh" cssClass="form-control" placeholder="Lưỡng tính">
+		<form:select path="luongTinh" cssClass="form-control"
+			placeholder="Lưỡng tính">
 			<form:option value="0" label="Không" />
 			<form:option value="1" label="Có" />
 		</form:select>
+		<form:errors path="luongTinh" cssClass="error"></form:errors>
 	</div>
-	<i class="col-sm-6">Tài khoản lưỡng tính hay không</i>
+	<i class="col-sm-6">Tài khoản lưỡng tính hay không, tính lưỡng tính
+		của tài khoản cấp dưới phải giống tài khoản cấp trên</i>
 </div>
 
 <div class="row form-group">

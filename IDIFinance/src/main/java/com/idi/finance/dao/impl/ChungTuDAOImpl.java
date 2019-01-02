@@ -1642,12 +1642,15 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 	public List<KetChuyenButToan> danhSachKetChuyenButToan() {
 		String query = DANH_SACH_KET_CHUYEN_BUT_TOAN;
 
+		logger.info(query);
 		return jdbcTmpl.query(query, new KetChuyenButToanMapper());
 	}
 
 	@Override
 	public List<KetChuyenButToan> danhSachKetChuyenButToan(int loaiKc) {
 		String query = DANH_SACH_KET_CHUYEN_BUT_TOAN_THEO_LOAI;
+		logger.info(query);
+		logger.info("loaiKc " + loaiKc);
 
 		Object[] objs = { loaiKc };
 		return jdbcTmpl.query(query, objs, new KetChuyenButToanMapper());
@@ -1692,6 +1695,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				taiKhoanCo.setLoaiTaiKhoan(loaiTaiKhoanCo);
 				taiKhoanCo.setSoDu(LoaiTaiKhoan.CO);
 				ketChuyenButToan.setTaiKhoanCo(taiKhoanCo);
+
+				logger.info(ketChuyenButToan);
 
 				return ketChuyenButToan;
 			} catch (Exception e) {

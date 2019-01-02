@@ -14,6 +14,12 @@ public class BalanceAssetItem {
 	public static final String CDKT_CT_110 = "110";
 	public static final String LCTT_CT_60 = "60";
 
+	public static final String BCTC_CDKT = "BCTC_CDKT";
+	public static final String BCTC_KQHDKD = "BCTC_KQHDKD";
+	public static final String BCTC_LCTT = "BCTC_LCTT";
+
+	private String type;
+
 	private String assetCode;
 	private String assetName;
 	private String assetCodeName;
@@ -26,6 +32,14 @@ public class BalanceAssetItem {
 	private List<LoaiTaiKhoan> taiKhoanDs;
 
 	private int row;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	public String getAssetCode() {
 		return assetCode;

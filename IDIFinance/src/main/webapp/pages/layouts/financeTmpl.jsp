@@ -18,19 +18,18 @@
 <link rel="stylesheet"
 	href="${url}/public/css/bootstrap-multiselect.css" />
 <link rel="stylesheet" href="${url}/public/css/bootcomplete.css" />
-<link rel="stylesheet" href="${url}/public/css/tabledit.css" />
-<link rel="stylesheet"
-	href="${url}/public/css/bootstrap-datetimepicker.min.css" />
+<link rel="stylesheet" href="${url}/public/css/bootstrap-datetimepicker.min.css" />
+<link rel="stylesheet" href="${url}/public/css/jquery.boot.treetable.css" />
+<link rel="stylesheet" href="${url}/public/css/celleditable.css" />
 <link rel="stylesheet" href="${url}/public/css/style.css" />
 
 <script src="${url}/public/js/jquery.min.js"></script>
-<script src="${url}/public/js/script.js"></script>
+<script src="${url}/public/js/jquery-ui.min.js"></script>
 <script src="${url}/public/js/bootstrap.min.js"></script>
 <script src="${url}/public/js/bootstrap-dialog.min.js"></script>
 <script src="${url}/public/js/bootstrap-combobox.js"></script>
 <script src="${url}/public/js/bootstrap-multiselect.js"></script>
 <script src="${url}/public/js/jquery.bootcomplete.js"></script>
-<script src="${url}/public/js/jquery.treetable.js"></script>
 <script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
 <script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
 <script src="${url}/public/js/jquery.formatCurrency-1.4.0.js"></script>
@@ -38,6 +37,8 @@
 <script src="${url}/public/js/accounting.min.js"></script>
 <script src="${url}/public/js/jquery.maskx.js"></script>
 <script src="${url}/public/js/celleditable.js"></script>
+<script src="${url}/public/js/jquery.boot.treetable.js"></script>
+<script src="${url}/public/js/script.js"></script>
 
 <title>Tập đoàn IDI - <tiles:getAsString name="title" /></title>
 <script type="text/javascript">

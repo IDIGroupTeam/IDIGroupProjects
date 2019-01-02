@@ -8,15 +8,15 @@ import com.idi.finance.bean.bctc.BalanceAssetItem;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public interface BalanceSheetDAO {
-	public BalanceAssetItem layBai(String assetCode, String maTk);
-
-	public int updateBai(BalanceAssetItem oldBai, BalanceAssetItem newBai);
-
-	public int insertBai(BalanceAssetItem bai);
-
-	public void xoaBai(BalanceAssetItem bai);
-
 	// BS
+	public BalanceAssetItem findBSBai(String assetCode, String maTk);
+
+	public int updateBSBai(BalanceAssetItem oldBai, BalanceAssetItem newBai);
+
+	public int insertBSBai(BalanceAssetItem bai);
+
+	public void deleteBSBai(BalanceAssetItem bai);
+
 	public void insertOrUpdateBA(BalanceAssetData bad);
 
 	public void insertOrUpdateBAs(BalanceAssetData bad);
@@ -75,6 +75,10 @@ public interface BalanceSheetDAO {
 	public List<BalanceAssetData> calculateSRBs(Date start, Date end);
 
 	// CF
+	public int insertCFBai(BalanceAssetItem bai);
+
+	public void deleteCFBai(BalanceAssetItem bai);
+
 	public void insertOrUpdateCF(BalanceAssetData sr);
 
 	public void insertOrUpdateCFs(BalanceAssetData cf);
