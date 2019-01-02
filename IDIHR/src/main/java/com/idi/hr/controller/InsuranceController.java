@@ -103,7 +103,7 @@ public class InsuranceController {
 				employee = (EmployeeInfo) list.get(i);
 				Integer id = employee.getEmployeeId();
 				employeeMap.put(id.toString(),
-						"Mã NV " + id + ", " + employee.getFullName() + ", phòng " + employee.getDepartment());
+						employee.getFullName() + ", phòng " + employee.getDepartment());
 			}
 
 		} catch (Exception e) {

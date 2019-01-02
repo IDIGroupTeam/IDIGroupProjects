@@ -25,6 +25,8 @@
 		moneyConvert("advancePayed");
 		moneyConvert("subsidize");
 		moneyConvert("taxPersonal");
+		moneyConvert("other");
+		moneyConvert("arrears");
 	});
 </script>	
 </head>
@@ -115,11 +117,11 @@
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Lương:</td>
-						<td><fmt:formatNumber value="${salaryDetail.salary}" type="number"/> đồng</td>
+						<td><fmt:formatNumber value="${salaryDetail.salary}" type="number"/> đ</td>
 						
 						<td bgcolor="#FAFAFA" nowrap="nowrap">Lương BHXH:</td>
 						<c:if test="${not empty salaryDetail.salaryInsurance}">
-							<td><fmt:formatNumber value="${salaryDetail.salaryInsurance}" type="number"/> đồng</td> 
+							<td><fmt:formatNumber value="${salaryDetail.salaryInsurance}" type="number"/> đ</td> 
 						</c:if>
 
 						<c:if test="${empty salaryDetail.salaryInsurance}">
@@ -135,7 +137,7 @@
 						<td></td><td></td>
 					</tr>				 
 					<tr>
-						<td colspan="4" nowrap="nowrap" bgcolor="#E6E6E6">Các khoản thưởng/phụ cấp/thưởng/tăng ca</td>
+						<td colspan="4" nowrap="nowrap" bgcolor="#E6E6E6">Các khoản thưởng/phụ cấp/thưởng/tăng ca/lễ/tết</td>
 						<td colspan="2" nowrap="nowrap" bgcolor="#E6E6E6">Các khoản giảm trừ vào lương</td>
 					</tr>
 					<tr>
@@ -177,8 +179,8 @@
 						<td nowrap="nowrap"> x <fmt:formatNumber value="${salaryPerHour}" type="number"/> x 2</td>
 						<td>= <fmt:formatNumber value="${salaryDetail.overTimeW*salaryPerHour*2}" /> đ</td>
 						
-						<td bgcolor="#FAFAFA" nowrap="nowrap"></td>
-						<td></td>						
+						<td bgcolor="#FAFAFA" nowrap="nowrap">Truy thu</td>
+						<td><form:input path="arrears" class="form-control animated" maxlength="12" /></td>						
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Yêu cầu định nghĩa số ngày công chuẩn cho tháng này trước">Làm thêm ngày lễ (h):</td>
@@ -190,21 +192,29 @@
 						<td></td> 											
 					</tr>
 					<tr>
+						<td bgcolor="#FAFAFA">Khác:</td>
+						<td><form:input path="other" class="form-control animated" maxlength="12" /></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>						
+					</tr>
+					<tr>
 						<td nowrap="nowrap" bgcolor="#E6E6E6">Tổng thu nhập</td>
-						<td nowrap="nowrap" bgcolor="#E6E6E6" colspan="2"><i><fmt:formatNumber value="${salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5}" /> đồng</i></td>
+						<td nowrap="nowrap" bgcolor="#E6E6E6" colspan="2"><i><fmt:formatNumber value="${salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '')}" /> đ</i></td>
 						<td nowrap="nowrap" bgcolor="#E6E6E6">Tổng giảm trừ</td>
 						<td nowrap="nowrap" bgcolor="#E6E6E6" colspan="2">
 							<c:if test="${not empty salaryDetail.salaryInsurance}">
-								<i><fmt:formatNumber value="${salaryDetail.salaryInsurance*10.5/100 + salaryDetail.taxPersonal.replaceAll(',', '') + salaryDetail.advancePayed.replaceAll(',', '')}" /> đồng </i>
+								<i><fmt:formatNumber value="${salaryDetail.salaryInsurance*10.5/100 + salaryDetail.taxPersonal.replaceAll(',', '') + salaryDetail.advancePayed.replaceAll(',', '') + salaryDetail.arrears.replaceAll(',', '')}" /> đ </i>
 							</c:if>
 							<c:if test="${empty salaryDetail.salaryInsurance}">
-								<i><fmt:formatNumber value="${salaryDetail.taxPersonal.replaceAll(',', '') + salaryDetail.advancePayed.replaceAll(',', '')}" /> đồng</i>
+								<i><fmt:formatNumber value="${salaryDetail.taxPersonal.replaceAll(',', '') + salaryDetail.advancePayed.replaceAll(',', '') + salaryDetail.arrears.replaceAll(',', '')}" /> đ</i>
 							</c:if>							
 						</td>
 					</tr>
 					<tr>
 						<td nowrap="nowrap"><b>Lương thực nhận:</b></td>
-						<td colspan="5"><b><fmt:formatNumber value="${salaryDetail.finalSalary}" /> </b>đồng</td>
+						<td colspan="5"><b><fmt:formatNumber value="${salaryDetail.finalSalary}" /> </b>vnđ</td>
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Ghi chú:</td>

@@ -126,7 +126,7 @@ public class WorkHistoryController {
 				employee = (EmployeeInfo) list.get(i);
 				Integer id = employee.getEmployeeId();
 				employeeMap.put(id.toString(),
-						"Ma NV " + id + ", " + employee.getFullName() + ", phòng " + employee.getDepartment());
+						employee.getFullName() + ", phòng " + employee.getDepartment());
 			}
 
 		} catch (Exception e) {

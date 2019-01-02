@@ -501,7 +501,7 @@ public class SalaryController {
 			//System.err.println(salaryDetail.getSalary());
 			WorkingDay workingDay = null;			
 			int month = salaryDetail.getMonth();
-			int year = salaryDetail.getYear();
+			int year = salaryDetail.getYear();			
 			int employeeId = salaryDetail.getEmployeeId();
 			if(month < 10)
 				workingDay = workingDayDAO.getWorkingDay(year + "-0" + month, "IDI");
@@ -531,9 +531,9 @@ public class SalaryController {
 				}
 				
 				//Không lv đủ cả tháng
-				String workedDay = salaryDetail.getWorkedDay(); 
-				log.info("Ngay lv thuc te trong thang: " + workedDay + "/" + workingDayOfMonth);
+				String workedDay = salaryDetail.getWorkedDay(); 				
 				if(workedDay != null && workedDay.length() > 0) {
+					log.info("Ngay lv thuc te trong thang: " + workedDay + "/" + workingDayOfMonth);
 					float currentSalary = (Float.parseFloat(workedDay)/workingDayOfMonth)*Float.valueOf(Float.parseFloat(salaryDetail.getSalary()));
 					salaryDetail.setSalaryForWorkedDay(String.valueOf(currentSalary));
 				}

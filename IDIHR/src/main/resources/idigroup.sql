@@ -163,7 +163,7 @@ INSERT INTO `idigroup`.`job_title` (`TITLE_ID`, `TITLE_NAME`, `DESCRIPTION`) VAL
 CREATE TABLE `idigroup`.`leave_info` (
   `EMPLOYEE_ID` bigint(5) NOT NULL,
   `DATE` date NOT NULL,
-  `LEAVE_TYPE` varchar(6) COLLATE utf8_unicode_ci NOT NULL,
+  `LEAVE_TYPE` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
   `TIME_VALUE` int(11) DEFAULT NULL,
   `COMMENT` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

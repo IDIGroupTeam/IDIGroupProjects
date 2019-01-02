@@ -262,7 +262,12 @@ public class SalaryDAO extends JdbcDaoSupport {
 			if (salaryDetail.getOverTimeH() != null && salaryDetail.getOverTimeH().length() > 0) {
 				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeH()) * 3;
 			}
+			if (salaryDetail.getOther() != null && salaryDetail.getOther().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getOther().replaceAll(",", ""));
+			}
 			// Giảm
+			if (salaryDetail.getArrears() != null && salaryDetail.getArrears().length() > 0)
+				finalSalary = finalSalary - Float.valueOf(salaryDetail.getArrears().replaceAll(",", ""));
 			if (salaryDetail.getTaxPersonal() != null && salaryDetail.getTaxPersonal().length() > 0)
 				finalSalary = finalSalary - Float.valueOf(salaryDetail.getTaxPersonal().replaceAll(",", ""));
 			if (salaryDetail.getAdvancePayed() != null && salaryDetail.getAdvancePayed().length() > 0)
@@ -282,12 +287,18 @@ public class SalaryDAO extends JdbcDaoSupport {
 				salaryDetail.setAdvancePayed(salaryDetail.getAdvancePayed().replaceAll(",", ""));
 			if(salaryDetail.getTaxPersonal() != null && salaryDetail.getTaxPersonal().length() > 0)
 				salaryDetail.setTaxPersonal(salaryDetail.getTaxPersonal().replaceAll(",", ""));
+			if(salaryDetail.getOther() != null && salaryDetail.getOther().length() > 0)
+				salaryDetail.setOther(salaryDetail.getOther().replaceAll(",", ""));
+			if(salaryDetail.getArrears() != null && salaryDetail.getArrears().length() > 0)
+				salaryDetail.setArrears(salaryDetail.getArrears().replaceAll(",", ""));
+			
 			Object[] params = new Object[] { salaryDetail.getEmployeeId(), salaryDetail.getOverTimeN(),
 					salaryDetail.getOverTimeW(), salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(),
 					salaryDetail.getBounus(), salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(),
 					salaryDetail.getTaxPersonal(), salaryDetail.getFinalSalary(), salaryDetail.getMonth(),
 					salaryDetail.getYear(), salaryDetail.getDesc(), salaryDetail.getPayedInsurance(), 
-					salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay() };
+					salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(), salaryDetail.getOther(),
+					salaryDetail.getArrears() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -341,7 +352,12 @@ public class SalaryDAO extends JdbcDaoSupport {
 			if (salaryDetail.getOverTimeH() != null && salaryDetail.getOverTimeH().length() > 0) {
 				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeH()) * 3;
 			}
+			if (salaryDetail.getOther() != null && salaryDetail.getOther().length() > 0) {
+				finalSalary = finalSalary + Float.valueOf(salaryDetail.getOther().replaceAll(",", ""));
+			}
 			// Giảm
+			if (salaryDetail.getArrears() != null && salaryDetail.getArrears().length() > 0)
+				finalSalary = finalSalary - Float.valueOf(salaryDetail.getArrears().replaceAll(",", ""));
 			if (salaryDetail.getTaxPersonal() != null && salaryDetail.getTaxPersonal().length() > 0)
 				finalSalary = finalSalary - Float.valueOf(salaryDetail.getTaxPersonal().replaceAll(",", ""));
 			if (salaryDetail.getAdvancePayed() != null && salaryDetail.getAdvancePayed().length() > 0)
@@ -363,13 +379,17 @@ public class SalaryDAO extends JdbcDaoSupport {
 				salaryDetail.setAdvancePayed(salaryDetail.getAdvancePayed().replaceAll(",", ""));
 			if(salaryDetail.getTaxPersonal() != null && salaryDetail.getTaxPersonal().length() > 0)
 				salaryDetail.setTaxPersonal(salaryDetail.getTaxPersonal().replaceAll(",", ""));
+			if(salaryDetail.getOther() != null && salaryDetail.getOther().length() > 0)
+				salaryDetail.setOther(salaryDetail.getOther().replaceAll(",", ""));
+			if(salaryDetail.getArrears() != null && salaryDetail.getArrears().length() > 0)
+				salaryDetail.setArrears(salaryDetail.getArrears().replaceAll(",", ""));
 			
 			Object[] params = new Object[] { salaryDetail.getOverTimeN(), salaryDetail.getOverTimeW(),
 					salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(),
 					salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(),
 					salaryDetail.getFinalSalary(), salaryDetail.getDesc(), salaryDetail.getPayedInsurance(),
-					salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(), salaryDetail.getEmployeeId(), 
-					salaryDetail.getMonth(), salaryDetail.getYear() };
+					salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(), salaryDetail.getOther(),
+					salaryDetail.getArrears(), salaryDetail.getEmployeeId(), salaryDetail.getMonth(), salaryDetail.getYear() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
