@@ -32,7 +32,6 @@
 					<th class="text-center">TK Kho (Nợ)</th>
 					<th class="text-center">TK công nợ (Có)</th>
 					<th class="text-center">Kho</th>
-					<th class="text-center">Lô</th>
 					<th class="text-center">Giá nhập kho</th>
 					<th class="text-center">Tổng tiền<br />nhập kho
 					</th>
@@ -94,7 +93,6 @@
 									itemLabel="tenKho" />
 							</form:select> <form:errors path="hangHoaDs[${status.index}].kho.maKho"
 								cssClass="error" /></td>
-						<td></td>
 						<td class="text-right" style="width: 180px;"><form:hidden
 								path="hangHoaDs[${status.index}].giaKho.soTien" /> <span
 							id="hangHoaDs${status.index}.giaKho.soTienTxt">${giaKho.soTien}</span></td>

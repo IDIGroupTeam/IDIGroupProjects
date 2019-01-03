@@ -169,7 +169,7 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 	public NhomHang danhSachNhomHangHoa(NhomHang nhomHangHoa) {
 		String query = DANH_SACH_NHOM_HANG_HOA_THEO_CHA;
 		logger.info(query);
-		logger.info(nhomHangHoa.getMaNhomHh());
+		logger.info("nhomHangHoa: " + nhomHangHoa);
 
 		Object[] params = { nhomHangHoa.getMaNhomHh() };
 		List<NhomHang> nhomHangHoaDs = jdbcTmpl.query(query, params, new NhomHangHoaMapper());

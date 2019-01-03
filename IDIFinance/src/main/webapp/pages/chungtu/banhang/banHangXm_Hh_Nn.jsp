@@ -61,7 +61,6 @@
 					<th class="text-center">TK Giá vốn (Nợ)</th>
 					<th class="text-center">TK Kho (Có)</th>
 					<th class="text-center">Kho</th>
-					<th class="text-center">Lô</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -76,7 +75,6 @@
 						<td>${hangHoa.tkGiaVon.loaiTaiKhoan.maTk}</td>
 						<td>${hangHoa.tkKho.loaiTaiKhoan.maTk}</td>
 						<td style="width: 200px;">${hangHoa.kho.tenKho}</td>
-						<td></td>
 					</tr>
 				</c:forEach>
 			</tbody>

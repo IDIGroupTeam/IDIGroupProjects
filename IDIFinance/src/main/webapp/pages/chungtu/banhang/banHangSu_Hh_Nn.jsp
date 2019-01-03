@@ -97,7 +97,6 @@
 					<th class="text-center">TK Giá vốn (Nợ)</th>
 					<th class="text-center">TK Kho (Có)</th>
 					<th class="text-center">Kho</th>
-					<th class="text-center">Lô</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -147,7 +146,6 @@
 									itemLabel="tenKho" />
 							</form:select> <form:errors path="hangHoaDs[${status.index}].kho.maKho"
 								cssClass="error" /></td>
-						<td></td>
 					</tr>
 				</c:forEach>
 			</tbody>

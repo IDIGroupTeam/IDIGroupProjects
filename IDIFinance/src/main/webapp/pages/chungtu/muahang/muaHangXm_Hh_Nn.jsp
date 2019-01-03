@@ -32,7 +32,6 @@
 					<th class="text-center">TK Kho (Nợ)</th>
 					<th class="text-center">TK công nợ (Có)</th>
 					<th class="text-center">Kho</th>
-					<th class="text-center">Lô</th>
 					<th class="text-center">Giá nhập kho</th>
 					<th class="text-center">Tổng tiền<br />nhập kho
 					</th>
@@ -80,7 +79,6 @@
 						<td>${hangHoa.tkKho.loaiTaiKhoan.maTk}</td>
 						<td>${hangHoa.tkThanhtoan.loaiTaiKhoan.maTk}</td>
 						<td>${hangHoa.kho.tenKho}</td>
-						<td></td>
 						<td class="text-right"><c:choose>
 								<c:when test="${chungTu.loaiTien.maLt=='VND'}">
 									<fmt:formatNumber value="${hangHoa.giaKho.soTien}"
