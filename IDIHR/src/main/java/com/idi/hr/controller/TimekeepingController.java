@@ -874,12 +874,12 @@ public class TimekeepingController {
 
 	}
 
-	@RequestMapping(value = { "/timekeeping/leaveInfo" }, method = RequestMethod.GET)
-	public String listLeaveInfo(Model model, @ModelAttribute("leaveInfoForm") LeaveInfoForm leaveInfoForm) {
+	@RequestMapping(value = { "/timekeeping/leaveInfo" })
+	public String listLeaveInfo(@ModelAttribute("leaveInfoForm") LeaveInfoForm leaveInfoForm, Model model) {
 		try {
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			Date date = new Date();// your date
-			String currentDate = dateFormat.format(date);
+			//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			//Date date = new Date();// your date
+			//String currentDate = dateFormat.format(date);
 			// Calendar cal = Calendar.getInstance();
 			// cal.setTime(date);
 			List<LeaveInfo> list = null;
@@ -887,8 +887,10 @@ public class TimekeepingController {
 			String toDate = leaveInfoForm.getToDate();
 			String dept = leaveInfoForm.getDept();
 			String eId = leaveInfoForm.geteId();
-
+			System.err.println(fromDate +"|" + toDate +"|" + dept + "|" + eId);
+			
 			if (fromDate != null && toDate != null) {
+				System.err.println("co chon ngay");
 				list = leaveDAO.getLeaves(fromDate, toDate, dept, eId);
 				if (list.size() == 0)
 					model.addAttribute("message",
@@ -896,21 +898,100 @@ public class TimekeepingController {
 				model.addAttribute("formTitle",
 						"Dữ liệu chấm công phát sinh từ ngày " + fromDate + " đến ngày " + toDate);
 			} else {
-				list = leaveDAO.getLeaves(currentDate, null, null, null);
+				
+				Calendar c = Calendar.getInstance();
+
+				// Set the calendar to monday of the current week
+				c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+				System.out.println();
+				// Print dates of the current week starting on Monday
+				//DateFormat df = new SimpleDateFormat("EEE dd/MM/yyyy");
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				System.out.println(df.format(c.getTime()));
+				fromDate = df.format(c.getTime());
+				leaveInfoForm.setDate(fromDate);
+				for (int i = 0; i < 6; i++) {
+					c.add(Calendar.DATE, 1);
+				}
+				System.out.println(df.format(c.getTime()));
+				toDate = df.format(c.getTime());
+				leaveInfoForm.setToDate(toDate);
+				//Date date = new Date();// your date
+				//Calendar cal = Calendar.getInstance(); 
+				//System.err.println("ko chon ngay " + cal.getTime());
+				//cal.setTime(date);
+				//fromDate = Utils.firstDayOfWeek(cal).toInstant().toString().substring(0, 10);
+				//System.err.println("ko chon ngay, from date " + fromDate);
+				//System.err.println("ko chon ngay, from date " + Utils.firstDayOfWeek(cal).toInstant());
+				//toDate = Utils.lastDayOfWeek(cal).toInstant().toString().substring(0, 10);
+				//System.err.println(Utils.firstDayOfWeek(cal).toInstant().toString().substring(0, 10));
+				//System.err.println(Utils.lastDayOfWeek(cal).toInstant().toString().substring(0, 10));
+				list = leaveDAO.getLeaves(fromDate,toDate, null, null);
 				if (list.size() == 0)
-					model.addAttribute("message", "Không có dữ liệu chấm công phát sinh cho ngày " + currentDate);
-				model.addAttribute("formTitle", "Dữ liệu chấm công phát sinh ngày " + currentDate);
+					model.addAttribute("message", "Không có dữ liệu chấm công phát sinh cho tuần này. Từ ngày " + fromDate + " đến ngày "+ toDate);
+				model.addAttribute("formTitle", "Dữ liệu chấm công phát sinh cho tuần này. Từ ngày " + fromDate + " đến ngày "+ toDate);
+			}
+			
+			// Paging:
+			// Number records of a Page: Default: 25
+			// Page Index: Default: 1
+			// Total records
+			// Total of page
+			if (leaveInfoForm.getNumberRecordsOfPage() == 0) {
+				leaveInfoForm.setNumberRecordsOfPage(25);
+			}
+
+			System.err.println("page " + leaveInfoForm.getPageIndex());
+			if(list.size() > 0) {
+				if (leaveInfoForm.getPageIndex() == 0) {
+					leaveInfoForm.setPageIndex(1);
+				}
+			}
+			System.err.println("page af" + leaveInfoForm.getPageIndex());
+			
+			leaveInfoForm.setTotalRecords(list.size());
+			System.err.println("page af" + list.size());
+			int totalPages = leaveInfoForm.getTotalRecords() % leaveInfoForm.getNumberRecordsOfPage() > 0
+					? leaveInfoForm.getTotalRecords() / leaveInfoForm.getNumberRecordsOfPage() + 1
+					: leaveInfoForm.getTotalRecords() / leaveInfoForm.getNumberRecordsOfPage();
+			leaveInfoForm.setTotalPages(totalPages);
+
+			List<LeaveInfo> listLeaveInfoForPage = new ArrayList<LeaveInfo>();
+			
+			if (leaveInfoForm.getPageIndex() < totalPages) {
+				if (leaveInfoForm.getPageIndex() == 1) {
+					for (int i = 0; i < leaveInfoForm.getNumberRecordsOfPage(); i++) {
+						LeaveInfo leaveInfo = new LeaveInfo();
+						leaveInfo = list.get(i);
+						listLeaveInfoForPage.add(leaveInfo);
+					}
+				} else if (leaveInfoForm.getPageIndex() > 1) {
+					for (int i = ((leaveInfoForm.getPageIndex() - 1) * leaveInfoForm.getNumberRecordsOfPage()); i < leaveInfoForm.getPageIndex()
+							* leaveInfoForm.getNumberRecordsOfPage(); i++) {
+						LeaveInfo leaveInfo = new LeaveInfo();
+						leaveInfo = list.get(i);
+						listLeaveInfoForPage.add(leaveInfo);
+					}
+				}
+			} else if (leaveInfoForm.getPageIndex() == totalPages && totalPages > 0) {
+				for (int i = ((leaveInfoForm.getPageIndex() - 1) * leaveInfoForm.getNumberRecordsOfPage()); i < leaveInfoForm
+						.getTotalRecords(); i++) {
+					LeaveInfo leaveInfo = new LeaveInfo();
+					leaveInfo = list.get(i);
+					listLeaveInfoForPage.add(leaveInfo);
+				}
 			}
 
 			// get list department
 			Map<String, String> departmentMap = this.dataForDepartments();
 			model.addAttribute("departmentMap", departmentMap);
-
+			model.addAttribute("leaveInfoForm", leaveInfoForm);
 			// get list employee id
 			Map<String, String> employeeMap = this.employees();
 			model.addAttribute("employeeMap", employeeMap);
 
-			model.addAttribute("leaveInfos", list);
+			model.addAttribute("leaveInfos", listLeaveInfoForPage);
 
 		} catch (Exception e) {
 			log.error(e, e);
@@ -1541,7 +1622,6 @@ public class TimekeepingController {
 		cell61.setCellValue("Ngày phép còn lại");
 
 		// Map<String, String> leaveTypes = list.get(0).getLeaveTypes();
-
 		int column = 6;
 		for (Map.Entry<String, String> entry : leaveForReport.entrySet()) {
 			Cell cell71 = row.createCell(column++);
@@ -1718,7 +1798,7 @@ public class TimekeepingController {
 				employee = (EmployeeInfo) list.get(i);
 				Integer id = employee.getEmployeeId();
 				employeeMap.put(id.toString(),
-						"Mã NV " + id + ", " + employee.getFullName() + ", phòng " + employee.getDepartment());
+						employee.getFullName() + ", phòng " + employee.getDepartment());
 			}
 
 		} catch (Exception e) {

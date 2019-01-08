@@ -8,9 +8,11 @@
 
 <html>
 <link rel="stylesheet" href="${url}/public/css/bootstrap.min.css" />
+<link href="${url}/public/css/bootstrap-editable.css" rel="stylesheet">
 <%--<link rel='stylesheet' type='text/css' media='all' href="${url}/public/css/calendar.css" />
 <link rel='stylesheet' type='text/css' href="${url}/public/css/ext.css"/>
  --%>
+ 
 <head>
 <!-- Initialize the plugin: -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -19,6 +21,7 @@
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+<script src="${url}/public/js/bootstrap-editable.min.js"></script>
 
 <script type="text/javascript">
 
@@ -31,6 +34,14 @@ $(window).load(function(){
 });
 
 	$(function() {
+		$('#comment').editable({
+            type:  'text',
+            pk:    1,
+            name:  'comment',
+            url:   '${url}/timekeeping/ghichu',  
+            title: 'thêm ghi chú'
+         });
+		
 		$("#dept")
 				.change(
 						function() {
@@ -322,10 +333,10 @@ $(window).load(function(){
 			<c:forEach var="timekeeping" items="${timekeepings}">
 				<tr style="font-size: 10">
 					<td>${timekeeping.employeeId}</td>
-					<td>${timekeeping.employeeName}</td>
+					<td nowrap="nowrap">${timekeeping.employeeName}</td>
 					<td>${timekeeping.department}</td>
 					<td>${timekeeping.title}</td>
-					<td>${timekeeping.date}</td>
+					<td nowrap="nowrap">${timekeeping.date}</td>
 					<c:if test="${not empty timekeeping.timeIn}">
 						<td>${timekeeping.timeIn}</td>
 					</c:if>
@@ -387,7 +398,13 @@ $(window).load(function(){
 					<c:if test="${empty timekeeping.leaveSoonA}">
 						<td>${timekeeping.leaveSoonA}</td>
 					</c:if>
-					<td>${timekeeping.comment}</td>
+					<c:if test="${not empty timekeeping.comment}">
+						<td title="Nhấn vào để thêm ghi chú"><a href="#"> ${timekeeping.comment}</a></td>
+					</c:if>
+					<c:if test="${empty timekeeping.comment}">
+						<td nowrap="nowrap" title="Nhấn vào để thêm ghi chú"><a href="#"> Thêm ghi chú</a></td>
+					</c:if>
+					
 				</tr>
 			</c:forEach>
 		</table>

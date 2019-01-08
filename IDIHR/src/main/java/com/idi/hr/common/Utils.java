@@ -15,6 +15,7 @@ public class Utils {
 	     while(cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY){
 	          cal.set(Calendar.DAY_OF_YEAR, --day);
 	     }
+	     System.err.println("util " + cal.getTime());
 	     return cal;
 	}
 
