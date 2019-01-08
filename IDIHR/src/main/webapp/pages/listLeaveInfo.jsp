@@ -112,7 +112,7 @@ tr:nth-child(even) {
 			class="btn btn-lg btn-primary btn-sm">Quay lại thông tin chấm công</button></a>
 	<br />	
 	<br />
-	<form:form action="leaveInfo" modelAttribute="leaveInfoForm" method="GET">
+	<form:form modelAttribute="leaveInfoForm" method="POST">
 		<table class="table">
 			<tr>
 				<td>Chọn xem từ ngày:(*) &nbsp;<form:input path="date" type="date"
@@ -142,10 +142,10 @@ tr:nth-child(even) {
 				<div class="alert alert-success">${message}</div>
 			</c:if>
 			
-	</form:form>
+<%-- 	</form:form> --%>
 	<br/>
-	
-		<form:form modelAttribute="leaveInfoForm" method="POST">
+<%-- 	
+	<form:form modelAttribute="leaveInfoForm" method="POST"> --%>
 		<table class="table">
 			<tr>
 				<td><span>Tổng số ${leaveInfoForm.totalRecords} bản ghi</span></td>
@@ -253,7 +253,6 @@ tr:nth-child(even) {
 				<th>Loại</th>
 				<th>Số giờ/lần</th>
 				<th>Ghi chú</th>
-
 				<!-- <th>Sửa</th> -->
 				<th style="color: red;">Xóa</th>
 			</tr>

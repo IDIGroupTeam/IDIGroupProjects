@@ -36,9 +36,7 @@
 				</tr>
 				<tr>
 					<td bgcolor="#FAFAFA">Họ tên NV:</td>
-					<td colspan="3"><form:select path="employeeId" class="form-control animated" disabled="true">
-							<form:options items="${employeeMap}" />
-						</form:select></td>						
+					<td colspan="3"><form:input path="fullName" class="form-control animated" disabled="true"/>	</td>						
 				</tr>
 				<tr>
 					<td bgcolor="#FAFAFA">Lương:(*)</td>

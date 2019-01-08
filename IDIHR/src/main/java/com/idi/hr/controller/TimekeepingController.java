@@ -887,34 +887,32 @@ public class TimekeepingController {
 			String toDate = leaveInfoForm.getToDate();
 			String dept = leaveInfoForm.getDept();
 			String eId = leaveInfoForm.geteId();
-			System.err.println(fromDate +"|" + toDate +"|" + dept + "|" + eId);
-			
+						
 			if (fromDate != null && toDate != null) {
-				System.err.println("co chon ngay");
+				//System.err.println("co chon ngay");
 				list = leaveDAO.getLeaves(fromDate, toDate, dept, eId);
 				if (list.size() == 0)
 					model.addAttribute("message",
 							"Không có dữ liệu chấm công phát sinh từ ngày " + fromDate + " đến ngày " + toDate);
 				model.addAttribute("formTitle",
 						"Dữ liệu chấm công phát sinh từ ngày " + fromDate + " đến ngày " + toDate);
-			} else {
-				
+			} else {				
 				Calendar c = Calendar.getInstance();
 
 				// Set the calendar to monday of the current week
 				c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 
-				System.out.println();
+				//System.out.println();
 				// Print dates of the current week starting on Monday
 				//DateFormat df = new SimpleDateFormat("EEE dd/MM/yyyy");
 				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-				System.out.println(df.format(c.getTime()));
+				//System.out.println(df.format(c.getTime()));
 				fromDate = df.format(c.getTime());
 				leaveInfoForm.setDate(fromDate);
 				for (int i = 0; i < 6; i++) {
 					c.add(Calendar.DATE, 1);
 				}
-				System.out.println(df.format(c.getTime()));
+				//System.out.println(df.format(c.getTime()));
 				toDate = df.format(c.getTime());
 				leaveInfoForm.setToDate(toDate);
 				//Date date = new Date();// your date
@@ -927,7 +925,7 @@ public class TimekeepingController {
 				//toDate = Utils.lastDayOfWeek(cal).toInstant().toString().substring(0, 10);
 				//System.err.println(Utils.firstDayOfWeek(cal).toInstant().toString().substring(0, 10));
 				//System.err.println(Utils.lastDayOfWeek(cal).toInstant().toString().substring(0, 10));
-				list = leaveDAO.getLeaves(fromDate,toDate, null, null);
+				list = leaveDAO.getLeaves(fromDate,toDate, dept, eId);
 				if (list.size() == 0)
 					model.addAttribute("message", "Không có dữ liệu chấm công phát sinh cho tuần này. Từ ngày " + fromDate + " đến ngày "+ toDate);
 				model.addAttribute("formTitle", "Dữ liệu chấm công phát sinh cho tuần này. Từ ngày " + fromDate + " đến ngày "+ toDate);
@@ -941,17 +939,14 @@ public class TimekeepingController {
 			if (leaveInfoForm.getNumberRecordsOfPage() == 0) {
 				leaveInfoForm.setNumberRecordsOfPage(25);
 			}
-
-			System.err.println("page " + leaveInfoForm.getPageIndex());
+			
 			if(list.size() > 0) {
 				if (leaveInfoForm.getPageIndex() == 0) {
 					leaveInfoForm.setPageIndex(1);
 				}
 			}
-			System.err.println("page af" + leaveInfoForm.getPageIndex());
 			
 			leaveInfoForm.setTotalRecords(list.size());
-			System.err.println("page af" + list.size());
 			int totalPages = leaveInfoForm.getTotalRecords() % leaveInfoForm.getNumberRecordsOfPage() > 0
 					? leaveInfoForm.getTotalRecords() / leaveInfoForm.getNumberRecordsOfPage() + 1
 					: leaveInfoForm.getTotalRecords() / leaveInfoForm.getNumberRecordsOfPage();
