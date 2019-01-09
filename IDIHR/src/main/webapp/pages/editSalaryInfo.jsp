@@ -30,6 +30,7 @@
 	<form:form modelAttribute="salaryForm" method="POST" action="updateSalary">		
 		<table class="table table-bordered">
 			<tbody>
+				<form:hidden path="employeeId" /> 
 				<tr>
 					<td colspan="4" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin
 						lương nhân viên</td>
