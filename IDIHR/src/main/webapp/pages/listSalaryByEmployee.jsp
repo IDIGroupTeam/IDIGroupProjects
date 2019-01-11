@@ -188,7 +188,8 @@ tr:nth-child(even) {
 				<th>Tháng</th>
 				<th>Lương</th>		
 				<th>Lương thực nhận</th>		
-				<th>Tính lại lương</th>				
+				<th>Sửa</th>
+				<th>Ghi chú</th>				
 			</tr>
 			<c:forEach var="salary" items="${salaryDetails}">
 				<tr>
@@ -197,8 +198,18 @@ tr:nth-child(even) {
 					<td>${salary.department}</td>					
 					<td>${salary.jobTitle}</td>
 					<td>${salary.month}-${salary.year}</td>
-					<td><fmt:formatNumber value="${salary.salary}" type="number"/> đồng</td>					
-					<td><fmt:formatNumber value="${salary.finalSalary}" type="number"/> đồng</td>
+					<%-- <td><fmt:formatNumber value="${salary.basicSalary}" type="number"/> đ</td> --%>		
+					<c:if test="${not empty salary.basicSalary}">
+						<td>
+							<fmt:formatNumber value="${salary.basicSalary}" /> đ
+						</td>
+					</c:if>
+					<c:if test="${empty salary.basicSalary}">
+						<td>
+							<fmt:formatNumber value="${salary.salary}" /> đ
+						</td>
+					</c:if>			
+					<td><fmt:formatNumber value="${salary.finalSalary}" type="number"/> đ</td>
 					<td><a href="editSalaryDetailForm?employeeId=${salary.employeeId}&month=${salary.month}&year=${salary.year}">Sửa</a></td>
 					<td>${salary.desc}</td>
 				</tr>

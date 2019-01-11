@@ -11,6 +11,7 @@ public class SalaryDetail implements Serializable {
 	
 	private int employeeId; 
 	private String finalSalary;
+	private String basicSalary;
 	private String overTimeN;
 	private String overTimeW;
 	private String overTimeH;
@@ -45,14 +46,15 @@ public class SalaryDetail implements Serializable {
 		
 	}
 
-	public SalaryDetail(int employeeId, String finalSalary, String overTimeN, String overTimeW, String overTimeH, String overTimeSalary,
-		String bounus, String subsidize, String advancePayed, String taxPersonal, int month, int year,	String description,
-		String payedInsurance, String fullName, String phoneNo, String bankNo, String bankName, String bankBranch, String salary, 
-		String department, String jobTitle, String salaryInsurance, String percentCompanyPay, String percentEmployeePay, 
-		int workComplete, String workedDay, String other, String arrears) {
+	public SalaryDetail(int employeeId, String basicSalary, String finalSalary, String overTimeN, String overTimeW, String overTimeH, 
+			String overTimeSalary, String bounus, String subsidize, String advancePayed, String taxPersonal, int month, int year,	
+			String description, String payedInsurance, String fullName, String phoneNo, String bankNo, String bankName, String bankBranch,
+			String salary, String department, String jobTitle, String salaryInsurance, String percentCompanyPay, String percentEmployeePay, 
+			int workComplete, String workedDay, String other, String arrears) {
 		
 		this.employeeId = employeeId;
 		this.finalSalary = finalSalary;
+		this.basicSalary = basicSalary;
 		this.overTimeN = overTimeN;
 		this.overTimeW = overTimeW;
 		this.overTimeH = overTimeH;
@@ -83,6 +85,14 @@ public class SalaryDetail implements Serializable {
 		this.arrears = arrears;
 		
 	}	
+
+	public String getBasicSalary() {
+		return basicSalary;
+	}
+
+	public void setBasicSalary(String basicSalary) {
+		this.basicSalary = basicSalary;
+	}
 
 	public String getFinalSalary() {
 		return finalSalary;

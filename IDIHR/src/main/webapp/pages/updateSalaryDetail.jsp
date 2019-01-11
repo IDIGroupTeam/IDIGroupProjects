@@ -95,9 +95,16 @@
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Lương:</td>						
-						<td>
-							<fmt:formatNumber value="${salaryDetail.salary}" /> đ
-						</td>							
+						<c:if test="${not empty salaryDetail.basicSalary}">
+							<td>
+								<fmt:formatNumber value="${salaryDetail.basicSalary}" /> đ
+							</td>
+						</c:if>
+						<c:if test="${empty salaryDetail.basicSalary}">
+							<td>
+								<fmt:formatNumber value="${salaryDetail.salary}" /> đ
+							</td>
+						</c:if>							
 						<td bgcolor="#FAFAFA" nowrap="nowrap">Lương BHXH:</td>
 						<c:if test="${not empty salaryDetail.salaryInsurance}">
 							<td><fmt:formatNumber value="${salaryDetail.salaryInsurance}" /> đ</td> 

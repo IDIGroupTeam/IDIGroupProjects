@@ -486,7 +486,7 @@ public class SalaryController {
 			model.addAttribute("salaryDetail", salaryDetail);
 			model.addAttribute("employeeId", salaryDetail.getEmployeeId());
 	
-			model.addAttribute("formTitle", "Thêm thông tin tính lương chi tiết của " + salaryDetail.getFullName());
+			model.addAttribute("formTitle", "Thay đổi thông tin tính lương chi tiết của " + salaryDetail.getFullName());
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -558,6 +558,11 @@ public class SalaryController {
 			salaryDetail.setOverTimeSalary(String.valueOf(overTimeSalary));
 			if(salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0)
 				salaryDetail.setPayedInsurance(String.valueOf(Float.parseFloat(salaryDetail.getSalaryInsurance())*10.5/100));
+			
+			//update ... lay salary o bang salary info sang bang salary detail lam basic salary
+			if(salaryDetail.getBasicSalary() == null) {
+				salaryDetail.setBasicSalary(salaryDetail.getSalary());
+			}
 			
 			model.addAttribute("salaryPerHour", salaryPerHour);
 			model.addAttribute("employeeId", salaryDetail.getEmployeeId());
