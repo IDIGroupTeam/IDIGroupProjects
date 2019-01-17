@@ -48,7 +48,7 @@
 					<tr>
 						<td bgcolor="#E6E6E6">Số sổ BHXH:(*)</td>
 						<td><form:input path="socicalInsuNo" maxlength="12" size="12"
-								required="required" class="form-control animated"/></td>
+								required="required" class="form-control animated" disabled="true"/></td>
 						<td bgcolor="#E6E6E6">% Tỷ lệ đóng của người LĐ:(*) </td>
 						<td><form:input path="percentSInsuE" size="6" maxlength="6"
 								required="required" class="form-control animated"/></td>

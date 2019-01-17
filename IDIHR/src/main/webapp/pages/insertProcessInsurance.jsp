@@ -40,7 +40,7 @@
 				</tr>
 				<tr>
 					<td bgcolor="#E6E6E6">Số sổ BHXH:</td>
-					<td><form:input path="socicalInsuNo" class="form-control animated"/></td>
+					<td><form:input path="socicalInsuNo" class="form-control animated" disabled="true"/></td>
 				</tr>
 				<tr>
 					<td bgcolor="#E6E6E6">Lương BH(*):</td>

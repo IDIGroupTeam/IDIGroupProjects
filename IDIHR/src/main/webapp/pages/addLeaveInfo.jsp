@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Tập đoàn IDI - Chấm công</title>
+<title>Tập đoàn IDI - Chấm công phát sinh</title>
 <style>
 .error-message {
 	color: red;
@@ -16,69 +16,19 @@
 	font-style: italic;
 }
 </style>
-
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
-<link href="https://rawgit.com/danielfarrell/bootstrap-combobox/master/css/bootstrap-combobox.css" rel="stylesheet"/>
-
 </head>
-
 <body>
-<%-- <script src="${url}/public/js/jquery-3.3.1.js"></script> --%>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="${url}/public/js/jquery-3.3.1.js"></script>
 <script src="${url}/public/js/bootstrap-combobox.js"></script>
 <script>
-/*     var $x = jQuery.noConflict(true);
-    alert($x.fn.jquery);
-	$(function() {
-		//alert("xxxx");
-		$('#employeeId').on('change', function(){
-			if($(this).val()){
-			  console.log("You selected: "+$(this).val());
-		      alert('Value is ' + $(this).val());
-		  }
-		});
-		
-		$('#leaveType').combobox();
+    // var $x = jQuery.noConflict(true);
+    //alert($x.fn.jquery);
+	$(function() {		
+		$('#leaveType').combobox();		
 		$('#employeeId').combobox();
-		//alert("yyyy");
-	}); */
-	
-/* 	$(function() {
-	$('.combobox').on('click', function(){
-	  var option = $(this).find('option:selected');
-		if(option.length){
-	    alert('Value is ' + option.val());
-	  }
-	})
-	}); */
+	}); 	
+ 
 </script> 
-<!-- 
-<script src="https://rawgit.com/danielfarrell/bootstrap-combobox/master/js/bootstrap-combobox.js"></script>
-
-<script src="${url}/public/js/jquery.min.js"></script>
-<script src="${url}/public/js/bootstrap.min.js"></script>
-<script src="${url}/public/js/bootstrap-combobox.js"></script>
-
-<link href="${url}/public/js/bootstrap.min.css" rel="stylesheet" /> 
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" type="text/javascript"></script>
-<script>
-    var $i = jQuery.noConflict();
-    alert($i.fn.jquery);
-</script> 
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script>
-    var $j = jQuery.noConflict();
-    alert($j.fn.jquery);
-</script> 
-
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script>
-    var $k = jQuery.noConflict();
-    alert($k.fn.jquery);
-</script> 
--->
 
 <a href="${pageContext.request.contextPath}/timekeeping/leaveInfo"><button class="btn btn-lg btn-primary btn-sm">Quay lại danh sách chấm công phát sinh</button></a>
 <br/><br/>

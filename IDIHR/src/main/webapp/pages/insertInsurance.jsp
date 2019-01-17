@@ -18,9 +18,16 @@
 <!-- Initialize the plugin: -->
 <script src="${url}/public/js/jquery.min.js"></script>
 <script src="${url}/public/js/common.js"></script>
+<script src="${url}/public/js/jquery-3.3.1.js"></script>
+<script src="${url}/public/js/bootstrap-combobox.js"></script>
 <script type="text/javascript">
 	$(function() {
 		moneyConvert("salarySocicalInsu");
+	});
+	$(function() {		
+		//alert("searching ....");
+		$('#employeeId').combobox();
+		//alert("searching .... ngon ....");
 	});
 </script>
 </head>

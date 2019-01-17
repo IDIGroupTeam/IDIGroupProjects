@@ -17,9 +17,7 @@
  * ============================================================ */
 
 (function( $ ) {
-
-	//alert("1111 combobox");
- "use strict";
+	"use strict";
 
  /* COMBOBOX PUBLIC CLASS DEFINITION
   * ================================ */
@@ -48,7 +46,6 @@
     constructor: Combobox
 
   , setup: function () {
-	  alert("1111a");
       var combobox = $(this.template());
       this.$source.before(combobox);
       this.$source.hide();
@@ -94,7 +91,6 @@
         this.$container.addClass('combobox-selected');
         this.selected = true;
       }
-      alert("1111b");
       return source;
     }
 
@@ -125,7 +121,6 @@
       this.$container.addClass('combobox-selected');
       this.selected = true;
       return this.hide();
-      alert("1111c");
     }
 
   , updater: function (item) {
@@ -262,7 +257,6 @@
         } else {
           this.clearElement();
           this.lookup();
-          alert("1111d");
         }
       }
     }
@@ -286,7 +280,6 @@
 
   , triggerChange: function () {
     this.$source.trigger('change');
-    alert("1111 change");
   }
 
   , refresh: function () {
@@ -448,7 +441,6 @@
   /* COMBOBOX PLUGIN DEFINITION
    * =========================== */
   $.fn.combobox = function ( option ) {
-	  alert("1111x");
     return this.each(function () {
       var $this = $(this)
         , data = $this.data('combobox')
@@ -466,5 +458,4 @@
 
   $.fn.combobox.Constructor = Combobox;
 
- // alert("2222 combobox");
 }( window.jQuery ));

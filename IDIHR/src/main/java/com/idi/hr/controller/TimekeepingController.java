@@ -514,15 +514,35 @@ public class TimekeepingController {
 	@RequestMapping(value = { "/timekeeping/" }, method = RequestMethod.GET)
 	public String listForTimekeeping(Model model, Timekeeping timekeeping, LeaveInfoForm leaveInfoForm) {
 		try {
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			Date date = new Date();
-			String currentDate = dateFormat.format(date);
+			//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			//Date date = new Date();
+			//String currentDate = dateFormat.format(date);
 			List<Timekeeping> list = null;
-			list = timekeepingDAO.getTimekeepings(currentDate, null, null, null);
+			
+			String fromDate = leaveInfoForm.getDate();
+			String toDate = leaveInfoForm.getToDate();
+			Calendar c = Calendar.getInstance();
+			// Set the calendar to monday of the current week
+			c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			//System.out.println();
+			// Print dates of the current week starting on Monday
+			//DateFormat df = new SimpleDateFormat("EEE dd/MM/yyyy");
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			//System.out.println(df.format(c.getTime()));
+			fromDate = df.format(c.getTime());
+			leaveInfoForm.setDate(fromDate);
+			for (int i = 0; i < 6; i++) {
+				c.add(Calendar.DATE, 1);
+			}
+			//System.out.println(df.format(c.getTime()));
+			toDate = df.format(c.getTime());
+			leaveInfoForm.setToDate(toDate);
+			
+			list = timekeepingDAO.getTimekeepings(fromDate, toDate, null, null);
 			List<LeaveInfo> listL = null;
-			listL = leaveDAO.getLeaves(currentDate, null, null, null);
+			listL = leaveDAO.getLeaves(fromDate, toDate, null, null);
 			if (list.size() == 0 && listL.size() == 0)
-				model.addAttribute("message", "Không có dữ liệu chấm công cho ngày " + currentDate);
+				model.addAttribute("message", "Không có dữ liệu chấm công cho tuần này. Từ ngày " + fromDate + " đến ngày " + toDate);
 
 			// get list department
 			Map<String, String> departmentMap = this.dataForDepartments();
@@ -530,13 +550,12 @@ public class TimekeepingController {
 			// get list employee id
 			Map<String, String> employeeMap = this.employees();
 			model.addAttribute("employeeMap", employeeMap);
-
 			model.addAttribute("departmentMap", departmentMap);
 			model.addAttribute("timekeepings", list);
 			model.addAttribute("leaveInfos", listL);
 			model.addAttribute("timekeepingForm", timekeeping);
 			model.addAttribute("leaveInfoForm", leaveInfoForm);
-			model.addAttribute("formTitle", "Dữ liệu chấm công ngày " + currentDate);
+			model.addAttribute("formTitle", "Dữ liệu chấm công cho tuần này. Từ ngày " + fromDate + " đến ngày " + toDate);
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -548,9 +567,9 @@ public class TimekeepingController {
 	public String listTimekeeping(Model model, @ModelAttribute("leaveInfoForm") LeaveInfoForm leaveInfoForm) {
 		try {
 			Timekeeping timekeeping = new Timekeeping();
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			Date date = new Date();
-			String currentDate = dateFormat.format(date);
+			//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			//Date date = new Date();
+			//String currentDate = dateFormat.format(date);
 			List<Timekeeping> list = null;
 			List<LeaveInfo> listL = null;
 
@@ -580,17 +599,30 @@ public class TimekeepingController {
 				if (list.size() == 0 && listL.size() == 0)
 					model.addAttribute("message",
 							"Không có dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate);
-				;
+				
 			} else {
-				list = timekeepingDAO.getTimekeepings(currentDate, null, null, null);
-				listL = leaveDAO.getLeaves(currentDate, null, null, null);
+				Calendar c = Calendar.getInstance();
+				// Set the calendar to monday of the current week
+				c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+				//System.out.println();
+				// Print dates of the current week starting on Monday
+				//DateFormat df = new SimpleDateFormat("EEE dd/MM/yyyy");
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				//System.out.println(df.format(c.getTime()));
+				fromDate = df.format(c.getTime());
+				leaveInfoForm.setDate(fromDate);
+				for (int i = 0; i < 6; i++) {
+					c.add(Calendar.DATE, 1);
+				}
+				//System.out.println(df.format(c.getTime()));
+				toDate = df.format(c.getTime());
+				leaveInfoForm.setToDate(toDate);
+				
+				list = timekeepingDAO.getTimekeepings(fromDate, toDate, null, null);
+				listL = leaveDAO.getLeaves(fromDate, toDate, null, null);
 				if (list.size() == 0 && listL.size() == 0)
-					model.addAttribute("message", "Không có dữ liệu chấm công cho ngày " + currentDate);
+					model.addAttribute("message", "Không có dữ liệu chấm công cho tuần này. Từ ngày " + fromDate + " đến ngày " + toDate);
 			}
-			// System.err.println(currentDate + "|" + leaveInfoForm.getDate());
-			// if(list.size() == 0 && listL.size() == 0)
-			// model.addAttribute("message", "Không có dữ liệu chấm công cho ngày " +
-			// leaveInfoForm.getDate());
 
 			// get list department
 			Map<String, String> departmentMap = this.dataForDepartments();
@@ -608,7 +640,7 @@ public class TimekeepingController {
 			if (leaveInfoForm.getDate() != null)
 				model.addAttribute("formTitle", "Dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate);
 			else
-				model.addAttribute("formTitle", "Dữ liệu chấm công ngày " + currentDate);
+				model.addAttribute("formTitle", "Dữ liệu chấm công cho tuần này. Từ ngày " + fromDate + " đến ngày " + toDate);
 
 		} catch (Exception e) {
 			log.error(e, e);
@@ -654,7 +686,7 @@ public class TimekeepingController {
 				if (list.size() == 0 && listL.size() == 0)
 					model.addAttribute("message",
 							"Không có dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate);
-				;
+				
 			} else {
 				list = timekeepingDAO.getTimekeepings(currentDate, null, null, null);
 				listL = leaveDAO.getLeaves(currentDate, null, null, null);
