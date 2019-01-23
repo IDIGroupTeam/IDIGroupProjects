@@ -77,5 +77,6 @@
 		</div>
 	</form:form>
 	<tiles:insertAttribute name="footer" />
+	<tiles:insertAttribute name="modal" />
 </body>
 </html>

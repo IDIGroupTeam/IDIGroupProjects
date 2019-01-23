@@ -1,12 +1,21 @@
 package com.idi.finance.bean.kyketoan;
 
+import org.apache.log4j.Logger;
+
 import com.idi.finance.bean.chungtu.DoiTuong;
+import com.idi.finance.bean.hanghoa.HangHoa;
+import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class SoDuKy {
+	private static final Logger logger = Logger.getLogger(SoDuKy.class);
+
 	private KyKeToan kyKeToan;
 	private LoaiTaiKhoan loaiTaiKhoan;
 	private DoiTuong doiTuong = new DoiTuong();
+	private HangHoa hangHoa;
+	private KhoHang khoHang;
+
 	private double noDauKy;
 	private double coDauKy;
 	private double noCuoiKy;
@@ -34,6 +43,22 @@ public class SoDuKy {
 
 	public void setDoiTuong(DoiTuong doiTuong) {
 		this.doiTuong = doiTuong;
+	}
+
+	public HangHoa getHangHoa() {
+		return hangHoa;
+	}
+
+	public void setHangHoa(HangHoa hangHoa) {
+		this.hangHoa = hangHoa;
+	}
+
+	public KhoHang getKhoHang() {
+		return khoHang;
+	}
+
+	public void setKhoHang(KhoHang khoHang) {
+		this.khoHang = khoHang;
 	}
 
 	public double getNoDauKy() {
@@ -136,7 +161,8 @@ public class SoDuKy {
 
 	@Override
 	public String toString() {
-		String out = kyKeToan + " " + doiTuong + " " + loaiTaiKhoan + " " + noDauKy + " " + coDauKy;
+		String out = kyKeToan + " " + doiTuong + " " + loaiTaiKhoan + " " + hangHoa + " " + khoHang + " " + noDauKy
+				+ " " + coDauKy;
 		return out;
 	}
 }

@@ -23,6 +23,9 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 	@Value("${DANH_SACH_TAI_KHOAN_THEO_MA_TK}")
 	private String DANH_SACH_TAI_KHOAN_THEO_MA_TK;
 
+	@Value("${DANH_SACH_TAI_KHOAN_THEO_MA_TK_CON}")
+	private String DANH_SACH_TAI_KHOAN_THEO_MA_TK_CON;
+
 	@Value("${LAY_LOAI_TAI_KHOAN_THEO_MA_TK}")
 	private String LAY_LOAI_TAI_KHOAN_THEO_MA_TK;
 
@@ -228,21 +231,40 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 
 	@Override
 	public List<LoaiTaiKhoan> danhSachTaiKhoan(List<String> maTkDs) {
-		if (maTkDs == null)
+		if (maTkDs == null || maTkDs == null || maTkDs.size() == 0)
 			return null;
 
-		String condition = "";
+		/*
+		 * String condition = ""; for (String maTk : maTkDs) { condition += "'" + maTk +
+		 * "',"; } if (!condition.trim().isEmpty()) { condition = condition.substring(0,
+		 * condition.length() - 1); }
+		 */
+
+		String condition = "'";
 		for (String maTk : maTkDs) {
-			condition += "'" + maTk + "',";
+			condition += "^" + maTk + "|";
 		}
-		if (!condition.trim().isEmpty()) {
-			condition = condition.substring(0, condition.length() - 1);
-		}
+		condition = condition.substring(0, condition.length() - 1);
+		condition += "'";
 
 		String query = DANH_SACH_TAI_KHOAN_THEO_MA_TK;
 		query = query.replaceAll("\\$MA_TK_LIST\\$", condition);
+		logger.info(query);
 
 		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, new LoaiTaiKhoanMapper());
+
+		return taiKhoanDs;
+	}
+
+	@Override
+	public List<LoaiTaiKhoan> danhSachTaiKhoan(String maTkCon) {
+		if (maTkCon == null || maTkCon.isEmpty())
+			return null;
+
+		String query = DANH_SACH_TAI_KHOAN_THEO_MA_TK_CON;
+
+		Object[] params = { maTkCon };
+		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, params, new LoaiTaiKhoanMapper());
 
 		return taiKhoanDs;
 	}

@@ -32,6 +32,7 @@
 <hr />
 
 <form:hidden path="maHh" />
+<form:hidden path="kyHieuHh" />
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="tenHh">Tên hàng
 		hóa:(*)</label>
@@ -43,11 +44,7 @@
 
 	<label class="control-label col-sm-2" for="kyHieuHh">Mã hàng
 		hóa:(*)</label>
-	<div class="col-sm-4">
-		<form:input path="kyHieuHh" placeholder="Mã hàng hóa"
-			cssClass="form-control" />
-		<form:errors path="kyHieuHh" cssClass="error"></form:errors>
-	</div>
+	<div class="col-sm-4">${mainFinanceForm.kyHieuHh}</div>
 </div>
 
 <div class="row form-group">

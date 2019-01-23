@@ -24,6 +24,7 @@
 <hr />
 
 <form:hidden path="maNhomHh" />
+<form:hidden path="kyHieuNhomHh" />
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="nhomHh.maNhomHh">Nhóm
 		cha:</label>
@@ -45,10 +46,7 @@
 
 	<label class="control-label col-sm-2" for="nhomHh.kyHieuNhomHh">Mã
 		nhóm:</label>
-	<div class="col-sm-2">
-		<form:input path="kyHieuNhomHh" placeholder="Mã hàng hóa"
-			cssClass="form-control" />
-	</div>
+	<div class="col-sm-2">${mainFinanceForm.kyHieuNhomHh}</div>
 </div>
 
 <div class="row form-group">

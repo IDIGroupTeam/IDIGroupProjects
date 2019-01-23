@@ -412,7 +412,7 @@ public class BalanceSheetController {
 					selectedAssetPeriods, form.getPeriodType());
 
 			// Sinh bảng cân đối kế toán ra pdf
-			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			JasperReport jasperReport = getCompiledFile("CDKT", req);
 			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bads);
 
@@ -654,7 +654,7 @@ public class BalanceSheetController {
 					selectedAssetPeriods, form.getPeriodType());
 
 			// Sinh bảng cân đối kế toán ra pdf
-			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			JasperReport jasperReport = getCompiledFile("KQHDKD", req);
 			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bads);
 
@@ -1276,7 +1276,7 @@ public class BalanceSheetController {
 					selectedAssetPeriods, form.getPeriodType());
 
 			// Sinh bảng cân đối kế toán ra pdf
-			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			JasperReport jasperReport = getCompiledFile("LCTT", req);
 			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bads);
 
@@ -1906,7 +1906,7 @@ public class BalanceSheetController {
 			// Sinh bảng cân đối phát sinh ra pdf
 			JasperReport jasperReport = getCompiledFile("CDPS", req);
 
-			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			params.put("KY_KE_TOAN", kyKt);
 			String path = req.getSession().getServletContext().getRealPath("/baocao/bctc/");
 			params.put("SUBREPORT_DIR", path);

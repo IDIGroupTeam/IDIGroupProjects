@@ -17,6 +17,7 @@
 		<put-attribute name="body" value="" />
 		<put-attribute name="footer"
 			value="/pages/layouts/footer.jsp" />
+		<put-attribute name="modal" value="" />
 	</definition>
 
 	<definition name="koKyKeToanMacDinh" extends="taichinh">
@@ -487,6 +488,8 @@
 		<put-attribute name="title" value="Xem kỳ kế toán" />
 		<put-attribute name="body"
 			value="/pages/kyketoan/kyKeToanXm.jsp" />
+		<put-attribute name="modal"
+			value="/pages/kyketoan/kyKeToanModal.jsp" />
 	</definition>
 
 	<definition name="nhapSoDuKyKeToan" extends="taichinh">

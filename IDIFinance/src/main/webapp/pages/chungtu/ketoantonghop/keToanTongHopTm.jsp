@@ -172,74 +172,96 @@
 			});
 		}
 
-		$("#themTk").click(
-				function() {
-					// Thêm dòng nghiệp vụ
-					var id = soDongTk - 1;
-					var newId = soDongTk;
-					var currentTr = $("tr#" + id);
+		$("#themTk")
+				.click(
+						function() {
+							// Thêm dòng nghiệp vụ
+							var id = soDongTk - 1;
+							var newId = soDongTk;
+							var currentTr = $("tr#" + id);
 
-					var newTr = "<tr>" + $(currentTr).html() + "</tr>";
-					var pat = new RegExp("\\[" + id + "\\]", "g");
-					var pat1 = new RegExp("Ds" + id, "g");
-					newTr = newTr.replace(pat, "[" + newId + "]");
-					newTr = newTr.replace(pat1, "Ds" + newId);
+							var newTr = "<tr>" + $(currentTr).html() + "</tr>";
+							var pat = new RegExp("\\[" + id + "\\]", "g");
+							var pat1 = new RegExp("Ds" + id, "g");
+							newTr = newTr.replace(pat, "[" + newId + "]");
+							newTr = newTr.replace(pat1, "Ds" + newId);
 
-					// Thêm dòng mới và tăng số dòng
-					$(newTr).insertAfter($(currentTr)).prop("id", newId);
-					soDongTk++;
+							// Thêm dòng mới và tăng số dòng
+							$(newTr).insertAfter($(currentTr))
+									.prop("id", newId);
+							soDongTk++;
 
-					// Làm mới nội dung
-					$("#taiKhoanNoDs" + newId + "\\.lyDo").val("");
-					$("#taiKhoanNoDs" + newId + "\\.lyDo").prop("placeholder",
-							"Lý do");
-					$("#taiKhoanCoDs" + newId + "\\.lyDo").val("");
+							// Làm mới nội dung
+							$("#taiKhoanNoDs" + newId + "\\.lyDo").val("");
+							$("#taiKhoanNoDs" + newId + "\\.lyDo").prop(
+									"placeholder", "Lý do");
+							$("#taiKhoanCoDs" + newId + "\\.lyDo").val("");
 
-					$("#" + newId).find(".combobox-container").remove();
-					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk").prop(
-							"name",
-							"taiKhoanNoDs[" + newId + "].loaiTaiKhoan.maTk");
-					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk").prop(
-							"name",
-							"taiKhoanCoDs[" + newId + "].loaiTaiKhoan.maTk");
-					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk").val(
-							"0");
-					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk").val(
-							"0");
-					$("#taiKhoanNoDs" + newId + "\\.loaiTaiKhoan\\.maTk")
-							.combobox();
-					$("#taiKhoanCoDs" + newId + "\\.loaiTaiKhoan\\.maTk")
-							.combobox();
+							$("#" + newId).find(".combobox-container").remove();
+							$(
+									"#taiKhoanNoDs" + newId
+											+ "\\.loaiTaiKhoan\\.maTk").prop(
+									"name",
+									"taiKhoanNoDs[" + newId
+											+ "].loaiTaiKhoan.maTk");
+							$(
+									"#taiKhoanCoDs" + newId
+											+ "\\.loaiTaiKhoan\\.maTk").prop(
+									"name",
+									"taiKhoanCoDs[" + newId
+											+ "].loaiTaiKhoan.maTk");
+							$(
+									"#taiKhoanNoDs" + newId
+											+ "\\.loaiTaiKhoan\\.maTk")
+									.val("0");
+							$(
+									"#taiKhoanCoDs" + newId
+											+ "\\.loaiTaiKhoan\\.maTk")
+									.val("0");
+							$(
+									"#taiKhoanNoDs" + newId
+											+ "\\.loaiTaiKhoan\\.maTk")
+									.combobox();
+							$(
+									"#taiKhoanCoDs" + newId
+											+ "\\.loaiTaiKhoan\\.maTk")
+									.combobox();
 
-					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien").val("0");
-					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien").prop(
-							"placeholder", "0");
-					$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien").val("0");
-					$("#"+newId).find("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']")
-							.maskx({
-								maskxTo : 'simpleMoneyTo',
-								maskxFrom : 'simpleMoneyFrom'
-							});
-					
-					$("#taiKhoanNoDs" + newId + "\\.nhomDk").val(newId);
-					$("#taiKhoanCoDs" + newId + "\\.nhomDk").val(newId);
+							$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien")
+									.val("0");
+							$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien")
+									.prop("placeholder", "0");
+							$("#taiKhoanCoDs" + newId + "\\.soTien\\.soTien")
+									.val("0");
+							$("#" + newId)
+									.find(
+											"input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']")
+									.maskx({
+										maskxTo : 'simpleMoneyTo',
+										maskxFrom : 'simpleMoneyFrom'
+									});
 
-					$(
-							"#taiKhoanNoDs" + newId
-									+ "\\.loaiTaiKhoan\\.maTk\\.errors")
-							.remove();
-					$(
-							"#taiKhoanCoDs" + newId
-									+ "\\.loaiTaiKhoan\\.maTk\\.errors")
-							.remove();
-					$("#taiKhoanNoDs" + newId + "\\.soTien\\.soTien\\.errors")
-							.remove();
+							$("#taiKhoanNoDs" + newId + "\\.nhomDk").val(newId);
+							$("#taiKhoanCoDs" + newId + "\\.nhomDk").val(newId);
 
-					// Đăng ký sự kiện thay đổi
-					dangKyThayDoi();
+							$(
+									"#taiKhoanNoDs" + newId
+											+ "\\.loaiTaiKhoan\\.maTk\\.errors")
+									.remove();
+							$(
+									"#taiKhoanCoDs" + newId
+											+ "\\.loaiTaiKhoan\\.maTk\\.errors")
+									.remove();
+							$(
+									"#taiKhoanNoDs" + newId
+											+ "\\.soTien\\.soTien\\.errors")
+									.remove();
 
-					$("#xoaTk").removeClass("disabled");
-				});
+							// Đăng ký sự kiện thay đổi
+							dangKyThayDoi();
+
+							$("#xoaTk").removeClass("disabled");
+						});
 
 		$("#xoaTk").click(function() {
 			$("tr#" + (soDongTk - 1)).remove();
@@ -322,218 +344,221 @@
 <h4>PHIẾU KẾ TOÁN TỔNG HỢP</h4>
 <hr />
 <form:hidden path="loaiCt" />
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="soCt">Số phiếu dự
-		kiến:</label>
-	<div class="col-sm-4">
-		${mainFinanceForm.loaiCt}${mainFinanceForm.soCt}
-		<form:hidden path="soCt" />
-	</div>
-
-	<label class="control-label col-sm-2" for=ngayLap>Ngày lập
-		phiếu (*):</label>
-	<div class="col-sm-4">
-		<div class="input-group date datetime smallform">
-			<form:input path="ngayLap" class="form-control" />
-			<span class="input-group-addon"><span
-				class="glyphicon glyphicon-calendar"></span></span>
+<div class="input-group input-group-sm">
+	<div class="row form-group">
+		<label class="control-label col-sm-2" for="soCt">Số phiếu dự
+			kiến:</label>
+		<div class="col-sm-4">
+			${mainFinanceForm.loaiCt}${mainFinanceForm.soCt}
+			<form:hidden path="soCt" />
 		</div>
-		<form:errors path="ngayLap" cssClass="error" />
-	</div>
-</div>
 
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="doiTuong.loaiDt">Loại
-		đối tượng:</label>
-	<div class="col-sm-4">
-		<form:select path="doiTuong.loaiDt" cssClass="form-control"
-			placeholder="Loại đối tượng">
-			<form:option value="${DoiTuong.NHAN_VIEN}" label="Nhân viên"></form:option>
-			<form:option value="${DoiTuong.KHACH_HANG}" label="Khách hàng"></form:option>
-			<form:option value="${DoiTuong.NHA_CUNG_CAP}" label="Nhà cung cấp"></form:option>
-			<form:option value="${DoiTuong.KHACH_VANG_LAI}"
-				label="Khách vãng lai"></form:option>
-		</form:select>
-	</div>
-
-	<label class="control-label col-sm-2" for=ngayHt>Ngày hạch toán
-		(*):</label>
-	<div class="col-sm-4">
-		<div class="input-group date datetime smallform">
-			<form:input path="ngayHt" class="form-control" />
-			<span class="input-group-addon"><span
-				class="glyphicon glyphicon-calendar"></span></span>
+		<label class="control-label col-sm-2" for=ngayLap>Ngày lập
+			phiếu (*):</label>
+		<div class="col-sm-4">
+			<div class="input-group date datetime smallform">
+				<form:input path="ngayLap" class="form-control" />
+				<span class="input-group-addon"><span
+					class="glyphicon glyphicon-calendar"></span></span>
+			</div>
+			<form:errors path="ngayLap" cssClass="error" />
 		</div>
-		<form:errors path="ngayHt" cssClass="error" />
-	</div>
-</div>
-
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="doiTuong.tenDt">Đối
-		tượng nộp:(*)</label>
-	<div class="col-sm-4">
-		<form:hidden path="doiTuong.maDt" />
-		<form:input path="doiTuong.tenDt" placeholder="Họ và tên"
-			cssClass="form-control" />
-		<br />
-		<form:errors path="doiTuong.tenDt" cssClass="error" />
 	</div>
 
-	<label class="control-label col-sm-2" for="doiTuong.maThue">Mã
-		số thuế:</label>
-	<div class="col-sm-4">
-		<form:input path="doiTuong.maThue" placeholder="Mã số thuế"
-			cssClass="form-control" />
-	</div>
-</div>
-
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="doiTuong.diaChi">Địa
-		chỉ:</label>
-	<div class="col-sm-4">
-		<form:textarea path="doiTuong.diaChi" placeholder="Địa chỉ"
-			cssClass="form-control" />
-	</div>
-
-	<label class="control-label col-sm-2" for="doiTuong.nguoiNop">Người
-		nộp: </label>
-	<div class="col-sm-4">
-		<form:input path="doiTuong.nguoiNop" placeholder="Người nộp"
-			cssClass="form-control" />
-	</div>
-</div>
-
-
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="lyDo">Lý do:(*)</label>
-	<div class="col-sm-4">
-		<form:textarea path="lyDo" placeholder="Lý do" cssClass="form-control" />
-		<br />
-		<form:errors path="lyDo" cssClass="error" />
-	</div>
-
-	<label class="control-label col-sm-2" for="kemTheo">Kèm theo <br />số
-		chứng từ gốc:
-	</label>
-	<div class="col-sm-4">
-		<form:input path="kemTheo" placeholder="0" cssClass="form-control" />
-		<br />
-		<form:errors path="kemTheo" cssClass="error" />
-	</div>
-</div>
-
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="loaiTien.maLt">Loại
-		tiền</label>
-	<div class="col-sm-4">
-		<form:select path="loaiTien.maLt" cssClass="form-control">
-			<form:options items="${loaiTienDs}" itemValue="maLt"
-				itemLabel="tenLt" />
-		</form:select>
-	</div>
-
-	<label class="control-label col-sm-2" for="loaiTien.banRa">Tỷ
-		giá:(*)</label>
-	<div class="col-sm-4">
-		<form:input path="loaiTien.banRa" placeholder="0.0"
-			cssClass="form-control" />
-		<br />
-		<form:errors path="loaiTien.banRa" cssClass="error" />
-	</div>
-</div>
-
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="soTien.giaTri">Thành
-		tiền:</label>
-	<div class="col-sm-4">
-		<form:hidden path="soTien.giaTri" />
-		<p id="soTien.giaTriTxt">
-			<fmt:formatNumber value="${mainFinanceForm.soTien.giaTri}"></fmt:formatNumber>
-			&nbsp;VND
-		</p>
-	</div>
-
-	<label class="control-label col-sm-2" for=ngayTt>Ngày thanh
-		toán</label>
-	<div class="col-sm-4">
-		<div class="input-group date datetime smallform">
-			<form:input path="ngayTt" class="form-control" />
-			<span class="input-group-addon"><span
-				class="glyphicon glyphicon-calendar"></span></span>
+	<div class="row form-group">
+		<label class="control-label col-sm-2" for="doiTuong.loaiDt">Loại
+			đối tượng:</label>
+		<div class="col-sm-4">
+			<form:select path="doiTuong.loaiDt" cssClass="form-control"
+				placeholder="Loại đối tượng">
+				<form:option value="${DoiTuong.NHAN_VIEN}" label="Nhân viên"></form:option>
+				<form:option value="${DoiTuong.KHACH_HANG}" label="Khách hàng"></form:option>
+				<form:option value="${DoiTuong.NHA_CUNG_CAP}" label="Nhà cung cấp"></form:option>
+				<form:option value="${DoiTuong.KHACH_VANG_LAI}"
+					label="Khách vãng lai"></form:option>
+			</form:select>
 		</div>
-		<form:errors path="ngayTt" cssClass="error" />
-	</div>
-</div>
 
-<div class="table-responsive row form-group">
-	<label class="control-label col-sm-2">Định khoản</label>
-	<table id="taiKhoanTbl"
-		class="table table-bordered table-hover text-center dinhkhoan">
-		<thead>
-			<tr>
-				<th class="text-center">Lý do</th>
-				<th class="text-center">Nợ</th>
-				<th class="text-center">Có</th>
-				<th class="text-center">Giá trị</th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:forEach begin="0" end="${mainFinanceForm.soTkLonNhat-1}"
-				varStatus="status">
-				<tr id="${status.index}">
-					<td><form:input cssClass="form-control"
-							path="taiKhoanNoDs[${status.index}].lyDo" placeholder="Lý do" />
-						<form:errors path="taiKhoanNoDs[${status.index}].lyDo"
-							cssClass="error" /> <form:hidden
-							path="taiKhoanCoDs[${status.index}].lyDo" /></td>
-					<td class="text-left"><form:select cssClass="form-control"
-							path="taiKhoanNoDs[${status.index}].loaiTaiKhoan.maTk"
-							multiple="false">
-							<form:option value="0">Tài khoản</form:option>
-							<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
-								itemLabel="maTenTk" />
-						</form:select> <form:hidden path="taiKhoanNoDs[${status.index}].soDu" /> <form:errors
-							path="taiKhoanNoDs[${status.index}].loaiTaiKhoan.maTk"
-							cssClass="error" /></td>
-					<td class="text-left"><form:select cssClass="form-control"
-							path="taiKhoanCoDs[${status.index}].loaiTaiKhoan.maTk"
-							multiple="false">
-							<form:option value="0">Tài khoản</form:option>
-							<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
-								itemLabel="maTenTk" />
-						</form:select> <form:hidden path="taiKhoanCoDs[${status.index}].soDu" /> <form:errors
-							path="taiKhoanCoDs[${status.index}].loaiTaiKhoan.maTk"
-							cssClass="error" /></td>
-					<td><form:input cssClass="form-control"
-							path="taiKhoanNoDs[${status.index}].soTien.soTien"
-							placeholder="0" /> <form:errors
-							path="taiKhoanNoDs[${status.index}].soTien.soTien"
-							cssClass="error" /> <form:hidden
-							path="taiKhoanCoDs[${status.index}].soTien.soTien" /> <form:hidden
-							path="taiKhoanNoDs[${status.index}].nhomDk" /> <form:hidden
-							path="taiKhoanCoDs[${status.index}].nhomDk" /></td>
+		<label class="control-label col-sm-2" for=ngayHt>Ngày hạch
+			toán (*):</label>
+		<div class="col-sm-4">
+			<div class="input-group date datetime smallform">
+				<form:input path="ngayHt" class="form-control" />
+				<span class="input-group-addon"><span
+					class="glyphicon glyphicon-calendar"></span></span>
+			</div>
+			<form:errors path="ngayHt" cssClass="error" />
+		</div>
+	</div>
+
+	<div class="row form-group">
+		<label class="control-label col-sm-2" for="doiTuong.tenDt">Đối
+			tượng nộp:(*)</label>
+		<div class="col-sm-4">
+			<form:hidden path="doiTuong.maDt" />
+			<form:input path="doiTuong.tenDt" placeholder="Họ và tên"
+				cssClass="form-control" />
+			<br />
+			<form:errors path="doiTuong.tenDt" cssClass="error" />
+		</div>
+
+		<label class="control-label col-sm-2" for="doiTuong.maThue">Mã
+			số thuế:</label>
+		<div class="col-sm-4">
+			<form:input path="doiTuong.maThue" placeholder="Mã số thuế"
+				cssClass="form-control" />
+		</div>
+	</div>
+
+	<div class="row form-group">
+		<label class="control-label col-sm-2" for="doiTuong.diaChi">Địa
+			chỉ:</label>
+		<div class="col-sm-4">
+			<form:textarea path="doiTuong.diaChi" placeholder="Địa chỉ"
+				cssClass="form-control" />
+		</div>
+
+		<label class="control-label col-sm-2" for="doiTuong.nguoiNop">Người
+			nộp: </label>
+		<div class="col-sm-4">
+			<form:input path="doiTuong.nguoiNop" placeholder="Người nộp"
+				cssClass="form-control" />
+		</div>
+	</div>
+
+
+	<div class="row form-group">
+		<label class="control-label col-sm-2" for="lyDo">Lý do:(*)</label>
+		<div class="col-sm-4">
+			<form:textarea path="lyDo" placeholder="Lý do"
+				cssClass="form-control" />
+			<br />
+			<form:errors path="lyDo" cssClass="error" />
+		</div>
+
+		<label class="control-label col-sm-2" for="kemTheo">Kèm theo <br />số
+			chứng từ gốc:
+		</label>
+		<div class="col-sm-4">
+			<form:input path="kemTheo" placeholder="0" cssClass="form-control" />
+			<br />
+			<form:errors path="kemTheo" cssClass="error" />
+		</div>
+	</div>
+
+	<div class="row form-group">
+		<label class="control-label col-sm-2" for="loaiTien.maLt">Loại
+			tiền</label>
+		<div class="col-sm-4">
+			<form:select path="loaiTien.maLt" cssClass="form-control">
+				<form:options items="${loaiTienDs}" itemValue="maLt"
+					itemLabel="tenLt" />
+			</form:select>
+		</div>
+
+		<label class="control-label col-sm-2" for="loaiTien.banRa">Tỷ
+			giá:(*)</label>
+		<div class="col-sm-4">
+			<form:input path="loaiTien.banRa" placeholder="0.0"
+				cssClass="form-control" />
+			<br />
+			<form:errors path="loaiTien.banRa" cssClass="error" />
+		</div>
+	</div>
+
+	<div class="row form-group">
+		<label class="control-label col-sm-2" for="soTien.giaTri">Thành
+			tiền:</label>
+		<div class="col-sm-4">
+			<form:hidden path="soTien.giaTri" />
+			<p id="soTien.giaTriTxt">
+				<fmt:formatNumber value="${mainFinanceForm.soTien.giaTri}"></fmt:formatNumber>
+				&nbsp;VND
+			</p>
+		</div>
+
+		<label class="control-label col-sm-2" for=ngayTt>Ngày thanh
+			toán</label>
+		<div class="col-sm-4">
+			<div class="input-group date datetime smallform">
+				<form:input path="ngayTt" class="form-control" />
+				<span class="input-group-addon"><span
+					class="glyphicon glyphicon-calendar"></span></span>
+			</div>
+			<form:errors path="ngayTt" cssClass="error" />
+		</div>
+	</div>
+
+	<div class="table-responsive row form-group">
+		<label class="control-label col-sm-2">Định khoản</label>
+		<table id="taiKhoanTbl"
+			class="table table-bordered table-hover text-center dinhkhoan">
+			<thead>
+				<tr>
+					<th class="text-center">Lý do</th>
+					<th class="text-center">Nợ</th>
+					<th class="text-center">Có</th>
+					<th class="text-center">Giá trị</th>
 				</tr>
-			</c:forEach>
-			<tr>
-				<td colspan="4">
-					<button id="themTk" type="button" class="btn btn-info btn-sm"
-						title="Thêm nghiệp vụ kế toán">
-						<span class="glyphicon glyphicon-plus"></span> Thêm
-					</button>
-					<button id="xoaTk" type="button"
-						class="btn btn-info btn-sm disabled" title="Xóa nghiệp vụ kế toán">
-						<span class="glyphicon glyphicon-plus"></span> Xóa
-					</button>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-</div>
+			</thead>
+			<tbody>
+				<c:forEach begin="0" end="${mainFinanceForm.soTkLonNhat-1}"
+					varStatus="status">
+					<tr id="${status.index}">
+						<td><form:input cssClass="form-control"
+								path="taiKhoanNoDs[${status.index}].lyDo" placeholder="Lý do" />
+							<form:errors path="taiKhoanNoDs[${status.index}].lyDo"
+								cssClass="error" /> <form:hidden
+								path="taiKhoanCoDs[${status.index}].lyDo" /></td>
+						<td class="text-left"><form:select cssClass="form-control"
+								path="taiKhoanNoDs[${status.index}].loaiTaiKhoan.maTk"
+								multiple="false">
+								<form:option value="0">Tài khoản</form:option>
+								<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
+									itemLabel="maTenTk" />
+							</form:select> <form:hidden path="taiKhoanNoDs[${status.index}].soDu" /> <form:errors
+								path="taiKhoanNoDs[${status.index}].loaiTaiKhoan.maTk"
+								cssClass="error" /></td>
+						<td class="text-left"><form:select cssClass="form-control"
+								path="taiKhoanCoDs[${status.index}].loaiTaiKhoan.maTk"
+								multiple="false">
+								<form:option value="0">Tài khoản</form:option>
+								<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
+									itemLabel="maTenTk" />
+							</form:select> <form:hidden path="taiKhoanCoDs[${status.index}].soDu" /> <form:errors
+								path="taiKhoanCoDs[${status.index}].loaiTaiKhoan.maTk"
+								cssClass="error" /></td>
+						<td><form:input cssClass="form-control"
+								path="taiKhoanNoDs[${status.index}].soTien.soTien"
+								placeholder="0" /> <form:errors
+								path="taiKhoanNoDs[${status.index}].soTien.soTien"
+								cssClass="error" /> <form:hidden
+								path="taiKhoanCoDs[${status.index}].soTien.soTien" /> <form:hidden
+								path="taiKhoanNoDs[${status.index}].nhomDk" /> <form:hidden
+								path="taiKhoanCoDs[${status.index}].nhomDk" /></td>
+					</tr>
+				</c:forEach>
+				<tr>
+					<td colspan="4">
+						<button id="themTk" type="button" class="btn btn-info btn-sm"
+							title="Thêm nghiệp vụ kế toán">
+							<span class="glyphicon glyphicon-plus"></span> Thêm
+						</button>
+						<button id="xoaTk" type="button"
+							class="btn btn-info btn-sm disabled"
+							title="Xóa nghiệp vụ kế toán">
+							<span class="glyphicon glyphicon-plus"></span> Xóa
+						</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
-<div class="row form-group">
-	<div class="col-sm-12">
-		<a href="${url}/chungtu/ktth/danhsach" class="btn btn-info btn-sm">Hủy</a>
-		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Tạo
-			mới</button>
+	<div class="row form-group">
+		<div class="col-sm-12">
+			<a href="${url}/chungtu/ktth/danhsach" class="btn btn-info btn-sm">Hủy</a>
+			<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu</button>
+		</div>
 	</div>
 </div>

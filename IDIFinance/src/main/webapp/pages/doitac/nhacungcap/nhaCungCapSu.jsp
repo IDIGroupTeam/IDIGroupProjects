@@ -20,7 +20,7 @@
 	});
 </script>
 
-<h4>TẠO MỚI NHÀ CUNG CẤP</h4>
+<h4>SỬA NHÀ CUNG CẤP</h4>
 
 <hr />
 

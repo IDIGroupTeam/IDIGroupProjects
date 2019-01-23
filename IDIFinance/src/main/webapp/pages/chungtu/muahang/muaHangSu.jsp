@@ -768,174 +768,177 @@
 <form:hidden path="loaiCt" />
 <form:hidden path="tinhChatCt" />
 <form:hidden path="chieu" />
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="soCt">Số dự chứng từ
-		kiến:</label>
-	<div class="col-sm-4">
-		${mainFinanceForm.loaiCt}${mainFinanceForm.soCt}
-		<form:hidden path="soCt" />
-	</div>
-
-	<label class="control-label col-sm-2" for=ngayLap>Ngày lập
-		chứng từ:</label>
-	<div class="col-sm-4">
-		<div class="input-group date datetime smallform">
-			<form:input path="ngayLap" class="form-control" />
-			<span class="input-group-addon"><span
-				class="glyphicon glyphicon-calendar"></span></span>
+<div class="input-group input-group-sm">
+	<div class="row form-group">
+		<label class="control-label col-sm-2" for="soCt">Số dự chứng
+			từ kiến:</label>
+		<div class="col-sm-4">
+			${mainFinanceForm.loaiCt}${mainFinanceForm.soCt}
+			<form:hidden path="soCt" />
 		</div>
-		<form:errors path="ngayLap" cssClass="error" />
-	</div>
-</div>
 
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="doiTuong.loaiDt">Loại
-		đối tượng:</label>
-	<div class="col-sm-4">
-		<form:select path="doiTuong.loaiDt" cssClass="form-control"
-			placeholder="Loại đối tượng">
-			<form:option value="${DoiTuong.NHA_CUNG_CAP}" label="Nhà cung cấp"></form:option>
-		</form:select>
-	</div>
-
-	<label class="control-label col-sm-2" for=ngayHt>Ngày hạch
-		toán:</label>
-	<div class="col-sm-4">
-		<div class="input-group date datetime smallform">
-			<form:input path="ngayHt" class="form-control" />
-			<span class="input-group-addon"><span
-				class="glyphicon glyphicon-calendar"></span></span>
+		<label class="control-label col-sm-2" for=ngayLap>Ngày lập
+			chứng từ:</label>
+		<div class="col-sm-4">
+			<div class="input-group date datetime smallform">
+				<form:input path="ngayLap" class="form-control" />
+				<span class="input-group-addon"><span
+					class="glyphicon glyphicon-calendar"></span></span>
+			</div>
+			<form:errors path="ngayLap" cssClass="error" />
 		</div>
-		<form:errors path="ngayHt" cssClass="error" />
-	</div>
-</div>
-
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="doiTuong.tenDt">Đối
-		tượng:(*)</label>
-	<div class="col-sm-4">
-		<form:hidden path="doiTuong.maDt" />
-		<form:input path="doiTuong.tenDt" placeholder="Họ và tên"
-			cssClass="form-control" />
-		<br />
-		<form:errors path="doiTuong.tenDt" cssClass="error" />
 	</div>
 
-	<label class="control-label col-sm-2" for="doiTuong.maThue">Mã
-		số thuế:</label>
-	<div class="col-sm-4">
-		<form:input path="doiTuong.maThue" placeholder="Mã số thuế"
-			cssClass="form-control" />
-	</div>
-</div>
-
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="doiTuong.diaChi">Địa
-		chỉ:</label>
-	<div class="col-sm-4">
-		<form:textarea path="doiTuong.diaChi" placeholder="Địa chỉ"
-			cssClass="form-control" />
-	</div>
-
-	<label class="control-label col-sm-2" for="doiTuong.nguoiNop">Người
-		giao: </label>
-	<div class="col-sm-4">
-		<form:input path="doiTuong.nguoiNop" placeholder="Người nộp"
-			cssClass="form-control" />
-	</div>
-</div>
-
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="lyDo">Lý do:(*)</label>
-	<div class="col-sm-4">
-		<form:textarea path="lyDo" placeholder="Lý do" cssClass="form-control" />
-		<br />
-		<form:errors path="lyDo" cssClass="error" />
-	</div>
-
-	<label class="control-label col-sm-2" for="kemTheo">Kèm theo <br />số
-		chứng từ gốc:
-	</label>
-	<div class="col-sm-4">
-		<form:input path="kemTheo" placeholder="0" cssClass="form-control" />
-		<br />
-		<form:errors path="kemTheo" cssClass="error" />
-	</div>
-</div>
-
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="loaiTien.maLt">Loại
-		tiền</label>
-	<div class="col-sm-4">
-		<form:select path="loaiTien.maLt" cssClass="form-control">
-			<form:options items="${loaiTienDs}" itemValue="maLt"
-				itemLabel="tenLt" />
-		</form:select>
-	</div>
-
-	<label class="control-label col-sm-2" for="loaiTien.banRa">Tỷ
-		giá:(*)</label>
-	<div class="col-sm-4">
-		<form:input path="loaiTien.banRa" placeholder="0.0"
-			cssClass="form-control" />
-		<br />
-		<form:errors path="loaiTien.banRa" cssClass="error" />
-	</div>
-</div>
-
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="soTien.giaTri">Thành
-		tiền:</label>
-	<div class="col-sm-4">
-		<p id="soTien.giaTriTxt">
-			<fmt:formatNumber value="${mainFinanceForm.soTien.giaTri}"></fmt:formatNumber>
-			&nbsp;VND
-		</p>
-	</div>
-
-	<label class="control-label col-sm-2" for=ngayTt>Ngày thanh
-		toán</label>
-	<div class="col-sm-4">
-		<div class="input-group date datetime smallform">
-			<form:input path="ngayTt" class="form-control" />
-			<span class="input-group-addon"><span
-				class="glyphicon glyphicon-calendar"></span></span>
+	<div class="row form-group">
+		<label class="control-label col-sm-2" for="doiTuong.loaiDt">Loại
+			đối tượng:</label>
+		<div class="col-sm-4">
+			<form:select path="doiTuong.loaiDt" cssClass="form-control"
+				placeholder="Loại đối tượng">
+				<form:option value="${DoiTuong.NHA_CUNG_CAP}" label="Nhà cung cấp"></form:option>
+			</form:select>
 		</div>
-		<form:errors path="ngayTt" cssClass="error" />
+
+		<label class="control-label col-sm-2" for=ngayHt>Ngày hạch
+			toán:</label>
+		<div class="col-sm-4">
+			<div class="input-group date datetime smallform">
+				<form:input path="ngayHt" class="form-control" />
+				<span class="input-group-addon"><span
+					class="glyphicon glyphicon-calendar"></span></span>
+			</div>
+			<form:errors path="ngayHt" cssClass="error" />
+		</div>
 	</div>
-</div>
 
-<label class="control-label">Danh sách hàng hóa, dịch vụ</label>
-<div class="row">
-	<c:choose>
-		<c:when test="${mainFinanceForm.tinhChatCt==2}">
-			<jsp:include page="muaHangSu_Hh_Nn.jsp"></jsp:include>
-		</c:when>
-		<c:when test="${mainFinanceForm.tinhChatCt==3}">
-			<jsp:include page="muaHangSu_Dv_Tn.jsp"></jsp:include>
-		</c:when>
-		<c:otherwise>
-			<jsp:include page="muaHangSu_Hh_Tn.jsp"></jsp:include>
-		</c:otherwise>
-	</c:choose>
-	<br />
-</div>
+	<div class="row form-group">
+		<label class="control-label col-sm-2" for="doiTuong.tenDt">Đối
+			tượng:(*)</label>
+		<div class="col-sm-4">
+			<form:hidden path="doiTuong.maDt" />
+			<form:input path="doiTuong.tenDt" placeholder="Họ và tên"
+				cssClass="form-control" />
+			<br />
+			<form:errors path="doiTuong.tenDt" cssClass="error" />
+		</div>
 
-<div class="row form-group" align="center">
-	<button id="themHh" type="button" class="btn btn-info btn-sm"
-		title="Thêm tài khoản ghi có">
-		<span class="glyphicon glyphicon-plus"></span> Thêm
-	</button>
-	<button id="xoaHh" type="button" class="btn btn-info btn-sm disabled"
-		title="Xóa tài khoản ghi có cuối cùng">
-		<span class="glyphicon glyphicon-plus"></span> Xóa
-	</button>
-</div>
+		<label class="control-label col-sm-2" for="doiTuong.maThue">Mã
+			số thuế:</label>
+		<div class="col-sm-4">
+			<form:input path="doiTuong.maThue" placeholder="Mã số thuế"
+				cssClass="form-control" />
+		</div>
+	</div>
 
-<div class="row form-group">
-	<div class="col-sm-12">
-		<a href="${url}/chungtu/muahang/xem/${mainFinanceForm.maCt}"
-			class="btn btn-info btn-sm">Hủy</a>
-		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu</button>
+	<div class="row form-group">
+		<label class="control-label col-sm-2" for="doiTuong.diaChi">Địa
+			chỉ:</label>
+		<div class="col-sm-4">
+			<form:textarea path="doiTuong.diaChi" placeholder="Địa chỉ"
+				cssClass="form-control" />
+		</div>
+
+		<label class="control-label col-sm-2" for="doiTuong.nguoiNop">Người
+			giao: </label>
+		<div class="col-sm-4">
+			<form:input path="doiTuong.nguoiNop" placeholder="Người nộp"
+				cssClass="form-control" />
+		</div>
+	</div>
+
+	<div class="row form-group">
+		<label class="control-label col-sm-2" for="lyDo">Lý do:(*)</label>
+		<div class="col-sm-4">
+			<form:textarea path="lyDo" placeholder="Lý do"
+				cssClass="form-control" />
+			<br />
+			<form:errors path="lyDo" cssClass="error" />
+		</div>
+
+		<label class="control-label col-sm-2" for="kemTheo">Kèm theo <br />số
+			chứng từ gốc:
+		</label>
+		<div class="col-sm-4">
+			<form:input path="kemTheo" placeholder="0" cssClass="form-control" />
+			<br />
+			<form:errors path="kemTheo" cssClass="error" />
+		</div>
+	</div>
+
+	<div class="row form-group">
+		<label class="control-label col-sm-2" for="loaiTien.maLt">Loại
+			tiền</label>
+		<div class="col-sm-4">
+			<form:select path="loaiTien.maLt" cssClass="form-control">
+				<form:options items="${loaiTienDs}" itemValue="maLt"
+					itemLabel="tenLt" />
+			</form:select>
+		</div>
+
+		<label class="control-label col-sm-2" for="loaiTien.banRa">Tỷ
+			giá:(*)</label>
+		<div class="col-sm-4">
+			<form:input path="loaiTien.banRa" placeholder="0.0"
+				cssClass="form-control" />
+			<br />
+			<form:errors path="loaiTien.banRa" cssClass="error" />
+		</div>
+	</div>
+
+	<div class="row form-group">
+		<label class="control-label col-sm-2" for="soTien.giaTri">Thành
+			tiền:</label>
+		<div class="col-sm-4">
+			<p id="soTien.giaTriTxt">
+				<fmt:formatNumber value="${mainFinanceForm.soTien.giaTri}"></fmt:formatNumber>
+				&nbsp;VND
+			</p>
+		</div>
+
+		<label class="control-label col-sm-2" for=ngayTt>Ngày thanh
+			toán</label>
+		<div class="col-sm-4">
+			<div class="input-group date datetime smallform">
+				<form:input path="ngayTt" class="form-control" />
+				<span class="input-group-addon"><span
+					class="glyphicon glyphicon-calendar"></span></span>
+			</div>
+			<form:errors path="ngayTt" cssClass="error" />
+		</div>
+	</div>
+
+	<label class="control-label">Danh sách hàng hóa, dịch vụ</label>
+	<div class="row">
+		<c:choose>
+			<c:when test="${mainFinanceForm.tinhChatCt==2}">
+				<jsp:include page="muaHangSu_Hh_Nn.jsp"></jsp:include>
+			</c:when>
+			<c:when test="${mainFinanceForm.tinhChatCt==3}">
+				<jsp:include page="muaHangSu_Dv_Tn.jsp"></jsp:include>
+			</c:when>
+			<c:otherwise>
+				<jsp:include page="muaHangSu_Hh_Tn.jsp"></jsp:include>
+			</c:otherwise>
+		</c:choose>
+		<br />
+	</div>
+
+	<div class="row form-group" align="center">
+		<button id="themHh" type="button" class="btn btn-info btn-sm"
+			title="Thêm tài khoản ghi có">
+			<span class="glyphicon glyphicon-plus"></span> Thêm
+		</button>
+		<button id="xoaHh" type="button" class="btn btn-info btn-sm disabled"
+			title="Xóa tài khoản ghi có cuối cùng">
+			<span class="glyphicon glyphicon-plus"></span> Xóa
+		</button>
+	</div>
+
+	<div class="row form-group">
+		<div class="col-sm-12">
+			<a href="${url}/chungtu/muahang/xem/${mainFinanceForm.maCt}"
+				class="btn btn-info btn-sm">Hủy</a>
+			<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu</button>
+		</div>
 	</div>
 </div>

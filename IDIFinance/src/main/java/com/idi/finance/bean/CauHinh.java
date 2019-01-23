@@ -4,8 +4,9 @@ public class CauHinh {
 	// File này quản lý nhóm cấu hình đọc từ csdl
 	// Người dùng được phép thay đổi giá trị
 	public static final int NHOM_MAC_DINH = 0;
-	public static final int NHOM_CHUNG = 1;
+	public static final int NHOM_CONG_TY = 1;
 	public static final int NHOM_TK = 2;
+	public static final int NHOM_KHAC = 3;
 
 	private String ma;
 	private String ten;

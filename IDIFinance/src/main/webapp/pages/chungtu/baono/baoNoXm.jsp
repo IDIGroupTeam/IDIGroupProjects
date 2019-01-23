@@ -213,14 +213,13 @@
 			<c:when
 				test="${kyKeToan!=null && kyKeToan.trangThai!= KyKeToan.DONG}">
 				<a href="${url}/chungtu/baono/pdf/${chungTu.maCt}" target="_blank"
-					class="btn btn-info btn-sm">Xuất báo nợ</a>
+					class="btn btn-info btn-sm">In</a>
 				<a id="xoaNut" href="${url}/chungtu/baono/xoa/${chungTu.maCt}"
 					class="btn btn-info btn-sm">Xóa</a>
 				<a href="${url}/chungtu/baono/sua/${chungTu.maCt}"
 					class="btn btn-info btn-sm">Sửa</a>
 				<a href="${url}/chungtu/baono/taomoi" class="btn btn-info btn-sm">Tạo
 					mới</a>
-
 			</c:when>
 		</c:choose>
 	</div>

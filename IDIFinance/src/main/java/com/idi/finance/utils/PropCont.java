@@ -79,6 +79,12 @@ public class PropCont {
 	@Value("${BAN_HANG_DS_TK_XK_CO}")
 	private String VALUE_BAN_HANG_DS_TK_XK_CO;
 
+	// Cấu hình khác
+	@Value("${TAI_KHOAN_CONG_NO}")
+	private String VALUE_TAI_KHOAN_CONG_NO;
+	@Value("${TAI_KHOAN_KHO_VTHH}")
+	private String VALUE_TAI_KHOAN_KHO_VTHH;
+
 	// Các khóa
 	public static final String SO_DU_DAU_KY_EXCEL_TEN_FILE = "SO_DU_DAU_KY_EXCEL_TEN_FILE";
 
@@ -110,6 +116,9 @@ public class PropCont {
 	public static final String BAN_HANG_DS_TK_KHO_NO = "BAN_HANG_DS_TK_KHO_NO";
 	public static final String BAN_HANG_DS_TK_GTGT_CO = "BAN_HANG_DS_TK_GTGT_CO";
 	public static final String BAN_HANG_DS_TK_XK_CO = "BAN_HANG_DS_TK_XK_CO";
+
+	public static final String TAI_KHOAN_CONG_NO = "TAI_KHOAN_CONG_NO";
+	public static final String TAI_KHOAN_KHO_VTHH = "TAI_KHOAN_KHO_VTHH";
 
 	private HashMap<String, String> propConts = new HashMap<>();
 
@@ -146,6 +155,9 @@ public class PropCont {
 		propConts.put(BAN_HANG_DS_TK_KHO_NO, VALUE_BAN_HANG_DS_TK_KHO_NO);
 		propConts.put(BAN_HANG_DS_TK_GTGT_CO, VALUE_BAN_HANG_DS_TK_GTGT_CO);
 		propConts.put(BAN_HANG_DS_TK_XK_CO, VALUE_BAN_HANG_DS_TK_XK_CO);
+
+		propConts.put(TAI_KHOAN_CONG_NO, VALUE_TAI_KHOAN_CONG_NO);
+		propConts.put(TAI_KHOAN_KHO_VTHH, VALUE_TAI_KHOAN_KHO_VTHH);
 	}
 
 	public HashMap<String, Object> getCauHinhTheoNhom(int nhom) {

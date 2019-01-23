@@ -98,14 +98,17 @@ public class CauHinhController {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
-			List<CauHinh> cauHinhChungDs = cauHinhDAO.danhSachCauHinh(CauHinh.NHOM_CHUNG);
+			List<CauHinh> cauHinhCongTyDs = cauHinhDAO.danhSachCauHinh(CauHinh.NHOM_CONG_TY);
 
 			List<CauHinh> cauHinhTkDs = cauHinhDAO.danhSachCauHinh(CauHinh.NHOM_TK);
 
+			List<CauHinh> cauHinhKhacDs = cauHinhDAO.danhSachCauHinh(CauHinh.NHOM_KHAC);
+
 			// List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
 
-			model.addAttribute("cauHinhChungDs", cauHinhChungDs);
+			model.addAttribute("cauHinhCongTyDs", cauHinhCongTyDs);
 			model.addAttribute("cauHinhTkDs", cauHinhTkDs);
+			model.addAttribute("cauHinhKhacDs", cauHinhKhacDs);
 			// model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 			model.addAttribute("tab", "tabDSCH");
 			return "danhSachCauHinh";

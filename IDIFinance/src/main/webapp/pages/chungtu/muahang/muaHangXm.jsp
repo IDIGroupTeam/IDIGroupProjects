@@ -149,8 +149,9 @@
 			maxFractionDigits="2"></fmt:formatNumber>
 		VND
 	</div>
-	
-	<label class="control-label col-sm-2" for=ngayHt>Ngày thanh toán:</label>
+
+	<label class="control-label col-sm-2" for=ngayHt>Ngày thanh
+		toán:</label>
 	<div class="col-sm-4">
 		<span id="ngayTt"><fmt:formatDate value="${chungTu.ngayTt}"
 				pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" /></span>
@@ -182,7 +183,7 @@
 			<c:when
 				test="${kyKeToan!=null && kyKeToan.trangThai!= KyKeToan.DONG}">
 				<a href="${url}/chungtu/muahang/pdf/${chungTu.maCt}"
-					class="btn btn-info btn-sm"> Xuất Pdf </a>
+					class="btn btn-info btn-sm">In</a>
 				<a href="${url}/chungtu/muahang/nhapkho/${chungTu.maCt}"
 					class="btn btn-info btn-sm"> Nhập kho </a>
 				<a id="xoaNut" href="${url}/chungtu/muahang/xoa/${chungTu.maCt}"

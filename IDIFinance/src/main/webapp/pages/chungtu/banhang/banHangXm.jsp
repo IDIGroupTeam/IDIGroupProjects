@@ -184,7 +184,7 @@
 			<c:when
 				test="${kyKeToan!=null && kyKeToan.trangThai!= KyKeToan.DONG}">
 				<a href="${url}/chungtu/banhang/pdf/${chungTu.maCt}"
-					class="btn btn-info btn-sm"> Xuất Pdf </a>
+					class="btn btn-info btn-sm">In</a>
 				<a href="${url}/chungtu/banhang/pdf/${chungTu.maCt}"
 					class="btn btn-info btn-sm"> Phiếu xuất kho </a>
 				<a id="xoaNut" href="${url}/chungtu/banhang/xoa/${chungTu.maCt}"

@@ -7,10 +7,11 @@
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 
 <script type="text/javascript">
-	function xacNhanXoaTaiKhoan(maTk){
+	function xacNhanXoaTaiKhoan(maTk) {
 		BootstrapDialog.confirm({
 			title : 'Xác nhận',
-			message : 'Bạn muốn xóa tài khoản này không ?<br/>Mã tài khoản: '+maTk,
+			message : 'Bạn muốn xóa tài khoản này không ?<br/>Mã tài khoản: '
+					+ maTk,
 			type : 'type-info',
 			closable : true,
 			draggable : true,
@@ -18,22 +19,21 @@
 			btnOKLabel : 'Có',
 			callback : function(result) {
 				if (result) {
-					$("#mainFinanceForm").attr(
-							"action", "${url}/taikhoan/xoa/"+maTk);
-					$("#mainFinanceForm").attr(
-							"method", "GET");
+					$("#mainFinanceForm").attr("action",
+							"${url}/taikhoan/xoa/" + maTk);
+					$("#mainFinanceForm").attr("method", "GET");
 					$("#mainFinanceForm").submit();
 				}
 			}
 		});
-	
+
 		return false;
 	}
-	
+
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		
+
 	});
 </script>
 
@@ -93,10 +93,14 @@
 					<td><div class="btn-group btn-group-sm">
 							<a href="${url}/taikhoan/sua/${taiKhoan.maTk}" class="btn"
 								title="Sửa"> <span class="glyphicon glyphicon-edit"></span>
-							</a><a href="${url}/taikhoan/xoa/${taiKhoan.maTk}" class="btn"
+							</a>
+							<%-- <a href="${url}/taikhoan/xoa/${taiKhoan.maTk}" class="btn"
 								title="Xoá"
 								onclick="return xacNhanXoaTaiKhoan(${taiKhoan.maTk});"> <span
 								class="glyphicon glyphicon-remove"></span>
+							</a> --%>
+							<a href="${url}/taikhoan/taomoi" class="btn" title="Tạo mới">
+								<span class="glyphicon glyphicon-plus"></span>
 							</a>
 						</div></td>
 				</tr>

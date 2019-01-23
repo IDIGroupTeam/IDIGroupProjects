@@ -3,6 +3,7 @@ package com.idi.finance.controller;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -31,14 +32,21 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.idi.finance.bean.DungChung;
+import com.idi.finance.bean.NhanVien;
 import com.idi.finance.bean.chungtu.DoiTuong;
 import com.idi.finance.bean.doitac.KhachHang;
 import com.idi.finance.bean.doitac.NhaCungCap;
+import com.idi.finance.bean.hanghoa.DonVi;
+import com.idi.finance.bean.hanghoa.HangHoa;
+import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.kyketoan.SoDuKy;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
+import com.idi.finance.dao.HangHoaDAO;
 import com.idi.finance.dao.KhachHangDAO;
 import com.idi.finance.dao.KyKeToanDAO;
 import com.idi.finance.dao.NhaCungCapDAO;
@@ -55,6 +63,9 @@ public class KyKeToanController {
 
 	@Autowired
 	DungChung dungChung;
+
+	@Autowired
+	PropCont props;
 
 	@Autowired
 	TaiKhoanDAO taiKhoanDAO;
@@ -75,6 +86,9 @@ public class KyKeToanController {
 	NhanVienDAO nhanVienDAO;
 
 	@Autowired
+	HangHoaDAO hangHoaDAO;
+
+	@Autowired
 	KyKeToanValidator kyKeToanValidator;
 
 	@InitBinder
@@ -90,6 +104,8 @@ public class KyKeToanController {
 
 		if (target.getClass() == KyKeToan.class) {
 			binder.setValidator(kyKeToanValidator);
+		} else if (target.getClass() == SoDuKy.class) {
+			binder.setValidator(null);
 		}
 	}
 
@@ -112,7 +128,8 @@ public class KyKeToanController {
 	}
 
 	@RequestMapping("/kyketoan/xem/{maKyKt}")
-	public String xemKyKeToan(@PathVariable("maKyKt") int maKyKt, Model model) {
+	public String xemKyKeToan(@ModelAttribute("mainFinanceForm") SoDuKy soDuKy, @PathVariable("maKyKt") int maKyKt,
+			Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
@@ -123,9 +140,15 @@ public class KyKeToanController {
 			}
 			model.addAttribute("kyKeToan", kyKeToan);
 
+			if (soDuKy == null) {
+				soDuKy = new SoDuKy();
+			}
+			soDuKy.setKyKeToan(kyKeToan);
+
 			// Lấy số dư đầu và cuối kỳ của các nhóm tài khoản
 			// Nhóm tài khoản CCDC, VTHH
-			// Số dư đầu kỳ VTHH
+			// Số dư đầu kỳ tồn kho VTHH
+			List<SoDuKy> tonKhoDs = kyKeToanDAO.danhSachSoDuKyTheoHangHoa(maKyKt);
 
 			// Nhóm tài khoản theo đối tượng
 			// (chỉ áp dụng với các tài khoản công nợ như 131, 331, 141, 334)
@@ -145,10 +168,64 @@ public class KyKeToanController {
 			// Nhóm tài khoản kế toán khác như tiền mặt, ...
 			List<SoDuKy> taiKhoanDs = kyKeToanDAO.danhSachSoDuKy(maKyKt);
 
+			model.addAttribute("tonKhoDs", tonKhoDs);
 			model.addAttribute("khachHangDs", khachHangDs);
 			model.addAttribute("nhaCcDs", nhaCcDs);
 			model.addAttribute("nhanVienDs", nhanVienDs);
 			model.addAttribute("taiKhoanDs", taiKhoanDs);
+
+			// LẤY CÁC THÔNG TIN CHUẨN BỊ CHO CÁC MODAL TỌA MỚI
+			// Danh sách tài khoản
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+
+			// Danh sách khách hàng
+			List<KhachHang> khDs = khachHangDAO.danhSachKhachHang();
+
+			// Danh sách nhà cung cấp
+			List<NhaCungCap> nccDs = nhaCungCapDAO.danhSachNhaCungCap();
+
+			// Danh sách nhân viên
+			List<NhanVien> nvDs = nhanVienDAO.danhSachNhanVien();
+
+			// Danh sách tài khoản cộng nợ
+			List<LoaiTaiKhoan> congNoTkDs = new ArrayList<>();
+			try {
+				String[] congNos = props.getCauHinh(PropCont.TAI_KHOAN_CONG_NO).getGiaTri().split(";");
+				congNoTkDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(congNos));
+			} catch (Exception e) {
+			}
+
+			// Danh sách tài khoản kho VTHH
+			List<LoaiTaiKhoan> khoTkDs = new ArrayList<>();
+			try {
+				String[] khos = props.getCauHinh(PropCont.TAI_KHOAN_KHO_VTHH).getGiaTri().split(";");
+				khoTkDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(khos));
+			} catch (Exception e) {
+			}
+
+			// Danh sách hàng hóa
+			List<HangHoa> hangHoaDs = hangHoaDAO.danhSachHangHoa();
+
+			// Danh sách kho hàng
+			List<KhoHang> khoHangDs = hangHoaDAO.danhSachKhoBai();
+
+			// Danh sách đơn vị hàng hóa
+			List<DonVi> donViDs = hangHoaDAO.danhSachDonViHangHoa();
+
+			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
+			model.addAttribute("khDs", khDs);
+			model.addAttribute("nccDs", nccDs);
+			model.addAttribute("nvDs", nvDs);
+			model.addAttribute("congNoTkDs", congNoTkDs);
+			model.addAttribute("khoTkDs", khoTkDs);
+			model.addAttribute("hangHoaDs", hangHoaDs);
+			model.addAttribute("khoHangDs", khoHangDs);
+			model.addAttribute("donViDs", donViDs);
+			model.addAttribute("mainFinanceForm", soDuKy);
+			model.addAttribute("mainFinanceFormKh", soDuKy);
+			model.addAttribute("mainFinanceFormNcc", soDuKy);
+			model.addAttribute("mainFinanceFormNv", soDuKy);
+			model.addAttribute("mainFinanceFormTkVthh", soDuKy);
 
 			model.addAttribute("tab", "tabKKT");
 			return "xemKyKeToan";
@@ -344,11 +421,11 @@ public class KyKeToanController {
 
 								soDuKy.setNoDauKy(noDauKy);
 								soDuKy.setCoDauKy(0);
-								kyKeToanDAO.themSoDuDauKy(soDuKy);
+								kyKeToanDAO.themCapNhatSoDuDauKy(soDuKy);
 							} else if (noDauKy < 0) {
 								soDuKy.setNoDauKy(0);
 								soDuKy.setCoDauKy(noDauKy * -1);
-								kyKeToanDAO.themSoDuDauKy(soDuKy);
+								kyKeToanDAO.themCapNhatSoDuDauKy(soDuKy);
 							}
 						} else {
 							// Còn các tài khoản còn lại thì chuyển bình thường
@@ -410,7 +487,7 @@ public class KyKeToanController {
 								// copy số dư cuối kỳ trước sang thành số dư đầu kỳ mới
 								logger.info(loaiTaiKhoan.getMaTk() + ": " + soDuKy.getNoDauKy() + " "
 										+ soDuKy.getCoDauKy());
-								kyKeToanDAO.themSoDuDauKy(soDuKy);
+								kyKeToanDAO.themCapNhatSoDuDauKy(soDuKy);
 							}
 						}
 					} catch (Exception e) {
@@ -437,7 +514,7 @@ public class KyKeToanController {
 				while (soDuKyIter.hasNext()) {
 					SoDuKy soDuKy = soDuKyIter.next();
 					logger.info(soDuKy);
-					kyKeToanDAO.themSoDuDauKy(soDuKy);
+					kyKeToanDAO.themCapNhatSoDuDauKy(soDuKy);
 				}
 			} else {
 				logger.info("Không tồn tài kỳ kế toán trước đó, không cần chuyển số dư.");
@@ -1008,7 +1085,8 @@ public class KyKeToanController {
 			res.reset();
 			res.resetBuffer();
 			res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
-			res.setHeader("Content-disposition", "attachment; filename=" + PropCont.SO_DU_DAU_KY_EXCEL_TEN_FILE);
+			res.setHeader("Content-disposition",
+					"attachment; filename=" + props.getCauHinh(PropCont.SO_DU_DAU_KY_EXCEL_TEN_FILE).getGiaTri());
 			ServletOutputStream out = res.getOutputStream();
 			wb.write(out);
 			out.flush();
@@ -1040,7 +1118,7 @@ public class KyKeToanController {
 	}
 
 	@RequestMapping(value = "/kyketoan/soduky/luusoduky", method = RequestMethod.POST)
-	public String lauSoDuKyKeToan(@ModelAttribute("mainFinanceForm") KyKeToanForm form, Model model) {
+	public String luuSoDuKyKeToan(@ModelAttribute("mainFinanceForm") KyKeToanForm form, Model model) {
 		// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 		model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
@@ -1094,7 +1172,7 @@ public class KyKeToanController {
 							soDuKy.setCoDauKy(coDauKy);
 
 							soDuTkDs.add(soDuKy);
-							kyKeToanDAO.themSoDuDauKy(soDuKy);
+							kyKeToanDAO.themCapNhatSoDuDauKy(soDuKy);
 						}
 					} catch (Exception e) {
 					}
@@ -1204,7 +1282,7 @@ public class KyKeToanController {
 							soDuKy.setCoDauKy(coDauKy);
 
 							khachHangCnDs.add(soDuKy);
-							kyKeToanDAO.themSoDuDauKy(soDuKy);
+							kyKeToanDAO.themCapNhatSoDuDauKy(soDuKy);
 						}
 					} catch (Exception e) {
 					}
@@ -1314,7 +1392,7 @@ public class KyKeToanController {
 							soDuKy.setCoDauKy(coDauKy);
 
 							nhaCcCnDs.add(soDuKy);
-							kyKeToanDAO.themSoDuDauKy(soDuKy);
+							kyKeToanDAO.themCapNhatSoDuDauKy(soDuKy);
 						}
 					} catch (Exception e) {
 					}
@@ -1374,7 +1452,7 @@ public class KyKeToanController {
 							soDuKy.setCoDauKy(coDauKy);
 
 							nhanVienCnDs.add(soDuKy);
-							kyKeToanDAO.themSoDuDauKy(soDuKy);
+							kyKeToanDAO.themCapNhatSoDuDauKy(soDuKy);
 						}
 					} catch (Exception e) {
 					}
@@ -1450,5 +1528,334 @@ public class KyKeToanController {
 		doiTuongDs.addAll(doiTuongTmplDs);
 
 		return doiTuongDs;
+	}
+
+	@RequestMapping(value = "/kyketoan/soduky/congnokh/luu", method = RequestMethod.POST)
+	public String luuTaoMoiKyKeToanSoDuKyCongNoKh(@ModelAttribute("mainFinanceFormKh") SoDuKy soDuKy, Model model) {
+		// Tìm kỳ hiện tại
+		KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(soDuKy.getKyKeToan().getMaKyKt());
+		if (kyKeToan == null || kyKeToan.getTrangThai() == KyKeToan.DONG) {
+			return "redirect:/kyketoan/danhsach";
+		}
+
+		try {
+			luuTaoMoiKyKeToanSoDuKyCongNo(kyKeToan, soDuKy);
+
+			return "redirect:/kyketoan/xem/" + soDuKy.getKyKeToan().getMaKyKt();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/kyketoan/soduky/congnoncc/luu", method = RequestMethod.POST)
+	public String luuTaoMoiKyKeToanSoDuKyCongNoNcc(@ModelAttribute("mainFinanceFormNcc") SoDuKy soDuKy, Model model) {
+		// Tìm kỳ hiện tại
+		KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(soDuKy.getKyKeToan().getMaKyKt());
+		if (kyKeToan == null || kyKeToan.getTrangThai() == KyKeToan.DONG) {
+			return "redirect:/kyketoan/danhsach";
+		}
+
+		try {
+			luuTaoMoiKyKeToanSoDuKyCongNo(kyKeToan, soDuKy);
+
+			return "redirect:/kyketoan/xem/" + soDuKy.getKyKeToan().getMaKyKt();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/kyketoan/soduky/congnonv/luu", method = RequestMethod.POST)
+	public String luuTaoMoiKyKeToanSoDuKyCongNoNv(@ModelAttribute("mainFinanceFormNv") SoDuKy soDuKy, Model model) {
+		// Tìm kỳ hiện tại
+		KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(soDuKy.getKyKeToan().getMaKyKt());
+		if (kyKeToan == null || kyKeToan.getTrangThai() == KyKeToan.DONG) {
+			return "redirect:/kyketoan/danhsach";
+		}
+
+		try {
+			luuTaoMoiKyKeToanSoDuKyCongNo(kyKeToan, soDuKy);
+
+			return "redirect:/kyketoan/xem/" + soDuKy.getKyKeToan().getMaKyKt();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/kyketoan/soduky/tonkhovthh/luu", method = RequestMethod.POST)
+	public String luuTaoMoiKyKeToanSoDuKyTonKhoVthh(@ModelAttribute("mainFinanceFormTkVthh") SoDuKy soDuKy,
+			Model model) {
+		// Tìm kỳ hiện tại
+		KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(soDuKy.getKyKeToan().getMaKyKt());
+		if (kyKeToan == null || kyKeToan.getTrangThai() == KyKeToan.DONG) {
+			return "redirect:/kyketoan/danhsach";
+		}
+
+		try {
+			luuTaoMoiKyKeToanSoDuKyTonKhoVthh(kyKeToan, soDuKy);
+
+			return "redirect:/kyketoan/xem/" + soDuKy.getKyKeToan().getMaKyKt();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	private void luuTaoMoiKyKeToanSoDuKyCongNo(KyKeToan kyKeToan, SoDuKy soDuKy) {
+		if (kyKeToan == null || soDuKy == null || soDuKy.getLoaiTaiKhoan() == null || soDuKy.getDoiTuong() == null
+				|| soDuKy.getKyKeToan() == null) {
+			return;
+		}
+
+		logger.info("soDuKy mới nhập: " + soDuKy);
+		// Lấy số dư kỳ trước đây của tài khoản đang xét
+		SoDuKy soDuKyTruoc = kyKeToanDAO.laySoDuKyTheoDoiTuong(soDuKy.getLoaiTaiKhoan().getMaTk(),
+				soDuKy.getKyKeToan().getMaKyKt(), soDuKy.getDoiTuong().getLoaiDt(), soDuKy.getDoiTuong().getMaDt());
+		if (soDuKyTruoc == null) {
+			soDuKyTruoc = new SoDuKy();
+			soDuKyTruoc.setKyKeToan(kyKeToan);
+			soDuKyTruoc.setLoaiTaiKhoan(soDuKy.getLoaiTaiKhoan());
+			soDuKyTruoc.setDoiTuong(soDuKy.getDoiTuong());
+		}
+
+		logger.info("soDuKy trước đây: " + soDuKyTruoc);
+
+		// Lấy số dư kỳ của các tài khoản đó
+		List<SoDuKy> soDuKyTkDs = kyKeToanDAO.danhSachSoDuKy(soDuKy.getLoaiTaiKhoan().getMaTk(),
+				soDuKy.getKyKeToan().getMaKyKt());
+
+		// Lấy số dư kỳ của các tài khoản đó cho phần công nợ
+		List<SoDuKy> soDuKyDtDs = kyKeToanDAO.danhSachSoDuKyTheoDoiTuong(soDuKy.getLoaiTaiKhoan().getMaTk(),
+				soDuKy.getKyKeToan().getMaKyKt(), soDuKy.getDoiTuong().getLoaiDt(), soDuKy.getDoiTuong().getMaDt());
+
+		// Lấy danh sách tài khoản cha/con của tài khoản đang xét
+		List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan(soDuKy.getLoaiTaiKhoan().getMaTk());
+		// Cập nhật giá trị mới cho tất cả tài khoản cha của tài khoản đang xét
+		if (loaiTaiKhoanDs != null) {
+			Iterator<LoaiTaiKhoan> loaiTaiKhoanIter = loaiTaiKhoanDs.iterator();
+			while (loaiTaiKhoanIter.hasNext()) {
+				LoaiTaiKhoan loaiTaiKhoan = loaiTaiKhoanIter.next();
+				logger.info("==== loaiTaiKhoan: " + loaiTaiKhoan);
+
+				// CẬP NHẬT CHO PHẦN SỐ DƯ TÀI KHOẢN
+				SoDuKy soDuKyTk = new SoDuKy();
+				soDuKyTk.setKyKeToan(kyKeToan);
+				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
+
+				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
+				if (soDuKyTkDs != null) {
+					Iterator<SoDuKy> soDuKyIter = soDuKyTkDs.iterator();
+					while (soDuKyIter.hasNext()) {
+						SoDuKy soDuKyTkTmpl = soDuKyIter.next();
+
+						if (loaiTaiKhoan.equals(soDuKyTkTmpl.getLoaiTaiKhoan())) {
+							soDuKyTk = soDuKyTkTmpl;
+							break;
+						}
+					}
+				}
+
+				logger.info("soDuKyTk hiện tại: " + soDuKyTk);
+				// Cập nhật dữ liệu mới
+				soDuKyTk.setNoDauKy(soDuKyTk.getNoDauKy() + soDuKy.getNoDauKy() - soDuKyTruoc.getNoDauKy());
+				soDuKyTk.setCoDauKy(soDuKyTk.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
+				soDuKyTk.setNoCuoiKy(soDuKyTk.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
+				soDuKyTk.setCoCuoiKy(soDuKyTk.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
+				logger.info("soDuKyTk mới: " + soDuKyTk);
+
+				// Cập nhật ngược vào csdl
+				kyKeToanDAO.themCapNhatSoDuDauKy(soDuKyTk);
+
+				// CẬP NHẬT CHO PHẦN CÔNG NỢ
+				SoDuKy soDuKyDt = new SoDuKy();
+				soDuKyDt.setKyKeToan(kyKeToan);
+				soDuKyDt.setLoaiTaiKhoan(loaiTaiKhoan);
+				soDuKyDt.setDoiTuong(soDuKy.getDoiTuong());
+
+				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
+				if (soDuKyDtDs != null) {
+					Iterator<SoDuKy> soDuKyDtIter = soDuKyDtDs.iterator();
+					while (soDuKyDtIter.hasNext()) {
+						SoDuKy soDuKyDtTmpl = soDuKyDtIter.next();
+
+						if (loaiTaiKhoan.equals(soDuKyDtTmpl.getLoaiTaiKhoan())) {
+							soDuKyDt = soDuKyDtTmpl;
+							break;
+						}
+					}
+				}
+
+				logger.info("soDuKyDt hiện tại: " + soDuKyDt);
+				// Cập nhật dữ liệu mới
+				if (soDuKyDt.getLoaiTaiKhoan().equals(soDuKy.getLoaiTaiKhoan())) {
+					soDuKyDt.setNoDauKy(soDuKy.getNoDauKy());
+					soDuKyDt.setCoDauKy(soDuKy.getCoDauKy());
+					soDuKyDt.setNoCuoiKy(soDuKy.getNoCuoiKy());
+					soDuKyDt.setCoCuoiKy(soDuKy.getCoCuoiKy());
+				} else {
+					soDuKyDt.setNoDauKy(soDuKyDt.getNoDauKy() + soDuKy.getNoDauKy() - soDuKyTruoc.getNoDauKy());
+					soDuKyDt.setCoDauKy(soDuKyDt.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
+					soDuKyDt.setNoCuoiKy(soDuKyDt.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
+					soDuKyDt.setCoCuoiKy(soDuKyDt.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
+				}
+
+				logger.info("soDuKyDt mới: " + soDuKyDt);
+
+				// Cập nhật ngược vào csdl
+				kyKeToanDAO.themCapNhatSoDuDauKy(soDuKyDt);
+			}
+		}
+	}
+
+	private void luuTaoMoiKyKeToanSoDuKyTonKhoVthh(KyKeToan kyKeToan, SoDuKy soDuKy) {
+		if (kyKeToan == null || soDuKy == null || soDuKy.getLoaiTaiKhoan() == null || soDuKy.getHangHoa() == null
+				|| soDuKy.getKhoHang() == null || soDuKy.getHangHoa().getDonVi() == null) {
+			return;
+		}
+
+		logger.info("soDuKy mới nhập: " + soDuKy);
+		// Lấy số dư kỳ trước đây của tài khoản đang xét
+		SoDuKy soDuKyTruoc = kyKeToanDAO.laySoDuKyTheoHangHoa(soDuKy.getLoaiTaiKhoan().getMaTk(),
+				soDuKy.getKyKeToan().getMaKyKt(), soDuKy.getHangHoa().getMaHh(), soDuKy.getKhoHang().getMaKho());
+		if (soDuKyTruoc == null) {
+			soDuKyTruoc = new SoDuKy();
+			soDuKyTruoc.setKyKeToan(kyKeToan);
+			soDuKyTruoc.setLoaiTaiKhoan(soDuKy.getLoaiTaiKhoan());
+			soDuKyTruoc.setHangHoa(soDuKy.getHangHoa());
+			soDuKyTruoc.setKhoHang(soDuKy.getKhoHang());
+		}
+
+		logger.info("soDuKy trước đây: " + soDuKyTruoc);
+
+		// Lấy số dư kỳ của các tài khoản đó
+		List<SoDuKy> soDuKyTkDs = kyKeToanDAO.danhSachSoDuKy(soDuKy.getLoaiTaiKhoan().getMaTk(),
+				soDuKy.getKyKeToan().getMaKyKt());
+
+		// Lấy số dư kỳ của các tài khoản đó cho phần tồn kho
+		List<SoDuKy> soDuKyHhDs = kyKeToanDAO.danhSachSoDuKyTheoHangHoa(soDuKy.getLoaiTaiKhoan().getMaTk(),
+				soDuKy.getKyKeToan().getMaKyKt(), soDuKy.getHangHoa().getMaHh(), soDuKy.getKhoHang().getMaKho());
+
+		// Lấy danh sách tài khoản cha/con của tài khoản đang xét
+		List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan(soDuKy.getLoaiTaiKhoan().getMaTk());
+		// Cập nhật giá trị mới cho tất cả tài khoản cha của tài khoản đang xét
+		if (loaiTaiKhoanDs != null) {
+			Iterator<LoaiTaiKhoan> loaiTaiKhoanIter = loaiTaiKhoanDs.iterator();
+			while (loaiTaiKhoanIter.hasNext()) {
+				LoaiTaiKhoan loaiTaiKhoan = loaiTaiKhoanIter.next();
+				logger.info("==== loaiTaiKhoan: " + loaiTaiKhoan);
+
+				// CẬP NHẬT CHO PHẦN SỐ DƯ TÀI KHOẢN
+				SoDuKy soDuKyTk = new SoDuKy();
+				soDuKyTk.setKyKeToan(kyKeToan);
+				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
+				soDuKyTk.setHangHoa(soDuKy.getHangHoa());
+				soDuKyTk.setKhoHang(soDuKy.getKhoHang());
+
+				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
+				if (soDuKyTkDs != null) {
+					Iterator<SoDuKy> soDuKyIter = soDuKyTkDs.iterator();
+					while (soDuKyIter.hasNext()) {
+						SoDuKy soDuKyTkTmpl = soDuKyIter.next();
+
+						if (loaiTaiKhoan.equals(soDuKyTkTmpl.getLoaiTaiKhoan())) {
+							soDuKyTk = soDuKyTkTmpl;
+							break;
+						}
+					}
+				}
+
+				logger.info("soDuKyTk hiện tại: " + soDuKyTk);
+				// Cập nhật dữ liệu mới
+				soDuKyTk.setNoDauKy(soDuKyTk.getNoDauKy() + soDuKy.getNoDauKy() - soDuKyTruoc.getNoDauKy());
+				soDuKyTk.setCoDauKy(soDuKyTk.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
+				soDuKyTk.setNoCuoiKy(soDuKyTk.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
+				soDuKyTk.setCoCuoiKy(soDuKyTk.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
+				logger.info("soDuKyTk mới: " + soDuKyTk);
+
+				// Cập nhật ngược vào csdl
+				kyKeToanDAO.themCapNhatSoDuDauKy(soDuKyTk);
+
+				// CẬP NHẬT CHO PHẦN CÔNG NỢ
+				SoDuKy soDuKyHh = new SoDuKy();
+				soDuKyHh.setKyKeToan(kyKeToan);
+				soDuKyHh.setLoaiTaiKhoan(loaiTaiKhoan);
+				soDuKyHh.setHangHoa(soDuKy.getHangHoa());
+				soDuKyHh.setKhoHang(soDuKy.getKhoHang());
+
+				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
+				if (soDuKyHhDs != null) {
+					Iterator<SoDuKy> soDuKyHhIter = soDuKyHhDs.iterator();
+					while (soDuKyHhIter.hasNext()) {
+						SoDuKy soDuKyHhTmpl = soDuKyHhIter.next();
+
+						if (loaiTaiKhoan.equals(soDuKyHhTmpl.getLoaiTaiKhoan())) {
+							soDuKyHh = soDuKyHhTmpl;
+							break;
+						}
+					}
+				}
+
+				logger.info("soDuKyHh hiện tại: " + soDuKyHh);
+				// Cập nhật dữ liệu mới
+				if (soDuKyHh.getLoaiTaiKhoan().equals(soDuKy.getLoaiTaiKhoan())) {
+					soDuKyHh.setNoDauKy(soDuKy.getNoDauKy());
+					soDuKyHh.setCoDauKy(soDuKy.getCoDauKy());
+					soDuKyHh.setNoCuoiKy(soDuKy.getNoCuoiKy());
+					soDuKyHh.setCoCuoiKy(soDuKy.getCoCuoiKy());
+
+					soDuKyHh.getHangHoa().setSoLuong(soDuKy.getHangHoa().getSoLuong());
+				} else {
+					soDuKyHh.setNoDauKy(soDuKyHh.getNoDauKy() + soDuKy.getNoDauKy() - soDuKyTruoc.getNoDauKy());
+					soDuKyHh.setCoDauKy(soDuKyHh.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
+					soDuKyHh.setNoCuoiKy(soDuKyHh.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
+					soDuKyHh.setCoCuoiKy(soDuKyHh.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
+
+					double soLuong = soDuKyHh.getHangHoa().getSoLuong() + soDuKy.getHangHoa().getSoLuong()
+							- soDuKyTruoc.getHangHoa().getSoLuong();
+					soDuKyHh.getHangHoa().setSoLuong(soLuong);
+				}
+
+				logger.info("soDuKyHh mới: " + soDuKyHh);
+
+				// Cập nhật ngược vào csdl
+				kyKeToanDAO.themCapNhatSoDuDauKy(soDuKyHh);
+			}
+		}
+	}
+
+	@RequestMapping("/kyketoan/soduky/congno")
+	@ResponseBody
+	public SoDuKy laySoDuKyCongNo(@RequestParam("maTk") String maTk, @RequestParam("maKkt") int maKkt,
+			@RequestParam("loaiDt") int loaiDt, @RequestParam("maDt") int maDt, Model model) {
+		logger.info("maTk: " + maTk);
+		logger.info("maKkt: " + maKkt);
+		logger.info("loaiDt: " + loaiDt);
+		logger.info("maDt: " + maDt);
+
+		SoDuKy soDuKy = kyKeToanDAO.laySoDuKyTheoDoiTuong(maTk, maKkt, loaiDt, maDt);
+		if (soDuKy == null) {
+			soDuKy = new SoDuKy();
+		}
+
+		return soDuKy;
+	}
+
+	@RequestMapping("/kyketoan/soduky/tonkho")
+	@ResponseBody
+	public SoDuKy laySoDuKyTonKho(@RequestParam("maTk") String maTk, @RequestParam("maKkt") int maKkt,
+			@RequestParam("maHh") int maHh, @RequestParam("maKho") int maKho, Model model) {
+		logger.info("maTk: " + maTk);
+		logger.info("maKkt: " + maKkt);
+		logger.info("maHh: " + maHh);
+		logger.info("maKho: " + maKho);
+
+		SoDuKy soDuKy = kyKeToanDAO.laySoDuKyTheoHangHoa(maTk, maKkt, maHh, maKho);
+		if (soDuKy == null) {
+			soDuKy = new SoDuKy();
+		}
+
+		return soDuKy;
 	}
 }

@@ -188,7 +188,7 @@ public class ChungTuController {
 	public void pdfPhieuThu(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
 			Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -411,7 +411,7 @@ public class ChungTuController {
 	public void pdfPhieuChi(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
 			Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_CHI);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -633,7 +633,7 @@ public class ChungTuController {
 	@RequestMapping(value = "/chungtu/baoco/pdf/{id}", method = RequestMethod.GET)
 	public void pdfBaoCo(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt, Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_CO);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -857,7 +857,7 @@ public class ChungTuController {
 	@RequestMapping(value = "/chungtu/baono/pdf/{id}", method = RequestMethod.GET)
 	public void pdfBaoNo(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt, Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_NO);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -1083,7 +1083,7 @@ public class ChungTuController {
 	public void pdfKeToanTongHop(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
 			Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_KT_TH);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -1306,7 +1306,7 @@ public class ChungTuController {
 	@RequestMapping(value = "/chungtu/muahang/pdf/{id}", method = RequestMethod.GET)
 	public void pdfMuaHang(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt, Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -1704,7 +1704,7 @@ public class ChungTuController {
 	@RequestMapping(value = "/chungtu/banhang/pdf/{id}", method = RequestMethod.GET)
 	public void pdfBanHang(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt, Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> chungTuDs = new ArrayList<>();
@@ -2264,7 +2264,7 @@ public class ChungTuController {
 	public void pdfKetChuyenButToan(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt,
 			Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CHUNG);
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> chungTuDs = new ArrayList<>();

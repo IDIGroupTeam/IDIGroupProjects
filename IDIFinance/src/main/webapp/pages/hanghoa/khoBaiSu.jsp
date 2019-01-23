@@ -24,13 +24,11 @@
 <hr />
 
 <form:hidden path="maKho" />
+<form:hidden path="kyHieuKho" />
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="kyHieuKho">Mã kho:(*)</label>
-	<div class="col-sm-4">
-		<form:input path="kyHieuKho" placeholder="Mã kho"
-			cssClass="form-control" />
-		<form:errors path="kyHieuKho" cssClass="error"></form:errors>
-	</div>
+	<label class="control-label col-sm-2" for="kyHieuKho">Mã
+		kho:(*)</label>
+	<div class="col-sm-4">${mainFinanceForm.kyHieuKho}</div>
 
 	<label class="control-label col-sm-2" for="tenKho">Tên kho:(*)</label>
 	<div class="col-sm-4">

@@ -16,6 +16,9 @@ import org.springframework.jdbc.core.RowMapper;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.DoiTuong;
 import com.idi.finance.bean.doitac.NganHangTaiKhoan;
+import com.idi.finance.bean.hanghoa.DonVi;
+import com.idi.finance.bean.hanghoa.HangHoa;
+import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.kyketoan.SoDuKy;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
@@ -78,6 +81,18 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 	@Value("${LAY_SO_DU_KY_THEO_KKT_DOI_TUONG_MA_TK}")
 	private String LAY_SO_DU_KY_THEO_KKT_DOI_TUONG_MA_TK;
 
+	@Value("${LAY_SO_DU_KY_THEO_KKT_DOI_TUONG_MA_TK_CON}")
+	private String LAY_SO_DU_KY_THEO_KKT_DOI_TUONG_MA_TK_CON;
+
+	@Value("${LAY_SO_DU_KY_THEO_KKT_HANG_HOA}")
+	private String LAY_SO_DU_KY_THEO_KKT_HANG_HOA;
+
+	@Value("${LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK_CON}")
+	private String LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK_CON;
+
+	@Value("${LAY_SO_DU_KY_THEO_KKT_HANG_HOA_CU_THE}")
+	private String LAY_SO_DU_KY_THEO_KKT_HANG_HOA_CU_THE;
+
 	@Value("${LAY_SO_DU_KY_THEO_HO_TK_KKT}")
 	private String LAY_SO_DU_KY_THEO_HO_TK_KKT;
 
@@ -92,9 +107,6 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 
 	@Value("${CAP_NHAT_SO_DU_DAU_KY}")
 	private String CAP_NHAT_SO_DU_DAU_KY;
-
-	@Value("${CAP_NHAT_SO_DU_CUOI_KY}")
-	private String CAP_NHAT_SO_DU_CUOI_KY;
 
 	private JdbcTemplate jdbcTmpl;
 
@@ -377,6 +389,19 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 	}
 
 	@Override
+	public List<SoDuKy> danhSachSoDuKy(String maTkCon, int maKkt) {
+		String query = LAY_SO_DU_KY_THEO_HO_TK_KKT;
+
+		try {
+			Object[] objs = { maTkCon, maKkt };
+			List<SoDuKy> soDuKyDs = jdbcTmpl.query(query, objs, new SoDuKyMapper());
+			return soDuKyDs;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
 	public List<SoDuKy> danhSachSoDuKyTheoDoiTuong(int maKkt, int loaiDt) {
 		String query = LAY_SO_DU_KY_THEO_KKT_DOI_TUONG;
 		logger.info(query);
@@ -414,15 +439,63 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 	}
 
 	@Override
-	public List<SoDuKy> danhSachSoDuKy(String maTk, int maKkt) {
-		String query = LAY_SO_DU_KY_THEO_HO_TK_KKT;
-		query = query.replaceAll("\\$MA_TK\\$", maTk);
+	public List<SoDuKy> danhSachSoDuKyTheoDoiTuong(String maTkCon, int maKkt, int loaiDt, int maDt) {
+		if (maTkCon == null) {
+			return null;
+		}
+
+		String query = LAY_SO_DU_KY_THEO_KKT_DOI_TUONG_MA_TK_CON;
 
 		try {
-			Object[] objs = { maKkt };
-			List<SoDuKy> soDuKyDs = jdbcTmpl.query(query, objs, new SoDuKyMapper());
-			return soDuKyDs;
+			logger.info(query);
+			logger.info("Mã tài khoản kế toán con " + maTkCon);
+			logger.info("Mã kỳ kế toán " + maKkt);
+			logger.info("Loại đối tượng " + loaiDt);
+			logger.info("Mã đối tượng " + maDt);
+
+			Object[] objs = { maTkCon, maKkt, loaiDt, maDt, maTkCon, maKkt, loaiDt, maDt, maTkCon, maKkt, loaiDt,
+					maDt };
+			return jdbcTmpl.query(query, objs, new SoDuKyDoiTuongMapper());
 		} catch (Exception e) {
+			// e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public List<SoDuKy> danhSachSoDuKyTheoHangHoa(int maKkt) {
+		String query = LAY_SO_DU_KY_THEO_KKT_HANG_HOA;
+
+		try {
+			logger.info(query);
+			logger.info("Mã kỳ kế toán " + maKkt);
+
+			Object[] objs = { maKkt };
+			return jdbcTmpl.query(query, objs, new SoDuKyHangHoaMapper());
+		} catch (Exception e) {
+			// e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public List<SoDuKy> danhSachSoDuKyTheoHangHoa(String maTk, int maKkt, int maHh, int maKho) {
+		if (maTk == null) {
+			return null;
+		}
+		String query = LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK_CON;
+
+		try {
+			logger.info(query);
+			logger.info("Mã kỳ kế toán " + maKkt);
+			logger.info("Mã tài khoản " + maTk);
+			logger.info("Mã hàng hóa " + maHh);
+			logger.info("Mã kho " + maKho);
+
+			Object[] objs = { maKkt, maTk, maHh, maKho };
+			return jdbcTmpl.query(query, objs, new SoDuKyHangHoaMapper());
+		} catch (Exception e) {
+			// e.printStackTrace();
 			return null;
 		}
 	}
@@ -449,17 +522,38 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 
 		String query = LAY_SO_DU_KY_THEO_KKT_DOI_TUONG_CU_THE;
 		logger.info(query);
-		logger.info("Loại đối tượng " + loaiDt);
-		logger.info("Mã đối tượng " + maDt);
 		logger.info("Mã tài khoản " + maTk);
 		logger.info("Mã kỳ kế toán " + maKkt);
+		logger.info("Loại đối tượng " + loaiDt);
+		logger.info("Mã đối tượng " + maDt);
 
 		try {
 			Object[] objs = { loaiDt, maDt, maTk, maKkt, loaiDt, maDt, maTk, maKkt, loaiDt, maDt, maTk, maKkt };
-			SoDuKy soDuKy = jdbcTmpl.queryForObject(query, objs, new SoDuKyDoiTuongMapper());
-
-			return soDuKy;
+			return jdbcTmpl.queryForObject(query, objs, new SoDuKyDoiTuongMapper());
 		} catch (Exception e) {
+			// e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public SoDuKy laySoDuKyTheoHangHoa(String maTk, int maKkt, int maHh, int maKho) {
+		if (maTk == null) {
+			return null;
+		}
+
+		String query = LAY_SO_DU_KY_THEO_KKT_HANG_HOA_CU_THE;
+		logger.info(query);
+		logger.info("Mã tài khoản " + maTk);
+		logger.info("Mã kỳ kế toán " + maKkt);
+		logger.info("Mã hàng hóa " + maHh);
+		logger.info("Mã kho " + maKho);
+
+		try {
+			Object[] objs = { maKkt, maTk, maHh, maKho };
+			return jdbcTmpl.queryForObject(query, objs, new SoDuKyHangHoaMapper());
+		} catch (Exception e) {
+			// e.printStackTrace();
 			return null;
 		}
 	}
@@ -546,32 +640,100 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 
 				return soDuKy;
 			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+	}
+
+	public class SoDuKyHangHoaMapper implements RowMapper<SoDuKy> {
+		public SoDuKy mapRow(ResultSet rs, int rowNum) throws SQLException {
+			try {
+				SoDuKy soDuKy = new SoDuKy();
+				soDuKy.setNoDauKy(rs.getDouble("NO_DAU_KY"));
+				soDuKy.setCoDauKy(rs.getDouble("CO_DAU_KY"));
+				soDuKy.setNoCuoiKy(rs.getDouble("NO_CUOI_KY"));
+				soDuKy.setCoCuoiKy(rs.getDouble("CO_CUOI_KY"));
+
+				KyKeToan kyKeToan = new KyKeToan();
+				kyKeToan.setMaKyKt(rs.getInt("MA_KKT"));
+				kyKeToan.setTenKyKt(rs.getString("TEN_KKT"));
+				kyKeToan.setBatDau(rs.getDate("BAT_DAU"));
+				kyKeToan.setKetThuc(rs.getDate("KET_THUC"));
+				kyKeToan.setTrangThai(rs.getInt("TRANG_THAI"));
+				kyKeToan.setMacDinh(rs.getInt("MAC_DINH"));
+				soDuKy.setKyKeToan(kyKeToan);
+
+				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
+				loaiTaiKhoan.setTenTk(rs.getString("TEN_TK"));
+				loaiTaiKhoan.setMaTenTk(rs.getString("MA_TK") + " - " + rs.getString("TEN_TK"));
+				loaiTaiKhoan.setMaTkCha(rs.getString("MA_TK_CHA"));
+				loaiTaiKhoan.setSoDu(rs.getInt("SO_DU"));
+				loaiTaiKhoan.setLuongTinh(rs.getBoolean("LUONG_TINH"));
+
+				soDuKy.setLoaiTaiKhoan(loaiTaiKhoan);
+
+				HangHoa hangHoa = new HangHoa();
+				hangHoa.setMaHh(rs.getInt("MA_HH"));
+				hangHoa.setKyHieuHh(rs.getString("KH_HH"));
+				hangHoa.setTenHh(rs.getString("TEN_HH"));
+				hangHoa.setKyHieuTenHh(rs.getString("KH_HH") + " - " + rs.getString("TEN_HH"));
+				hangHoa.setSoLuong(rs.getDouble("SO_LUONG"));
+
+				DonVi donVi = new DonVi();
+				donVi.setMaDv(rs.getInt("MA_DV"));
+				donVi.setTenDv(rs.getString("TEN_DV"));
+				donVi.setMoTa(rs.getString("MO_TA"));
+				hangHoa.setDonVi(donVi);
+
+				KhoHang khoHang = new KhoHang();
+				khoHang.setMaKho(rs.getInt("MA_KHO"));
+				khoHang.setKyHieuKho(rs.getString("KH_KHO"));
+				khoHang.setTenKho(rs.getString("TEN_KHO"));
+				hangHoa.setKho(khoHang);
+
+				soDuKy.setHangHoa(hangHoa);
+				soDuKy.setKhoHang(khoHang);
+
+				return soDuKy;
+			} catch (Exception e) {
+				e.printStackTrace();
 				return null;
 			}
 		}
 	}
 
 	@Override
-	public void themSoDuDauKy(SoDuKy soDuKy) {
+	public void themCapNhatSoDuDauKy(SoDuKy soDuKy) {
 		if (soDuKy == null || soDuKy.getKyKeToan() == null || soDuKy.getLoaiTaiKhoan() == null) {
 			return;
 		}
 
+		int maDt = soDuKy.getDoiTuong() != null ? soDuKy.getDoiTuong().getMaDt() : 0;
+		int loaiDt = soDuKy.getDoiTuong() != null ? soDuKy.getDoiTuong().getLoaiDt() : 0;
+		int maHh = soDuKy.getHangHoa() != null ? soDuKy.getHangHoa().getMaHh() : 0;
+		int maKho = soDuKy.getKhoHang() != null ? soDuKy.getKhoHang().getMaKho() : 0;
+		double soLuong = soDuKy.getHangHoa() != null ? soDuKy.getHangHoa().getSoLuong() : 0;
+		int maDv = soDuKy.getHangHoa() != null && soDuKy.getHangHoa().getDonVi() != null
+				? soDuKy.getHangHoa().getDonVi().getMaDv()
+				: 0;
+
 		try {
 			// Thêm mới
 			String query = THEM_SO_DU_KY;
+			logger.info(query);
 
-			jdbcTmpl.update(query, soDuKy.getKyKeToan().getMaKyKt(), soDuKy.getLoaiTaiKhoan().getMaTk(),
-					soDuKy.getDoiTuong().getLoaiDt(), soDuKy.getDoiTuong().getMaDt(), soDuKy.getNoDauKy(),
-					soDuKy.getCoDauKy(), soDuKy.getNoCuoiKy(), soDuKy.getCoCuoiKy());
+			jdbcTmpl.update(query, soDuKy.getKyKeToan().getMaKyKt(), soDuKy.getLoaiTaiKhoan().getMaTk(), loaiDt, maDt,
+					maHh, maKho, soDuKy.getNoDauKy(), soDuKy.getCoDauKy(), soLuong, maDv);
 		} catch (Exception e) {
+			e.printStackTrace();
 			// Nếu đã có thì cập nhật
 			String query = CAP_NHAT_SO_DU_DAU_KY;
+			logger.info(query);
 
-			jdbcTmpl.update(query, soDuKy.getNoDauKy(), soDuKy.getCoDauKy(), soDuKy.getKyKeToan().getMaKyKt(),
-					soDuKy.getLoaiTaiKhoan().getMaTk(), soDuKy.getDoiTuong().getLoaiDt(),
-					soDuKy.getDoiTuong().getMaDt());
+			jdbcTmpl.update(query, soDuKy.getNoDauKy(), soDuKy.getCoDauKy(), soLuong, maDv,
+					soDuKy.getKyKeToan().getMaKyKt(), soDuKy.getLoaiTaiKhoan().getMaTk(), loaiDt, maDt, maHh, maKho);
 		}
-
 	}
 }
