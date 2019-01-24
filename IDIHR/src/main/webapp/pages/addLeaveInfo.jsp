@@ -56,10 +56,10 @@
 				<tr>
 					<td bgcolor="#FBEFF2">Chọn nhân viên(*):</td>
 					<td>						
-					<form:select path="employeeId"  class="form-control animated">
-							<!-- option>Nhập hoặc chọn nhân viên</option> -->
+						<form:select path="employeeId" class="form-control animated">
 							<form:options items="${employeeMap}" />
-						</form:select></td>						
+						</form:select>
+					</td>						
 				</tr>
 				<tr>
 					<td bgcolor="#FBEFF2">Chọn loại(*):</td>
