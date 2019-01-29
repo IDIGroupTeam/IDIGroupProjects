@@ -130,5 +130,18 @@ public class EmployeeDAO extends JdbcDaoSupport {
 
 		return list;
 	}
+	
+	/**
+	 * get the list over of all the tasks from DB
+	 * @return List of employee 
+	 */
+	public List<EmployeeInfo> getListOwner(){
+		String sql = properties.getProperty("GET_OWNER_OF_TASKS").toString();
+		log.info("GET_OWNER_OF_TASKS query: " + sql);
+		EmployeeMapper mapper = new EmployeeMapper();
+		List<EmployeeInfo> list = jdbcTmpl.query(sql, mapper);
+
+		return list;
+	}	
 
 }

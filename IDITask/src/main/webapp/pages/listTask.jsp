@@ -108,32 +108,39 @@ tr:nth-child(even) {
 	<form:form modelAttribute="taskForm" method="POST">
 		<table class="table">
 			<tr>
-				<td colspan="2" nowrap="nowrap"><i>Tìm công việc theo: Mã
-						việc/Tên việc/Người được giao/Trạng thái công việc/Mã phòng/Kế hoạch cho tháng </i>
-				</td>
-				<td align="center"><form:input path="searchValue" class="form-control"/>
-				</td>
-				<td> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-					<input id="search" class="btn btn-lg btn-primary btn-sm" type="submit" value="Tìm" />
-				</td>
-			</tr>
-			<tr>
 				<td nowrap="nowrap">Tìm theo phòng:</td>
 				<td><form:select path="area" class="form-control animated">
-						<form:option value="" label="- Chọn phòng ban -" />
+						<form:option value="" label="- Chọn tất cả phòng ban -" />
 						<form:options items="${departmentMap}" />
 					</form:select>
 				</td>
 				<td nowrap="nowrap">Tìm theo người làm:</td>
 				<td><form:select path="ownedBy" class="form-control animated">
-						<form:option value="0" label="- Chọn người được giao -" />
+						<form:option value="0" label="- Chọn tất cả người làm -" />
 						<c:forEach items="${employeesList}" var="employee">
 							<form:option value="${employee.employeeId}">${employee.fullName},&nbsp;${employee.jobTitle}</form:option>
 						</c:forEach>
 					</form:select>
 				</td>
+				<td nowrap="nowrap">Tìm theo trạng thái:</td>
+				<td><form:select path="status" class="form-control animated">
+						<form:option value="" label="- Chọn tất cả trạng thái công việc -" />
+						<c:forEach items="${statusList}" var="status">
+							<form:option value="${status}">${status}</form:option>
+						</c:forEach>
+					</form:select>
+				</td>
 			</tr>
-
+			<tr>
+				<td colspan="2" nowrap="nowrap"><i>Tìm công việc theo: Mã
+						việc/Tên việc/Người được giao/Trạng thái công việc/Mã phòng/Kế hoạch cho tháng </i>
+				</td>
+				<td align="center" colspan="2"><form:input path="searchValue" class="form-control"/>
+				</td>
+				<td colspan="2" align="right"> 
+					<input id="search" class="btn btn-lg btn-primary btn-sm" type="submit" value="Tìm kiếm" align="right" />
+				</td>
+			</tr>
 		</table>
 	
 		<table class="table">
@@ -208,7 +215,7 @@ tr:nth-child(even) {
 					</c:choose>
 					<c:choose>
 						<c:when
-							test="${taskForm.pageIndex==taskForm.totalPages}">
+							test="${taskForm.pageIndex==taskForm.totalPages || taskForm.totalPages == 0}">
 							<button id="nextPage" type="button"
 								class="btn btn-default disabled">Sau</button>
 							<button id="lastPage" type="button"

@@ -232,7 +232,7 @@ public class TaskDAO extends JdbcDaoSupport {
 	 * @return List of task
 	 * 
 	 */
-	public List<Task> getTasksBySearch(String value, String department, int owner) {
+	public List<Task> getTasksBySearch(String value, String department, int owner, String status) {
 		
 		String sql = properties.getProperty("GET_TASKS_BY_SEARCH").toString();
 		Object[] params = new Object[] {};
@@ -246,9 +246,16 @@ public class TaskDAO extends JdbcDaoSupport {
 		}
 		if(department != null && department.length() > 0) {
 			if(first)
-				sql = sql + " WHERE T.AREA ='" + department + "' ";
+				sql = sql + " WHERE T.AREA = '" + department + "' ";
 			else
-				sql = sql + " AND T.AREA ='" + department +"' ";
+				sql = sql + " AND T.AREA = '" + department +"' ";
+			first = false;
+		}
+		if(status != null && status.length() > 0) {
+			if(first)
+				sql = sql + " WHERE T.STATUS = '" + status + "' ";
+			else
+				sql = sql + " AND T.STATUS = '" + status +"' ";
 			first = false;
 		}
 		if(value != null && value.length() > 0) {
@@ -270,6 +277,14 @@ public class TaskDAO extends JdbcDaoSupport {
 		List<Task> list = jdbcTmpl.query(sql, params, mapper);
 
 		return list;
+	}
+	
+	public List<String> getListStatus(){
+		String sql = properties.getProperty("GET_STATUS").toString();
+		log.info("GET_STATUS query: " + sql);	
+		List<String> list = jdbcTmpl.queryForList(sql, String.class);
+
+		return list;	
 	}
 	
 	/**

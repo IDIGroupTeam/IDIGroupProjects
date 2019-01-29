@@ -97,8 +97,10 @@ public class TaskController {
 			Map<String, String> departmentMap = this.listDepartments();
 			model.addAttribute("departmentMap", departmentMap);
 
-			// get list employee id
-			model.addAttribute("employeesList", employees("all"));
+			// get list employee id who is owner of the tasks
+			model.addAttribute("employeesList", employeesOwner());
+			
+			model.addAttribute("statusList", taskDAO.getListStatus());
 			
 			// Paging:
 			// Number records of a Page: Default: 25
@@ -115,10 +117,12 @@ public class TaskController {
 
 			boolean search = false;
 			if ((form.getSearchValue() != null && form.getSearchValue().length() > 0)
-					|| (form.getArea() != null && form.getArea() != "") || form.getOwnedBy() > 0 ){
-				log.info("Searching for: '" + form.getSearchValue()+ "', '" + form.getArea() + "','" + form.getOwnedBy());
+					|| (form.getArea() != null && form.getArea() != "") 
+					|| form.getOwnedBy() > 0
+					|| form.getStatus() != null && form.getStatus().length() > 0){
+				log.info("Searching for: '" + form.getSearchValue()+ "', phòng: " + form.getArea() + ", Người làm có id: " + form.getOwnedBy() + ", trạng thái công viêc: " + form.getStatus() );
 				search = true;
-				list = taskDAO.getTasksBySearch(form.getSearchValue(), form.getArea(), form.getOwnedBy());
+				list = taskDAO.getTasksBySearch(form.getSearchValue(), form.getArea(), form.getOwnedBy(), form.getStatus());
 			} else
 				list = taskDAO.getTasks();
 			form.setTotalRecords(list.size());
@@ -160,7 +164,8 @@ public class TaskController {
 			else if (list != null && list.size() < 1 && search)
 				model.addAttribute("message",
 						"Không có công việc nào khớp với thông tin: Mã việc/Tên việc/Người được giao/Trạng thái công việc/Mã phòng/Kế hoạch cho tháng = '"
-				+ form.getSearchValue() + "', người làm có id = " + form.getOwnedBy() + ", phòng ban có mã = '" + form.getArea() + "'.\n \n Note: id = 0 tức là không chọn ai");
+				+ form.getSearchValue() + "', người làm có id = " + form.getOwnedBy() + ", phòng ban có mã = '" + form.getArea() 
+				+ "', trạng thái công việc = '" + form.getStatus() + "'.\n \n (Note: id = 0 tức là không chọn ai)");
 
 			model.addAttribute("tasks", listTaskForPage);
 			model.addAttribute("formTitle", "Danh sách công việc");
@@ -934,6 +939,13 @@ public class TaskController {
 	private List<EmployeeInfo> employeesSub(String subscriber) throws Exception {
 		List<EmployeeInfo> list = null;
 		list = employeeDAO.getEmployeesSub(subscriber);
+		return list;
+	}
+	
+	private List<EmployeeInfo> employeesOwner() throws Exception {
+		List<EmployeeInfo> list = null;		
+		list = employeeDAO.getListOwner();		
+
 		return list;
 	}
 
