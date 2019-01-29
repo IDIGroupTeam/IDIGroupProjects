@@ -18,7 +18,8 @@
 		$("#submitBt").click(function() {
 			$("#mainFinanceForm").submit();
 		});
-
+		
+		$("#maTkCha").combobox();
 	});
 </script>
 

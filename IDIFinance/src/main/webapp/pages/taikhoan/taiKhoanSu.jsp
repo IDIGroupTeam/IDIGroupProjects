@@ -19,6 +19,7 @@
 			$("#mainFinanceForm").submit();
 		});
 
+		$("#maTkCha").combobox();
 	});
 </script>
 
