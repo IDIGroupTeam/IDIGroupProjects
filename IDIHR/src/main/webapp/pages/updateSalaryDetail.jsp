@@ -183,7 +183,14 @@
 					</tr>
 					<tr>
 						<td nowrap="nowrap" bgcolor="#E6E6E6">Tổng thu nhập</td>
-						<td nowrap="nowrap" bgcolor="#E6E6E6" colspan="2"><i><fmt:formatNumber value="${salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '')}" /> đ</i></td>
+						<td nowrap="nowrap" bgcolor="#E6E6E6" colspan="2"><i>							
+							<c:if test="${not empty salaryDetail.basicSalary}">
+								<fmt:formatNumber value="${salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '') + salaryDetail.basicSalary.replaceAll(',', '')}" /> đ
+							</c:if>
+							<c:if test="${empty salaryDetail.basicSalary}">
+								<fmt:formatNumber value="${salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '') + salaryDetail.salary.replaceAll(',', '')}" /> đ
+							</c:if>	
+						</i></td>
 						<td nowrap="nowrap" bgcolor="#E6E6E6">Tổng giảm trừ</td>
 						<td nowrap="nowrap" bgcolor="#E6E6E6" colspan="2">
 							<c:if test="${not empty salaryDetail.salaryInsurance}">
