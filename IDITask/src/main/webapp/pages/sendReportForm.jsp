@@ -38,15 +38,14 @@
 				<td><form:input path="sendTo" required="required"
 						class="form-control animated" /></td>
 			</tr>
-			<tr>
+<%-- 			<tr>
 				<td nowrap="nowrap" title="Phần này khi hoàn thiên chức năng phân quyền sẽ không cần nữa hệ thống sẽ tự động sác định được người gửi ...">Người gửi:</td>
 				<td><form:input path="sendFrom" 
 						class="form-control animated" /></td>
-			</tr>
+			</tr> --%>
 			<tr>
 				<td>Tiêu đề:</td>
-				<td><form:input path="subject" 
-						class="form-control animated" /></td>
+				<td><form:input path="subject" class="form-control animated" /></td>
 			</tr>
 			<tr>
 				<td>Nội dung:</td>
@@ -57,8 +56,11 @@
 							<th>Tên việc</th>
 							<th>Người làm</th>
 							<th nowrap="nowrap">Trạng thái</th>
+							<th nowrap="nowrap">Thời gian ước lượng</th>
+							<th nowrap="nowrap">Thời gian đã làm</th>
 							<th nowrap="nowrap">Cập nhật gần nhất</th>
 							<th nowrap="nowrap">Ngày phải xong</th>
+							<th nowrap="nowrap">Nhận xét đánh giá</th>
 						</tr>
 						<c:forEach var="task" items="${tasks}">
 							<tr>
@@ -71,8 +73,11 @@
 									<td nowrap="nowrap">${task.ownerName}</td>
 								</c:if>
 								<td>${task.status}</td>
+								<td>${task.estimate} ${task.estimateTimeType}</td>
+								<td>${task.timeSpent} ${task.timeSpentType}</td>								
 								<td>${task.updateTS}</td>
 								<td>${task.dueDate}</td>
+								<td>${task.reviewComment}</td>
 							</tr>
 						</c:forEach>
 					</table>

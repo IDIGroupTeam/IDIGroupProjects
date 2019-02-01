@@ -47,7 +47,9 @@ tr:nth-child(even) {
 				<th nowrap="nowrap">Mã việc</th>
 				<th>Tên việc</th>
 				<th>Người làm</th>
-				<th nowrap="nowrap">Trạng thái</th>				
+				<th nowrap="nowrap">Trạng thái</th>			
+				<th nowrap="nowrap">Thời gian ước lượng</th>
+				<th nowrap="nowrap">Thời gian đã làm</th>	
 				<th nowrap="nowrap">Cập nhật gần nhất</th>
 				<th nowrap="nowrap">Ngày phải xong</th>
 				<th nowrap="nowrap">Nhận xét đánh giá</th>
@@ -63,6 +65,8 @@ tr:nth-child(even) {
 						<td nowrap="nowrap">${task.ownerName}</td>
 					</c:if>
 					<td>${task.status}</td>
+					<td>${task.estimate} ${task.estimateTimeType}</td>
+					<td>${task.timeSpent} ${task.timeSpentType}</td>
 					<td nowrap="nowrap">${task.updateTS}</td>
 					<%-- <td><fmt:formatDate pattern="dd-MM-yyyy" value="${task.dueDate}" /></td> --%>
 					<td>${task.dueDate}</td>

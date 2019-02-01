@@ -788,7 +788,7 @@ public class TaskController {
 			String path = properties.getProperty("REPORT_PATH");
 			
 			File file = new File(path + sendReportForm.getFileName() + ".pdf");
-		//	log.info("sending report 111111113: " + path +"|" + sendReportForm.getSubject()+"|"+sendReportForm.getFileName());
+		//	log.info("sending report: " + path +"|" + sendReportForm.getSubject()+"|"+sendReportForm.getFileName());
 			if(file.exists()) {
 				
 				mimeMessage.setFrom("IDITask-NotReply");
@@ -866,7 +866,7 @@ public class TaskController {
 		//Chunk chunk = new Chunk(fileName, font);		 
 		//document.add(chunk);
 		
-		PdfPTable table = new PdfPTable(6);
+		PdfPTable table = new PdfPTable(9);
 		addTableHeader(table, font);
 		List<Task> list = null;
         ReportForm taskReportForm = new ReportForm();
@@ -895,7 +895,7 @@ public class TaskController {
 	}
 
 	private void addTableHeader(PdfPTable table, Font font) throws Exception {//throws DocumentException, IOException {
-	    Stream.of("Mã việc", "Tên việc", "Người làm", "Trạng thái", "Ngày phải xong", "Nhận xét/đánh giá")
+	    Stream.of("Mã việc", "Tên việc", "Người làm", "Trạng thái", "Thời gian ước lượng", "Thời gian đã làm", "Ngày cập nhật gần nhất", "Ngày phải xong", "Nhận xét/đánh giá")
 	      .forEach(columnTitle -> {
 	        PdfPCell header = new PdfPCell();
 	        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
@@ -914,15 +914,25 @@ public class TaskController {
 			Task task = new Task();
 			task = (Task)tasks.get(i);
 			
-			//String DateToStr = "";
-			//if(task.getDueDate() !=null)
-			//	DateToStr = format.format(task.getDueDate());
-
 			table.addCell(String.valueOf(task.getTaskId()));
 		    table.addCell(new Paragraph(task.getTaskName(), font));
 		    table.addCell(new Paragraph(task.getOwnerName(), font));
 		    table.addCell(new Paragraph(task.getStatus(), font));
-		   // table.addCell(String.valueOf(task.getUpdateTS()));
+		    if(task.getEstimate() != null)
+		    	if(task.getEstimateTimeType() != null)
+		    		table.addCell(new Paragraph(task.getEstimate() + " " + timeStypeMap().get(task.getEstimateTimeType()), font));
+		    	else 
+		    		table.addCell(new Paragraph(task.getEstimate() + " phút", font));
+		    else
+		    	table.addCell(new Paragraph("0 phút ", font));
+		    if(task.getTimeSpent() != null)
+		    	if(task.getTimeSpentType() != null)
+		    		table.addCell(new Paragraph(task.getTimeSpent() + " " + timeStypeMap().get(task.getTimeSpentType()), font));
+		    	else
+		    		table.addCell(new Paragraph(task.getTimeSpent() + " phút", font));
+		    else
+		    	table.addCell(new Paragraph("0 phút", font));
+		    table.addCell(String.valueOf(task.getUpdateTS()));
 		    table.addCell(task.getDueDate());	
 		    table.addCell(new Paragraph(task.getReviewComment(), font));
 		}	        
@@ -930,9 +940,7 @@ public class TaskController {
 	
 	private List<EmployeeInfo> employeesForSub(String subscriber) throws Exception {
 		List<EmployeeInfo> list = null;
-		
 		list = employeeDAO.getEmployeesForSub(subscriber);
-		//System.err.println("list available for subs: "+ list.size());
 		return list;
 	}
 
@@ -1008,6 +1016,16 @@ public class TaskController {
 			e.printStackTrace();
 		}
 		return departmentMap;
+	}
+
+
+	public static Map<String, String> timeStypeMap() {
+		Map<String, String> timeStype = new LinkedHashMap<String, String>();
+		timeStype.put("m", "Phút");
+		timeStype.put("h", "Giờ");
+		timeStype.put("d", "Ngày");
+		timeStype.put("w", "Tuần");
+		return timeStype;
 	}
 
 	// For Ajax
