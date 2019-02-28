@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFFont;
@@ -1137,14 +1138,18 @@ public class KyKeToanController {
 				List<SoDuKy> soDuTkDs = new ArrayList<>();
 
 				Iterator<Row> soDuTkIter = soDuTkSt.rowIterator();
+				// Skip the first row
+				soDuTkIter.next();
 				while (soDuTkIter.hasNext()) {
 					try {
 						XSSFRow row0i = (XSSFRow) soDuTkIter.next();
 
 						// Đọc cột maTk
 						XSSFCell cell0i0 = row0i.getCell(0);
-						String maTk = cell0i0.getStringCellValue();
+						CellType type = cell0i0.getCellTypeEnum();
 
+						String maTk = cell0i0.getRawValue();
+						logger.info("maTk " + maTk);
 						// Đọc cột nợ
 						XSSFCell cell0i1 = row0i.getCell(1);
 						double noDauKy = 0;
@@ -1152,7 +1157,7 @@ public class KyKeToanController {
 							noDauKy = cell0i1.getNumericCellValue();
 						} catch (Exception e) {
 						}
-
+						logger.info("noDauKy " + noDauKy);
 						// Đọc cột có
 						XSSFCell cell0i2 = row0i.getCell(2);
 						double coDauKy = 0;
@@ -1160,7 +1165,7 @@ public class KyKeToanController {
 							coDauKy = cell0i2.getNumericCellValue();
 						} catch (Exception e) {
 						}
-
+						logger.info("coDauKy " + coDauKy);
 						if (maTk != null && !maTk.trim().equals("")) {
 							SoDuKy soDuKy = new SoDuKy();
 
@@ -1171,10 +1176,13 @@ public class KyKeToanController {
 							soDuKy.setNoDauKy(noDauKy);
 							soDuKy.setCoDauKy(coDauKy);
 
+							soDuKy.setKyKeToan(kyKeToan);
+
 							soDuTkDs.add(soDuKy);
 							kyKeToanDAO.themCapNhatSoDuDauKy(soDuKy);
 						}
 					} catch (Exception e) {
+						// e.printStackTrace();
 					}
 				}
 
@@ -1183,37 +1191,39 @@ public class KyKeToanController {
 				List<DoiTuong> khachHangDs = new ArrayList<>();
 
 				Iterator<Row> khachHangIter = khachHangSt.rowIterator();
+				// Skip the first row
+				khachHangIter.next();
 				while (khachHangIter.hasNext()) {
 					try {
 						XSSFRow row1i = (XSSFRow) khachHangIter.next();
 
 						// Đọc cột Mã KH
 						XSSFCell cell1i0 = row1i.getCell(0);
-						String khKh = cell1i0.getStringCellValue();
+						String khKh = cell1i0.getRawValue();
 
 						// Đọc cột Tên KH
 						XSSFCell cell1i1 = row1i.getCell(1);
-						String tenKh = cell1i1.getStringCellValue();
+						String tenKh = cell1i1.getRawValue();
 
 						// Đọc cột Mã số thuế
 						XSSFCell cell1i2 = row1i.getCell(2);
-						String maThue = cell1i2.getStringCellValue();
+						String maThue = cell1i2.getRawValue();
 
 						// Đọc cột Địa chỉ
 						XSSFCell cell1i3 = row1i.getCell(3);
-						String diaChi = cell1i3.getStringCellValue();
+						String diaChi = cell1i3.getRawValue();
 
 						// Đọc cột Email
 						XSSFCell cell1i4 = row1i.getCell(4);
-						String email = cell1i4.getStringCellValue();
+						String email = cell1i4.getRawValue();
 
 						// Đọc cột Số điện thoại
 						XSSFCell cell1i5 = row1i.getCell(5);
-						String sdt = cell1i5.getStringCellValue();
+						String sdt = cell1i5.getRawValue();
 
 						// Đọc cột Website
 						XSSFCell cell1i6 = row1i.getCell(6);
-						String webSite = cell1i6.getStringCellValue();
+						String webSite = cell1i6.getRawValue();
 
 						if (khKh != null && !khKh.trim().equals("")) {
 							KhachHang khachHang = new KhachHang();
@@ -1238,17 +1248,19 @@ public class KyKeToanController {
 				List<SoDuKy> khachHangCnDs = new ArrayList<>();
 
 				Iterator<Row> khachHangCnIter = khachHangCnSt.rowIterator();
+				// Skip the first row
+				khachHangCnIter.next();
 				while (khachHangCnIter.hasNext()) {
 					try {
 						XSSFRow row2i = (XSSFRow) khachHangCnIter.next();
 
 						// Đọc cột Mã Kh
 						XSSFCell cell2i0 = row2i.getCell(0);
-						String khKh = cell2i0.getStringCellValue();
+						String khKh = cell2i0.getRawValue();
 
 						// Đọc cột Mã tài khoản
 						XSSFCell cell2i1 = row2i.getCell(1);
-						String maTk = cell2i1.getStringCellValue();
+						String maTk = cell2i1.getRawValue();
 
 						// Đọc cột nợ
 						XSSFCell cell2i2 = row2i.getCell(2);
@@ -1293,37 +1305,39 @@ public class KyKeToanController {
 				List<DoiTuong> nhaCcDs = new ArrayList<>();
 
 				Iterator<Row> nhaCcIter = nhaCcSt.rowIterator();
+				// Skip the first row
+				nhaCcIter.next();
 				while (nhaCcIter.hasNext()) {
 					try {
 						XSSFRow row3i = (XSSFRow) nhaCcIter.next();
 
 						// Đọc cột Mã KH
 						XSSFCell cell3i0 = row3i.getCell(0);
-						String khNcc = cell3i0.getStringCellValue();
+						String khNcc = cell3i0.getRawValue();
 
 						// Đọc cột Tên KH
 						XSSFCell cell3i1 = row3i.getCell(1);
-						String tenNcc = cell3i1.getStringCellValue();
+						String tenNcc = cell3i1.getRawValue();
 
 						// Đọc cột Mã số thuế
 						XSSFCell cell3i2 = row3i.getCell(2);
-						String maThue = cell3i2.getStringCellValue();
+						String maThue = cell3i2.getRawValue();
 
 						// Đọc cột Địa chỉ
 						XSSFCell cell3i3 = row3i.getCell(3);
-						String diaChi = cell3i3.getStringCellValue();
+						String diaChi = cell3i3.getRawValue();
 
 						// Đọc cột Email
 						XSSFCell cell3i4 = row3i.getCell(4);
-						String email = cell3i4.getStringCellValue();
+						String email = cell3i4.getRawValue();
 
 						// Đọc cột Số điện thoại
 						XSSFCell cell3i5 = row3i.getCell(5);
-						String sdt = cell3i5.getStringCellValue();
+						String sdt = cell3i5.getRawValue();
 
 						// Đọc cột Website
 						XSSFCell cell3i6 = row3i.getCell(6);
-						String webSite = cell3i6.getStringCellValue();
+						String webSite = cell3i6.getRawValue();
 
 						if (khNcc != null && !khNcc.trim().equals("")) {
 							NhaCungCap nhaCc = new NhaCungCap();
@@ -1348,17 +1362,19 @@ public class KyKeToanController {
 				List<SoDuKy> nhaCcCnDs = new ArrayList<>();
 
 				Iterator<Row> nhaCcCnIter = nhaCcCnSt.rowIterator();
+				// Skip the first row
+				nhaCcCnIter.next();
 				while (nhaCcCnIter.hasNext()) {
 					try {
 						XSSFRow row4i = (XSSFRow) nhaCcCnIter.next();
 
 						// Đọc cột Mã Kh
 						XSSFCell cell4i0 = row4i.getCell(0);
-						String khNcc = cell4i0.getStringCellValue();
+						String khNcc = cell4i0.getRawValue();
 
 						// Đọc cột Mã tài khoản
 						XSSFCell cell4i1 = row4i.getCell(1);
-						String maTk = cell4i1.getStringCellValue();
+						String maTk = cell4i1.getRawValue();
 
 						// Đọc cột nợ
 						XSSFCell cell4i2 = row4i.getCell(2);
@@ -1403,13 +1419,15 @@ public class KyKeToanController {
 				List<SoDuKy> nhanVienCnDs = new ArrayList<>();
 
 				Iterator<Row> nhanVienCnIter = nhanVienCnSt.rowIterator();
+				// Skip the first row
+				nhanVienCnIter.next();
 				while (nhanVienCnIter.hasNext()) {
 					try {
 						XSSFRow row5i = (XSSFRow) nhanVienCnIter.next();
 
 						// Đọc cột Mã Kh
 						XSSFCell cell5i0 = row5i.getCell(0);
-						String maNv = cell5i0.getStringCellValue();
+						String maNv = cell5i0.getRawValue();
 						int maNvNum = 0;
 						try {
 							maNvNum = Integer.parseInt(maNv);
@@ -1418,7 +1436,7 @@ public class KyKeToanController {
 
 						// Đọc cột Mã tài khoản
 						XSSFCell cell5i1 = row5i.getCell(1);
-						String maTk = cell5i1.getStringCellValue();
+						String maTk = cell5i1.getRawValue();
 
 						// Đọc cột nợ
 						XSSFCell cell5i2 = row5i.getCell(2);
