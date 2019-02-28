@@ -27,4 +27,5 @@ INSERT INTO `CAU_HINH` (`MA`, `TEN`, `GIA_TRI`, `NHOM`) VALUES
 ('BAN_HANG_DS_TK_XK_CO', 'Bán hàng: tài khoản thuế xuất khẩu', '3333', 2);
 
 INSERT INTO `CAU_HINH` (`MA`, `TEN`, `GIA_TRI`, `NHOM`) VALUES 
-('TAI_KHOAN_CONG_NO', 'Tài khoản công nợ', '131;141;331;334', 3)
+('TAI_KHOAN_CONG_NO', 'Tài khoản công nợ', '131;141;331;334', 3), 
+('TAI_KHOAN_KHO_VTHH', 'Tài khoản kho vật tư hàng hóa', '152;153;154;155;156', 3);

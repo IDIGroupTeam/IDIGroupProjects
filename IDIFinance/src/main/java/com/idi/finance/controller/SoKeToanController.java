@@ -97,6 +97,10 @@ public class SoKeToanController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
 
 			// Lấy kỳ kế toán mặc định
 			if (form.getKyKeToan() == null) {
@@ -252,6 +256,10 @@ public class SoKeToanController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
 
 			// Lấy kỳ kế toán mặc định
 			if (form.getKyKeToan() == null) {
@@ -418,6 +426,10 @@ public class SoKeToanController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
 
 			// Lấy kỳ kế toán mặc định
 			if (form.getKyKeToan() == null) {
@@ -628,6 +640,10 @@ public class SoKeToanController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
 
 			// Lấy kỳ kế toán mặc định
 			if (form.getKyKeToan() == null) {
@@ -929,6 +945,10 @@ public class SoKeToanController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
 
 			// Lấy kỳ kế toán mặc định
 			if (form.getKyKeToan() == null) {
@@ -1003,6 +1023,10 @@ public class SoKeToanController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
 
 			// Lấy kỳ kế toán mặc định
 			if (form.getKyKeToan() == null) {

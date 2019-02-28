@@ -70,7 +70,7 @@ INSERT INTO `SALE_RESULT_ITEM` (`ASSET_CODE`, `ASSET_NAME`, `ASSET_PARENT`, `RUL
 ('40', 'Lợi nhuận khác', '50', '31 - 32', NULL, -1),
 ('50', 'Tổng lợi nhuận kế toán trước thuế', '60', '30 + 40', NULL, -1),
 ('51', 'Chi phí thuế thu nhập DN', '60', NULL, NULL, -1),
-('60', 'Lợi nhuận sau thuế thu nhập doanh nghiệp', NULL, '50 - 51', NULL, -1)
+('60', 'Lợi nhuận sau thuế thu nhập doanh nghiệp', NULL, '50 - 51', NULL, -1);
 CREATE TABLE `SALE_RESULT_DATA` ( `ASSET_CODE` VARCHAR(10) NOT NULL , `START_VALUE` DOUBLE NULL, `END_VALUE` DOUBLE NULL , `CHANGED_RATIO` DOUBLE NULL , `PERIOD_TYPE` TINYINT(4) NOT NULL DEFAULT '1' , `PERIOD` DATE NOT NULL , `DESCRIPTION` VARCHAR(255) NULL, PRIMARY KEY (`ASSET_CODE`, `PERIOD_TYPE` , `PERIOD`) ) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE `CASH_FLOW_ITEM` ( `ASSET_CODE` VARCHAR(10) NOT NULL , `ASSET_NAME` VARCHAR(255) NOT NULL , `ASSET_PARENT` VARCHAR(10) NULL, `RULE` VARCHAR(255) NULL, `NOTE` VARCHAR(255) NULL , SO_DU TINYINT(1) NOT NULL DEFAULT -1 , PRIMARY KEY (`ASSET_CODE`(10)) ) ENGINE = InnoDB;
@@ -104,10 +104,7 @@ INSERT INTO `CASH_FLOW_ITEM` VALUES
 CREATE TABLE `CASH_FLOW_DATA` ( `ASSET_CODE` VARCHAR(10) NOT NULL , `START_VALUE` DOUBLE NULL, `END_VALUE` DOUBLE NULL , `CHANGED_RATIO` DOUBLE NULL , `PERIOD_TYPE` TINYINT(4) NOT NULL DEFAULT '1', `PERIOD` DATE NOT NULL , `DESCRIPTION` VARCHAR(255) NULL, PRIMARY KEY (`ASSET_CODE`, `PERIOD_TYPE` , `PERIOD`) ) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE `KPI_GROUP` ( `GROUP_ID` INT NOT NULL AUTO_INCREMENT , `GROUP_NAME` VARCHAR(255) NOT NULL , PRIMARY KEY (`GROUP_ID`) ) ENGINE = InnoDB;
-INSERT INTO `KPI_GROUP` (`GROUP_NAME`) VALUES ('Khả năng thanh toán');
-INSERT INTO `KPI_GROUP` (`GROUP_NAME`) VALUES ('Khả năng hoạt động');
-INSERT INTO `KPI_GROUP` (`GROUP_NAME`) VALUES ('Khả năng sinh lợi');
-INSERT INTO `KPI_GROUP` (`GROUP_NAME`) VALUES ('Khả năng cân đối nợ');
+INSERT INTO `KPI_GROUP` (`GROUP_NAME`) VALUES ('Khả năng thanh toán'), ('Khả năng hoạt động'), ('Khả năng sinh lợi'), ('Khả năng cân đối nợ');
 
 CREATE TABLE `KPI_CHART` ( `CHART_ID` INT NOT NULL AUTO_INCREMENT , `CHART_TITLE` VARCHAR(255) NOT NULL , `CHART_TITLE_EN` VARCHAR(255) NULL , `GROUP_ID` INT NOT NULL, HOME_FLAG TINYINT(1) NOT NULL DEFAULT 0 , THRESHOLD DOUBLE NOT NULL DEFAULT 0, PRIMARY KEY (`CHART_ID`) ) ENGINE = InnoDB;
 INSERT INTO `KPI_CHART` (`CHART_ID`, `CHART_TITLE`, `CHART_TITLE_EN`, `GROUP_ID`, `HOME_FLAG`, `THRESHOLD`) VALUES
@@ -145,40 +142,43 @@ INSERT INTO `KPI_CHART` (`CHART_ID`, `CHART_TITLE`, `CHART_TITLE_EN`, `GROUP_ID`
 CREATE TABLE `KPI_MEASURE` ( `MEASURE_ID` INT NOT NULL AUTO_INCREMENT , `MEASURE_NAME` VARCHAR(255) NOT NULL , `EXPRESSION` VARCHAR(255) NULL , `CHART_ID` INT NOT NULL , `TYPE_CHART` INT NOT NULL DEFAULT '1', PRIMARY KEY (`MEASURE_ID`) ) ENGINE = InnoDB;
 
 -- Các biểu đồ trong nhóm khả năng thanh toán
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Khả năng thanh toán tức thời', 'CĐKT.100.CK/CĐKT.310.CK', 1);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Khả năng thanh toán nhanh', '(CĐKT.100.CK-CĐKT.140.CK)/CĐKT.310.CK', 2);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Khả năng thanh toán bằng tiền', 'CĐKT.110.CK/CĐKT.310.CK', 3);
+INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES 
+('Khả năng thanh toán tức thời', 'CĐKT.100.CK/CĐKT.310.CK', 1),
+('Khả năng thanh toán nhanh', '(CĐKT.100.CK-CĐKT.140.CK)/CĐKT.310.CK', 2),
+('Khả năng thanh toán bằng tiền', 'CĐKT.110.CK/CĐKT.310.CK', 3);
 
 -- Các biểu đồ trong nhóm khả năng hoạt động 
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Vòng quay khoản phải thu', 'HĐKD.10.CK/(((CĐKT.130.ĐK+CĐKT.210.ĐK)+(CĐKT.130.CK+CĐKT.210.CK))/2)', 4);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Kỳ thu tiền bình quân', '365/KPI.4', 5);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Vòng quay hàng tồn kho (chỉ số đo theo năm/quý) theo giá trị sổ sách', 'HĐKD.11.CK/((CĐKT.140.ĐK+CĐKT.140.CK)/2)', 6);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Vòng quay hàng tồn kho (chỉ số đo theo năm/quý) theo giá trị thị trường', 'HĐKD.10.CK/((CĐKT.140.ĐK+CĐKT.140.CK)/2)', 7);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Số ngày tồn kho bình quân theo giá trị sổ sách', '365/KPI.6', 8);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Số ngày tồn kho bình quân theo giá trị thị trường', '365/KPI.7', 9);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Chu kỳ hoạt động của doanh nghiệp theo giá trị sổ sách', 'KPI.5+KPI.8', 10);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Chu kỳ hoạt động của doanh nghiệp theo giá trị thị trường', 'KPI.5+KPI.9', 11);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Vòng quay khoản phải trả', 'HĐKD.11.CK/(((CĐKT.310.ĐK+CĐKT.330.ĐK)+(CĐKT.310.CK+CĐKT.330.CK))/2)', 12);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Kỳ phải trả bình quân', '365/KPI.12', 13);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Chu kỳ luân chuyển tiền theo giá trị sổ sách', 'KPI.10/KPI.13', 14);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Chu kỳ luân chuyển tiền theo giá trị thị trường', 'KPI.11/KPI.13', 15);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Khả năng thanh toán lãi vay', 'HĐKD.50.CK/HĐKD.23.CK', 16);
+INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES 
+('Vòng quay khoản phải thu', 'HĐKD.10.CK/(((CĐKT.130.ĐK+CĐKT.210.ĐK)+(CĐKT.130.CK+CĐKT.210.CK))/2)', 4),
+('Kỳ thu tiền bình quân', '365/KPI.4', 5),
+('Vòng quay hàng tồn kho (chỉ số đo theo năm/quý) theo giá trị sổ sách', 'HĐKD.11.CK/((CĐKT.140.ĐK+CĐKT.140.CK)/2)', 6),
+('Vòng quay hàng tồn kho (chỉ số đo theo năm/quý) theo giá trị thị trường', 'HĐKD.10.CK/((CĐKT.140.ĐK+CĐKT.140.CK)/2)', 7),
+('Số ngày tồn kho bình quân theo giá trị sổ sách', '365/KPI.6', 8),
+('Số ngày tồn kho bình quân theo giá trị thị trường', '365/KPI.7', 9),
+('Chu kỳ hoạt động của doanh nghiệp theo giá trị sổ sách', 'KPI.5+KPI.8', 10),
+('Chu kỳ hoạt động của doanh nghiệp theo giá trị thị trường', 'KPI.5+KPI.9', 11),
+('Vòng quay khoản phải trả', 'HĐKD.11.CK/(((CĐKT.310.ĐK+CĐKT.330.ĐK)+(CĐKT.310.CK+CĐKT.330.CK))/2)', 12),
+('Kỳ phải trả bình quân', '365/KPI.12', 13),
+('Chu kỳ luân chuyển tiền theo giá trị sổ sách', 'KPI.10/KPI.13', 14),
+('Chu kỳ luân chuyển tiền theo giá trị thị trường', 'KPI.11/KPI.13', 15),
+('Khả năng thanh toán lãi vay', 'HĐKD.50.CK/HĐKD.23.CK', 16);
 
 -- Các biểu đồ trong nhóm khả năng sinh lợi
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Hiệu suất sử dụng tổng tài sản (vòng quay tổng tài sản)', 'HĐKD.10.CK/((CĐKT.270.ĐK+CĐKT.270.CK)/2)', 17);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Hiệu suất sử dụng tài sản cố định', 'HĐKD.10.CK/((CĐKT.220.ĐK+CĐKT.220.CK)/2)', 18);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Hiệu suất sử dụng trên vòng quay vốn lưu động', 'HĐKD.10.CK/((CĐKT.100.ĐK+CĐKT.100.CK)/2)', 19);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Tỷ suất lợi nhuận gộp (Lợi nhuận gộp biên)', 'HĐKD.20.CK/HĐKD.10.CK', 20);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Tỷ suất lợi nhuận ròng (Lợi nhuận ròng biên)', 'HĐKD.60.CK/(HĐKD.01.CK+HĐKD.21.CK)', 21);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Suất sinh lời trên tổng tài sản (Doanh lợi tổng tài sản)', 'HĐKD.60.CK/CĐKT.270.CK', 22);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Suất sinh lời trên vốn chủ sở hữu (Doanh lợi vốn chủ sở hữu)', 'HĐKD.60.CK/CĐKT.400.CK', 23);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Suất sinh lời vốn đầu tư', 'HĐKD.60.CK/HĐKD.30.CK', 24); -- Lưu chuyển tiền tệ, phải sửa code
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Khả năng sinh lời cơ bản', 'HĐKD.50.CK/CĐKT.270.CK', 25);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Tỷ số lợi nhuận tích lũy', 'HĐKD.60.CK/(HĐKD.60.CK-HĐKD.36.CK)', 26); -- Lưu chuyển tiền tệ, phải sửa code
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Tỷ số tăng trưởng bền vững', '(HĐKD.60.CK-HĐKD.36.CK)/CĐKT.400.CK', 27); -- Lưu chuyển tiền tệ, phải sửa code
+INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES 
+('Hiệu suất sử dụng tổng tài sản (vòng quay tổng tài sản)', 'HĐKD.10.CK/((CĐKT.270.ĐK+CĐKT.270.CK)/2)', 17),
+('Hiệu suất sử dụng tài sản cố định', 'HĐKD.10.CK/((CĐKT.220.ĐK+CĐKT.220.CK)/2)', 18),
+('Hiệu suất sử dụng trên vòng quay vốn lưu động', 'HĐKD.10.CK/((CĐKT.100.ĐK+CĐKT.100.CK)/2)', 19),
+('Tỷ suất lợi nhuận gộp (Lợi nhuận gộp biên)', 'HĐKD.20.CK/HĐKD.10.CK', 20),
+('Tỷ suất lợi nhuận ròng (Lợi nhuận ròng biên)', 'HĐKD.60.CK/(HĐKD.01.CK+HĐKD.21.CK)', 21),
+('Suất sinh lời trên tổng tài sản (Doanh lợi tổng tài sản)', 'HĐKD.60.CK/CĐKT.270.CK', 22),
+('Suất sinh lời trên vốn chủ sở hữu (Doanh lợi vốn chủ sở hữu)', 'HĐKD.60.CK/CĐKT.400.CK', 23),
+('Suất sinh lời vốn đầu tư', 'HĐKD.60.CK/HĐKD.30.CK', 24), -- Lưu chuyển tiền tệ, phải sửa code
+('Khả năng sinh lời cơ bản', 'HĐKD.50.CK/CĐKT.270.CK', 25),
+('Tỷ số lợi nhuận tích lũy', 'HĐKD.60.CK/(HĐKD.60.CK-HĐKD.36.CK)', 26), -- Lưu chuyển tiền tệ, phải sửa code
+('Tỷ số tăng trưởng bền vững', '(HĐKD.60.CK-HĐKD.36.CK)/CĐKT.400.CK', 27); -- Lưu chuyển tiền tệ, phải sửa code
 
 -- Các biểu đồ trong nhóm khả năng cân đối nợ
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Hệ số nợ (tỷ số nợ)', 'CĐKT.300.CK/CĐKT.270.CK', 28);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Đòn bẩy tài chính', 'CĐKT.270.CK/CĐKT.400.CK', 29);
-INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES ('Tỷ số khả năng trả nợ', 'CĐKT.270.CK/1000000', 30);
-
+INSERT INTO `KPI_MEASURE` (`MEASURE_NAME`, `EXPRESSION`, `CHART_ID`) VALUES 
+('Hệ số nợ (tỷ số nợ)', 'CĐKT.300.CK/CĐKT.270.CK', 28),
+('Đòn bẩy tài chính', 'CĐKT.270.CK/CĐKT.400.CK', 29),
+('Tỷ số khả năng trả nợ', 'CĐKT.270.CK/1000000', 30);

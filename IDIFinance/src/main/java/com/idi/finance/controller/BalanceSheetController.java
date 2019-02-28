@@ -110,6 +110,10 @@ public class BalanceSheetController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
 
 			// List balance assets:
 			if (form == null)
@@ -209,6 +213,11 @@ public class BalanceSheetController {
 	@RequestMapping("/bctc/cdkt/capnhat")
 	public String showUpdateBS(@ModelAttribute("mainFinanceForm") BalanceAssetForm form, Model model) {
 		try {
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
+
 			if (form == null)
 				form = new BalanceAssetForm();
 
@@ -504,6 +513,10 @@ public class BalanceSheetController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
 
 			// List balance assets:
 			if (form == null)
@@ -677,6 +690,11 @@ public class BalanceSheetController {
 	@RequestMapping("/bctc/kqhdkd/capnhat")
 	public String showUpdateSR(@ModelAttribute("mainFinanceForm") BalanceAssetForm form, Model model) {
 		try {
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
+
 			if (form == null)
 				form = new BalanceAssetForm();
 
@@ -1126,6 +1144,10 @@ public class BalanceSheetController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
 
 			// List balance assets:
 			if (form == null)
@@ -1299,6 +1321,11 @@ public class BalanceSheetController {
 	@RequestMapping("/bctc/luuchuyentt/capnhat")
 	public String showUpdateCF(@ModelAttribute("mainFinanceForm") BalanceAssetForm form, Model model) {
 		try {
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
+
 			if (form == null)
 				form = new BalanceAssetForm();
 
@@ -1776,6 +1803,10 @@ public class BalanceSheetController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
 
 			// Lấy kỳ kế toán mặc định
 			if (form.getKyKeToan() == null) {

@@ -7,13 +7,14 @@ INSERT INTO `DIA_CHI_VUNG` (`MA_VUNG_DC`, `TEN_VUNG_DC`, `MA_VUNG_DC_CHA`, `MA_C
 ('01', 'Hà Nội', 'm1', 2), ('48', 'Đà Nẵng', 'm2', 2), ('79', 'Hồ Chí Minh', 'm3', 2);
 
 CREATE TABLE `DIA_CHI_CAP` ( `MA_CAP_DC` INT NOT NULL AUTO_INCREMENT , `TEN_CAP_DC` VARCHAR(255) NOT NULL , `MO_TA` VARCHAR(255) NOT NULL , `CAP_DC` TINYINT NOT NULL , PRIMARY KEY (`MA_CAP_DC`)) ENGINE = InnoDB;
-INSERT INTO `DIA_CHI_CAP` ( `TEN_CAP_DC`, `MO_TA`, `CAP_DC`) VALUES ('Miền', '', '1');
-INSERT INTO `DIA_CHI_CAP` ( `TEN_CAP_DC`, `MO_TA`, `CAP_DC`) VALUES ('Thành phố', 'Thành phố trực thuộc trung ương', '2');
-INSERT INTO `DIA_CHI_CAP` ( `TEN_CAP_DC`, `MO_TA`, `CAP_DC`) VALUES ('Tỉnh', '', '2');
-INSERT INTO `DIA_CHI_CAP` ( `TEN_CAP_DC`, `MO_TA`, `CAP_DC`) VALUES ('Quận', '', '3');
-INSERT INTO `DIA_CHI_CAP` ( `TEN_CAP_DC`, `MO_TA`, `CAP_DC`) VALUES ('Huyện', '', '3');
-INSERT INTO `DIA_CHI_CAP` ( `TEN_CAP_DC`, `MO_TA`, `CAP_DC`) VALUES ('Thành phố', 'Thành phố trực thuộc tỉnh', '3');
-INSERT INTO `DIA_CHI_CAP` ( `TEN_CAP_DC`, `MO_TA`, `CAP_DC`) VALUES ('Thị xã', '', '3');
-INSERT INTO `DIA_CHI_CAP` ( `TEN_CAP_DC`, `MO_TA`, `CAP_DC`) VALUES ('Thị trấn', '', '4');
-INSERT INTO `DIA_CHI_CAP` ( `TEN_CAP_DC`, `MO_TA`, `CAP_DC`) VALUES ('Phường', '', '4');
-INSERT INTO `DIA_CHI_CAP` ( `TEN_CAP_DC`, `MO_TA`, `CAP_DC`) VALUES ('Xã', '', '4');
+INSERT INTO `DIA_CHI_CAP` ( `TEN_CAP_DC`, `MO_TA`, `CAP_DC`) VALUES 
+('Miền', '', '1'),
+('Thành phố', 'Thành phố trực thuộc trung ương', '2'),
+('Tỉnh', '', '2'),
+('Quận', '', '3'),
+('Huyện', '', '3'),
+('Thành phố', 'Thành phố trực thuộc tỉnh', '3'),
+('Thị xã', '', '3'),
+('Thị trấn', '', '4'),
+('Phường', '', '4'),
+('Xã', '', '4');
