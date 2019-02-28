@@ -43,7 +43,7 @@
 		<form:errors path="tenKyKt" cssClass="error"></form:errors>
 	</div>
 
-	<label class="control-label col-sm-2" for="batDau">Bắt đầu</label>
+	<label class="control-label col-sm-2" for="batDau">Bắt đầu (*)</label>
 	<div class="col-sm-2">
 		<div class="input-group date datetime smallform">
 			<form:input path="batDau" class="form-control" />
@@ -53,7 +53,7 @@
 		<form:errors path="batDau" cssClass="error"></form:errors>
 	</div>
 
-	<label class="control-label col-sm-2" for="ketThuc">Kết thúc</label>
+	<label class="control-label col-sm-2" for="ketThuc">Kết thúc (*)</label>
 	<div class="col-sm-2">
 		<div class="input-group date datetime smallform">
 			<form:input path="ketThuc" class="form-control" />
@@ -61,6 +61,18 @@
 				class="glyphicon glyphicon-calendar"></span></span>
 		</div>
 		<form:errors path="ketThuc" cssClass="error"></form:errors>
+	</div>
+</div>
+
+<div class="row form-group">
+	<div class="col-sm-12">
+		<label class="control-label">Lưu ý:</label>
+		<ul>
+			<li>Các thông tin trên khi được tạo ra sẽ không thể thay đổi,
+				vậy hãy điền thông tin cần thận trước khi ấn nút lưu</li>
+			<li>Khoảng thời gian của kỳ kế toán sắp tạo không được trùng với
+				khoảng thời gian của các kỳ kế toán trước đó trong hệ thống</li>
+		</ul>
 	</div>
 </div>
 

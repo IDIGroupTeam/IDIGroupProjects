@@ -29,6 +29,8 @@ public class KyKeToanValidator implements Validator {
 		logger.info(kyKeToan);
 
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "tenKyKt", "NotEmpty.KyKeToan.tenKyKt");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "batDau", "NotEmpty.KyKeToan.batDau");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "ketThuc", "NotEmpty.KyKeToan.ketThuc");
 
 		if (kyKeToan != null && kyKeToan.getBatDau() != null && kyKeToan.getKetThuc() != null) {
 			if (!kyKeToan.getBatDau().before(kyKeToan.getKetThuc())) {
@@ -44,12 +46,9 @@ public class KyKeToanValidator implements Validator {
 				}
 
 				if (ketThuc != null && !kyKeToan.getBatDau().after(ketThuc)) {
-					logger.info(ketThuc);
 					errors.rejectValue("batDau", "NotValid.KyKeToan.batDau");
 				}
 			}
-		} else {
-			errors.rejectValue("batDau", "NotEmpty.KyKeToan.batDau");
 		}
 	}
 }
