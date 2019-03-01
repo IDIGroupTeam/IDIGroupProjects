@@ -235,8 +235,13 @@ public class LeaveDAO extends JdbcDaoSupport {
 				
 			}else {				
 				if (leaveType.endsWith("2")) {
-					leaveInfo.setTimeValue(4);
-					leaveType = leaveType.substring(0, leaveType.length() - 1);
+					if(leaveType.equalsIgnoreCase("NP2")) {
+						leaveInfo.setTimeValue(4);
+						//leaveType = leaveType.substring(0, leaveType.length() - 1);
+					}else {
+						leaveInfo.setTimeValue(4);
+						leaveType = leaveType.substring(0, leaveType.length() - 1);
+					}
 				} else if (leaveType.equalsIgnoreCase("KCC"))
 					leaveInfo.setTimeValue(1);
 				else if (leaveType.equalsIgnoreCase("DMS") || leaveType.equalsIgnoreCase("DMC")
