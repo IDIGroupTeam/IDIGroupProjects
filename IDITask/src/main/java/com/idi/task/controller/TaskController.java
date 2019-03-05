@@ -46,6 +46,7 @@ import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
@@ -644,7 +645,7 @@ public class TaskController {
 			}
 			
 			if(taskIds != null) {
-				System.out.println("cv da chon: " + taskIds);
+				//System.out.println("cv da chon: " + taskIds);
 				String relatedUpdated = null;
 				if(task.getRelated() != null && task.getRelated().length() > 0){
 					//da co cv lien quan + then 
@@ -838,7 +839,8 @@ public class TaskController {
 			@ModelAttribute("eName") String eName, @ModelAttribute("dept") String dept, @ModelAttribute("eId") int eId) throws Exception {
 		//System.err.println("export to pdf");
 		
-		Document document = new Document();
+		//Document document = new Document();
+		Document document = new Document(PageSize.A4.rotate());
 		String path = properties.getProperty("REPORT_PATH");
 		File dir = new File(path);
 		if (!dir.exists()) {

@@ -1,3 +1,6 @@
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.text.DateFormat"%>
+<%@page import="java.util.Date"%>
 <%@page language="java" contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
@@ -253,21 +256,67 @@ tr:nth-child(even) {
 				<th>Ngày cập nhật</th>
 			</tr>
 			<c:forEach var="task" items="${tasks}">
-				<tr>
-					<td>${task.taskId}</td>
-					<td><a href="/IDITask/editTask?tab=1&taskId=${task.taskId}">${task.taskName}</a></td>					
-					<c:if test="${task.ownedBy == 0}">
-						<td nowrap="nowrap">Chưa giao cho ai</td>
-					</c:if>
-					<c:if test="${task.ownedBy > 0}">
-						<td nowrap="nowrap">${task.ownerName}</td>
-					</c:if>
-					<td nowrap="nowrap">${task.area}</td>
-					<td nowrap="nowrap">${task.status}</td>
-					<td nowrap="nowrap">${task.priority}</td>
-					<td>${task.plannedFor}</td>
-					<td nowrap="nowrap">${task.updateTS}</td>
-				</tr>
+			<c:set var="dueDate" value="${task.dueDate}"/>
+			<c:set var="status" value="${task.status}"/>
+			<%
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = new Date();
+				String currentDate = dateFormat.format(date);							
+				currentDate = currentDate.replaceAll("-", "");				
+				pageContext.setAttribute("currentDate", currentDate);
+				
+				String status = (String)pageContext.getAttribute("status");
+				
+				String dueDate = (String)pageContext.getAttribute("dueDate");
+				
+				if(dueDate != null && dueDate.length() > 0 && !status.endsWith("xong")){
+					dueDate = dueDate.replaceAll("-", "");
+					if(Integer.parseInt(dueDate) < Integer.parseInt(currentDate)){
+						pageContext.setAttribute("overDate", "yes");
+					}else{
+						pageContext.setAttribute("overDate", "no");
+					}
+				}else{
+					pageContext.setAttribute("overDate", "no");
+				}
+				
+			%>
+				<c:choose>
+				    <c:when test="${overDate == 'yes'}">
+				       	<tr>
+							<td>${task.taskId} ${task.dueDate} | ${currentDate}</td>
+							<td><a href="/IDITask/editTask?tab=1&taskId=${task.taskId}">${task.taskName}</a></td>					
+							<c:if test="${task.ownedBy == 0}">
+								<td nowrap="nowrap">Chưa giao cho ai</td>
+							</c:if>
+							<c:if test="${task.ownedBy > 0}">
+								<td nowrap="nowrap">${task.ownerName}</td>
+							</c:if>
+							<td nowrap="nowrap">${task.area}</td>
+							<td nowrap="nowrap" title="Quá thời hạn phải hoàn thành việc này">${task.status} <b style="background-color: red">  Đã quá hạn</b></td>
+							<td nowrap="nowrap">${task.priority}</td>
+							<td>${task.plannedFor}</td>
+							<td nowrap="nowrap">${task.updateTS}</td>
+						</tr>
+				    </c:when>    
+				    <c:otherwise>
+				       	<tr>
+							<td>${task.taskId}</td>
+							<td><a href="/IDITask/editTask?tab=1&taskId=${task.taskId}">${task.taskName}</a></td>					
+							<c:if test="${task.ownedBy == 0}">
+								<td nowrap="nowrap">Chưa giao cho ai</td>
+							</c:if>
+							<c:if test="${task.ownedBy > 0}">
+								<td nowrap="nowrap">${task.ownerName}</td>
+							</c:if>
+							<td nowrap="nowrap">${task.area}</td>
+							<td nowrap="nowrap">${task.status}</td>
+							<td nowrap="nowrap">${task.priority}</td>
+							<td>${task.plannedFor}</td>
+							<td nowrap="nowrap">${task.updateTS}</td>
+						</tr>
+				    </c:otherwise>
+				</c:choose>										
 			</c:forEach>
 		</table>
 </body>

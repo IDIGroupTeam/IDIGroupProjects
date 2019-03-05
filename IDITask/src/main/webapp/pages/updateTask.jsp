@@ -222,7 +222,7 @@
 								<td nowrap="nowrap" align="right">Trạng thái của công việc:</td>
 								<td><form:select path="status"
 										class="form-control animated">
-										<form:option value="Mới tạo" label="Mới tạo" />
+										<form:option value="Mới" label="Mới" />
 										<form:option value="Đang làm" label="Đang làm"
 											style="color:green" />
 										<form:option value="Tạm dừng" label="Tạm dừng"
