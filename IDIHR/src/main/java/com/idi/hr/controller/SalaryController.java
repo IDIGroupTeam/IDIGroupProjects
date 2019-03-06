@@ -722,8 +722,10 @@ public class SalaryController {
 							listSalaryForPage.add(salary);
 						}
 					}	
+					SalaryReport salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(), leaveReport.getMonthReport(), leaveReport.getYearReport());
+					model.addAttribute("salaryReport", salaryReport);
 					model.addAttribute("salaryForm", form);
-					model.addAttribute("salaryDetails", listSalaryForPage);					
+					model.addAttribute("salaryDetails", listSalaryForPage);			
 					model.addAttribute("formTitle", "Thông tin thông kê lương nhân viên tháng " + leaveReport.getMonthReport() + ", năm " + leaveReport.getYearReport());
 					//model.addAttribute("listSalaryReportDetail", listSalaryReportDetail);
 					return "listSalarySumaryDetail";

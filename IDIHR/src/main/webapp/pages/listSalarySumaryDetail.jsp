@@ -192,7 +192,7 @@ tr:nth-child(even) {
 				<th><i>Đóng BHXH</i></th>				
 			</tr>
 			<c:if test="${not empty salaryReport}">
-				<th colspan="5">Tổng cả năm: </th>		
+				<th colspan="5" align="center"> Tổng: </th>		
 				<th><fmt:formatNumber value="${salaryReport.finalSalary + salaryReport.bounus + salaryReport.subsidize + salaryReport.overTimeSalary + salaryReport.advancePayed}" type="number"/></th>		
 				<th><fmt:formatNumber value="${salaryReport.bounus}" type="number"/></th>
 				<th><fmt:formatNumber value="${salaryReport.subsidize}" type="number"/></th>
