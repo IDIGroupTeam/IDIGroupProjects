@@ -284,7 +284,7 @@ tr:nth-child(even) {
 				<c:choose>
 				    <c:when test="${overDate == 'yes'}">
 				       	<tr>
-							<td>${task.taskId} ${task.dueDate} | ${currentDate}</td>
+							<td>${task.taskId}</td>
 							<td><a href="/IDITask/editTask?tab=1&taskId=${task.taskId}">${task.taskName}</a></td>					
 							<c:if test="${task.ownedBy == 0}">
 								<td nowrap="nowrap">Chưa giao cho ai</td>
