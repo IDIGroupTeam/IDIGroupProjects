@@ -193,7 +193,7 @@ tr:nth-child(even) {
 			</tr>
 			<c:if test="${not empty salaryReport}">
 				<th colspan="5" align="center"> Tổng: </th>		
-				<th><fmt:formatNumber value="${salaryReport.finalSalary + salaryReport.bounus + salaryReport.subsidize + salaryReport.overTimeSalary + salaryReport.advancePayed}" type="number"/></th>		
+				<th><fmt:formatNumber value="${salaryReport.finalSalary + salaryReport.advancePayed}" type="number"/></th>		
 				<th><fmt:formatNumber value="${salaryReport.bounus}" type="number"/></th>
 				<th><fmt:formatNumber value="${salaryReport.subsidize}" type="number"/></th>
 				<th><fmt:formatNumber value="${salaryReport.overTimeSalary}" type="number"/></th>
@@ -208,7 +208,7 @@ tr:nth-child(even) {
 					<td>${salary.department}</td>					
 					<td>${salary.jobTitle}</td>
 					<td><fmt:formatNumber value="${salary.salary}" type="number"/> </td>					
-					<td><fmt:formatNumber value="${salary.finalSalary + salary.bounus + salary.subsidize + salary.overTimeSalary + salary.advancePayed}" type="number"/></td>
+					<td><fmt:formatNumber value="${salary.finalSalary + salary.advancePayed}" type="number"/></td>
 					<td><fmt:formatNumber value="${salary.bounus}" type="number"/> </td>
 					<td><fmt:formatNumber value="${salary.subsidize}" type="number"/> </td>
 					<td><fmt:formatNumber value="${salary.overTimeSalary}" type="number"/> </td>
