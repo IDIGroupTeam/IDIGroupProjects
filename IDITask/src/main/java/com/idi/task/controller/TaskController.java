@@ -16,6 +16,12 @@ import java.util.StringTokenizer;
 import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +39,7 @@ import com.idi.task.bean.Department;
 import com.idi.task.bean.EmployeeInfo;
 import com.idi.task.bean.Task;
 import com.idi.task.bean.TaskComment;
+import com.idi.task.bean.TaskSummay;
 import com.idi.task.common.PropertiesManager;
 import com.idi.task.common.Utils;
 import com.idi.task.dao.TaskDAO;
@@ -62,6 +69,8 @@ import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -315,6 +324,7 @@ public class TaskController {
 			task.setCreationDate(ts);
 			task.setUpdateTS(ts);
 			taskDAO.insertTask(task);
+			
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Thêm thông tin công việc thành công!");
 			String owner = "Chưa giao cho ai";
@@ -725,6 +735,13 @@ public class TaskController {
 	@RequestMapping("/prepareReport")
 	public String prepareReport(Model model) throws Exception {
 		ReportForm taskReportForm = new ReportForm();
+		
+	    Date dNow = new Date( );
+	    SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
+	    String today = ft.format(dNow);
+	    //System.err.println(today);
+	    taskReportForm.setToDate(today);
+	   // model.addAttribute("today", today);
 		model.addAttribute("formTitle", "Lựa chọn thông tin báo cáo công việc");
 
 		// get list department
@@ -739,8 +756,152 @@ public class TaskController {
 		return "prepareReport";
 	}
 	
-	@RequestMapping("/generateTaskReport")
-	public String generateTaskReport(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) {
+	@RequestMapping(value = "/generateTaskReport", params = "chat")
+	public String generateTaskReportToChat(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm, HttpServletResponse response, HttpServletRequest request ) {		
+		
+		TaskSummay taskSummay = new TaskSummay();
+		try {
+			String fDate = taskReportForm.getFromDate();
+			String tDate = taskReportForm.getToDate();	
+			/*
+			 * int totalT = 0; int newT = 0; int inprogressT= 0; int stopedT = 0; int
+			 * invalidT = 0; int reviewingT = 0; int completedT = 0;
+			 */
+			
+			if(taskReportForm.getEmployeeId() > 0) {
+				taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, taskReportForm.getEmployeeId());
+				
+				//listTaskSummary.add(taskSummay);
+				/*}else if(taskReportForm.getDepartment() != null && !taskReportForm.getDepartment().equalsIgnoreCase("all")) {
+				List<EmployeeInfo > employees = employees(taskReportForm.getDepartment());
+				
+				 * for(int i=0; i < employees.size(); i++) { EmployeeInfo e = new
+				 * EmployeeInfo(); e = employees.get(i); TaskSummay taskSummayD =
+				 * taskDAO.getSummaryTasksForReport(fDate, tDate, e.getEmployeeId()); totalT =
+				 * totalT + taskSummayD.getTaskTotal(); newT = newT + taskSummayD.getTaskNew();
+				 * inprogressT = inprogressT + taskSummayD.getTaskInprogess(); stopedT = stopedT
+				 * + taskSummayD.getTaskStoped(); invalidT = invalidT +
+				 * taskSummayD.getTaskinvalid(); reviewingT = reviewingT +
+				 * taskSummayD.getTaskReviewing(); completedT = completedT +
+				 * taskSummayD.getTaskCompleted();
+				 * 
+				 * } taskSummay.setTaskTotal(totalT); taskSummay.setTaskNew(newT);
+				 * taskSummay.setTaskInprogess(inprogressT); taskSummay.setTaskStoped(stopedT);
+				 * taskSummay.setTaskinvalid(invalidT); taskSummay.setTaskReviewing(reviewingT);
+				 * taskSummay.setTaskCompleted(completedT);
+				 */
+			}else {
+				taskSummay = taskDAO.getSummaryTasksForChat(fDate, tDate, taskReportForm.getDepartment());
+				/*
+				 * List<EmployeeInfo > employees = employees("all"); for(int i=0; i <
+				 * employees.size(); i++) { EmployeeInfo e = new EmployeeInfo(); e =
+				 * employees.get(i); TaskSummay taskSummayA =
+				 * taskDAO.getSummaryTasksForReport(fDate, tDate, e.getEmployeeId()); totalT =
+				 * totalT + taskSummayA.getTaskTotal(); newT = newT + taskSummayA.getTaskNew();
+				 * inprogressT = inprogressT + taskSummayA.getTaskInprogess(); stopedT = stopedT
+				 * + taskSummayA.getTaskStoped(); invalidT = invalidT +
+				 * taskSummayA.getTaskinvalid(); reviewingT = reviewingT +
+				 * taskSummayA.getTaskReviewing(); completedT = completedT +
+				 * taskSummayA.getTaskCompleted();
+				 * 
+				 * } taskSummay.setTaskTotal(totalT); taskSummay.setTaskNew(newT);
+				 * taskSummay.setTaskInprogess(inprogressT); taskSummay.setTaskStoped(stopedT);
+				 * taskSummay.setTaskinvalid(invalidT); taskSummay.setTaskReviewing(reviewingT);
+				 * taskSummay.setTaskCompleted(completedT);
+				 */					
+			}	
+			
+			
+			Map<String, Integer> values = new LinkedHashMap<String, Integer>();
+			log.info("Ve bieu thong ke khoi luong cong viec ");
+
+			values.put("Mới: " + taskSummay.getTaskNew(), taskSummay.getTaskNew());
+			values.put("Đang làm: " + taskSummay.getTaskInprogess(), taskSummay.getTaskInprogess());
+			values.put("Đã hủy bỏ: " + taskSummay.getTaskinvalid(), taskSummay.getTaskinvalid());
+			values.put("Tạm dừng: " + taskSummay.getTaskStoped(), taskSummay.getTaskStoped());
+			values.put("Chờ đánh giá: " + taskSummay.getTaskReviewing(), taskSummay.getTaskReviewing());
+			values.put("Đã xong: " + taskSummay.getTaskCompleted(), taskSummay.getTaskCompleted());
+	
+			// Create Dataset
+			CategoryDataset dataset = createDatasetI(values);
+
+			// Create chart
+			JFreeChart chart = ChartFactory.createBarChart("Biểu đồ thông kê khối lượng công việc ", // Chart Title
+					"Từ ngày " + fDate + " đến ngày " + tDate , // Category axis
+					"Số lượng công việc (Tổng số: " + taskSummay.getTaskTotal() + ")", // Value axis
+					dataset, PlotOrientation.VERTICAL, true, true, false);
+
+			try {
+				
+				String rootPath = request.getSession().getServletContext().getRealPath("/");
+				File dir = new File(rootPath + "charts/");
+				if (!dir.exists()) {
+					dir.mkdirs();
+				}
+
+				File file = new File(dir + "/tasksummaryChart.png");
+				model.addAttribute("chart", "/charts/tasksummaryChart.png");
+				ChartUtilities.saveChartAsJPEG(file, chart, 750, 400);
+				
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+			
+			// get list department
+			Map<String, String> departmentMap = this.listDepartments();
+			model.addAttribute("departmentMap", departmentMap);
+			// get list employee id
+			model.addAttribute("employeesList", employeesMap("all"));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		model.addAttribute("taskReportForm", taskReportForm);		
+		model.addAttribute("chat", 1);
+		model.addAttribute("taskSummay", taskSummay);
+		model.addAttribute("formTitle", "Biểu đồ thống kê khối lượng công việc");
+		return "prepareReport";
+	}
+	
+	@RequestMapping(value = "/generateTaskReport", params = "summary")
+	public String generateTaskReportSummary(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) {	
+		List<TaskSummay> listTaskSummary = new ArrayList<TaskSummay>();
+		try {
+			String fDate = taskReportForm.getFromDate();
+			String tDate = taskReportForm.getToDate();			
+			if(taskReportForm.getEmployeeId() > 0) {
+				TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, taskReportForm.getEmployeeId());
+				listTaskSummary.add(taskSummay);
+			}else if(taskReportForm.getDepartment() != null && !taskReportForm.getDepartment().equalsIgnoreCase("all")) {
+				List<EmployeeInfo > employees = employees(taskReportForm.getDepartment());
+				for(int i=0; i < employees.size(); i++) {
+					EmployeeInfo e = new EmployeeInfo();
+					e = employees.get(i);
+					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, e.getEmployeeId());
+					listTaskSummary.add(taskSummay);
+				}			
+			}else {
+				List<EmployeeInfo > employees = employees("all");			
+				for(int i=0; i < employees.size(); i++) {
+					EmployeeInfo e = new EmployeeInfo();
+					e = employees.get(i);
+					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, e.getEmployeeId());
+					listTaskSummary.add(taskSummay);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("reportForm", taskReportForm);
+		model.addAttribute("listTaskSummary", listTaskSummary);
+		model.addAttribute("formTitle", "Thông tin thống kê khối lượng công việc");
+		return "taskSummaryReport";
+	}
+	
+	@RequestMapping(value = "/generateTaskReport", params = "generateTaskReport")
+	public String generateTaskReport(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) {		
 		List<Task> list = null;
 		list = taskDAO.getTasksForReport(taskReportForm);
 		model.addAttribute("reportForm", taskReportForm);
@@ -1028,6 +1189,16 @@ public class TaskController {
 		timeStype.put("d", "Ngày");
 		timeStype.put("w", "Tuần");
 		return timeStype;
+	}
+	
+	private CategoryDataset createDatasetI(Map<String, Integer> values) {
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+		for (Map.Entry<String, Integer> entry : values.entrySet()) {
+			System.out.println("Item : " + entry.getKey() + " Count : " + entry.getValue());
+			dataset.addValue(entry.getValue(), entry.getKey(), "");
+		}
+		return dataset;
 	}
 
 	// For Ajax

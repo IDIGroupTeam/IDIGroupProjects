@@ -9,16 +9,19 @@ import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.idi.task.bean.Task;
 import com.idi.task.bean.TaskComment;
+import com.idi.task.bean.TaskSummay;
 import com.idi.task.common.PropertiesManager;
 import com.idi.task.form.ReportForm;
 import com.idi.task.mapper.MailListMapping;
 import com.idi.task.mapper.TaskCommentMapper;
 import com.idi.task.mapper.TaskMapper;
+import com.idi.task.mapper.TaskSummayMapper;
 
 public class TaskDAO extends JdbcDaoSupport {
 
@@ -57,9 +60,9 @@ public class TaskDAO extends JdbcDaoSupport {
 		return list;
 
 	}
-	
+
 	/**
-	 * Get list Task related from DB 
+	 * Get list Task related from DB
 	 * 
 	 * @return List of Task
 	 * @throws Exception
@@ -68,14 +71,14 @@ public class TaskDAO extends JdbcDaoSupport {
 
 		String sql = properties.getProperty("GET_TASKS_RELATED").toString();
 		log.info("GET_TASKS_RELATED query: " + sql);
-		//Object[] params = new Object[] { taskIds };
-		if(taskIds != null && taskIds.length() > 0)
-			sql = sql + " AND TASK_ID IN (" + taskIds + ") ORDER BY UPDATE_TS DESC";		
+		// Object[] params = new Object[] { taskIds };
+		if (taskIds != null && taskIds.length() > 0)
+			sql = sql + " AND TASK_ID IN (" + taskIds + ") ORDER BY UPDATE_TS DESC";
 		System.err.println("task related: " + taskIds);
 		TaskMapper mapper = new TaskMapper();
 
 		List<Task> list = jdbcTmpl.query(sql, mapper);
-		System.err.println("so luong cv lien quan " +list.size());
+		System.err.println("so luong cv lien quan " + list.size());
 		return list;
 
 	}
@@ -100,17 +103,18 @@ public class TaskDAO extends JdbcDaoSupport {
 	}
 
 	/**
-	 * get list subscriber of task 
+	 * get list subscriber of task
+	 * 
 	 * @param taskId
 	 * @return
 	 */
-	public String getTaskSubscriber(int taskId){
-		String subscriber="";
+	public String getTaskSubscriber(int taskId) {
+		String subscriber = "";
 		try {
 			String sql = properties.get("GET_SUBSCRIBER").toString();
 			log.info("GET_SUBSCRIBER query: " + sql);
-			Object[] params = new Object[] { taskId };	
-	
+			Object[] params = new Object[] { taskId };
+
 			subscriber = jdbcTmpl.queryForObject(sql, params, String.class);
 		} catch (Exception e) {
 			log.error(e, e);
@@ -118,7 +122,7 @@ public class TaskDAO extends JdbcDaoSupport {
 		}
 		return subscriber;
 	}
-	
+
 	/**
 	 * Insert a task into database
 	 * 
@@ -129,14 +133,16 @@ public class TaskDAO extends JdbcDaoSupport {
 			log.info("Thêm mới thông tin task ....");
 			String sql = properties.getProperty("INSERT_TASK").toString();
 			log.info("INSERT_TASK query: " + sql);
-/*			System.err.println(task.getTaskName() +"|"+ task.getCreatedBy() +"|"+ task.getOwnedBy() +"|"+ 
-					task.getDueDate() +"|"+ 
-					task.getType() +"|"+ task.getArea() +"|"+ task.getPriority() +"|"+ task.getPlannedFor() +"|"+
-					task.getEstimate() +"|"+ task.getDescription());*/
-			Object[] params = new Object[] { task.getTaskName(), task.getCreatedBy(), task.getOwnedBy(), 
-					task.getSecondOwned(),  task.getVerifyBy(),
-					task.getDueDate(), task.getCreationDate(), task.getType(), task.getArea(), task.getPriority(), task.getPlannedFor(),
-					task.getUpdateTS(), task.getEstimate(), task.getEstimateTimeType(), task.getDescription()};
+			/*
+			 * System.err.println(task.getTaskName() +"|"+ task.getCreatedBy() +"|"+
+			 * task.getOwnedBy() +"|"+ task.getDueDate() +"|"+ task.getType() +"|"+
+			 * task.getArea() +"|"+ task.getPriority() +"|"+ task.getPlannedFor() +"|"+
+			 * task.getEstimate() +"|"+ task.getDescription());
+			 */
+			Object[] params = new Object[] { task.getTaskName(), task.getCreatedBy(), task.getOwnedBy(),
+					task.getSecondOwned(), task.getVerifyBy(), task.getDueDate(), task.getCreationDate(),
+					task.getType(), task.getArea(), task.getPriority(), task.getPlannedFor(), task.getUpdateTS(),
+					task.getEstimate(), task.getEstimateTimeType(), task.getDescription() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -157,23 +163,26 @@ public class TaskDAO extends JdbcDaoSupport {
 			// update
 			String sql = properties.getProperty("UPDATE_TASK").toString();
 			log.info("UPDATE_TASK query: " + sql);
-			//se lam sau khi xong fan quyen
-			//if(task.getStatus().equalsIgnoreCase("Xong")) {
-			//	task.setResolutionDate("");
-			//	task.setResolvedBy("");
-			//}
-			if(task.getTimeSpent() != null && task.getTimeSpent().length() == 0)
+			// se lam sau khi xong fan quyen
+			// if(task.getStatus().equalsIgnoreCase("Xong")) {
+			// task.setResolutionDate("");
+			// task.setResolvedBy("");
+			// }
+			if (task.getTimeSpent() != null && task.getTimeSpent().length() == 0)
 				task.setTimeSpent(null);
-/*			System.err.println(task.getTaskName()  +"|"+  task.getOwnedBy() +"| est type "+  task.getEstimateTimeType() +"| spent type "+
-					task.getTimeSpentType() +"|"+
-					task.getDueDate() +"|"+ task.getSecondOwned() + "|" + task.getVerifyBy() +"|"+ 
-					task.getType() +"|"+ task.getArea() +"|"+ task.getPriority() +"|"+ task.getPlannedFor() +"|"+
-					task.getTimeSpent() +"|"+ task.getEstimate() +"|"+ task.getDescription() +"|"+ task.getTaskId());
-			*/
+			/*
+			 * System.err.println(task.getTaskName() +"|"+ task.getOwnedBy() +"| est type "+
+			 * task.getEstimateTimeType() +"| spent type "+ task.getTimeSpentType() +"|"+
+			 * task.getDueDate() +"|"+ task.getSecondOwned() + "|" + task.getVerifyBy()
+			 * +"|"+ task.getType() +"|"+ task.getArea() +"|"+ task.getPriority() +"|"+
+			 * task.getPlannedFor() +"|"+ task.getTimeSpent() +"|"+ task.getEstimate() +"|"+
+			 * task.getDescription() +"|"+ task.getTaskId());
+			 */
 			Object[] params = new Object[] { task.getTaskName(), task.getOwnedBy(), task.getSecondOwned(),
-					task.getVerifyBy(), task.getUpdateId(),	task.getUpdateTS(), task.getResolvedBy(), task.getDueDate(), task.getResolutionDate(),
-					task.getType(), task.getArea(), task.getPriority(), task.getStatus(), task.getPlannedFor(), task.getTimeSpent(),
-					task.getTimeSpentType(), task.getEstimate(), task.getEstimateTimeType(), task.getDescription(), task.getReviewComment(), task.getTaskId() };
+					task.getVerifyBy(), task.getUpdateId(), task.getUpdateTS(), task.getResolvedBy(), task.getDueDate(),
+					task.getResolutionDate(), task.getType(), task.getArea(), task.getPriority(), task.getStatus(),
+					task.getPlannedFor(), task.getTimeSpent(), task.getTimeSpentType(), task.getEstimate(),
+					task.getEstimateTimeType(), task.getDescription(), task.getReviewComment(), task.getTaskId() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -181,21 +190,22 @@ public class TaskDAO extends JdbcDaoSupport {
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * Update subscriber for a task into database
+	 * 
 	 * @param sub
 	 * @param taskId
 	 * @throws Exception
 	 */
 	public void updateSubscriber(String sub, int taskId) throws Exception {
-		
+
 		try {
 			log.info("Cập nhật thông tin người liên quan đến công viêc mã " + taskId);
 			String sql = properties.getProperty("UPDATE_SUBSCRIBER").toString();
 			log.info("UPDATE_SUBSCRIBER query: " + sql);
 
-			Object[] params = new Object[] {sub, taskId};
+			Object[] params = new Object[] { sub, taskId };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -206,18 +216,19 @@ public class TaskDAO extends JdbcDaoSupport {
 
 	/**
 	 * Update task related for a task into database
-	 * @param task related
+	 * 
+	 * @param task   related
 	 * @param taskId
 	 * @throws Exception
 	 */
 	public void updateRelated(String tasksRelated, int taskId) throws Exception {
-		
+
 		try {
 			log.info("thêm công việc liên quan đến công viêc mã " + taskId);
 			String sql = properties.getProperty("UPDATE_RELATED").toString();
 			log.info("UPDATE_RELATED query: " + sql);
 
-			Object[] params = new Object[] {tasksRelated, taskId};
+			Object[] params = new Object[] { tasksRelated, taskId };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -225,91 +236,94 @@ public class TaskDAO extends JdbcDaoSupport {
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * Get tasks from DB by search
+	 * 
 	 * @param search value
 	 * @return List of task
 	 * 
 	 */
 	public List<Task> getTasksBySearch(String value, String department, int owner, String status) {
-		
+
 		String sql = properties.getProperty("GET_TASKS_BY_SEARCH").toString();
 		Object[] params = new Object[] {};
 		boolean first = true;
-		if(owner > 0) {
-			if(first)
+		if (owner > 0) {
+			if (first)
 				sql = sql + " WHERE T.OWNED_BY = " + owner;
 			else
 				sql = sql + " AND T.OWNED_BY = " + owner;
 			first = false;
 		}
-		if(department != null && department.length() > 0) {
-			if(first)
+		if (department != null && department.length() > 0) {
+			if (first)
 				sql = sql + " WHERE T.AREA = '" + department + "' ";
 			else
-				sql = sql + " AND T.AREA = '" + department +"' ";
+				sql = sql + " AND T.AREA = '" + department + "' ";
 			first = false;
 		}
-		if(status != null && status.length() > 0) {
-			if(first)
+		if (status != null && status.length() > 0) {
+			if (first)
 				sql = sql + " WHERE T.STATUS = '" + status + "' ";
 			else
-				sql = sql + " AND T.STATUS = '" + status +"' ";
+				sql = sql + " AND T.STATUS = '" + status + "' ";
 			first = false;
 		}
-		if(value != null && value.length() > 0) {
-			if(first)
-				sql = sql + " WHERE (E.FULL_NAME LIKE ? OR T.TASK_ID LIKE ? OR T.TASK_NAME LIKE ? OR T.AREA LIKE ? OR T.STATUS LIKE ? OR PLANED_FOR LIKE ? ) ";
+		if (value != null && value.length() > 0) {
+			if (first)
+				sql = sql
+						+ " WHERE (E.FULL_NAME LIKE ? OR T.TASK_ID LIKE ? OR T.TASK_NAME LIKE ? OR T.AREA LIKE ? OR T.STATUS LIKE ? OR PLANED_FOR LIKE ? ) ";
 			else
-				sql = sql + " AND (E.FULL_NAME LIKE ? OR T.TASK_ID LIKE ? OR T.TASK_NAME LIKE ? OR T.AREA LIKE ? OR T.STATUS LIKE ? OR PLANED_FOR LIKE ? ) ";
+				sql = sql
+						+ " AND (E.FULL_NAME LIKE ? OR T.TASK_ID LIKE ? OR T.TASK_NAME LIKE ? OR T.AREA LIKE ? OR T.STATUS LIKE ? OR PLANED_FOR LIKE ? ) ";
 			first = false;
 			value = "%" + value + "%";
-			params = new Object[] {value, value, value, value, value, value};
-		}			
-		
+			params = new Object[] { value, value, value, value, value, value };
+		}
+
 		sql = sql + " ORDER BY T.UPDATE_TS DESC ";
-		
+
 		log.info("GET_TASKS_BY_SEARCH query: " + sql);
-		
+
 		TaskMapper mapper = new TaskMapper();
 
 		List<Task> list = jdbcTmpl.query(sql, params, mapper);
 
 		return list;
 	}
-	
-	public List<String> getListStatus(){
+
+	public List<String> getListStatus() {
 		String sql = properties.getProperty("GET_STATUS").toString();
-		log.info("GET_STATUS query: " + sql);	
+		log.info("GET_STATUS query: " + sql);
 		List<String> list = jdbcTmpl.queryForList(sql, String.class);
 
-		return list;	
+		return list;
 	}
-	
+
 	/**
 	 * Get tasks from DB for report
+	 * 
 	 * @param reportForm
 	 * @return List of task
 	 * 
 	 */
 	public List<Task> getTasksForReport(ReportForm reportForm) {
-		
+
 		String sql = properties.getProperty("GET_TASKS_FOR_REPORT").toString();
-		if(reportForm.getFromDate() != null && reportForm.getFromDate().length() > 0)
+		if (reportForm.getFromDate() != null && reportForm.getFromDate().length() > 0)
 			sql = sql.replaceAll("%FROM_DATE%", reportForm.getFromDate());
-		if(reportForm.getToDate() != null && reportForm.getToDate().length() > 0)
+		if (reportForm.getToDate() != null && reportForm.getToDate().length() > 0)
 			sql = sql.replaceAll("%TO_DATE%", reportForm.getToDate());
-		if(reportForm.getEmployeeId() > 0)
+		if (reportForm.getEmployeeId() > 0)
 			sql = sql + " AND T.OWNED_BY = " + reportForm.getEmployeeId();
-		else
-			if(reportForm.getDepartment() != null && !reportForm.getDepartment().equalsIgnoreCase("all"))
-				sql = sql + " AND T.AREA = '" + reportForm.getDepartment() + "'";
-		
+		else if (reportForm.getDepartment() != null && !reportForm.getDepartment().equalsIgnoreCase("all"))
+			sql = sql + " AND T.AREA = '" + reportForm.getDepartment() + "'";
+
 		sql = sql + " ORDER BY T.UPDATE_TS DESC";
-		
+
 		log.info("GET_TASKS_FOR_REPORT query: " + sql);
-		
+
 		Object[] params = new Object[] {};
 		TaskMapper mapper = new TaskMapper();
 
@@ -319,27 +333,105 @@ public class TaskDAO extends JdbcDaoSupport {
 	}
 	
 	/**
+	 * 
+	 * @param fromDate
+	 * @param toDate
+	 * @param dept
+	 * @return
+	 */		
+	public TaskSummay getSummaryTasksForChat(String fromDate, String toDate, String dept) {
+		TaskSummay taskSummay = new TaskSummay();
+		try {
+			String sql = properties.getProperty("GET_SUMMARY_TASK_FOR_CHAT").toString();
+			if (fromDate != null && fromDate.length() > 0)
+				sql = sql.replaceAll("%FROM_DATE%", fromDate);
+			if (toDate != null && toDate.length() > 0)
+				sql = sql.replaceAll("%TO_DATE%", toDate);
+			if (dept != null && !dept.equalsIgnoreCase("all")) {
+				sql = sql.replaceAll("%ID%", " AND AREA = '" + dept + "'");
+			}else {
+				sql = sql.replaceAll("%ID%", "");
+			}
+	
+			sql = sql.replaceAll("%NEW%", "Mới', 'Mới tạo");
+			sql = sql.replaceAll("%INPROGRESS%", "Đang làm");
+			sql = sql.replaceAll("%STOPED%", "Tạm dừng");
+			sql = sql.replaceAll("%INVALID%", "Hủy bỏ");
+			sql = sql.replaceAll("%REVIEWING%", "Chờ đánh giá");
+			sql = sql.replaceAll("%COMPLETED%", "Đã xong");		
+			
+			Object[] params = new Object[] {};
+			TaskSummayMapper mapper = new TaskSummayMapper();
+			log.info("GET_SUMMARY_TASK query: " + sql);
+			taskSummay = jdbcTmpl.queryForObject(sql, params, mapper);
+		}catch (EmptyResultDataAccessException e) {
+			
+			//taskSummay.setTaskNew(0);
+		}
+		return taskSummay;
+	}
+	
+	/**
+	 * 
+	 * @param fromDate
+	 * @param toDate
+	 * @param id
+	 * @return
+	 */
+	public TaskSummay getSummaryTasksForReport(String fromDate, String toDate, int id) {
+		TaskSummay taskSummay = new TaskSummay();
+		try {
+			String sql = properties.getProperty("GET_SUMMARY_TASK").toString();
+			if (fromDate != null && fromDate.length() > 0)
+				sql = sql.replaceAll("%FROM_DATE%", fromDate);
+			if (toDate != null && toDate.length() > 0)
+				sql = sql.replaceAll("%TO_DATE%", toDate);
+			if (id > 0) {
+				sql = sql.replaceAll("%ID%", "" + id + "");
+			}
+	
+			sql = sql.replaceAll("%NEW%", "Mới', 'Mới tạo");
+			sql = sql.replaceAll("%INPROGRESS%", "Đang làm");
+			sql = sql.replaceAll("%STOPED%", "Tạm dừng");
+			sql = sql.replaceAll("%INVALID%", "Hủy bỏ");
+			sql = sql.replaceAll("%REVIEWING%", "Chờ đánh giá");
+			sql = sql.replaceAll("%COMPLETED%", "Đã xong");		
+			
+			Object[] params = new Object[] {};
+			TaskSummayMapper mapper = new TaskSummayMapper();
+			log.info("GET_SUMMARY_TASK query: " + sql);
+			taskSummay = jdbcTmpl.queryForObject(sql, params, mapper);
+		}catch (EmptyResultDataAccessException e) {
+			
+			//taskSummay.setTaskNew(0);
+		}
+		return taskSummay;
+	}
+
+	/**
 	 * Get tasks from DB by search
+	 * 
 	 * @param search value
 	 * @return List of task
 	 * @throws Exception
 	 */
 	public List<Task> getTasksBySearchForRelated(String value, String related) {
 		String sql = properties.getProperty("GET_TASKS_BY_SEARCH_FOR_RELATED").toString();
-		//log.info("GET_TASKS_BY_SEARCH_FOR_RELATED query: " + sql);
+		// log.info("GET_TASKS_BY_SEARCH_FOR_RELATED query: " + sql);
 		value = "%" + value + "%";
-		//System.err.println("related for search " + related);
+		// System.err.println("related for search " + related);
 		sql = sql.replaceAll("%TASK_RELATED%", related);
-		Object[] params = new Object[] {value, value, value, value, value, value};
+		Object[] params = new Object[] { value, value, value, value, value, value };
 		TaskMapper mapper = new TaskMapper();
 		log.info("GET_TASKS_BY_SEARCH_FOR_RELATED query: " + sql);
 		List<Task> list = jdbcTmpl.query(sql, params, mapper);
 
 		return list;
 	}
-	
+
 	/**
 	 * get list id of who related this task
+	 * 
 	 * @param taskId
 	 * @return
 	 */
@@ -347,67 +439,69 @@ public class TaskDAO extends JdbcDaoSupport {
 		String sql = properties.getProperty("GET_RELATED_IDS").toString();
 		log.info("GET_RELATED_IDS query: " + sql);
 		MailListMapping mapper = new MailListMapping();
-		Object[] params = new Object[] {taskId};		
-		
+		Object[] params = new Object[] { taskId };
+
 		String listIds = jdbcTmpl.queryForObject(sql, params, mapper);
-		//System.err.println(listIds);
+		// System.err.println(listIds);
 		return listIds;
 	}
-	
+
 	/**
 	 * Get list email
+	 * 
 	 * @param taskId
 	 * @return list email address
 	 */
-	public List<String> getMailList(int taskId){
+	public List<String> getMailList(int taskId) {
 		String ids = getRelatedIds(taskId);
 		String sql = properties.getProperty("GET_EMAIL_LIST").toString();
 		log.info("GET_EMAIL_LIST query: " + sql);
-		List<String> list = new ArrayList<String>();		
+		List<String> list = new ArrayList<String>();
 		StringTokenizer st = new StringTokenizer(ids, ",");
 		while (st.hasMoreElements()) {
 			String id = st.nextToken();
-			//System.err.println("id"+id);
-			if(id != null && !id.equalsIgnoreCase("0") && !id.equalsIgnoreCase("null")) {
-				Object[] params = new Object[] {id};	
+			// System.err.println("id"+id);
+			if (id != null && !id.equalsIgnoreCase("0") && !id.equalsIgnoreCase("null")) {
+				Object[] params = new Object[] { id };
 				String email = jdbcTmpl.queryForObject(sql, params, String.class);
-				//System.err.println("email"+email);
+				// System.err.println("email"+email);
 				list.add(email);
 			}
-		}		
-		//System.err.println("sql: "+jdbcTmpl.toString());
-		//System.err.println(list);
+		}
+		// System.err.println("sql: "+jdbcTmpl.toString());
+		// System.err.println(list);
 		return list;
 	}
-	
+
 	/**
 	 * Get email by employee id
+	 * 
 	 * @param taskId
 	 * @return list email address
 	 */
-	public List<String> getEmail(String employeeIds){
-		
+	public List<String> getEmail(String employeeIds) {
+
 		String sql = properties.getProperty("GET_EMAIL_LIST").toString();
 		log.info("GET_EMAIL_LIST query: " + sql);
-		List<String> list = new ArrayList<String>();		
+		List<String> list = new ArrayList<String>();
 		StringTokenizer st = new StringTokenizer(employeeIds, ",");
 		while (st.hasMoreElements()) {
 			String id = st.nextToken();
-			//System.err.println("id"+id);
-			if(id != null && !id.equalsIgnoreCase("0") && !id.equalsIgnoreCase("null")) {
-				Object[] params = new Object[] {id};	
+			// System.err.println("id"+id);
+			if (id != null && !id.equalsIgnoreCase("0") && !id.equalsIgnoreCase("null")) {
+				Object[] params = new Object[] { id };
 				String email = jdbcTmpl.queryForObject(sql, params, String.class);
-				//System.err.println("email"+email);
+				// System.err.println("email"+email);
 				list.add(email);
 			}
-		}		
-		//System.err.println("sql: "+jdbcTmpl.toString());
-		//System.err.println(list);
+		}
+		// System.err.println("sql: "+jdbcTmpl.toString());
+		// System.err.println(list);
 		return list;
 	}
-	
-	//------------------- Task comment ------------------//
-	
+
+	// ------------------- Task comment ------------------//
+
 	/**
 	 * Get list Task comment from DB
 	 * 
@@ -419,31 +513,32 @@ public class TaskDAO extends JdbcDaoSupport {
 		String sql = properties.getProperty("GET_TASK_COMMENTS").toString();
 		log.info("GET_TASK_COMMENTS query: " + sql);
 		TaskCommentMapper mapper = new TaskCommentMapper();
-		Object[] params = new Object[] {taskId};
-		List<TaskComment> list = jdbcTmpl.query(sql,params, mapper);
+		Object[] params = new Object[] { taskId };
+		List<TaskComment> list = jdbcTmpl.query(sql, params, mapper);
 		return list;
 	}
-	
+
 	/**
-	 * get max comment index currently 
+	 * get max comment index currently
+	 * 
 	 * @param taskId
 	 * @return number
 	 */
 	public int getMaxCommentIndex(int taskId) {
 		int maxNunber = 0;
-		try {			
+		try {
 			String sql = properties.get("GET_MAX_COMMENT_INDEX").toString();
 			log.info("GET_MAX_COMMENT_INDEX query: " + sql);
-			Object[] params = new Object[] { taskId };	
+			Object[] params = new Object[] { taskId };
 			maxNunber = jdbcTmpl.queryForObject(sql, Integer.class, params);
-		}catch(Exception e) {
-			//lan dau se va day vi tra ve null
-			//System.err.println("lan dau se va day vi tra ve null");
+		} catch (Exception e) {
+			// lan dau se va day vi tra ve null
+			// System.err.println("lan dau se va day vi tra ve null");
 			return 0;
 		}
 		return maxNunber;
 	}
-	
+
 	/**
 	 * Insert a task comment into database
 	 * 
@@ -455,7 +550,7 @@ public class TaskDAO extends JdbcDaoSupport {
 			String sql = properties.getProperty("INSERT_TASK_COMMENT").toString();
 			log.info("INSERT_TASK_COMMENT query: " + sql);
 			Object[] params = new Object[] { taskComment.getCommentIndex(), taskComment.getTaskId(),
-					taskComment.getCommentedBy(), taskComment.getContent()};
+					taskComment.getCommentedBy(), taskComment.getContent() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {

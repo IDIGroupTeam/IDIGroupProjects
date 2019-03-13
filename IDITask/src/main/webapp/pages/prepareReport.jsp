@@ -50,6 +50,7 @@ $(function() {
 </head>
 <body>
 	<a href="${url}/"><button class="btn btn-lg btn-primary btn-sm"> Quay lại dach sách công việc</button></a>
+	
 	<form:form action="generateTaskReport"
 		modelAttribute="taskReportForm" method="POST">				
 		<br/>
@@ -60,7 +61,7 @@ $(function() {
 					required="required" class="form-control animated"/>
 				</td>
 				<td>Đến ngày:(*) </td>
-				<td><form:input path="toDate" type="date"
+				<td><form:input path="toDate" type="date" value="${taskReportForm.toDate}"
 					required="required" class="form-control animated"/>
 				</td>
 			</tr>
@@ -81,7 +82,16 @@ $(function() {
 				</td>
 			</tr>
 		</table>
-		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Tạo báo cáo" /> &nbsp;
+		<input class="btn btn-lg btn-primary btn-sm" type="submit" name="generateTaskReport" value="Tạo báo cáo" /> &nbsp;
+		<input class="btn btn-lg btn-primary btn-sm" type="submit" name="summary" value="Thống kê khối lượng công việc" /> &nbsp;
+		<input class="btn btn-lg btn-primary btn-sm" type="submit" name="chat" value="Vẽ biểu đồ" /> &nbsp;
+		<c:if test="${chat > 0}">
+			<table align="center">
+				<tr>
+					<td><img src="${url}${chart}" alt="chart" width="750" height="400" /></td>
+				</tr>
+			</table>
+		</c:if>
 	</form:form>	
 </body>
 </html>
