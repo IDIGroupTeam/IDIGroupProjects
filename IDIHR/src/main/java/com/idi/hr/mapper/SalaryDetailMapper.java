@@ -40,10 +40,11 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 		String workedDay = rs.getString("WORKED_DAY");
 		String other = rs.getString("OTHER");
 		String arrears = rs.getString("ARREARS");
+		String payStatus = rs.getString("PAY_STATUS");
 		return new SalaryDetail(employeeId, basicSalary, finalSalary, overTimeN, overTimeW, overTimeH, 
 				overTimeSalary, bounus, subsidize, advancePayed, taxPersonal, month, year, desc,
 				payedInsurance,fullName, phoneNo, bankNo, bankName, bankBranch, salary, department, 
 				jobTitle, salaryInsurance, percentCompanyPay, percentEmployeePay, workcomplete, 
-				workedDay, other, arrears);
+				workedDay, other, arrears, payStatus);
 	}	
 }

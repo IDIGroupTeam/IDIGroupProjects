@@ -298,7 +298,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 					salaryDetail.getTaxPersonal(), salaryDetail.getSalary(), salaryDetail.getFinalSalary(), 
 					salaryDetail.getMonth(), salaryDetail.getYear(), salaryDetail.getDesc(), 
 					salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(),
-					salaryDetail.getOther(), salaryDetail.getArrears() };
+					salaryDetail.getOther(), salaryDetail.getArrears(), salaryDetail.getPayStatus() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -389,7 +389,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 					salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(),
 					salaryDetail.getBasicSalary(), salaryDetail.getFinalSalary(), salaryDetail.getDesc(), 
 					salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(), salaryDetail.getOther(),
-					salaryDetail.getArrears(), salaryDetail.getEmployeeId(), salaryDetail.getMonth(), salaryDetail.getYear() };
+					salaryDetail.getArrears(), salaryDetail.getPayStatus(), salaryDetail.getEmployeeId(), salaryDetail.getMonth(), salaryDetail.getYear() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {

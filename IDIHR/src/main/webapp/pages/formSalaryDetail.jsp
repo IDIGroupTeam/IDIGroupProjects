@@ -221,7 +221,17 @@
 					</tr>
 					<tr>
 						<td nowrap="nowrap"><b>Lương thực nhận:</b></td>
-						<td colspan="5"><b><fmt:formatNumber value="${salaryDetail.finalSalary}" /> </b>vnđ</td>
+						<td><b><fmt:formatNumber value="${salaryDetail.finalSalary}" /> </b>vnđ</td>						
+						<c:if test="${not empty salaryDetail.finalSalary}">
+							<td nowrap="nowrap"><b>Trạng thái thanh toán:</b></td>
+							<td>
+								<form:select path="payStatus" class="form-control animated">
+									<form:option value="" label="-Chọn trạng thái-"/>
+									<form:option value="Đã trả lương" label="Đã trả lương"></form:option>
+									<form:option value="Chưa trả lương" label="Chưa trả lương"></form:option> 
+								</form:select>
+							</td>
+						</c:if>
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Ghi chú:</td>

@@ -41,6 +41,7 @@ public class SalaryDetail implements Serializable {
 	private String salaryForWorkedDay;
 	private String other;
 	private String arrears;
+	private String payStatus;
 	
 	public SalaryDetail() {
 		
@@ -50,7 +51,7 @@ public class SalaryDetail implements Serializable {
 			String overTimeSalary, String bounus, String subsidize, String advancePayed, String taxPersonal, int month, int year,	
 			String description, String payedInsurance, String fullName, String phoneNo, String bankNo, String bankName, String bankBranch,
 			String salary, String department, String jobTitle, String salaryInsurance, String percentCompanyPay, String percentEmployeePay, 
-			int workComplete, String workedDay, String other, String arrears) {
+			int workComplete, String workedDay, String other, String arrears, String payStatus) {
 		
 		this.employeeId = employeeId;
 		this.finalSalary = finalSalary;
@@ -83,7 +84,7 @@ public class SalaryDetail implements Serializable {
 		this.workedDay = workedDay;
 		this.other = other;
 		this.arrears = arrears;
-		
+		this.payStatus = payStatus;
 	}	
 
 	public String getBasicSalary() {
@@ -344,6 +345,14 @@ public class SalaryDetail implements Serializable {
 
 	public void setArrears(String arrears) {
 		this.arrears = arrears;
+	}
+
+	public String getPayStatus() {
+		return payStatus;
+	}
+
+	public void setPayStatus(String payStatus) {
+		this.payStatus = payStatus;
 	}
 		
 }
