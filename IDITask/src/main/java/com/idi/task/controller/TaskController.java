@@ -767,10 +767,10 @@ public class TaskController {
 			 * int totalT = 0; int newT = 0; int inprogressT= 0; int stopedT = 0; int
 			 * invalidT = 0; int reviewingT = 0; int completedT = 0;
 			 */
-			
+			String title = "Biểu đồ thông kê khối lượng công việc";
 			if(taskReportForm.getEmployeeId() > 0) {
 				taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, taskReportForm.getEmployeeId());
-				
+				title = title + " của " + allEmployeesMap().get(taskReportForm.getEmployeeId());
 				//listTaskSummary.add(taskSummay);
 				/*}else if(taskReportForm.getDepartment() != null && !taskReportForm.getDepartment().equalsIgnoreCase("all")) {
 				List<EmployeeInfo > employees = employees(taskReportForm.getDepartment());
@@ -791,6 +791,12 @@ public class TaskController {
 				 * taskSummay.setTaskCompleted(completedT);
 				 */
 			}else {
+				if(taskReportForm.getDepartment().equalsIgnoreCase("all")) {
+					title = title + " của tất cả phòng ban";
+				}else {
+					title = title + " của phòng " + taskReportForm.getDepartment();
+				}
+					
 				taskSummay = taskDAO.getSummaryTasksForChat(fDate, tDate, taskReportForm.getDepartment());
 				/*
 				 * List<EmployeeInfo > employees = employees("all"); for(int i=0; i <
@@ -825,8 +831,11 @@ public class TaskController {
 			// Create Dataset
 			CategoryDataset dataset = createDatasetI(values);
 
+			//lam ro/chi tiet tieu de bao cao cho ....
+			
+			
 			// Create chart
-			JFreeChart chart = ChartFactory.createBarChart("Biểu đồ thông kê khối lượng công việc ", // Chart Title
+			JFreeChart chart = ChartFactory.createBarChart(title, // Chart Title
 					"Từ ngày " + fDate + " đến ngày " + tDate , // Category axis
 					"Số lượng công việc (Tổng số: " + taskSummay.getTaskTotal() + ")", // Value axis
 					dataset, PlotOrientation.VERTICAL, true, true, false);
