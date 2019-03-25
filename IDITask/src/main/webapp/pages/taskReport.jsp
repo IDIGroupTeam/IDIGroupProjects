@@ -22,17 +22,17 @@ td, th {
 	text-align: left;
 	padding: 8px;
 }
-
+/* 
 tr:nth-child(even) {
 	background-color: #E8E3E3;
-}
+} */
 </style>
 </head>
 <body>
 	<a href="${url}/prepareReport"><button class="btn btn-primary btn-sm">Lựa chọn lại thông tin cần báo cáo</button></a>
-	<c:if test="${tasks.size() > 0}">
-		<a href="${url}/exportToPDF?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${tasks[0].ownerName}&dept=${reportForm.department}&eId=${reportForm.employeeId}"><button class="btn btn-primary btn-sm">Export ra file PDF và gửi báo cáo</button></a>
-	</c:if>	
+<%-- 	<c:if test="${tasks.size() > 0}">
+		<a href="${url}/exportToPDF?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${tasks[0].ownerName}&dept=${reportForm.department}&eId=${reportForm.employeeId}&sender=${sender}&comment=${comment}"><button class="btn btn-primary btn-sm">Export ra file PDF và gửi báo cáo</button></a>
+	</c:if>	 --%>
 	<br />
 	<h3>Báo cáo công việc từ ngày ${reportForm.fromDate} đến ngày ${reportForm.toDate}
 		<c:if test="${reportForm.employeeId > 0}">
@@ -41,7 +41,25 @@ tr:nth-child(even) {
 		<c:if test="${reportForm.department != 'all'}"> phòng ${reportForm.department}</c:if>
 	</h3>
 	<br />
-	<input type="hidden" name="employeeName" value="${tasks[0].ownerName}">
+	<form:form action="exportToPDF" modelAttribute="reportForm" method="POST">
+		<input class="btn btn-lg btn-primary btn-sm" type="submit" name="Export ra file PDF và gửi báo cáo" value="Export ra file PDF và gửi báo cáo" /> <br/><br/>
+		<table>
+			<form:hidden path="fromDate" />
+			<form:hidden path="toDate" />
+			<form:hidden path="department" />
+			<form:hidden path="employeeId" />
+			<form:hidden path="employeeName" />
+			<tr>
+				<td width="15%">Người báo cáo:</td>
+				<td width="85%"><form:input path="sender" type="text" class="form-control animated" /></td>			
+			</tr>
+			<tr>
+				<td>Ý kiến/ Đề xuất:</td>
+				<td><form:input path="comment" type="text" class="form-control animated" /></td>
+			</tr>
+		</table>
+	</form:form>
+	<br/>
 	<table class="table table-striped">
 			<tr>
 				<th nowrap="nowrap">Mã việc</th>

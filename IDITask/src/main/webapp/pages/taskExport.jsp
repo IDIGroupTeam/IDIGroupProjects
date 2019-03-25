@@ -39,9 +39,16 @@ tr:nth-child(even) {
 		<c:if test="${reportForm.department != 'all'}"> phòng ${reportForm.department}</c:if>
 	</h3>
 	<br />	
-	<div class="alert alert-success">
-		Báo cáo công việc đã được export ra file PDF và lưu tại thư mục ${path} 
-	</div>
+	<c:if test="${not empty isOpen}">
+		<div class="alert alert-warning">
+			Vui lòng tắt file báo cáo đang mở trước khi tạo lại báo cáo! 
+		</div>
+	</c:if>
+	<c:if test="${empty isOpen}">
+		<div class="alert alert-success">
+			Báo cáo công việc đã được export ra file PDF và lưu tại thư mục ${path} 
+		</div>
+	</c:if>
 	<a href="${url}/sendReportForm?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${reportForm.employeeName}&dept=${reportForm.department}&eId=${reportForm.employeeId}"><button class="btn btn-primary btn-sm">Gửi báo cáo</button></a>
 </body>
 </html>

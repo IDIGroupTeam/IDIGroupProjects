@@ -303,7 +303,7 @@
 									</form:select></td>
 
 								<td bgcolor="#FAFAFA">Thời gian ước lượng để làm:</td>
-								<td><form:input path="estimate" type="number"
+								<td><form:input path="estimate" type="number" step="0.5" min="0"
 										class="col-xs-4" /> &nbsp; <form:select
 										path="estimateTimeType">
 										<form:option value="m" label="Phút" />
@@ -321,7 +321,7 @@
 									<td>${taskForm.createdByName}</td>
 								</c:if>
 								<td bgcolor="#FAFAFA">Thời gian đã làm:</td>
-								<td><form:input path="timeSpent" type="number"
+								<td><form:input path="timeSpent" type="number" step="0.5" min="0" 
 										class="col-xs-4" /> &nbsp; <form:select path="timeSpentType">
 										<form:option value="m" label="Phút" />
 										<form:option value="h" label="Giờ" />
@@ -350,7 +350,7 @@
 											<form:option value="${employee.employeeId}">${employee.fullName},&nbsp;${employee.jobTitle}</form:option>
 										</c:forEach>
 									</form:select></td>									
-								<td bgcolor="#FAFAFA">Ngày phải xong:(12/24/2018)</td>
+								<td bgcolor="#FAFAFA">Ngày phải xong:(vd:12/24/2018)</td>
 								<td><form:input path="dueDate" type="date"
 										class="form-control animated" /></td>
 							</tr>

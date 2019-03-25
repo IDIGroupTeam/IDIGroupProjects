@@ -3,6 +3,7 @@ package com.idi.task.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -913,6 +914,15 @@ public class TaskController {
 	public String generateTaskReport(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) {		
 		List<Task> list = null;
 		list = taskDAO.getTasksForReport(taskReportForm);
+		
+		//inject from Login account		
+		
+		/*
+		 * String username = new LoginController().getPrincipal();
+		 * log.info("Using usename =" + username + " in insert new task"); if (username
+		 * != null && username.length() > 0) { taskReportForm.setSender(username); }
+		 */		 
+		
 		model.addAttribute("reportForm", taskReportForm);
 		model.addAttribute("tasks", list);
 		model.addAttribute("formTitle", "Thông tin báo cáo công việc");
@@ -952,117 +962,166 @@ public class TaskController {
 	@RequestMapping(value ="/sendReport")
 	public String sendReport(Model model, @ModelAttribute("sendReportForm") @Validated SendReportForm sendReportForm, @RequestParam(required=false, value="formTitle") String formTitle) throws Exception {
 		log.info("sending report");
-		if(formTitle == null) {
-			
-			MimeMessage mimeMessage = mailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-			String path = properties.getProperty("REPORT_PATH");
-			
-			File file = new File(path + sendReportForm.getFileName() + ".pdf");
-		//	log.info("sending report: " + path +"|" + sendReportForm.getSubject()+"|"+sendReportForm.getFileName());
-			if(file.exists()) {
+		try {
+			if(formTitle == null) {
 				
-				mimeMessage.setFrom("IDITask-NotReply");
-				helper.setSubject(sendReportForm.getSubject());
-				mimeMessage.setContent(sendReportForm.getFileName(), "text/html; charset=UTF-8");
+				MimeMessage mimeMessage = mailSender.createMimeMessage();
+				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+				String path = properties.getProperty("REPORT_PATH");
 				
-				Multipart multipart = new MimeMultipart();
-				BodyPart attach = new MimeBodyPart();
-				DataSource source = new FileDataSource(path + sendReportForm.getFileName() + ".pdf");
-				attach.setDataHandler(new DataHandler(source));
-				attach.setFileName(path + sendReportForm.getFileName() + ".pdf");
-				
-				multipart.addBodyPart(attach);
-				BodyPart content = new MimeBodyPart();
-				content.setContent("Báo cáo công việc", "text/html; charset=UTF-8");
-				multipart.addBodyPart(content);
-				
-				mimeMessage.setContent(multipart, "text/html; charset=UTF-8");
-				
-				StringTokenizer st = new StringTokenizer(sendReportForm.getSendTo(), ";");
-				while(st.hasMoreTokens()) {
+				File file = new File(path + sendReportForm.getFileName() + ".pdf");
+			//	log.info("sending report: " + path +"|" + sendReportForm.getSubject()+"|"+sendReportForm.getFileName());
+				if(file.exists()) {
 					
-					String sendTo = st.nextToken(";");
-					if(sendTo != null && sendTo.length() > 0 && sendTo.contains("@") && sendTo.contains(".com")) {
-						log.info("send report cho " + sendTo);
-						helper.setTo(sendTo);			
+					mimeMessage.setFrom("IDITask-NotReply");
+					helper.setSubject(sendReportForm.getSubject());
+					mimeMessage.setContent(sendReportForm.getFileName(), "text/html; charset=UTF-8");
+					
+					Multipart multipart = new MimeMultipart();
+					BodyPart attach = new MimeBodyPart();
+					DataSource source = new FileDataSource(path + sendReportForm.getFileName() + ".pdf");
+					attach.setDataHandler(new DataHandler(source));
+					attach.setFileName(path + sendReportForm.getFileName() + ".pdf");
+					
+					multipart.addBodyPart(attach);
+					BodyPart content = new MimeBodyPart();
+					content.setContent("Báo cáo công việc", "text/html; charset=UTF-8");
+					multipart.addBodyPart(content);
+					
+					mimeMessage.setContent(multipart, "text/html; charset=UTF-8");
+					
+					StringTokenizer st = new StringTokenizer(sendReportForm.getSendTo(), ";");
+					while(st.hasMoreTokens()) {
 						
-						mailSender.send(mimeMessage);
-					//System.err.println("sent");
-					}			
+						String sendTo = st.nextToken(";");
+						if(sendTo != null && sendTo.length() > 0 && sendTo.contains("@") && sendTo.contains(".com")) {
+							log.info("send report cho " + sendTo);
+							helper.setTo(sendTo);			
+							
+							mailSender.send(mimeMessage);
+						//System.err.println("sent");
+						}			
+					}
+					//model.addAttribute("isReload","Yes");
+					model.addAttribute("formTitle", "Gửi báo cáo công việc");
+					return "redirect:/sendReport";
+				}else {
+					model.addAttribute("formTitle", "Vui lòng export file trước khi gửi báo cáo công việc");
 				}
-				//model.addAttribute("isReload","Yes");
-				model.addAttribute("formTitle", "Gửi báo cáo công việc");
-				return "redirect:/sendReport";
 			}else {
-				model.addAttribute("formTitle", "Vui lòng export file trước khi gửi báo cáo công việc");
-			}
-		}else {
-			log.info("try to sending report again...");
-			model.addAttribute("formTitle", "Gửi báo cáo công việc");
-		}	
+				log.info("try to sending report again...");
+				model.addAttribute("formTitle", "Gửi báo cáo công việc");
+			}	
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		return "sentReport";
 	}
 	
 	@RequestMapping("/exportToPDF")
-	public String getPDF(Model model, @ModelAttribute("fDate") String fDate, @ModelAttribute("tDate") String tDate,
-			@ModelAttribute("eName") String eName, @ModelAttribute("dept") String dept, @ModelAttribute("eId") int eId) throws Exception {
-		//System.err.println("export to pdf");
-		
-		//Document document = new Document();
-		Document document = new Document(PageSize.A4.rotate());
-		String path = properties.getProperty("REPORT_PATH");
-		File dir = new File(path);
-		if (!dir.exists()) {
-			dir.mkdirs();
+	public String getPDF(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) throws Exception {
+		try {
+						
+			//Document document = new Document();
+			Document document = new Document(PageSize.A4.rotate());
+			String path = properties.getProperty("REPORT_PATH");
+			File dir = new File(path);
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			
+			int eId = taskReportForm.getEmployeeId();
+			String dept = taskReportForm.getDepartment();
+			String fDate = taskReportForm.getFromDate();
+			String tDate = taskReportForm.getToDate();
+			String eName = taskReportForm.getEmployeeName();
+			String fileName = "";
+			if(eId > 0 && !dept.equalsIgnoreCase("all"))
+				fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
+				+ " của " + eName + " phòng " + dept + ".pdf";
+			else if (eId < 1 && !dept.equalsIgnoreCase("all"))
+				fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
+				+ " của phòng " + dept + ".pdf";
+			else if (eId > 0 && dept.equalsIgnoreCase("all"))
+				fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
+				+ " của " + eName + ".pdf";
+			else
+				fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate + " của tất cả các phòng ban.pdf";
+			
+			PdfWriter.getInstance(document, new FileOutputStream(dir + "/" + fileName));
+			BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+		    Font fontB = new Font(bf,18);
+		    Font font = new Font(bf,14);
+			document.open();
+			//Font font = FontFactory.getFont(FontFactory.TIMES_ROMAN, "UTF-8");
+			//Chunk chunk = new Chunk(fileName, font);		 
+			//document.add(chunk);
+			
+			PdfPTable table = new PdfPTable(9);
+			addTableHeader(table, font);
+			List<Task> list = null;
+			list = taskDAO.getTasksForReport(taskReportForm);
+			
+			//tinh tong thoi gian da lam va estimate
+			float timeEstimateTotal = 0;
+			float timeSpentTotal = 0;
+			for(int i=0;i<list.size();i++) {
+				Task taskDTO = new Task();
+				taskDTO = list.get(i);
+				if(taskDTO.getTimeSpent() != null && taskDTO.getTimeSpent().length() > 0) {
+					if(taskDTO.getTimeSpentType().equalsIgnoreCase("w"))
+						timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent())*Float.valueOf(properties.getProperty("w"));
+					else if(taskDTO.getTimeSpentType().equalsIgnoreCase("d"))
+						timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent())*Float.valueOf(properties.getProperty("d"));
+					else if(taskDTO.getTimeSpentType().equalsIgnoreCase("m"))
+						timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent())/60;
+					else
+						timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent());
+				}
+				if(taskDTO.getEstimate() != null && taskDTO.getEstimate().length() > 0) {
+					if(taskDTO.getEstimateTimeType().equalsIgnoreCase("w"))
+						timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate())*Float.valueOf(properties.getProperty("w"));
+					else if(taskDTO.getEstimateTimeType().equalsIgnoreCase("d"))
+						timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate())*Float.valueOf(properties.getProperty("d"));
+					else if(taskDTO.getEstimateTimeType().equalsIgnoreCase("m"))
+						timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate())/60;
+					else
+						timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate());					 
+				}
+			}
+			BigDecimal s = new BigDecimal(timeSpentTotal);
+			BigDecimal spentTT = s.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+
+			BigDecimal e = new BigDecimal(timeEstimateTotal);
+			BigDecimal estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+			
+			float percent = (timeSpentTotal/timeEstimateTotal)*100;
+			BigDecimal p = new BigDecimal(percent);
+			BigDecimal percentCurrent = p.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+			
+			System.err.println("time estimate:= " + estimateTT + "/time spent: " + spentTT);
+			
+			addRows(table, list);
+			//addCustomRows(table);
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = new Date();
+			String currentDate = dateFormat.format(date);
+			document.add(new Paragraph("                     " + fileName.substring(0, fileName.length() - 4), fontB));		
+			document.add(new Paragraph("                     ", font));
+			document.add(table);		
+			document.add(new Paragraph("                       Tổng thời gian thực tế đã làm / Tổng thời gian ước lượng: " + spentTT + " giờ / " + estimateTT + " giờ, tương đương " +  percentCurrent + "%", font));
+			document.add(new Paragraph("                       Ngày tạo báo cáo: " + currentDate, font));
+			document.add(new Paragraph("                       Người báo cáo: " + taskReportForm.getSender(), font));
+			document.add(new Paragraph("                       Ý kiến/ Đề xuất:" + taskReportForm.getComment(), font));
+			
+			document.close();
+			model.addAttribute("reportForm", taskReportForm); 
+			model.addAttribute("path", path);
+			model.addAttribute("formTitle", "Export báo cáo công việc");
+		}catch(Exception e) {			
+			model.addAttribute("isOpen", "Yes");
+			e.printStackTrace();
 		}
-		
-		String fileName = "";
-		if(eId > 0 && !dept.equalsIgnoreCase("all"))
-			fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
-			+ " của " + eName + " phòng " + dept + ".pdf";
-		else if (eId < 1 && !dept.equalsIgnoreCase("all"))
-			fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
-			+ " của phòng " + dept + ".pdf";
-		else if (eId > 0 && dept.equalsIgnoreCase("all"))
-			fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
-			+ " của " + eName + ".pdf";
-		else
-			fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate + " của tất cả các phòng ban.pdf";
-		
-		PdfWriter.getInstance(document, new FileOutputStream(dir + "/" + fileName));
-		BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-	    Font font = new Font(bf,14); 
-		document.open();
-		//Font font = FontFactory.getFont(FontFactory.TIMES_ROMAN, "UTF-8");
-		//Chunk chunk = new Chunk(fileName, font);		 
-		//document.add(chunk);
-		
-		PdfPTable table = new PdfPTable(9);
-		addTableHeader(table, font);
-		List<Task> list = null;
-        ReportForm taskReportForm = new ReportForm();
-        taskReportForm.setFromDate(fDate);
-        taskReportForm.setToDate(tDate);
-        taskReportForm.setDepartment(dept);
-        taskReportForm.setEmployeeId(eId);
-        taskReportForm.setEmployeeName(eName);
-		list = taskDAO.getTasksForReport(taskReportForm);
-		
-		addRows(table, list);
-		//addCustomRows(table);
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
-		String currentDate = dateFormat.format(date);
-		document.add(new Paragraph("                     " + fileName.substring(0, fileName.length() - 4), font));		
-		document.add(new Paragraph("                     ", font));
-		document.add(table);		
-		document.add(new Paragraph("               Ngày tạo báo cáo " + currentDate, font));
-		
-		document.close();
-		model.addAttribute("reportForm", taskReportForm);
-		model.addAttribute("path", path);
-		model.addAttribute("formTitle", "Export báo cáo công việc");
 		return "taskExport";
 	}
 

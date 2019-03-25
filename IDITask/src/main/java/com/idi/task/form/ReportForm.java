@@ -14,6 +14,8 @@ public class ReportForm implements Serializable{
 	private int employeeId;
 	private String employeeName;
 	private String department;
+	private String sender;
+	private String comment;
 	
 	public String getFromDate() {
 		return fromDate;
@@ -45,5 +47,16 @@ public class ReportForm implements Serializable{
 	public void setDepartment(String department) {
 		this.department = department;
 	}
-	
+	public String getSender() {
+		return sender;
+	}
+	public void setSender(String sender) {
+		this.sender = sender;
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
+	}	
 }
