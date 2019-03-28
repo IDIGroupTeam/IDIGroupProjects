@@ -98,6 +98,7 @@ public class TaskController {
 	PropertiesManager properties = new PropertiesManager("task.properties");
 	
 	public static File fontFile = new File("/home/idi/properties/vuTimes.ttf");
+	//public static File fontBFile = new File("/home/idi/properties/vni.common.VTIMESB.ttf");
 	
 	@RequestMapping(value = { "/" })
 	public String listTasks(Model model, @ModelAttribute("taskForm") TaskForm form) throws Exception {
@@ -1050,7 +1051,9 @@ public class TaskController {
 			
 			PdfWriter.getInstance(document, new FileOutputStream(dir + "/" + fileName));
 			BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+			//BaseFont bfB = BaseFont.createFont(fontBFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 		    Font fontB = new Font(bf,18);
+		   // Font fontB14 = new Font(bfB,14);
 		    Font font = new Font(bf,14);
 			document.open();
 			//Font font = FontFactory.getFont(FontFactory.TIMES_ROMAN, "UTF-8");
@@ -1099,7 +1102,7 @@ public class TaskController {
 			BigDecimal p = new BigDecimal(percent);
 			BigDecimal percentCurrent = p.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 			
-			System.err.println("time estimate:= " + estimateTT + "/time spent: " + spentTT);
+			//System.err.println("time estimate:= " + estimateTT + "/time spent: " + spentTT);
 			
 			addRows(table, list);
 			//addCustomRows(table);
@@ -1109,10 +1112,16 @@ public class TaskController {
 			document.add(new Paragraph("                     " + fileName.substring(0, fileName.length() - 4), fontB));		
 			document.add(new Paragraph("                     ", font));
 			document.add(table);		
+			document.add(new Paragraph("                     ", font));
 			document.add(new Paragraph("                       Tổng thời gian thực tế đã làm / Tổng thời gian ước lượng: " + spentTT + " giờ / " + estimateTT + " giờ, tương đương " +  percentCurrent + "%", font));
-			document.add(new Paragraph("                       Ngày tạo báo cáo: " + currentDate, font));
-			document.add(new Paragraph("                       Người báo cáo: " + taskReportForm.getSender(), font));
-			document.add(new Paragraph("                       Ý kiến/ Đề xuất:" + taskReportForm.getComment(), font));
+			document.add(new Paragraph("                       Ý kiến/ Đề xuất: " + taskReportForm.getComment(), font));
+			document.add(new Paragraph("                       ", font));
+			document.add(new Paragraph("                       ", font));
+			document.add(new Paragraph("                       ", font));
+			document.add(new Paragraph("                                                                                                                                  Ngày tạo báo cáo: " + currentDate, font));
+			document.add(new Paragraph("                                                                                                                                  Người báo cáo ", font));
+			document.add(new Paragraph("                       ", font));
+			document.add(new Paragraph("                                                                                                                                  " + taskReportForm.getSender(), font));
 			
 			document.close();
 			model.addAttribute("reportForm", taskReportForm); 
