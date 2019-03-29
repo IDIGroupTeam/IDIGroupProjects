@@ -43,7 +43,7 @@ tr:nth-child(even) {
 		Thống kê khối lượng công việc từ ngày ${reportForm.fromDate} đến ngày
 		${reportForm.toDate}
 		<c:if test="${reportForm.employeeId > 0}">
-			của ${tasks[0].ownerName}
+			của ${reportForm.employeeName}
        	</c:if>
 		<c:if test="${reportForm.department != 'all'}"> phòng ${reportForm.department} làm</c:if>
 	</h3>

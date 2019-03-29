@@ -879,6 +879,8 @@ public class TaskController {
 	public String generateTaskReportSummary(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) {	
 		List<TaskSummay> listTaskSummary = new ArrayList<TaskSummay>();
 		try {
+			String eName = allEmployeesMap().get(taskReportForm.getEmployeeId());
+			taskReportForm.setEmployeeName(eName);
 			String fDate = taskReportForm.getFromDate();
 			String tDate = taskReportForm.getToDate();			
 			if(taskReportForm.getEmployeeId() > 0) {
@@ -1035,7 +1037,8 @@ public class TaskController {
 			String dept = taskReportForm.getDepartment();
 			String fDate = taskReportForm.getFromDate();
 			String tDate = taskReportForm.getToDate();
-			String eName = taskReportForm.getEmployeeName();
+			String eName = allEmployeesMap().get(taskReportForm.getEmployeeId());
+			taskReportForm.setEmployeeName(eName);
 			String fileName = "";
 			if(eId > 0 && !dept.equalsIgnoreCase("all"))
 				fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
