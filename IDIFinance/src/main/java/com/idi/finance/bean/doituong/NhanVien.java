@@ -1,4 +1,4 @@
-package com.idi.finance.bean;
+package com.idi.finance.bean.doituong;
 
 public class NhanVien {
 	private int employeedId;

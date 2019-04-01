@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.idi.finance.bean.bctc.DuLieuKeToan;
-import com.idi.finance.bean.chungtu.TaiKhoan;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
+import com.idi.finance.bean.taikhoan.TaiKhoan;
 
 public interface SoKeToanDAO {
 	public List<NghiepVuKeToan> danhSachNghiepVuKeToanTheoLoaiTaiKhoan(String maTk);

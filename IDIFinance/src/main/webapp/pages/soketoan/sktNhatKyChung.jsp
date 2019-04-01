@@ -1,5 +1,5 @@
 <%@page import="com.idi.finance.bean.chungtu.ChungTu"%>
-<%@page import="com.idi.finance.bean.chungtu.DoiTuong"%>
+<%@page import="com.idi.finance.bean.doituong.DoiTuong"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 

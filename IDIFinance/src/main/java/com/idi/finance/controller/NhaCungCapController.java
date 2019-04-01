@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.idi.finance.bean.doitac.NhaCungCap;
+import com.idi.finance.bean.doituong.NhaCungCap;
 import com.idi.finance.dao.NhaCungCapDAO;
 import com.idi.finance.validator.NhaCungCapValidator;
 

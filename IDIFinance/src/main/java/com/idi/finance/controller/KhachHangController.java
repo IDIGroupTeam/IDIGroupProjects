@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.idi.finance.bean.doitac.KhachHang;
+import com.idi.finance.bean.doituong.KhachHang;
 import com.idi.finance.dao.KhachHangDAO;
 import com.idi.finance.validator.KhachHangValidator;
 

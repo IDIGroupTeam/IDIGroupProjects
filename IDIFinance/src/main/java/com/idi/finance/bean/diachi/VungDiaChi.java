@@ -1,4 +1,4 @@
-package com.idi.finance.bean.doitac;
+package com.idi.finance.bean.diachi;
 
 import java.util.ArrayList;
 import java.util.Iterator;

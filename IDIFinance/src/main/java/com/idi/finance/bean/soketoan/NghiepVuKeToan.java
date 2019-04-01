@@ -2,8 +2,8 @@ package com.idi.finance.bean.soketoan;
 
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;
-import com.idi.finance.bean.chungtu.TaiKhoan;
 import com.idi.finance.bean.hanghoa.HangHoa;
+import com.idi.finance.bean.taikhoan.TaiKhoan;
 
 public class NghiepVuKeToan implements Comparable<NghiepVuKeToan> {
 	private ChungTu chungTu;

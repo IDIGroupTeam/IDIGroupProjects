@@ -1,17 +1,23 @@
-package com.idi.finance.bean.chungtu;
+package com.idi.finance.bean.taikhoan;
 
+import com.idi.finance.bean.Tien;
 import com.idi.finance.bean.bctc.BalanceAssetItem;
-import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
+import com.idi.finance.bean.chungtu.ChungTu;
+import com.idi.finance.bean.doituong.DoiTuong;
 
 public class TaiKhoan {
 	private ChungTu chungTu;
 	private LoaiTaiKhoan loaiTaiKhoan;
 	private Tien soTien = new Tien();
+	private Tien no = new Tien();
+	private Tien co = new Tien();
+	private boolean canBang = true;
 	private int soDu = -1;
 	private String lyDo;
 	private BalanceAssetItem bai;
 	private int maNvkt;
 	private int nhomDk;
+	private DoiTuong doiTuong = new DoiTuong();
 
 	public ChungTu getChungTu() {
 		return chungTu;
@@ -35,6 +41,30 @@ public class TaiKhoan {
 
 	public void setSoTien(Tien soTien) {
 		this.soTien = soTien;
+	}
+
+	public Tien getNo() {
+		return no;
+	}
+
+	public void setNo(Tien no) {
+		this.no = no;
+	}
+
+	public Tien getCo() {
+		return co;
+	}
+
+	public void setCo(Tien co) {
+		this.co = co;
+	}
+
+	public boolean isCanBang() {
+		return canBang;
+	}
+
+	public void setCanBang(boolean canBang) {
+		this.canBang = canBang;
 	}
 
 	public int getSoDu() {
@@ -75,6 +105,14 @@ public class TaiKhoan {
 
 	public void setNhomDk(int nhomDk) {
 		this.nhomDk = nhomDk;
+	}
+
+	public DoiTuong getDoiTuong() {
+		return doiTuong;
+	}
+
+	public void setDoiTuong(DoiTuong doiTuong) {
+		this.doiTuong = doiTuong;
 	}
 
 	@Override

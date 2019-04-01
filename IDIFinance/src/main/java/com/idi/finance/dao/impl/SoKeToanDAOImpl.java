@@ -14,15 +14,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.idi.finance.bean.LoaiTien;
+import com.idi.finance.bean.Tien;
 import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.chungtu.ChungTu;
-import com.idi.finance.bean.chungtu.DoiTuong;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;
-import com.idi.finance.bean.chungtu.TaiKhoan;
-import com.idi.finance.bean.chungtu.Tien;
+import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
+import com.idi.finance.bean.taikhoan.TaiKhoan;
 import com.idi.finance.dao.SoKeToanDAO;
 
 public class SoKeToanDAOImpl implements SoKeToanDAO {

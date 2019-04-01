@@ -4,7 +4,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.idi.finance.bean.doitac.NganHangTaiKhoan;
+import com.idi.finance.bean.doituong.NganHangTaiKhoan;
 
 public class NganHangTaiKhoanValidator implements Validator {
 	@Override

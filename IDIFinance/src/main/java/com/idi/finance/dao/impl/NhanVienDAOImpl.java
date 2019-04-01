@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.idi.finance.bean.NhanVien;
-import com.idi.finance.bean.chungtu.DoiTuong;
+import com.idi.finance.bean.doituong.DoiTuong;
+import com.idi.finance.bean.doituong.NhanVien;
 import com.idi.finance.dao.NhanVienDAO;
 
 public class NhanVienDAOImpl implements NhanVienDAO {
@@ -36,6 +36,22 @@ public class NhanVienDAOImpl implements NhanVienDAO {
 	public List<DoiTuong> danhSachDoiTuong() {
 		String query = DANH_SACH_NHAN_VIEN;
 		logger.info("Danh sách nhân viên ...");
+		logger.info(query);
+
+		List<DoiTuong> doiTuongDs = jdbcTmpl.query(query, new DoiTuongMapper());
+		return doiTuongDs;
+	}
+
+	@Override
+	public List<DoiTuong> danhSachDoiTuong(String maHoacTen) {
+		if (maHoacTen == null || maHoacTen.trim().equals("")) {
+			return null;
+		}
+
+		String query = DANH_SACH_NHAN_VIEN_THEO_MA_HOAC_TEN;
+		query = query.replaceAll("\\?", maHoacTen.trim());
+
+		logger.info("Danh sách nhân viên theo MA_KH hoặc TEN_KH ...");
 		logger.info(query);
 
 		List<DoiTuong> doiTuongDs = jdbcTmpl.query(query, new DoiTuongMapper());

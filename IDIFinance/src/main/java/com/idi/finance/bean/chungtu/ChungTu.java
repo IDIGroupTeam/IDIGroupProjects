@@ -8,11 +8,14 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.idi.finance.bean.LoaiTien;
+import com.idi.finance.bean.Tien;
+import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
+import com.idi.finance.bean.taikhoan.TaiKhoan;
 
 public class ChungTu {
 	private static final Logger logger = Logger.getLogger(ChungTu.class);
@@ -52,11 +55,15 @@ public class ChungTu {
 	private Tien soTien = new Tien();
 	private String lyDo;
 	private int kemTheo;
-	private DoiTuong doiTuong;
+	private DoiTuong doiTuong = new DoiTuong();
 	private List<TaiKhoan> taiKhoanNoDs;
 	private List<TaiKhoan> taiKhoanCoDs;
+	private List<TaiKhoan> taiKhoanKtthDs;
+	private List<NhomDinhKhoan> nhomDkDs;
 	private List<NghiepVuKeToan> nvktDs;
 	private List<KetChuyenButToan> kcbtDs;
+
+	private String nghiepVu;
 
 	private LoaiTaiKhoan thanhToan;
 	private KhoHang khoBai;
@@ -211,6 +218,7 @@ public class ChungTu {
 				taiKhoanNoDs.add(taiKhoan);
 				soTien.setGiaTri(soTien.getGiaTri()
 						+ taiKhoan.getSoTien().getSoTien() * taiKhoan.getSoTien().getLoaiTien().getBanRa());
+				soTien.setSoTien(soTien.getGiaTri() / taiKhoan.getSoTien().getLoaiTien().getBanRa());
 			}
 		} else if (taiKhoan.getSoDu() == LoaiTaiKhoan.CO) {
 			if (taiKhoanCoDs == null)
@@ -231,6 +239,60 @@ public class ChungTu {
 		while (iter.hasNext()) {
 			TaiKhoan taiKhoan = iter.next();
 			themTaiKhoan(taiKhoan);
+		}
+	}
+
+	public void themTaiKhoanKtth(TaiKhoan taiKhoan) {
+		if (taiKhoan == null) {
+			return;
+		}
+
+		if (taiKhoanKtthDs == null)
+			taiKhoanKtthDs = new ArrayList<>();
+
+		if (!taiKhoanKtthDs.contains(taiKhoan)) {
+			taiKhoanKtthDs.add(taiKhoan);
+			if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
+				soTien.setGiaTri(soTien.getGiaTri() + taiKhoan.getNo().getSoTien() * loaiTien.getBanRa());
+				soTien.setSoTien(soTien.getSoTien() + taiKhoan.getNo().getSoTien());
+			}
+		}
+	}
+
+	public void themTaiKhoanKtth(List<TaiKhoan> taiKhoanDs) {
+		if (taiKhoanDs == null) {
+			return;
+		}
+
+		Iterator<TaiKhoan> iter = taiKhoanDs.iterator();
+		while (iter.hasNext()) {
+			TaiKhoan taiKhoan = iter.next();
+			themTaiKhoanKtth(taiKhoan);
+		}
+	}
+
+	public void themNhomDinhKhoan(NhomDinhKhoan nhomDinhKhoan) {
+		if (nhomDinhKhoan == null) {
+			return;
+		}
+
+		if (nhomDkDs == null)
+			nhomDkDs = new ArrayList<>();
+
+		if (!nhomDkDs.contains(nhomDinhKhoan)) {
+			nhomDkDs.add(nhomDinhKhoan);
+		}
+	}
+
+	public void themNhomDinhKhoan(List<NhomDinhKhoan> nhomDinhKhoanDs) {
+		if (nhomDinhKhoanDs == null) {
+			return;
+		}
+
+		Iterator<NhomDinhKhoan> iter = nhomDinhKhoanDs.iterator();
+		while (iter.hasNext()) {
+			NhomDinhKhoan nhomDinhKhoan = iter.next();
+			themNhomDinhKhoan(nhomDinhKhoan);
 		}
 	}
 
@@ -262,6 +324,22 @@ public class ChungTu {
 		this.taiKhoanCoDs = taiKhoanCoDs;
 	}
 
+	public List<TaiKhoan> getTaiKhoanKtthDs() {
+		return taiKhoanKtthDs;
+	}
+
+	public void setTaiKhoanKtthDs(List<TaiKhoan> taiKhoanKtthDs) {
+		this.taiKhoanKtthDs = taiKhoanKtthDs;
+	}
+
+	public List<NhomDinhKhoan> getNhomDkDs() {
+		return nhomDkDs;
+	}
+
+	public void setNhomDkDs(List<NhomDinhKhoan> nhomDkDs) {
+		this.nhomDkDs = nhomDkDs;
+	}
+
 	public List<NghiepVuKeToan> getNvktDs() {
 		return nvktDs;
 	}
@@ -275,6 +353,14 @@ public class ChungTu {
 			kcbtDs = new ArrayList<>();
 		}
 		return kcbtDs;
+	}
+
+	public String getNghiepVu() {
+		return nghiepVu;
+	}
+
+	public void setNghiepVu(String nghiepVu) {
+		this.nghiepVu = nghiepVu;
 	}
 
 	public void setKcbtDs(List<KetChuyenButToan> kcbtDs) {

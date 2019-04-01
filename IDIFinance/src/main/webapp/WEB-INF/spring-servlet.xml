@@ -92,7 +92,7 @@
 		<property name="driverClassName"
 			value="com.mysql.cj.jdbc.Driver" />
 		<property name="url"
-			value="jdbc:mysql://localhost:3306/IDIGROUP?useUnicode=true&amp;characterEncoding=UTF-8" />
+			value="jdbc:mysql://localhost:3306/IDIGROUP_133?useUnicode=true&amp;characterEncoding=UTF-8" />
 		<property name="username" value="root" />
 		<property name="password" value="" />
 		<!-- <property name="password" value="idi123456" /> -->

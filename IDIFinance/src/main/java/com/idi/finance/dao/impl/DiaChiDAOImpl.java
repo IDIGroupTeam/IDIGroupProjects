@@ -13,8 +13,8 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.idi.finance.bean.doitac.CapDiaChi;
-import com.idi.finance.bean.doitac.VungDiaChi;
+import com.idi.finance.bean.diachi.CapDiaChi;
+import com.idi.finance.bean.diachi.VungDiaChi;
 import com.idi.finance.dao.DiaChiDAO;
 
 public class DiaChiDAOImpl implements DiaChiDAO {

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.idi.finance.bean.doitac.CapDiaChi;
-import com.idi.finance.bean.doitac.VungDiaChi;
+import com.idi.finance.bean.diachi.CapDiaChi;
+import com.idi.finance.bean.diachi.VungDiaChi;
 import com.idi.finance.dao.DiaChiDAO;
 import com.idi.finance.form.DiaChiForm;
 import com.idi.finance.utils.ExcelProcessor;

@@ -1,4 +1,4 @@
-package com.idi.finance.bean.doitac;
+package com.idi.finance.bean.diachi;
 
 public class DiaChi {
 	private String diaChi;

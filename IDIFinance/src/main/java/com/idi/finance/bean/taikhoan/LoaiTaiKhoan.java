@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.idi.finance.bean.doitac.NganHangTaiKhoan;
+import com.idi.finance.bean.doituong.NganHangTaiKhoan;
 
 public class LoaiTaiKhoan {
 	private static final Logger logger = Logger.getLogger(LoaiTaiKhoan.class);

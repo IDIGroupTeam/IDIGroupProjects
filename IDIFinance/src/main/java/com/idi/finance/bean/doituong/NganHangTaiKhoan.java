@@ -1,4 +1,4 @@
-package com.idi.finance.bean.doitac;
+package com.idi.finance.bean.doituong;
 
 public class NganHangTaiKhoan {
 	private int maTk;

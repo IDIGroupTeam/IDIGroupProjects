@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.idi.finance.bean.doitac.NganHang;
-import com.idi.finance.bean.doitac.NganHangTaiKhoan;
+import com.idi.finance.bean.doituong.NganHang;
+import com.idi.finance.bean.doituong.NganHangTaiKhoan;
 import com.idi.finance.dao.NganHangDAO;
 
 public class NganHangDAOImpl implements NganHangDAO {

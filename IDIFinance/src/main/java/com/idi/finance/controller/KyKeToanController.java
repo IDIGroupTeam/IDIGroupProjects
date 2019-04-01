@@ -37,10 +37,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.idi.finance.bean.DungChung;
-import com.idi.finance.bean.NhanVien;
-import com.idi.finance.bean.chungtu.DoiTuong;
-import com.idi.finance.bean.doitac.KhachHang;
-import com.idi.finance.bean.doitac.NhaCungCap;
+import com.idi.finance.bean.doituong.DoiTuong;
+import com.idi.finance.bean.doituong.KhachHang;
+import com.idi.finance.bean.doituong.NhaCungCap;
+import com.idi.finance.bean.doituong.NhanVien;
 import com.idi.finance.bean.hanghoa.DonVi;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.hanghoa.KhoHang;
@@ -261,10 +261,6 @@ public class KyKeToanController {
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			KyKeToan kyKeToan = new KyKeToan();
-
-			Date homNay = new Date();
-			kyKeToan.setBatDau(homNay);
-			kyKeToan.setKetThuc(homNay);
 
 			return chuanBiFormKyKeToan(model, kyKeToan);
 		} catch (Exception e) {

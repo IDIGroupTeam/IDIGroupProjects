@@ -2,7 +2,7 @@ package com.idi.finance.bean.kyketoan;
 
 import org.apache.log4j.Logger;
 
-import com.idi.finance.bean.chungtu.DoiTuong;
+import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;

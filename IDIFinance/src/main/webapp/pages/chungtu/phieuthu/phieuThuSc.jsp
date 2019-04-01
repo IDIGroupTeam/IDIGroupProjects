@@ -13,7 +13,7 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		$("#mainFinanceForm").attr("action", "${url}/chungtu/baoco/luu");
+		$("#mainFinanceForm").attr("action", "${url}/chungtu/phieuthu/luu");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		$("#submitBt").click(function() {
@@ -146,6 +146,7 @@
 				selectedRow = newRow;
 				console.log("selectedRow", "current", curRow, "new", newRow);
 			});
+
 			$("#goiYBt").click(function() {
 				var loaiCt = $("#loaiCt").val();
 				var param = "loaiCt=" + loaiCt;
@@ -323,16 +324,15 @@
 	});
 </script>
 
-<h4>BÁO CÓ</h4>
+<h4>PHIẾU THU</h4>
 <hr />
 <form:hidden path="loaiCt" />
-<form:hidden path="maCt" />
 <form:hidden path="nghiepVu" />
 <fmt:formatDate value="${homNay}" pattern="dd/M/yyyy" type="Date"
 	dateStyle="SHORT" var="homNay" />
 <div class="input-group input-group-sm col-xs-12">
 	<div class="row form-group">
-		<label class="control-label col-sm-2" for="soCt">Số báo có
+		<label class="control-label col-sm-2" for="soCt">Số phiếu thu
 			dự kiến (*):</label>
 		<%-- <div class="col-sm-1">${mainFinanceForm.loaiCt}</div> --%>
 		<div class="col-sm-2">
@@ -345,7 +345,7 @@
 		</div>
 
 		<label class="control-label col-sm-2" for=ngayLap>Ngày lập
-			báo có (*):</label>
+			phiếu thu (*):</label>
 		<div class="col-sm-4">
 			<div class="input-group date datetime smallform">
 				<form:input path="ngayLap" class="form-control"
@@ -466,7 +466,7 @@
 		<div class="col-sm-4">
 			<form:select cssClass="form-control"
 				path="taiKhoanNoDs[0].loaiTaiKhoan.maTk" multiple="false">
-				<form:options items="${loaiTaiKhoanTgnhDs}" itemValue="maTk"
+				<form:options items="${loaiTaiKhoanTmDs}" itemValue="maTk"
 					itemLabel="maTenTk" />
 			</form:select>
 			<form:hidden path="taiKhoanNoDs[0].soDu" />
@@ -541,7 +541,7 @@
 
 	<div class="row form-group">
 		<div class="col-sm-12">
-			<a href="${url}/chungtu/baoco/danhsach"
+			<a href="${url}/chungtu/phieuthu/xem/${mainFinanceForm.maCt}"
 				class="btn btn-info btn-sm">Hủy</a>
 			<button id="submitBt" type="button" class="btn btn-info btn-sm">Lưu</button>
 		</div>

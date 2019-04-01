@@ -1,6 +1,6 @@
 <%@page import="com.idi.finance.bean.kyketoan.KyKeToan"%>
 <%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
-<%@page import="com.idi.finance.bean.chungtu.DoiTuong"%>
+<%@page import="com.idi.finance.bean.doituong.DoiTuong"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
@@ -47,21 +47,16 @@
 
 <div>
 	<span class="pull-left heading4">BÁO NỢ</span>
-	<%-- <div class="btn-group btn-group-sm pull-right">
-		<a href="${url}/chungtu/baono/pdf/${chungTu.maCt}" class="btn btn-info btn-sm">
-			<span class="glyphicon glyphicon-download"></span> Xuất
-		</a>
-	</div> --%>
 </div>
 <br />
 <hr />
 
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="soCt">Số báo cáo:</label>
+	<label class="control-label col-sm-2" for="soCt">Số báo nợ:</label>
 	<div class="col-sm-4">${chungTu.loaiCt}${chungTu.soCt}</div>
 
-	<label class="control-label col-sm-2" for=ngayLap>Ngày lập
-		phiếu chi:</label>
+	<label class="control-label col-sm-2" for=ngayLap>Ngày lập báo
+		nợ:</label>
 	<div class="col-sm-4">
 		<span id="ngayLap"><fmt:formatDate value="${chungTu.ngayLap}"
 				pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" /></span>
@@ -98,7 +93,7 @@
 
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="doiTuong.tenDt">Đối
-		tượng nhận:</label>
+		tượng:</label>
 	<div class="col-sm-4">${chungTu.doiTuong.tenDt}</div>
 
 	<label class="control-label col-sm-2" for="doiTuong.maThue">Mã
@@ -112,7 +107,7 @@
 	<div class="col-sm-4">${chungTu.doiTuong.diaChi}</div>
 
 	<label class="control-label col-sm-2" for="doiTuong.nguoiNop">Người
-		nhận: </label>
+		nộp: </label>
 	<div class="col-sm-4">${chungTu.doiTuong.nguoiNop}</div>
 </div>
 
@@ -139,13 +134,11 @@
 </div>
 
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="soTien.giaTri">Thành
-		tiền:</label>
+	<label class="control-label col-sm-2"
+		for=taiKhoanNoDs[0].loaiTaiKhoan.maTk>Tài khoản có</label>
 	<div class="col-sm-4">
-		<fmt:formatNumber value="${chungTu.soTien.giaTri}"
-			maxFractionDigits="2"></fmt:formatNumber>
-		VND
-	</div>
+		${chungTu.taiKhoanCoDs[0].loaiTaiKhoan.maTk} -
+		${chungTu.taiKhoanCoDs[0].loaiTaiKhoan.tenTk}</div>
 
 	<label class="control-label col-sm-2" for=ngayHt>Ngày thanh
 		toán:</label>
@@ -161,45 +154,32 @@
 		class="table table-bordered table-hover text-center dinhkhoan">
 		<thead>
 			<tr>
-				<th class="text-center" colspan="3">Nợ</th>
-				<th class="text-center" colspan="2">Có</th>
+				<th class="text-center">Tài khoản nợ</th>
+				<th class="text-center">Giá trị</th>
+				<th class="text-center">Lý do</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<th class="text-center"><b>Tài khoản</b></th>
-				<th class="text-center"><b>Giá trị</b></th>
-				<th class="text-center"><b>Lý do</b></th>
-				<th class="text-center"><b>Tài khoản</b></th>
-				<th class="text-center"><b>Giá trị</b></th>
-			</tr>
-			<c:forEach begin="0" end="${chungTu.soTkLonNhat-1}"
+			<c:forEach items="${chungTu.taiKhoanNoDs}" var="taiKhoanNo"
 				varStatus="status">
 				<tr id="${status.index}">
-					<!-- Phần ghi Nợ -->
-					<td>${chungTu.taiKhoanNoDs[status.index].loaiTaiKhoan.maTk}-${chungTu.taiKhoanNoDs[status.index].loaiTaiKhoan.tenTk}</td>
-					<td><fmt:formatNumber
-							value="${chungTu.taiKhoanNoDs[status.index].soTien.soTien}"
-							maxFractionDigits="2"></fmt:formatNumber>
-						${chungTu.taiKhoanNoDs[status.index].soTien.loaiTien.maLt}</td>
-					<td>${chungTu.taiKhoanNoDs[status.index].lyDo}</td>
-
-					<!-- Phần ghi Có -->
-					<c:choose>
-						<c:when test="${status.index < chungTu.taiKhoanCoDs.size()}">
-							<td>${chungTu.taiKhoanCoDs[status.index].loaiTaiKhoan.maTk}-${chungTu.taiKhoanCoDs[status.index].loaiTaiKhoan.tenTk}</td>
-							<td><fmt:formatNumber
-									value="${chungTu.taiKhoanCoDs[status.index].soTien.soTien}"
-									maxFractionDigits="2"></fmt:formatNumber>
-								${chungTu.taiKhoanCoDs[status.index].soTien.loaiTien.maLt}</td>
-						</c:when>
-						<c:otherwise>
-							<td></td>
-							<td></td>
-						</c:otherwise>
-					</c:choose>
+					<td class="text-left">${taiKhoanNo.loaiTaiKhoan.maTk}-${taiKhoanNo.loaiTaiKhoan.tenTk}</td>
+					<td class="text-right"><fmt:formatNumber
+							value="${taiKhoanNo.soTien.soTien}" maxFractionDigits="2"></fmt:formatNumber>
+						${taiKhoanNo.soTien.loaiTien.maLt}</td>
+					<td class="text-left">${taiKhoanNo.lyDo}</td>
 				</tr>
 			</c:forEach>
+			<tr>
+				<td class="text-left"><b>Thành tiền:</b></td>
+				<td class="text-right"><span id="soTien.giaTriTxt"> <fmt:formatNumber
+							value="${chungTu.soTien.soTien}"></fmt:formatNumber>
+						&nbsp;${chungTu.loaiTien.maLt}
+				</span></td>
+				<td class="text-right"><span id="soTien.giaTriQdTxt"> <fmt:formatNumber
+							value="${chungTu.soTien.giaTri}"></fmt:formatNumber> &nbsp;VND
+				</span></td>
+			</tr>
 		</tbody>
 	</table>
 </div>
@@ -212,17 +192,17 @@
 		<c:choose>
 			<c:when
 				test="${kyKeToan!=null && kyKeToan.trangThai!= KyKeToan.DONG}">
+				<a href="${url}/chungtu/baono/sua/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Sửa</a>
 				<a href="${url}/chungtu/baono/pdf/${chungTu.maCt}" target="_blank"
 					class="btn btn-info btn-sm">In</a>
 				<a id="xoaNut" href="${url}/chungtu/baono/xoa/${chungTu.maCt}"
 					class="btn btn-info btn-sm">Xóa</a>
-				<a href="${url}/chungtu/baono/sua/${chungTu.maCt}"
-					class="btn btn-info btn-sm">Sửa</a>
+				<a href="${url}/chungtu/baono/saochep/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Sao chép</a>
 				<a href="${url}/chungtu/baono/taomoi" class="btn btn-info btn-sm">Tạo
 					mới</a>
 			</c:when>
 		</c:choose>
 	</div>
 </div>
-
-

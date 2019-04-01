@@ -3,13 +3,14 @@ package com.idi.finance.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.idi.finance.bean.chungtu.DoiTuong;
-import com.idi.finance.bean.doitac.KhachHang;
+import com.idi.finance.bean.doituong.DoiTuong;
+import com.idi.finance.bean.doituong.KhachHang;
 import com.idi.finance.dao.KhachHangDAO;
 
 public class KhachHangDAOImpl implements KhachHangDAO {
@@ -33,6 +34,22 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 		String query = "SELECT * FROM KHACH_HANG WHERE MA_KH!=1 ORDER BY TEN_KH";
 
 		logger.info("Danh sách khách hàng ...");
+		logger.info(query);
+
+		List<DoiTuong> doiTuongDs = jdbcTmpl.query(query, new DoiTuongMapper());
+		return doiTuongDs;
+	}
+	
+	@Override
+	public List<DoiTuong> danhSachDoiTuong(String maHoacTen) {
+		if (maHoacTen == null || maHoacTen.trim().equals("")) {
+			return null;
+		}
+
+		String query = DANH_SACH_KHACH_HANG_THEO_MA_HOAC_TEN;
+		query = query.replaceAll("\\?", maHoacTen.trim());
+
+		logger.info("Danh sách khách hàng theo MA_KH hoặc TEN_KH ...");
 		logger.info(query);
 
 		List<DoiTuong> doiTuongDs = jdbcTmpl.query(query, new DoiTuongMapper());

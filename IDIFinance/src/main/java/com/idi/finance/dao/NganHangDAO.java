@@ -2,8 +2,8 @@ package com.idi.finance.dao;
 
 import java.util.List;
 
-import com.idi.finance.bean.doitac.NganHang;
-import com.idi.finance.bean.doitac.NganHangTaiKhoan;
+import com.idi.finance.bean.doituong.NganHang;
+import com.idi.finance.bean.doituong.NganHangTaiKhoan;
 
 public interface NganHangDAO {
 	public List<NganHang> danhSachNganHang();

@@ -2,7 +2,7 @@ package com.idi.finance.bean.hanghoa;
 
 import java.util.Date;
 
-import com.idi.finance.bean.chungtu.Tien;
+import com.idi.finance.bean.Tien;
 
 public class DonGia {
 	private int maGia;

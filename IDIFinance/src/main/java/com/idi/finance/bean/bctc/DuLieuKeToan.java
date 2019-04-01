@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.idi.finance.bean.chungtu.DoiTuong;
+import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 

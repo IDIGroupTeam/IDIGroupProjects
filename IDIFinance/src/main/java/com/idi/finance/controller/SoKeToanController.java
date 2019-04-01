@@ -27,7 +27,7 @@ import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.bctc.KyKeToanCon;
 import com.idi.finance.bean.chungtu.ChungTu;
-import com.idi.finance.bean.chungtu.DoiTuong;
+import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.kyketoan.KyKeToan;

@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.idi.finance.bean.chungtu.Tien;
+import com.idi.finance.bean.Tien;
 import com.idi.finance.bean.hanghoa.DonGia;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.dao.KhoHangDAO;

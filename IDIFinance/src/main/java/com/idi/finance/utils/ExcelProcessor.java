@@ -23,8 +23,8 @@ import com.idi.finance.bean.bctc.BalanceAssetData;
 import com.idi.finance.bean.bctc.BalanceAssetItem;
 import com.idi.finance.bean.bieudo.KpiChart;
 import com.idi.finance.bean.bieudo.KpiGroup;
-import com.idi.finance.bean.doitac.CapDiaChi;
-import com.idi.finance.bean.doitac.VungDiaChi;
+import com.idi.finance.bean.diachi.CapDiaChi;
+import com.idi.finance.bean.diachi.VungDiaChi;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.DiaChiDAO;
 

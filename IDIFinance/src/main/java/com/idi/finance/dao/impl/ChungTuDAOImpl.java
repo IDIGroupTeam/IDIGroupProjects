@@ -20,16 +20,16 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 import com.idi.finance.bean.LoaiTien;
+import com.idi.finance.bean.Tien;
 import com.idi.finance.bean.chungtu.ChungTu;
-import com.idi.finance.bean.chungtu.DoiTuong;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;
-import com.idi.finance.bean.chungtu.TaiKhoan;
-import com.idi.finance.bean.chungtu.Tien;
+import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.hanghoa.DonVi;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.hanghoa.NhomHang;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
+import com.idi.finance.bean.taikhoan.TaiKhoan;
 import com.idi.finance.dao.ChungTuDAO;
 import com.idi.finance.utils.ExpressionEval;
 
@@ -39,11 +39,17 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 	@Value("${DANH_SACH_CHUNG_TU_THEO_LOAI}")
 	private String DANH_SACH_CHUNG_TU_THEO_LOAI;
 
+	@Value("${DANH_SACH_CHUNG_TU_THEO_LOAI_KTTH}")
+	private String DANH_SACH_CHUNG_TU_THEO_LOAI_KTTH;
+
 	@Value("${DANH_SACH_CHUNG_TU_KHO_THEO_LOAI}")
 	private String DANH_SACH_CHUNG_TU_KHO_THEO_LOAI;
 
 	@Value("${LAY_CHUNG_TU_THEO_MACT_LOAICT}")
 	private String LAY_CHUNG_TU_THEO_MACT_LOAICT;
+
+	@Value("${LAY_CHUNG_TU_THEO_MACT_LOAICT_KTTH}")
+	private String LAY_CHUNG_TU_THEO_MACT_LOAICT_KTTH;
 
 	@Value("${LAY_CHUNG_TU_KHO_THEO_MACT_LOAICT}")
 	private String LAY_CHUNG_TU_KHO_THEO_MACT_LOAICT;
@@ -54,11 +60,20 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 	@Value("${DEM_SO_CHUNG_TU}")
 	private String DEM_SO_CHUNG_TU;
 
+	@Value("${LAY_SO_CHUNG_TU_LON_NHAT}")
+	private String LAY_SO_CHUNG_TU_LON_NHAT;
+
+	@Value("${KIEM_TRA_SO_CHUNG_TU}")
+	private String KIEM_TRA_SO_CHUNG_TU;
+
 	@Value("${THEM_CHUNG_TU}")
 	private String THEM_CHUNG_TU;
 
 	@Value("${THEM_CHUNG_TU_TAI_KHOAN}")
 	private String THEM_CHUNG_TU_TAI_KHOAN;
+
+	@Value("${THEM_CHUNG_TU_TAI_KHOAN_KTTH}")
+	private String THEM_CHUNG_TU_TAI_KHOAN_KTTH;
 
 	@Value("${CAP_NHAT_CHUNG_TU}")
 	private String CAP_NHAT_CHUNG_TU;
@@ -77,6 +92,9 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 	@Value("${THEM_TAI_KHOAN}")
 	private String THEM_TAI_KHOAN;
+
+	@Value("${THEM_TAI_KHOAN_KTTH}")
+	private String THEM_TAI_KHOAN_KTTH;
 
 	@Value("${THEM_CHUNG_TU_TAI_KHOAN_KHO}")
 	private String THEM_CHUNG_TU_TAI_KHOAN_KHO;
@@ -248,6 +266,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
 				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
 				loaiTaiKhoan.setTenTk(rs.getString("TEN_TK"));
+				loaiTaiKhoan.setMaTenTk(loaiTaiKhoan.getMaTk() + " - " + loaiTaiKhoan.getTenTk());
 				taiKhoan.setLoaiTaiKhoan(loaiTaiKhoan);
 
 				Tien tien = new Tien();
@@ -257,6 +276,127 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				taiKhoan.setSoTien(tien);
 
 				chungTu.themTaiKhoan(taiKhoan);
+				taiKhoan.setChungTu(chungTu);
+
+				return chungTu;
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	}
+
+	@Override
+	public List<ChungTu> danhSachChungTuKtth(List<String> loaiCts, Date batDau, Date ketThuc) {
+		if (loaiCts == null || batDau == null || ketThuc == null) {
+			return null;
+		}
+
+		String query = DANH_SACH_CHUNG_TU_THEO_LOAI_KTTH;
+
+		if (loaiCts.contains(ChungTu.TAT_CA)) {
+			query = query.replaceAll("\\$DIEU_KIEN_LOAI_CT\\$", "");
+			logger.info("Danh sách tất cả chứng từ ...");
+		} else {
+			logger.info("Danh sách tất cả chứng từ loại " + loaiCts + " ...");
+
+			String dieuKien = "";
+			Iterator<String> iter = loaiCts.iterator();
+			while (iter.hasNext()) {
+				String loaiCt = iter.next();
+				dieuKien += "'" + loaiCt.trim() + "',";
+			}
+			if (!dieuKien.equals("")) {
+				dieuKien = dieuKien.substring(0, dieuKien.length() - 1);
+			}
+			dieuKien = " AND CT.LOAI_CT IN (" + dieuKien + ")";
+
+			query = query.replaceAll("\\$DIEU_KIEN_LOAI_CT\\$", dieuKien);
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		String batDauStr = sdf.format(batDau);
+		String ketThucStr = sdf.format(ketThuc);
+
+		logger.info("Danh sách chứng từ theo loại chứng từ: '" + loaiCts + "' từ " + batDauStr + " đến " + ketThucStr);
+		logger.info(query);
+
+		Object[] objs = { batDauStr, ketThucStr };
+		List<ChungTu> chungTuDs = jdbcTmpl.query(query, objs, new ChungTuKtthMapper());
+
+		// Gộp chứng từ trùng nhau nhưng có tài khoản ảnh hường khác nhau
+		List<ChungTu> ketQua = null;
+		if (chungTuDs != null) {
+			ketQua = new ArrayList<>();
+			Iterator<ChungTu> iter = chungTuDs.iterator();
+			while (iter.hasNext()) {
+				ChungTu chungTu = iter.next();
+
+				int pos = ketQua.indexOf(chungTu);
+				if (pos > -1) {
+					ChungTu chungTuTmpl = ketQua.get(pos);
+					chungTuTmpl.themTaiKhoanKtth(chungTu.getTaiKhoanKtthDs());
+				} else {
+					ketQua.add(chungTu);
+				}
+			}
+		}
+
+		return ketQua;
+	}
+
+	public class ChungTuKtthMapper implements RowMapper<ChungTu> {
+		public ChungTu mapRow(ResultSet rs, int rowNum) throws SQLException {
+			try {
+				ChungTu chungTu = new ChungTu();
+				chungTu.setMaCt(rs.getInt("MA_CT"));
+				chungTu.setSoCt(rs.getInt("SO_CT"));
+				chungTu.setLoaiCt(rs.getString("LOAI_CT"));
+				chungTu.setTinhChatCt(rs.getInt("TINH_CHAT"));
+				chungTu.setLyDo(rs.getString("LY_DO"));
+				chungTu.setKemTheo(rs.getInt("KEM_THEO"));
+				chungTu.setNgayLap(rs.getDate("NGAY_LAP"));
+				chungTu.setNgayHt(rs.getDate("NGAY_HT"));
+				chungTu.setNgayTt(rs.getDate("NGAY_TT"));
+
+				LoaiTien loaiTien = new LoaiTien();
+				loaiTien.setMaLt(rs.getString("LOAI_TIEN"));
+				loaiTien.setTenLt(rs.getString("TEN_NT"));
+				loaiTien.setBanRa(rs.getDouble("TY_GIA"));
+				chungTu.setLoaiTien(loaiTien);
+
+				TaiKhoan taiKhoan = new TaiKhoan();
+				taiKhoan.setMaNvkt(rs.getInt("MA_NVKT"));
+				taiKhoan.setSoDu(rs.getInt("SO_DU"));
+				taiKhoan.setLyDo(rs.getString("TK_LY_DO"));
+				taiKhoan.setNhomDk(rs.getInt("NHOM_DK"));
+
+				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
+				loaiTaiKhoan.setTenTk(rs.getString("TEN_TK"));
+				loaiTaiKhoan.setMaTenTk(loaiTaiKhoan.getMaTk() + " - " + loaiTaiKhoan.getTenTk());
+				taiKhoan.setLoaiTaiKhoan(loaiTaiKhoan);
+
+				DoiTuong doiTuong = new DoiTuong();
+				doiTuong.setMaDt(rs.getInt("MA_DT"));
+				doiTuong.setKhDt(rs.getString("KH_DT"));
+				doiTuong.setTenDt(rs.getString("TEN_DT"));
+				doiTuong.setLoaiDt(rs.getInt("LOAI_DT"));
+				doiTuong.setDiaChi(rs.getString("DIA_CHI"));
+				doiTuong.setMaThue(rs.getString("MA_THUE"));
+				taiKhoan.setDoiTuong(doiTuong);
+
+				Tien tien = new Tien();
+				tien.setLoaiTien(loaiTien);
+				tien.setGiaTri(rs.getDouble("SO_TIEN"));
+				tien.setSoTien(tien.getGiaTri() / tien.getLoaiTien().getBanRa());
+
+				if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
+					taiKhoan.setNo(tien);
+				} else {
+					taiKhoan.setCo(tien);
+				}
+
+				chungTu.themTaiKhoanKtth(taiKhoan);
 				taiKhoan.setChungTu(chungTu);
 
 				return chungTu;
@@ -413,6 +553,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
 				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
 				loaiTaiKhoan.setTenTk(rs.getString("TEN_TK"));
+				loaiTaiKhoan.setMaTenTk(loaiTaiKhoan.getMaTk() + " - " + loaiTaiKhoan.getTenTk());
 				taiKhoan.setLoaiTaiKhoan(loaiTaiKhoan);
 
 				Tien tkTien = new Tien();
@@ -482,6 +623,41 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (pos > -1) {
 					ChungTu chungTuTmpl = ketQua.get(pos);
 					chungTuTmpl.themTaiKhoan(chungTu.getTaiKhoanDs());
+				} else {
+					ketQua.add(chungTu);
+				}
+			}
+		}
+
+		if (ketQua != null && ketQua.size() > 0) {
+			return ketQua.get(0);
+		}
+
+		return null;
+	}
+
+	@Override
+	public ChungTu layChungTuKtth(int maCt, String loaiCt) {
+		String layChungTu = LAY_CHUNG_TU_THEO_MACT_LOAICT_KTTH;
+
+		logger.info("Lấy chứng từ theo MA_CT: '" + maCt + "', LOAI_CT: '" + loaiCt + "' ...");
+		logger.info(layChungTu);
+
+		Object[] objs = { maCt, loaiCt };
+		List<ChungTu> chungTuDs = jdbcTmpl.query(layChungTu, objs, new ChungTuKtthMapper());
+
+		// Gộp chứng từ trùng nhau nhưng có tài khoản ảnh hường khác nhau
+		List<ChungTu> ketQua = null;
+		if (chungTuDs != null) {
+			ketQua = new ArrayList<>();
+			Iterator<ChungTu> iter = chungTuDs.iterator();
+			while (iter.hasNext()) {
+				ChungTu chungTu = iter.next();
+
+				int pos = ketQua.indexOf(chungTu);
+				if (pos > -1) {
+					ChungTu chungTuTmpl = ketQua.get(pos);
+					chungTuTmpl.themTaiKhoanKtth(chungTu.getTaiKhoanKtthDs());
 				} else {
 					ketQua.add(chungTu);
 				}
@@ -709,6 +885,205 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 								// Sau đó thêm vào bảng CHUNG_TU_NVKT
 								logger.info("Thêm vào bảng chung_tu_nvkt " + taiKhoan);
 								jdbcTmpl.update(themChungTuTaiKhoan, chungTu.getMaCt(), nvktHolder.getKey().intValue());
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						} else {
+							// Cập nhật những nvkt mà người dùng vừa thay đổi
+							try {
+								// Chỉ cân cập nhật trong bảng NGHIEP_VU_KE_TOAN là đủ
+								// Trong bảng CHUNG_TU_NVKT không có thay đổi gì
+								jdbcTmpl.update(capNhatChungTuNvkt, taiKhoan.getLoaiTaiKhoan().getMaTk(),
+										taiKhoan.getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa(),
+										taiKhoan.getSoDu(), taiKhoan.getLyDo(), taiKhoan.getMaNvkt());
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+
+						// Những nghiệp vụ này sẽ không bị xóa ở bước cuối
+						if (maNvktDs != null) {
+							maNvktDs.remove(maNvkt);
+						}
+					}
+				}
+
+				// Xóa đi những nvkt đã bị người dùng xóa
+				if (maNvktDs != null) {
+					Iterator<Integer> maNvktIter = maNvktDs.iterator();
+					while (maNvktIter.hasNext()) {
+						Integer maNvkt = (Integer) maNvktIter.next();
+						try {
+							// Xóa trong bảng CHUNG_TU_NVKT trước
+							jdbcTmpl.update(xoaChungTuTk, chungTu.getMaCt(), maNvkt);
+
+							// Xóa trong bảng NGHIEP_VU_KE_TOAN
+							jdbcTmpl.update(xoaChungTuNvkt, maNvkt);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void themChungTuKtth(ChungTu chungTu) {
+		String themChungTu = THEM_CHUNG_TU;
+		String themTaiKhoan = THEM_TAI_KHOAN_KTTH;
+		String themChungTuTaiKhoan = THEM_CHUNG_TU_TAI_KHOAN_KTTH;
+
+		try {
+			// Thêm chứng từ
+			GeneratedKeyHolder holder = new GeneratedKeyHolder();
+			jdbcTmpl.update(new PreparedStatementCreator() {
+				@Override
+				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+					PreparedStatement stt = con.prepareStatement(themChungTu, Statement.RETURN_GENERATED_KEYS);
+					stt.setInt(1, chungTu.getSoCt());
+					stt.setString(2, chungTu.getLoaiCt());
+					stt.setInt(3, chungTu.getTinhChatCt());
+					java.sql.Date ngayLap = new java.sql.Date(chungTu.getNgayLap().getTime());
+					stt.setDate(4, ngayLap);
+					java.sql.Date ngayHt = new java.sql.Date(chungTu.getNgayHt().getTime());
+					stt.setDate(5, ngayHt);
+					java.sql.Date ngayTt = null;
+					if (chungTu.getNgayTt() != null) {
+						ngayTt = new java.sql.Date(chungTu.getNgayTt().getTime());
+					}
+					stt.setDate(6, ngayTt);
+					stt.setString(7, chungTu.getLyDo());
+					stt.setString(8, chungTu.getLoaiTien().getMaLt());
+					stt.setDouble(9, chungTu.getLoaiTien().getBanRa());
+					stt.setInt(10, chungTu.getKemTheo());
+					stt.setInt(11, chungTu.getDoiTuong().getMaDt());
+					stt.setInt(12, chungTu.getDoiTuong().getLoaiDt());
+					stt.setString(13, chungTu.getDoiTuong().getNguoiNop());
+
+					return stt;
+				}
+			}, holder);
+
+			// Thêm chứng từ tài khoản
+			chungTu.setMaCt(holder.getKey().intValue());
+			Iterator<TaiKhoan> iter = chungTu.getTaiKhoanKtthDs().iterator();
+			while (iter.hasNext()) {
+				TaiKhoan taiKhoan = iter.next();
+
+				try {
+					if (taiKhoan.getLoaiTaiKhoan() != null && taiKhoan.getLoaiTaiKhoan().getMaTk() != null
+							&& !taiKhoan.getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						logger.info("Tài khoản: " + taiKhoan.getLoaiTaiKhoan().getMaTk());
+						GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
+						jdbcTmpl.update(new PreparedStatementCreator() {
+							@Override
+							public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+								PreparedStatement stt = con.prepareStatement(themTaiKhoan,
+										Statement.RETURN_GENERATED_KEYS);
+								stt.setString(1, taiKhoan.getLoaiTaiKhoan().getMaTk());
+								if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
+									stt.setDouble(2, taiKhoan.getNo().getSoTien() * chungTu.getLoaiTien().getBanRa());
+								} else {
+									stt.setDouble(2, taiKhoan.getCo().getSoTien() * chungTu.getLoaiTien().getBanRa());
+								}
+								stt.setInt(3, taiKhoan.getSoDu());
+								stt.setString(4, taiKhoan.getLyDo());
+								stt.setInt(5, taiKhoan.getDoiTuong().getMaDt());
+								stt.setInt(6, taiKhoan.getDoiTuong().getLoaiDt());
+
+								return stt;
+							}
+						}, nvktHolder);
+
+						logger.info("Thêm vào bảng chung_tu_nvkt " + taiKhoan);
+						jdbcTmpl.update(themChungTuTaiKhoan, chungTu.getMaCt(), nvktHolder.getKey().intValue(),
+								taiKhoan.getNhomDk());
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void capNhatChungTuKtth(ChungTu chungTu) {
+		if (chungTu == null) {
+			return;
+		}
+
+		String capNhatChungTu = CAP_NHAT_CHUNG_TU;
+		String capNhatChungTuNvkt = CAP_NHAT_CHUNG_TU_NVKT;
+		String layChungTuTaiKhoan = LAY_CHUNG_TU_TAI_KHOAN;
+		String themTaiKhoan = THEM_TAI_KHOAN_KTTH;
+		String themChungTuTaiKhoan = THEM_CHUNG_TU_TAI_KHOAN_KTTH;
+
+		String xoaChungTuTk = XOA_CHUNG_TU_NVKT;
+		String xoaChungTuNvkt = XOA_NVKT;
+
+		try {
+			// Cập nhật chứng từ
+			jdbcTmpl.update(capNhatChungTu, chungTu.getSoCt(), chungTu.getLoaiCt(), chungTu.getTinhChatCt(),
+					chungTu.getNgayLap(), chungTu.getNgayHt(), chungTu.getNgayTt(), chungTu.getLyDo(),
+					chungTu.getLoaiTien().getMaLt(), chungTu.getLoaiTien().getBanRa(), chungTu.getKemTheo(),
+					chungTu.getDoiTuong().getMaDt(), chungTu.getDoiTuong().getLoaiDt(),
+					chungTu.getDoiTuong().getNguoiNop(), chungTu.getMaCt());
+
+			// Lấy danh sách nvkt hiện có của chứng từ
+			Object[] objs = { chungTu.getMaCt() };
+			List<Integer> maNvktDs = jdbcTmpl.query(layChungTuTaiKhoan, objs, new RowMapper<Integer>() {
+				public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+					return rs.getInt("MA_NVKT");
+				}
+			});
+
+			if (chungTu.getTaiKhoanKtthDs() != null && chungTu.getTaiKhoanKtthDs().size() > 0) {
+				Iterator<TaiKhoan> iter = chungTu.getTaiKhoanKtthDs().iterator();
+				while (iter.hasNext()) {
+					TaiKhoan taiKhoan = iter.next();
+					Integer maNvkt = taiKhoan.getMaNvkt();
+
+					// Những nghiệp vụ kế toán có định khoản mới được cập nhật/thêm mới
+					if (taiKhoan.getLoaiTaiKhoan() != null && taiKhoan.getLoaiTaiKhoan().getMaTk() != null
+							&& !taiKhoan.getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						logger.info("Tài khoản: " + taiKhoan.getLoaiTaiKhoan().getMaTk());
+						if (taiKhoan.getMaNvkt() == 0) {
+							// Thêm mới nvkt người dùng vừa thêm
+							try {
+								// Thêm vào bảng NGHIEP_VU_KE_TOAN trước
+								GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
+								jdbcTmpl.update(new PreparedStatementCreator() {
+									@Override
+									public PreparedStatement createPreparedStatement(Connection con)
+											throws SQLException {
+										PreparedStatement stt = con.prepareStatement(themTaiKhoan,
+												Statement.RETURN_GENERATED_KEYS);
+										stt.setString(1, taiKhoan.getLoaiTaiKhoan().getMaTk());
+										if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
+											stt.setDouble(2,
+													taiKhoan.getNo().getSoTien() * chungTu.getLoaiTien().getBanRa());
+										} else {
+											stt.setDouble(2,
+													taiKhoan.getCo().getSoTien() * chungTu.getLoaiTien().getBanRa());
+										}
+										stt.setInt(3, taiKhoan.getSoDu());
+										stt.setString(4, taiKhoan.getLyDo());
+										stt.setInt(5, taiKhoan.getDoiTuong().getMaDt());
+										stt.setInt(6, taiKhoan.getDoiTuong().getLoaiDt());
+
+										return stt;
+									}
+								}, nvktHolder);
+
+								// Sau đó thêm vào bảng CHUNG_TU_NVKT
+								logger.info("Thêm vào bảng chung_tu_nvkt " + taiKhoan);
+								jdbcTmpl.update(themChungTuTaiKhoan, chungTu.getMaCt(), nvktHolder.getKey().intValue(),
+										taiKhoan.getNhomDk());
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -1467,6 +1842,54 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 		int count = jdbcTmpl.queryForObject(demSoChungTu, new Object[] { loaiCt, batDauStr, ketThucStr },
 				Integer.class);
+		return count;
+	}
+
+	@Override
+	public int laySoChungTuLonNhatTheoLoaiCtVaKy(String loaiCt, Date batDau, Date ketThuc) {
+		if (batDau == null || ketThuc == null) {
+			return 0;
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		String batDauStr = sdf.format(batDau);
+		String ketThucStr = sdf.format(ketThuc);
+
+		String laySoChungTuLonNhat = LAY_SO_CHUNG_TU_LON_NHAT;
+
+		logger.info("Lấy số chứng từ lớn nhất");
+		logger.info(laySoChungTuLonNhat);
+		logger.info("Loại chứng từ: " + loaiCt);
+		logger.info("Từ: " + batDauStr);
+		logger.info("Đến: " + ketThucStr);
+
+		int count = jdbcTmpl.queryForObject(laySoChungTuLonNhat, new Object[] { loaiCt, batDauStr, ketThucStr },
+				Integer.class);
+		return count;
+	}
+
+	@Override
+	public int kiemTraSoChungTu(int soCt, String loaiCt, Date batDau, Date ketThuc) {
+		if (batDau == null || ketThuc == null) {
+			return 0;
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		String batDauStr = sdf.format(batDau);
+		String ketThucStr = sdf.format(ketThuc);
+
+		String kiemTraSoChungTuLon = KIEM_TRA_SO_CHUNG_TU;
+
+		logger.info("Kiểm tra số chứng từ đã tồn tại ?");
+		logger.info(kiemTraSoChungTuLon);
+		logger.info("Loại chứng từ: " + loaiCt);
+		logger.info("Số chứng từ: " + soCt);
+		logger.info("Từ: " + batDauStr);
+		logger.info("Đến: " + ketThucStr);
+
+		int count = jdbcTmpl.queryForObject(kiemTraSoChungTuLon, new Object[] { loaiCt, batDauStr, ketThucStr, soCt },
+				Integer.class);
+		logger.info("Kết quả:: " + count);
 		return count;
 	}
 

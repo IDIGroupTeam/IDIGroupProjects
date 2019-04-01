@@ -5,10 +5,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.format.annotation.NumberFormat;
 
-import com.idi.finance.bean.chungtu.TaiKhoan;
-import com.idi.finance.bean.chungtu.Tien;
+import com.idi.finance.bean.Tien;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
+import com.idi.finance.bean.taikhoan.TaiKhoan;
 
 public class HangHoa {
 	private static final Logger logger = Logger.getLogger(HangHoa.class);

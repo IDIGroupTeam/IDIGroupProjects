@@ -1,4 +1,4 @@
-<%@page import="com.idi.finance.bean.chungtu.DoiTuong"%>
+<%@page import="com.idi.finance.bean.doituong.DoiTuong"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
@@ -46,7 +46,7 @@
 				<th class="text-center" colspan="2">Phiếu nhập kho</th>
 				<th class="text-center" rowspan="2">Lý do</th>
 				<th class="text-center" rowspan="2">Tổng số tiền (*)</th>
-				<th class="text-center" rowspan="2">Đối tượng nộp</th>
+				<th class="text-center" rowspan="2">Đối tượng</th>
 				<th class="text-center" rowspan="2">Địa chỉ</th>
 				<th class="text-center" rowspan="2">Mã số thuế</th>
 				<th class="text-center" rowspan="2">Loại đối tượng</th>

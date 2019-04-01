@@ -1,8 +1,6 @@
-package com.idi.finance.bean.chungtu;
+package com.idi.finance.bean;
 
 import org.springframework.format.annotation.NumberFormat;
-
-import com.idi.finance.bean.LoaiTien;
 
 public class Tien {
 	private int maGia;

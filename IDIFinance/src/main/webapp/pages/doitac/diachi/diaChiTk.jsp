@@ -1,4 +1,4 @@
-<%@page import="com.idi.finance.bean.doitac.VungDiaChi"%>
+<%@page import="com.idi.finance.bean.diachi.VungDiaChi"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 

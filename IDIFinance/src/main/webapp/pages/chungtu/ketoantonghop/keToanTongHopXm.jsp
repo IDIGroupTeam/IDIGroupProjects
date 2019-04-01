@@ -1,6 +1,6 @@
 <%@page import="com.idi.finance.bean.kyketoan.KyKeToan"%>
 <%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
-<%@page import="com.idi.finance.bean.chungtu.DoiTuong"%>
+<%@page import="com.idi.finance.bean.doituong.DoiTuong"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
@@ -47,11 +47,6 @@
 
 <div>
 	<span class="pull-left heading4">PHIẾU KẾ TOÁN TỔNG HỢP</span>
-	<%-- <div class="btn-group btn-group-sm pull-right">
-		<a href="${url}/chungtu/ktth/pdf/${chungTu.maCt}" class="btn btn-info btn-sm">
-			<span class="glyphicon glyphicon-download"></span> Xuất
-		</a>
-	</div> --%>
 </div>
 <br />
 <hr />
@@ -69,24 +64,8 @@
 </div>
 
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="doiTuong.loaiDt">Loại
-		đối tượng:</label>
-	<div class="col-sm-4">
-		<c:choose>
-			<c:when test="${chungTu.doiTuong.loaiDt == DoiTuong.NHAN_VIEN}">
-								Nhân viên
-							</c:when>
-			<c:when test="${chungTu.doiTuong.loaiDt == DoiTuong.KHACH_HANG}">
-								Khách hàng
-							</c:when>
-			<c:when test="${chungTu.doiTuong.loaiDt == DoiTuong.NHA_CUNG_CAP}">
-								Nhà cung cấp
-							</c:when>
-			<c:when test="${chungTu.doiTuong.loaiDt == DoiTuong.KHACH_VANG_LAI}">
-								Khách vãng lai
-							</c:when>
-		</c:choose>
-	</div>
+	<label class="control-label col-sm-2" for="lyDo">Lý do:</label>
+	<div class="col-sm-4">${chungTu.lyDo}</div>
 
 	<label class="control-label col-sm-2" for=ngayHt>Ngày hạch
 		toán:</label>
@@ -94,36 +73,6 @@
 		<span id="ngayHt"><fmt:formatDate value="${chungTu.ngayHt}"
 				pattern="dd/M/yyyy" type="Date" dateStyle="SHORT" /></span>
 	</div>
-</div>
-
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="doiTuong.tenDt">Đối
-		tượng nộp:</label>
-	<div class="col-sm-4">${chungTu.doiTuong.tenDt}</div>
-
-	<label class="control-label col-sm-2" for="doiTuong.maThue">Mã
-		số thuế:</label>
-	<div class="col-sm-4">${chungTu.doiTuong.maThue}</div>
-</div>
-
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="doiTuong.diaChi">Địa
-		chỉ:</label>
-	<div class="col-sm-4">${chungTu.doiTuong.diaChi}</div>
-
-	<label class="control-label col-sm-2" for="doiTuong.nguoiNop">Người
-		nộp: </label>
-	<div class="col-sm-4">${chungTu.doiTuong.nguoiNop}</div>
-</div>
-
-<div class="row form-group">
-	<label class="control-label col-sm-2" for="lyDo">Lý do:</label>
-	<div class="col-sm-4">${chungTu.lyDo}</div>
-
-	<label class="control-label col-sm-2" for="kemTheo">Kèm theo <br />số
-		chứng từ gốc:
-	</label>
-	<div class="col-sm-4">${chungTu.kemTheo}</div>
 </div>
 
 <div class="row form-group">
@@ -139,13 +88,10 @@
 </div>
 
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="soTien.giaTri">Thành
-		tiền:</label>
-	<div class="col-sm-4">
-		<fmt:formatNumber value="${chungTu.soTien.giaTri}"
-			maxFractionDigits="2"></fmt:formatNumber>
-		VND
-	</div>
+	<label class="control-label col-sm-2" for="kemTheo">Kèm theo <br />số
+		chứng từ gốc:
+	</label>
+	<div class="col-sm-4">${chungTu.kemTheo}</div>
 
 	<label class="control-label col-sm-2" for=ngayHt>Ngày thanh
 		toán:</label>
@@ -161,57 +107,69 @@
 		class="table table-bordered table-hover text-center dinhkhoan">
 		<thead>
 			<tr>
-				<th class="text-center" colspan="3">Nợ</th>
-				<th class="text-center" colspan="3">Có</th>
+				<th class="text-center" rowspan="2">Tài khoản</th>
+				<th class="text-center" rowspan="2" style="width: 100px;">Nợ</th>
+				<th class="text-center" rowspan="2" style="width: 100px;">Có</th>
+				<th class="text-center" rowspan="2">Lý do</th>
+				<th class="text-center" colspan="2">Đối tượng</th>
+				<th class="text-center" rowspan="2" style="width: 50px;">Nhóm</th>
+			</tr>
+			<tr>
+				<th class="text-center" style="width: 100px;">Tên</th>
+				<th class="text-center" style="width: 100px;">Loại</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<th class="text-center"><b>Tài khoản</b></th>
-				<th class="text-center"><b>Giá trị</b></th>
-				<th class="text-center"><b>Lý do</b></th>
-				<th class="text-center"><b>Tài khoản</b></th>
-				<th class="text-center"><b>Giá trị</b></th>
-				<th class="text-center"><b>Lý do</b></th>
-			</tr>
-			<c:forEach begin="0" end="${chungTu.soTkLonNhat-1}"
+			<c:forEach items="${chungTu.taiKhoanKtthDs}" var="taiKhoanKtth"
 				varStatus="status">
-				<tr id="${status.index}">
-					<!-- Phần ghi Nợ -->
+				<tr>
+					<td class="text-left">${taiKhoanKtth.loaiTaiKhoan.maTenTk}</td>
 					<c:choose>
-						<c:when test="${status.index < chungTu.taiKhoanNoDs.size()}">
-							<td>${chungTu.taiKhoanNoDs[status.index].loaiTaiKhoan.maTk}-${chungTu.taiKhoanNoDs[status.index].loaiTaiKhoan.tenTk}</td>
-							<td><fmt:formatNumber
-									value="${chungTu.taiKhoanNoDs[status.index].soTien.soTien}"
-									maxFractionDigits="2"></fmt:formatNumber></td>
-							<td>${chungTu.taiKhoanNoDs[status.index].lyDo}</td>
+						<c:when test="${taiKhoanKtth.soDu == LoaiTaiKhoan.NO}">
+							<td class="text-right" style="width: 100px;"><fmt:formatNumber
+									value="${taiKhoanKtth.no.soTien}" maxFractionDigits="2"></fmt:formatNumber></td>
+							<td class="text-right" style="width: 100px;">0</td>
 						</c:when>
 						<c:otherwise>
-							<td></td>
-							<td></td>
-							<td></td>
+							<td class="text-right" style="width: 100px;">0</td>
+							<td class="text-right" style="width: 100px;"><fmt:formatNumber
+									value="${taiKhoanKtth.co.soTien}" maxFractionDigits="2"></fmt:formatNumber></td>
 						</c:otherwise>
 					</c:choose>
-
-					<!-- Phần ghi Có -->
-					<c:choose>
-						<c:when test="${status.index < chungTu.taiKhoanCoDs.size()}">
-							<td>${chungTu.taiKhoanCoDs[status.index].loaiTaiKhoan.maTk}-${chungTu.taiKhoanCoDs[status.index].loaiTaiKhoan.tenTk}</td>
-							<td><fmt:formatNumber
-									value="${chungTu.taiKhoanCoDs[status.index].soTien.soTien}"
-									maxFractionDigits="2"></fmt:formatNumber></td>
-							<td>${chungTu.taiKhoanCoDs[status.index].lyDo}</td>
-						</c:when>
-						<c:otherwise>
-							<td></td>
-							<td></td>
-							<td></td>
-						</c:otherwise>
-					</c:choose>
-
-
+					<td class="text-left">${taiKhoanKtth.lyDo}</td>
+					<td class="text-left" style="width: 100px;">${taiKhoanKtth.doiTuong.tenDt}</td>
+					<td class="text-left" style="width: 100px;"><c:choose>
+							<c:when
+								test="${taiKhoanKtth.doiTuong.loaiDt == DoiTuong.NHAN_VIEN}">
+								Nhân viên
+							</c:when>
+							<c:when
+								test="${taiKhoanKtth.doiTuong.loaiDt == DoiTuong.KHACH_HANG}">
+								Khách hàng
+							</c:when>
+							<c:when
+								test="${taiKhoanKtth.doiTuong.loaiDt == DoiTuong.NHA_CUNG_CAP}">
+								Nhà cung cấp
+							</c:when>
+							<c:when
+								test="${taiKhoanKtth.doiTuong.loaiDt == DoiTuong.KHACH_VANG_LAI}">
+								Khách vãng lai
+							</c:when>
+						</c:choose></td>
+					<td style="width: 50px;">${taiKhoanKtth.nhomDk}</td>
 				</tr>
 			</c:forEach>
+			<tr>
+				<td class="text-left"><b>Thành tiền:</b></td>
+				<td class="text-right" colspan="2" style="width: 200px;"><fmt:formatNumber
+						value="${chungTu.soTien.soTien}" maxFractionDigits="2"></fmt:formatNumber>
+					${chungTu.loaiTien.maLt}</td>
+				<td class="text-left"><b>Quy đổi:</b></td>
+				<td class="text-right" colspan="2" style="width: 200px;"><fmt:formatNumber
+						value="${chungTu.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber>
+					VND</td>
+				<td style="width: 50px;"></td>
+			</tr>
 		</tbody>
 	</table>
 </div>
@@ -224,12 +182,14 @@
 		<c:choose>
 			<c:when
 				test="${kyKeToan!=null && kyKeToan.trangThai!= KyKeToan.DONG}">
+				<a href="${url}/chungtu/ktth/sua/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Sửa</a>
 				<a href="${url}/chungtu/ktth/pdf/${chungTu.maCt}" target="_blank"
 					class="btn btn-info btn-sm">In</a>
 				<a id="xoaNut" href="${url}/chungtu/ktth/xoa/${chungTu.maCt}"
 					class="btn btn-info btn-sm">Xóa</a>
-				<a href="${url}/chungtu/ktth/sua/${chungTu.maCt}"
-					class="btn btn-info btn-sm">Sửa</a>
+				<a href="${url}/chungtu/ktth/saochep/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Sao chép</a>
 				<a href="${url}/chungtu/ktth/taomoi" class="btn btn-info btn-sm">Tạo
 					mới</a>
 			</c:when>

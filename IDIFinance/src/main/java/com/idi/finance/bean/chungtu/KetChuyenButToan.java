@@ -2,6 +2,8 @@ package com.idi.finance.bean.chungtu;
 
 import org.apache.log4j.Logger;
 
+import com.idi.finance.bean.taikhoan.TaiKhoan;
+
 public class KetChuyenButToan {
 	private static final Logger logger = Logger.getLogger(KetChuyenButToan.class);
 

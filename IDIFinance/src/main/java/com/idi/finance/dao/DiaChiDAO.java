@@ -2,8 +2,8 @@ package com.idi.finance.dao;
 
 import java.util.List;
 
-import com.idi.finance.bean.doitac.CapDiaChi;
-import com.idi.finance.bean.doitac.VungDiaChi;
+import com.idi.finance.bean.diachi.CapDiaChi;
+import com.idi.finance.bean.diachi.VungDiaChi;
 
 public interface DiaChiDAO {
 	public List<CapDiaChi> danhSachCapDiaChi(int capDc);

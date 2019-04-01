@@ -6,7 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.idi.finance.bean.doitac.NhaCungCap;
+import com.idi.finance.bean.doituong.NhaCungCap;
 import com.idi.finance.dao.NhaCungCapDAO;
 
 public class NhaCungCapValidator implements Validator {

@@ -1,4 +1,4 @@
-package com.idi.finance.bean.chungtu;
+package com.idi.finance.bean.doituong;
 
 import com.idi.finance.bean.bctc.DuLieuKeToan;
 

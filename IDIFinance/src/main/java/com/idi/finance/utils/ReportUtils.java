@@ -3,7 +3,7 @@ package com.idi.finance.utils;
 import java.util.Iterator;
 import java.util.List;
 
-import com.idi.finance.bean.chungtu.TaiKhoan;
+import com.idi.finance.bean.taikhoan.TaiKhoan;
 
 public class ReportUtils {
 	public static String layDanhSachTaiKhoan(List<TaiKhoan> taiKhoanDs) {

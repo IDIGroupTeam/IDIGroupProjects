@@ -1,6 +1,6 @@
 <%@page import="com.idi.finance.bean.kyketoan.KyKeToan"%>
 <%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
-<%@page import="com.idi.finance.bean.chungtu.DoiTuong"%>
+<%@page import="com.idi.finance.bean.doituong.DoiTuong"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
@@ -101,7 +101,7 @@
 
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="doiTuong.tenDt">Đối
-		tượng nộp:</label>
+		tượng:</label>
 	<div class="col-sm-4">${chungTu.doiTuong.tenDt}</div>
 
 	<label class="control-label col-sm-2" for="doiTuong.maThue">Mã

@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.idi.finance.bean.bctc.KyKeToanCon;
-import com.idi.finance.bean.chungtu.TaiKhoan;
 import com.idi.finance.bean.kyketoan.KyKeToan;
+import com.idi.finance.bean.taikhoan.TaiKhoan;
 
 public class BalanceAssetForm {
 	private KyKeToan kyKeToan;

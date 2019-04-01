@@ -1,4 +1,4 @@
-package com.idi.finance.bean.doitac;
+package com.idi.finance.bean.diachi;
 
 public class CapDiaChi {
 	public static final int MIEN = 1;

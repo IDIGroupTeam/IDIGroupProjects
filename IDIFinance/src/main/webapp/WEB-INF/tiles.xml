@@ -64,6 +64,12 @@
 			value="/pages/chungtu/phieuthu/phieuThuSu.jsp" />
 	</definition>
 
+	<definition name="saoChepPhieuThu" extends="taichinh">
+		<put-attribute name="title" value="Sao chép phiếu thu" />
+		<put-attribute name="body"
+			value="/pages/chungtu/phieuthu/phieuThuSc.jsp" />
+	</definition>
+
 	<definition name="taoMoiPhieuThu" extends="taichinh">
 		<put-attribute name="title" value="Tạo mới phiếu thu" />
 		<put-attribute name="body"
@@ -87,6 +93,12 @@
 		<put-attribute name="title" value="Sửa phiếu chi" />
 		<put-attribute name="body"
 			value="/pages/chungtu/phieuchi/phieuChiSu.jsp" />
+	</definition>
+
+	<definition name="saoChepPhieuChi" extends="taichinh">
+		<put-attribute name="title" value="Sao chép phiếu chi" />
+		<put-attribute name="body"
+			value="/pages/chungtu/phieuchi/phieuChiSc.jsp" />
 	</definition>
 
 	<definition name="taoMoiPhieuChi" extends="taichinh">
@@ -114,6 +126,12 @@
 			value="/pages/chungtu/baoco/baoCoSu.jsp" />
 	</definition>
 
+	<definition name="saoChepBaoCo" extends="taichinh">
+		<put-attribute name="title" value="Sao chép báo có" />
+		<put-attribute name="body"
+			value="/pages/chungtu/baoco/baoCoSc.jsp" />
+	</definition>
+
 	<definition name="taoMoiBaoCo" extends="taichinh">
 		<put-attribute name="title" value="Tạo mới báo có" />
 		<put-attribute name="body"
@@ -137,6 +155,12 @@
 		<put-attribute name="title" value="Sửa báo nợ" />
 		<put-attribute name="body"
 			value="/pages/chungtu/baono/baoNoSu.jsp" />
+	</definition>
+
+	<definition name="saoChepBaoNo" extends="taichinh">
+		<put-attribute name="title" value="Sao chép báo nợ" />
+		<put-attribute name="body"
+			value="/pages/chungtu/baono/baoNoSc.jsp" />
 	</definition>
 
 	<definition name="taoMoiBaoNo" extends="taichinh">
@@ -164,6 +188,13 @@
 		<put-attribute name="title" value="Sửa kế toán tổng hợp" />
 		<put-attribute name="body"
 			value="/pages/chungtu/ketoantonghop/keToanTongHopSu.jsp" />
+	</definition>
+
+	<definition name="saoChepKeToanTongHop" extends="taichinh">
+		<put-attribute name="title"
+			value="Sao chép kế toán tổng hợp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketoantonghop/keToanTongHopSc.jsp" />
 	</definition>
 
 	<definition name="taoMoiKeToanTongHop" extends="taichinh">
