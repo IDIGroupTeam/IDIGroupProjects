@@ -1863,8 +1863,13 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 		logger.info("Từ: " + batDauStr);
 		logger.info("Đến: " + ketThucStr);
 
-		int count = jdbcTmpl.queryForObject(laySoChungTuLonNhat, new Object[] { loaiCt, batDauStr, ketThucStr },
-				Integer.class);
+		int count = 0;
+		try {
+			count = jdbcTmpl.queryForObject(laySoChungTuLonNhat, new Object[] { loaiCt, batDauStr, ketThucStr },
+					Integer.class);
+		} catch (Exception e) {
+		}
+
 		return count;
 	}
 
