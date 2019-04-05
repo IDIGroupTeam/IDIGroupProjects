@@ -17,7 +17,7 @@ import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.bean.taikhoan.TaiKhoan;
 
-public class ChungTu {
+public class ChungTu implements Comparable<ChungTu> {
 	private static final Logger logger = Logger.getLogger(ChungTu.class);
 	// Hằng số cho phần chứng từ: Phiếu thu, chi, báo có, báo nợ
 	public static final String TAT_CA = "TAT_CA";
@@ -243,6 +243,7 @@ public class ChungTu {
 	}
 
 	public void themTaiKhoanKtth(TaiKhoan taiKhoan) {
+		logger.info("themTaiKhoanKtth: " + taiKhoan);
 		if (taiKhoan == null) {
 			return;
 		}
@@ -825,18 +826,10 @@ public class ChungTu {
 	}
 
 	public int getSoDongNkc() {
-		int soDongNkc = 1;
+		int soDongNkc = 0;
 		if (loaiCt.equals(CHUNG_TU_KT_TH)) {
-			if (taiKhoanNoDs == null) {
-				if (taiKhoanCoDs != null) {
-					soDongNkc += taiKhoanCoDs.size();
-				}
-			} else {
-				if (taiKhoanCoDs == null) {
-					soDongNkc += taiKhoanNoDs.size();
-				} else {
-					soDongNkc += taiKhoanNoDs.size() + taiKhoanCoDs.size();
-				}
+			if (taiKhoanKtthDs != null) {
+				soDongNkc = taiKhoanKtthDs.size();
 			}
 		} else if (loaiCt.equals(CHUNG_TU_MUA_HANG)) {
 			soDongNkc = 0;
@@ -889,7 +882,8 @@ public class ChungTu {
 				}
 			}
 		} else {
-			soDongNkc += getSoTkLonNhat();
+			// soDongNkc += getSoTkLonNhat();
+			soDongNkc = getTaiKhoanDs().size();
 		}
 
 		return soDongNkc;
@@ -1045,5 +1039,58 @@ public class ChungTu {
 		}
 
 		return true;
+	}
+
+	@Override
+	public int compareTo(ChungTu chungTu) {
+		if (chungTu == null) {
+			return 1;
+		}
+
+		int rs = 0;
+
+		if (ngayHt == null) {
+			if (chungTu.getNgayHt() != null) {
+				return -1;
+			}
+		} else {
+			if (chungTu.getNgayHt() == null) {
+				return 1;
+			} else {
+				rs = ngayHt.compareTo(chungTu.getNgayHt());
+				if (rs != 0) {
+					return rs;
+				}
+			}
+		}
+
+		if (loaiCt == null) {
+			if (chungTu.getLoaiCt() != null) {
+				return -1;
+			}
+		} else {
+			if (chungTu.getLoaiCt() == null) {
+				return 1;
+			} else {
+				rs = loaiCt.compareTo(chungTu.getLoaiCt());
+				if (rs != 0) {
+					return rs;
+				}
+			}
+		}
+
+		if (soCt > chungTu.getSoCt()) {
+			return 1;
+		} else if (soCt < chungTu.getSoCt()) {
+			return -1;
+		}
+
+		if (maCt > chungTu.getMaCt()) {
+			return 1;
+		} else if (maCt < chungTu.getMaCt()) {
+			return -1;
+		}
+
+		return rs;
 	}
 }

@@ -27,6 +27,7 @@ import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.bctc.KyKeToanCon;
 import com.idi.finance.bean.chungtu.ChungTu;
+import com.idi.finance.bean.chungtu.KetChuyenButToan;
 import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.hanghoa.KhoHang;
@@ -34,6 +35,7 @@ import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.kyketoan.SoDuKy;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
+import com.idi.finance.bean.taikhoan.TaiKhoan;
 import com.idi.finance.dao.ChungTuDAO;
 import com.idi.finance.dao.HangHoaDAO;
 import com.idi.finance.dao.KhachHangDAO;
@@ -138,6 +140,7 @@ public class SoKeToanController {
 			// Lấy danh sách tất cả chứng từ
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			List<String> loaiCts = new ArrayList<>();
+			List<String> loaiCtKtths = new ArrayList<>();
 			List<String> loaiCtKhos = new ArrayList<>();
 			List<String> loaiCtKcs = new ArrayList<>();
 
@@ -146,7 +149,8 @@ public class SoKeToanController {
 				loaiCts.add(ChungTu.CHUNG_TU_PHIEU_CHI);
 				loaiCts.add(ChungTu.CHUNG_TU_BAO_NO);
 				loaiCts.add(ChungTu.CHUNG_TU_BAO_CO);
-				loaiCts.add(ChungTu.CHUNG_TU_KT_TH);
+
+				loaiCtKtths.add(ChungTu.CHUNG_TU_KT_TH);
 
 				loaiCtKhos.add(ChungTu.CHUNG_TU_MUA_HANG);
 				loaiCtKhos.add(ChungTu.CHUNG_TU_BAN_HANG);
@@ -157,7 +161,9 @@ public class SoKeToanController {
 				while (iter.hasNext()) {
 					String loaiCt = iter.next();
 
-					if (loaiCt.equals(ChungTu.CHUNG_TU_KET_CHUYEN)) {
+					if (loaiCt.equals(ChungTu.CHUNG_TU_KT_TH)) {
+						loaiCtKtths.add(ChungTu.CHUNG_TU_KT_TH);
+					} else if (loaiCt.equals(ChungTu.CHUNG_TU_KET_CHUYEN)) {
 						loaiCtKcs.add(loaiCt);
 					} else if (loaiCt.equals(ChungTu.CHUNG_TU_BAN_HANG) || loaiCt.equals(ChungTu.CHUNG_TU_MUA_HANG)) {
 						loaiCtKhos.add(loaiCt);
@@ -168,53 +174,67 @@ public class SoKeToanController {
 			}
 
 			chungTuDs = chungTuDAO.danhSachChungTu(loaiCts, form.getDau(), form.getCuoi());
+			if (chungTuDs == null)
+				chungTuDs = new ArrayList<>();
+
+			List<ChungTu> chungTuKtthDs = chungTuDAO.danhSachChungTuKtth(loaiCtKtths, form.getDau(), form.getCuoi());
+			if (chungTuKtthDs == null)
+				chungTuKtthDs = new ArrayList<>();
 
 			List<ChungTu> chungTuKhoDs = chungTuDAO.danhSachChungTuKho(loaiCtKhos, form.getDau(), form.getCuoi());
+			if (chungTuKhoDs == null)
+				chungTuKhoDs = new ArrayList<>();
 
 			List<ChungTu> chungTuKcDs = null;
 			if (loaiCtKcs.size() > 0) {
 				chungTuKcDs = chungTuDAO.danhSachKetChuyen(form.getDau(), form.getCuoi());
 			}
-
-			if (chungTuDs == null)
-				chungTuDs = new ArrayList<>();
-
-			if (chungTuKhoDs == null)
-				chungTuKhoDs = new ArrayList<>();
-
 			if (chungTuKcDs == null)
 				chungTuKcDs = new ArrayList<>();
 
+			chungTuDs.addAll(chungTuKtthDs);
 			chungTuDs.addAll(chungTuKhoDs);
 			chungTuDs.addAll(chungTuKcDs);
 
-			Collections.sort(chungTuDs, new Comparator<ChungTu>() {
-				@Override
-				public int compare(ChungTu ct1, ChungTu ct2) {
-					try {
-						if (ct1.getNgayHt().after(ct2.getNgayHt())) {
-							return 1;
-						} else if (ct1.getNgayHt().before(ct2.getNgayHt())) {
-							return -1;
-						} else {
-							if (ct1.getMaCt() > ct2.getMaCt()) {
-								return 1;
-							} else if (ct1.getMaCt() < ct2.getMaCt()) {
-								return -1;
-							} else {
-								return 0;
-							}
+			List<TaiKhoan> taiKhoanDs = new ArrayList<>();
+			for (Iterator<ChungTu> ctIter = chungTuDs.iterator(); ctIter.hasNext();) {
+				ChungTu chungTu = ctIter.next();
+
+				if (chungTu.getLoaiCt().equals(ChungTu.CHUNG_TU_KT_TH)) {
+					taiKhoanDs.addAll(chungTu.getTaiKhoanKtthDs());
+				} else if (chungTu.getLoaiCt().equals(ChungTu.CHUNG_TU_MUA_HANG)
+						|| chungTu.getLoaiCt().equals(ChungTu.CHUNG_TU_BAN_HANG)) {
+					taiKhoanDs.add(chungTu.getTkChietKhau());
+					taiKhoanDs.add(chungTu.getTkChiPhi());
+					taiKhoanDs.add(chungTu.getTkDoanhThu());
+					taiKhoanDs.add(chungTu.getTkGiamGia());
+					taiKhoanDs.add(chungTu.getTkGiaVon());
+					taiKhoanDs.add(chungTu.getTkKho());
+					taiKhoanDs.add(chungTu.getTkThanhtoan());
+					taiKhoanDs.add(chungTu.getTkThue());
+					taiKhoanDs.add(chungTu.getTkThueGtgt());
+					taiKhoanDs.add(chungTu.getTkThueNk());
+					taiKhoanDs.add(chungTu.getTkThueTtdb());
+					taiKhoanDs.add(chungTu.getTkThueXk());
+					taiKhoanDs.add(chungTu.getTkTraLai());
+				} else if (chungTu.getLoaiCt().equals(ChungTu.CHUNG_TU_KET_CHUYEN)) {
+					if (chungTu.getKcbtDs() != null) {
+						for (Iterator<KetChuyenButToan> iter = chungTu.getKcbtDs().iterator(); iter.hasNext();) {
+							KetChuyenButToan ketChuyen = iter.next();
+							taiKhoanDs.add(ketChuyen.getTaiKhoanNo());
+							taiKhoanDs.add(ketChuyen.getTaiKhoanCo());
 						}
-					} catch (Exception e) {
-
 					}
-
-					return 0;
+				} else {
+					// Phiếu thu, phiếu chi, báo nợ, báo có
+					taiKhoanDs.addAll(chungTu.getTaiKhoanDs());
 				}
-			});
+			}
+
+			Collections.sort(taiKhoanDs);
 
 			model.addAttribute("kyKeToanDs", kyKeToanDAO.danhSachKyKeToan());
-			model.addAttribute("chungTuDs", chungTuDs);
+			model.addAttribute("taiKhoanDs", taiKhoanDs);
 			model.addAttribute("mainFinanceForm", form);
 
 			model.addAttribute("tab", "tabSKTNKC");
@@ -356,6 +376,9 @@ public class SoKeToanController {
 				// Lấy nghiệp vụ kế toán được ghi từ phiếu thu, phiếu chi, báo nợ, báo có
 				duLieuKeToan.themNghiepVuKeToan(soKeToanDAO.danhSachNghiepVuKeToanTheoLoaiTaiKhoan(form.getTaiKhoan(),
 						kyKt.getDau(), kyKt.getCuoi()));
+
+				duLieuKeToan.themNghiepVuKeToan(soKeToanDAO
+						.danhSachNghiepVuKeToanKtthTheoLoaiTaiKhoan(form.getTaiKhoan(), kyKt.getDau(), kyKt.getCuoi()));
 
 				// Lấy nghiệp vụ kế toán được ghi từ chứng từ mua hàng, bán hàng
 				duLieuKeToan.themNghiepVuKeToan(soKeToanDAO

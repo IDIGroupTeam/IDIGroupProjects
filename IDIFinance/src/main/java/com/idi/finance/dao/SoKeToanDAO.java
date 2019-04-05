@@ -11,6 +11,8 @@ public interface SoKeToanDAO {
 	public List<NghiepVuKeToan> danhSachNghiepVuKeToanTheoLoaiTaiKhoan(String maTk);
 
 	public List<NghiepVuKeToan> danhSachNghiepVuKeToanTheoLoaiTaiKhoan(String maTk, Date dau, Date cuoi);
+	
+	public List<NghiepVuKeToan> danhSachNghiepVuKeToanKtthTheoLoaiTaiKhoan(String maTk, Date dau, Date cuoi);
 
 	public List<NghiepVuKeToan> danhSachNghiepVuKeToanKhoTheoLoaiTaiKhoan(String maTk, Date dau, Date cuoi);
 

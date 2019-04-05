@@ -171,7 +171,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 	@Override
 	public List<ChungTu> danhSachChungTu(List<String> loaiCts, Date batDau, Date ketThuc) {
-		if (loaiCts == null || batDau == null || ketThuc == null) {
+		if (loaiCts == null || loaiCts.size() == 0 || batDau == null || ketThuc == null) {
 			return null;
 		}
 
@@ -287,7 +287,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 	@Override
 	public List<ChungTu> danhSachChungTuKtth(List<String> loaiCts, Date batDau, Date ketThuc) {
-		if (loaiCts == null || batDau == null || ketThuc == null) {
+		if (loaiCts == null || loaiCts.size() == 0 || batDau == null || ketThuc == null) {
 			return null;
 		}
 
@@ -408,7 +408,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 	@Override
 	public List<ChungTu> danhSachChungTuKho(List<String> loaiCts, Date batDau, Date ketThuc) {
-		if (loaiCts == null || batDau == null || ketThuc == null) {
+		if (loaiCts == null || loaiCts.size() == 0 || batDau == null || ketThuc == null) {
 			return null;
 		}
 
@@ -562,8 +562,6 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				tkTien.setSoTien(tkTien.getGiaTri() / tkTien.getLoaiTien().getBanRa());
 				taiKhoan.setSoTien(tkTien);
 
-				taiKhoan.setChungTu(chungTu);
-
 				int loaiTk = rs.getInt("LOAI_TK");
 				if (loaiTk == HangHoa.TK_THANH_TOAN) {
 					hangHoa.setTkThanhtoan(taiKhoan);
@@ -592,6 +590,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				}
 
 				chungTu.themHangHoa(hangHoa);
+				taiKhoan.setChungTu(chungTu);
 
 				return chungTu;
 			} catch (Exception e) {
@@ -2257,8 +2256,6 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				tien.setSoTien(tien.getGiaTri() / tien.getLoaiTien().getBanRa());
 				taiKhoan.setSoTien(tien);
 
-				taiKhoan.setChungTu(chungTu);
-
 				KetChuyenButToan ketChuyenButToan = new KetChuyenButToan();
 				ketChuyenButToan.setMaKc(rs.getInt("MA_KC"));
 				ketChuyenButToan.setTenKc(rs.getString("TEN_KC"));
@@ -2272,7 +2269,9 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				} else {
 					ketChuyenButToan.setTaiKhoanCo(taiKhoan);
 				}
+
 				chungTu.themKetChuyenButToan(ketChuyenButToan);
+				taiKhoan.setChungTu(chungTu);
 
 				return chungTu;
 			} catch (Exception e) {

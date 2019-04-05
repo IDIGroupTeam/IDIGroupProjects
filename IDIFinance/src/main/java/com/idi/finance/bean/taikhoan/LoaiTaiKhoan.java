@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 import com.idi.finance.bean.doituong.NganHangTaiKhoan;
 
-public class LoaiTaiKhoan {
+public class LoaiTaiKhoan implements Comparable<LoaiTaiKhoan> {
 	private static final Logger logger = Logger.getLogger(LoaiTaiKhoan.class);
 	public static final int NO = -1;
 	public static final String NO_XAU = "NO";
@@ -253,5 +253,32 @@ public class LoaiTaiKhoan {
 		}
 
 		return true;
+	}
+
+	@Override
+	public int compareTo(LoaiTaiKhoan loaiTaiKhoan) {
+		if (loaiTaiKhoan == null) {
+			return 1;
+		}
+
+		int rs = 0;
+
+		// So sanh maTk
+		if (maTk == null) {
+			if (loaiTaiKhoan.getMaTk() != null) {
+				return -1;
+			}
+		} else {
+			if (loaiTaiKhoan.getMaTk() == null) {
+				return 1;
+			} else {
+				rs = maTk.compareTo(loaiTaiKhoan.getMaTk());
+				if (rs != 0) {
+					return rs;
+				}
+			}
+		}
+
+		return rs;
 	}
 }

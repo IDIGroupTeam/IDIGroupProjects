@@ -1199,7 +1199,6 @@ public class ChungTuController {
 			// Lấy danh sách phiếu kế toán tổng hợp
 			List<ChungTu> keToanTongHopDs = chungTuDAO.danhSachChungTuKtth(loaiCts, kyKeToan.getBatDau(),
 					kyKeToan.getKetThuc());
-			logger.info("keToanTongHopDs: " + keToanTongHopDs.size());
 
 			model.addAttribute("keToanTongHopDs", keToanTongHopDs);
 			model.addAttribute("kyKeToan", kyKeToan);

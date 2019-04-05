@@ -5,7 +5,7 @@ import com.idi.finance.bean.bctc.BalanceAssetItem;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.doituong.DoiTuong;
 
-public class TaiKhoan {
+public class TaiKhoan implements Comparable<TaiKhoan> {
 	private ChungTu chungTu;
 	private LoaiTaiKhoan loaiTaiKhoan;
 	private Tien soTien = new Tien();
@@ -117,7 +117,7 @@ public class TaiKhoan {
 
 	@Override
 	public String toString() {
-		String out = loaiTaiKhoan + " - " + soDu + " - " + soTien;
+		String out = loaiTaiKhoan + " - " + soDu + " - " + soTien + " - " + nhomDk;
 		return out;
 	}
 
@@ -153,10 +153,63 @@ public class TaiKhoan {
 
 			if (soDu != item.getSoDu())
 				return false;
+
+			if (nhomDk != item.getNhomDk())
+				return false;
 		} catch (Exception e) {
 			return false;
 		}
 
 		return true;
+	}
+
+	@Override
+	public int compareTo(TaiKhoan taiKhoan) {
+		if (taiKhoan == null) {
+			return 1;
+		}
+
+		int rs = 0;
+
+		// So sanh chung tu
+		if (chungTu == null) {
+			if (taiKhoan.getChungTu() != null) {
+				return -1;
+			}
+		} else {
+			if (taiKhoan.getChungTu() == null) {
+				return 1;
+			} else {
+				rs = chungTu.compareTo(taiKhoan.getChungTu());
+				if (rs != 0) {
+					return rs;
+				}
+			}
+		}
+
+		// So sanh nhom dinh khoan
+		if (nhomDk > taiKhoan.getNhomDk()) {
+			return 1;
+		} else if (nhomDk < taiKhoan.getNhomDk()) {
+			return -1;
+		}
+
+		// So sanh loai tai khoan
+		if (loaiTaiKhoan == null) {
+			if (taiKhoan.getLoaiTaiKhoan() != null) {
+				return -1;
+			}
+		} else {
+			if (taiKhoan.getLoaiTaiKhoan() == null) {
+				return 1;
+			} else {
+				rs = loaiTaiKhoan.compareTo(taiKhoan.getLoaiTaiKhoan());
+				if (rs != 0) {
+					return rs;
+				}
+			}
+		}
+
+		return rs;
 	}
 }
