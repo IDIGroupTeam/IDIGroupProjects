@@ -313,7 +313,7 @@ public class SalaryController {
 				salaryDetail.setOverTimeW("");
 				salaryDetail.setSubsidize("");
 			}			
-			
+			salaryDetail.setWorkedDay(null);
 			WorkingDay workingDay = null;
 			if(month < 10)
 				workingDay = workingDayDAO.getWorkingDay(year + "-0" + month, "IDI");
