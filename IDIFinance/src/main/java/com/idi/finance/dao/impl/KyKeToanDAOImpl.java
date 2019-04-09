@@ -102,6 +102,9 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 	@Value("${TINH_SO_DU_KY_THEO_DOI_TUONG}")
 	private String TINH_SO_DU_KY_THEO_DOI_TUONG;
 
+	@Value("${TINH_SO_DU_KY_KTTH_THEO_DOI_TUONG}")
+	private String TINH_SO_DU_KY_KTTH_THEO_DOI_TUONG;
+
 	@Value("${THEM_SO_DU_KY}")
 	private String THEM_SO_DU_KY;
 
@@ -270,8 +273,11 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 		}
 
 		String query = TINH_SO_DU_KY_THEO_DOI_TUONG;
+		String ktthQuery = TINH_SO_DU_KY_KTTH_THEO_DOI_TUONG;
 		query = query.replaceAll("\\$MA_TK\\$", maTk);
+		ktthQuery = query.replaceAll("\\$MA_TK\\$", maTk);
 		logger.info(query);
+		logger.info(ktthQuery);
 		logger.info("kyKeToan " + kyKeToan);
 		logger.info("loaiDt " + loaiDt);
 		logger.info("maTk " + maTk);
@@ -279,11 +285,32 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 		Object[] objs = { loaiDt, kyKeToan.getBatDau(), kyKeToan.getKetThuc(), loaiDt, kyKeToan.getBatDau(),
 				kyKeToan.getKetThuc(), loaiDt, kyKeToan.getBatDau(), kyKeToan.getKetThuc() };
 		List<SoDuKy> soDuKyDs = jdbcTmpl.query(query, objs, new SoDuKyTruocDoiTuongMapper());
+		List<SoDuKy> soDuKyKtthDs = jdbcTmpl.query(ktthQuery, objs, new SoDuKyTruocDoiTuongMapper());
 
-		List<SoDuKy> ketQua = null;
+		List<SoDuKy> ketQua = new ArrayList<>();
 		if (soDuKyDs != null) {
-			ketQua = new ArrayList<>();
 			Iterator<SoDuKy> iter = soDuKyDs.iterator();
+			while (iter.hasNext()) {
+				SoDuKy soDuKy = iter.next();
+
+				try {
+					soDuKy.setKyKeToan(kyKeToan);
+
+					int pos = ketQua.indexOf(soDuKy);
+					if (pos > -1) {
+						SoDuKy soDuKyTt = ketQua.get(pos);
+						soDuKyTt.tron(soDuKy);
+					} else {
+						ketQua.add(soDuKy);
+					}
+				} catch (Exception e) {
+
+				}
+			}
+		}
+
+		if (soDuKyKtthDs != null) {
+			Iterator<SoDuKy> iter = soDuKyKtthDs.iterator();
 			while (iter.hasNext()) {
 				SoDuKy soDuKy = iter.next();
 
