@@ -1495,12 +1495,20 @@ public class KyKeToanController {
 		}
 
 		List<SoDuKy> doiTuongDs = kyKeToanDAO.danhSachSoDuKyTheoDoiTuong(kyKeToan.getMaKyKt(), loaiDt);
-		List<SoDuKy> phaiThuDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, loaiDt, LoaiTaiKhoan.PHAI_THU_KHACH_HANG);
-		List<SoDuKy> phaiTraDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, loaiDt, LoaiTaiKhoan.PHAI_TRA_NGUOI_BAN);
 
+		// Danh sách cộng nợ
 		List<SoDuKy> doiTuongCNDs = new ArrayList<>();
-		doiTuongCNDs.addAll(phaiThuDs);
-		doiTuongCNDs.addAll(phaiTraDs);
+
+		String[] congNos = props.getCauHinh(PropCont.TAI_KHOAN_CONG_NO).getGiaTri().split(";");
+
+		for (int i = 0; i < congNos.length; i++) {
+			try {
+				List<SoDuKy> congNoDs = kyKeToanDAO.tinhSoDuKyTheoDoiTuong(kyKeToan, loaiDt, congNos[i]);
+				doiTuongCNDs.addAll(congNoDs);
+			} catch (Exception e) {
+			}
+		}
+
 		Iterator<SoDuKy> doiTuongIter = doiTuongCNDs.iterator();
 		while (doiTuongIter.hasNext()) {
 			SoDuKy soDuKy = doiTuongIter.next();

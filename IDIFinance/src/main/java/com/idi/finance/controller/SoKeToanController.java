@@ -3,6 +3,7 @@ package com.idi.finance.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -45,6 +46,7 @@ import com.idi.finance.dao.NhanVienDAO;
 import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.form.TkSoKeToanForm;
+import com.idi.finance.utils.PropCont;
 import com.idi.finance.utils.Utils;
 
 @Controller
@@ -53,6 +55,9 @@ public class SoKeToanController {
 
 	@Autowired
 	DungChung dungChung;
+
+	@Autowired
+	PropCont props;
 
 	@Autowired
 	TaiKhoanDAO taiKhoanDAO;
@@ -490,12 +495,13 @@ public class SoKeToanController {
 				form.themLoaiCt(ChungTu.TAT_CA);
 			}
 
-			// Lấy danh sách tài khoản 131, 331
+			// Lấy danh sách tài khoản công nợ 131; 331; 141; 334 ...
 			List<LoaiTaiKhoan> loaiTaiKhoanDs = new ArrayList<>();
-			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.PHAI_THU_KHACH_HANG));
-			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.PHAI_TRA_NGUOI_BAN));
-			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.TAM_UNG));
-			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.TRA_NGUOI_LAO_DONG));
+			try {
+				String[] congNos = props.getCauHinh(PropCont.TAI_KHOAN_CONG_NO).getGiaTri().split(";");
+				loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(congNos));
+			} catch (Exception e) {
+			}
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
 			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định là 131
@@ -702,12 +708,13 @@ public class SoKeToanController {
 				form.themLoaiCt(ChungTu.TAT_CA);
 			}
 
-			// Lấy danh sách tài khoản 131, 331
+			// Lấy danh sách tài khoản công nợ 131; 331; 141; 334
 			List<LoaiTaiKhoan> loaiTaiKhoanDs = new ArrayList<>();
-			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.PHAI_THU_KHACH_HANG));
-			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.PHAI_TRA_NGUOI_BAN));
-			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.TAM_UNG));
-			loaiTaiKhoanDs.add(taiKhoanDAO.layTaiKhoan(LoaiTaiKhoan.TRA_NGUOI_LAO_DONG));
+			try {
+				String[] congNos = props.getCauHinh(PropCont.TAI_KHOAN_CONG_NO).getGiaTri().split(";");
+				loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(congNos));
+			} catch (Exception e) {
+			}
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
 			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định là 111

@@ -380,6 +380,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				doiTuong.setMaDt(rs.getInt("MA_DT"));
 				doiTuong.setKhDt(rs.getString("KH_DT"));
 				doiTuong.setTenDt(rs.getString("TEN_DT"));
+				logger.info(
+						"doiTuong: " + doiTuong.getMaDt() + " - " + doiTuong.getTenDt() + " - " + doiTuong.getKhDt());
 				doiTuong.setLoaiDt(rs.getInt("LOAI_DT"));
 				doiTuong.setDiaChi(rs.getString("DIA_CHI"));
 				doiTuong.setMaThue(rs.getString("MA_THUE"));
