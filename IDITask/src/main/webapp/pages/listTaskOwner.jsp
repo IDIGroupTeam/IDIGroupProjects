@@ -43,7 +43,7 @@ $(function() {
 
 	$(function() {
 		// Khởi tạo action/method cho taskForm form
-		$("#taskForm").attr("action", "${url}/");
+		$("#taskForm").attr("action", "${url}/listTasksOwner");
 		$("#taskForm").attr("method", "POST");		
 		$("button[id^=page]").each(function(i, el) {
 			$(this).click(function() {
@@ -104,27 +104,19 @@ tr:nth-child(even) {
 </style>
 </head>
 <body>
-	<a href="${url}/listTasksOwner"><button class="btn btn-primary btn-sm">Công việc của tôi</button></a>
+	<a href="${url}/"><button class="btn btn-primary btn-sm">Tất cả công việc</button></a>
 	<a href="${url}/prepareReport"><button class="btn btn-primary btn-sm">Thống kê/báo cáo</button></a>
 	<a href="${url}/addNewTask"><button class="btn btn-primary btn-sm">Tạo việc mới</button></a>
+	
 	<br />
 	<br />
-	<form:form modelAttribute="taskForm" method="POST">
+	<form:form modelAttribute="taskForm" method="POST" action="listTasksOwner" enctype="multipart/form-data">
 		<table class="table">
 			<tr>
-				<td nowrap="nowrap">Tìm theo phòng:</td>
-				<td><form:select path="area" class="form-control animated">
-						<form:option value="" label="- Chọn tất cả phòng ban -" />
-						<form:options items="${departmentMap}" />
-					</form:select>
+				<td nowrap="nowrap"><i>Tìm công việc theo: Mã
+						việc/Tên việc/Người được giao/Trạng thái công việc/Mã phòng/Kế hoạch cho tháng </i>
 				</td>
-				<td nowrap="nowrap">Tìm theo người làm:</td>
-				<td><form:select path="ownedBy" class="form-control animated">
-						<form:option value="0" label="- Chọn tất cả người làm -" />
-						<c:forEach items="${employeesList}" var="employee">
-							<form:option value="${employee.employeeId}">${employee.fullName},&nbsp;${employee.jobTitle}</form:option>
-						</c:forEach>
-					</form:select>
+				<td align="center" ><form:input path="searchValue" class="form-control"/>
 				</td>
 				<td nowrap="nowrap">Tìm theo trạng thái:</td>
 				<td><form:select path="status" class="form-control animated">
@@ -134,14 +126,7 @@ tr:nth-child(even) {
 						</c:forEach>
 					</form:select>
 				</td>
-			</tr>
-			<tr>
-				<td colspan="2" nowrap="nowrap"><i>Tìm công việc theo: Mã
-						việc/Tên việc/Người được giao/Trạng thái công việc/Mã phòng/Kế hoạch cho tháng </i>
-				</td>
-				<td align="center" colspan="2"><form:input path="searchValue" class="form-control"/>
-				</td>
-				<td colspan="2" align="right"> 
+				<td align="right"> 
 					<input id="search" class="btn btn-lg btn-primary btn-sm" type="submit" value="Tìm kiếm" align="right" />
 				</td>
 			</tr>

@@ -81,16 +81,19 @@
 }
 </style>
 </head>
-<body>
+<body>	
 	<a href="${pageContext.request.contextPath}/"><button
-			class="btn btn-lg btn-primary btn-sm">Quay lại danh sách
-			công việc</button></a><br/><br/>
+		class="btn btn-lg btn-primary btn-sm">Danh sách tất cả
+		công việc</button></a>
+	<a href="${pageContext.request.contextPath}/listTasksOwner"><button
+		class="btn btn-lg btn-primary btn-sm">Công việc của tôi</button></a><br/><br/>
+	
 	<form:form modelAttribute="taskForm" method="POST"
 		action="insertNewTask" enctype="multipart/form-data">
-		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu"
+		<!-- <input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu"
 			name="Lưu" />
-		<br />
-		<br />
+		<br /> 
+		<br /> -->
 		<div class="table table-bordered">
 			<table class="table">
 				<tbody>
@@ -208,8 +211,8 @@
 		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Lưu"
 			name="Lưu" /> <br/><br/>
 	</form:form>
-	<a href="${pageContext.request.contextPath}/"><button
+<%-- 	<a href="${pageContext.request.contextPath}/"><button
 			class="btn btn-lg btn-primary btn-sm">Quay lại danh sách
-			công việc</button></a>
+			công việc</button></a> --%>
 </body>
 </html>

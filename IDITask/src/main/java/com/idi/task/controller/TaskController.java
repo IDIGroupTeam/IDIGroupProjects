@@ -180,7 +180,7 @@ public class TaskController {
 				+ "', trạng thái công việc = '" + form.getStatus() + "'.\n \n (Note: id = 0 tức là không chọn ai)");
 
 			model.addAttribute("tasks", listTaskForPage);
-			model.addAttribute("formTitle", "Danh sách công việc");
+			model.addAttribute("formTitle", "Danh sách tất cả công việc");
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -188,6 +188,103 @@ public class TaskController {
 		return "listTask";
 	}
 
+	@RequestMapping(value = {"/listTasksOwner"})
+	public String listTasksOwner(Model model, @ModelAttribute("taskForm") TaskForm form) throws Exception {
+		try {
+			//System.err.println("owner .....");
+			//inject from Login account
+			int userId = -1;
+			String username = new LoginController().getPrincipal();		
+			//System.err.println("user name: " + username);
+		    if (username != null && username.length() > 0 && !username.equalsIgnoreCase("anonymousUser")) {
+		    	UserLogin userLogin  =  userRoleDAO.getAUserLoginFull(username);
+		    	userId = userLogin.getUserID();
+		    }else {
+		    	return "/login"; 
+		    }
+		    //System.err.println("user userId: " + userId);
+			List<Task> list = null;
+			
+			// get list department
+			Map<String, String> departmentMap = this.listDepartments();
+			model.addAttribute("departmentMap", departmentMap);
+
+			// get list employee id who is owner of the tasks
+			model.addAttribute("employeesList", employeesOwner());
+			
+			model.addAttribute("statusList", taskDAO.getListStatus());
+			
+			// Paging:
+			// Number records of a Page: Default: 25
+			// Page Index: Default: 1
+			// Total records
+			// Total of page
+			if (form.getNumberRecordsOfPage() == 0) {
+				form.setNumberRecordsOfPage(25);
+			}
+
+			if (form.getPageIndex() == 0) {
+				form.setPageIndex(1);
+			}
+
+			boolean search = false;
+			if ((form.getSearchValue() != null && form.getSearchValue().length() > 0)					
+					|| form.getStatus() != null && form.getStatus().length() > 0){
+				log.info("Searching for: '" + form.getSearchValue() + "', trạng thái công viêc: " + form.getStatus() );
+				search = true;
+				list = taskDAO.getTasksBySearch(form.getSearchValue(), null, userId, form.getStatus());
+			} else
+				list = taskDAO.getTasksOwner(userId);
+			form.setTotalRecords(list.size());
+
+			int totalPages = form.getTotalRecords() % form.getNumberRecordsOfPage() > 0
+					? form.getTotalRecords() / form.getNumberRecordsOfPage() + 1
+					: form.getTotalRecords() / form.getNumberRecordsOfPage();
+			form.setTotalPages(totalPages);
+
+			List<Task> listTaskForPage = new ArrayList<Task>();
+
+			if (form.getPageIndex() < totalPages) {
+				if (form.getPageIndex() == 1) {
+					for (int i = 0; i < form.getNumberRecordsOfPage(); i++) {
+						Task task = new Task();
+						task = list.get(i);
+						listTaskForPage.add(task);
+					}
+				} else if (form.getPageIndex() > 1) {
+					for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form.getPageIndex()
+							* form.getNumberRecordsOfPage(); i++) {
+						Task task = new Task();
+						task = list.get(i);
+						listTaskForPage.add(task);
+					}
+				}
+			} else if (form.getPageIndex() == totalPages) {
+				for (int i = ((form.getPageIndex() - 1) * form.getNumberRecordsOfPage()); i < form
+						.getTotalRecords(); i++) {
+					Task task = new Task();
+					task = list.get(i);
+					listTaskForPage.add(task);
+				}
+			}
+
+			model.addAttribute("taskForm", form);
+			if (list != null && list.size() < 1 && !search)
+				model.addAttribute("message", "Chưa có công việc nào được giao cho bạn");
+			else if (list != null && list.size() < 1 && search)
+				model.addAttribute("message",
+						"Không có công việc nào khớp với thông tin: Mã việc/Tên việc/Người được giao/Trạng thái công việc/Mã phòng/Kế hoạch cho tháng = '"
+				+ form.getSearchValue() + "', trạng thái công việc = '" + form.getStatus() + "' được giao cho bạn");
+
+			model.addAttribute("tasks", listTaskForPage);
+			model.addAttribute("formTitle", "Danh sách công việc được giao cho bạn");			
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return "listTaskOwner";
+	}
+	
 	@RequestMapping(value = "/removeTaskRelated")
 	public String removeTaskRelated(Model model, @RequestParam("taskId") int taskId, @RequestParam("taskIdRemove") int taskIdRemove) throws Exception{
 		try {

@@ -54,32 +54,36 @@ public class UserRoleDAOImpl implements UserRoleDAO {
 		//logger.info("GET_FULL_A_USER_BY_USERNAME query= " + sql);
 	
 		UserLogin usrLogin  = new  UserLogin();
-		
-		if (username != null && username.length() >0) {
-			String sql1= properties.getProperty("GET_USER_BY_USERNAME").toString();
-			logger.info("GET_USER_BY_USERNAME query=" + sql1);		
-			Object[] params1 = new Object[] {username};
-			UserBean usrB = jdbcTmpl.queryForObject(sql1, params1, new UserMapper());
-			
-			usrLogin.setId(usrB.getId());
-			usrLogin.setEnable(usrB.getEnabled());
-			usrLogin.setPassword(usrB.getPassword());
-			usrLogin.setUsername(usrB.getUsername());
-			usrLogin.setUserID(usrB.getUserID());
-			
-			if (usrB.getId() > 0) {
+		try {
+			if (username != null && username.length() >0) {
+				String sql1= properties.getProperty("GET_USER_BY_USERNAME").toString();
+				logger.info("GET_USER_BY_USERNAME query=" + sql1);		
+				Object[] params1 = new Object[] {username};
+				UserBean usrB = jdbcTmpl.queryForObject(sql1, params1, new UserMapper());
 				
-				String sql2 = properties.getProperty("GET_USER_ROLE_BY_IDUSER").toString();
-				logger.info("GET_USER_ROLE_BY_IDUSER query=" + sql2);		
-				Object[] params2 = new Object[] {usrB.getId()};	
-				UserRoleBean usrRB  = jdbcTmpl.queryForObject(sql2, params2, new UserRoleMapper());
+				usrLogin.setId(usrB.getId());
+				usrLogin.setEnable(usrB.getEnabled());
+				usrLogin.setPassword(usrB.getPassword());
+				usrLogin.setUsername(usrB.getUsername());
+				usrLogin.setUserID(usrB.getUserID());
 				
-				usrLogin.setRoleID(usrRB.getRoleID());
-				usrLogin.setSecondRoleID(usrRB.getSecondRoleID());
-				usrLogin.setThirdRoleID(usrRB.getThirdRoleID());
-				usrLogin.setUser_Role(usrRB.getUserRole());
+				if (usrB.getId() > 0) {
+					
+					String sql2 = properties.getProperty("GET_USER_ROLE_BY_IDUSER").toString();
+					logger.info("GET_USER_ROLE_BY_IDUSER query=" + sql2);		
+					Object[] params2 = new Object[] {usrB.getId()};	
+					UserRoleBean usrRB  = jdbcTmpl.queryForObject(sql2, params2, new UserRoleMapper());
+					
+					usrLogin.setRoleID(usrRB.getRoleID());
+					usrLogin.setSecondRoleID(usrRB.getSecondRoleID());
+					usrLogin.setThirdRoleID(usrRB.getThirdRoleID());
+					usrLogin.setUser_Role(usrRB.getUserRole());
+				}
+				
 			}
-			
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
 		
 		return usrLogin;

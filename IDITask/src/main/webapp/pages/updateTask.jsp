@@ -191,13 +191,12 @@
 </style>
 </head>
 <body>
-	&nbsp;&nbsp;&nbsp;
-	<a href="${pageContext.request.contextPath}/">
-		<button class="btn btn-lg btn-primary btn-sm">Quay lại danh
-			sách công việc</button>
-	</a>
-	<br />
-	<br />
+	<a href="${pageContext.request.contextPath}/"><button
+		class="btn btn-lg btn-primary btn-sm">Danh sách tất cả
+		công việc</button></a>
+	<a href="${pageContext.request.contextPath}/listTasksOwner"><button
+		class="btn btn-lg btn-primary btn-sm">Công việc của tôi</button></a><br/><br/>
+
 <!-- 	<div id="exTab2" class="container"> -->
 		<ul class="nav nav-tabs">
 			<li class="${active1}"><a href="#1" data-toggle="tab">Thông tin chung</a></li>
@@ -205,20 +204,15 @@
 			<li class="${active3}"><a href="#3" data-toggle="tab">Công việc liên quan</a></li>
 		</ul>
 		<div class="tab-content ">
-			<div class="${tabActive1}" id="1">
-				<br />
+			<div class="${tabActive1}" id="1">				
 				<form:form modelAttribute="taskForm" method="POST"
-					action="updateTask" enctype="multipart/form-data">
-					<input class="btn btn-lg btn-primary btn-sm" type="submit"
-						value="Lưu" name="Lưu" />
-					<br />
-					<br />
+					action="updateTask" enctype="multipart/form-data">					
 					<form:hidden path="taskId" />
 					<table class="table table-bordered">
 						<tbody>
 							<tr>
 								<td bgcolor="#FAFAFA">Mã công việc:</td>
-								<td>${taskForm.taskId}</td>
+								<td>${taskForm.taskId}</td>								
 								<td nowrap="nowrap" align="right">Trạng thái của công việc:</td>
 								<td><form:select path="status"
 										class="form-control animated">
@@ -235,8 +229,8 @@
 									</form:select></td>
 							</tr>
 							<tr>
-								<td bgcolor="#FAFAFA">Tên việc:(*)</td>
-								<td colspan="3"><form:input path="taskName"
+								<td colspan="2" bgcolor="#FAFAFA">Tên việc:(*)</td>
+								<td colspan="2"><form:input path="taskName"
 										required="required" size="110" class="form-control animated" /></td>
 							</tr>
 						</tbody>
@@ -422,18 +416,19 @@
 
 				</form:form>
 				<a href="${pageContext.request.contextPath}/"><button
-						class="btn btn-lg btn-primary btn-sm">Quay lại danh sách
-						công việc</button></a> <br />
+					class="btn btn-lg btn-primary btn-sm">Danh sách tất cả
+					công việc</button></a>
+				<a href="${pageContext.request.contextPath}/listTasksOwner"><button
+					class="btn btn-lg btn-primary btn-sm">Công việc của tôi</button></a><br/><br/>
 			</div>
 			<div class="${tabActive2}" id="2">
 				<form:form modelAttribute="taskForm" method="POST"
 					action="updateSub" enctype="multipart/form-data">
-					<br />
 					<form:hidden path="taskId" />
 					<table class="table table-bordered">
 						<tbody>
 							<tr>
-								<td>Mã công việc: ${taskForm.taskId}</td>
+								<td>Mã công việc: ${taskForm.taskId}&nbsp;</td>
 								<td>Tên công việc: ${taskForm.taskName}</td>
 							</tr>
 						</tbody>
@@ -470,7 +465,6 @@
 				</form:form>
 			</div>
 			<div class="${tabActive3}" id="3">
-				<br />
 				<form:form modelAttribute="taskForm" method="GET"
 					action="editTask" enctype="multipart/form-data">
 					<form:hidden path="taskId" />				
@@ -478,7 +472,7 @@
 					<table class="table table-bordered">
 						<tbody>
 							<tr>
-								<td>Mã công việc: ${taskForm.taskId}</td>
+								<td>Mã công việc: ${taskForm.taskId} &nbsp;</td>
 								<td>Tên công việc: ${taskForm.taskName}</td>
 							</tr>
 						</tbody>

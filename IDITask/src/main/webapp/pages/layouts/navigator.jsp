@@ -7,7 +7,7 @@
 	</div>
 	<div class="panel-body">
 		<ul class="nav nav-pills nav-stacked">
-			<li><a class="active" href="/IDITask">Công việc</a></li>		
+			<li><a class="active" href="/IDITask/listTasksOwner">Công việc</a></li>		
 			<li><a href="#">xxxxx</a></li>
 		
 		</ul>

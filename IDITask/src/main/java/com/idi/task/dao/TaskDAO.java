@@ -60,6 +60,25 @@ public class TaskDAO extends JdbcDaoSupport {
 		return list;
 
 	}
+	
+	/**
+	 * Get list Task from DB
+	 * 
+	 * @param ownerBy
+	 * @return List of Task
+	 * @throws Exception
+	 */	
+	public List<Task> getTasksOwner(int ownerBy) {
+
+		String sql = properties.getProperty("GET_TASKS_OWNER").toString();
+		log.info("GET_TASKS_OWNER query: " + sql);
+		Object[] params = new Object[] { ownerBy };
+		TaskMapper mapper = new TaskMapper();
+
+		List<Task> list = jdbcTmpl.query(sql, params, mapper);
+		return list;
+
+	}
 
 	/**
 	 * Get list Task related from DB
@@ -293,6 +312,10 @@ public class TaskDAO extends JdbcDaoSupport {
 		return list;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public List<String> getListStatus() {
 		String sql = properties.getProperty("GET_STATUS").toString();
 		log.info("GET_STATUS query: " + sql);

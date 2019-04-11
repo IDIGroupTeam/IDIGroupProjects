@@ -48,12 +48,14 @@ $(function() {
 </script>
 <title>Báo cáo công việc</title>
 </head>
-<body>
-	<a href="${url}/"><button class="btn btn-lg btn-primary btn-sm"> Quay lại dach sách công việc</button></a>
-	
+<body>	
+	<a href="${pageContext.request.contextPath}/"><button
+		class="btn btn-lg btn-primary btn-sm">Danh sách tất cả
+		công việc</button></a>
+	<a href="${pageContext.request.contextPath}/listTasksOwner"><button
+		class="btn btn-lg btn-primary btn-sm">Công việc của tôi</button></a><br/><br/>
 	<form:form action="generateTaskReport"
 		modelAttribute="taskReportForm" method="POST">				
-		<br/>
 		<table class="table table-bordered table-hover">
 			<tr>
 				<td>Từ ngày:(*)</td>
