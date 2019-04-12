@@ -118,7 +118,7 @@
 						<td bgcolor="#FAFAFA" nowrap="nowrap">Hệ số hoàn thành cv (%):</td>
 						<td><form:input path="workComplete" class="form-control bfh-number" min="0" max="999" type="number" size="4"/></td>
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng">Số ngày lv thực tế:</td>
-						<td><form:input path="workedDay" class="form-control bfh-number" min="0.5" max="31" step="0.5" type="number" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng"/></td>
+						<td><form:input path="workedDay" class="form-control bfh-number" min="0.5" max="31" step="0.5" type="number" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng. Và bắt buộc phải định nghĩa ngày công chuẩn trước để việc tính toán được chính sác"/></td>
 						<td></td><td></td>
 					</tr>
 					<tr>
@@ -183,13 +183,23 @@
 					</tr>
 					<tr>
 						<td nowrap="nowrap" bgcolor="#E6E6E6">Tổng thu nhập</td>
-						<td nowrap="nowrap" bgcolor="#E6E6E6" colspan="2"><i>							
+						<td nowrap="nowrap" bgcolor="#E6E6E6" colspan="2"><i>	
+						<c:if test="${not empty salaryDetail.salaryForWorkedDay}">							
 							<c:if test="${not empty salaryDetail.basicSalary}">
-								<fmt:formatNumber value="${salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '') + salaryDetail.basicSalary.replaceAll(',', '')}" /> đ
+								<fmt:formatNumber value="${salaryDetail.salaryForWorkedDay.replaceAll(',', '')*(salaryDetail.workComplete/100) + salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '')}" /> đ
 							</c:if>
 							<c:if test="${empty salaryDetail.basicSalary}">
-								<fmt:formatNumber value="${salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '') + salaryDetail.salary.replaceAll(',', '')}" /> đ
+								<fmt:formatNumber value="${salaryDetail.salaryForWorkedDay.replaceAll(',', '')*(salaryDetail.workComplete/100) + salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '')}" /> đ
 							</c:if>	
+						</c:if>
+						<c:if test="${empty salaryDetail.salaryForWorkedDay}">							
+							<c:if test="${not empty salaryDetail.basicSalary}">
+								<fmt:formatNumber value="${salaryDetail.basicSalary.replaceAll(',', '')*(salaryDetail.workComplete/100) + salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '')}" /> đ
+							</c:if>
+							<c:if test="${empty salaryDetail.basicSalary}">
+								<fmt:formatNumber value="${salaryDetail.salary.replaceAll(',', '')*(salaryDetail.workComplete/100) + salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '')}" /> đ
+							</c:if>	
+						</c:if>	
 						</i></td>
 						<td nowrap="nowrap" bgcolor="#E6E6E6">Tổng giảm trừ</td>
 						<td nowrap="nowrap" bgcolor="#E6E6E6" colspan="2">

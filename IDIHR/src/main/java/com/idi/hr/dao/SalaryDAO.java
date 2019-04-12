@@ -242,7 +242,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 				 finalSalary = Float.valueOf(salaryDetail.getSalary());
 			}
 			if(salaryDetail.getWorkComplete() > 0) {
-				finalSalary=finalSalary*salaryDetail.getWorkComplete()/100;
+				finalSalary=finalSalary*(salaryDetail.getWorkComplete()/100);
 				//System.err.println(8000000*120/100);
 			}
 			// Tăng
@@ -333,7 +333,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 			}
 			
 			if(salaryDetail.getWorkComplete() > 0) {
-				finalSalary=finalSalary*salaryDetail.getWorkComplete()/100;				
+				finalSalary=finalSalary*(salaryDetail.getWorkComplete()/100);				
 			}
 			// Tang
 			float salaryPerHour = 0;
