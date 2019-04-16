@@ -342,7 +342,7 @@ public class TaskController {
 					//System.out.println(subUpdated);
 					if (subAddNew != null) {
 						subUpdated = sub.replace(subRemove, subAddNew);
-						System.out.println("co remove cu va add them moi " + subUpdated);
+						System.out.println("Co remove cu va add them moi " + subUpdated);
 					} else {
 						subUpdated = sub.replace(subRemove, "0");
 						System.out.println("Chi remove bot di va khong add them " + subUpdated);
@@ -366,6 +366,47 @@ public class TaskController {
 				 subUpdated = Utils.cutComma(subUpdated);
 				 taskDAO.updateSubscriber(subUpdated, taskForm.getTaskId());
 			}				
+			
+			Task task = taskDAO.getTask(taskForm.getTaskId());
+			
+			//inject from Login account
+			String username = new LoginController().getPrincipal();
+			UserLogin userLogin = new UserLogin();
+		    log.info("Using usename =" + username +" in update subcriber");
+		    if (username !=null && username.length() >0 ) {
+		    	userLogin  =  userRoleDAO.getAUserLoginFull(username);		    	
+		    }	
+						
+			MimeMessage mimeMessage = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+			//allEmployeesMap();
+			String htmlMsg = "Dear you, <br/>\n<br/>\n"
+					+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+					+ "<b>Người làm: " + allEmployeesMap().get(task.getOwnedBy()) + " </b><br/>\n"
+					+ "<b>Người thêm người liên quan: " + allEmployeesMap().get(userLogin.getUserID()) + " </b><br/>\n"
+					+ "Công việc thuộc phòng: " + task.getArea() + " <br/>\n " 
+					+ "Trạng thái: Tạo mới <br/>\n "
+					+ "Kế hoạch cho tháng: " + task.getPlannedFor() + " <br/>\n " 
+					+ "Độ ưu tiên: " + task.getPriority()
+					+ "<br/> <br/> \n" 
+					+ "Mô tả nội dung công việc: "	+ task.getDescription()
+					+ "<br/> \n <br/> \n Trân trọng, <br/> \n"
+					+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" ;
+			mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
+			List<String> mailList = taskDAO.getEmail(subUpdated);
+			
+			for (int i = 0; i < mailList.size(); i++) {
+				String sendTo = mailList.get(i);
+				//System.err.println("chuan bi send mail");
+				if (sendTo != null && sendTo.length() > 0) {
+					//System.err.println("send mail cho " + sendTo);
+					helper.setTo(sendTo);
+					helper.setSubject("[Thêm người liên quan cho công việc] - " + task.getTaskName());
+					helper.setFrom("IDITaskNotReply");
+					mailSender.send(mimeMessage);
+					//System.err.println("sent");
+				}
+			}
 
 			/*
 			 * model.addAttribute("sub", sub); if(sub !=null && sub.length() > 0)
