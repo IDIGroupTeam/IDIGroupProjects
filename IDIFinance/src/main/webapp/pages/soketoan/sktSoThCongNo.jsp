@@ -17,15 +17,7 @@
 	});
 </script>
 
-<c:choose>
-	<c:when
-		test="${mainFinanceForm.taiKhoan==LoaiTaiKhoan.PHAI_THU_KHACH_HANG}">
-		<h4>Sổ tổng hợp công nợ phải thu</h4>
-	</c:when>
-	<c:otherwise>
-		<h4>Sổ tổng hợp công nợ phải trả</h4>
-	</c:otherwise>
-</c:choose>
+<h4>Sổ tổng hợp công nợ ${fn:toLowerCase(loaiTaiKhoan.tenTk)}</h4>
 
 <p>
 	<i>Tài khoản ${mainFinanceForm.taiKhoan}. Từ <fmt:formatDate
@@ -86,17 +78,35 @@
 								value="${duLieuKeToanCon.tongNoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
 						<td class="text-right" style="width: 100px;"><fmt:formatNumber
 								value="${duLieuKeToanCon.tongCoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+
 						<c:choose>
-							<c:when
-								test="${mainFinanceForm.taiKhoan==LoaiTaiKhoan.PHAI_THU_KHACH_HANG}">
-								<td class="text-right" style="width: 100px;"><fmt:formatNumber
-										value="${duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
-								<td class="text-right" style="width: 100px;">0</td>
+							<c:when test="${loaiTaiKhoan.luongTinh}">
+								<c:choose>
+									<c:when test="${duLieuKeToanCon.soDuCuoiKy > 0}">
+										<td class="text-right" style="width: 100px;"><fmt:formatNumber
+												value="${duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+										<td class="text-right" style="width: 100px;">0</td>
+									</c:when>
+									<c:otherwise>
+										<td class="text-right" style="width: 100px;">0</td>
+										<td class="text-right" style="width: 100px;"><fmt:formatNumber
+												value="${0-duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+									</c:otherwise>
+								</c:choose>
 							</c:when>
 							<c:otherwise>
-								<td class="text-right" style="width: 100px;">0</td>
-								<td class="text-right" style="width: 100px;"><fmt:formatNumber
-										value="${0-duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+								<c:choose>
+									<c:when test="${loaiTaiKhoan.soDu == LoaiTaiKhoan.NO}">
+										<td class="text-right" style="width: 100px;"><fmt:formatNumber
+												value="${duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+										<td class="text-right" style="width: 100px;">0</td>
+									</c:when>
+									<c:otherwise>
+										<td class="text-right" style="width: 100px;">0</td>
+										<td class="text-right" style="width: 100px;"><fmt:formatNumber
+												value="${duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+									</c:otherwise>
+								</c:choose>
 							</c:otherwise>
 						</c:choose>
 					</tr>

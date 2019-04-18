@@ -506,7 +506,7 @@ public class SoKeToanController {
 
 			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định là 131
 			if (form.getTaiKhoan() == null) {
-				form.setTaiKhoan(LoaiTaiKhoan.PHAI_THU_KHACH_HANG);
+				form.setTaiKhoan(loaiTaiKhoanDs.get(0).getMaTk());
 			}
 
 			logger.info("Sổ tổng hợp công nợ tài khoản: " + form.getTaiKhoan());
@@ -531,6 +531,26 @@ public class SoKeToanController {
 				// Tính nợ/có đầu kỳ của tất cả các đối tượng
 				List<DuLieuKeToan> noCoDauKyDs = soKeToanDAO.danhSachTongHopCongNo(form.getTaiKhoan(), form.getDau(),
 						Utils.prevPeriod(kyKt).getCuoi());
+				List<DuLieuKeToan> noCoDauKyKtthDs = soKeToanDAO.danhSachTongHopCongNoKtth(form.getTaiKhoan(),
+						form.getDau(), Utils.prevPeriod(kyKt).getCuoi());
+				if (noCoDauKyDs != null) {
+					if (noCoDauKyKtthDs != null) {
+						Iterator<DuLieuKeToan> noCoDauKyKtthIter = noCoDauKyKtthDs.iterator();
+						while (noCoDauKyKtthIter.hasNext()) {
+							DuLieuKeToan duLieuKeToanKtthTmpl = noCoDauKyKtthIter.next();
+
+							int pos = noCoDauKyDs.indexOf(duLieuKeToanKtthTmpl);
+							if (pos > -1) {
+								DuLieuKeToan duLieuKeToanTmpl = noCoDauKyDs.get(pos);
+								duLieuKeToanTmpl.tron(duLieuKeToanKtthTmpl);
+							} else {
+								noCoDauKyDs.add(duLieuKeToan);
+							}
+						}
+					}
+				} else {
+					noCoDauKyDs = noCoDauKyKtthDs;
+				}
 
 				// Tính số dự đầu kỳ thực
 				if (noCoDauKyDs != null) {
@@ -595,6 +615,26 @@ public class SoKeToanController {
 				// Tính nợ/có phát sinh trong kỳ của tất cả các đối tượng
 				List<DuLieuKeToan> tongNoCoPsDs = soKeToanDAO.danhSachTongHopCongNo(form.getTaiKhoan(), kyKt.getDau(),
 						kyKt.getCuoi());
+				List<DuLieuKeToan> tongNoCoPsKtthDs = soKeToanDAO.danhSachTongHopCongNoKtth(form.getTaiKhoan(),
+						kyKt.getDau(), kyKt.getCuoi());
+				if (tongNoCoPsDs != null) {
+					if (tongNoCoPsKtthDs != null) {
+						Iterator<DuLieuKeToan> tongNoCoPsKtthIter = tongNoCoPsKtthDs.iterator();
+						while (tongNoCoPsKtthIter.hasNext()) {
+							DuLieuKeToan duLieuKeToanKtthTmpl = tongNoCoPsKtthIter.next();
+
+							int pos = tongNoCoPsDs.indexOf(duLieuKeToanKtthTmpl);
+							if (pos > -1) {
+								DuLieuKeToan duLieuKeToanTmpl = tongNoCoPsDs.get(pos);
+								duLieuKeToanTmpl.tron(duLieuKeToanKtthTmpl);
+							} else {
+								tongNoCoPsDs.add(duLieuKeToanKtthTmpl);
+							}
+						}
+					}
+				} else {
+					tongNoCoPsDs = tongNoCoPsKtthDs;
+				}
 
 				if (tongNoCoPsDs != null) {
 					Iterator<DuLieuKeToan> tongNoCoPsIter = tongNoCoPsDs.iterator();
@@ -610,6 +650,30 @@ public class SoKeToanController {
 									duLieuKeToanTmpl.tron(noCoDauKyTmpl);
 									break;
 								}
+							}
+						}
+					}
+				}
+
+				if (noCoDauKyDs != null) {
+					Iterator<DuLieuKeToan> noCoDauKyIter = noCoDauKyDs.iterator();
+					while (noCoDauKyIter.hasNext()) {
+						DuLieuKeToan noCoDauKyTmpl = noCoDauKyIter.next();
+
+						if (tongNoCoPsDs != null) {
+							boolean coDoiTuong = false;
+							Iterator<DuLieuKeToan> tongNoCoPsIter = tongNoCoPsDs.iterator();
+							while (tongNoCoPsIter.hasNext()) {
+								DuLieuKeToan duLieuKeToanTmpl = tongNoCoPsIter.next();
+
+								if (duLieuKeToanTmpl.equals(noCoDauKyTmpl)) {
+									coDoiTuong = true;
+									break;
+								}
+							}
+
+							if (!coDoiTuong) {
+								tongNoCoPsDs.add(noCoDauKyTmpl);
 							}
 						}
 					}
@@ -719,7 +783,7 @@ public class SoKeToanController {
 
 			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định là 111
 			if (form.getTaiKhoan() == null) {
-				form.setTaiKhoan(LoaiTaiKhoan.PHAI_THU_KHACH_HANG);
+				form.setTaiKhoan(loaiTaiKhoanDs.get(0).getMaTk());
 			}
 
 			// Lấy danh sách đối tượng
@@ -775,7 +839,6 @@ public class SoKeToanController {
 			logger.info("Lấy danh sách số dư kỳ theo đối tượng");
 			List<SoDuKy> soDuKyDs = kyKeToanDAO.danhSachSoDuKyTheoDoiTuong(form.getTaiKhoan(),
 					form.getKyKeToan().getMaKyKt());
-			logger.info(soDuKyDs);
 
 			logger.info("Lấy tổng nợ/có đầu kỳ");
 			List<DuLieuKeToan> noCoDauKyDs = soKeToanDAO.danhSachTongPhatSinhDoiTuong(form.getTaiKhoan(),

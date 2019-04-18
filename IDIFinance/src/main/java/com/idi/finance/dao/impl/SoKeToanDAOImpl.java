@@ -54,6 +54,9 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 	@Value("${DANH_SACH_TONG_HOP_CONG_NO}")
 	private String DANH_SACH_TONG_HOP_CONG_NO;
+	
+	@Value("${DANH_SACH_TONG_HOP_CONG_NO_KTTH}")
+	private String DANH_SACH_TONG_HOP_CONG_NO_KTTH;
 
 	private JdbcTemplate jdbcTmpl;
 
@@ -704,6 +707,57 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		query = query.replaceAll("\\$MA_TK\\$", maTk);
 
 		logger.info("Danh sách tổng hợp công nợ theo loại tài khoản: '" + maTk + "' ...");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		if (dau != null) {
+			String batDau = sdf.format(dau);
+			logger.info("Từ " + batDau);
+			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "AND CT.NGAY_HT >= '" + batDau + "'");
+		} else {
+			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "");
+		}
+
+		if (cuoi != null) {
+			String ketThuc = sdf.format(cuoi);
+			logger.info("Đến " + ketThuc);
+			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "AND CT.NGAY_HT <= '" + ketThuc + "'");
+		} else {
+			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "");
+		}
+
+		logger.info(query);
+
+		List<DuLieuKeToan> duLieuKeToanDs = jdbcTmpl.query(query, new DuLieuKeToanMapper());
+
+		List<DuLieuKeToan> ketQua = null;
+		// Ghép dữ liệu tại đây
+		if (duLieuKeToanDs != null) {
+			ketQua = new ArrayList<>();
+			Iterator<DuLieuKeToan> iter = duLieuKeToanDs.iterator();
+			while (iter.hasNext()) {
+				DuLieuKeToan duLieuKeToan = iter.next();
+
+				int pos = ketQua.indexOf(duLieuKeToan);
+				if (pos > -1) {
+					DuLieuKeToan duLieuKeToanTmpl = ketQua.get(pos);
+					duLieuKeToanTmpl.tron(duLieuKeToan);
+				} else {
+					ketQua.add(duLieuKeToan);
+				}
+			}
+		}
+
+		return ketQua;
+	}
+	
+	public List<DuLieuKeToan> danhSachTongHopCongNoKtth(String maTk, Date dau, Date cuoi) {
+		if (maTk == null) {
+			return null;
+		}
+
+		String query = DANH_SACH_TONG_HOP_CONG_NO_KTTH;
+		query = query.replaceAll("\\$MA_TK\\$", maTk);
+
+		logger.info("Danh sách tổng hợp công nợ ktth theo loại tài khoản: '" + maTk + "' ...");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
 		if (dau != null) {
 			String batDau = sdf.format(dau);

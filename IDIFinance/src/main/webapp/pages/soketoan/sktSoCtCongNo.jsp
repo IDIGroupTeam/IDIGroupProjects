@@ -17,15 +17,7 @@
 	});
 </script>
 
-<c:choose>
-	<c:when
-		test="${mainFinanceForm.taiKhoan==LoaiTaiKhoan.PHAI_THU_KHACH_HANG}">
-		<h4>Sổ chi tiết công nợ phải thu</h4>
-	</c:when>
-	<c:otherwise>
-		<h4>Sổ chi tiết công nợ phải trả</h4>
-	</c:otherwise>
-</c:choose>
+<h4>Sổ chi tiết công nợ ${fn:toLowerCase(loaiTaiKhoan.tenTk)}</h4>
 
 <div>
 	<span><i>Tài khoản ${mainFinanceForm.taiKhoan}. Từ <fmt:formatDate

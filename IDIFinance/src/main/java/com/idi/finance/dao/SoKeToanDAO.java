@@ -11,7 +11,7 @@ public interface SoKeToanDAO {
 	public List<NghiepVuKeToan> danhSachNghiepVuKeToanTheoLoaiTaiKhoan(String maTk);
 
 	public List<NghiepVuKeToan> danhSachNghiepVuKeToanTheoLoaiTaiKhoan(String maTk, Date dau, Date cuoi);
-	
+
 	public List<NghiepVuKeToan> danhSachNghiepVuKeToanKtthTheoLoaiTaiKhoan(String maTk, Date dau, Date cuoi);
 
 	public List<NghiepVuKeToan> danhSachNghiepVuKeToanKhoTheoLoaiTaiKhoan(String maTk, Date dau, Date cuoi);
@@ -25,4 +25,6 @@ public interface SoKeToanDAO {
 	public List<DuLieuKeToan> danhSachTongPhatSinhDoiTuong(String maTk, Date dau, Date cuoi);
 
 	public List<DuLieuKeToan> danhSachTongHopCongNo(String maTk, Date dau, Date cuoi);
+
+	public List<DuLieuKeToan> danhSachTongHopCongNoKtth(String maTk, Date dau, Date cuoi);
 }
