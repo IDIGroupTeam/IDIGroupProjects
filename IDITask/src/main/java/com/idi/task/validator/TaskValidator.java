@@ -1,12 +1,12 @@
-/*package com.idi.task.validator;
+package com.idi.task.validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.idi.task.form.TaskForm;
+import com.idi.task.bean.Task;
+import com.idi.task.dao.TaskDAO;
 
 //import org.apache.commons.validator.routines.EmailValidator;
 
@@ -19,32 +19,23 @@ public class TaskValidator implements Validator {
 	// Các class được hỗ trợ Validate
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return clazz == TaskForm.class;
+		return clazz == Task.class;
 	}
+	
 	@Autowired
-	//private EmployeeDAO employeeDAO;
+	private TaskDAO taskDAO;
 	
 	@Override
-	public void validate(Object target, Errors errors) {
-	//	EmployeeInfo employeeFrom = (EmployeeInfo) target;
-
-		// Kiểm tra các field của EmployeeInfo.
-		// (Xem thêm file property: messages/validator.property)
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "fullName", "NotEmpty.employeeForm.fullName");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "NotEmpty.employeeForm.email");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "gender", "NotEmpty.employeeForm.gender");
-
-		if (!emailValidator.isValid(employeeFrom.getEmail())) {
-			// Error in email field.
-			// Lỗi trường email.
-			errors.rejectValue("email", "Pattern.employeeForm.email");
+	public void validate(Object target, Errors errors){
+		//System.err.println("Validator ...");
+		Task task = (Task) target;
+		try {		
+			if(taskDAO.taskIsExits(task.getTaskName())) {
+				//System.out.println("Duplicate taskName is existing...");
+				errors.rejectValue("taskName", "Pattern.task.taskName");
+			}	
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
-		//kiem tra duplicate account name
-		
-		if(employeeDAO.getAccount(employeeFrom.getLoginAccount()) > 0) {
-			//System.out.println("dupicate login account is existing...");
-			errors.rejectValue("loginAccount", "Pattern.employeeForm.loginAccount");
-		}		
 	}
 }
-*/

@@ -95,6 +95,11 @@
 		<br /> 
 		<br /> -->
 		<div class="table table-bordered">
+			<table>
+				<tr>
+					<td><form:errors path="taskName" class="error-message" /></td>
+				</tr>
+			</table>
 			<table class="table">
 				<tbody>
 					<tr>

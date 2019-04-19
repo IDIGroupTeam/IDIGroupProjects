@@ -25,10 +25,13 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +52,7 @@ import com.idi.task.form.SendReportForm;
 import com.idi.task.form.TaskForm;
 import com.idi.task.login.bean.UserLogin;
 import com.idi.task.login.dao.UserRoleDAO;
-
+import com.idi.task.validator.TaskValidator;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -96,6 +99,9 @@ public class TaskController {
 	private JavaMailSender mailSender;
 	
 	PropertiesManager properties = new PropertiesManager("task.properties");
+	
+	@Autowired
+	TaskValidator taskValidator;
 	
 	public static File fontFile = new File("/home/idi/properties/vuTimes.ttf");
 	//public static File fontBFile = new File("/home/idi/properties/vni.common.VTIMESB.ttf");
@@ -438,74 +444,95 @@ public class TaskController {
 	 * "Danh sách công việc được tìm"); } catch (Exception e) { log.error(e, e);
 	 * e.printStackTrace(); } return "listTask"; }
 	 */
+	
+	// Set a form validator
+	@InitBinder
+	protected void initBinder(WebDataBinder dataBinder) {
+
+		// Form mục tiêu
+		Object target = dataBinder.getTarget();
+		if (target == null) {
+			return;
+		}
+		if (target.getClass() == Task.class) {
+			dataBinder.setValidator(taskValidator);
+		}
+	}
 
 	@RequestMapping(value = "/insertNewTask", method = RequestMethod.POST)
-	public String insertNewTask(Model model, @ModelAttribute("taskForm") Task task,
-			final RedirectAttributes redirectAttributes) throws Exception {
+	public String insertNewTask(Model model, @ModelAttribute("taskForm") @Validated Task task,
+			BindingResult result, final RedirectAttributes redirectAttributes) throws Exception {
 		try {
 			//System.err.println("insert new task");
 
-			//inject from Login account
-			String username = new LoginController().getPrincipal();
-		    log.info("Using usename =" + username +" in insert new task");
-		    if (username !=null && username.length() >0 ) {
-		    	UserLogin userLogin  =  userRoleDAO.getAUserLoginFull(username);
-		    	task.setCreatedBy(userLogin.getUserID());
-		    }
-			
-			Timestamp ts = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
-			
-			
-			System.out.println("M:"+ task.getMonth() +"Y:" + task.getYear());
-			if(Integer.parseInt(task.getMonth()) < 10 && Integer.parseInt(task.getMonth()) > 0)
-				task.setPlannedFor(task.getYear() + "-0" + task.getMonth());
-			else if(Integer.parseInt(task.getMonth()) > 9)
-				task.setPlannedFor(task.getYear() + "-" + task.getMonth());
-			task.setCreationDate(ts);
-			task.setUpdateTS(ts);
-			taskDAO.insertTask(task);
-			
-			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Thêm thông tin công việc thành công!");
-			String owner = "Chưa giao cho ai";
-			if(task.getOwnedBy() > 0)
-				owner = allEmployeesMap().get(task.getOwnedBy());
-			String createdName = "";
-			if(task.getCreatedBy() > 0)
-				createdName = allEmployeesMap().get(task.getCreatedBy());
-			MimeMessage mimeMessage = mailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-			String htmlMsg = "Dear you, <br/>\n<br/>\n"
-					+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
-					+ "<b>Người làm: " + owner + " </b><br/>\n"
-					+ "Công việc thuộc phòng: " + task.getArea() + " <br/>\n " 
-					+ "Trạng thái: Tạo mới <br/>\n "
-					+ "Kế hoạch cho tháng: " + task.getPlannedFor() + " <br/>\n " 
-					+ "Độ ưu tiên: " + task.getPriority()
-					+ "<br/> <br/> \n" 
-					+ "<b>Người tạo " + createdName + " </b> <e-mail> lúc "	+ ts + " <br/>\n" 
-					+ "Mô tả nội dung công việc: "	+ task.getDescription()
-					+ "<br/> \n <br/> \n Trân trọng, <br/> \n"
-					+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" ;
-			mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
-			List<String> mailList = taskDAO.getEmail(task.getOwnedBy() + "," + task.getVerifyBy() + "," + task.getSecondOwned());
-			
-			for (int i = 0; i < mailList.size(); i++) {
-				String sendTo = mailList.get(i);
-				//System.err.println("chuan bi send mail");
-				if (sendTo != null && sendTo.length() > 0) {
-					//System.err.println("send mail cho " + sendTo);
-					helper.setTo(sendTo);
-					helper.setSubject("[Tạo mới công việc] - " + task.getTaskName());
-					helper.setFrom("IDITaskNotReply");
-					mailSender.send(mimeMessage);
-					//System.err.println("sent");
+			if(taskDAO.taskIsExits(task.getTaskName())) {
+				log.info("Da ton tai task name nay ");				
+				if (result.hasErrors()) {
+					// System.err.println("co loi validate");
+					return this.addNewTask(model, task);
+				}
+			}else {			
+				//inject from Login account
+				String username = new LoginController().getPrincipal();
+			    log.info("Using usename =" + username +" in insert new task");
+			    if (username !=null && username.length() >0 ) {
+			    	UserLogin userLogin  =  userRoleDAO.getAUserLoginFull(username);
+			    	task.setCreatedBy(userLogin.getUserID());
+			    }
+				
+				Timestamp ts = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());			
+				
+				//System.out.println("Month: "+ task.getMonth() +", Year: " + task.getYear());
+				if(Integer.parseInt(task.getMonth()) < 10 && Integer.parseInt(task.getMonth()) > 0)
+					task.setPlannedFor(task.getYear() + "-0" + task.getMonth());
+				else if(Integer.parseInt(task.getMonth()) > 9)
+					task.setPlannedFor(task.getYear() + "-" + task.getMonth());
+				task.setCreationDate(ts);
+				task.setUpdateTS(ts);
+				taskDAO.insertTask(task);
+				
+				// Add message to flash scope
+				redirectAttributes.addFlashAttribute("message", "Thêm thông tin công việc thành công!");
+				String owner = "Chưa giao cho ai";
+				if(task.getOwnedBy() > 0)
+					owner = allEmployeesMap().get(task.getOwnedBy());
+				String createdName = "";
+				if(task.getCreatedBy() > 0)
+					createdName = allEmployeesMap().get(task.getCreatedBy());
+				MimeMessage mimeMessage = mailSender.createMimeMessage();
+				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+				String htmlMsg = "Dear you, <br/>\n<br/>\n"
+						+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+						+ "<b>Người làm: " + owner + " </b><br/>\n"
+						+ "Công việc thuộc phòng: " + task.getArea() + " <br/>\n " 
+						+ "Trạng thái: Tạo mới <br/>\n "
+						+ "Kế hoạch cho tháng: " + task.getPlannedFor() + " <br/>\n " 
+						+ "Độ ưu tiên: " + task.getPriority()
+						+ "<br/> <br/> \n" 
+						+ "<b>Người tạo " + createdName + " </b> <e-mail> lúc "	+ ts + " <br/>\n" 
+						+ "Mô tả nội dung công việc: "	+ task.getDescription()
+						+ "<br/> \n <br/> \n Trân trọng, <br/> \n"
+						+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" ;
+				mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
+				List<String> mailList = taskDAO.getEmail(task.getOwnedBy() + "," + task.getVerifyBy() + "," + task.getSecondOwned());
+				
+				for (int i = 0; i < mailList.size(); i++) {
+					String sendTo = mailList.get(i);
+					//System.err.println("chuan bi send mail");
+					if (sendTo != null && sendTo.length() > 0) {
+						//System.err.println("send mail cho " + sendTo);
+						helper.setTo(sendTo);
+						helper.setSubject("[Tạo mới công việc] - " + task.getTaskName());
+						helper.setFrom("IDITaskNotReply");
+						mailSender.send(mimeMessage);
+						//System.err.println("sent");
+					}
 				}
 			}
-
 		} catch (Exception e) {
 			log.error(e, e);
 		}
+		
 		return "redirect:/";
 	}
 
@@ -710,8 +737,7 @@ public class TaskController {
 	}
 
 	@RequestMapping("/addNewTask")
-	public String addNewTask(Model model) throws Exception {
-		Task task = new Task();
+	public String addNewTask(Model model, Task task) throws Exception {		
 		model.addAttribute("formTitle", "Thêm mới thông tin công việc");
 
 		// get list department

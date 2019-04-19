@@ -120,6 +120,32 @@ public class TaskDAO extends JdbcDaoSupport {
 		return task;
 
 	}
+	
+	/**
+	 * get task by task id
+	 * 
+	 * @param task id
+	 * @return Task object
+	 */
+	public boolean taskIsExits(String taskName) throws Exception {
+		boolean existing = true;
+		try {
+			String sql = properties.get("GET_TASK_EXISTS_BY_NAME").toString();
+			log.info("GET_TASK_EXISTS_BY_NAME query: " + sql);
+			Object[] params = new Object[] { taskName.trim() };
+			String id = jdbcTmpl.queryForObject(sql, String.class, params);
+			if(id != null && id.length() > 0) {
+				existing = true;
+			}else {
+				existing = false;
+			}
+			
+		} catch (Exception e) {
+			//e.printStackTrace();
+			existing = false;
+		}
+		return existing;
+	}
 
 	/**
 	 * get list subscriber of task
@@ -158,7 +184,7 @@ public class TaskDAO extends JdbcDaoSupport {
 			 * task.getArea() +"|"+ task.getPriority() +"|"+ task.getPlannedFor() +"|"+
 			 * task.getEstimate() +"|"+ task.getDescription());
 			 */
-			Object[] params = new Object[] { task.getTaskName(), task.getCreatedBy(), task.getOwnedBy(),
+			Object[] params = new Object[] { task.getTaskName().trim(), task.getCreatedBy(), task.getOwnedBy(),
 					task.getSecondOwned(), task.getVerifyBy(), task.getDueDate(), task.getCreationDate(),
 					task.getType(), task.getArea(), task.getPriority(), task.getPlannedFor(), task.getUpdateTS(),
 					task.getEstimate(), task.getEstimateTimeType(), task.getDescription() };
@@ -197,7 +223,7 @@ public class TaskDAO extends JdbcDaoSupport {
 			 * task.getPlannedFor() +"|"+ task.getTimeSpent() +"|"+ task.getEstimate() +"|"+
 			 * task.getDescription() +"|"+ task.getTaskId());
 			 */
-			Object[] params = new Object[] { task.getTaskName(), task.getOwnedBy(), task.getSecondOwned(),
+			Object[] params = new Object[] { task.getTaskName().trim(), task.getOwnedBy(), task.getSecondOwned(),
 					task.getVerifyBy(), task.getUpdateId(), task.getUpdateTS(), task.getResolvedBy(), task.getDueDate(),
 					task.getResolutionDate(), task.getType(), task.getArea(), task.getPriority(), task.getStatus(),
 					task.getPlannedFor(), task.getTimeSpent(), task.getTimeSpentType(), task.getEstimate(),
