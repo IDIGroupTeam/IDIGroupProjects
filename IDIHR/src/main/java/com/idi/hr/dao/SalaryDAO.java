@@ -241,8 +241,8 @@ public class SalaryDAO extends JdbcDaoSupport {
 			}else {
 				 finalSalary = Float.valueOf(salaryDetail.getSalary());
 			}
-			if(salaryDetail.getWorkComplete() > 0) {
-				finalSalary=finalSalary*(salaryDetail.getWorkComplete()/100);
+			if(salaryDetail.getWorkComplete() >= 0) {
+				finalSalary=finalSalary*salaryDetail.getWorkComplete()/100;
 				//System.err.println(8000000*120/100);
 			}
 			// Tăng
@@ -331,10 +331,11 @@ public class SalaryDAO extends JdbcDaoSupport {
 			}else {
 				 finalSalary = Float.valueOf(salaryDetail.getSalary());
 			}
-			
-			if(salaryDetail.getWorkComplete() > 0) {
-				finalSalary=finalSalary*(salaryDetail.getWorkComplete()/100);				
+			if(salaryDetail.getWorkComplete() >= 0) {
+				finalSalary = finalSalary*salaryDetail.getWorkComplete()/100;				
 			}
+			//System.out.printf("%.2f", finalSalary);
+			
 			// Tang
 			float salaryPerHour = 0;
 			if (salaryDetail.getSalaryPerHour() > 0)
@@ -369,7 +370,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 
 			salaryDetail.setFinalSalary(String.valueOf(finalSalary));
 			//System.err.println("year " + salaryDetail.getYear());
-			//System.err.println("Luong thuc nhan " + finalSalary);
+			//System.out.printf("%.2f", finalSalary);
 			
 			if(salaryDetail.getBounus() != null && salaryDetail.getBounus().length() > 0)
 				salaryDetail.setBounus(salaryDetail.getBounus().replaceAll(",", ""));

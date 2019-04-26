@@ -115,8 +115,8 @@
 						<td></td><td></td>	 
 					</tr>
 					<tr>
-						<td bgcolor="#FAFAFA" nowrap="nowrap">Hệ số hoàn thành cv (%):</td>
-						<td><form:input path="workComplete" class="form-control bfh-number" min="0" max="999" type="number" size="4"/></td>
+						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Bắt buộc phải > hoăc = 0">Hệ số hoàn thành cv (%):</td>
+						<td><form:input path="workComplete" class="form-control bfh-number" min="0" max="999" type="number" size="4" required="required"/></td>
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng">Số ngày lv thực tế:</td>
 						<td><form:input path="workedDay" class="form-control bfh-number" min="0.5" max="31" step="0.5" type="number" title="Chỉ nhập số ngày nếu tháng đó không làm đủ cả tháng. Và bắt buộc phải định nghĩa ngày công chuẩn trước để việc tính toán được chính sác"/></td>
 						<td></td><td></td>
