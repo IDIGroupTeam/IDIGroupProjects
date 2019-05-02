@@ -29,83 +29,81 @@
 <hr />
 
 <form:hidden path="maKc" />
-<div class="input-group input-group-sm">
-	<div class="row form-group">
-		<label class="control-label col-sm-2" for="tenKc">Tên kết
-			chuyển (*)</label>
-		<div class="col-sm-4">
-			<form:input path="tenKc" class="form-control" />
-			<br />
-			<form:errors path="tenKc" cssClass="error" />
-		</div>
 
-		<label class="control-label col-sm-2" for=congThuc>Công thức
-			(*)</label>
-		<div class="col-sm-4">
-			<form:input path="congThuc" class="form-control" />
-			<br />
-			<form:errors path="congThuc" cssClass="error" />
-		</div>
+<div class="row form-group">
+	<label class="control-label col-sm-2" for="tenKc">Tên kết
+		chuyển (*)</label>
+	<div class="col-sm-4">
+		<form:input path="tenKc" class="form-control" />
+		<br />
+		<form:errors path="tenKc" cssClass="error" />
 	</div>
 
-	<div class="row form-group">
-		<label class="control-label col-sm-2"
-			for="taiKhoanNo.loaiTaiKhoan.maTk">Tài khoản nợ (*)</label>
-		<div class="col-sm-4">
-			<form:select path="taiKhoanNo.loaiTaiKhoan.maTk" class="form-control">
-				<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
-					itemLabel="maTenTk" />
-			</form:select>
-			<br />
-			<form:errors path="taiKhoanNo.loaiTaiKhoan.maTk" cssClass="error" />
-		</div>
+	<label class="control-label col-sm-2" for=congThuc>Công thức
+		(*)</label>
+	<div class="col-sm-4">
+		<form:input path="congThuc" class="form-control" />
+		<br />
+		<form:errors path="congThuc" cssClass="error" />
+	</div>
+</div>
 
-		<label class="control-label col-sm-2"
-			for="taiKhoanNo.loaiTaiKhoan.maTk">Tài khoản có (*)</label>
-		<div class="col-sm-4">
-			<form:select path="taiKhoanCo.loaiTaiKhoan.maTk" class="form-control">
-				<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
-					itemLabel="maTenTk" />
-			</form:select>
-			<br />
-			<form:errors path="taiKhoanCo.loaiTaiKhoan.maTk" cssClass="error" />
-		</div>
+<div class="row form-group">
+	<label class="control-label col-sm-2"
+		for="taiKhoanNo.loaiTaiKhoan.maTk">Tài khoản nợ (*)</label>
+	<div class="col-sm-4">
+		<form:select path="taiKhoanNo.loaiTaiKhoan.maTk" class="form-control">
+			<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
+				itemLabel="maTenTk" />
+		</form:select>
+		<br />
+		<form:errors path="taiKhoanNo.loaiTaiKhoan.maTk" cssClass="error" />
 	</div>
 
-	<div class="row form-group">
-		<label class="control-label col-sm-2" for="thuTu">Thứ tự (*)</label>
-		<div class="col-sm-4">
-			<form:input path="thuTu" class="form-control" />
-			<br />
-			<form:errors path="thuTu" cssClass="error" />
-		</div>
+	<label class="control-label col-sm-2"
+		for="taiKhoanNo.loaiTaiKhoan.maTk">Tài khoản có (*)</label>
+	<div class="col-sm-4">
+		<form:select path="taiKhoanCo.loaiTaiKhoan.maTk" class="form-control">
+			<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
+				itemLabel="maTenTk" />
+		</form:select>
+		<br />
+		<form:errors path="taiKhoanCo.loaiTaiKhoan.maTk" cssClass="error" />
+	</div>
+</div>
 
-		<label class="control-label col-sm-2" for="loaiKc">Phân loại
-			(*)</label>
-		<div class="col-sm-4">
-			<form:select path="loaiKc" class="form-control">
-				<form:option value="${KetChuyenButToan.KCBT_CUOI_KY}">Kết chuyển cuối kỳ</form:option>
-				<%-- <form:option value="${KetChuyenButToan.KCBT_DAU_KY}">Kết chuyển đầu kỳ</form:option> --%>
-			</form:select>
-			<br />
-			<form:errors path="loaiKc" cssClass="error" />
-		</div>
+<div class="row form-group">
+	<label class="control-label col-sm-2" for="thuTu">Thứ tự (*)</label>
+	<div class="col-sm-4">
+		<form:input path="thuTu" class="form-control" />
+		<br />
+		<form:errors path="thuTu" cssClass="error" />
 	</div>
 
-
-	<div class="row form-group">
-		<label class="control-label col-sm-2" for="moTa">Mô tả</label>
-		<div class="col-sm-4">
-			<form:textarea path="moTa" class="form-control" />
-		</div>
+	<label class="control-label col-sm-2" for="loaiKc">Phân loại
+		(*)</label>
+	<div class="col-sm-4">
+		<form:select path="loaiKc" class="form-control">
+			<form:option value="${KetChuyenButToan.KCBT_CUOI_KY}">Kết chuyển cuối kỳ</form:option>
+			<%-- <form:option value="${KetChuyenButToan.KCBT_DAU_KY}">Kết chuyển đầu kỳ</form:option> --%>
+		</form:select>
+		<br />
+		<form:errors path="loaiKc" cssClass="error" />
 	</div>
+</div>
 
-	<div class="row form-group">
-		<div class="col-sm-12">
-			<a
-				href="${url}/chungtu/ketchuyen/buttoan/xem/${mainFinanceForm.maKc}"
-				class="btn btn-info btn-sm">Hủy</a>
-			<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu</button>
-		</div>
+
+<div class="row form-group">
+	<label class="control-label col-sm-2" for="moTa">Mô tả</label>
+	<div class="col-sm-4">
+		<form:textarea path="moTa" class="form-control" />
+	</div>
+</div>
+
+<div class="row form-group">
+	<div class="col-sm-12">
+		<a href="${url}/chungtu/ketchuyen/buttoan/xem/${mainFinanceForm.maKc}"
+			class="btn btn-info btn-sm">Hủy</a>
+		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu</button>
 	</div>
 </div>

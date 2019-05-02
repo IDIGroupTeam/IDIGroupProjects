@@ -182,14 +182,14 @@
 		<c:choose>
 			<c:when
 				test="${kyKeToan!=null && kyKeToan.trangThai!= KyKeToan.DONG}">
+				<a href="${url}/chungtu/muahang/sua/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Sửa</a>
 				<a href="${url}/chungtu/muahang/pdf/${chungTu.maCt}"
 					class="btn btn-info btn-sm">In</a>
 				<a href="${url}/chungtu/muahang/nhapkho/${chungTu.maCt}"
 					class="btn btn-info btn-sm"> Nhập kho </a>
 				<a id="xoaNut" href="${url}/chungtu/muahang/xoa/${chungTu.maCt}"
 					class="btn btn-info btn-sm">Xóa</a>
-				<a href="${url}/chungtu/muahang/sua/${chungTu.maCt}"
-					class="btn btn-info btn-sm">Sửa</a>
 				<a href="${url}/chungtu/muahang/taomoi/${chungTu.tinhChatCt}"
 					class="btn btn-info btn-sm">Tạo mới</a>
 			</c:when>
