@@ -184,7 +184,7 @@ public class TaskDAO extends JdbcDaoSupport {
 			 * task.getArea() +"|"+ task.getPriority() +"|"+ task.getPlannedFor() +"|"+
 			 * task.getEstimate() +"|"+ task.getDescription());
 			 */
-			Object[] params = new Object[] { task.getTaskName().trim(), task.getCreatedBy(), task.getOwnedBy(),
+			Object[] params = new Object[] { task.getTaskName().trim(), task.getStatus(), task.getCreatedBy(), task.getOwnedBy(),
 					task.getSecondOwned(), task.getVerifyBy(), task.getDueDate(), task.getCreationDate(),
 					task.getType(), task.getArea(), task.getPriority(), task.getPlannedFor(), task.getUpdateTS(),
 					task.getEstimate(), task.getEstimateTimeType(), task.getDescription() };

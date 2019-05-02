@@ -104,8 +104,23 @@
 				<tbody>
 					<tr>
 						<td bgcolor="#FAFAFA">Tên việc:(*)</td>
-						<td colspan="3"><form:input path="taskName"
+						<td><form:input path="taskName"
 								class="form-control animated" required="required" size="110" /></td>
+						<td bgcolor="#FAFAFA">Trạng thái:</td>
+						<td><form:select path="status"
+								class="form-control animated">
+								<form:option value="Mới" label="Mới" />
+								<form:option value="Đang làm" label="Đang làm"
+									style="color:green" />
+								<form:option value="Tạm dừng" label="Tạm dừng"
+									style="color:orange" />
+								<form:option value="Hủy bỏ" label="Hủy bỏ" style="color:red" />
+								<form:option value="Chờ đánh giá" label="Chờ đánh giá"
+									style="color:navy" />
+								<form:option value="Đã xong" label="Đã xong"
+									style="color:blue" />
+							</form:select>
+						</td>		
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Công việc thuộc phòng:</td>
