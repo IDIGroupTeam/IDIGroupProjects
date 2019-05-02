@@ -24,6 +24,8 @@ public interface SoKeToanDAO {
 
 	public List<DuLieuKeToan> danhSachTongPhatSinhDoiTuong(String maTk, Date dau, Date cuoi);
 
+	public List<DuLieuKeToan> danhSachTongPhatSinhDoiTuongKtth(String maTk, Date dau, Date cuoi);
+
 	public List<DuLieuKeToan> danhSachTongHopCongNo(String maTk, Date dau, Date cuoi);
 
 	public List<DuLieuKeToan> danhSachTongHopCongNoKtth(String maTk, Date dau, Date cuoi);

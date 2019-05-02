@@ -38,9 +38,13 @@
 						<td class="text-left" style="width: 200px;">${hangHoa.kyHieuHh}</td>
 						<td class="text-left" style="width: 230px;">${hangHoa.tenHh}</td>
 						<td>${hangHoa.donVi.tenDv}</td>
-						<td>${hangHoa.soLuong}</td>
-						<td>${hangHoa.donGia.soTien}</td>
-						<td class="text-right" style="width: 180px;"></td>
+						<td><fmt:formatNumber value="${hangHoa.soLuong}"
+								maxFractionDigits="2"></fmt:formatNumber></td>
+						<td><fmt:formatNumber value="${hangHoa.donGia.soTien}"
+								maxFractionDigits="2"></fmt:formatNumber></td>
+						<td style="width: 180px;"><fmt:formatNumber
+								value="${hangHoa.soLuong*hangHoa.donGia.soTien}"
+								maxFractionDigits="2"></fmt:formatNumber></td>
 						<td>${hangHoa.tkThanhtoan.loaiTaiKhoan.maTk}</td>
 						<td>${hangHoa.tkDoanhThu.loaiTaiKhoan.maTk}</td>
 					</tr>
@@ -70,8 +74,11 @@
 						<td style="width: 250px;">${hangHoa.tenHh}</td>
 						<td>${hangHoa.donVi.tenDv}</td>
 						<td>${hangHoa.soLuong}</td>
-						<td>${hangHoa.giaKho.soTien}</td>
-						<td></td>
+						<td><fmt:formatNumber value="${hangHoa.giaKho.soTien}"
+								maxFractionDigits="2"></fmt:formatNumber></td>
+						<td><fmt:formatNumber
+								value="${hangHoa.soLuong*hangHoa.giaKho.soTien}"
+								maxFractionDigits="2"></fmt:formatNumber></td>
 						<td>${hangHoa.tkGiaVon.loaiTaiKhoan.maTk}</td>
 						<td>${hangHoa.tkKho.loaiTaiKhoan.maTk}</td>
 						<td style="width: 200px;">${hangHoa.kho.tenKho}</td>
@@ -102,7 +109,9 @@
 						<td class="text-left" style="width: 220px;">${hangHoa.tenHh}</td>
 						<td class="text-right" style="width: 180px;"></td>
 						<td>${hangHoa.thueSuatGtgt}</td>
-						<td>${hangHoa.tkThueGtgt.soTien.soTien}</td>
+						<td><fmt:formatNumber
+								value="${hangHoa.tkThueGtgt.soTien.soTien}"
+								maxFractionDigits="2"></fmt:formatNumber></td>
 						<td>${hangHoa.tkThueGtgt.loaiTaiKhoan.maTk}</td>
 					</tr>
 				</c:forEach>

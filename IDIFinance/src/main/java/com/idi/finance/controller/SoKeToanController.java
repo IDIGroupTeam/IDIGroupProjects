@@ -843,6 +843,8 @@ public class SoKeToanController {
 			logger.info("Lấy tổng nợ/có đầu kỳ");
 			List<DuLieuKeToan> noCoDauKyDs = soKeToanDAO.danhSachTongPhatSinhDoiTuong(form.getTaiKhoan(),
 					form.getKyKeToan().getBatDau(), Utils.prevPeriod(kyKt).getCuoi());
+			List<DuLieuKeToan> noCoDauKyKtthDs = soKeToanDAO.danhSachTongPhatSinhDoiTuongKtth(form.getTaiKhoan(),
+					form.getKyKeToan().getBatDau(), Utils.prevPeriod(kyKt).getCuoi());
 
 			Iterator<DuLieuKeToan> noCoDauKyIter = noCoDauKyDs.iterator();
 			while (noCoDauKyIter.hasNext()) {

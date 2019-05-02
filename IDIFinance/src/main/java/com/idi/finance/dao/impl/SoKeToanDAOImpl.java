@@ -49,12 +49,15 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 	@Value("${TONG_PHAT_SINH_DOI_TUONG}")
 	private String TONG_PHAT_SINH_DOI_TUONG;
 
+	@Value("${TONG_PHAT_SINH_DOI_TUONG_KTTH}")
+	private String TONG_PHAT_SINH_DOI_TUONG_KTTH;
+
 	@Value("${TONG_PHAT_SINH_TOAN_BO}")
 	private String TONG_PHAT_SINH_TOAN_BO;
 
 	@Value("${DANH_SACH_TONG_HOP_CONG_NO}")
 	private String DANH_SACH_TONG_HOP_CONG_NO;
-	
+
 	@Value("${DANH_SACH_TONG_HOP_CONG_NO_KTTH}")
 	private String DANH_SACH_TONG_HOP_CONG_NO_KTTH;
 
@@ -110,6 +113,65 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		}
 
 		String query = TONG_PHAT_SINH_DOI_TUONG;
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+
+		if (dau != null) {
+			String batDau = sdf.format(dau);
+			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "AND CT.NGAY_HT >= '" + batDau + "'");
+		} else {
+			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "");
+		}
+
+		if (cuoi != null) {
+			String ketThuc = sdf.format(cuoi);
+			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "AND CT.NGAY_HT <= '" + ketThuc + "'");
+		} else {
+			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "");
+		}
+
+		query = query.replaceAll("\\$MA_TK\\$", maTk);
+
+		logger.info(query);
+		logger.info("maTk " + maTk);
+
+		List<DuLieuKeToan> duLieuKeToanDs = jdbcTmpl.query(query, new DuLieuKeToanDoiTuongMapper());
+		if (duLieuKeToanDs != null) {
+			Iterator<DuLieuKeToan> iter = duLieuKeToanDs.iterator();
+			while (iter.hasNext()) {
+				DuLieuKeToan duLieuKeToan = iter.next();
+				duLieuKeToan.getLoaiTaiKhoan().setMaTk(maTk.trim());
+			}
+		}
+
+		List<DuLieuKeToan> ketQua = null;
+		// Ghép dữ liệu tại đây
+		if (duLieuKeToanDs != null) {
+			ketQua = new ArrayList<>();
+			Iterator<DuLieuKeToan> iter = duLieuKeToanDs.iterator();
+			while (iter.hasNext()) {
+				DuLieuKeToan duLieuKeToan = iter.next();
+
+				int pos = ketQua.indexOf(duLieuKeToan);
+				if (pos > -1) {
+					DuLieuKeToan duLieuKeToanTmpl = ketQua.get(pos);
+					duLieuKeToanTmpl.tron(duLieuKeToan);
+				} else {
+					ketQua.add(duLieuKeToan);
+				}
+			}
+		}
+
+		return ketQua;
+	}
+	
+	@Override
+	public List<DuLieuKeToan> danhSachTongPhatSinhDoiTuongKtth(String maTk, Date dau, Date cuoi) {
+		if (maTk == null || maTk.trim().equals("")) {
+			return null;
+		}
+
+		String query = TONG_PHAT_SINH_DOI_TUONG_KTTH;
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
 
@@ -748,7 +810,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 		return ketQua;
 	}
-	
+
 	public List<DuLieuKeToan> danhSachTongHopCongNoKtth(String maTk, Date dau, Date cuoi) {
 		if (maTk == null) {
 			return null;
@@ -846,6 +908,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				duLieuKeToan.setDoiTuong(doiTuong);
 
 				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
 				loaiTaiKhoan.setSoDu(rs.getInt("SO_DU"));
 				loaiTaiKhoan.setLuongTinh(rs.getBoolean("LUONG_TINH"));
 				duLieuKeToan.setLoaiTaiKhoan(loaiTaiKhoan);

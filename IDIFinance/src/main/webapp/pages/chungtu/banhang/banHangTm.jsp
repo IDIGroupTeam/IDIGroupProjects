@@ -337,7 +337,7 @@
 			} else {
 				param += "&maKho=0";
 			}
-
+			console.log("danhSachGiaVon", param);
 			$
 					.ajax({
 						url : "${url}/chungtu/hanghoa/giavonds",
