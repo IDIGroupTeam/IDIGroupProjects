@@ -374,7 +374,6 @@ public class SoKeToanController {
 
 			while (kyKt != null && kyKt.getCuoi() != null && !kyKt.getCuoi().after(form.getCuoi())) {
 				logger.info("Kỳ: " + kyKt);
-
 				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
 
 				// Lấy nghiệp vụ kế toán được ghi từ phiếu thu, phiếu chi, báo nợ, báo có
@@ -521,7 +520,6 @@ public class SoKeToanController {
 
 			while (kyKt != null && kyKt.getCuoi() != null && !kyKt.getCuoi().after(form.getCuoi())) {
 				logger.info("Kỳ: " + kyKt);
-
 				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
 
 				// Lấy số dư kỳ tất cả các đối tượng của tài khoản hiện tại
@@ -910,7 +908,6 @@ public class SoKeToanController {
 
 			while (kyKt != null && kyKt.getCuoi() != null && !kyKt.getCuoi().after(form.getCuoi())) {
 				logger.info("========== Kỳ: " + kyKt);
-
 				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
 
 				// Lấy danh sách nghiệp vụ kế toán ghi vào chứng từ PT, PC, BN, BC, KTTH
@@ -1093,8 +1090,23 @@ public class SoKeToanController {
 
 			logger.info("Sổ tổng hợp nhập xuất tồn ... ");
 			logger.info("Tài khoản: " + form.getTaiKhoan());
+
 			// Lấy danh sách các nghiệp vụ kế toán theo tài khoản, loại chứng từ, và từng kỳ
 			List<DuLieuKeToan> duLieuKeToanDs = new ArrayList<>();
+
+			KyKeToanCon kyKt = new KyKeToanCon(form.getDau(), form.getLoaiKy());
+			if (form.getLoaiKy() == KyKeToanCon.NAN) {
+				kyKt = new KyKeToanCon(form.getDau(), form.getCuoi());
+			}
+
+			while (kyKt != null && kyKt.getCuoi() != null && !kyKt.getCuoi().after(form.getCuoi())) {
+				logger.info("========== Kỳ: " + kyKt);
+				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
+
+				duLieuKeToanDs.add(duLieuKeToan);
+
+				kyKt = Utils.nextPeriod(kyKt);
+			}
 
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 			model.addAttribute("loaiTaiKhoan", loaiTaiKhoan);
