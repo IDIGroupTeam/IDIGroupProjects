@@ -93,6 +93,26 @@ public class InsuranceController {
 		return "listInsurance";
 	}
 
+	private Map<String, String> employeesForInsert() {
+		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
+		try {
+			//note: nhung 
+			List<EmployeeInfo> list = employeeDAO.getEmployeesForInsertInsurrance();
+			EmployeeInfo employee = new EmployeeInfo();
+			for (int i = 0; i < list.size(); i++) {
+				employee = (EmployeeInfo) list.get(i);
+				Integer id = employee.getEmployeeId();
+				employeeMap.put(id.toString(),
+						employee.getFullName() + ", phòng " + employee.getDepartment());
+			}
+
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return employeeMap;
+	}
+	
 	private Map<String, String> employees() {
 		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
 		try {
@@ -164,17 +184,20 @@ public class InsuranceController {
 	private String insuranceForm(Model model, Insurance insurance) {
 		model.addAttribute("insuranceForm", insurance);
 		// get list employee id
-		Map<String, String> employeeMap = this.employees();
-		model.addAttribute("employeeMap", employeeMap);
+		Map<String, String> employeeMap = null;
+		
 
 		String actionform = "";
 		if (insurance.getSocicalInsuNo() != null) {
+			employeeMap = this.allEmployees();
 			model.addAttribute("formTitle", "Sửa thông tin bảo hiểm ");
 			actionform = "editInsurance";
 		} else {
+			employeeMap = this.employeesForInsert();
 			model.addAttribute("formTitle", "Thêm mới thông tin bảo hiểm");
 			actionform = "insertInsurance";
 		}
+		model.addAttribute("employeeMap", employeeMap);
 		//System.err.println(actionform);
 		return actionform;
 	}

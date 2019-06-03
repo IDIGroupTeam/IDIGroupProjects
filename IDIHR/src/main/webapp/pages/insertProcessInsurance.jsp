@@ -30,6 +30,7 @@
 	<form:form modelAttribute="pInsuranceForm" method="POST"
 		action="insertProcessInsurance?employeeId=${employeeId}">
 		<table class="table">
+			<form:hidden path="socicalInsuNo"/>
 			<tbody>
 				<tr>
 					<td colspan="4" nowrap="nowrap" bgcolor="#F6CED8">Thông tin	bảo hiểm xã hội</td>
@@ -46,7 +47,7 @@
 					<td bgcolor="#E6E6E6">Lương BH(*):</td>
 					<td><form:input path="salarySocicalInsu" size="12"
 							maxlength="12" required="required" class="form-control animated"/></td>
-					<td bgcolor="#E6E6E6">Cty đóng:</td>
+					<td bgcolor="#E6E6E6">Cty đóng(*):</td>
 					<td><form:input path="companyPay" required="required" class="form-control animated"/></td>							
 				</tr>
 				<tr>

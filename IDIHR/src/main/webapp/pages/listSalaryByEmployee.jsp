@@ -76,7 +76,7 @@ tr:nth-child(even) {
 	<button	class="btn btn-lg btn-primary btn-sm">Quay lại danh sách thông tin lương chung</button></a>
 	
 	<a href="${pageContext.request.contextPath}/salary/insertSalaryDetailForm?employeeId=${employeeId}"><button
-			class="btn btn-primary btn-sm">Tính lương tháng </button></a>
+			class="btn btn-primary btn-sm">Tính lương tháng này</button></a>
 	<br />
 	<br />
 	

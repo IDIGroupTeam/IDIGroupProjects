@@ -31,6 +31,7 @@
 	<form:form modelAttribute="insuranceForm" method="POST"
 		action="updateInsurance">
 			<table class="table">
+			<form:hidden path="socicalInsuNo"/>
 				<tbody>
 					<tr>
 						<td colspan="4" nowrap="nowrap" bgcolor="#F6CED8">Thông tin

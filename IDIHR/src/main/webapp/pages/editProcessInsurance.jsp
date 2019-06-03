@@ -46,7 +46,7 @@
 						<td bgcolor="#E6E6E6">Mức lương đóng BH(*):</td>
 						<td><form:input path="salarySocicalInsu" size="12"
 								maxlength="12" required="required" class="form-control animated"/></td>
-					<td bgcolor="#E6E6E6">Công ty đóng:</td>
+					<td bgcolor="#E6E6E6">Công ty đóng(*):</td>
 						<td><form:input path="companyPay" required="required" class="form-control animated"/></td>							
 					</tr>
 					<tr>
