@@ -52,7 +52,7 @@ tr:nth-child(even) {
 		<c:if test="${not empty pInsurances}">
 			<table class="table table-striped">
 				<tr>
-					<th>Số sổ BHXH</th>
+					<!-- <th>Số sổ BHXH</th> -->
 					<th>Lương BH</th>
 					<th>Cty đóng BHXH</th>
 					<th>Từ ngày</th>
@@ -63,7 +63,7 @@ tr:nth-child(even) {
 				</tr>
 				<c:forEach var="insurance" items="${pInsurances}">
 					<tr>
-						<td>${insurance.socicalInsuNo}</td>
+						<%-- <td>${insurance.socicalInsuNo}</td> --%>
 						<td><fmt:formatNumber value="${insurance.salarySocicalInsu.replaceAll(',', '')}"/></td>
 						<td>${insurance.companyPay}</td>
 						<td>${insurance.fromDate}</td>
