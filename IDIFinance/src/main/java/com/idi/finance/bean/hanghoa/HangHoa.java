@@ -43,6 +43,7 @@ public class HangHoa {
 	private Tien giaKho = new Tien();
 	@NumberFormat(pattern = "#")
 	private double soLuong;
+	private double soLuongBanDau;
 
 	private KhoHang kho;
 	private TaiKhoan tkThanhtoan;
@@ -206,6 +207,14 @@ public class HangHoa {
 
 	public void setSoLuong(double soLuong) {
 		this.soLuong = soLuong;
+	}
+
+	public double getSoLuongBanDau() {
+		return soLuongBanDau;
+	}
+
+	public void setSoLuongBanDau(double soLuongBanDau) {
+		this.soLuongBanDau = soLuongBanDau;
 	}
 
 	public TaiKhoan getTkKho() {

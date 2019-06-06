@@ -43,6 +43,7 @@ import com.idi.finance.bean.hanghoa.DonGia;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.kyketoan.KyKeToan;
+import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.bean.taikhoan.TaiKhoan;
 import com.idi.finance.dao.BaoCaoDAO;
@@ -1603,7 +1604,7 @@ public class ChungTuController {
 						if (soLuong == -1) {
 							khoHangDAO.themNhapKho(hangHoa);
 						} else {
-							hangHoa.setSoLuong(soLuong + hangHoa.getSoLuong());
+							hangHoa.setSoLuong(soLuong + hangHoa.getSoLuong() - hangHoa.getSoLuongBanDau());
 							khoHangDAO.suaNhapKho(hangHoa);
 						}
 					}
@@ -1699,7 +1700,7 @@ public class ChungTuController {
 
 				// Tính chi phí và phân bổ chi phí
 				// Phần này hiện chưa có
-				double tongChiPhi = 0;
+				// double tongChiPhi = 0;
 
 				// Từ đó tính ra giá nhập kho
 				// Đã tính ở phần client gằng js nên không cần tính lại
@@ -1745,11 +1746,73 @@ public class ChungTuController {
 				}
 			}
 
+			// Nhập kho
+			// Copy code từ phương thức nhapKhoMuaHang
+			// Sau này cần tách phần nhập kho ra ngoài
+			if (chungTu != null) {
+				if (chungTu.getHangHoaDs() != null) {
+					Iterator<HangHoa> iter = chungTu.getHangHoaDs().iterator();
+					while (iter.hasNext()) {
+						HangHoa hangHoa = iter.next();
+
+						double soLuong = khoHangDAO.laySoLuong(hangHoa);
+						if (soLuong == -1) {
+							khoHangDAO.themNhapKho(hangHoa);
+						} else {
+							hangHoa.setSoLuong(soLuong + hangHoa.getSoLuong() - hangHoa.getSoLuongBanDau());
+							khoHangDAO.suaNhapKho(hangHoa);
+						}
+					}
+				}
+			}
+
 			if (chungTu.getMaCt() > 0) {
 				chungTuDAO.capNhatChungTuKho(chungTu);
 				return "redirect:/chungtu/muahang/xem/" + chungTu.getMaCt();
 			} else {
 				chungTuDAO.themChungTuKho(chungTu);
+			}
+			
+			// Tạo phiếu kế toán tổng hợp kèm theo nếu cần
+			if (chungTu != null && chungTu.getNvktDs() != null) {
+				KyKeToan kyKeToan = dungChung.getKyKeToan();
+
+				int nhomDk = 1;
+				DoiTuong doiTuong = chungTu.getDoiTuong();
+				List<TaiKhoan> taiKhoanKtthDs = new ArrayList<>();
+				Iterator<NghiepVuKeToan> ktthIter = chungTu.getNvktDs().iterator();
+				while (ktthIter.hasNext()) {
+					NghiepVuKeToan nvkt = ktthIter.next();
+
+					TaiKhoan taiKhoanNo = nvkt.getTaiKhoanNo();
+					taiKhoanNo.setSoDu(LoaiTaiKhoan.NO);
+					taiKhoanNo.setNhomDk(nhomDk);
+					taiKhoanNo.setDoiTuong(doiTuong);
+					taiKhoanNo.setNo(taiKhoanNo.getSoTien());
+
+					TaiKhoan taiKhoanCo = nvkt.getTaiKhoanCo();
+					taiKhoanCo.setLyDo(taiKhoanNo.getLyDo());
+					taiKhoanCo.setSoDu(LoaiTaiKhoan.CO);
+					taiKhoanCo.setCo(taiKhoanNo.getSoTien());
+					taiKhoanCo.setNhomDk(nhomDk);
+					taiKhoanCo.setDoiTuong(doiTuong);
+
+					taiKhoanKtthDs.add(taiKhoanNo);
+					taiKhoanKtthDs.add(taiKhoanCo);
+					nhomDk++;
+				}
+
+				if (taiKhoanKtthDs != null && taiKhoanKtthDs.size() > 0) {
+					chungTu.setDoiTuong(new DoiTuong());
+					chungTu.setLoaiCt(ChungTu.CHUNG_TU_KT_TH);
+					// Lấy số phiếu thu của năm hiện tại
+					int soKeToanTongHop = chungTuDAO.laySoChungTuLonNhatTheoLoaiCtVaKy(ChungTu.CHUNG_TU_KT_TH,
+							kyKeToan.getBatDau(), kyKeToan.getKetThuc());
+					soKeToanTongHop++;
+					chungTu.setSoCt(soKeToanTongHop);
+					chungTu.setTaiKhoanKtthDs(taiKhoanKtthDs);
+					chungTuDAO.themChungTuKtth(chungTu);
+				}
 			}
 
 			return "redirect:/chungtu/muahang/danhsach";
@@ -2134,6 +2197,48 @@ public class ChungTuController {
 					} else {
 						// Không đủ hàng hóa để bán
 						// Cần bắn ra lỗi và thông báo
+					}
+				}
+
+				// Tạo phiếu kế toán tổng hợp kèm theo nếu cần
+				if (chungTu != null && chungTu.getNvktDs() != null) {
+					KyKeToan kyKeToan = dungChung.getKyKeToan();
+
+					int nhomDk = 1;
+					DoiTuong doiTuong = chungTu.getDoiTuong();
+					List<TaiKhoan> taiKhoanKtthDs = new ArrayList<>();
+					Iterator<NghiepVuKeToan> ktthIter = chungTu.getNvktDs().iterator();
+					while (ktthIter.hasNext()) {
+						NghiepVuKeToan nvkt = ktthIter.next();
+
+						TaiKhoan taiKhoanNo = nvkt.getTaiKhoanNo();
+						taiKhoanNo.setSoDu(LoaiTaiKhoan.NO);
+						taiKhoanNo.setNhomDk(nhomDk);
+						taiKhoanNo.setDoiTuong(doiTuong);
+						taiKhoanNo.setNo(taiKhoanNo.getSoTien());
+
+						TaiKhoan taiKhoanCo = nvkt.getTaiKhoanCo();
+						taiKhoanCo.setLyDo(taiKhoanNo.getLyDo());
+						taiKhoanCo.setSoDu(LoaiTaiKhoan.CO);
+						taiKhoanCo.setCo(taiKhoanNo.getSoTien());
+						taiKhoanCo.setNhomDk(nhomDk);
+						taiKhoanCo.setDoiTuong(doiTuong);
+
+						taiKhoanKtthDs.add(taiKhoanNo);
+						taiKhoanKtthDs.add(taiKhoanCo);
+						nhomDk++;
+					}
+
+					if (taiKhoanKtthDs != null && taiKhoanKtthDs.size() > 0) {
+						chungTu.setDoiTuong(new DoiTuong());
+						chungTu.setLoaiCt(ChungTu.CHUNG_TU_KT_TH);
+						// Lấy số phiếu thu của năm hiện tại
+						int soKeToanTongHop = chungTuDAO.laySoChungTuLonNhatTheoLoaiCtVaKy(ChungTu.CHUNG_TU_KT_TH,
+								kyKeToan.getBatDau(), kyKeToan.getKetThuc());
+						soKeToanTongHop++;
+						chungTu.setSoCt(soKeToanTongHop);
+						chungTu.setTaiKhoanKtthDs(taiKhoanKtthDs);
+						chungTuDAO.themChungTuKtth(chungTu);
 					}
 				}
 			}

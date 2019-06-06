@@ -16,7 +16,7 @@
 	<li><a data-toggle="tab" href="#chiPhi">Chi phí</a></li>
 </ul>
 <div class="tab-content table-responsive sub-content"
-	style="overflow-x: auto; overflow-y: visiable;">
+	style="overflow-x: auto; overflow-y: none;">
 	<div id="hangTien" class="tab-pane fade in active"
 		style="width: 1700px;">
 		<table class="table table-bordered table-hover text-center hanghoa"
@@ -57,7 +57,8 @@
 							id="hangHoaDs${status.index}.donVi.tenDvTxt">${hangHoa.donVi.tenDv}</span></td>
 						<td><form:input cssClass="form-control"
 								path="hangHoaDs[${status.index}].soLuong" /> <form:errors
-								path="hangHoaDs[${status.index}].soLuong" cssClass="error" /></td>
+								path="hangHoaDs[${status.index}].soLuong" cssClass="error" /> <form:hidden
+								path="hangHoaDs[${status.index}].soLuongBanDau" /></td>
 						<td><form:input cssClass="form-control"
 								path="hangHoaDs[${status.index}].donGia.soTien" /> <form:errors
 								path="hangHoaDs[${status.index}].donGia.soTien" cssClass="error" /></td>

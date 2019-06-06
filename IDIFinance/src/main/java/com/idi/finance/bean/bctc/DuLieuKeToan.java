@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.idi.finance.bean.doituong.DoiTuong;
+import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
@@ -17,6 +18,7 @@ public class DuLieuKeToan {
 	private LoaiTaiKhoan loaiTaiKhoan;
 	private DoiTuong doiTuong;
 	private List<DoiTuong> doiTuongDs;
+	private HangHoa hangHoa;
 
 	private double soDuDauKy;
 	private double noDauKy;
@@ -28,6 +30,11 @@ public class DuLieuKeToan {
 
 	private double tongNoPhatSinh;
 	private double tongCoPhatSinh;
+
+	private int soLuongDauKy;
+	private int soLuongNhap;
+	private int soLuongXuat;
+	private int soLuongCuoiKy;
 
 	private DuLieuKeToan duLieuKeToan;
 	private List<DuLieuKeToan> duLieuKeToanDs;
@@ -76,6 +83,14 @@ public class DuLieuKeToan {
 
 	public void setDoiTuongDs(List<DoiTuong> doiTuongDs) {
 		this.doiTuongDs = doiTuongDs;
+	}
+
+	public HangHoa getHangHoa() {
+		return hangHoa;
+	}
+
+	public void setHangHoa(HangHoa hangHoa) {
+		this.hangHoa = hangHoa;
 	}
 
 	public double getSoDuDauKy() {
@@ -146,6 +161,41 @@ public class DuLieuKeToan {
 		capNhatNoCoCuoiKy();
 	}
 
+	public int getSoLuongDauKy() {
+		capNhatNoCoCuoiKy();
+		return soLuongDauKy;
+	}
+
+	public void setSoLuongDauKy(int soLuongDauKy) {
+		this.soLuongDauKy = soLuongDauKy;
+	}
+
+	public int getSoLuongNhap() {
+		return soLuongNhap;
+	}
+
+	public void setSoLuongNhap(int soLuongNhap) {
+		capNhatNoCoCuoiKy();
+		this.soLuongNhap = soLuongNhap;
+	}
+
+	public int getSoLuongXuat() {
+		return soLuongXuat;
+	}
+
+	public void setSoLuongXuat(int soLuongXuat) {
+		capNhatNoCoCuoiKy();
+		this.soLuongXuat = soLuongXuat;
+	}
+
+	public int getSoLuongCuoiKy() {
+		return soLuongCuoiKy;
+	}
+
+	public void setSoLuongCuoiKy(int soLuongCuoiKy) {
+		this.soLuongCuoiKy = soLuongCuoiKy;
+	}
+
 	public List<NghiepVuKeToan> getNghiepVuKeToanDs() {
 		return nghiepVuKeToanDs;
 	}
@@ -160,6 +210,8 @@ public class DuLieuKeToan {
 
 		soDuDauKy = noDauKy - coDauKy;
 		soDuCuoiKy = noCuoiKy - coCuoiKy;
+
+		soLuongCuoiKy = soLuongDauKy + soLuongNhap - soLuongXuat;
 	}
 
 	public void themNghiepVuKeToan(NghiepVuKeToan nghiepVuKeToan) {
@@ -249,6 +301,10 @@ public class DuLieuKeToan {
 
 				tongNoPhatSinh += duLieuKeToan.getTongNoPhatSinh();
 				tongCoPhatSinh += duLieuKeToan.getTongCoPhatSinh();
+
+				soLuongDauKy += duLieuKeToan.getSoLuongDauKy();
+				soLuongNhap += duLieuKeToan.getSoLuongNhap();
+				soLuongXuat += duLieuKeToan.getSoLuongXuat();
 			}
 
 			noCuoiKy = noDauKy + tongNoPhatSinh;
@@ -256,6 +312,8 @@ public class DuLieuKeToan {
 
 			soDuDauKy = noDauKy - coDauKy;
 			soDuCuoiKy = noCuoiKy - coCuoiKy;
+
+			soLuongCuoiKy = soLuongDauKy + soLuongNhap - soLuongXuat;
 		}
 	}
 
@@ -368,6 +426,15 @@ public class DuLieuKeToan {
 		} else if (item.getDoiTuong() == null) {
 			return false;
 		} else if (!doiTuong.equals(item.getDoiTuong())) {
+			return false;
+		}
+
+		if (hangHoa == null) {
+			if (item.getHangHoa() != null)
+				return false;
+		} else if (item.getHangHoa() == null) {
+			return false;
+		} else if (!hangHoa.equals(item.getHangHoa())) {
 			return false;
 		}
 

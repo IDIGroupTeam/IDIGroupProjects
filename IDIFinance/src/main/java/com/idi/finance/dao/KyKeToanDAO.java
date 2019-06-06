@@ -48,6 +48,8 @@ public interface KyKeToanDAO {
 
 	public List<SoDuKy> danhSachSoDuKyTheoHangHoa(int maKkt);
 
+	public List<SoDuKy> danhSachSoDuKyTheoHangHoa(String maTk, int maKkt);
+
 	public List<SoDuKy> danhSachSoDuKyTheoHangHoa(String maTk, int maKkt, int maHh, int maKho);
 
 	public SoDuKy laySoDuKy(String maTk, int maKkt);

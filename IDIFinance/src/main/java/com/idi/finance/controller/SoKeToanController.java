@@ -1076,7 +1076,7 @@ public class SoKeToanController {
 				form.themLoaiCt(ChungTu.TAT_CA);
 			}
 
-			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định là 111
+			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định là 156
 			if (form.getTaiKhoan() == null) {
 				form.setTaiKhoan(LoaiTaiKhoan.HANG_HOA);
 			}
@@ -1103,8 +1103,22 @@ public class SoKeToanController {
 				logger.info("========== Kỳ: " + kyKt);
 				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
 
-				duLieuKeToanDs.add(duLieuKeToan);
+				// Lấy danh sách số dư đầu kỳ nhập xuất tồn
+				List<SoDuKy> soDuKyDs = kyKeToanDAO.danhSachSoDuKyTheoHangHoa(loaiTaiKhoan.getMaTk(),
+						kyKeToan.getMaKyKt());
 
+				// Tính nợ/có đầu kỳ nhập xuất tồn của tất cả các hàng hóa
+				List<DuLieuKeToan> noCoDauKyDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), form.getDau(),
+						Utils.prevPeriod(kyKt).getCuoi());
+
+				// Trộn số dư đầu kỳ nhập xuất tồn các loại hàng hóa
+
+				// Tính nợ/có phát sinh nhập xuất tồn trong kỳ của tất cả các hàng hóa
+				List<DuLieuKeToan> tongNoCoPsDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), kyKt.getDau(),
+						kyKt.getCuoi());
+
+				duLieuKeToan.capNhatDuLieuKeToan(tongNoCoPsDs);
+				duLieuKeToanDs.add(duLieuKeToan);
 				kyKt = Utils.nextPeriod(kyKt);
 			}
 

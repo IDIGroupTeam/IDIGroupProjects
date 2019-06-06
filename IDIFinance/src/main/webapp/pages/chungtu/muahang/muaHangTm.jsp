@@ -394,6 +394,10 @@
 			var tenHh = $("#hangHoaDs" + id + "\\.tenHh").val();
 			$("#hangHoaDs" + id + "\\.thue\\.tenHhTxt").text(tenHh);
 			$("#hangHoaDs" + id + "\\.chiPhi\\.tenHhTxt").text(tenHh);
+			
+			$("#lyDo").change(function() {
+				$("#nvktDs" + id + "\\.taiKhoanNo\\.lyDo").val($(this).val());
+			});
 
 			// Đăng ký thay đổi số lượng
 			$("#hangHoaDs" + id + "\\.soLuong").change(function() {
@@ -418,6 +422,13 @@
 				capNhatTongTienHangHoa(id);
 				capNhapTongTienChungTu();
 			});
+			
+			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk").val("");
+			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk")
+					.combobox();
+			$("#nvktDs" + id + "\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk").val("");
+			$("#nvktDs" + id + "\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk")
+					.combobox();
 
 			// Thuế suất nhập khẩu thay đổi
 			$("#hangHoaDs" + id + "\\.thueSuatNk").change(function() {

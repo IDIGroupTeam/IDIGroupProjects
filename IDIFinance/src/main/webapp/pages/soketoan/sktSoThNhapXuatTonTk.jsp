@@ -79,6 +79,19 @@
 		});
 
 		$('#taiKhoan').combobox();
+		
+		$("#maKhoDs").multiselect({
+			enableFiltering : true,
+			filterPlaceholder : 'Tìm kiếm',
+			maxHeight : 200,
+			buttonWidth : '170px',
+			nonSelectedText : 'Chọn kho',
+			nSelectedText : 'Được chọn',
+			includeSelectAllOption : true,
+			allSelectedText : 'Chọn tất cả',
+			selectAllText : 'Tất cả',
+			selectAllValue : 'ALL'
+		});
 	});
 </script>
 
@@ -100,7 +113,7 @@
 		<div class="form-group">
 			<label for="taiKhoan">Kho:</label>
 			<div class="input-group date smallform pull-right">
-				<form:select path="kho.maKho" multiple="false" class="form-control">
+				<form:select path="maKhoDs" multiple="true" class="form-control">
 					<form:options items="${khoHangDs}" itemValue="maKho"
 						itemLabel="tenKho" />
 				</form:select>

@@ -513,6 +513,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				hangHoa.setKyHieuHh(rs.getString("KH_HH"));
 				hangHoa.setTenHh(rs.getString("TEN_HH"));
 				hangHoa.setSoLuong(rs.getDouble("SO_LUONG_TN"));
+				hangHoa.setSoLuongBanDau(rs.getDouble("SO_LUONG_TN"));
 
 				DonVi donVi = new DonVi();
 				donVi.setMaDv(rs.getInt("MA_DV"));
@@ -1575,7 +1576,6 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 									+ hangHoa.getGiaKho().getSoTien() * hangHoa.getGiaKho().getLoaiTien().getBanRa()
 									+ " của hàng hóa " + hangHoa.getMaHh());
 						}
-
 					} catch (Exception e) {
 						logger.info("Chưa có đơn giá "
 								+ hangHoa.getGiaKho().getSoTien() * hangHoa.getGiaKho().getLoaiTien().getBanRa()

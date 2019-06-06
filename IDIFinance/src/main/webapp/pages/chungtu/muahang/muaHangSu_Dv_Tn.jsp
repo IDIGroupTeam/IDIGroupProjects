@@ -15,8 +15,8 @@
 	<li><a data-toggle="tab" href="#thue">Thuế</a></li>
 	<li><a data-toggle="tab" href="#chiPhi">Chi phí</a></li>
 </ul>
-<div class="tab-content table-responsive sub-content">
-	<div id="hangTien" class="tab-pane fade in active">
+<div class="tab-content sub-content">
+	<div id="hangTien" class="tab-pane fade in active table-responsive">
 		<table class="table table-bordered table-hover text-center hanghoa"
 			id="hangTienTbl">
 			<thead>
@@ -53,7 +53,8 @@
 							id="hangHoaDs${status.index}.donVi.tenDvTxt">${hangHoa.donVi.tenDv}</span></td>
 						<td><form:input cssClass="form-control"
 								path="hangHoaDs[${status.index}].soLuong" /> <form:errors
-								path="hangHoaDs[${status.index}].soLuong" cssClass="error" /></td>
+								path="hangHoaDs[${status.index}].soLuong" cssClass="error" />
+							<form:hidden path="hangHoaDs[${status.index}].soLuongBanDau" /></td>
 						<td><form:input cssClass="form-control"
 								path="hangHoaDs[${status.index}].donGia.soTien" /> <form:errors
 								path="hangHoaDs[${status.index}].donGia.soTien" cssClass="error" /></td>
@@ -89,7 +90,7 @@
 			</tbody>
 		</table>
 	</div>
-	<div id="thue" class="tab-pane fade">
+	<div id="thue" class="tab-pane fade table-responsive">
 		<table class="table table-bordered table-hover text-center hanghoa"
 			id="thueTbl">
 			<thead>
@@ -132,7 +133,7 @@
 			</tbody>
 		</table>
 	</div>
-	<div id="chiPhi" class="tab-pane fade">
+	<div id="chiPhi" class="tab-pane fade table-responsive">
 		<table class="table table-bordered table-hover text-center hanghoa"
 			id="chiPhiTbl">
 			<thead>

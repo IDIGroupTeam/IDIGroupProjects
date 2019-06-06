@@ -23,6 +23,7 @@ public class TkSoKeToanForm {
 	private int doSau = 2;
 	private HangHoa hangHoa = new HangHoa();
 	private KhoHang kho = new KhoHang();
+	private List<String> maKhoDs;
 
 	public int getLoaiKy() {
 		return loaiKy;
@@ -121,6 +122,14 @@ public class TkSoKeToanForm {
 
 	public void setKho(KhoHang kho) {
 		this.kho = kho;
+	}
+
+	public List<String> getMaKhoDs() {
+		return maKhoDs;
+	}
+
+	public void setMaKhoDs(List<String> maKhoDs) {
+		this.maKhoDs = maKhoDs;
 	}
 
 	public List<String> getLoaiCts() {

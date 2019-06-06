@@ -105,6 +105,7 @@ public class KhoHangDAOImpl implements KhoHangDAO {
 					new Object[] { hangHoa.getMaHh(), hangHoa.getKho().getMaKho(), hangHoa.getGiaKho().getMaGia() },
 					Double.class);
 		} catch (Exception e) {
+			logger.info(e.getMessage());
 			return -1;
 		}
 	}

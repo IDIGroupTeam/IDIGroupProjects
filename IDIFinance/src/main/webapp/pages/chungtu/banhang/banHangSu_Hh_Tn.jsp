@@ -14,9 +14,10 @@
 			tiền</a></li>
 	<li><a data-toggle="tab" href="#giaVon">Giá vốn</a></li>
 	<li><a data-toggle="tab" href="#thue">Thuế</a></li>
+	<li><a data-toggle="tab" href="#ktth">Kế toán tổng hợp</a></li>
 </ul>
-<div class="tab-content table-responsive sub-content">
-	<div id="hangTien" class="tab-pane fade in active">
+<div class="tab-content sub-content">
+	<div id="hangTien" class="tab-pane fade in active table-responsive">
 		<table class="table table-bordered table-hover text-center hanghoa"
 			id="hangTienTbl">
 			<thead>
@@ -51,7 +52,8 @@
 							id="hangHoaDs${status.index}.donVi.tenDvTxt">${hangHoa.donVi.tenDv}</span></td>
 						<td><form:input cssClass="form-control"
 								path="hangHoaDs[${status.index}].soLuong" /> <form:errors
-								path="hangHoaDs[${status.index}].soLuong" cssClass="error" /></td>
+								path="hangHoaDs[${status.index}].soLuong" cssClass="error" /> <form:hidden
+								path="hangHoaDs[${status.index}].soLuongBanDau" /></td>
 						<td><form:input cssClass="form-control"
 								path="hangHoaDs[${status.index}].donGia.soTien" /> <form:errors
 								path="hangHoaDs[${status.index}].donGia.soTien" cssClass="error" /></td>
@@ -84,7 +86,7 @@
 			</tbody>
 		</table>
 	</div>
-	<div id="giaVon" class="tab-pane fade">
+	<div id="giaVon" class="tab-pane fade table-responsive">
 		<table class="table table-bordered table-hover text-center hanghoa"
 			id="chiPhiTbl">
 			<thead>
@@ -151,7 +153,7 @@
 			</tbody>
 		</table>
 	</div>
-	<div id="thue" class="tab-pane fade">
+	<div id="thue" class="tab-pane fade table-responsive">
 		<table class="table table-bordered table-hover text-center hanghoa"
 			id="thueTbl">
 			<thead>
@@ -187,6 +189,60 @@
 									itemLabel="maTenTk" />
 							</form:select> <form:errors
 								path="hangHoaDs[${status.index}].tkThueGtgt.loaiTaiKhoan.maTk"
+								cssClass="error" /></td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+	</div>
+	<div id="ktth" class="tab-pane fade table-responsive">
+		<table class="table table-bordered table-hover text-center hanghoa"
+			id="ktthTbl">
+			<thead>
+				<tr>
+					<th class="text-center" rowspan="2">Lý do</th>
+					<th class="text-center" colspan="2">Tài khoản</th>
+					<th class="text-center" rowspan="2">Số tiền</th>
+				</tr>
+				<tr>
+					<th class="text-center">Nợ</th>
+					<th class="text-center">Có</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach items="${mainFinanceForm.hangHoaDs}" var="hangHoa"
+					varStatus="status">
+					<tr id="ktth${status.index}">
+						<td class="text-left" style="width: 220px;"><form:input
+								cssClass="form-control"
+								path="nvktDs[${status.index}].taiKhoanNo.lyDo"
+								placeholder="Lý do" /> <form:errors
+								path="nvktDs[${status.index}].taiKhoanNo.lyDo" cssClass="error" /></td>
+						<td class="text-left" style="width: 180px;"><form:select
+								cssClass="form-control"
+								path="nvktDs[${status.index}].taiKhoanNo.loaiTaiKhoan.maTk"
+								multiple="false">
+								<%-- <form:option value="0"></form:option> --%>
+								<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
+									itemLabel="maTenTk" />
+							</form:select> <form:errors
+								path="nvktDs[${status.index}].taiKhoanNo.loaiTaiKhoan.maTk"
+								cssClass="error" /></td>
+						<td class="text-left" style="width: 180px;"><form:select
+								cssClass="form-control"
+								path="nvktDs[${status.index}].taiKhoanCo.loaiTaiKhoan.maTk"
+								multiple="false">
+								<%-- <form:option value="0"></form:option> --%>
+								<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
+									itemLabel="maTenTk" />
+							</form:select> <form:errors
+								path="nvktDs[${status.index}].taiKhoanCo.loaiTaiKhoan.maTk"
+								cssClass="error" /></td>
+						<td class="text-right" style="width: 180px;"><form:input
+								cssClass="form-control"
+								path="nvktDs[${status.index}].taiKhoanNo.soTien.soTien"
+								placeholder="" /> <form:errors
+								path="nvktDs[${status.index}].taiKhoanNo.soTien.soTien"
 								cssClass="error" /></td>
 					</tr>
 				</c:forEach>

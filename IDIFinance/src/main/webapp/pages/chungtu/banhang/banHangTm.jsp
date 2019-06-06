@@ -25,6 +25,7 @@
 		var hangTienDong = "";
 		var thueDong = "";
 		var chiPhiDong = "";
+		var ktthDong = "";
 		var patt = new RegExp("\\[" + (soDongTk - 1) + "\\]", "g");
 		var patt1 = new RegExp("Ds" + (soDongTk - 1), "g");
 
@@ -274,6 +275,12 @@
 					$(chiPhiDongMoi).appendTo($("#chiPhiTbl")).prop("id",
 							"chiPhi" + soDongTk);
 
+					// Thêm dòng mới vào tab ktth
+					ktthDongMoi = ktthDong.replace(patt, "[" + soDongTk + "]");
+					ktthDongMoi = ktthDongMoi.replace(patt1, "Ds" + soDongTk);
+					$(ktthDongMoi).appendTo($("#ktthTbl")).prop("id",
+							"ktth" + soDongTk);
+
 					dangKy(soDongTk);
 
 					soDongTk++;
@@ -287,6 +294,7 @@
 			$("#hangTien" + soDongTk).remove();
 			$("#thue" + soDongTk).remove();
 			$("#chiPhi" + soDongTk).remove();
+			$("#ktth" + soDongTk).remove();
 
 			if (soDongTk == 1) {
 				$("#xoaHh").addClass("disabled");
@@ -374,6 +382,10 @@
 
 			var donVi = $("#hangHoaDs" + id + "\\.donVi\\.tenDv").val();
 			$("#hangHoaDs" + id + "\\.giaVon\\.tenDvTxt").text(donVi);
+
+			$("#lyDo").change(function() {
+				$("#nvktDs" + id + "\\.taiKhoanNo\\.lyDo").val($(this).val());
+			});
 
 			// Đăng ký thay đổi số lượng
 			$("#hangHoaDs" + id + "\\.soLuong").change(function() {
@@ -488,6 +500,13 @@
 								$("#hangHoaDs" + id + "\\.giaKho\\.soTien")
 										.val(giaVon);
 							});
+
+			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk").val("");
+			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk")
+					.combobox();
+			$("#nvktDs" + id + "\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk").val("");
+			$("#nvktDs" + id + "\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk")
+					.combobox();
 
 			// Đăng ký chọn hàng hóa
 			$("#hangHoaDs" + id + "\\.maHh").combobox();
@@ -713,6 +732,9 @@
 
 			chiPhiDong = $("#chiPhi" + (soDongTk - 1)).html();
 			chiPhiDong = "<tr>" + chiPhiDong + "</tr>";
+
+			ktthDong = $("#ktth" + (soDongTk - 1)).html();
+			ktthDong = "<tr>" + ktthDong + "</tr>";
 
 			if (soDongTk > 1) {
 				$("#hangTien" + (soDongTk - 1)).remove();

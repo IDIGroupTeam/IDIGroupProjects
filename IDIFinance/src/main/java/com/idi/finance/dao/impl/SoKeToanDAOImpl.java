@@ -19,6 +19,7 @@ import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;
 import com.idi.finance.bean.doituong.DoiTuong;
+import com.idi.finance.bean.hanghoa.DonVi;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
@@ -60,6 +61,9 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 	@Value("${DANH_SACH_TONG_HOP_CONG_NO_KTTH}")
 	private String DANH_SACH_TONG_HOP_CONG_NO_KTTH;
+
+	@Value("${DANH_SACH_TONG_HOP_NXT}")
+	private String DANH_SACH_TONG_HOP_NXT;
 
 	private JdbcTemplate jdbcTmpl;
 
@@ -164,7 +168,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 		return ketQua;
 	}
-	
+
 	@Override
 	public List<DuLieuKeToan> danhSachTongPhatSinhDoiTuongKtth(String maTk, Date dau, Date cuoi) {
 		if (maTk == null || maTk.trim().equals("")) {
@@ -860,6 +864,97 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		}
 
 		return ketQua;
+	}
+
+	@Override
+	public List<DuLieuKeToan> danhSachTongHopNxt(String maTk, Date dau, Date cuoi) {
+		if (maTk == null) {
+			return null;
+		}
+
+		String query = DANH_SACH_TONG_HOP_NXT;
+		query = query.replaceAll("\\$MA_TK\\$", maTk);
+
+		logger.info("Danh sách tổng hợp nhập xuất tồn theo loại tài khoản: '" + maTk + "' ...");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		if (dau != null) {
+			String batDau = sdf.format(dau);
+			logger.info("Từ " + batDau);
+			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "AND CT.NGAY_HT >= '" + batDau + "'");
+		} else {
+			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "");
+		}
+
+		if (cuoi != null) {
+			String ketThuc = sdf.format(cuoi);
+			logger.info("Đến " + ketThuc);
+			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "AND CT.NGAY_HT <= '" + ketThuc + "'");
+		} else {
+			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "");
+		}
+
+		logger.info(query);
+
+		List<DuLieuKeToan> duLieuKeToanDs = jdbcTmpl.query(query, new DuLieuKeToanMapper());
+
+		List<DuLieuKeToan> ketQua = null;
+		// Ghép dữ liệu tại đây
+		if (duLieuKeToanDs != null) {
+			ketQua = new ArrayList<>();
+			Iterator<DuLieuKeToan> iter = duLieuKeToanDs.iterator();
+			while (iter.hasNext()) {
+				DuLieuKeToan duLieuKeToan = iter.next();
+
+				int pos = ketQua.indexOf(duLieuKeToan);
+				if (pos > -1) {
+					DuLieuKeToan duLieuKeToanTmpl = ketQua.get(pos);
+					duLieuKeToanTmpl.tron(duLieuKeToan);
+				} else {
+					ketQua.add(duLieuKeToan);
+				}
+			}
+		}
+
+		return ketQua;
+	}
+
+	public class DuLieuKeToanHangHoaMapper implements RowMapper<DuLieuKeToan> {
+		public DuLieuKeToan mapRow(ResultSet rs, int rowNum) throws SQLException {
+			try {
+				DuLieuKeToan duLieuKeToan = new DuLieuKeToan();
+
+				HangHoa hangHoa = new HangHoa();
+				hangHoa.setMaHh(rs.getInt("MA_HH"));
+				hangHoa.setTenHh(rs.getString("TEN_HH"));
+				hangHoa.setKyHieuHh(rs.getString("KH_HH"));
+
+				DonVi donVi = new DonVi();
+				donVi.setMaDv(rs.getInt("MA_DV"));
+				donVi.setTenDv(rs.getString("TEN_DV"));
+				donVi.setMoTa(rs.getString("MO_TA"));
+				hangHoa.setDonVi(donVi);
+
+				duLieuKeToan.setHangHoa(hangHoa);
+				int chieu = rs.getInt("CHIEU");
+
+				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
+				loaiTaiKhoan.setSoDu(rs.getInt("SO_DU"));
+				loaiTaiKhoan.setLuongTinh(rs.getBoolean("LUONG_TINH"));
+				duLieuKeToan.setLoaiTaiKhoan(loaiTaiKhoan);
+
+				if (loaiTaiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
+					duLieuKeToan.setTongNoPhatSinh(rs.getDouble("SO_TIEN"));
+				} else {
+					duLieuKeToan.setTongCoPhatSinh(rs.getDouble("SO_TIEN"));
+				}
+
+				return duLieuKeToan;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 	}
 
 	public class DuLieuKeToanMapper implements RowMapper<DuLieuKeToan> {
