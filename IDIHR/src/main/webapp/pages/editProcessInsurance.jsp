@@ -13,7 +13,7 @@
 	color: red;
 	font-size: 90%;
 	font-style: italic;
-}
+	}
 </style>
 <!-- Initialize the plugin: -->
 <script src="${url}/public/js/jquery.min.js"></script>
