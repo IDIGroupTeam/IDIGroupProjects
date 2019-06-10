@@ -586,7 +586,9 @@
 
 <div class="row form-group">
 	<div class="col-sm-12">
-		<a href="${url}/chungtu/ktth/danhsach" class="btn btn-info btn-sm">Hủy</a>
+		<a href="${url}/chungtu/ktth/danhsach" class="btn btn-info btn-sm">Danh
+			sách kế toán tổng hợp</a> <a href="${url}/chungtu/ktth/danhsach"
+			class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="button" class="btn btn-info btn-sm">Lưu</button>
 	</div>
 </div>

@@ -94,11 +94,11 @@
 							<a href="${url}/taikhoan/sua/${taiKhoan.maTk}" class="btn"
 								title="Sửa"> <span class="glyphicon glyphicon-edit"></span>
 							</a>
-							<%-- <a href="${url}/taikhoan/xoa/${taiKhoan.maTk}" class="btn"
+							<a href="${url}/taikhoan/xoa/${taiKhoan.maTk}" class="btn"
 								title="Xoá"
 								onclick="return xacNhanXoaTaiKhoan(${taiKhoan.maTk});"> <span
 								class="glyphicon glyphicon-remove"></span>
-							</a> --%>
+							</a>
 							<a href="${url}/taikhoan/taomoi" class="btn" title="Tạo mới">
 								<span class="glyphicon glyphicon-plus"></span>
 							</a>

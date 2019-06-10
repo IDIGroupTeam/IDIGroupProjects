@@ -129,7 +129,7 @@
 		<li class="active"><a data-toggle="tab" href="#sdTaiKhoan"
 			data-target="#sdTaiKhoan">Số dư tài khoản</a></li>
 		<li><a data-toggle="tab" href="#sdCongNoKH"
-			data-target="#sdCongNoKH">Công nợ khách hàng</a></li>
+			data-target="#sdCongNoKH">Công nợ KH</a></li>
 		<li><a data-toggle="tab" href="#sdCongNoNCC"
 			data-target="#sdCongNoNCC">Công nợ NCC</a></li>
 		<li><a data-toggle="tab" href="#sdCongNoNV"
@@ -140,8 +140,8 @@
 		<li><a data-toggle="tab" href="#sdTSCD">Tài sản cố định</a></li> -->
 	</ul>
 
-	<div class="tab-content table-responsive sub-content">
-		<div id="sdTaiKhoan" class="tab-pane fade in active">
+	<div class="tab-content sub-content">
+		<div id="sdTaiKhoan" class="tab-pane fade in active table-responsive">
 			<table class="table table-bordered table-hover">
 				<thead>
 					<tr>
@@ -180,10 +180,13 @@
 				</tbody>
 			</table>
 
-			<!-- <div class="col-sm-12"><a class="btn btn-info btn-sm" title="Thêm số dư" href="#"
-				data-toggle="modal" data-target="#sdTaiKhoanModal">Thêm số dư Tk</a></div>-->
+			<div class="col-sm-12">
+				<a class="btn btn-info btn-sm" title="Thêm số dư" href="#"
+					data-toggle="modal" data-target="#sdTaiKhoanModal">Thêm & Sửa
+					số dư </a>
+			</div>
 		</div>
-		<div id="sdCongNoKH" class="tab-pane fade">
+		<div id="sdCongNoKH" class="tab-pane fade table-responsive">
 			<table class="table table-bordered table-hover">
 				<thead>
 					<tr>
@@ -238,7 +241,7 @@
 				</c:when>
 			</c:choose>
 		</div>
-		<div id="sdCongNoNCC" class="tab-pane fade">
+		<div id="sdCongNoNCC" class="tab-pane fade table-responsive">
 			<table class="table table-bordered table-hover">
 				<thead>
 					<tr>
@@ -293,7 +296,7 @@
 				</c:when>
 			</c:choose>
 		</div>
-		<div id="sdCongNoNV" class="tab-pane fade">
+		<div id="sdCongNoNV" class="tab-pane fade table-responsive">
 			<table class="table table-bordered table-hover">
 				<thead>
 					<tr>
@@ -348,7 +351,7 @@
 				</c:when>
 			</c:choose>
 		</div>
-		<div id="sdTonKho" class="tab-pane fade">
+		<div id="sdTonKho" class="tab-pane fade table-responsive">
 			<table class="table table-bordered table-hover">
 				<thead>
 					<tr>
@@ -418,7 +421,7 @@
 				</c:when>
 			</c:choose>
 		</div>
-		<div id="sdCCDC" class="tab-pane fade">
+		<div id="sdCCDC" class="tab-pane fade table-responsive">
 			<table class="table table-bordered table-hover">
 				<thead>
 					<tr>
@@ -441,7 +444,7 @@
 				</tbody>
 			</table>
 		</div>
-		<div id="sdTSCD" class="tab-pane fade">
+		<div id="sdTSCD" class="tab-pane fade table-responsive">
 			<table class="table table-bordered table-hover">
 				<thead>
 					<tr>

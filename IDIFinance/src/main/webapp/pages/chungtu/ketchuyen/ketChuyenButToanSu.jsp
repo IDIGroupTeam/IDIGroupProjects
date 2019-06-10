@@ -102,7 +102,9 @@
 
 <div class="row form-group">
 	<div class="col-sm-12">
-		<a href="${url}/chungtu/ketchuyen/buttoan/xem/${mainFinanceForm.maKc}"
+		<a href="${url}/chungtu/ketchuyen/buttoan/danhsach"
+			class="btn btn-info btn-sm">Danh sách bút toán kết chuyển</a> <a
+			href="${url}/chungtu/ketchuyen/buttoan/xem/${mainFinanceForm.maKc}"
 			class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu</button>
 	</div>

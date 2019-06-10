@@ -80,6 +80,10 @@ public class PropCont {
 	private String VALUE_BAN_HANG_DS_TK_XK_CO;
 
 	// Cấu hình khác
+	@Value("${TAI_KHOAN_TIEN_MAT}")
+	private String VALUE_TAI_KHOAN_TIEN_MAT;
+	@Value("${TAI_KHOAN_TIEN_GUI}")
+	private String VALUE_TAI_KHOAN_TIEN_GUI;
 	@Value("${TAI_KHOAN_CONG_NO}")
 	private String VALUE_TAI_KHOAN_CONG_NO;
 	@Value("${TAI_KHOAN_KHO_VTHH}")
@@ -117,6 +121,8 @@ public class PropCont {
 	public static final String BAN_HANG_DS_TK_GTGT_CO = "BAN_HANG_DS_TK_GTGT_CO";
 	public static final String BAN_HANG_DS_TK_XK_CO = "BAN_HANG_DS_TK_XK_CO";
 
+	public static final String TAI_KHOAN_TIEN_MAT = "TAI_KHOAN_TIEN_MAT";
+	public static final String TAI_KHOAN_TIEN_GUI = "TAI_KHOAN_TIEN_GUI";
 	public static final String TAI_KHOAN_CONG_NO = "TAI_KHOAN_CONG_NO";
 	public static final String TAI_KHOAN_KHO_VTHH = "TAI_KHOAN_KHO_VTHH";
 
@@ -156,6 +162,8 @@ public class PropCont {
 		propConts.put(BAN_HANG_DS_TK_GTGT_CO, VALUE_BAN_HANG_DS_TK_GTGT_CO);
 		propConts.put(BAN_HANG_DS_TK_XK_CO, VALUE_BAN_HANG_DS_TK_XK_CO);
 
+		propConts.put(TAI_KHOAN_TIEN_MAT, VALUE_TAI_KHOAN_TIEN_MAT);
+		propConts.put(TAI_KHOAN_TIEN_GUI, VALUE_TAI_KHOAN_TIEN_GUI);
 		propConts.put(TAI_KHOAN_CONG_NO, VALUE_TAI_KHOAN_CONG_NO);
 		propConts.put(TAI_KHOAN_KHO_VTHH, VALUE_TAI_KHOAN_KHO_VTHH);
 	}

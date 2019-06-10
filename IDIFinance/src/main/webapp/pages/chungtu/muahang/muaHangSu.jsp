@@ -935,7 +935,9 @@
 
 <div class="row form-group">
 	<div class="col-sm-12">
-		<a href="${url}/chungtu/muahang/xem/${mainFinanceForm.maCt}"
+		<a href="${url}/chungtu/muahang/danhsach" class="btn btn-info btn-sm">Danh
+			sách mua hàng</a> <a
+			href="${url}/chungtu/muahang/xem/${mainFinanceForm.maCt}"
 			class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu</button>
 	</div>

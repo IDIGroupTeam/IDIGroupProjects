@@ -538,6 +538,7 @@
 
 <div class="row form-group">
 	<div class="col-sm-12">
+		<a href="${url}/chungtu/phieuchi/danhsach" class="btn btn-info btn-sm">Danh sách phiếu chi</a>
 		<a href="${url}/chungtu/phieuchi/danhsach" class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="button" class="btn btn-info btn-sm">Lưu</button>
 	</div>

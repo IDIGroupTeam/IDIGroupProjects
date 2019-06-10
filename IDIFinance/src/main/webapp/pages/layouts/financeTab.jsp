@@ -85,6 +85,7 @@
 		<ul class="dropdown-menu">
 			<li id="tabKKT"><a href="${url}/kyketoan/danhsach">Kỳ kế
 					toán</a></li>
+			<li id="tabKKT"><a href="${url}/kyketoan/xem/1">Khai báo số dư đầu kỳ</a></li>
 			<li id="tabDSCH"><a href="${url}/cauhinh/danhsach">Cấu hình</a></li>
 
 			<li class="divider"></li>

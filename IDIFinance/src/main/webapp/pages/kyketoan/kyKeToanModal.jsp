@@ -14,6 +14,43 @@
 <script type="text/javascript">
 	//Shorthand for $( document ).ready()
 	$(function() {
+		function layTaiKhoan() {
+			var form = $(this).parents('form');
+
+			console.log(form);
+
+			var maTk = $(form).find("#loaiTaiKhoan\\.maTk").val();
+			var maKkt = $(form).find("#kyKeToan\\.maKyKt").val();
+
+			var param = "maTk=" + maTk + "&maKkt=" + maKkt;
+			console.log("param", param);
+
+			$.ajax({
+				url : "${url}/kyketoan/soduky/taikhoan",
+				data : param,
+				dataType : "json",
+				type : "POST",
+				success : function(soDuKy) {
+					console.log("success", soDuKy);
+					if (soDuKy != null) {
+						console.log("success", soDuKy.noDauKy + " - "
+								+ soDuKy.coDauKy);
+						$(form).find("#noDauKy").val(soDuKy.noDauKy);
+						$(form).find("#coDauKy").val(soDuKy.coDauKy);
+					} else {
+						console.log("success", "There is no data");
+						$(form).find("#noDauKy").val(0);
+						$(form).find("#coDauKy").val(0);
+					}
+				},
+				error : function(data) {
+					console.log(data);
+					$(form).find("#noDauKy").val(0);
+					$(form).find("#coDauKy").val(0);
+				}
+			});
+		}
+
 		function layCongNo() {
 			var form = $(this).parents('form');
 
@@ -108,6 +145,7 @@
 			});
 		}
 
+		$(".layTaiKhoan").change(layTaiKhoan);
 		$(".layCongNo").change(layCongNo);
 		$(".layTonKho").change(layTonKho);
 
@@ -121,15 +159,42 @@
 	<div class="modal-dialog">
 		<!-- Modal content-->
 		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title text-primary">Thêm số dư tài khoản</h4>
-			</div>
-			<div class="modal-body">Thêm số dư tài khoản</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-primary">Lưu</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-			</div>
+			<form:form action="${url}/kyketoan/soduky/taikhoan/luu"
+				modelAttribute="mainFinanceFormTk" method="POST">
+				<input type="hidden" id="kyKeToan.maKyKt" name="kyKeToan.maKyKt"
+					value="${kyKeToan.maKyKt}" />
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title text-primary">Thêm số dư tài khoản</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="loaiTaiKhoan.maTk">Mã tài khoản</label>
+						<form:select path="loaiTaiKhoan.maTk"
+							class="form-control combox layTaiKhoan">
+							<form:option value=""></form:option>
+							<form:options items="${tienMatTkDs}" itemLabel="maTenTk"
+								itemValue="maTk"></form:options>
+						</form:select>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-sm-6">
+								<label for="noDauKy">Nợ</label>
+								<form:input path="noDauKy" class="form-control" />
+							</div>
+							<div class="col-sm-6">
+								<label for="coDauKy">Có</label>
+								<form:input path="coDauKy" class="form-control" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">Lưu</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+				</div>
+			</form:form>
 		</div>
 	</div>
 </div>
