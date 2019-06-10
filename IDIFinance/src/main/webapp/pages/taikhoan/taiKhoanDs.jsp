@@ -93,15 +93,16 @@
 					<td><div class="btn-group btn-group-sm">
 							<a href="${url}/taikhoan/sua/${taiKhoan.maTk}" class="btn"
 								title="Sửa"> <span class="glyphicon glyphicon-edit"></span>
-							</a>
-							<a href="${url}/taikhoan/xoa/${taiKhoan.maTk}" class="btn"
-								title="Xoá"
-								onclick="return xacNhanXoaTaiKhoan(${taiKhoan.maTk});"> <span
-								class="glyphicon glyphicon-remove"></span>
-							</a>
-							<a href="${url}/taikhoan/taomoi" class="btn" title="Tạo mới">
+							</a> <a href="${url}/taikhoan/taomoi" class="btn" title="Tạo mới">
 								<span class="glyphicon glyphicon-plus"></span>
 							</a>
+							<c:if test="${!taiKhoan.phatSinh && !taiKhoan.cha}">
+								<a href="${url}/taikhoan/xoa/${taiKhoan.maTk}" class="btn"
+									title="Xoá"
+									onclick="return xacNhanXoaTaiKhoan(${taiKhoan.maTk});"> <span
+									class="glyphicon glyphicon-remove"></span>
+								</a>
+							</c:if>
 						</div></td>
 				</tr>
 			</c:forEach>

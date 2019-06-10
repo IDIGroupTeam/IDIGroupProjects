@@ -64,14 +64,30 @@ public class TaiKhoanController {
 		model.addAttribute("kpiGroups", kpiGroups);
 
 		List<LoaiTaiKhoan> taiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
-		model.addAttribute("taiKhoanDs", taiKhoanDs);
 
+		List<LoaiTaiKhoan> taiKhoanPhatSinhDs = taiKhoanDAO.danhSachTaiKhoanPhatSinh();
+		List<LoaiTaiKhoan> taiKhoanChaDs = taiKhoanDAO.danhSachTaiKhoanCha();
 		Iterator<LoaiTaiKhoan> iter = taiKhoanDs.iterator();
 		while (iter.hasNext()) {
 			LoaiTaiKhoan loaiTaiKhoan = iter.next();
 
+			if (taiKhoanPhatSinhDs.contains(loaiTaiKhoan)) {
+				// Loại tài khoản chưa có phát sinh
+				loaiTaiKhoan.setPhatSinh(true);
+			} else {
+				loaiTaiKhoan.setPhatSinh(false);
+			}
+
+			if (taiKhoanChaDs.contains(loaiTaiKhoan)) {
+				// Loại tài khoản cha
+				loaiTaiKhoan.setCha(true);
+			} else {
+				// Loại tài khoản con
+				loaiTaiKhoan.setCha(false);
+			}
 		}
 
+		model.addAttribute("taiKhoanDs", taiKhoanDs);
 		model.addAttribute("tab", "tabDMTK");
 		return "danhSachTaiKhoan";
 	}
@@ -85,6 +101,7 @@ public class TaiKhoanController {
 
 			LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
 			loaiTaiKhoan.setNew(true);
+			loaiTaiKhoan.setPhatSinh(false);
 
 			return chuanBiFormTaoMoi(model, loaiTaiKhoan);
 		} catch (Exception e) {
@@ -165,7 +182,11 @@ public class TaiKhoanController {
 	@RequestMapping("/taikhoan/xoa/{maTk}")
 	public String xoaTaiKhoan(@PathVariable("maTk") String maTk, Model model) {
 		try {
-			taiKhoanDAO.xoaTaiKhoan(maTk);
+			// Chỉ xóa những tài khoản không phải là cha và chưa phát sinh
+			if (!taiKhoanDAO.isCha(maTk) && !taiKhoanDAO.isPhatSinh(maTk)) {
+				taiKhoanDAO.xoaTaiKhoan(maTk);
+			}
+
 			return "redirect:/taikhoan/danhsach";
 		} catch (Exception e) {
 			e.printStackTrace();

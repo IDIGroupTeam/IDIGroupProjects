@@ -191,6 +191,32 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 	}
 
 	@Override
+	public boolean isPhatSinh(String maTk) {
+		if (maTk == null) {
+			return false;
+		}
+
+		String query = "SELECT DISTINCT MA_TK FROM NGHIEP_VU_KE_TOAN WHERE MA_TK=? ORDER BY MA_TK";
+
+		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, new LoaiTaiKhoanMapper());
+
+		return (taiKhoanDs != null && taiKhoanDs.size() > 0);
+	}
+
+	@Override
+	public boolean isCha(String maTk) {
+		if (maTk == null) {
+			return false;
+		}
+
+		String query = "SELECT DISTINCT MA_TK_CHA AS MA_TK FROM TAI_KHOAN_DANH_MUC WHERE MA_TK_CHA=? ORDER BY MA_TK";
+
+		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, new LoaiTaiKhoanMapper());
+
+		return (taiKhoanDs != null && taiKhoanDs.size() > 0);
+	}
+
+	@Override
 	public List<LoaiTaiKhoan> danhSachTaiKhoan() {
 		String query = "SELECT * FROM TAI_KHOAN_DANH_MUC ORDER BY MA_TK";
 
@@ -217,6 +243,32 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 
 			return loaiTaiKhoan;
 		}
+	}
+
+	@Override
+	public List<LoaiTaiKhoan> danhSachTaiKhoanPhatSinh() {
+		String query = "SELECT DISTINCT MA_TK FROM NGHIEP_VU_KE_TOAN ORDER BY MA_TK";
+
+		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, new LoaiTaiKhoanPhatSinhMapper());
+
+		return taiKhoanDs;
+	}
+
+	public class LoaiTaiKhoanPhatSinhMapper implements RowMapper<LoaiTaiKhoan> {
+		public LoaiTaiKhoan mapRow(ResultSet rs, int rowNum) throws SQLException {
+			LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+			loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
+			return loaiTaiKhoan;
+		}
+	}
+
+	@Override
+	public List<LoaiTaiKhoan> danhSachTaiKhoanCha() {
+		String query = "SELECT DISTINCT MA_TK_CHA AS MA_TK FROM TAI_KHOAN_DANH_MUC WHERE MA_TK_CHA IS NOT NULL ORDER BY MA_TK";
+
+		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, new LoaiTaiKhoanPhatSinhMapper());
+
+		return taiKhoanDs;
 	}
 
 	@Override
@@ -277,5 +329,4 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 		}
 		return loaiTaiKhoan;
 	}
-
 }

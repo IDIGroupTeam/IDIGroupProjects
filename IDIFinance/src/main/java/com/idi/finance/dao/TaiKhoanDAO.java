@@ -17,7 +17,15 @@ public interface TaiKhoanDAO {
 
 	public void xoaTaiKhoan(String maTk);
 
+	public boolean isPhatSinh(String maTk);
+
+	public boolean isCha(String maTk);
+
 	public List<LoaiTaiKhoan> danhSachTaiKhoan();
+
+	public List<LoaiTaiKhoan> danhSachTaiKhoanPhatSinh();
+
+	public List<LoaiTaiKhoan> danhSachTaiKhoanCha();
 
 	public List<LoaiTaiKhoan> danhSachTaiKhoanTheoCap1(String maTkCap1);
 

@@ -45,6 +45,8 @@ public class LoaiTaiKhoan implements Comparable<LoaiTaiKhoan> {
 	private boolean isNew = false;
 	private String maTkGoc;
 	private NganHangTaiKhoan nganHangTaiKhoan;
+	private boolean isPhatSinh = false;
+	private boolean isCha = false;
 
 	public LoaiTaiKhoan() {
 
@@ -169,6 +171,22 @@ public class LoaiTaiKhoan implements Comparable<LoaiTaiKhoan> {
 
 	public NganHangTaiKhoan getNganHangTaiKhoan() {
 		return nganHangTaiKhoan;
+	}
+
+	public boolean isPhatSinh() {
+		return isPhatSinh;
+	}
+
+	public void setPhatSinh(boolean isPhatSinh) {
+		this.isPhatSinh = isPhatSinh;
+	}
+
+	public boolean isCha() {
+		return isCha;
+	}
+
+	public void setCha(boolean isCha) {
+		this.isCha = isCha;
 	}
 
 	public String getMaTkGoc() {
