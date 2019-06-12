@@ -98,11 +98,11 @@ public class TaskController {
 	@Autowired
 	private JavaMailSender mailSender;
 	
-	PropertiesManager properties = new PropertiesManager("task.properties");
-	
 	@Autowired
 	TaskValidator taskValidator;
-	
+
+	PropertiesManager properties = new PropertiesManager("task.properties");
+
 	public static File fontFile = new File("/home/idi/properties/vuTimes.ttf");
 	//public static File fontBFile = new File("/home/idi/properties/vni.common.VTIMESB.ttf");
 	
@@ -447,8 +447,7 @@ public class TaskController {
 	
 	// Set a form validator
 	@InitBinder
-	protected void initBinder(WebDataBinder dataBinder) {
-
+	protected void initBinder(WebDataBinder dataBinder) {        
 		// Form mục tiêu
 		Object target = dataBinder.getTarget();
 		if (target == null) {
@@ -464,7 +463,12 @@ public class TaskController {
 			BindingResult result, final RedirectAttributes redirectAttributes) throws Exception {
 		try {
 			//System.err.println("insert new task");
-
+			if(task.getDueDate() != null && task.getDueDate().length() > 10 ) {
+				if (result.hasErrors()) {
+					// System.err.println("co loi validate");
+					return this.addNewTask(model, task);
+				}
+			}
 			if(taskDAO.taskIsExits(task.getTaskName())) {
 				log.info("Da ton tai task name nay ");				
 				if (result.hasErrors()) {
@@ -538,197 +542,200 @@ public class TaskController {
 
 	@RequestMapping(value = "/updateTask", method = RequestMethod.POST)
 	public String updateTask(Model model, @ModelAttribute("taskForm") @Validated TaskForm taskForm,
-			final RedirectAttributes redirectAttributes) throws Exception {
+			BindingResult result, final RedirectAttributes redirectAttributes) throws Exception {
 		try {
-
-			// Xu ly cho task comment
-			TaskComment taskComment = new TaskComment();
-			int currentMaxCommentIndex = 0;
-			 UserLogin userLogin = new UserLogin();
-			if (taskForm.getContent() != null && taskForm.getContent().length() > 0) {
-				currentMaxCommentIndex = taskDAO.getMaxCommentIndex(taskForm.getTaskId());
-				currentMaxCommentIndex = currentMaxCommentIndex + 1;
-				taskComment.setCommentIndex(currentMaxCommentIndex);
-				taskComment.setTaskId(taskForm.getTaskId());
-				taskComment.setCommentedBy(taskForm.getCommentedBy());
-				taskComment.setContent(taskForm.getContent());
-
-				//inject from Login account
-				String username = new LoginController().getPrincipal();
-			    log.info("Using usename =" + username +" in insert new task");
-			   
-			    if (username !=null && username.length() >0 ) {
-			    	userLogin  =  userRoleDAO.getAUserLoginFull(username);
-			    	taskComment.setCommentedBy(userLogin.getUserID());
-			    }
-				
-				taskDAO.insertTaskComment(taskComment);
-			}
-
-			// Xu ly cho task
-			Task task = new Task();
-			// get info from taskForm then put to task bean
-			task.setTaskId(taskForm.getTaskId());
-			task.setTaskName(taskForm.getTaskName());
-			task.setCreatedBy(taskForm.getCreatedBy());
-			task.setOwnedBy(taskForm.getOwnedBy());
-			task.setSecondOwned(taskForm.getSecondOwned());
-			task.setVerifyBy(taskForm.getVerifyBy());
-			task.setUpdateId(taskForm.getUpdateId()); // auto not edit show only
-			task.setUpdateTS(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
-			task.setResolvedBy(taskForm.getResolvedBy()); // auto not edit show only when completed
-			task.setCreationDate(taskForm.getCreationDate());
-			task.setDueDate(taskForm.getDueDate());
-			task.setResolutionDate(taskForm.getResolutionDate()); // auto not edit show only when completed
-			task.setType(taskForm.getType());
-			task.setArea(taskForm.getArea()); // viec cua phong kt , cntt, ns, ...
-			task.setPriority(taskForm.getPriority());
-			task.setStatus(taskForm.getStatus());
-			if(taskForm.getPlannedFor() != null && taskForm.getPlannedFor().length() > 0)
-				task.setPlannedFor(taskForm.getPlannedFor());
-			else {
-				if(Integer.parseInt(taskForm.getMonth()) < 10 && Integer.parseInt(taskForm.getMonth()) > 0)
-					task.setPlannedFor(taskForm.getYear() + "-0" + taskForm.getMonth());
-				else if(Integer.parseInt(taskForm.getMonth()) > 9)
-					task.setPlannedFor(taskForm.getYear() + "-" + taskForm.getMonth());
-			}
-			task.setTimeSpent(taskForm.getTimeSpent());
-			task.setTimeSpentType(taskForm.getTimeSpentType());
-			task.setEstimate(taskForm.getEstimate());
-			task.setEstimateTimeType(taskForm.getEstimateTimeType());
-			task.setDescription(taskForm.getDescription());
-			task.setReviewComment(taskForm.getReviewComment());
-
-			Task currentTask = new Task();
-			currentTask = taskDAO.getTask(taskForm.getTaskId());
-
-			taskDAO.updateTask(task);
-
-			// Gui mail notification
-			// Lấy ds email can gui
-			String owner = "Chưa giao cho ai";
-			if(taskForm.getOwnedBy() > 0)
-				owner = allEmployeesMap().get(taskForm.getOwnedBy());
-			
-			String updatedBy = "";
-			if(userLogin.getUserID() > 0)
-				updatedBy = allEmployeesMap().get(userLogin.getUserID());
-			
-			List<String> mailList = taskDAO.getMailList(taskForm.getTaskId());
-			MimeMessage mimeMessage = mailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-			if (taskForm.getDescription().equalsIgnoreCase(currentTask.getDescription())) {
-				//System.err.println("Ko thay doi description");
-				//System.err.println(
-				//"Ko thay doi description:" + taskForm.getDescription() + "|" + currentTask.getDescription());
-				String htmlMsg = "";
-				if(taskForm.getReviewComment() != null && taskForm.getReviewComment().length() > 0) {
-					htmlMsg ="Dear you, <br/>\n <br/>\n"
-							+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
-							+ "<b>Người làm: " + owner + "</b><br/>\n"
-							+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
-							+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n " 
-							+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n " 
-							+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
-							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
-							+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" 
-							+ "<b>Người cập nhật: " + updatedBy
-							+ "</b> <e-mail> lúc " + task.getUpdateTS() + " <br/>\n"
-							+ "<tabel border='1'>"
-							+ "<br/>\n<tr><td>Nhận xét/đánh giá của người giám sát: </td><td>" + taskForm.getReviewComment() 
-							+ "</tr><tr><td><br/>Nội dung thảo luận: " + taskForm.getContent()
-							+ "<br/>\n<br/>Trân trọng, <br/> \n"
-							+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
-							+ " </td></tr></table><br/> \n";
-				}else {
-					htmlMsg = "Dear you, <br/>\n <br/>\n"
-							+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
-							+ "<b>Người làm: " + owner + " </b><br/>\n"
-							+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n "
-							+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "							
-							+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n "
-							+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
-							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
-							+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" 
-							+ "<b>Người cập nhật: " + updatedBy
-							+ "</b><e-mail> lúc " +  task.getUpdateTS() + " <br/>\n"
-							+ "<tabel border='1'>"
-							+ "<tr><td>Nội dung thảo luận: " + taskForm.getContent()
-							+ "<br/>\n<br/>Trân trọng, <br/> \n"
-							+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
-							+ "</td></tr></table><br/> \n";
+			if(taskForm.getDueDate() != null && taskForm.getDueDate().length() > 10 ) {		
+				model.addAttribute("message", "Vui lòng nhập ngày phải xong đúng định dạng, ví dụ như 06/24/2019");
+				System.err.println("sai dinh dang ngay fai xong");				
+			}else {			
+				// Xu ly cho task comment
+				TaskComment taskComment = new TaskComment();
+				int currentMaxCommentIndex = 0;
+				 UserLogin userLogin = new UserLogin();
+				if (taskForm.getContent() != null && taskForm.getContent().length() > 0) {
+					currentMaxCommentIndex = taskDAO.getMaxCommentIndex(taskForm.getTaskId());
+					currentMaxCommentIndex = currentMaxCommentIndex + 1;
+					taskComment.setCommentIndex(currentMaxCommentIndex);
+					taskComment.setTaskId(taskForm.getTaskId());
+					taskComment.setCommentedBy(taskForm.getCommentedBy());
+					taskComment.setContent(taskForm.getContent());
+	
+					//inject from Login account
+					String username = new LoginController().getPrincipal();
+				    log.info("Using usename = " + username +" in insert new task");
+				   
+				    if (username !=null && username.length() >0 ) {
+				    	userLogin  =  userRoleDAO.getAUserLoginFull(username);
+				    	taskComment.setCommentedBy(userLogin.getUserID());
+				    }
+					
+					taskDAO.insertTaskComment(taskComment);
 				}
-
-				mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
-				// mimeMessage.setContent(new String(htmlMsg.getBytes("UTF-8"),
-				// "UTF-8"),"text/html; charset=UTF-8");
-				// mimeMessage.setContent(htmlMsg, "text/html");
-			} else {
-				//System.err.println("Thay doi description");
-				String htmlMsg = "";
-				if(taskForm.getReviewComment() != null && taskForm.getReviewComment().length() > 0) {
-					htmlMsg = "Dear you, <br/>\n <br/>\n"
-							+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n" 
-							+ "<b>Người làm: " + owner + " </b><br/>\n"
-							+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
-							+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "							
-							+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n " 
-							+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
-							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
-							+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" 
-							+ "<b>Người cập nhật: " + updatedBy
-							+ "</b><e-mail> lúc " +  task.getUpdateTS() + " <br/>\n"
-							+ "<tabel border='1'><tr>" 
-							+ "<td>Mô tả công việc: </td><td>" + taskForm.getDescription()
-							+ " </td></tr><br/> \n "
-							+ "+ <tr><td>Nhận xét/đánh giá của người giám sát: " + taskForm.getReviewComment() 
-							+ "</td></tr><br/> \n "
-							+ "<tr><td>Nội dung thảo luận: " + taskForm.getContent()
-							+ "<br/>\n<br/>\n Trân trọng, <br/> \n"
-							+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
-							+ "</td></tr></table><br/> \n";
-				}else {
-					htmlMsg = "Dear you, <br/>\n <br/>\n"
-							+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n" 
-							+ "<b>Người làm: " + owner + " </b><br/>\n"
-							+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
-							+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "							
-							+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n " 
-							+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
-							+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n "
-							+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n "
-							+ "<b>Người cập nhật: " + updatedBy
-							+ "</b> <e-mail> lúc " +  task.getUpdateTS() + " <br/>\n"
-							+ "<tabel border='1'>"
-							+ "<tr><td>Mô tả công việc: </td><td>" + taskForm.getDescription()
-							+ "</td></tr><br/>\n "
-							+ "<tr><td>Nội dung thảo luận: " + taskForm.getContent()
-							+ "<br/>\n<br/>\n Trân trọng, <br/> \n"
-							+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
-							+ "</td></tr></table><br/> \n";
-				}					
-				
-				mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
-				// mimeMessage.setContent(new String(htmlMsg.getBytes("UTF-8"),
-				// "UTF-8"),"text/html; charset=UTF-8");
-				// mimeMessage.setContent(htmlMsg, "text/html");
-			}
-			//System.err.println("chuan bi send mail " + mailList.size());
-			for (int i = 0; i < mailList.size(); i++) {
-				String sendTo = mailList.get(i);
-				//System.err.println("chuan bi send mail");
-				if (sendTo != null && sendTo.length() > 0) {
-					//System.err.println("send mail cho " + sendTo);
-					helper.setTo(sendTo);
-					helper.setSubject("[Mã công việc: " + taskForm.getTaskId() + "] - " + taskForm.getTaskName());
-					helper.setFrom("IDITaskNotReply");
-					mailSender.send(mimeMessage);
-					//System.err.println("sent");
+	
+				// Xu ly cho task
+				Task task = new Task();
+				// get info from taskForm then put to task bean
+				task.setTaskId(taskForm.getTaskId());
+				task.setTaskName(taskForm.getTaskName());
+				task.setCreatedBy(taskForm.getCreatedBy());
+				task.setOwnedBy(taskForm.getOwnedBy());
+				task.setSecondOwned(taskForm.getSecondOwned());
+				task.setVerifyBy(taskForm.getVerifyBy());
+				task.setUpdateId(taskForm.getUpdateId()); // auto not edit show only
+				task.setUpdateTS(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
+				task.setResolvedBy(taskForm.getResolvedBy()); // auto not edit show only when completed
+				task.setCreationDate(taskForm.getCreationDate());
+				task.setDueDate(taskForm.getDueDate());
+				task.setResolutionDate(taskForm.getResolutionDate()); // auto not edit show only when completed
+				task.setType(taskForm.getType());
+				task.setArea(taskForm.getArea()); // viec cua phong kt , cntt, ns, ...
+				task.setPriority(taskForm.getPriority());
+				task.setStatus(taskForm.getStatus());
+				if(taskForm.getPlannedFor() != null && taskForm.getPlannedFor().length() > 0)
+					task.setPlannedFor(taskForm.getPlannedFor());
+				else {
+					if(Integer.parseInt(taskForm.getMonth()) < 10 && Integer.parseInt(taskForm.getMonth()) > 0)
+						task.setPlannedFor(taskForm.getYear() + "-0" + taskForm.getMonth());
+					else if(Integer.parseInt(taskForm.getMonth()) > 9)
+						task.setPlannedFor(taskForm.getYear() + "-" + taskForm.getMonth());
 				}
+				task.setTimeSpent(taskForm.getTimeSpent());
+				task.setTimeSpentType(taskForm.getTimeSpentType());
+				task.setEstimate(taskForm.getEstimate());
+				task.setEstimateTimeType(taskForm.getEstimateTimeType());
+				task.setDescription(taskForm.getDescription());
+				task.setReviewComment(taskForm.getReviewComment());
+	
+				Task currentTask = new Task();
+				currentTask = taskDAO.getTask(taskForm.getTaskId());
+	
+				taskDAO.updateTask(task);
+	
+				// Gui mail notification
+				// Lấy ds email can gui
+				String owner = "Chưa giao cho ai";
+				if(taskForm.getOwnedBy() > 0)
+					owner = allEmployeesMap().get(taskForm.getOwnedBy());
+				
+				String updatedBy = "";
+				if(userLogin.getUserID() > 0)
+					updatedBy = allEmployeesMap().get(userLogin.getUserID());
+				
+				List<String> mailList = taskDAO.getMailList(taskForm.getTaskId());
+				MimeMessage mimeMessage = mailSender.createMimeMessage();
+				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+				if (taskForm.getDescription().equalsIgnoreCase(currentTask.getDescription())) {
+					//System.err.println("Ko thay doi description");
+					//System.err.println(
+					//"Ko thay doi description:" + taskForm.getDescription() + "|" + currentTask.getDescription());
+					String htmlMsg = "";
+					if(taskForm.getReviewComment() != null && taskForm.getReviewComment().length() > 0) {
+						htmlMsg ="Dear you, <br/>\n <br/>\n"
+								+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+								+ "<b>Người làm: " + owner + "</b><br/>\n"
+								+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
+								+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n " 
+								+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n " 
+								+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
+								+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
+								+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" 
+								+ "<b>Người cập nhật: " + updatedBy
+								+ "</b> <e-mail> lúc " + task.getUpdateTS() + " <br/>\n"
+								+ "<tabel border='1'>"
+								+ "<br/>\n<tr><td>Nhận xét/đánh giá của người giám sát: </td><td><textarea>" + taskForm.getReviewComment() 
+								+ "</textarea></td></tr><tr><td><br/>Nội dung thảo luận:<textarea> " + taskForm.getContent()
+								+ "</textarea><br/>\n<br/>Trân trọng, <br/> \n"
+								+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
+								+ " </td></tr></table><br/> \n";
+					}else {
+						htmlMsg = "Dear you, <br/>\n <br/>\n"
+								+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+								+ "<b>Người làm: " + owner + " </b><br/>\n"
+								+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n "
+								+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "							
+								+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n "
+								+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
+								+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
+								+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" 
+								+ "<b>Người cập nhật: " + updatedBy
+								+ "</b><e-mail> lúc " +  task.getUpdateTS() + " <br/>\n"
+								+ "<tabel border='1'>"
+								+ "<tr><td>Nội dung thảo luận:<textarea> " + taskForm.getContent()
+								+ "</textarea><br/>\n<br/>Trân trọng, <br/> \n"
+								+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
+								+ "</td></tr></table><br/> \n";
+					}
+	
+					mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
+					// mimeMessage.setContent(new String(htmlMsg.getBytes("UTF-8"),
+					// "UTF-8"),"text/html; charset=UTF-8");
+					// mimeMessage.setContent(htmlMsg, "text/html");
+				} else {
+					//System.err.println("Thay doi description");
+					String htmlMsg = "";
+					if(taskForm.getReviewComment() != null && taskForm.getReviewComment().length() > 0) {
+						htmlMsg = "Dear you, <br/>\n <br/>\n"
+								+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n" 
+								+ "<b>Người làm: " + owner + " </b><br/>\n"
+								+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
+								+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "							
+								+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n " 
+								+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
+								+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
+								+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" 
+								+ "<b>Người cập nhật: " + updatedBy
+								+ "</b><e-mail> lúc " +  task.getUpdateTS() + " <br/>\n"
+								+ "<tabel border='1'><tr>" 
+								+ "<td>Mô tả công việc: </td><td><textarea> " + taskForm.getDescription()
+								+ " </textarea></td></tr><br/> \n "
+								+ "+ <tr><td>Nhận xét/đánh giá của người giám sát: " + taskForm.getReviewComment() 
+								+ "</td></tr><br/> \n "
+								+ "<tr><td>Nội dung thảo luận: <textarea>" + taskForm.getContent()
+								+ "</textarea><br/>\n<br/>\n Trân trọng, <br/> \n"
+								+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
+								+ "</td></tr></table><br/> \n";
+					}else {
+						htmlMsg = "Dear you, <br/>\n <br/>\n"
+								+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n" 
+								+ "<b>Người làm: " + owner + " </b><br/>\n"
+								+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
+								+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "							
+								+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n " 
+								+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
+								+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n "
+								+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n "
+								+ "<b>Người cập nhật: " + updatedBy
+								+ "</b> <e-mail> lúc " +  task.getUpdateTS() + " <br/>\n"
+								+ "<tabel border='1'>"
+								+ "<tr><td>Mô tả công việc: </td><td><textarea>" + taskForm.getDescription()
+								+ "</textarea></td></tr><br/>\n "
+								+ "<tr><td>Nội dung thảo luận: <textarea>" + taskForm.getContent()
+								+ "</textarea><br/>\n<br/>\n Trân trọng, <br/> \n"
+								+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
+								+ "</td></tr></table><br/> \n";
+					}					
+					
+					mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
+					// mimeMessage.setContent(new String(htmlMsg.getBytes("UTF-8"),
+					// "UTF-8"),"text/html; charset=UTF-8");
+					// mimeMessage.setContent(htmlMsg, "text/html");
+				}
+				//System.err.println("chuan bi send mail " + mailList.size());
+				for (int i = 0; i < mailList.size(); i++) {
+					String sendTo = mailList.get(i);
+					//System.err.println("chuan bi send mail");
+					if (sendTo != null && sendTo.length() > 0) {
+						//System.err.println("send mail cho " + sendTo);
+						helper.setTo(sendTo);
+						helper.setSubject("[Mã công việc: " + taskForm.getTaskId() + "] - " + taskForm.getTaskName());
+						helper.setFrom("IDITaskNotReply");
+						mailSender.send(mimeMessage);
+						//System.err.println("sent");
+					}
+				}
+				// Add message to flash scope
+				model.addAttribute("message", "Cập nhật thông tin công việc thành công!");
 			}
-			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin công việc thành công!");
-
 		} catch (Exception e) {
 			log.error(e, e);
 		}
@@ -884,13 +891,11 @@ public class TaskController {
 				model.addAttribute("tabActive2", "tab-pane active");
 				model.addAttribute("tabActive3", "tab-pane");
 			} else if (tab == 3) {
-				System.err.println("345");
 				model.addAttribute("active3", "active");
 				model.addAttribute("tabActive1", "tab-pane");
 				model.addAttribute("tabActive2", "tab-pane");
 				model.addAttribute("tabActive3", "tab-pane active");
 			}
-
 		} else {
 			return "redirect:/";
 		}
@@ -916,7 +921,6 @@ public class TaskController {
 
 		// get list employee id
 		model.addAttribute("employeesList", employeesMap("all"));
-
 		model.addAttribute("taskReportForm", taskReportForm);
 
 		return "prepareReport";

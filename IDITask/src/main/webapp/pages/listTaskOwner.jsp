@@ -255,7 +255,7 @@ tr:nth-child(even) {
 				
 				String dueDate = (String)pageContext.getAttribute("dueDate");
 				
-				if(dueDate != null && dueDate.length() > 0 && !status.endsWith("xong")){
+				if(dueDate != null && dueDate.length() == 10 && !status.endsWith("xong")){
 					dueDate = dueDate.replaceAll("-", "");
 					if(Integer.parseInt(dueDate) < Integer.parseInt(currentDate)){
 						pageContext.setAttribute("overDate", "yes");

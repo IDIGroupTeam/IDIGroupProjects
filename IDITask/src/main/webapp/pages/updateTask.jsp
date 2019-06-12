@@ -20,9 +20,13 @@
 <script src="${url}/public/js/bootstrap-autosize.js"></script>
 <script src="${url}/public/js/jquery-ui.js"></script>
 <script src="${url}/public/js/bootstrap3-typeahead.min.js"></script>
+<%-- <script src="${url}/public/js/dojoCode.js"></script> --%>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+ 
 <script type="text/javascript">
 	$(function() {
+		/* $("#dueDate").datepicker({dateFormat: 'dd/mm/yy'}); */
+		
 		$("#area")
 				.change(
 						function() {
@@ -71,7 +75,7 @@
 
 						});
 	});
-
+	
 	$(function() {
 		$('.normal').autosize();
 		$('.animatedArea').autosize({
@@ -179,6 +183,74 @@
 	       
 	    }
 	}
+	
+/* 	function passParms(){
+		var forSubscriber = document.getElementById("forSubscriber");
+		var subscriber = document.getElementById("subscriber");
+		for(var i = 0; i < forSubscriber.length; i++){
+			var parmSelect = forSubscriber.options[i];
+			if(parmSelect.selected){
+				dojo.create("option",{
+					value : parmSelect.value,
+					innerHTML : parmSelect.text,
+				}, subscriber);
+				forSubscriber.remove(i);
+				i--;
+			}
+		}
+	}
+
+	function returnParms(){
+		var forSubscriber = document.getElementById("forSubscriber");
+		var subscriber = document.getElementById("subscriber");
+		for(var i = 0; i < subscriber.length; i++){
+			var parmSelect = subscriber.options[i];
+			if(parmSelect.selected){
+				dojo.create("option",{
+					value : parmSelect.value,
+					innerHTML : parmSelect.text,
+				}, forSubscriber);
+				subscriber.remove(i);
+				i--;
+			}
+		}
+	}
+
+	function passAllParms(){
+		var forSubscriber = document.getElementById("forSubscriber");
+		var subscriber = document.getElementById("subscriber");
+		subscriber = "<option value='0'>Chưa giao cho ai</option>";
+		for(var i = 0; i < forSubscriber.length; i++){
+			var parmSelect = forSubscriber.options[i];
+			
+			
+			
+				subscriberSel += "<option value='" + obj[i].employeeId + "'>"
+						+ obj[i].fullName
+						+ ", chức vụ: "
+						+ obj[i].jobTitle
+						+ "</option>";
+			innerHTML : parmSelect.text,
+			}, subscriber);
+			forSubscriber.remove(i);
+			i--;
+		}
+		$("#subscriber").html(subscriberSel);
+	}
+
+	function returnAllParms(){
+		var forSubscriber = document.getElementById("forSubscriber");
+		var subscriber = document.getElementById("subscriber");
+		for(var i = 0; i < subscriber.length; i++){
+			var parmSelect = subscriber.options[i];
+			dojo.create("option",{
+				value : parmSelect.value,
+				innerHTML : parmSelect.text,
+			}, forSubscriber);
+			subscriber.remove(i);
+			i--;
+		}
+	} */
 </script>
 
 <title>Tập đoàn IDI - Quản lý công việc</title>
@@ -196,7 +268,11 @@
 		công việc</button></a>
 	<a href="${pageContext.request.contextPath}/listTasksOwner"><button
 		class="btn btn-lg btn-primary btn-sm">Công việc của tôi</button></a><br/><br/>
-
+		<table>
+			<tr>
+				<td>${message}</td>				
+			</tr>
+		</table>
 <!-- 	<div id="exTab2" class="container"> -->
 		<ul class="nav nav-tabs">
 			<li class="${active1}"><a href="#1" data-toggle="tab">Thông tin chung</a></li>
@@ -213,8 +289,8 @@
 							<tr>
 								<td bgcolor="#FAFAFA">Mã công việc:</td>
 								<td>${taskForm.taskId}</td>								
-								<td nowrap="nowrap" align="right">Trạng thái của công việc:</td>
-								<td><form:select path="status"
+								<td nowrap="nowrap" align="right">Trạng thái:</td>
+								<td><form:select path="status"    
 										class="form-control animated">
 										<form:option value="Mới" label="Mới" />
 										<form:option value="Đang làm" label="Đang làm"
@@ -229,8 +305,8 @@
 									</form:select></td>
 							</tr>
 							<tr>
-								<td colspan="2" bgcolor="#FAFAFA">Tên việc:(*)</td>
-								<td colspan="2"><form:input path="taskName"
+								<td bgcolor="#FAFAFA">Tên việc:(*)</td>
+								<td colspan="3"><form:input path="taskName"
 										required="required" size="110" class="form-control animated" /></td>
 							</tr>
 						</tbody>
@@ -345,8 +421,9 @@
 										</c:forEach>
 									</form:select></td>									
 								<td bgcolor="#FAFAFA">Ngày phải xong:(vd:12/24/2018)</td>
-								<td><form:input path="dueDate" type="date"
-										class="form-control animated" /></td>
+								<td>								
+									<form:input path="dueDate" type="date" class="form-control animated" id="dueDate"/>									
+								</td>
 							</tr>
 							<tr>
 								<td bgcolor="#FAFAFA">Người giám sát:</td>
@@ -408,7 +485,7 @@
 									</c:if>
 								</tr>
 								<tr>
-									<td>${taskComment.content}</td>
+									<td><textarea class="form-control animatedArea" readonly="readonly"> ${taskComment.content}</textarea> </td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -436,11 +513,12 @@
 					<table class="table table-bordered">
 						<tr>
 							<th>Người đang liên quan (chọn để loại bỏ)</th>
+<!-- 							<th></th> -->
 							<th>Chọn thêm người liên quan</th>
 						</tr>
 						<tr>
 							<c:if test="${sub != null}">
-								<td><form:select path="subscriber"
+								<td><form:select path="subscriber" id="subscriber"
 										class="form-control animated" multiple="multiple" size="10">
 										<c:forEach items="${subscriberList}" var="subscriber">
 											<form:option value="${subscriber.employeeId}">${subscriber.fullName},&nbsp;${subscriber.jobTitle}
@@ -451,7 +529,17 @@
 							<c:if test="${sub == null}">
 								<td><i>Chưa chọn ai</i></td>
 							</c:if>
-							<td><form:select path="forSubscriber"
+<!-- 							<td style="text-align : center; vertical-align:middle; width : 50px">					
+								<a href="javascript:passAllParms()" title="Pass all Operation Parms"> << </a>
+								<br/><br/>			
+								<a href="javascript:passParms();" title="Pass seleted Operation Parms"> < </a>
+								<br/><br/>
+								<a href="javascript:returnParms();" title="Return selected Operation Parms"> >  </a>
+								<br/><br/>
+								<a href="javascript:returnAllParms();" title="Return all Operation Parms"> >> </a>
+								<br/>
+							</td> -->
+							<td><form:select path="forSubscriber" id="forSubscriber"
 									class="form-control animated" multiple="multiple" size="10">
 									<c:forEach items="${employeesListS}" var="employeeS">
 										<form:option value="${employeeS.employeeId}">${employeeS.fullName},&nbsp;${employeeS.jobTitle}

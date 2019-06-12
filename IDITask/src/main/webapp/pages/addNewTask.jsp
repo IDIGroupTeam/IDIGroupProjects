@@ -98,6 +98,7 @@
 			<table>
 				<tr>
 					<td><form:errors path="taskName" class="error-message" /></td>
+					<td><form:errors path="dueDate" class="error-message" /></td>
 				</tr>
 			</table>
 			<table class="table">

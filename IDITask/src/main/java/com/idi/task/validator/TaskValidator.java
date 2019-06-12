@@ -34,6 +34,9 @@ public class TaskValidator implements Validator {
 				//System.out.println("Duplicate taskName is existing...");
 				errors.rejectValue("taskName", "Pattern.task.taskName");
 			}	
+			if(task.getDueDate() != null && task.getDueDate().length() > 10 ) {
+				errors.rejectValue("dueDate", "Pattern.task.dueDate");
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
