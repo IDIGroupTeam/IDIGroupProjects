@@ -21,6 +21,7 @@
 <link rel="stylesheet" href="${url}/public/css/bootstrap-datetimepicker.min.css" />
 <link rel="stylesheet" href="${url}/public/css/jquery.boot.treetable.css" />
 <link rel="stylesheet" href="${url}/public/css/celleditable.css" />
+<link rel="stylesheet" href="${url}/public/css/dataTables.bootstrap.css" />
 <link rel="stylesheet" href="${url}/public/css/style.css" />
 
 <script src="${url}/public/js/jquery.min.js"></script>
@@ -38,6 +39,8 @@
 <script src="${url}/public/js/jquery.maskx.js"></script>
 <script src="${url}/public/js/celleditable.js"></script>
 <script src="${url}/public/js/jquery.boot.treetable.js"></script>
+<script src="${url}/public/js/jquery.dataTables.js"></script>
+<script src="${url}/public/js/dataTables.bootstrap.js"></script>
 <script src="${url}/public/js/script.js"></script>
 
 <title>Tập đoàn IDI - <tiles:getAsString name="title" /></title>

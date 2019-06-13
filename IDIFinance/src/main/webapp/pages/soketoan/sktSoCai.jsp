@@ -83,7 +83,7 @@
 									- <fmt:formatDate value="${duLieuKeToan.kyKeToan.cuoi}"
 										pattern="dd/M/yyyy"></fmt:formatDate></b></td>
 						</tr>
-						<tr>
+						<%-- <tr>
 							<td></td>
 							<td></td>
 							<td><i>Số dư đầu kỳ</i></td>
@@ -100,7 +100,7 @@
 							</c:if>
 							<td></td>
 							<td></td>
-						</tr>
+						</tr> --%>
 
 						<c:forEach items="${duLieuKeToan.nghiepVuKeToanDs}"
 							var="nghiepVuKeToan">
@@ -213,7 +213,7 @@
 								</c:choose>
 							</tr>
 						</c:forEach>
-						<tr>
+						<%-- <tr>
 							<td></td>
 							<td></td>
 							<td><i>Tổng phát sinh trong kỳ</i></td>
@@ -224,8 +224,8 @@
 									value="${duLieuKeToan.tongCoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
 							<td></td>
 							<td></td>
-						</tr>
-						<tr>
+						</tr> --%>
+						<%-- <tr>
 							<td></td>
 							<td></td>
 							<td><i>Số dư cuối kỳ</i></td>
@@ -242,7 +242,7 @@
 							</c:if>
 							<td></td>
 							<td></td>
-						</tr>
+						</tr> --%>
 					</c:forEach>
 					<tr>
 						<td></td>

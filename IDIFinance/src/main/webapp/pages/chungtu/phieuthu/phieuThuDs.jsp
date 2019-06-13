@@ -12,7 +12,10 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-
+		// Khởi tạo action/method cho mainFinanceForm form
+		$(document).ready(function() {
+			
+		});
 	});
 </script>
 
@@ -48,7 +51,7 @@
 <br />
 <br />
 
-<div class="table-responsive">
+<div id="dataTable" class="table-responsive">
 	<table class="table table-bordered table-hover">
 		<thead>
 			<tr>

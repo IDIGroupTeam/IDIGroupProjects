@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="${url}/public/css/bootcomplete.css" />
 <link rel="stylesheet"
 	href="${url}/public/css/bootstrap-datetimepicker.min.css" />
+<link rel="stylesheet" href="${url}/public/css/dataTables.bootstrap.css" />
 <link rel="stylesheet" href="${url}/public/css/style.css" />
 
 <script src="${url}/public/js/jquery.min.js"></script>
@@ -32,6 +33,8 @@
 <script src="${url}/public/js/jquery.formatCurrency-1.4.0.js"></script>
 <script src="${url}/public/js/jquery.formatCurrency.vi-VN.js"></script>
 <script src="${url}/public/js/accounting.min.js"></script>
+<script src="${url}/public/js/jquery.dataTables.js"></script>
+<script src="${url}/public/js/dataTables.bootstrap.js"></script>
 
 <title>Tập đoàn IDI - <tiles:getAsString name="title" /></title>
 <script type="text/javascript">

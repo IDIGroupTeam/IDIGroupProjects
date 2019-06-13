@@ -66,7 +66,7 @@
 							<a href="${url}/hanghoa/donvi/sua/${donVi.maDv}" class="btn"
 								title="Sửa"> <span class="glyphicon glyphicon-edit"></span>
 							</a><a href="${url}/hanghoa/donvi/xoa/${donVi.maDv}" class="btn"
-								title="Sửa" onclick="return xacNhanXoaDonViTinh(${donVi.maDv});">
+								title="Xóa" onclick="return xacNhanXoaDonViTinh(${donVi.maDv});">
 								<span class="glyphicon glyphicon-remove"></span>
 							</a>
 						</div></td>

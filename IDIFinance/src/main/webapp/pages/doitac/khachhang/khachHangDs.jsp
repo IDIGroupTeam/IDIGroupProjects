@@ -9,7 +9,9 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-
+		$('#dataTable').DataTable({
+			ordering : false
+		});
 	});
 </script>
 
@@ -24,7 +26,7 @@
 <br />
 
 <div class="table-responsive">
-	<table class="table table-bordered table-hover">
+	<table id="dataTable" class="table table-bordered table-hover">
 		<thead>
 			<tr>
 				<th>Mã</th>

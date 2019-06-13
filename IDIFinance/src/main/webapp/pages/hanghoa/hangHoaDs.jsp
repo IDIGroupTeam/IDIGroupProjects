@@ -33,7 +33,11 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-
+		$(document).ready(function() {
+			$('#dataTable').DataTable({
+				ordering: false
+			});
+		});
 	});
 </script>
 
@@ -47,10 +51,11 @@
 <br />
 
 <div class="table-responsive">
-	<table class="table table-bordered table-hover">
+	<table id="dataTable" class="table table-bordered table-hover">
 		<thead>
 			<tr>
 				<!-- <th>STT</th> -->
+				<th style="width: 10px;">#</th>
 				<th style="width: 80px;">Mã hàng hóa</th>
 				<th>Tên hàng hóa</th>
 				<th>Đơn vị</th>
@@ -65,6 +70,7 @@
 		<tbody>
 			<c:forEach items="${hangHoaDs}" var="hangHoa" varStatus="status">
 				<tr>
+					<td>${status.index}</td>
 					<td>${hangHoa.kyHieuHh}</td>
 					<td><a href="${url}/hanghoa/xem/${hangHoa.maHh}">${hangHoa.tenHh}</a></td>
 					<td>${hangHoa.donVi.tenDv}</td>
