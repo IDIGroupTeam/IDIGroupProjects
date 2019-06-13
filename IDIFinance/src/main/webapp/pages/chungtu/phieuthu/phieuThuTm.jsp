@@ -78,26 +78,29 @@
 			$("input[id^='taiKhoanCoDs'][id$='\\.soTien\\.soTien']").each(
 					function() {
 						var giaTri = $.trim($(this).val());
+						console.log("giaTri", giaTri)
 						var giaTriSo = giaTri.replace(/,/g, "");
+						console.log("giaTri", giaTri);
 
 						var tr = $(this).parents("tr");
 						tr.find("[name$='\\.soTien\\.soTien']").val(giaTriSo);
-
+						console.log("giaTri", giaTri)
 						if (giaTriSo != '' && !isNaN(giaTriSo)) {
+							console.log("in giaTri", giaTri,tongGiaTri);
 							tongGiaTri += parseFloat(giaTriSo);
 						}
 					});
 
 			$("#taiKhoanNoDs0\\.soTien\\.soTien").val(tongGiaTri);
 			$("#taiKhoanNoDs0\\.soTien\\.soTienTxt").html(
-					accounting.formatNumber(tongGiaTri, 0, ","));
+					accounting.formatNumber(tongGiaTri, 2, ","));
 
 			var tyGia = $.trim($("#loaiTien\\.banRa").val());
 			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTri, 0, ",") + " "
+					accounting.formatNumber(tongGiaTri, 2, ",") + " "
 							+ loaiTien.maLt);
 			$("#soTien\\.giaTriQdTxt").html(
-					accounting.formatNumber(tongGiaTri * tyGia, 0, ",")
+					accounting.formatNumber(tongGiaTri * tyGia, 2, ",")
 							+ " VND");
 		}
 
@@ -106,10 +109,10 @@
 			// Quy ra tiền Việt Nam
 			var tongGiaTri = $("#taiKhoanNoDs0\\.soTien\\.soTien").val();
 			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTri, 0, ",") + " "
+					accounting.formatNumber(tongGiaTri, 2, ",") + " "
 							+ loaiTien.maLt);
 			$("#soTien\\.giaTriQdTxt").html(
-					accounting.formatNumber(tongGiaTri * tyGia, 0, ",")
+					accounting.formatNumber(tongGiaTri * tyGia, 2, ",")
 							+ " VND");
 		}
 
@@ -199,8 +202,8 @@
 							+ "].soTien.soTien");
 					soTienObj.val("0");
 					soTienObj.maskx({
-						maskxTo : 'simpleMoneyTo',
-						maskxFrom : 'simpleMoneyFrom'
+						maskxTo : 'moneyTo',
+						maskxFrom : 'moneyFrom'
 					});
 
 					newTr.find("[id$='\\.errors']").remove();
@@ -297,8 +300,8 @@
 					function() {
 						console.log("tien", $(this).val());
 						$(this).maskx({
-							maskxTo : 'simpleMoneyTo',
-							maskxFrom : 'simpleMoneyFrom'
+							maskxTo : 'moneyTo',
+							maskxFrom : 'moneyFrom'
 						});
 					});
 
