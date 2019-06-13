@@ -77,15 +77,15 @@
 					: tongGiaTriCo;
 			$("#soTien\\.giaTriTxt").html(
 					accounting
-							.formatNumber(tongGiaTri * loaiTien.banRa, 0, ",")
+							.formatNumber(tongGiaTri * loaiTien.banRa, 2, ",")
 							+ " VND");
 
 			$("#no\\.soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTriNo, 0, ",") + " "
+					accounting.formatNumber(tongGiaTriNo, 2, ",") + " "
 							+ loaiTien.maLt);
 
 			$("#co\\.soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTriCo, 0, ",") + " "
+					accounting.formatNumber(tongGiaTriCo, 2, ",") + " "
 							+ loaiTien.maLt);
 		}
 
@@ -247,8 +247,8 @@
 					noSoTienObj.prop("name", noName);
 					noSoTienObj.val("");
 					noSoTienObj.maskx({
-						maskxTo : 'simpleMoneyTo',
-						maskxFrom : 'simpleMoneyFrom'
+						maskxTo : 'moneyTo',
+						maskxFrom : 'moneyFrom'
 					});
 
 					var coName = coSoTienNameObj.prop("name");
@@ -256,8 +256,8 @@
 					coSoTienObj.prop("name", coName);
 					coSoTienObj.val("");
 					coSoTienObj.maskx({
-						maskxTo : 'simpleMoneyTo',
-						maskxFrom : 'simpleMoneyFrom'
+						maskxTo : 'moneyTo',
+						maskxFrom : 'moneyFrom'
 					});
 
 					newTr.find(".error").remove();
@@ -368,8 +368,8 @@
 
 			$("input[id$='\\.soTien']").each(function() {
 				$(this).maskx({
-					maskxTo : 'simpleMoneyTo',
-					maskxFrom : 'simpleMoneyFrom'
+					maskxTo : 'moneyTo',
+					maskxFrom : 'moneyFrom'
 				});
 			});
 
