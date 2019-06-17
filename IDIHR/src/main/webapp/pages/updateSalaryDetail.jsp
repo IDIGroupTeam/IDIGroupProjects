@@ -68,7 +68,23 @@
 						<td>${salaryDetail.phoneNo}</td>
 						
 						<td bgcolor="#FAFAFA">Tháng:</td>
-						<td>${salaryDetail.month}</td>								
+						<td>
+						${salaryDetail.month}
+						<%-- 	<form:select path="month" class="form-control animated">
+								<form:option value="1" label="Tháng 1" />
+								<form:option value="2" label="Tháng 2" />
+								<form:option value="3" label="Tháng 3" />
+								<form:option value="4" label="Tháng 4" />
+								<form:option value="5" label="Tháng 5" />
+								<form:option value="6" label="Tháng 6" />
+								<form:option value="7" label="Tháng 7" />
+								<form:option value="8" label="Tháng 8" />
+								<form:option value="9" label="Tháng 9" />
+								<form:option value="10" label="Tháng 10" />
+								<form:option value="11" label="Tháng 11" />
+								<form:option value="12" label="Tháng 12" />						
+							</form:select> --%>
+						</td>								
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Bộ phận:</td>
@@ -78,7 +94,13 @@
 						<td>${salaryDetail.jobTitle}</td>
 						
 						<td bgcolor="#FAFAFA">Năm:</td>
-						<td>${salaryDetail.year}</td>		
+						<td>${salaryDetail.year}							
+							<%-- <form:select path="year" class="form-control animated">
+								<form:option value="${salaryDetail.year + 1}" label="${salaryDetail.year + 1}" />
+								<form:option value="${salaryDetail.year}" label="${salaryDetail.year}" />
+								<form:option value="${salaryDetail.year -1 }" label="${salaryDetail.year - 1 }" />
+							</form:select> --%>
+						</td>		
 					</tr>
 					<tr>
 						<td colspan="6" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin tài khoản ngân hàng</td>

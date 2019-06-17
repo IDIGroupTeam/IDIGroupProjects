@@ -299,7 +299,8 @@ public class SalaryController {
 			//SalaryDetail salaryDetail = new SalaryDetail();	
 			try {
 				salaryDetail = salaryDAO.getSalaryDetail(employeeId, month, year);
-				return editSalaryDetailForm(model, salaryDetail);
+				log.info("Thang nay da duoc tinh luong ... update hoac chon thang khac ....");
+				//return editSalaryDetailForm(model, salaryDetail);
 			}catch(Exception e) {
 				salaryDetail = salaryDAO.getSalaryDetail(employeeId, 0, 0);
 				log.info("Tinh cho thang moi");
