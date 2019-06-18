@@ -130,13 +130,13 @@
 		v = v.replace(/\t/g, "");
 		v = v.replace(/^[0]+/g, "");
 
-		v = v.replace(/(\d)(\d{20})$/, "$1,$2");
-		v = v.replace(/(\d)(\d{17})$/, "$1,$2");
-		v = v.replace(/(\d)(\d{14})$/, "$1,$2");
-		v = v.replace(/(\d)(\d{11})$/, "$1,$2");
-		v = v.replace(/(\d)(\d{8})$/, "$1,$2");
-		v = v.replace(/(\d)(\d{5})$/, "$1,$2");
-		v = v.replace(/(\d)(\d{2})$/, "$1.$2");
+		v = v.replace(/(\d)(\d{22})$/, "$1,$2");
+		v = v.replace(/(\d)(\d{19})$/, "$1,$2");
+		v = v.replace(/(\d)(\d{16})$/, "$1,$2");
+		v = v.replace(/(\d)(\d{13})$/, "$1,$2");
+		v = v.replace(/(\d)(\d{10})$/, "$1,$2");
+		v = v.replace(/(\d)(\d{7})$/, "$1,$2");
+		v = v.replace(/(\d)(\d{4})$/, "$1.$2");
 		return v;
 	};
 	plugin.moneyFrom = function(v) {
