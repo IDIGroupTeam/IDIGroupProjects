@@ -81,11 +81,11 @@
 							+ " VND");
 
 			$("#no\\.soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTriNo, 2, ",") + " "
+					accounting.formatNumber(tongGiaTriNo, 4, ",") + " "
 							+ loaiTien.maLt);
 
 			$("#co\\.soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTriCo, 2, ",") + " "
+					accounting.formatNumber(tongGiaTriCo, 4, ",") + " "
 							+ loaiTien.maLt);
 		}
 

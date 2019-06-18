@@ -90,14 +90,14 @@
 
 			$("#taiKhoanCoDs0\\.soTien\\.soTien").val(tongGiaTri);
 			$("#taiKhoanCoDs0\\.soTien\\.soTienTxt").html(
-					accounting.formatNumber(tongGiaTri, 2, ","));
+					accounting.formatNumber(tongGiaTri, 4, ","));
 
 			var tyGia = $.trim($("#loaiTien\\.banRa").val());
 			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTri, 2, ",") + " "
+					accounting.formatNumber(tongGiaTri, 4, ",") + " "
 							+ loaiTien.maLt);
 			$("#soTien\\.giaTriQdTxt").html(
-					accounting.formatNumber(tongGiaTri * tyGia, 2, ",")
+					accounting.formatNumber(tongGiaTri * tyGia, 4, ",")
 							+ " VND");
 		}
 
@@ -106,10 +106,10 @@
 			// Quy ra tiền Việt Nam
 			var tongGiaTri = $("#taiKhoanCoDs0\\.soTien\\.soTien").val();
 			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTri, 2, ",") + " "
+					accounting.formatNumber(tongGiaTri, 4, ",") + " "
 							+ loaiTien.maLt);
 			$("#soTien\\.giaTriQdTxt").html(
-					accounting.formatNumber(tongGiaTri * tyGia, 2, ",")
+					accounting.formatNumber(tongGiaTri * tyGia, 4, ",")
 							+ " VND");
 		}
 

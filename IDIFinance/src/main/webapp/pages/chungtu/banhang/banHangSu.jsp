@@ -135,10 +135,10 @@
 
 			// CẬP NHẬT HIỂN THỊ
 			var tongTienVn = tongTien * loaiTien.banRa;
-			tongTienVn = accounting.formatNumber(tongTienVn, 2, ",") + " VND";
+			tongTienVn = accounting.formatNumber(tongTienVn, 4, ",") + " VND";
 
 			// Hiển thị tổng tiền ở tab hàng tiền
-			var tongTxt = accounting.formatNumber(tongTien, 2, ",") + " "
+			var tongTxt = accounting.formatNumber(tongTien, 4, ",") + " "
 					+ loaiTien.maLt;
 			if (loaiTien.maLt != "VND") {
 				tongTxt += "<br/>" + tongTienVn;
@@ -247,7 +247,7 @@
 
 			// Sau đó cập nhật tổng tiền cả chứng từ
 			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongTienChungTu, 0, ",") + " VND");
+					accounting.formatNumber(tongTienChungTu, 4, ",") + " VND");
 		}
 
 		$("#themHh").click(
