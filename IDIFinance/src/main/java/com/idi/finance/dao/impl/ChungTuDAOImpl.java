@@ -592,8 +592,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					hangHoa.setTkThueGtgtDu(taiKhoan);
 				}
 
-				chungTu.themHangHoa(hangHoa);
 				taiKhoan.setChungTu(chungTu);
+				chungTu.themHangHoa(hangHoa);
 
 				return chungTu;
 			} catch (Exception e) {
@@ -1132,9 +1132,9 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 	}
 
 	@Override
-	public void themChungTuKho(ChungTu chungTu) {
+	public int themChungTuKho(ChungTu chungTu) {
 		if (chungTu == null || chungTu.getHangHoaDs() == null || chungTu.getHangHoaDs().size() == 0) {
-			return;
+			return 0;
 		}
 
 		String themChungTu = THEM_CHUNG_TU_KHO;
@@ -1457,6 +1457,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		return chungTu.getMaCt();
 	}
 
 	@Override

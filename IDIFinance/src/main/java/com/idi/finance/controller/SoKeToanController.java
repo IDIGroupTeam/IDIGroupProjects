@@ -180,14 +180,17 @@ public class SoKeToanController {
 			chungTuDs = chungTuDAO.danhSachChungTu(loaiCts, form.getDau(), form.getCuoi());
 			if (chungTuDs == null)
 				chungTuDs = new ArrayList<>();
+			logger.info("chungTuDs: " + chungTuDs);
 
 			List<ChungTu> chungTuKtthDs = chungTuDAO.danhSachChungTuKtth(loaiCtKtths, form.getDau(), form.getCuoi());
 			if (chungTuKtthDs == null)
 				chungTuKtthDs = new ArrayList<>();
+			logger.info("chungTuKtthDs: " + chungTuKtthDs);
 
 			List<ChungTu> chungTuKhoDs = chungTuDAO.danhSachChungTuKho(loaiCtKhos, form.getDau(), form.getCuoi());
 			if (chungTuKhoDs == null)
 				chungTuKhoDs = new ArrayList<>();
+			logger.info("chungTuKhoDs: " + chungTuKhoDs);
 
 			List<ChungTu> chungTuKcDs = null;
 			if (loaiCtKcs.size() > 0) {
@@ -195,6 +198,7 @@ public class SoKeToanController {
 			}
 			if (chungTuKcDs == null)
 				chungTuKcDs = new ArrayList<>();
+			logger.info("chungTuKcDs: " + chungTuKcDs);
 
 			chungTuDs.addAll(chungTuKtthDs);
 			chungTuDs.addAll(chungTuKhoDs);
@@ -208,25 +212,90 @@ public class SoKeToanController {
 					taiKhoanDs.addAll(chungTu.getTaiKhoanKtthDs());
 				} else if (chungTu.getLoaiCt().equals(ChungTu.CHUNG_TU_MUA_HANG)
 						|| chungTu.getLoaiCt().equals(ChungTu.CHUNG_TU_BAN_HANG)) {
-					taiKhoanDs.add(chungTu.getTkChietKhau());
-					taiKhoanDs.add(chungTu.getTkChiPhi());
-					taiKhoanDs.add(chungTu.getTkDoanhThu());
-					taiKhoanDs.add(chungTu.getTkGiamGia());
-					taiKhoanDs.add(chungTu.getTkGiaVon());
-					taiKhoanDs.add(chungTu.getTkKho());
-					taiKhoanDs.add(chungTu.getTkThanhtoan());
-					taiKhoanDs.add(chungTu.getTkThue());
-					taiKhoanDs.add(chungTu.getTkThueGtgt());
-					taiKhoanDs.add(chungTu.getTkThueNk());
-					taiKhoanDs.add(chungTu.getTkThueTtdb());
-					taiKhoanDs.add(chungTu.getTkThueXk());
-					taiKhoanDs.add(chungTu.getTkTraLai());
+					if (chungTu.getTkChietKhau() != null && chungTu.getTkChietKhau().getLoaiTaiKhoan() != null
+							&& chungTu.getTkChietKhau().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkChietKhau().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkChietKhau());
+					}
+					if (chungTu.getTkChiPhi() != null && chungTu.getTkChiPhi().getLoaiTaiKhoan() != null
+							&& chungTu.getTkChiPhi().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkChiPhi().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkChiPhi());
+					}
+					if (chungTu.getTkDoanhThu() != null && chungTu.getTkDoanhThu().getLoaiTaiKhoan() != null
+							&& chungTu.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkDoanhThu());
+					}
+					if (chungTu.getTkGiamGia() != null && chungTu.getTkGiamGia().getLoaiTaiKhoan() != null
+							&& chungTu.getTkGiamGia().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkGiamGia().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkGiamGia());
+					}
+					if (chungTu.getTkGiaVon() != null && chungTu.getTkGiaVon().getLoaiTaiKhoan() != null
+							&& chungTu.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkGiaVon().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkGiaVon());
+					}
+					if (chungTu.getTkKho() != null && chungTu.getTkKho().getLoaiTaiKhoan() != null
+							&& chungTu.getTkKho().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkKho().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkKho());
+					}
+					if (chungTu.getTkThanhtoan() != null && chungTu.getTkThanhtoan().getLoaiTaiKhoan() != null
+							&& chungTu.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkThanhtoan());
+					}
+					if (chungTu.getTkThue() != null && chungTu.getTkThue().getLoaiTaiKhoan() != null
+							&& chungTu.getTkThue().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkThue().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkThue());
+					}
+					if (chungTu.getTkThueGtgt() != null && chungTu.getTkThueGtgt().getLoaiTaiKhoan() != null
+							&& chungTu.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkThueGtgt());
+					}
+					if (chungTu.getTkThueNk() != null && chungTu.getTkThueNk().getLoaiTaiKhoan() != null
+							&& chungTu.getTkThueNk().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkThueNk().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkThueNk());
+					}
+					if (chungTu.getTkThueTtdb() != null && chungTu.getTkThueTtdb().getLoaiTaiKhoan() != null
+							&& chungTu.getTkThueTtdb().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkThueTtdb().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkThueTtdb());
+					}
+					if (chungTu.getTkThueXk() != null && chungTu.getTkThueXk().getLoaiTaiKhoan() != null
+							&& chungTu.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkThueXk().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkThueXk());
+					}
+					if (chungTu.getTkThueXk() != null && chungTu.getTkThueXk().getLoaiTaiKhoan() != null
+							&& chungTu.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkThueXk().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkThueXk());
+					}
+					if (chungTu.getTkTraLai() != null && chungTu.getTkTraLai().getLoaiTaiKhoan() != null
+							&& chungTu.getTkTraLai().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkTraLai().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkTraLai());
+					}
 				} else if (chungTu.getLoaiCt().equals(ChungTu.CHUNG_TU_KET_CHUYEN)) {
 					if (chungTu.getKcbtDs() != null) {
 						for (Iterator<KetChuyenButToan> iter = chungTu.getKcbtDs().iterator(); iter.hasNext();) {
 							KetChuyenButToan ketChuyen = iter.next();
-							taiKhoanDs.add(ketChuyen.getTaiKhoanNo());
-							taiKhoanDs.add(ketChuyen.getTaiKhoanCo());
+							if (ketChuyen.getTaiKhoanNo() != null && ketChuyen.getTaiKhoanNo().getLoaiTaiKhoan() != null
+									&& ketChuyen.getTaiKhoanNo().getLoaiTaiKhoan().getMaTk() != null
+									&& !ketChuyen.getTaiKhoanNo().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+								taiKhoanDs.add(ketChuyen.getTaiKhoanNo());
+							}
+							if (ketChuyen.getTaiKhoanCo() != null && ketChuyen.getTaiKhoanCo().getLoaiTaiKhoan() != null
+									&& ketChuyen.getTaiKhoanCo().getLoaiTaiKhoan().getMaTk() != null
+									&& !ketChuyen.getTaiKhoanCo().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+								taiKhoanDs.add(ketChuyen.getTaiKhoanCo());
+							}
 						}
 					}
 				} else {

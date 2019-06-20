@@ -1623,7 +1623,7 @@ public class ChungTuController {
 		try {
 			if (result.hasErrors()) {
 				HangHoa hangHoa = new HangHoa();
-				chungTu.themHangHoa(hangHoa);
+				// chungTu.themHangHoa(hangHoa);
 
 				return chuanBiFormMuaHang(model, chungTu);
 			}
@@ -1746,33 +1746,13 @@ public class ChungTuController {
 				}
 			}
 
-			// Nhập kho
-			// Copy code từ phương thức nhapKhoMuaHang
-			// Sau này cần tách phần nhập kho ra ngoài
-			if (chungTu != null) {
-				if (chungTu.getHangHoaDs() != null) {
-					Iterator<HangHoa> iter = chungTu.getHangHoaDs().iterator();
-					while (iter.hasNext()) {
-						HangHoa hangHoa = iter.next();
-
-						double soLuong = khoHangDAO.laySoLuong(hangHoa);
-						if (soLuong == -1) {
-							khoHangDAO.themNhapKho(hangHoa);
-						} else {
-							hangHoa.setSoLuong(soLuong + hangHoa.getSoLuong() - hangHoa.getSoLuongBanDau());
-							khoHangDAO.suaNhapKho(hangHoa);
-						}
-					}
-				}
-			}
-
 			if (chungTu.getMaCt() > 0) {
 				chungTuDAO.capNhatChungTuKho(chungTu);
 				return "redirect:/chungtu/muahang/xem/" + chungTu.getMaCt();
 			} else {
 				chungTuDAO.themChungTuKho(chungTu);
 			}
-			
+
 			// Tạo phiếu kế toán tổng hợp kèm theo nếu cần
 			if (chungTu != null && chungTu.getNvktDs() != null) {
 				KyKeToan kyKeToan = dungChung.getKyKeToan();

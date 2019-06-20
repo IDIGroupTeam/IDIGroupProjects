@@ -99,7 +99,7 @@
 							</c:when>
 							<c:otherwise>${taiKhoan.chungTu.loaiCt}${taiKhoan.chungTu.soCt}</c:otherwise>
 						</c:choose></td>
-					<td>${taiKhoan.lyDo}</td>
+					<td>${taiKhoan.chungTu.lyDo}</td>
 					<td class="text-center">${taiKhoan.loaiTaiKhoan.maTk}</td>
 					<c:choose>
 						<c:when test="${taiKhoan.chungTu.loaiCt==ChungTu.CHUNG_TU_KT_TH}">

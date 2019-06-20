@@ -487,6 +487,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				&& !hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 			if (tkThanhtoan == null) {
 				tkThanhtoan = new TaiKhoan();
+				tkThanhtoan.setChungTu(this);
 				tkThanhtoan.setLoaiTaiKhoan(hangHoa.getTkThanhtoan().getLoaiTaiKhoan());
 				tkThanhtoan.setSoDu(hangHoa.getTkThanhtoan().getSoDu());
 			}
@@ -512,6 +513,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				&& !hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 			if (tkKho == null) {
 				tkKho = new TaiKhoan();
+				tkKho.setChungTu(this);
 				tkKho.setLoaiTaiKhoan(hangHoa.getTkKho().getLoaiTaiKhoan());
 				tkKho.setSoDu(hangHoa.getTkKho().getSoDu());
 			}
@@ -534,6 +536,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				&& !hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 			if (tkDoanhThu == null) {
 				tkDoanhThu = new TaiKhoan();
+				tkDoanhThu.setChungTu(this);
 				tkDoanhThu.setLoaiTaiKhoan(hangHoa.getTkDoanhThu().getLoaiTaiKhoan());
 				tkDoanhThu.setSoDu(hangHoa.getTkDoanhThu().getSoDu());
 			}
@@ -559,6 +562,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				&& !hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 			if (tkChiPhi == null) {
 				tkChiPhi = new TaiKhoan();
+				tkChiPhi.setChungTu(this);
 				tkChiPhi.setLoaiTaiKhoan(hangHoa.getTkChiPhi().getLoaiTaiKhoan());
 				tkChiPhi.setSoDu(hangHoa.getTkChiPhi().getSoDu());
 			}
@@ -583,6 +587,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				&& !hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 			if (tkGiaVon == null) {
 				tkGiaVon = new TaiKhoan();
+				tkGiaVon.setChungTu(this);
 				tkGiaVon.setLoaiTaiKhoan(hangHoa.getTkGiaVon().getLoaiTaiKhoan());
 				tkGiaVon.setSoDu(hangHoa.getTkGiaVon().getSoDu());
 			}
@@ -607,6 +612,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				&& !hangHoa.getTkChietKhau().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 			if (tkChietKhau == null) {
 				tkChietKhau = new TaiKhoan();
+				tkChietKhau.setChungTu(this);
 				tkChietKhau.setLoaiTaiKhoan(hangHoa.getTkChietKhau().getLoaiTaiKhoan());
 				tkChietKhau.setSoDu(hangHoa.getTkChietKhau().getSoDu());
 			}
@@ -632,6 +638,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				&& !hangHoa.getTkGiamGia().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 			if (tkGiamGia == null) {
 				tkGiamGia = new TaiKhoan();
+				tkGiamGia.setChungTu(this);
 				tkGiamGia.setLoaiTaiKhoan(hangHoa.getTkGiamGia().getLoaiTaiKhoan());
 				tkGiamGia.setSoDu(hangHoa.getTkGiamGia().getSoDu());
 			}
@@ -656,6 +663,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				&& !hangHoa.getTkTraLai().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 			if (tkTraLai == null) {
 				tkTraLai = new TaiKhoan();
+				tkTraLai.setChungTu(this);
 				tkTraLai.setLoaiTaiKhoan(hangHoa.getTkTraLai().getLoaiTaiKhoan());
 				tkTraLai.setSoDu(hangHoa.getTkTraLai().getSoDu());
 			}
@@ -681,6 +689,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				&& !hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 			if (tkThueGtgt == null) {
 				tkThueGtgt = new TaiKhoan();
+				tkThueGtgt.setChungTu(this);
 				tkThueGtgt.setLoaiTaiKhoan(hangHoa.getTkThueGtgt().getLoaiTaiKhoan());
 				tkThueGtgt.setSoDu(hangHoa.getTkThueGtgt().getSoDu());
 			}
@@ -706,6 +715,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				&& !hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 			if (tkThueTtdb == null) {
 				tkThueTtdb = new TaiKhoan();
+				tkThueTtdb.setChungTu(this);
 				tkThueTtdb.setLoaiTaiKhoan(hangHoa.getTkThueTtdb().getLoaiTaiKhoan());
 				tkThueTtdb.setSoDu(hangHoa.getTkThueTtdb().getSoDu());
 			}
@@ -731,6 +741,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				&& !hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 			if (tkThueXk == null) {
 				tkThueXk = new TaiKhoan();
+				tkThueXk.setChungTu(this);
 				tkThueXk.setLoaiTaiKhoan(hangHoa.getTkThueXk().getLoaiTaiKhoan());
 				tkThueXk.setSoDu(hangHoa.getTkThueXk().getSoDu());
 			}
@@ -755,6 +766,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				&& !hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 			if (tkThueNk == null) {
 				tkThueNk = new TaiKhoan();
+				tkThueNk.setChungTu(this);
 				tkThueNk.setLoaiTaiKhoan(hangHoa.getTkThueNk().getLoaiTaiKhoan());
 				tkThueNk.setSoDu(hangHoa.getTkThueNk().getSoDu());
 			}
@@ -779,6 +791,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				&& !hangHoa.getTkThue().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 			if (tkThue == null) {
 				tkThue = new TaiKhoan();
+				tkThue.setChungTu(this);
 				tkThue.setLoaiTaiKhoan(hangHoa.getTkThue().getLoaiTaiKhoan());
 				tkThue.setSoDu(hangHoa.getTkThue().getSoDu());
 			}

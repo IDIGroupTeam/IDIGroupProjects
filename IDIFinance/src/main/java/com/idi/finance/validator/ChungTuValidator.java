@@ -14,8 +14,11 @@ import org.springframework.validation.Validator;
 import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;
+import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.kyketoan.KyKeToan;
+import com.idi.finance.bean.soketoan.NghiepVuKeToan;
+import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.bean.taikhoan.TaiKhoan;
 import com.idi.finance.dao.ChungTuDAO;
 
@@ -225,6 +228,26 @@ public class ChungTuValidator implements Validator {
 
 						id++;
 					}
+
+					// Validate kế toán tổng hợp - nếu có
+					if (chungTu != null && chungTu.getNvktDs() != null) {
+						logger.info("chungTu.getNvktDs(): " + chungTu.getNvktDs().size());
+						Iterator<NghiepVuKeToan> ktthIter = chungTu.getNvktDs().iterator();
+						while (ktthIter.hasNext()) {
+							NghiepVuKeToan nvkt = ktthIter.next();
+
+							TaiKhoan taiKhoanNo = nvkt.getTaiKhoanNo();
+							TaiKhoan taiKhoanCo = nvkt.getTaiKhoanCo();
+
+							logger.info("nvkt: " + nvkt);
+							logger.info("taiKhoanNo: " + taiKhoanNo);
+							logger.info("taiKhoanCo: " + taiKhoanCo);
+
+							if (taiKhoanNo != null) {
+
+							}
+						}
+					}
 				}
 			} else if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_BAN_HANG)) {
 				// Validate cho chứng từ mua hàng
@@ -375,7 +398,7 @@ public class ChungTuValidator implements Validator {
 				}
 
 				// Giới hạn quan hệ 1-n của nhóm ĐK
-				
+
 			} else if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_KET_CHUYEN)) {
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lyDo", "NotEmpty.chungTu.tenKetChuyen");
 

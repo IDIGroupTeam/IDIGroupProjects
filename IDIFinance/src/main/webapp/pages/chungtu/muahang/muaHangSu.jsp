@@ -135,10 +135,10 @@
 
 			// CẬP NHẬT HIỂN THỊ
 			var tongTienVn = tongTien * loaiTien.banRa;
-			tongTienVn = accounting.formatNumber(tongTienVn, 4, ",") + " VND";
+			tongTienVn = accounting.formatNumber(tongTienVn, 2, ",") + " VND";
 
 			// Hiển thị tổng tiền ở tab hàng tiền
-			var tongTxt = accounting.formatNumber(tongTien, 4, ",") + " "
+			var tongTxt = accounting.formatNumber(tongTien, 2, ",") + " "
 					+ loaiTien.maLt;
 			if (loaiTien.maLt != "VND") {
 				tongTxt += "<br/>" + tongTienVn;
@@ -270,23 +270,23 @@
 				}
 
 				if (loaiTien.maLt != "VND") {
-					tongGiaKhoTxt = accounting.formatNumber(tongGiaKho, 4, ",")
+					tongGiaKhoTxt = accounting.formatNumber(tongGiaKho, 2, ",")
 							+ " " + loaiTien.maLt;
 					tongGiaKhoTxt = tongGiaKhoTxt + "<br/>"
-							+ accounting.formatNumber(tongGiaKhoVn, 4, ",")
+							+ accounting.formatNumber(tongGiaKhoVn, 2, ",")
 							+ " VND";
 
-					giaKhoTxt = accounting.formatNumber(giaKho, 4, ",") + " "
+					giaKhoTxt = accounting.formatNumber(giaKho, 2, ",") + " "
 							+ loaiTien.maLt;
 					giaKhoTxt = giaKhoTxt + "<br/>"
-							+ accounting.formatNumber(giaKhoVn, 4, ",")
+							+ accounting.formatNumber(giaKhoVn, 2, ",")
 							+ " VND";
 				} else {
-					tongGiaKhoTxt = accounting.formatNumber(tongGiaKhoVn, 4,
+					tongGiaKhoTxt = accounting.formatNumber(tongGiaKhoVn, 2,
 							",")
 							+ " VND";
 
-					giaKhoTxt = accounting.formatNumber(giaKhoVn, 4, ",")
+					giaKhoTxt = accounting.formatNumber(giaKhoVn, 2, ",")
 							+ " VND";
 				}
 
@@ -314,7 +314,7 @@
 
 			// Sau đó cập nhật tổng tiền cả chứng từ
 			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongTienChungTu, 4, ",") + " VND");
+					accounting.formatNumber(tongTienChungTu, 2, ",") + " VND");
 		}
 
 		$("#themHh").click(

@@ -30,7 +30,7 @@ public interface ChungTuDAO {
 
 	public void capNhatChungTuKtth(ChungTu chungTu);
 
-	public void themChungTuKho(ChungTu chungTu);
+	public int themChungTuKho(ChungTu chungTu);
 
 	public void capNhatChungTuKho(ChungTu chungTu);
 

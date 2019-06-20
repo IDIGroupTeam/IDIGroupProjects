@@ -101,6 +101,11 @@ public class KhoHangDAOImpl implements KhoHangDAO {
 		String kiemTraKho = KIEM_TRA_KHO;
 
 		try {
+			logger.info("kiemTraKho: " + kiemTraKho);
+			logger.info("maHh: " + hangHoa.getMaHh());
+			logger.info("maKho: " + hangHoa.getKho().getMaKho());
+			logger.info("maGia: " + hangHoa.getGiaKho().getMaGia());
+
 			return jdbcTmpl.queryForObject(kiemTraKho,
 					new Object[] { hangHoa.getMaHh(), hangHoa.getKho().getMaKho(), hangHoa.getGiaKho().getMaGia() },
 					Double.class);
@@ -119,6 +124,12 @@ public class KhoHangDAOImpl implements KhoHangDAO {
 		String themNhapKho = THEM_NHAP_KHO;
 		Date homNay = new Date();
 		try {
+			logger.info("themNhapKho: " + themNhapKho);
+			logger.info("maHh: " + hangHoa.getMaHh());
+			logger.info("maKho: " + hangHoa.getKho().getMaKho());
+			logger.info("maGia: " + hangHoa.getGiaKho().getMaGia());
+			logger.info("soLuong: " + hangHoa.getSoLuong());
+
 			jdbcTmpl.update(themNhapKho, hangHoa.getMaHh(), hangHoa.getKho().getMaKho(), hangHoa.getGiaKho().getMaGia(),
 					hangHoa.getSoLuong(), new java.sql.Date(homNay.getTime()), new java.sql.Date(homNay.getTime()));
 		} catch (Exception e) {
@@ -135,6 +146,12 @@ public class KhoHangDAOImpl implements KhoHangDAO {
 		String suaNhapKho = SUA_NHAP_KHO;
 		Date homNay = new Date();
 		try {
+			logger.info("suaNhapKho: " + suaNhapKho);
+			logger.info("maHh: " + hangHoa.getMaHh());
+			logger.info("maKho: " + hangHoa.getKho().getMaKho());
+			logger.info("maGia: " + hangHoa.getGiaKho().getMaGia());
+			logger.info("soLuong: " + hangHoa.getSoLuong());
+
 			jdbcTmpl.update(suaNhapKho, hangHoa.getSoLuong(), new java.sql.Date(homNay.getTime()), hangHoa.getMaHh(),
 					hangHoa.getKho().getMaKho(), hangHoa.getGiaKho().getMaGia());
 		} catch (Exception e) {
