@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.idi.finance.bean.DungChung;
+import com.idi.finance.bean.LoaiTien;
 import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.doituong.KhachHang;
 import com.idi.finance.bean.doituong.NhaCungCap;
@@ -47,6 +48,7 @@ import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.kyketoan.SoDuKy;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
+import com.idi.finance.dao.ChungTuDAO;
 import com.idi.finance.dao.HangHoaDAO;
 import com.idi.finance.dao.KhachHangDAO;
 import com.idi.finance.dao.KyKeToanDAO;
@@ -67,6 +69,9 @@ public class KyKeToanController {
 
 	@Autowired
 	PropCont props;
+
+	@Autowired
+	ChungTuDAO chungTuDAO;
 
 	@Autowired
 	TaiKhoanDAO taiKhoanDAO;
@@ -141,6 +146,11 @@ public class KyKeToanController {
 			}
 			model.addAttribute("kyKeToan", kyKeToan);
 
+			KyKeToan kyKeToanTruoc = kyKeToanDAO.layKyKeToanTruoc(kyKeToan);
+			if (kyKeToanTruoc == null) {
+				kyKeToan.setDau(true);
+			}
+
 			if (soDuKy == null) {
 				soDuKy = new SoDuKy();
 			}
@@ -176,6 +186,9 @@ public class KyKeToanController {
 			model.addAttribute("taiKhoanDs", taiKhoanDs);
 
 			// LẤY CÁC THÔNG TIN CHUẨN BỊ CHO CÁC MODAL TỌA MỚI
+			// Danh sách loại tiền
+			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
+
 			// Danh sách tài khoản
 			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
 
@@ -195,11 +208,12 @@ public class KyKeToanController {
 				tienMatTkDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(tienMats));
 			} catch (Exception e) {
 			}
+			logger.info("tienMatTkDs: " + tienMatTkDs);
 
 			// Danh sách tài khoản tiền gửi ngân hàng
 			List<LoaiTaiKhoan> tienGuiTkDs = new ArrayList<>();
 			try {
-				String[] tienGuis = props.getCauHinh(PropCont.TAI_KHOAN_TIEN_MAT).getGiaTri().split(";");
+				String[] tienGuis = props.getCauHinh(PropCont.TAI_KHOAN_TIEN_GUI).getGiaTri().split(";");
 				tienGuiTkDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(tienGuis));
 			} catch (Exception e) {
 			}
@@ -230,6 +244,7 @@ public class KyKeToanController {
 			// Danh sách đơn vị hàng hóa
 			List<DonVi> donViDs = hangHoaDAO.danhSachDonViHangHoa();
 
+			model.addAttribute("loaiTienDs", loaiTienDs);
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 			model.addAttribute("khDs", khDs);
 			model.addAttribute("nccDs", nccDs);
@@ -1663,11 +1678,13 @@ public class KyKeToanController {
 	}
 
 	private void luuTaoMoiKyKeToanSoDuKyTaiKhoan(KyKeToan kyKeToan, SoDuKy soDuKy) {
-		if (kyKeToan == null || soDuKy == null || soDuKy.getLoaiTaiKhoan() == null || soDuKy.getDoiTuong() == null
+		if (kyKeToan == null || soDuKy == null || soDuKy.getLoaiTaiKhoan() == null
+				|| soDuKy.getLoaiTaiKhoan().getMaTk() == null || soDuKy.getLoaiTaiKhoan().getMaTk().isEmpty()
+				|| soDuKy.getLoaiTien() == null || soDuKy.getLoaiTien().getMaLt() == null
+				|| soDuKy.getLoaiTien().getMaLt().isEmpty() || soDuKy.getDoiTuong() == null
 				|| soDuKy.getKyKeToan() == null) {
 			return;
 		}
-
 		logger.info("soDuKy mới nhập: " + soDuKy);
 
 		// Lấy số dư kỳ trước đây của tài khoản đang xét
@@ -1691,13 +1708,9 @@ public class KyKeToanController {
 			Iterator<LoaiTaiKhoan> loaiTaiKhoanIter = loaiTaiKhoanDs.iterator();
 			while (loaiTaiKhoanIter.hasNext()) {
 				LoaiTaiKhoan loaiTaiKhoan = loaiTaiKhoanIter.next();
-				logger.info("==== loaiTaiKhoan: " + loaiTaiKhoan);
 
 				// CẬP NHẬT CHO PHẦN SỐ DƯ TÀI KHOẢN
 				SoDuKy soDuKyTk = new SoDuKy();
-				soDuKyTk.setKyKeToan(kyKeToan);
-				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
-
 				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
 				if (soDuKyTkDs != null) {
 					Iterator<SoDuKy> soDuKyIter = soDuKyTkDs.iterator();
@@ -1710,6 +1723,8 @@ public class KyKeToanController {
 						}
 					}
 				}
+				soDuKyTk.setKyKeToan(kyKeToan);
+				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
 
 				logger.info("soDuKyTk hiện tại: " + soDuKyTk);
 				// Cập nhật dữ liệu mới
@@ -1717,6 +1732,15 @@ public class KyKeToanController {
 				soDuKyTk.setCoDauKy(soDuKyTk.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
 				soDuKyTk.setNoCuoiKy(soDuKyTk.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
 				soDuKyTk.setCoCuoiKy(soDuKyTk.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
+				if (soDuKyTk.equals(soDuKy) || soDuKyTk.getLoaiTien().equals(soDuKy.getLoaiTien())) {
+					soDuKyTk.setLoaiTien(soDuKy.getLoaiTien());
+					soDuKyTk.setCoDauKyNt(soDuKyTk.getCoDauKyNt() + soDuKy.getCoDauKyNt() - soDuKyTruoc.getCoDauKyNt());
+					soDuKyTk.setNoDauKyNt(soDuKyTk.getNoDauKyNt() + soDuKy.getNoDauKyNt() - soDuKyTruoc.getNoDauKyNt());
+					soDuKyTk.setNoCuoiKyNt(
+							soDuKyTk.getNoCuoiKyNt() + soDuKy.getNoCuoiKyNt() - soDuKyTruoc.getNoCuoiKyNt());
+					soDuKyTk.setCoCuoiKyNt(
+							soDuKyTk.getCoCuoiKyNt() + soDuKy.getCoCuoiKyNt() - soDuKyTruoc.getCoCuoiKyNt());
+				}
 				logger.info("soDuKyTk mới: " + soDuKyTk);
 
 				// Cập nhật ngược vào csdl
@@ -1763,9 +1787,6 @@ public class KyKeToanController {
 
 				// CẬP NHẬT CHO PHẦN SỐ DƯ TÀI KHOẢN
 				SoDuKy soDuKyTk = new SoDuKy();
-				soDuKyTk.setKyKeToan(kyKeToan);
-				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
-
 				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
 				if (soDuKyTkDs != null) {
 					Iterator<SoDuKy> soDuKyIter = soDuKyTkDs.iterator();
@@ -1778,6 +1799,8 @@ public class KyKeToanController {
 						}
 					}
 				}
+				soDuKyTk.setKyKeToan(kyKeToan);
+				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
 
 				logger.info("soDuKyTk hiện tại: " + soDuKyTk);
 				// Cập nhật dữ liệu mới
@@ -1785,6 +1808,15 @@ public class KyKeToanController {
 				soDuKyTk.setCoDauKy(soDuKyTk.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
 				soDuKyTk.setNoCuoiKy(soDuKyTk.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
 				soDuKyTk.setCoCuoiKy(soDuKyTk.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
+				if (soDuKyTk.equals(soDuKy) || soDuKyTk.getLoaiTien().equals(soDuKy.getLoaiTien())) {
+					soDuKyTk.setLoaiTien(soDuKy.getLoaiTien());
+					soDuKyTk.setCoDauKyNt(soDuKyTk.getCoDauKyNt() + soDuKy.getCoDauKyNt() - soDuKyTruoc.getCoDauKyNt());
+					soDuKyTk.setNoDauKyNt(soDuKyTk.getNoDauKyNt() + soDuKy.getNoDauKyNt() - soDuKyTruoc.getNoDauKyNt());
+					soDuKyTk.setNoCuoiKyNt(
+							soDuKyTk.getNoCuoiKyNt() + soDuKy.getNoCuoiKyNt() - soDuKyTruoc.getNoCuoiKyNt());
+					soDuKyTk.setCoCuoiKyNt(
+							soDuKyTk.getCoCuoiKyNt() + soDuKy.getCoCuoiKyNt() - soDuKyTruoc.getCoCuoiKyNt());
+				}
 				logger.info("soDuKyTk mới: " + soDuKyTk);
 
 				// Cập nhật ngược vào csdl
@@ -1792,10 +1824,6 @@ public class KyKeToanController {
 
 				// CẬP NHẬT CHO PHẦN CÔNG NỢ
 				SoDuKy soDuKyDt = new SoDuKy();
-				soDuKyDt.setKyKeToan(kyKeToan);
-				soDuKyDt.setLoaiTaiKhoan(loaiTaiKhoan);
-				soDuKyDt.setDoiTuong(soDuKy.getDoiTuong());
-
 				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
 				if (soDuKyDtDs != null) {
 					Iterator<SoDuKy> soDuKyDtIter = soDuKyDtDs.iterator();
@@ -1808,21 +1836,25 @@ public class KyKeToanController {
 						}
 					}
 				}
+				soDuKyDt.setKyKeToan(kyKeToan);
+				soDuKyDt.setLoaiTaiKhoan(loaiTaiKhoan);
+				soDuKyDt.setDoiTuong(soDuKy.getDoiTuong());
 
 				logger.info("soDuKyDt hiện tại: " + soDuKyDt);
 				// Cập nhật dữ liệu mới
-				if (soDuKyDt.getLoaiTaiKhoan().equals(soDuKy.getLoaiTaiKhoan())) {
-					soDuKyDt.setNoDauKy(soDuKy.getNoDauKy());
-					soDuKyDt.setCoDauKy(soDuKy.getCoDauKy());
-					soDuKyDt.setNoCuoiKy(soDuKy.getNoCuoiKy());
-					soDuKyDt.setCoCuoiKy(soDuKy.getCoCuoiKy());
-				} else {
-					soDuKyDt.setNoDauKy(soDuKyDt.getNoDauKy() + soDuKy.getNoDauKy() - soDuKyTruoc.getNoDauKy());
-					soDuKyDt.setCoDauKy(soDuKyDt.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
-					soDuKyDt.setNoCuoiKy(soDuKyDt.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
-					soDuKyDt.setCoCuoiKy(soDuKyDt.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
+				soDuKyDt.setNoDauKy(soDuKyDt.getNoDauKy() + soDuKy.getNoDauKy() - soDuKyTruoc.getNoDauKy());
+				soDuKyDt.setCoDauKy(soDuKyDt.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
+				soDuKyDt.setNoCuoiKy(soDuKyDt.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
+				soDuKyDt.setCoCuoiKy(soDuKyDt.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
+				if (soDuKyDt.equals(soDuKy) || soDuKyDt.getLoaiTien().equals(soDuKy.getLoaiTien())) {
+					soDuKyDt.setLoaiTien(soDuKy.getLoaiTien());
+					soDuKyDt.setCoDauKyNt(soDuKyDt.getCoDauKyNt() + soDuKy.getCoDauKyNt() - soDuKyTruoc.getCoDauKyNt());
+					soDuKyDt.setNoDauKyNt(soDuKyDt.getNoDauKyNt() + soDuKy.getNoDauKyNt() - soDuKyTruoc.getNoDauKyNt());
+					soDuKyDt.setNoCuoiKyNt(
+							soDuKyDt.getNoCuoiKyNt() + soDuKy.getNoCuoiKyNt() - soDuKyTruoc.getNoCuoiKyNt());
+					soDuKyDt.setCoCuoiKyNt(
+							soDuKyDt.getCoCuoiKyNt() + soDuKy.getCoCuoiKyNt() - soDuKyTruoc.getCoCuoiKyNt());
 				}
-
 				logger.info("soDuKyDt mới: " + soDuKyDt);
 
 				// Cập nhật ngược vào csdl
@@ -1869,12 +1901,8 @@ public class KyKeToanController {
 				logger.info("==== loaiTaiKhoan: " + loaiTaiKhoan);
 
 				// CẬP NHẬT CHO PHẦN SỐ DƯ TÀI KHOẢN
+				logger.info("CẬP NHẬT CHO PHẦN SỐ DƯ TÀI KHOẢN");
 				SoDuKy soDuKyTk = new SoDuKy();
-				soDuKyTk.setKyKeToan(kyKeToan);
-				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
-				soDuKyTk.setHangHoa(soDuKy.getHangHoa());
-				soDuKyTk.setKhoHang(soDuKy.getKhoHang());
-
 				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
 				if (soDuKyTkDs != null) {
 					Iterator<SoDuKy> soDuKyIter = soDuKyTkDs.iterator();
@@ -1887,6 +1915,8 @@ public class KyKeToanController {
 						}
 					}
 				}
+				soDuKyTk.setKyKeToan(kyKeToan);
+				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
 
 				logger.info("soDuKyTk hiện tại: " + soDuKyTk);
 				// Cập nhật dữ liệu mới
@@ -1894,18 +1924,23 @@ public class KyKeToanController {
 				soDuKyTk.setCoDauKy(soDuKyTk.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
 				soDuKyTk.setNoCuoiKy(soDuKyTk.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
 				soDuKyTk.setCoCuoiKy(soDuKyTk.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
+				if (soDuKyTk.equals(soDuKy) || soDuKyTk.getLoaiTien().equals(soDuKy.getLoaiTien())) {
+					soDuKyTk.setLoaiTien(soDuKy.getLoaiTien());
+					soDuKyTk.setCoDauKyNt(soDuKyTk.getCoDauKyNt() + soDuKy.getCoDauKyNt() - soDuKyTruoc.getCoDauKyNt());
+					soDuKyTk.setNoDauKyNt(soDuKyTk.getNoDauKyNt() + soDuKy.getNoDauKyNt() - soDuKyTruoc.getNoDauKyNt());
+					soDuKyTk.setNoCuoiKyNt(
+							soDuKyTk.getNoCuoiKyNt() + soDuKy.getNoCuoiKyNt() - soDuKyTruoc.getNoCuoiKyNt());
+					soDuKyTk.setCoCuoiKyNt(
+							soDuKyTk.getCoCuoiKyNt() + soDuKy.getCoCuoiKyNt() - soDuKyTruoc.getCoCuoiKyNt());
+				}
 				logger.info("soDuKyTk mới: " + soDuKyTk);
 
 				// Cập nhật ngược vào csdl
 				kyKeToanDAO.themCapNhatSoDuDauKy(soDuKyTk);
 
+				logger.info("CẬP NHẬT CHO PHẦN CÔNG NỢ");
 				// CẬP NHẬT CHO PHẦN CÔNG NỢ
 				SoDuKy soDuKyHh = new SoDuKy();
-				soDuKyHh.setKyKeToan(kyKeToan);
-				soDuKyHh.setLoaiTaiKhoan(loaiTaiKhoan);
-				soDuKyHh.setHangHoa(soDuKy.getHangHoa());
-				soDuKyHh.setKhoHang(soDuKy.getKhoHang());
-
 				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
 				if (soDuKyHhDs != null) {
 					Iterator<SoDuKy> soDuKyHhIter = soDuKyHhDs.iterator();
@@ -1918,25 +1953,28 @@ public class KyKeToanController {
 						}
 					}
 				}
+				soDuKyHh.setKyKeToan(kyKeToan);
+				soDuKyHh.setLoaiTaiKhoan(loaiTaiKhoan);
+				soDuKyHh.setHangHoa(soDuKy.getHangHoa());
+				soDuKyHh.setKhoHang(soDuKy.getKhoHang());
 
 				logger.info("soDuKyHh hiện tại: " + soDuKyHh);
 				// Cập nhật dữ liệu mới
-				if (soDuKyHh.getLoaiTaiKhoan().equals(soDuKy.getLoaiTaiKhoan())) {
-					soDuKyHh.setNoDauKy(soDuKy.getNoDauKy());
-					soDuKyHh.setCoDauKy(soDuKy.getCoDauKy());
-					soDuKyHh.setNoCuoiKy(soDuKy.getNoCuoiKy());
-					soDuKyHh.setCoCuoiKy(soDuKy.getCoCuoiKy());
-
-					soDuKyHh.getHangHoa().setSoLuong(soDuKy.getHangHoa().getSoLuong());
-				} else {
-					soDuKyHh.setNoDauKy(soDuKyHh.getNoDauKy() + soDuKy.getNoDauKy() - soDuKyTruoc.getNoDauKy());
-					soDuKyHh.setCoDauKy(soDuKyHh.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
-					soDuKyHh.setNoCuoiKy(soDuKyHh.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
-					soDuKyHh.setCoCuoiKy(soDuKyHh.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
-
-					double soLuong = soDuKyHh.getHangHoa().getSoLuong() + soDuKy.getHangHoa().getSoLuong()
-							- soDuKyTruoc.getHangHoa().getSoLuong();
-					soDuKyHh.getHangHoa().setSoLuong(soLuong);
+				soDuKyHh.setNoDauKy(soDuKyHh.getNoDauKy() + soDuKy.getNoDauKy() - soDuKyTruoc.getNoDauKy());
+				soDuKyHh.setCoDauKy(soDuKyHh.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
+				soDuKyHh.setNoCuoiKy(soDuKyHh.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
+				soDuKyHh.setCoCuoiKy(soDuKyHh.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
+				double soLuong = soDuKyHh.getHangHoa().getSoLuong() + soDuKy.getHangHoa().getSoLuong()
+						- soDuKyTruoc.getHangHoa().getSoLuong();
+				soDuKyHh.getHangHoa().setSoLuong(soLuong);
+				if (soDuKyHh.equals(soDuKy) || soDuKyHh.getLoaiTien().equals(soDuKy.getLoaiTien())) {
+					soDuKyHh.setLoaiTien(soDuKy.getLoaiTien());
+					soDuKyHh.setCoDauKyNt(soDuKyHh.getCoDauKyNt() + soDuKy.getCoDauKyNt() - soDuKyTruoc.getCoDauKyNt());
+					soDuKyHh.setNoDauKyNt(soDuKyHh.getNoDauKyNt() + soDuKy.getNoDauKyNt() - soDuKyTruoc.getNoDauKyNt());
+					soDuKyHh.setNoCuoiKyNt(
+							soDuKyHh.getNoCuoiKyNt() + soDuKy.getNoCuoiKyNt() - soDuKyTruoc.getNoCuoiKyNt());
+					soDuKyHh.setCoCuoiKyNt(
+							soDuKyHh.getCoCuoiKyNt() + soDuKy.getCoCuoiKyNt() - soDuKyTruoc.getCoCuoiKyNt());
 				}
 
 				logger.info("soDuKyHh mới: " + soDuKyHh);

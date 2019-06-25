@@ -25,30 +25,51 @@
 			var param = "maTk=" + maTk + "&maKkt=" + maKkt;
 			console.log("param", param);
 
-			$.ajax({
-				url : "${url}/kyketoan/soduky/taikhoan",
-				data : param,
-				dataType : "json",
-				type : "POST",
-				success : function(soDuKy) {
-					console.log("success", soDuKy);
-					if (soDuKy != null) {
-						console.log("success", soDuKy.noDauKy + " - "
-								+ soDuKy.coDauKy);
-						$(form).find("#noDauKy").val(soDuKy.noDauKy);
-						$(form).find("#coDauKy").val(soDuKy.coDauKy);
-					} else {
-						console.log("success", "There is no data");
-						$(form).find("#noDauKy").val(0);
-						$(form).find("#coDauKy").val(0);
-					}
-				},
-				error : function(data) {
-					console.log(data);
-					$(form).find("#noDauKy").val(0);
-					$(form).find("#coDauKy").val(0);
-				}
-			});
+			$
+					.ajax({
+						url : "${url}/kyketoan/soduky/taikhoan",
+						data : param,
+						dataType : "json",
+						type : "POST",
+						success : function(soDuKy) {
+							if (soDuKy != null) {
+								console.log("success", soDuKy.noDauKy + " - "
+										+ soDuKy.coDauKy + " - "
+										+ soDuKy.loaiTien.maLt);
+
+								$(form).find("#noDauKy").val(soDuKy.noDauKy);
+								$(form).find("#noDauKyNt")
+										.val(soDuKy.noDauKyNt);
+								$(form).find("#coDauKy").val(soDuKy.coDauKy);
+								$(form).find("#coDauKyNt")
+										.val(soDuKy.coDauKyNt);
+
+								$(form).find("#loaiTien\\.maLt").val(
+										soDuKy.loaiTien.maLt);
+								$(form).find("#loaiTien\\.maLt").data(
+										'combobox').refresh();
+							} else {
+								console.log("success", "There is no data");
+								$(form).find("#noDauKy").val(0);
+								$(form).find("#noDauKyNt").val(0);
+								$(form).find("#coDauKy").val(0);
+								$(form).find("#coDauKyNt").val(0);
+
+								$(form).find("#loaiTien\\.maLt").val("");
+							}
+						},
+						error : function(data) {
+							console.log(data);
+							$(form).find("#noDauKy").val(0);
+							$(form).find("#noDauKyNt").val(0);
+							$(form).find("#coDauKy").val(0);
+							$(form).find("#coDauKyNt").val(0);
+
+							$(form).find("#loaiTien\\.maLt").val("");
+							$(form).find("#loaiTien\\.maLt").data('combobox')
+									.refresh();
+						}
+					});
 		}
 
 		function layCongNo() {
@@ -65,30 +86,53 @@
 					+ loaiDt + "&maDt=" + maDt;
 			console.log("param", param);
 
-			$.ajax({
-				url : "${url}/kyketoan/soduky/congno",
-				data : param,
-				dataType : "json",
-				type : "POST",
-				success : function(soDuKy) {
-					console.log("success", soDuKy);
-					if (soDuKy != null) {
-						console.log("success", soDuKy.noDauKy + " - "
-								+ soDuKy.coDauKy);
-						$(form).find("#noDauKy").val(soDuKy.noDauKy);
-						$(form).find("#coDauKy").val(soDuKy.coDauKy);
-					} else {
-						console.log("success", "There is no data");
-						$(form).find("#noDauKy").val(0);
-						$(form).find("#coDauKy").val(0);
-					}
-				},
-				error : function(data) {
-					console.log(data);
-					$(form).find("#noDauKy").val(0);
-					$(form).find("#coDauKy").val(0);
-				}
-			});
+			$
+					.ajax({
+						url : "${url}/kyketoan/soduky/congno",
+						data : param,
+						dataType : "json",
+						type : "POST",
+						success : function(soDuKy) {
+							if (soDuKy != null) {
+								console.log("success", soDuKy.noDauKy + " - "
+										+ soDuKy.coDauKy + " - "
+										+ soDuKy.loaiTien.maLt);
+
+								$(form).find("#noDauKy").val(soDuKy.noDauKy);
+								$(form).find("#noDauKyNt")
+										.val(soDuKy.noDauKyNt);
+								$(form).find("#coDauKy").val(soDuKy.coDauKy);
+								$(form).find("#coDauKyNt")
+										.val(soDuKy.coDauKyNt);
+
+								$(form).find("#loaiTien\\.maLt").val(
+										soDuKy.loaiTien.maLt);
+								$(form).find("#loaiTien\\.maLt").data(
+										'combobox').refresh();
+							} else {
+								console.log("success", "There is no data");
+								$(form).find("#noDauKy").val(0);
+								$(form).find("#noDauKyNt").val(0);
+								$(form).find("#coDauKy").val(0);
+								$(form).find("#coDauKyNt").val(0);
+
+								$(form).find("#loaiTien\\.maLt").val("");
+								$(form).find("#loaiTien\\.maLt").data(
+										'combobox').refresh();
+							}
+						},
+						error : function(data) {
+							console.log(data);
+							$(form).find("#noDauKy").val(0);
+							$(form).find("#noDauKyNt").val(0);
+							$(form).find("#coDauKy").val(0);
+							$(form).find("#coDauKyNt").val(0);
+
+							$(form).find("#loaiTien\\.maLt").val("");
+							$(form).find("#loaiTien\\.maLt").data('combobox')
+									.refresh();
+						}
+					});
 		}
 
 		function layTonKho() {
@@ -105,44 +149,57 @@
 					+ "&maKho=" + maKho;
 			console.log("param", param);
 
-			$.ajax({
-				url : "${url}/kyketoan/soduky/tonkho",
-				data : param,
-				dataType : "json",
-				type : "POST",
-				success : function(soDuKy) {
-					console.log("success", soDuKy);
-					if (soDuKy != null) {
-						console.log("success", soDuKy.noDauKy + " - "
-								+ soDuKy.coDauKy);
-						$(form).find("#noDauKy").val(soDuKy.noDauKy);
-						$(form).find("#coDauKy").val(soDuKy.coDauKy);
-						if (soDuKy.hangHoa != null) {
-							$(form).find("#hangHoa\\.soLuong").val(
-									soDuKy.hangHoa.soLuong);
-							$(form).find("#hangHoa\\.donVi\\.maDv").val(
-									soDuKy.hangHoa.donVi.maDv);
+			$
+					.ajax({
+						url : "${url}/kyketoan/soduky/tonkho",
+						data : param,
+						dataType : "json",
+						type : "POST",
+						success : function(soDuKy) {
+							console.log("success", soDuKy);
+							if (soDuKy != null) {
+								console.log("success", soDuKy.noDauKy + " - "
+										+ soDuKy.coDauKy);
+								$(form).find("#noDauKy").val(soDuKy.noDauKy);
+								$(form).find("#coDauKy").val(soDuKy.coDauKy);
+								if (soDuKy.hangHoa != null) {
+									$(form).find("#hangHoa\\.soLuong").val(
+											soDuKy.hangHoa.soLuong);
+									$(form).find("#hangHoa\\.donVi\\.maDv")
+											.val(soDuKy.hangHoa.donVi.maDv);
+								}
+								$(form).find("#loaiTien\\.maLt").val(
+										soDuKy.loaiTien.maLt);
+								$(form).find("#loaiTien\\.maLt").data(
+										'combobox').refresh();
+							} else {
+								console.log("success", "There is no data");
+								$(form).find("#noDauKy").val(0);
+								$(form).find("#coDauKy").val(0);
+								$(form).find("#hangHoa\\.soLuong").val(0);
+								$(form).find("#hangHoa\\.donVi\\.maDv").val(0);
+
+								$(form).find("#loaiTien\\.maLt").val("");
+								$(form).find("#loaiTien\\.maLt").data(
+										'combobox').refresh();
+							}
+							$(form).find('#hangHoa\\.donVi\\.maDv').data(
+									'combobox').refresh();
+						},
+						error : function(data) {
+							console.log(data);
+							$(form).find("#noDauKy").val(0);
+							$(form).find("#coDauKy").val(0);
+							$(form).find("#hangHoa\\.soLuong").val(0);
+							$(form).find("#hangHoa\\.donVi\\.maDv").val(0);
+							$(form).find('#hangHoa\\.donVi\\.maDv').data(
+									'combobox').refresh();
+
+							$(form).find("#loaiTien\\.maLt").val("");
+							$(form).find("#loaiTien\\.maLt").data('combobox')
+									.refresh();
 						}
-					} else {
-						console.log("success", "There is no data");
-						$(form).find("#noDauKy").val(0);
-						$(form).find("#coDauKy").val(0);
-						$(form).find("#hangHoa\\.soLuong").val(0);
-						$(form).find("#hangHoa\\.donVi\\.maDv").val(0);
-					}
-					$(form).find('#hangHoa\\.donVi\\.maDv').data('combobox')
-							.refresh();
-				},
-				error : function(data) {
-					console.log(data);
-					$(form).find("#noDauKy").val(0);
-					$(form).find("#coDauKy").val(0);
-					$(form).find("#hangHoa\\.soLuong").val(0);
-					$(form).find("#hangHoa\\.donVi\\.maDv").val(0);
-					$(form).find('#hangHoa\\.donVi\\.maDv').data('combobox')
-							.refresh();
-				}
-			});
+					});
 		}
 
 		$(".layTaiKhoan").change(layTaiKhoan);
@@ -150,10 +207,8 @@
 		$(".layTonKho").change(layTonKho);
 
 		$(".combox").combobox();
-
 	});
 </script>
-
 
 <div id="sdTaiKhoanModal" class="modal fade" role="dialog">
 	<div class="modal-dialog">
@@ -178,14 +233,34 @@
 						</form:select>
 					</div>
 					<div class="form-group">
+						<label for="loaiTien.maLt">Loại tiền</label>
+						<form:select path="loaiTien.maLt" class="form-control combox">
+							<form:option value=""></form:option>
+							<form:options items="${loaiTienDs}" itemLabel="tenLt"
+								itemValue="maLt"></form:options>
+						</form:select>
+					</div>
+					<div class="form-group">
 						<div class="row">
 							<div class="col-sm-6">
-								<label for="noDauKy">Nợ</label>
+								<label for="noDauKy">Nợ (VND)</label>
 								<form:input path="noDauKy" class="form-control" />
 							</div>
 							<div class="col-sm-6">
 								<label for="coDauKy">Có</label>
 								<form:input path="coDauKy" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-sm-6">
+								<label for="noDauKyNt">Nợ (Ngoại tệ)</label>
+								<form:input path="noDauKyNt" class="form-control" />
+							</div>
+							<div class="col-sm-6">
+								<label for="coDauKyNt">Có</label>
+								<form:input path="coDauKyNt" class="form-control" />
 							</div>
 						</div>
 					</div>
@@ -232,14 +307,34 @@
 						</form:select>
 					</div>
 					<div class="form-group">
+						<label for="loaiTien.maLt">Loại tiền</label>
+						<form:select path="loaiTien.maLt" class="form-control combox">
+							<form:option value=""></form:option>
+							<form:options items="${loaiTienDs}" itemLabel="tenLt"
+								itemValue="maLt"></form:options>
+						</form:select>
+					</div>
+					<div class="form-group">
 						<div class="row">
 							<div class="col-sm-6">
-								<label for="noDauKy">Nợ</label>
+								<label for="noDauKy">Nợ (VND)</label>
 								<form:input path="noDauKy" class="form-control" />
 							</div>
 							<div class="col-sm-6">
 								<label for="coDauKy">Có</label>
 								<form:input path="coDauKy" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-sm-6">
+								<label for="noDauKyNt">Nợ (Ngoại tệ)</label>
+								<form:input path="noDauKyNt" class="form-control" />
+							</div>
+							<div class="col-sm-6">
+								<label for="coDauKyNt">Có</label>
+								<form:input path="coDauKyNt" class="form-control" />
 							</div>
 						</div>
 					</div>
@@ -287,14 +382,34 @@
 						</form:select>
 					</div>
 					<div class="form-group">
+						<label for="loaiTien.maLt">Loại tiền</label>
+						<form:select path="loaiTien.maLt" class="form-control combox">
+							<form:option value=""></form:option>
+							<form:options items="${loaiTienDs}" itemLabel="tenLt"
+								itemValue="maLt"></form:options>
+						</form:select>
+					</div>
+					<div class="form-group">
 						<div class="row">
 							<div class="col-sm-6">
-								<label for="noDauKy">Nợ</label>
+								<label for="noDauKy">Nợ (VND)</label>
 								<form:input path="noDauKy" class="form-control" />
 							</div>
 							<div class="col-sm-6">
 								<label for="coDauKy">Có</label>
 								<form:input path="coDauKy" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-sm-6">
+								<label for="noDauKyNt">Nợ (Ngoại tệ)</label>
+								<form:input path="noDauKyNt" class="form-control" />
+							</div>
+							<div class="col-sm-6">
+								<label for="coDauKyNt">Có</label>
+								<form:input path="coDauKyNt" class="form-control" />
 							</div>
 						</div>
 					</div>
@@ -342,14 +457,34 @@
 						</form:select>
 					</div>
 					<div class="form-group">
+						<label for="loaiTien.maLt">Loại tiền</label>
+						<form:select path="loaiTien.maLt" class="form-control combox">
+							<form:option value=""></form:option>
+							<form:options items="${loaiTienDs}" itemLabel="tenLt"
+								itemValue="maLt"></form:options>
+						</form:select>
+					</div>
+					<div class="form-group">
 						<div class="row">
 							<div class="col-sm-6">
-								<label for="noDauKy">Nợ</label>
+								<label for="noDauKy">Nợ (VND)</label>
 								<form:input path="noDauKy" class="form-control" />
 							</div>
 							<div class="col-sm-6">
 								<label for="coDauKy">Có</label>
 								<form:input path="coDauKy" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-sm-6">
+								<label for="noDauKyNt">Nợ (Ngoại tệ)</label>
+								<form:input path="noDauKyNt" class="form-control" />
+							</div>
+							<div class="col-sm-6">
+								<label for="coDauKyNt">Có</label>
+								<form:input path="coDauKyNt" class="form-control" />
 							</div>
 						</div>
 					</div>
@@ -419,14 +554,36 @@
 							</form:select>
 						</div>
 					</div>
-					<div class="row">
-						<div class="form-group col-sm-6">
-							<label for="noDauKy">Nợ</label>
-							<form:input path="noDauKy" class="form-control" />
+					<div class="form-group">
+						<label for="loaiTien.maLt">Loại tiền</label>
+						<form:select path="loaiTien.maLt" class="form-control combox">
+							<form:option value=""></form:option>
+							<form:options items="${loaiTienDs}" itemLabel="tenLt"
+								itemValue="maLt"></form:options>
+						</form:select>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-sm-6">
+								<label for="noDauKy">Nợ (VND)</label>
+								<form:input path="noDauKy" class="form-control" />
+							</div>
+							<div class="col-sm-6">
+								<label for="coDauKy">Có</label>
+								<form:input path="coDauKy" class="form-control" />
+							</div>
 						</div>
-						<div class="form-group col-sm-6">
-							<label for="coDauKy">Có</label>
-							<form:input path="coDauKy" class="form-control" />
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-sm-6">
+								<label for="noDauKyNt">Nợ (Ngoại tệ)</label>
+								<form:input path="noDauKyNt" class="form-control" />
+							</div>
+							<div class="col-sm-6">
+								<label for="coDauKyNt">Có</label>
+								<form:input path="coDauKyNt" class="form-control" />
+							</div>
 						</div>
 					</div>
 				</div>

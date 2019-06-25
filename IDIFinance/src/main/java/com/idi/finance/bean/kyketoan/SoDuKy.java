@@ -2,6 +2,7 @@ package com.idi.finance.bean.kyketoan;
 
 import org.apache.log4j.Logger;
 
+import com.idi.finance.bean.LoaiTien;
 import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.hanghoa.KhoHang;
@@ -17,9 +18,14 @@ public class SoDuKy {
 	private KhoHang khoHang;
 
 	private double noDauKy;
+	private double noDauKyNt;
 	private double coDauKy;
+	private double coDauKyNt;
 	private double noCuoiKy;
+	private double noCuoiKyNt;
 	private double coCuoiKy;
+	private double coCuoiKyNt;
+	private LoaiTien loaiTien = new LoaiTien();
 
 	public KyKeToan getKyKeToan() {
 		return kyKeToan;
@@ -69,12 +75,28 @@ public class SoDuKy {
 		this.noDauKy = noDauKy;
 	}
 
+	public double getNoDauKyNt() {
+		return noDauKyNt;
+	}
+
+	public void setNoDauKyNt(double noDauKyNt) {
+		this.noDauKyNt = noDauKyNt;
+	}
+
 	public double getCoDauKy() {
 		return coDauKy;
 	}
 
 	public void setCoDauKy(double coDauKy) {
 		this.coDauKy = coDauKy;
+	}
+
+	public double getCoDauKyNt() {
+		return coDauKyNt;
+	}
+
+	public void setCoDauKyNt(double coDauKyNt) {
+		this.coDauKyNt = coDauKyNt;
 	}
 
 	public double getNoCuoiKy() {
@@ -85,12 +107,36 @@ public class SoDuKy {
 		this.noCuoiKy = noCuoiKy;
 	}
 
+	public double getNoCuoiKyNt() {
+		return noCuoiKyNt;
+	}
+
+	public void setNoCuoiKyNt(double noCuoiKyNt) {
+		this.noCuoiKyNt = noCuoiKyNt;
+	}
+
 	public double getCoCuoiKy() {
 		return coCuoiKy;
 	}
 
 	public void setCoCuoiKy(double coCuoiKy) {
 		this.coCuoiKy = coCuoiKy;
+	}
+
+	public double getCoCuoiKyNt() {
+		return coCuoiKyNt;
+	}
+
+	public void setCoCuoiKyNt(double coCuoiKyNt) {
+		this.coCuoiKyNt = coCuoiKyNt;
+	}
+
+	public LoaiTien getLoaiTien() {
+		return loaiTien;
+	}
+
+	public void setLoaiTien(LoaiTien loaiTien) {
+		this.loaiTien = loaiTien;
 	}
 
 	public void tron(SoDuKy soDuKy) {
@@ -108,9 +154,13 @@ public class SoDuKy {
 			}
 
 			this.noDauKy += soDuKy.getNoDauKy();
+			this.noDauKyNt += soDuKy.getNoDauKyNt();
 			this.coDauKy += soDuKy.getCoDauKy();
+			this.coDauKyNt += soDuKy.getCoDauKyNt();
 			this.noCuoiKy += soDuKy.getNoCuoiKy();
+			this.noCuoiKyNt += soDuKy.getNoCuoiKyNt();
 			this.coCuoiKy += soDuKy.getCoCuoiKy();
+			this.coCuoiKyNt += soDuKy.getCoCuoiKyNt();
 		}
 	}
 
@@ -162,7 +212,7 @@ public class SoDuKy {
 	@Override
 	public String toString() {
 		String out = kyKeToan + " " + doiTuong + " " + loaiTaiKhoan + " " + hangHoa + " " + khoHang + " " + noDauKy
-				+ " " + coDauKy;
+				+ " " + noDauKyNt + " " + coDauKy + " " + coDauKyNt + " - " + loaiTien;
 		return out;
 	}
 }

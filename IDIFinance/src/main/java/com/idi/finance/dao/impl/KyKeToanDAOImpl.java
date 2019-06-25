@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.idi.finance.bean.LoaiTien;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.doituong.NganHangTaiKhoan;
@@ -611,11 +612,20 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 	public class SoDuKyMapper implements RowMapper<SoDuKy> {
 		public SoDuKy mapRow(ResultSet rs, int rowNum) throws SQLException {
 			try {
+				LoaiTien loaiTien = new LoaiTien();
+				loaiTien.setMaLt(rs.getString("MA_NT"));
+				loaiTien.setTenLt(rs.getString("TEN_NT"));
+
 				SoDuKy soDuKy = new SoDuKy();
 				soDuKy.setNoDauKy(rs.getDouble("NO_DAU_KY"));
+				soDuKy.setNoDauKyNt(rs.getDouble("NO_DAU_KY_NT"));
 				soDuKy.setCoDauKy(rs.getDouble("CO_DAU_KY"));
+				soDuKy.setCoDauKyNt(rs.getDouble("CO_DAU_KY_NT"));
 				soDuKy.setNoCuoiKy(rs.getDouble("NO_CUOI_KY"));
+				soDuKy.setNoCuoiKyNt(rs.getDouble("NO_CUOI_KY_NT"));
 				soDuKy.setCoCuoiKy(rs.getDouble("CO_CUOI_KY"));
+				soDuKy.setCoCuoiKyNt(rs.getDouble("CO_CUOI_KY_NT"));
+				soDuKy.setLoaiTien(loaiTien);
 
 				KyKeToan kyKeToan = new KyKeToan();
 				kyKeToan.setMaKyKt(rs.getInt("MA_KKT"));
@@ -650,11 +660,20 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 	public class SoDuKyDoiTuongMapper implements RowMapper<SoDuKy> {
 		public SoDuKy mapRow(ResultSet rs, int rowNum) throws SQLException {
 			try {
+				LoaiTien loaiTien = new LoaiTien();
+				loaiTien.setMaLt(rs.getString("MA_NT"));
+				loaiTien.setTenLt(rs.getString("TEN_NT"));
+
 				SoDuKy soDuKy = new SoDuKy();
 				soDuKy.setNoDauKy(rs.getDouble("NO_DAU_KY"));
+				soDuKy.setNoDauKyNt(rs.getDouble("NO_DAU_KY_NT"));
 				soDuKy.setCoDauKy(rs.getDouble("CO_DAU_KY"));
+				soDuKy.setCoDauKyNt(rs.getDouble("CO_DAU_KY_NT"));
 				soDuKy.setNoCuoiKy(rs.getDouble("NO_CUOI_KY"));
+				soDuKy.setNoCuoiKyNt(rs.getDouble("NO_CUOI_KY_NT"));
 				soDuKy.setCoCuoiKy(rs.getDouble("CO_CUOI_KY"));
+				soDuKy.setCoCuoiKyNt(rs.getDouble("CO_CUOI_KY_NT"));
+				soDuKy.setLoaiTien(loaiTien);
 
 				KyKeToan kyKeToan = new KyKeToan();
 				kyKeToan.setMaKyKt(rs.getInt("MA_KKT"));
@@ -699,11 +718,20 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 	public class SoDuKyHangHoaMapper implements RowMapper<SoDuKy> {
 		public SoDuKy mapRow(ResultSet rs, int rowNum) throws SQLException {
 			try {
+				LoaiTien loaiTien = new LoaiTien();
+				loaiTien.setMaLt(rs.getString("MA_NT"));
+				loaiTien.setTenLt(rs.getString("TEN_NT"));
+
 				SoDuKy soDuKy = new SoDuKy();
 				soDuKy.setNoDauKy(rs.getDouble("NO_DAU_KY"));
+				soDuKy.setNoDauKyNt(rs.getDouble("NO_DAU_KY_NT"));
 				soDuKy.setCoDauKy(rs.getDouble("CO_DAU_KY"));
+				soDuKy.setCoDauKyNt(rs.getDouble("CO_DAU_KY_NT"));
 				soDuKy.setNoCuoiKy(rs.getDouble("NO_CUOI_KY"));
+				soDuKy.setNoCuoiKyNt(rs.getDouble("NO_CUOI_KY_NT"));
 				soDuKy.setCoCuoiKy(rs.getDouble("CO_CUOI_KY"));
+				soDuKy.setCoCuoiKyNt(rs.getDouble("CO_CUOI_KY_NT"));
+				soDuKy.setLoaiTien(loaiTien);
 
 				KyKeToan kyKeToan = new KyKeToan();
 				kyKeToan.setMaKyKt(rs.getInt("MA_KKT"));
@@ -750,11 +778,20 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 	public class SoDuKyHangHoaKhoMapper implements RowMapper<SoDuKy> {
 		public SoDuKy mapRow(ResultSet rs, int rowNum) throws SQLException {
 			try {
+				LoaiTien loaiTien = new LoaiTien();
+				loaiTien.setMaLt(rs.getString("MA_NT"));
+				loaiTien.setTenLt(rs.getString("TEN_NT"));
+
 				SoDuKy soDuKy = new SoDuKy();
 				soDuKy.setNoDauKy(rs.getDouble("NO_DAU_KY"));
+				soDuKy.setNoDauKyNt(rs.getDouble("NO_DAU_KY_NT"));
 				soDuKy.setCoDauKy(rs.getDouble("CO_DAU_KY"));
+				soDuKy.setCoDauKyNt(rs.getDouble("CO_DAU_KY_NT"));
 				soDuKy.setNoCuoiKy(rs.getDouble("NO_CUOI_KY"));
+				soDuKy.setNoCuoiKyNt(rs.getDouble("NO_CUOI_KY_NT"));
 				soDuKy.setCoCuoiKy(rs.getDouble("CO_CUOI_KY"));
+				soDuKy.setCoCuoiKyNt(rs.getDouble("CO_CUOI_KY_NT"));
+				soDuKy.setLoaiTien(loaiTien);
 
 				KyKeToan kyKeToan = new KyKeToan();
 				kyKeToan.setMaKyKt(rs.getInt("MA_KKT"));
@@ -826,14 +863,16 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 			logger.info(query);
 
 			jdbcTmpl.update(query, soDuKy.getKyKeToan().getMaKyKt(), soDuKy.getLoaiTaiKhoan().getMaTk(), loaiDt, maDt,
-					maHh, maKho, soDuKy.getNoDauKy(), soDuKy.getCoDauKy(), soLuong, maDv);
+					maHh, maKho, soDuKy.getNoDauKy(), soDuKy.getNoDauKyNt(), soDuKy.getCoDauKy(), soDuKy.getCoDauKyNt(),
+					soDuKy.getLoaiTien().getMaLt(), soLuong, maDv);
 		} catch (Exception e) {
-			e.printStackTrace();
+			 e.printStackTrace();
 			// Nếu đã có thì cập nhật
 			String query = CAP_NHAT_SO_DU_DAU_KY;
 			logger.info(query);
 
-			jdbcTmpl.update(query, soDuKy.getNoDauKy(), soDuKy.getCoDauKy(), soLuong, maDv,
+			jdbcTmpl.update(query, soDuKy.getNoDauKy(), soDuKy.getNoDauKyNt(), soDuKy.getCoDauKy(),
+					soDuKy.getCoDauKyNt(), soDuKy.getLoaiTien().getMaLt(), soLuong, maDv,
 					soDuKy.getKyKeToan().getMaKyKt(), soDuKy.getLoaiTaiKhoan().getMaTk(), loaiDt, maDt, maHh, maKho);
 		}
 	}

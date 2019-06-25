@@ -75,14 +75,14 @@
 					</tr>
 
 					<c:forEach items="${duLieuKeToanDs}" var="duLieuKeToan">
-						<tr>
+						<%-- <tr>
 							<td></td>
 							<td></td>
 							<td colspan="6"><b>Kỳ <fmt:formatDate
 										value="${duLieuKeToan.kyKeToan.dau}" pattern="dd/M/yyyy"></fmt:formatDate>
 									- <fmt:formatDate value="${duLieuKeToan.kyKeToan.cuoi}"
 										pattern="dd/M/yyyy"></fmt:formatDate></b></td>
-						</tr>
+						</tr> --%>
 						<%-- <tr>
 							<td></td>
 							<td></td>

@@ -19,6 +19,7 @@ public class KyKeToan {
 	private int trangThai;
 	private int macDinh;
 	private List<SoDuKy> soDuKyDs;
+	private boolean dau;
 
 	public int getMaKyKt() {
 		return maKyKt;
@@ -97,6 +98,14 @@ public class KyKeToan {
 			SoDuKy soDuKy = iter.next();
 			themSoDuKy(soDuKy);
 		}
+	}
+
+	public boolean isDau() {
+		return dau;
+	}
+
+	public void setDau(boolean dau) {
+		this.dau = dau;
 	}
 
 	@Override

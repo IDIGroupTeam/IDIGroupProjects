@@ -25,17 +25,6 @@
 <hr />
 
 <div class="row form-group">
-	<label class="control-label col-sm-2" for="tenKh">Tên khách
-		hàng (*)</label>
-	<div class="col-sm-4">
-		<form:input path="tenKh" cssClass="form-control"
-			placeholder="Tên khách hàng" />
-		<br />
-		<form:errors path="tenKh" cssClass="error" />
-	</div>
-</div>
-
-<div class="row form-group">
 	<label class="control-label col-sm-2" for="khKh">Mã khách hàng
 		(*)</label>
 	<div class="col-sm-4">
@@ -43,6 +32,17 @@
 			placeholder="Mã khách hàng" />
 		<br />
 		<form:errors path="khKh" cssClass="error" />
+	</div>
+</div>
+
+<div class="row form-group">
+	<label class="control-label col-sm-2" for="tenKh">Tên khách
+		hàng (*)</label>
+	<div class="col-sm-4">
+		<form:input path="tenKh" cssClass="form-control"
+			placeholder="Tên khách hàng" />
+		<br />
+		<form:errors path="tenKh" cssClass="error" />
 	</div>
 
 	<label class="control-label col-sm-2" for="maThue">Mã số thuế</label>
