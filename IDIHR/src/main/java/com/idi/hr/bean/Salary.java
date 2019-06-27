@@ -10,6 +10,7 @@ public class Salary implements Serializable {
 	private static final long serialVersionUID = -1871003330726286155L;
 	
 	private String salary;
+	private String moneyType;
 	private int employeeId; 
 	private String bankNo;
 	private String bankName;
@@ -23,11 +24,12 @@ public class Salary implements Serializable {
 		
 	}
 
-	public Salary(int employeeId, String fullName, String salary, String bankNo, String bankName,
-			String bankBranch, String department, String jobTitle, String description) {
+	public Salary(int employeeId, String fullName, String salary, String moneyType, String bankNo, 
+			String bankName, String bankBranch, String department, String jobTitle, String description) {
 		this.employeeId = employeeId;
 		this.fullName = fullName;
 		this.salary = salary;
+		this.moneyType = moneyType;
 		this.bankNo = bankNo;
 		this.bankName = bankName;
 		this.bankBranch = bankBranch;
@@ -42,6 +44,14 @@ public class Salary implements Serializable {
 
 	public void setSalary(String salary) {
 		this.salary = salary;
+	}
+
+	public String getMoneyType() {
+		return moneyType;
+	}
+
+	public void setMoneyType(String moneyType) {
+		this.moneyType = moneyType;
 	}
 
 	public int getEmployeeId() {

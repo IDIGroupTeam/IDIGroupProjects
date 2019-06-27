@@ -11,6 +11,7 @@ public class SalaryDetail implements Serializable {
 	
 	private int employeeId; 
 	private String finalSalary;
+	private String exchangeRate;
 	private String basicSalary;
 	private String overTimeN;
 	private String overTimeW;
@@ -47,7 +48,7 @@ public class SalaryDetail implements Serializable {
 		
 	}
 
-	public SalaryDetail(int employeeId, String basicSalary, String finalSalary, String overTimeN, String overTimeW, String overTimeH, 
+	public SalaryDetail(int employeeId, String basicSalary, String exchangeRate, String finalSalary, String overTimeN, String overTimeW, String overTimeH, 
 			String overTimeSalary, String bounus, String subsidize, String advancePayed, String taxPersonal, int month, int year,	
 			String description, String payedInsurance, String fullName, String phoneNo, String bankNo, String bankName, String bankBranch,
 			String salary, String department, String jobTitle, String salaryInsurance, String percentCompanyPay, String percentEmployeePay, 
@@ -56,6 +57,7 @@ public class SalaryDetail implements Serializable {
 		this.employeeId = employeeId;
 		this.finalSalary = finalSalary;
 		this.basicSalary = basicSalary;
+		this.exchangeRate = exchangeRate;
 		this.overTimeN = overTimeN;
 		this.overTimeW = overTimeW;
 		this.overTimeH = overTimeH;
@@ -93,6 +95,14 @@ public class SalaryDetail implements Serializable {
 
 	public void setBasicSalary(String basicSalary) {
 		this.basicSalary = basicSalary;
+	}
+
+	public String getExchangeRate() {
+		return exchangeRate;
+	}
+
+	public void setExchangeRate(String exchangeRate) {
+		this.exchangeRate = exchangeRate;
 	}
 
 	public String getFinalSalary() {

@@ -12,6 +12,7 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 	public SalaryDetail mapRow(ResultSet rs, int nowNum) throws SQLException {
 		int employeeId = rs.getInt("EMPLOYEE_ID");
 		String basicSalary = rs.getString("BASIC_SALARY");
+		String exchangeRate = rs.getString("EXCHANGE_RATE");
 		String finalSalary = rs.getString("ACTUAL_SALARY");
 		String overTimeN = rs.getString("OVER_TIME_N");
 		String overTimeW = rs.getString("OVER_TIME_W");
@@ -41,7 +42,7 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 		String other = rs.getString("OTHER");
 		String arrears = rs.getString("ARREARS");
 		String payStatus = rs.getString("PAY_STATUS");
-		return new SalaryDetail(employeeId, basicSalary, finalSalary, overTimeN, overTimeW, overTimeH, 
+		return new SalaryDetail(employeeId, basicSalary, exchangeRate, finalSalary, overTimeN, overTimeW, overTimeH, 
 				overTimeSalary, bounus, subsidize, advancePayed, taxPersonal, month, year, desc,
 				payedInsurance,fullName, phoneNo, bankNo, bankName, bankBranch, salary, department, 
 				jobTitle, salaryInsurance, percentCompanyPay, percentEmployeePay, workcomplete, 

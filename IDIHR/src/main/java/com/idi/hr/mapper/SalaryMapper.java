@@ -13,6 +13,7 @@ public class SalaryMapper implements RowMapper<Salary> {
 		int employeeId = rs.getInt("EMPLOYEE_ID");
 		String fullName = rs.getString("FULL_NAME");
 		String salary = rs.getString("SALARY");
+		String moneyType = rs.getString("MONEY_TYPE");
 		String bankNo = rs.getString("BANK_NO");
 		String bankName = rs.getString("BANK_NAME");
 		String bankBranch = rs.getString("BANK_BRANCH");
@@ -20,6 +21,6 @@ public class SalaryMapper implements RowMapper<Salary> {
 		String jobTitle = rs.getString("JOB_TITLE");
 		String description = rs.getString("COMMENT");
 		
-		return new Salary(employeeId, fullName, salary, bankNo, bankName, bankBranch, department, jobTitle, description);
+		return new Salary(employeeId, fullName, salary, moneyType, bankNo, bankName, bankBranch, department, jobTitle, description);
 	}
 }

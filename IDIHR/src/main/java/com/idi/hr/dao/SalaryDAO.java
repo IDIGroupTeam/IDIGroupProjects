@@ -88,7 +88,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 			String sql = hr.getProperty("INSERT_SALARY_INFO").toString();
 			log.info("INSERT_SALARY_INFO query: " + sql);
 			Object[] params = new Object[] { salary.getEmployeeId(), salary.getSalary().replaceAll(",", ""), 
-					salary.getBankNo(),	salary.getBankName(), salary.getBankBranch(), salary.getDesc() };
+					salary.getMoneyType(), salary.getBankNo(),	salary.getBankName(), salary.getBankBranch(), salary.getDesc() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -108,7 +108,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 			// update
 			String sql = hr.getProperty("UPDATE_SALARY_INFO").toString();
 			log.info("UPDATE_SALARY_INFO query: " + sql);
-			Object[] params = new Object[] { salary.getSalary().replaceAll(",", ""), salary.getBankNo(), 
+			Object[] params = new Object[] { salary.getSalary().replaceAll(",", ""), salary.getMoneyType(), salary.getBankNo(), 
 					salary.getBankName(), salary.getBankBranch(), salary.getDesc(), salary.getEmployeeId() };
 			jdbcTmpl.update(sql, params);
 
@@ -239,7 +239,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 			if(salaryDetail.getSalaryForWorkedDay() != null) {
 				finalSalary = Float.valueOf(salaryDetail.getSalaryForWorkedDay());
 			}else {
-				 finalSalary = Float.valueOf(salaryDetail.getSalary());
+				 finalSalary = Float.valueOf(salaryDetail.getBasicSalary());
 			}
 			if(salaryDetail.getWorkComplete() >= 0) {
 				finalSalary=finalSalary*salaryDetail.getWorkComplete()/100;
@@ -295,8 +295,8 @@ public class SalaryDAO extends JdbcDaoSupport {
 			Object[] params = new Object[] { salaryDetail.getEmployeeId(), salaryDetail.getOverTimeN(),
 					salaryDetail.getOverTimeW(), salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(),
 					salaryDetail.getBounus(), salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(),
-					salaryDetail.getTaxPersonal(), salaryDetail.getSalary(), salaryDetail.getFinalSalary(), 
-					salaryDetail.getMonth(), salaryDetail.getYear(), salaryDetail.getDesc(), 
+					salaryDetail.getTaxPersonal(), salaryDetail.getBasicSalary(), salaryDetail.getExchangeRate(),
+					salaryDetail.getFinalSalary(), salaryDetail.getMonth(), salaryDetail.getYear(), salaryDetail.getDesc(), 
 					salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(),
 					salaryDetail.getOther(), salaryDetail.getArrears(), salaryDetail.getPayStatus() };
 			jdbcTmpl.update(sql, params);
@@ -329,7 +329,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 			if(salaryDetail.getSalaryForWorkedDay() != null) {
 				finalSalary = Float.valueOf(salaryDetail.getSalaryForWorkedDay());
 			}else {
-				 finalSalary = Float.valueOf(salaryDetail.getSalary());
+				 finalSalary = Float.valueOf(salaryDetail.getBasicSalary());
 			}
 			if(salaryDetail.getWorkComplete() >= 0) {
 				finalSalary = finalSalary*salaryDetail.getWorkComplete()/100;				
@@ -388,9 +388,10 @@ public class SalaryDAO extends JdbcDaoSupport {
 			Object[] params = new Object[] { salaryDetail.getOverTimeN(), salaryDetail.getOverTimeW(),
 					salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(),
 					salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(),
-					salaryDetail.getBasicSalary(), salaryDetail.getFinalSalary(), salaryDetail.getDesc(), 
-					salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(), salaryDetail.getOther(),
-					salaryDetail.getArrears(), salaryDetail.getPayStatus(), salaryDetail.getEmployeeId(), salaryDetail.getMonth(), salaryDetail.getYear() };
+					salaryDetail.getBasicSalary(), salaryDetail.getExchangeRate(), salaryDetail.getFinalSalary(),
+					salaryDetail.getDesc(),	salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete(), 
+					salaryDetail.getWorkedDay(), salaryDetail.getOther(), salaryDetail.getArrears(),
+					salaryDetail.getPayStatus(), salaryDetail.getEmployeeId(), salaryDetail.getMonth(), salaryDetail.getYear() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -402,8 +403,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 	/**
 	 * Update total salary take home
 	 * 
-	 * @param finalSalary,
-	 *            month, year, employeeId
+	 * @param finalSalary, month, year, employeeId
 	 */
 	public void updateSalaryTakeHome(String finalSalary, int month, int year, int employeeId) throws Exception {
 		try {

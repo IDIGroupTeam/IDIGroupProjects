@@ -32,17 +32,23 @@
 			<tbody>
 				<form:hidden path="employeeId" /> 
 				<tr>
-					<td colspan="4" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin
+					<td colspan="5" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin
 						lương nhân viên</td>
 				</tr>
 				<tr>
 					<td bgcolor="#FAFAFA">Họ tên NV:</td>
-					<td colspan="3"><form:input path="fullName" class="form-control animated" disabled="true"/>	</td>						
+					<td colspan="4"><form:input path="fullName" class="form-control animated" disabled="true"/>	</td>						
 				</tr>
 				<tr>
 					<td bgcolor="#FAFAFA">Lương:(*)</td>
 					<td><form:input path="salary" maxlength="12" 
 							required="required" class="form-control animated"/></td>
+					<td>		
+						<form:select path="moneyType" class="form-control animated" >
+							<form:option value="VND" label="VND" />
+							<form:option value="USD" label="USD" />
+						</form:select>		
+					</td>		
 							
 					<td bgcolor="#FAFAFA">Số TK ngân hàng:</td>
 					<td><form:input path="bankNo" maxlength="16" type="number"
@@ -50,7 +56,7 @@
 				</tr>	
 				<tr>
 					<td bgcolor="#FAFAFA">Tên ngân hàng:</td>
-					<td><form:input path="bankName" maxlength="64" 
+					<td colspan="2"><form:input path="bankName" maxlength="64" 
 							class="form-control animated"/></td>
 							
 					<td bgcolor="#FAFAFA">Tên chi nhánh:</td>
@@ -59,7 +65,7 @@
 				</tr>						
 				<tr>
 					<td bgcolor="#FAFAFA">Ghi chú:</td>
-					<td colspan="3"><form:textarea path="desc" cols="64" class="form-control animated"/></td>
+					<td colspan="4"><form:textarea path="desc" cols="64" class="form-control animated"/></td>
 				</tr>
 			</tbody>
 		</table>

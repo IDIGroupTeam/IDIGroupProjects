@@ -117,24 +117,32 @@
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Lương:</td>						
-						<c:if test="${not empty salaryDetail.basicSalary}">
+<%-- 						<c:if test="${not empty salaryDetail.basicSalary}">
 							<td>
-								<fmt:formatNumber value="${salaryDetail.basicSalary}" /> đ
+								<fmt:formatNumber value="${salaryDetail.basicSalary}" /> 
 							</td>
 						</c:if>
-						<c:if test="${empty salaryDetail.basicSalary}">
-							<td>
-								<fmt:formatNumber value="${salaryDetail.salary}" /> đ
-							</td>
-						</c:if>							
+						<c:if test="${empty salaryDetail.basicSalary}"> --%>
+						<td>
+							<fmt:formatNumber value="${salaryDetail.salary}" /> ${moneyType}
+						</td>
+						<%-- </c:if>	 --%>		
+						<c:if test="${moneyType != 'VND'}">
+							<td bgcolor="#FAFAFA">tỷ giá:</td>
+							<td><form:input path="exchangeRate" class="form-control animated" maxlength="16" min="0" step="0.01" type="number" /></td>
+						</c:if>										
+						<c:if test="${moneyType == 'VND'}">
+							<td bgcolor="#FAFAFA"></td>
+							<td></td>
+						</c:if>				
 						<td bgcolor="#FAFAFA" nowrap="nowrap">Lương BHXH:</td>
 						<c:if test="${not empty salaryDetail.salaryInsurance}">
-							<td><fmt:formatNumber value="${salaryDetail.salaryInsurance}" /> đ</td> 
+							<td><fmt:formatNumber value="${salaryDetail.salaryInsurance}" /> </td> 
 						</c:if>
 						<c:if test="${empty salaryDetail.salaryInsurance}">
 							<td><i>Không tham gia BHXH</i></td> 
-						</c:if>				
-						<td></td><td></td>	 
+						</c:if>		
+					 
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Bắt buộc phải > hoăc = 0">Hệ số hoàn thành cv (%):</td>
@@ -167,11 +175,11 @@
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Yêu cầu định nghĩa số ngày công chuẩn cho tháng này trước">Làm thêm ngày thường (h):</td>
 						<td><form:input path="overTimeN" maxlength="12" class="form-control animated" type="number" min="0"/></td>
 						<td nowrap="nowrap"> x <fmt:formatNumber value="${salaryPerHour}" /> x 1.5</td>
-						<td>= <fmt:formatNumber value="${salaryDetail.overTimeN*salaryPerHour*1.5}" /> đ</td>
+						<td>= <fmt:formatNumber value="${salaryDetail.overTimeN*salaryPerHour*1.5}" /> </td>
 						
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="10.5% trong đó gồm: 8% cho hưu trí, 1% cho thất nghiệp và 1.5% y tế">Đóng BHXH(10.5%):</td>						
 						<c:if test="${not empty salaryDetail.salaryInsurance}">
-							<td><fmt:formatNumber value="${salaryDetail.salaryInsurance*10.5/100}" /> đ</td> 
+							<td><fmt:formatNumber value="${salaryDetail.salaryInsurance*10.5/100}" /> </td> 
 						</c:if>
 						<c:if test="${empty salaryDetail.salaryInsurance}">
 							<td><i>Không tham gia BHXH</i></td> 
@@ -181,7 +189,7 @@
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Yêu cầu định nghĩa số ngày công chuẩn cho tháng này trước">Làm thêm cuối tuần (h):</td>
 						<td><form:input path="overTimeW" maxlength="12" class="form-control animated" type="number" min="0"/></td>
 						<td nowrap="nowrap"> x <fmt:formatNumber value="${salaryPerHour}" /> x 2</td>
-						<td>= <fmt:formatNumber value="${salaryDetail.overTimeW*salaryPerHour*2}" /> đ</td>
+						<td>= <fmt:formatNumber value="${salaryDetail.overTimeW*salaryPerHour*2}" /> </td>
 						
 						<td bgcolor="#FAFAFA" nowrap="nowrap">Truy thu</td>
 						<td><form:input path="arrears" class="form-control animated" maxlength="12" /></td>						
@@ -190,7 +198,7 @@
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Yêu cầu định nghĩa số ngày công chuẩn cho tháng này trước">Làm thêm ngày lễ (h):</td>
 						<td><form:input path="overTimeH" maxlength="12" class="form-control animated" type="number" min="0"/></td>
 						<td nowrap="nowrap"> x <fmt:formatNumber value="${salaryPerHour}" /> x 3</td>
-						<td>= <fmt:formatNumber value="${salaryDetail.overTimeH*salaryPerHour*3}" /> đ</td>
+						<td>= <fmt:formatNumber value="${salaryDetail.overTimeH*salaryPerHour*3}" /> </td>
 						
 						<td bgcolor="#FAFAFA" nowrap="nowrap"></td>
 						<td></td> 											
@@ -208,34 +216,34 @@
 						<td nowrap="nowrap" bgcolor="#E6E6E6" colspan="2"><i>	
 						<c:if test="${not empty salaryDetail.salaryForWorkedDay}">							
 							<c:if test="${not empty salaryDetail.basicSalary}">
-								<fmt:formatNumber value="${salaryDetail.salaryForWorkedDay.replaceAll(',', '')*(salaryDetail.workComplete/100) + salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '')}" /> đ
+								<fmt:formatNumber value="${salaryDetail.salaryForWorkedDay.replaceAll(',', '')*(salaryDetail.workComplete/100) + salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '')}" /> 
 							</c:if>
 							<c:if test="${empty salaryDetail.basicSalary}">
-								<fmt:formatNumber value="${salaryDetail.salaryForWorkedDay.replaceAll(',', '')*(salaryDetail.workComplete/100) + salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '')}" /> đ
+								<fmt:formatNumber value="${salaryDetail.salaryForWorkedDay.replaceAll(',', '')*(salaryDetail.workComplete/100) + salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '')}" /> 
 							</c:if>	
 						</c:if>
 						<c:if test="${empty salaryDetail.salaryForWorkedDay}">							
 							<c:if test="${not empty salaryDetail.basicSalary}">
-								<fmt:formatNumber value="${salaryDetail.basicSalary.replaceAll(',', '')*(salaryDetail.workComplete/100) + salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '')}" /> đ
+								<fmt:formatNumber value="${salaryDetail.basicSalary.replaceAll(',', '')*(salaryDetail.workComplete/100) + salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '')}" /> 
 							</c:if>
 							<c:if test="${empty salaryDetail.basicSalary}">
-								<fmt:formatNumber value="${salaryDetail.salary.replaceAll(',', '')*(salaryDetail.workComplete/100) + salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '')}" /> đ
+								<fmt:formatNumber value="${salaryDetail.salary.replaceAll(',', '')*(salaryDetail.workComplete/100) + salaryDetail.bounus.replaceAll(',', '') + salaryDetail.subsidize.replaceAll(',', '') + salaryDetail.overTimeH*salaryPerHour*3 + salaryDetail.overTimeW*salaryPerHour*2 + salaryDetail.overTimeN*salaryPerHour*1.5 + salaryDetail.other.replaceAll(',', '')}" /> 
 							</c:if>	
 						</c:if>	
 						</i></td>
 						<td nowrap="nowrap" bgcolor="#E6E6E6">Tổng giảm trừ</td>
 						<td nowrap="nowrap" bgcolor="#E6E6E6" colspan="2">
 							<c:if test="${not empty salaryDetail.salaryInsurance}">
-								<i><fmt:formatNumber value="${salaryDetail.salaryInsurance*10.5/100 + salaryDetail.taxPersonal.replaceAll(',', '') + salaryDetail.advancePayed.replaceAll(',', '') + salaryDetail.arrears.replaceAll(',', '')}" /> đ </i>
+								<i><fmt:formatNumber value="${salaryDetail.salaryInsurance*10.5/100 + salaryDetail.taxPersonal.replaceAll(',', '') + salaryDetail.advancePayed.replaceAll(',', '') + salaryDetail.arrears.replaceAll(',', '')}" />  </i>
 							</c:if>
 							<c:if test="${empty salaryDetail.salaryInsurance}">
-								<i><fmt:formatNumber value="${salaryDetail.taxPersonal.replaceAll(',', '') + salaryDetail.advancePayed.replaceAll(',', '') + salaryDetail.arrears.replaceAll(',', '')}" /> đ</i>
+								<i><fmt:formatNumber value="${salaryDetail.taxPersonal.replaceAll(',', '') + salaryDetail.advancePayed.replaceAll(',', '') + salaryDetail.arrears.replaceAll(',', '')}" /> </i>
 							</c:if>							
 						</td>
 					</tr>
 					<tr>
 						<td nowrap="nowrap"><b>Lương thực nhận:</b></td>
-						<td><b><fmt:formatNumber value="${salaryDetail.finalSalary}" /></b> vnđ</td>
+						<td><b><fmt:formatNumber value="${salaryDetail.finalSalary}" /></b> VND</td>
 						<c:if test="${not empty salaryDetail.finalSalary}">
 							<td nowrap="nowrap"><b>Trạng thái thanh toán:</b></td>
 							<td align="center">

@@ -314,8 +314,12 @@ public class SalaryController {
 				salaryDetail.setOverTimeN("");
 				salaryDetail.setOverTimeW("");
 				salaryDetail.setSubsidize("");
+				salaryDetail.setWorkedDay(null);
 			}			
-			salaryDetail.setWorkedDay(null);
+			
+			String moneyType = salaryDAO.getSalary(employeeId).getMoneyType();
+			model.addAttribute("moneyType", moneyType);
+			
 			WorkingDay workingDay = null;
 			if(month < 10)
 				workingDay = workingDayDAO.getWorkingDay(year + "-0" + month, "IDI");
@@ -368,6 +372,12 @@ public class SalaryController {
 			final RedirectAttributes redirectAttributes) {
 		try {
 			//System.err.println(salaryDetail.getMonth());
+			Float s = null;
+			if(salaryDetail.getExchangeRate() != null && salaryDetail.getExchangeRate().length() > 0) {
+				s = Float.valueOf(salaryDetail.getSalary())*Float.valueOf(salaryDetail.getExchangeRate());
+				salaryDetail.setBasicSalary(String.valueOf(s));
+			}else if(s ==null)
+				s = Float.valueOf(salaryDetail.getSalary());
 			
 			WorkingDay workingDay = null;
 			int month = salaryDetail.getMonth();
@@ -394,8 +404,8 @@ public class SalaryController {
 				}
 				
 				//System.err.println(workingDayOfMonth);
-				if(salaryDetail.getSalary() != null && salaryDetail.getSalary().length() > 0) {
-					salaryPerHour = Float.valueOf(salaryDetail.getSalary())/workingDayOfMonth/8;
+				if(s != null && s > 0) {
+					salaryPerHour = s/workingDayOfMonth/8;
 					salaryPerHour = Math.round((salaryPerHour*10)/10);
 				}	
 				//System.err.println("luong/gio" + salaryPerHour);
@@ -403,7 +413,7 @@ public class SalaryController {
 				//Không lv đủ cả tháng
 				String workedDay = salaryDetail.getWorkedDay(); 
 				if(workedDay != null && workedDay.length() > 0) {
-					float currentSalary = (Float.parseFloat(workedDay)/workingDayOfMonth)*Float.valueOf(Float.parseFloat(salaryDetail.getSalary()));
+					float currentSalary = (Float.parseFloat(workedDay)/workingDayOfMonth)*s;
 					log.info("Ngay lv thuc te trong thang: " + workedDay + "/" + workingDayOfMonth);
 					salaryDetail.setSalaryForWorkedDay(String.valueOf(currentSalary));
 				}
@@ -431,6 +441,11 @@ public class SalaryController {
 				//System.err.println(overTimeSalary + " overTime H controller " + overTimeH);
 			}
 						
+			//update ... lay salary o bang salary info sang bang salary detail lam basic salary
+			if(salaryDetail.getBasicSalary() == null) {
+				salaryDetail.setBasicSalary(String.valueOf(s));
+			}
+			
 			//System.err.println("salaryPerHour: " + salaryPerHour + " overTimeSalary: " + overTimeSalary);
 			overTimeSalary = Math.round(overTimeSalary);
 			salaryDetail.setOverTimeSalary(String.valueOf(overTimeSalary));
@@ -483,6 +498,9 @@ public class SalaryController {
 					salaryPerHour = Math.round((salaryPerHour*10)/10);
 				}
 			}	
+			String moneyType = salaryDAO.getSalary(employeeId).getMoneyType();
+			model.addAttribute("moneyType", moneyType);
+			
 			salaryDetail.setSalaryPerHour(salaryPerHour);
 			model.addAttribute("salaryPerHour", salaryPerHour);			
 			model.addAttribute("salaryDetail", salaryDetail);
@@ -501,6 +519,14 @@ public class SalaryController {
 			final RedirectAttributes redirectAttributes) {
 		try {
 			//System.err.println(salaryDetail.getSalary());
+			Float s = null;
+			if(salaryDetail.getExchangeRate() != null && salaryDetail.getExchangeRate().length() > 0) {
+				s = Float.valueOf(salaryDetail.getSalary())*Float.valueOf(salaryDetail.getExchangeRate());
+				salaryDetail.setBasicSalary(String.valueOf(s));
+			}else if(s == null)
+				s = Float.valueOf(salaryDetail.getSalary());
+			System.err.println(s);
+			
 			WorkingDay workingDay = null;			
 			int month = salaryDetail.getMonth();
 			int year = salaryDetail.getYear();			
@@ -526,8 +552,8 @@ public class SalaryController {
 					log.info( "Cong them " + Utils.countWeekendDays(year, month) + " vao ngay cong chuan");
 				}			
 		
-				if(salaryDetail.getSalary() != null && salaryDetail.getSalary().length() > 0) {
-					salaryPerHour = Float.valueOf(salaryDetail.getSalary())/workingDayOfMonth/8;
+				if(s != null && s > 0) {
+					salaryPerHour = s/workingDayOfMonth/8;
 					salaryPerHour = Math.round(salaryPerHour);
 					//System.err.println("Lương theo giờ: " + Math.round(salaryPerHour));
 				}
@@ -536,7 +562,7 @@ public class SalaryController {
 				String workedDay = salaryDetail.getWorkedDay(); 				
 				if(workedDay != null && workedDay.length() > 0) {
 					log.info("Ngay lv thuc te trong thang: " + workedDay + "/" + workingDayOfMonth);
-					float currentSalary = (Float.parseFloat(workedDay)/workingDayOfMonth)*Float.valueOf(Float.parseFloat(salaryDetail.getSalary()));
+					float currentSalary = (Float.parseFloat(workedDay)/workingDayOfMonth)*s;
 					salaryDetail.setSalaryForWorkedDay(String.valueOf(currentSalary));
 				}
 			}else {
@@ -563,7 +589,7 @@ public class SalaryController {
 			
 			//update ... lay salary o bang salary info sang bang salary detail lam basic salary
 			if(salaryDetail.getBasicSalary() == null) {
-				salaryDetail.setBasicSalary(salaryDetail.getSalary());
+				salaryDetail.setBasicSalary(String.valueOf(s));
 			}
 			
 			model.addAttribute("salaryPerHour", salaryPerHour);
@@ -575,7 +601,7 @@ public class SalaryController {
 		} catch (Exception e) {
 			log.error(e, e);
 		}
-		return "updateSalaryDetail";
+		return editSalaryDetailForm(model, salaryDetail);//"updateSalaryDetail";
 	}	
 	
 	@RequestMapping(value = "/salary/prepareSummarySalary", method = RequestMethod.GET)
