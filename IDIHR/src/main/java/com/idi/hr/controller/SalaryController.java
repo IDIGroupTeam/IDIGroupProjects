@@ -390,8 +390,7 @@ public class SalaryController {
 			
 			float salaryPerHour = 0;
 			if(workingDay.getWorkDayOfMonth() != null) {
-				float workingDayOfMonth = workingDay.getWorkDayOfMonth();
-				
+				float workingDayOfMonth = workingDay.getWorkDayOfMonth();				
 				String carDriver = "";
 				carDriver = hr.getProperty("WORK_SATURDAY");
 				//System.err.println(workingDayOfMonth + " thang " + month);
@@ -525,7 +524,7 @@ public class SalaryController {
 				salaryDetail.setBasicSalary(String.valueOf(s));
 			}else if(s == null)
 				s = Float.valueOf(salaryDetail.getSalary());
-			System.err.println(s);
+			///System.err.println(s);
 			
 			WorkingDay workingDay = null;			
 			int month = salaryDetail.getMonth();
