@@ -24,6 +24,7 @@ public class TkSoKeToanForm {
 	private HangHoa hangHoa = new HangHoa();
 	private KhoHang kho = new KhoHang();
 	private List<String> maKhoDs;
+	private List<KhoHang> khoDs;
 
 	public int getLoaiKy() {
 		return loaiKy;
@@ -130,6 +131,14 @@ public class TkSoKeToanForm {
 
 	public void setMaKhoDs(List<String> maKhoDs) {
 		this.maKhoDs = maKhoDs;
+	}
+
+	public List<KhoHang> getKhoDs() {
+		return khoDs;
+	}
+
+	public void setKhoDs(List<KhoHang> khoDs) {
+		this.khoDs = khoDs;
 	}
 
 	public List<String> getLoaiCts() {

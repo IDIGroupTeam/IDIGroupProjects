@@ -19,7 +19,9 @@
 
 <h4>Sổ tổng hợp nhập xuất tồn</h4>
 <p>
-	<i>156 - Kho Cầu Giấy</i>
+	<i>Tài khoản ${mainFinanceForm.taiKhoan} - <c:forEach
+			items="${mainFinanceForm.khoDs}" var="kho">${kho.tenKho}, </c:forEach>
+	</i>
 </p>
 
 <div class="table-responsive">
@@ -33,7 +35,7 @@
 				<th colspan="2" class="text-center">Nhập trong kỳ</th>
 				<th colspan="2" class="text-center">Xuất trong kỳ</th>
 				<th colspan="2" class="text-center">Tồn cuối kỳ</th>
-				<th rowspan="2" class="text-center">Ghi chú</th>
+				<!-- <th rowspan="2" class="text-center">Ghi chú</th> -->
 			</tr>
 			<tr>
 				<th class="text-center">Số lượng</th>
@@ -72,7 +74,7 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td></td>
+				<!-- <td></td> -->
 			</tr>
 			<tr>
 				<td></td>
@@ -86,7 +88,7 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td></td>
+				<!-- <td></td> -->
 			</tr>
 		</tbody>
 	</table>

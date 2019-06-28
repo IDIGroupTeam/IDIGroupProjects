@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -93,6 +94,29 @@ public class SoKeToanController {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
 		dateFormat.setLenient(false);
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+		binder.registerCustomEditor(List.class, "khoDs", new CustomCollectionEditor(List.class) {
+			@Override
+			protected Object convertElement(Object element) {
+				KhoHang kho = new KhoHang();
+				try {
+					if (element instanceof String) {
+						Integer maKho = Integer.parseInt((String) element);
+						kho = hangHoaDAO.layKhoBai(maKho);
+					} else if (element instanceof Integer) {
+						Integer maKho = (Integer) element;
+						kho = hangHoaDAO.layKhoBai(maKho);
+					} else if (element instanceof KhoHang) {
+						kho = (KhoHang) element;
+					}
+
+					return kho;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				return kho;
+			}
+		});
 
 		this.binder = binder;
 	}
@@ -848,7 +872,7 @@ public class SoKeToanController {
 			}
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
-			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định là 111
+			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định
 			if (form.getTaiKhoan() == null) {
 				form.setTaiKhoan(loaiTaiKhoanDs.get(0).getMaTk());
 			}
@@ -1145,20 +1169,41 @@ public class SoKeToanController {
 				form.themLoaiCt(ChungTu.TAT_CA);
 			}
 
-			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định là 156
-			if (form.getTaiKhoan() == null) {
-				form.setTaiKhoan(LoaiTaiKhoan.HANG_HOA);
+			// Lấy danh sách tài khoản công nợ 152;153;154;155;156
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = new ArrayList<>();
+			try {
+				String[] khoVthhs = props.getCauHinh(PropCont.TAI_KHOAN_KHO_VTHH).getGiaTri().split(";");
+				loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(khoVthhs));
+			} catch (Exception e) {
 			}
 
-			// Lấy danh sách tài khoản
-			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định
+			if (form.getTaiKhoan() == null) {
+				form.setTaiKhoan(loaiTaiKhoanDs.get(0).getMaTk());
+			}
 			LoaiTaiKhoan loaiTaiKhoan = taiKhoanDAO.layTaiKhoan(form.getTaiKhoan());
 
 			// Lấy danh sách kho
 			List<KhoHang> khoHangDs = hangHoaDAO.danhSachKhoBai();
+			if (form != null && form.getKhoDs() == null) {
+				form.setKhoDs(khoHangDs);
+			}
+
+			boolean tatCaKho = false;
+			List<Integer> maKhoDs = new ArrayList<>();
+			if (khoHangDs != null && form.getKhoDs() != null && khoHangDs.size() == form.getKhoDs().size()) {
+				tatCaKho = true;
+			} else {
+				tatCaKho = false;
+				for (Iterator<KhoHang> iter = form.getKhoDs().iterator(); iter.hasNext();) {
+					KhoHang khoHang = iter.next();
+					maKhoDs.add(khoHang.getMaKho());
+				}
+			}
 
 			logger.info("Sổ tổng hợp nhập xuất tồn ... ");
 			logger.info("Tài khoản: " + form.getTaiKhoan());
+			logger.info("Kho hàng: " + form.getKhoDs());
 
 			// Lấy danh sách các nghiệp vụ kế toán theo tài khoản, loại chứng từ, và từng kỳ
 			List<DuLieuKeToan> duLieuKeToanDs = new ArrayList<>();
@@ -1173,18 +1218,39 @@ public class SoKeToanController {
 				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
 
 				// Lấy danh sách số dư đầu kỳ nhập xuất tồn
-				List<SoDuKy> soDuKyDs = kyKeToanDAO.danhSachSoDuKyTheoHangHoa(loaiTaiKhoan.getMaTk(),
-						kyKeToan.getMaKyKt());
+				// theo mã tài khoản và danh sách kho
+				List<SoDuKy> soDuKyDs = null;
+				if (tatCaKho) {
+					soDuKyDs = kyKeToanDAO.danhSachSoDuKyTheoHangHoa(loaiTaiKhoan.getMaTk(), kyKeToan.getMaKyKt());
+				} else {
+					// Lấy dữ liệu từ các kho được lựa chọn
+					soDuKyDs = kyKeToanDAO.danhSachSoDuKyTheoHangHoa(loaiTaiKhoan.getMaTk(), kyKeToan.getMaKyKt(),
+							maKhoDs);
+				}
 
-				// Tính nợ/có đầu kỳ nhập xuất tồn của tất cả các hàng hóa
-				List<DuLieuKeToan> noCoDauKyDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), form.getDau(),
-						Utils.prevPeriod(kyKt).getCuoi());
+				// Tính nợ/có phát sinh kỳ trước tất cả các hàng hóa
+				// trong danh sách kho cho trước
+				List<DuLieuKeToan> noCoDauKyDs = null;
+				if (tatCaKho) {
+					noCoDauKyDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), form.getDau(),
+							Utils.prevPeriod(kyKt).getCuoi());
+				} else {
+					// Lấy dữ liệu từ các kho được lựa chọn
+					noCoDauKyDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), maKhoDs, form.getDau(),
+							Utils.prevPeriod(kyKt).getCuoi());
+				}
 
 				// Trộn số dư đầu kỳ nhập xuất tồn các loại hàng hóa
+				// trong danh sách kho cho trước
 
 				// Tính nợ/có phát sinh nhập xuất tồn trong kỳ của tất cả các hàng hóa
-				List<DuLieuKeToan> tongNoCoPsDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), kyKt.getDau(),
-						kyKt.getCuoi());
+				List<DuLieuKeToan> tongNoCoPsDs = null;
+				if (tatCaKho) {
+					tongNoCoPsDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), kyKt.getDau(), kyKt.getCuoi());
+				} else {
+					tongNoCoPsDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), maKhoDs, kyKt.getDau(),
+							kyKt.getCuoi());
+				}
 
 				duLieuKeToan.capNhatDuLieuKeToan(tongNoCoPsDs);
 				duLieuKeToanDs.add(duLieuKeToan);

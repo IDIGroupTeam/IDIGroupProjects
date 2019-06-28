@@ -1732,15 +1732,13 @@ public class KyKeToanController {
 				soDuKyTk.setCoDauKy(soDuKyTk.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
 				soDuKyTk.setNoCuoiKy(soDuKyTk.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
 				soDuKyTk.setCoCuoiKy(soDuKyTk.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
-				if (soDuKyTk.equals(soDuKy) || soDuKyTk.getLoaiTien().equals(soDuKy.getLoaiTien())) {
+				if (soDuKyTk.getLoaiTaiKhoan().equals(soDuKy.getLoaiTaiKhoan())) {
 					soDuKyTk.setLoaiTien(soDuKy.getLoaiTien());
-					soDuKyTk.setCoDauKyNt(soDuKyTk.getCoDauKyNt() + soDuKy.getCoDauKyNt() - soDuKyTruoc.getCoDauKyNt());
-					soDuKyTk.setNoDauKyNt(soDuKyTk.getNoDauKyNt() + soDuKy.getNoDauKyNt() - soDuKyTruoc.getNoDauKyNt());
-					soDuKyTk.setNoCuoiKyNt(
-							soDuKyTk.getNoCuoiKyNt() + soDuKy.getNoCuoiKyNt() - soDuKyTruoc.getNoCuoiKyNt());
-					soDuKyTk.setCoCuoiKyNt(
-							soDuKyTk.getCoCuoiKyNt() + soDuKy.getCoCuoiKyNt() - soDuKyTruoc.getCoCuoiKyNt());
 				}
+				soDuKyTk.setCoDauKyNt(soDuKyTk.getCoDauKyNt() + soDuKy.getCoDauKyNt() - soDuKyTruoc.getCoDauKyNt());
+				soDuKyTk.setNoDauKyNt(soDuKyTk.getNoDauKyNt() + soDuKy.getNoDauKyNt() - soDuKyTruoc.getNoDauKyNt());
+				soDuKyTk.setNoCuoiKyNt(soDuKyTk.getNoCuoiKyNt() + soDuKy.getNoCuoiKyNt() - soDuKyTruoc.getNoCuoiKyNt());
+				soDuKyTk.setCoCuoiKyNt(soDuKyTk.getCoCuoiKyNt() + soDuKy.getCoCuoiKyNt() - soDuKyTruoc.getCoCuoiKyNt());
 				logger.info("soDuKyTk mới: " + soDuKyTk);
 
 				// Cập nhật ngược vào csdl
@@ -1808,15 +1806,13 @@ public class KyKeToanController {
 				soDuKyTk.setCoDauKy(soDuKyTk.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
 				soDuKyTk.setNoCuoiKy(soDuKyTk.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
 				soDuKyTk.setCoCuoiKy(soDuKyTk.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
-				if (soDuKyTk.equals(soDuKy) || soDuKyTk.getLoaiTien().equals(soDuKy.getLoaiTien())) {
+				if (soDuKyTk.getLoaiTaiKhoan().equals(soDuKy.getLoaiTaiKhoan())) {
 					soDuKyTk.setLoaiTien(soDuKy.getLoaiTien());
-					soDuKyTk.setCoDauKyNt(soDuKyTk.getCoDauKyNt() + soDuKy.getCoDauKyNt() - soDuKyTruoc.getCoDauKyNt());
-					soDuKyTk.setNoDauKyNt(soDuKyTk.getNoDauKyNt() + soDuKy.getNoDauKyNt() - soDuKyTruoc.getNoDauKyNt());
-					soDuKyTk.setNoCuoiKyNt(
-							soDuKyTk.getNoCuoiKyNt() + soDuKy.getNoCuoiKyNt() - soDuKyTruoc.getNoCuoiKyNt());
-					soDuKyTk.setCoCuoiKyNt(
-							soDuKyTk.getCoCuoiKyNt() + soDuKy.getCoCuoiKyNt() - soDuKyTruoc.getCoCuoiKyNt());
 				}
+				soDuKyTk.setCoDauKyNt(soDuKyTk.getCoDauKyNt() + soDuKy.getCoDauKyNt() - soDuKyTruoc.getCoDauKyNt());
+				soDuKyTk.setNoDauKyNt(soDuKyTk.getNoDauKyNt() + soDuKy.getNoDauKyNt() - soDuKyTruoc.getNoDauKyNt());
+				soDuKyTk.setNoCuoiKyNt(soDuKyTk.getNoCuoiKyNt() + soDuKy.getNoCuoiKyNt() - soDuKyTruoc.getNoCuoiKyNt());
+				soDuKyTk.setCoCuoiKyNt(soDuKyTk.getCoCuoiKyNt() + soDuKy.getCoCuoiKyNt() - soDuKyTruoc.getCoCuoiKyNt());
 				logger.info("soDuKyTk mới: " + soDuKyTk);
 
 				// Cập nhật ngược vào csdl
@@ -1846,15 +1842,13 @@ public class KyKeToanController {
 				soDuKyDt.setCoDauKy(soDuKyDt.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
 				soDuKyDt.setNoCuoiKy(soDuKyDt.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
 				soDuKyDt.setCoCuoiKy(soDuKyDt.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
-				if (soDuKyDt.equals(soDuKy) || soDuKyDt.getLoaiTien().equals(soDuKy.getLoaiTien())) {
+				if (soDuKyDt.getLoaiTaiKhoan().equals(soDuKy.getLoaiTaiKhoan())) {
 					soDuKyDt.setLoaiTien(soDuKy.getLoaiTien());
-					soDuKyDt.setCoDauKyNt(soDuKyDt.getCoDauKyNt() + soDuKy.getCoDauKyNt() - soDuKyTruoc.getCoDauKyNt());
-					soDuKyDt.setNoDauKyNt(soDuKyDt.getNoDauKyNt() + soDuKy.getNoDauKyNt() - soDuKyTruoc.getNoDauKyNt());
-					soDuKyDt.setNoCuoiKyNt(
-							soDuKyDt.getNoCuoiKyNt() + soDuKy.getNoCuoiKyNt() - soDuKyTruoc.getNoCuoiKyNt());
-					soDuKyDt.setCoCuoiKyNt(
-							soDuKyDt.getCoCuoiKyNt() + soDuKy.getCoCuoiKyNt() - soDuKyTruoc.getCoCuoiKyNt());
 				}
+				soDuKyDt.setCoDauKyNt(soDuKyDt.getCoDauKyNt() + soDuKy.getCoDauKyNt() - soDuKyTruoc.getCoDauKyNt());
+				soDuKyDt.setNoDauKyNt(soDuKyDt.getNoDauKyNt() + soDuKy.getNoDauKyNt() - soDuKyTruoc.getNoDauKyNt());
+				soDuKyDt.setNoCuoiKyNt(soDuKyDt.getNoCuoiKyNt() + soDuKy.getNoCuoiKyNt() - soDuKyTruoc.getNoCuoiKyNt());
+				soDuKyDt.setCoCuoiKyNt(soDuKyDt.getCoCuoiKyNt() + soDuKy.getCoCuoiKyNt() - soDuKyTruoc.getCoCuoiKyNt());
 				logger.info("soDuKyDt mới: " + soDuKyDt);
 
 				// Cập nhật ngược vào csdl
@@ -1924,15 +1918,13 @@ public class KyKeToanController {
 				soDuKyTk.setCoDauKy(soDuKyTk.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
 				soDuKyTk.setNoCuoiKy(soDuKyTk.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
 				soDuKyTk.setCoCuoiKy(soDuKyTk.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
-				if (soDuKyTk.equals(soDuKy) || soDuKyTk.getLoaiTien().equals(soDuKy.getLoaiTien())) {
+				if (soDuKyTk.getLoaiTaiKhoan().equals(soDuKy.getLoaiTaiKhoan())) {
 					soDuKyTk.setLoaiTien(soDuKy.getLoaiTien());
-					soDuKyTk.setCoDauKyNt(soDuKyTk.getCoDauKyNt() + soDuKy.getCoDauKyNt() - soDuKyTruoc.getCoDauKyNt());
-					soDuKyTk.setNoDauKyNt(soDuKyTk.getNoDauKyNt() + soDuKy.getNoDauKyNt() - soDuKyTruoc.getNoDauKyNt());
-					soDuKyTk.setNoCuoiKyNt(
-							soDuKyTk.getNoCuoiKyNt() + soDuKy.getNoCuoiKyNt() - soDuKyTruoc.getNoCuoiKyNt());
-					soDuKyTk.setCoCuoiKyNt(
-							soDuKyTk.getCoCuoiKyNt() + soDuKy.getCoCuoiKyNt() - soDuKyTruoc.getCoCuoiKyNt());
 				}
+				soDuKyTk.setCoDauKyNt(soDuKyTk.getCoDauKyNt() + soDuKy.getCoDauKyNt() - soDuKyTruoc.getCoDauKyNt());
+				soDuKyTk.setNoDauKyNt(soDuKyTk.getNoDauKyNt() + soDuKy.getNoDauKyNt() - soDuKyTruoc.getNoDauKyNt());
+				soDuKyTk.setNoCuoiKyNt(soDuKyTk.getNoCuoiKyNt() + soDuKy.getNoCuoiKyNt() - soDuKyTruoc.getNoCuoiKyNt());
+				soDuKyTk.setCoCuoiKyNt(soDuKyTk.getCoCuoiKyNt() + soDuKy.getCoCuoiKyNt() - soDuKyTruoc.getCoCuoiKyNt());
 				logger.info("soDuKyTk mới: " + soDuKyTk);
 
 				// Cập nhật ngược vào csdl
@@ -1967,16 +1959,13 @@ public class KyKeToanController {
 				double soLuong = soDuKyHh.getHangHoa().getSoLuong() + soDuKy.getHangHoa().getSoLuong()
 						- soDuKyTruoc.getHangHoa().getSoLuong();
 				soDuKyHh.getHangHoa().setSoLuong(soLuong);
-				if (soDuKyHh.equals(soDuKy) || soDuKyHh.getLoaiTien().equals(soDuKy.getLoaiTien())) {
+				if (soDuKyHh.getLoaiTaiKhoan().equals(soDuKy.getLoaiTaiKhoan())) {
 					soDuKyHh.setLoaiTien(soDuKy.getLoaiTien());
-					soDuKyHh.setCoDauKyNt(soDuKyHh.getCoDauKyNt() + soDuKy.getCoDauKyNt() - soDuKyTruoc.getCoDauKyNt());
-					soDuKyHh.setNoDauKyNt(soDuKyHh.getNoDauKyNt() + soDuKy.getNoDauKyNt() - soDuKyTruoc.getNoDauKyNt());
-					soDuKyHh.setNoCuoiKyNt(
-							soDuKyHh.getNoCuoiKyNt() + soDuKy.getNoCuoiKyNt() - soDuKyTruoc.getNoCuoiKyNt());
-					soDuKyHh.setCoCuoiKyNt(
-							soDuKyHh.getCoCuoiKyNt() + soDuKy.getCoCuoiKyNt() - soDuKyTruoc.getCoCuoiKyNt());
 				}
-
+				soDuKyHh.setCoDauKyNt(soDuKyHh.getCoDauKyNt() + soDuKy.getCoDauKyNt() - soDuKyTruoc.getCoDauKyNt());
+				soDuKyHh.setNoDauKyNt(soDuKyHh.getNoDauKyNt() + soDuKy.getNoDauKyNt() - soDuKyTruoc.getNoDauKyNt());
+				soDuKyHh.setNoCuoiKyNt(soDuKyHh.getNoCuoiKyNt() + soDuKy.getNoCuoiKyNt() - soDuKyTruoc.getNoCuoiKyNt());
+				soDuKyHh.setCoCuoiKyNt(soDuKyHh.getCoCuoiKyNt() + soDuKy.getCoCuoiKyNt() - soDuKyTruoc.getCoCuoiKyNt());
 				logger.info("soDuKyHh mới: " + soDuKyHh);
 
 				// Cập nhật ngược vào csdl

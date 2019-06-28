@@ -88,11 +88,14 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 	@Value("${LAY_SO_DU_KY_THEO_KKT_HANG_HOA}")
 	private String LAY_SO_DU_KY_THEO_KKT_HANG_HOA;
 
+	@Value("${LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK_CON_KHO}")
+	private String LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK_CON_KHO;
+
 	@Value("${LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK}")
 	private String LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK;
 
-	@Value("${LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK_CON_KHO}")
-	private String LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK_CON_KHO;
+	@Value("${LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK_KHO}")
+	private String LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK_KHO;
 
 	@Value("${LAY_SO_DU_KY_THEO_KKT_HANG_HOA_CU_THE}")
 	private String LAY_SO_DU_KY_THEO_KKT_HANG_HOA_CU_THE;
@@ -522,7 +525,39 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 			logger.info("Mã tài khoản " + maTk);
 
 			Object[] objs = { maKkt, maTk };
-			return jdbcTmpl.query(query, objs, new SoDuKyHangHoaMapper());
+			return jdbcTmpl.query(query, objs, new SoDuKyHangHoaKhoMapper());
+		} catch (Exception e) {
+			// e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public List<SoDuKy> danhSachSoDuKyTheoHangHoa(String maTk, int maKkt, List<Integer> maKhoDs) {
+		if (maTk == null || maKhoDs == null) {
+			return null;
+		}
+
+		String query = LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK_KHO;
+
+		try {
+			String dieuKienKho = "";
+			for (Iterator<Integer> iter = maKhoDs.iterator(); iter.hasNext();) {
+				Integer maKho = iter.next();
+				dieuKienKho += maKho + ", ";
+			}
+			if (!dieuKienKho.isEmpty()) {
+				dieuKienKho = dieuKienKho.substring(0, dieuKienKho.length() - 1);
+			}
+			query = query.replace("$DIEU_KIEN_MA_KHO$", dieuKienKho);
+
+			logger.info(query);
+			logger.info("Mã kỳ kế toán " + maKkt);
+			logger.info("Mã tài khoản " + maTk);
+			logger.info("Mã kho " + maKhoDs);
+
+			Object[] objs = { maKkt, maTk };
+			return jdbcTmpl.query(query, objs, new SoDuKyHangHoaKhoMapper());
 		} catch (Exception e) {
 			// e.printStackTrace();
 			return null;
@@ -715,66 +750,6 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 		}
 	}
 
-	public class SoDuKyHangHoaMapper implements RowMapper<SoDuKy> {
-		public SoDuKy mapRow(ResultSet rs, int rowNum) throws SQLException {
-			try {
-				LoaiTien loaiTien = new LoaiTien();
-				loaiTien.setMaLt(rs.getString("MA_NT"));
-				loaiTien.setTenLt(rs.getString("TEN_NT"));
-
-				SoDuKy soDuKy = new SoDuKy();
-				soDuKy.setNoDauKy(rs.getDouble("NO_DAU_KY"));
-				soDuKy.setNoDauKyNt(rs.getDouble("NO_DAU_KY_NT"));
-				soDuKy.setCoDauKy(rs.getDouble("CO_DAU_KY"));
-				soDuKy.setCoDauKyNt(rs.getDouble("CO_DAU_KY_NT"));
-				soDuKy.setNoCuoiKy(rs.getDouble("NO_CUOI_KY"));
-				soDuKy.setNoCuoiKyNt(rs.getDouble("NO_CUOI_KY_NT"));
-				soDuKy.setCoCuoiKy(rs.getDouble("CO_CUOI_KY"));
-				soDuKy.setCoCuoiKyNt(rs.getDouble("CO_CUOI_KY_NT"));
-				soDuKy.setLoaiTien(loaiTien);
-
-				KyKeToan kyKeToan = new KyKeToan();
-				kyKeToan.setMaKyKt(rs.getInt("MA_KKT"));
-				kyKeToan.setTenKyKt(rs.getString("TEN_KKT"));
-				kyKeToan.setBatDau(rs.getDate("BAT_DAU"));
-				kyKeToan.setKetThuc(rs.getDate("KET_THUC"));
-				kyKeToan.setTrangThai(rs.getInt("TRANG_THAI"));
-				kyKeToan.setMacDinh(rs.getInt("MAC_DINH"));
-				soDuKy.setKyKeToan(kyKeToan);
-
-				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
-				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
-				loaiTaiKhoan.setTenTk(rs.getString("TEN_TK"));
-				loaiTaiKhoan.setMaTenTk(rs.getString("MA_TK") + " - " + rs.getString("TEN_TK"));
-				loaiTaiKhoan.setMaTkCha(rs.getString("MA_TK_CHA"));
-				loaiTaiKhoan.setSoDu(rs.getInt("SO_DU"));
-				loaiTaiKhoan.setLuongTinh(rs.getBoolean("LUONG_TINH"));
-
-				soDuKy.setLoaiTaiKhoan(loaiTaiKhoan);
-
-				HangHoa hangHoa = new HangHoa();
-				hangHoa.setMaHh(rs.getInt("MA_HH"));
-				hangHoa.setKyHieuHh(rs.getString("KH_HH"));
-				hangHoa.setTenHh(rs.getString("TEN_HH"));
-				hangHoa.setKyHieuTenHh(rs.getString("KH_HH") + " - " + rs.getString("TEN_HH"));
-				hangHoa.setSoLuong(rs.getDouble("SO_LUONG"));
-
-				DonVi donVi = new DonVi();
-				donVi.setMaDv(rs.getInt("MA_DV"));
-				donVi.setTenDv(rs.getString("TEN_DV"));
-				donVi.setMoTa(rs.getString("MO_TA"));
-				hangHoa.setDonVi(donVi);
-
-				soDuKy.setHangHoa(hangHoa);
-
-				return soDuKy;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
-	}
-
 	public class SoDuKyHangHoaKhoMapper implements RowMapper<SoDuKy> {
 		public SoDuKy mapRow(ResultSet rs, int rowNum) throws SQLException {
 			try {
@@ -866,7 +841,7 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 					maHh, maKho, soDuKy.getNoDauKy(), soDuKy.getNoDauKyNt(), soDuKy.getCoDauKy(), soDuKy.getCoDauKyNt(),
 					soDuKy.getLoaiTien().getMaLt(), soLuong, maDv);
 		} catch (Exception e) {
-			 e.printStackTrace();
+			// e.printStackTrace();
 			// Nếu đã có thì cập nhật
 			String query = CAP_NHAT_SO_DU_DAU_KY;
 			logger.info(query);

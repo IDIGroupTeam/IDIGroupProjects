@@ -15,7 +15,7 @@
 		$("#submitBut").click(
 				function() {
 					$("#mainFinanceForm").prop("action",
-							"${url}/soketoan/sonhapxuatton");
+							"${url}/soketoan/nhapxuatton/tonghop");
 					$("#mainFinanceForm").prop("method", "POST");
 					$("#mainFinanceForm").submit();
 				});
@@ -79,8 +79,8 @@
 		});
 
 		$('#taiKhoan').combobox();
-		
-		$("#maKhoDs").multiselect({
+
+		$("#khoDs").multiselect({
 			enableFiltering : true,
 			filterPlaceholder : 'Tìm kiếm',
 			maxHeight : 200,
@@ -113,7 +113,7 @@
 		<div class="form-group">
 			<label for="taiKhoan">Kho:</label>
 			<div class="input-group date smallform pull-right">
-				<form:select path="maKhoDs" multiple="true" class="form-control">
+				<form:select path="khoDs" multiple="true" class="form-control">
 					<form:options items="${khoHangDs}" itemValue="maKho"
 						itemLabel="tenKho" />
 				</form:select>

@@ -15,7 +15,7 @@
 		$("#submitBut").click(
 				function() {
 					$("#mainFinanceForm").prop("action",
-							"${url}/soketoan/sonhapxuatton");
+							"${url}/soketoan/nhapxuatton/chitiet");
 					$("#mainFinanceForm").prop("method", "POST");
 					$("#mainFinanceForm").submit();
 				});

@@ -31,4 +31,6 @@ public interface SoKeToanDAO {
 	public List<DuLieuKeToan> danhSachTongHopCongNoKtth(String maTk, Date dau, Date cuoi);
 
 	public List<DuLieuKeToan> danhSachTongHopNxt(String maTk, Date dau, Date cuoi);
+
+	public List<DuLieuKeToan> danhSachTongHopNxt(String maTk, List<Integer> maKhoDs, Date dau, Date cuoi);
 }
