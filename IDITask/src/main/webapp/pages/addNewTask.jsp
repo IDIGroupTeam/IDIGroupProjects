@@ -105,9 +105,17 @@
 				<tbody>
 					<tr>
 						<td bgcolor="#FAFAFA">Tên việc:(*)</td>
-						<td><form:input path="taskName"
-								class="form-control animated" required="required" size="110" /></td>
-						<td bgcolor="#FAFAFA">Trạng thái:</td>
+						<td colspan="3"><form:input path="taskName"
+								class="form-control animated" required="required" size="110" />
+						</td>							
+					</tr>
+					<tr>
+						<td bgcolor="#FAFAFA">Công việc thuộc phòng:</td>
+						<td><form:select path="area" class="form-control animated">
+								<form:option value="" label="-Phòng ban-" />
+								<form:options items="${departmentMap}" />
+							</form:select></td>
+						<td bgcolor="#FAFAFA">Trạng thái:</td>	
 						<td><form:select path="status"
 								class="form-control animated">
 								<form:option value="Mới" label="Mới" />
@@ -121,13 +129,23 @@
 								<form:option value="Đã xong" label="Đã xong"
 									style="color:blue" />
 							</form:select>
-						</td>		
+						</td>							
 					</tr>
 					<tr>
-						<td bgcolor="#FAFAFA">Công việc thuộc phòng:</td>
-						<td><form:select path="area" class="form-control animated">
-								<form:option value="" label="-Phòng ban-" />
-								<form:options items="${departmentMap}" />
+						<td bgcolor="#FAFAFA">Độ ưu tiên:</td>
+						<td><form:select path="priority"
+								class="form-control animated">
+								<form:option value="0" label="-Không chọn-" />
+								<form:option value="1" label="1" style="color:red" />
+								<form:option value="2" label="2" style="color:orange" />
+								<form:option value="3" label="3" style="color:yellow" />
+								<form:option value="4" label="4" />
+								<form:option value="5" label="5" />
+								<form:option value="6" label="6" />
+								<form:option value="7" label="7" />
+								<form:option value="8" label="8" />
+								<form:option value="9" label="9" />
+								<form:option value="10" label="10" />
 							</form:select></td>
 						<td bgcolor="#FAFAFA">Kế hoạch cho tháng:</td>
 						<td><form:select path="month">
@@ -161,34 +179,8 @@
 			                    </span>
 			                </span> -->
 						</td>
-					<%-- 	<td><form:input path="plannedFor" type="month"
-								class="form-control animated" /></td> --%>
-					</tr>
-					<tr>
-						<td bgcolor="#FAFAFA">Độ ưu tiên:</td>
-						<td><form:select path="priority"
-								class="form-control animated">
-								<form:option value="0" label="-Không chọn-" />
-								<form:option value="1" label="1" style="color:red" />
-								<form:option value="2" label="2" style="color:orange" />
-								<form:option value="3" label="3" style="color:yellow" />
-								<form:option value="4" label="4" />
-								<form:option value="5" label="5" />
-								<form:option value="6" label="6" />
-								<form:option value="7" label="7" />
-								<form:option value="8" label="8" />
-								<form:option value="9" label="9" />
-								<form:option value="10" label="10" />
-							</form:select></td>
-
-						<td bgcolor="#FAFAFA">Thời gian ước lượng để làm:</td>
-						<td><form:input path="estimate" type="number" step="0.5" min="0" value="0" />&nbsp;&nbsp;
-							<form:select path="estimateTimeType">
-								<form:option value="m" label="Phút" />
-								<form:option value="h" label="Giờ" />
-								<form:option value="d" label="Ngày" />
-								<form:option value="w" label="Tuần" />
-							</form:select></td>
+						<%-- 	<td><form:input path="plannedFor" type="month"
+								class="form-control animated" /></td> --%>						
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Giao cho:</td>
@@ -198,9 +190,14 @@
 									<form:option value="${employee.employeeId}">${employee.fullName},&nbsp;${employee.jobTitle}</form:option>
 								</c:forEach>
 							</form:select></td>
-						<td bgcolor="#FAFAFA">Ngày phải xong:(vd:12/24/2018)</td>
-						<td><form:input path="dueDate" type="date"
-								class="form-control animated" /></td>
+						<td bgcolor="#FAFAFA">Thời gian ước lượng để làm:</td>
+						<td><form:input path="estimate" type="number" step="0.5" min="0" value="0" />&nbsp;&nbsp;
+							<form:select path="estimateTimeType">
+								<form:option value="m" label="Phút" />
+								<form:option value="h" label="Giờ" />
+								<form:option value="d" label="Ngày" />
+								<form:option value="w" label="Tuần" />
+							</form:select></td>		
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Backup bởi:</td>
@@ -210,7 +207,17 @@
 								<c:forEach items="${employeesList}" var="employee">
 									<form:option value="${employee.employeeId}">${employee.fullName},&nbsp;${employee.jobTitle}</form:option>
 								</c:forEach>
-							</form:select></td>
+							</form:select></td>							
+						<td bgcolor="#FAFAFA">Thời gian đã làm:</td>
+						<td><form:input path="timeSpent" type="number" step="0.5" min="0" value="0" />&nbsp;&nbsp;
+							<form:select path="timeSpentType">
+								<form:option value="m" label="Phút" />
+								<form:option value="h" label="Giờ" />
+								<form:option value="d" label="Ngày" />
+								<form:option value="w" label="Tuần" />
+							</form:select></td>	
+					</tr>
+					<tr>
 						<td bgcolor="#FAFAFA">Người giám sát:</td>
 						<td><form:select path="verifyBy"
 								class="form-control animated">
@@ -219,6 +226,10 @@
 									<form:option value="${employee.employeeId}">${employee.fullName},&nbsp;${employee.jobTitle}</form:option>
 								</c:forEach>
 							</form:select></td>
+						<td bgcolor="#FAFAFA">Ngày phải xong:(vd:12/24/2018)</td>
+						<td><form:input path="dueDate" type="date"
+								class="form-control animated" />
+						</td>		
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Mô tả:</td>

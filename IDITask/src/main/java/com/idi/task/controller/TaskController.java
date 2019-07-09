@@ -1231,7 +1231,7 @@ public class TaskController {
 			//Chunk chunk = new Chunk(fileName, font);		 
 			//document.add(chunk);
 			
-			PdfPTable table = new PdfPTable(9);
+			PdfPTable table = new PdfPTable(7);
 			addTableHeader(table, font);
 			List<Task> list = null;
 			list = taskDAO.getTasksForReport(taskReportForm);
@@ -1306,7 +1306,7 @@ public class TaskController {
 	}
 
 	private void addTableHeader(PdfPTable table, Font font) throws Exception {//throws DocumentException, IOException {
-	    Stream.of("Mã việc", "Tên việc", "Người làm", "Trạng thái", "Thời gian ước lượng", "Thời gian đã làm", "Ngày cập nhật gần nhất", "Ngày phải xong", "Nhận xét/đánh giá")
+	    Stream.of("Tên việc", "Người làm", "Trạng thái", "Thời gian ước lượng", "Thời gian đã làm", "Ngày phải xong", "Nhận xét/đánh giá")
 	      .forEach(columnTitle -> {
 	        PdfPCell header = new PdfPCell();
 	        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
@@ -1325,7 +1325,7 @@ public class TaskController {
 			Task task = new Task();
 			task = (Task)tasks.get(i);
 			
-			table.addCell(String.valueOf(task.getTaskId()));
+			//table.addCell(String.valueOf(task.getTaskId()));
 		    table.addCell(new Paragraph(task.getTaskName(), font));
 		    table.addCell(new Paragraph(task.getOwnerName(), font));
 		    table.addCell(new Paragraph(task.getStatus(), font));
@@ -1343,7 +1343,7 @@ public class TaskController {
 		    		table.addCell(new Paragraph(task.getTimeSpent() + " phút", font));
 		    else
 		    	table.addCell(new Paragraph("0 phút", font));
-		    table.addCell(String.valueOf(task.getUpdateTS()));
+		   // table.addCell(String.valueOf(task.getUpdateTS()));
 		    table.addCell(task.getDueDate());	
 		    table.addCell(new Paragraph(task.getReviewComment(), font));
 		}	        
