@@ -12,11 +12,13 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		$("#mainFinanceForm").addClass("form-horizontal");
-		$("#submitBut").click(function() {
-			$("#mainFinanceForm").prop("action", "${url}/soketoan/soctcongno");
-			$("#mainFinanceForm").prop("method", "POST");
-			$("#mainFinanceForm").submit();
-		});
+		$("#submitBut").click(
+				function() {
+					$("#mainFinanceForm").prop("action",
+							"${url}/soketoan/socongno/chitiet");
+					$("#mainFinanceForm").prop("method", "POST");
+					$("#mainFinanceForm").submit();
+				});
 
 		var kyKeToanDsStr = '${kyKeToanDs}';
 		var kyKeToanDs = docKyKeToanDs(kyKeToanDsStr);

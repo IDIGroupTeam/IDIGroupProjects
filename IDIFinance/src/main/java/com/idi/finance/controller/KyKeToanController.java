@@ -1956,6 +1956,9 @@ public class KyKeToanController {
 				soDuKyHh.setCoDauKy(soDuKyHh.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
 				soDuKyHh.setNoCuoiKy(soDuKyHh.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
 				soDuKyHh.setCoCuoiKy(soDuKyHh.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
+				logger.info("soDuKyHh: " + soDuKyHh.getHangHoa().getSoLuong());
+				logger.info("soDuKy: " + soDuKy.getHangHoa().getSoLuong());
+				logger.info("soDuKyTruoc: " + soDuKyTruoc.getHangHoa().getSoLuong());
 				double soLuong = soDuKyHh.getHangHoa().getSoLuong() + soDuKy.getHangHoa().getSoLuong()
 						- soDuKyTruoc.getHangHoa().getSoLuong();
 				soDuKyHh.getHangHoa().setSoLuong(soLuong);

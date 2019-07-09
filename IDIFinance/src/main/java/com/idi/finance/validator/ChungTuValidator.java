@@ -14,11 +14,9 @@ import org.springframework.validation.Validator;
 import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;
-import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
-import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.bean.taikhoan.TaiKhoan;
 import com.idi.finance.dao.ChungTuDAO;
 
@@ -231,6 +229,7 @@ public class ChungTuValidator implements Validator {
 
 					// Validate kế toán tổng hợp - nếu có
 					if (chungTu != null && chungTu.getNvktDs() != null) {
+						id = 0;
 						logger.info("chungTu.getNvktDs(): " + chungTu.getNvktDs().size());
 						Iterator<NghiepVuKeToan> ktthIter = chungTu.getNvktDs().iterator();
 						while (ktthIter.hasNext()) {
@@ -243,9 +242,25 @@ public class ChungTuValidator implements Validator {
 							logger.info("taiKhoanNo: " + taiKhoanNo);
 							logger.info("taiKhoanCo: " + taiKhoanCo);
 
-							if (taiKhoanNo != null) {
-
+							if (taiKhoanNo != null && taiKhoanNo.getLoaiTaiKhoan().getMaTk() != null
+									&& !taiKhoanNo.getLoaiTaiKhoan().getMaTk().isEmpty()
+									&& taiKhoanNo.getSoTien() != null && taiKhoanNo.getSoTien().getSoTien() > 0
+									&& taiKhoanCo != null && taiKhoanCo.getLoaiTaiKhoan().getMaTk() != null
+									&& !taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty()) {
+								// Valid data, do nothing
+							} else {
+								// Invalid data, send message
+								if (taiKhoanNo == null || taiKhoanNo.getLoaiTaiKhoan().getMaTk() == null
+										|| taiKhoanNo.getLoaiTaiKhoan().getMaTk().isEmpty()) {
+									//errors.rejectValue("nvktDs[" + id + "].taiKhoanNo.loaiTaiKhoan.maTk", "");
+								} else if (taiKhoanNo.getSoTien() == null || taiKhoanNo.getSoTien().getSoTien() == 0) {
+									//errors.rejectValue("nvktDs[" + id + "].taiKhoanNo.soTien.soTien", "");
+								} else if (taiKhoanCo == null || taiKhoanCo.getLoaiTaiKhoan().getMaTk() == null
+										|| taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty()) {
+									//errors.rejectValue("nvktDs[" + id + "].taiKhoanCo.loaiTaiKhoan.maTk", "");
+								}
 							}
+							id++;
 						}
 					}
 				}

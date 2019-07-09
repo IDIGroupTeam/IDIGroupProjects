@@ -44,9 +44,9 @@
 			<li id="tabSKTNKC"><a href="${url}/soketoan/nhatkychung">Nhật
 					ký chung</a></li>
 			<li id="tabSKTSC"><a href="${url}/soketoan/socai">Sổ cái</a></li>
-			<li id="tabSKTSTHCN"><a href="${url}/soketoan/sothcongno">Sổ
+			<li id="tabSKTSTHCN"><a href="${url}/soketoan/socongno/tonghop">Sổ
 					tổng hợp công nợ</a></li>
-			<li id="tabSKTSCTCN"><a href="${url}/soketoan/soctcongno">Sổ
+			<li id="tabSKTSCTCN"><a href="${url}/soketoan/socongno/chitiet">Sổ
 					chi tiết công nợ</a></li>
 			<li id="tabSKTSTHNXT"><a
 				href="${url}/soketoan/nhapxuatton/tonghop">Sổ tổng hợp nhập xuất
@@ -85,7 +85,8 @@
 		<ul class="dropdown-menu">
 			<li id="tabKKT"><a href="${url}/kyketoan/danhsach">Kỳ kế
 					toán</a></li>
-			<li id="tabKKT"><a href="${url}/kyketoan/xem/1">Khai báo số dư đầu kỳ</a></li>
+			<li id="tabKKT"><a href="${url}/kyketoan/xem/1">Khai báo số
+					dư đầu kỳ</a></li>
 			<li id="tabDSCH"><a href="${url}/cauhinh/danhsach">Cấu hình</a></li>
 
 			<li class="divider"></li>

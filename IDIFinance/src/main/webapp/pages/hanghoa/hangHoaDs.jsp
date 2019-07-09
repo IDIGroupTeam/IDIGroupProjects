@@ -35,7 +35,7 @@
 		// Khởi tạo action/method cho mainFinanceForm form
 		$(document).ready(function() {
 			$('#dataTable').DataTable({
-				ordering: false
+				ordering : false
 			});
 		});
 	});
@@ -70,7 +70,7 @@
 		<tbody>
 			<c:forEach items="${hangHoaDs}" var="hangHoa" varStatus="status">
 				<tr>
-					<td>${status.index}</td>
+					<td>${status.index+1}</td>
 					<td>${hangHoa.kyHieuHh}</td>
 					<td><a href="${url}/hanghoa/xem/${hangHoa.maHh}">${hangHoa.tenHh}</a></td>
 					<td>${hangHoa.donVi.tenDv}</td>

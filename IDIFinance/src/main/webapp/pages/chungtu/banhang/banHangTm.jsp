@@ -575,12 +575,14 @@
 																+ "\\.tkKho\\.loaiTaiKhoan\\.maTk")
 														.val(
 																hangHoa.tkKhoMd.maTk);
-												$(
-														"#hangHoaDs"
-																+ id
-																+ "\\.kho\\.maKho")
-														.val(
-																hangHoa.khoMd.maKho);
+												if (hangHoa.khoMd != null) {
+													$(
+															"#hangHoaDs"
+																	+ id
+																	+ "\\.kho\\.maKho")
+															.val(
+																	hangHoa.khoMd.maKho);
+												}
 
 												$(
 														"#hangHoaDs" + id

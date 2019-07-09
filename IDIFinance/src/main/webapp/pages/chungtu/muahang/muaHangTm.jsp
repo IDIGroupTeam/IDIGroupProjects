@@ -394,7 +394,7 @@
 			var tenHh = $("#hangHoaDs" + id + "\\.tenHh").val();
 			$("#hangHoaDs" + id + "\\.thue\\.tenHhTxt").text(tenHh);
 			$("#hangHoaDs" + id + "\\.chiPhi\\.tenHhTxt").text(tenHh);
-			
+
 			$("#lyDo").change(function() {
 				$("#nvktDs" + id + "\\.taiKhoanNo\\.lyDo").val($(this).val());
 			});
@@ -422,7 +422,7 @@
 				capNhatTongTienHangHoa(id);
 				capNhapTongTienChungTu();
 			});
-			
+
 			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk").val("");
 			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk")
 					.combobox();
@@ -576,12 +576,14 @@
 																+ "\\.tkKho\\.loaiTaiKhoan\\.maTk")
 														.val(
 																hangHoa.tkKhoMd.maTk);
-												$(
-														"#hangHoaDs"
-																+ id
-																+ "\\.kho\\.maKho")
-														.val(
-																hangHoa.khoMd.maKho);
+												if (hangHoa.khoMd != null) {
+													$(
+															"#hangHoaDs"
+																	+ id
+																	+ "\\.kho\\.maKho")
+															.val(
+																	hangHoa.khoMd.maKho);
+												}
 
 												$(
 														"#hangHoaDs" + id
