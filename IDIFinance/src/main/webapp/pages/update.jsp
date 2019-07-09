@@ -13,12 +13,12 @@
 		$("#mainFinanceForm").attr("enctype", "multipart/form-data");
 
 		$("#balanceAssetBut").click(function() {
-			$("#mainFinanceForm").attr("action", "${url}/luutrudulieu");
+			$("#mainFinanceForm").attr("action", "${url}/bctc/luutrudulieu");
 			$("#mainFinanceForm").submit();
 		});
 
 		$("#taiKhoanBut").click(function() {
-			$("#mainFinanceForm").attr("action", "${url}/luuTaiKhoan");
+			$("#mainFinanceForm").attr("action", "${url}/taikhoan/luu");
 			$("#mainFinanceForm").submit();
 		});
 	});

@@ -1,3 +1,4 @@
+<%@page import="com.idi.finance.bean.bctc.KyKeToanCon"%>
 <%@page import="com.idi.finance.bean.chungtu.ChungTu"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
@@ -12,9 +13,70 @@
 	$(function() {
 		$("#mainFinanceForm").addClass("form-horizontal");
 		$("#submitBut").click(function() {
+			$("#mainFinanceForm").prop("action", "${url}/soketoan/socai");
 			$("#mainFinanceForm").prop("method", "POST");
 			$("#mainFinanceForm").submit();
 		});
+
+		var kyKeToanDsStr = '${kyKeToanDs}';
+		var kyKeToanDs = docKyKeToanDs(kyKeToanDsStr);
+
+		$("#kyKeToan\\.maKyKt").change(
+				function() {
+					var kyKeToan;
+					var id = $(this).val();
+
+					for (var i = 0; i < kyKeToanDs.length; i++) {
+						if (kyKeToanDs[i].maKyKt == id) {
+							kyKeToan = kyKeToanDs[i];
+							break;
+						}
+					}
+
+					$('.datetime').datetimepicker('setStartDate',
+							kyKeToan.batDau);
+					$('.datetime').datetimepicker('setEndDate',
+							kyKeToan.ketThuc);
+
+					var homNay = new Date();
+					var batDau = new Date(kyKeToan.batDau);
+					var ketThuc = new Date(kyKeToan.ketThuc);
+
+					if (homNay.getTime() >= batDau.getTime()
+							&& homNay.getTime() <= ketThuc.getTime()) {
+						y = homNay.getFullYear();
+						m = homNay.getMonth();
+
+						batDau = new Date();
+						batDau.setFullYear(y, m, 1);
+						ketThuc = new Date();
+						ketThuc.setFullYear(y, m + 1, 0);
+					}
+
+					$("#dau").val(
+							batDau.getDate() + "/" + (batDau.getMonth() + 1)
+									+ "/" + batDau.getFullYear());
+					$("#cuoi").val(
+							ketThuc.getDate() + "/" + (ketThuc.getMonth() + 1)
+									+ "/" + ketThuc.getFullYear());
+
+					$('.datetime').datetimepicker('update');
+				});
+
+		$(".datetime").datetimepicker({
+			language : 'vi',
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			minView : 2,
+			forceParse : 0,
+			pickerPosition : "top-left",
+			startDate : '${mainFinanceForm.kyKeToan.batDau}',
+			endDate : '${mainFinanceForm.kyKeToan.ketThuc}'
+		});
+
+		$('#taiKhoan').combobox();
 	});
 </script>
 
@@ -24,8 +86,8 @@
 	</div>
 	<div class="panel-body">
 		<div class="form-group">
-			<label for="taiKhoan">Chứng từ:</label>
-			<div class="input-group date smallform">
+			<label for="taiKhoan">Tài khoản:</label>
+			<div class="input-group date smallform pull-right">
 				<form:select id="taiKhoan" path="taiKhoan" multiple="false"
 					class="form-control">
 					<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
@@ -35,58 +97,48 @@
 		</div>
 
 		<div class="form-group">
-			<label for="loaiCts">Chứng từ:</label>
-			<form:select id="loaiCts" path="loaiCts" multiple="multiple"
-				class="form-control">
-				<form:option value="${ChungTu.CHUNG_TU_PHIEU_THU}">Phiếu thu</form:option>
-				<form:option value="${ChungTu.CHUNG_TU_PHIEU_CHI}">Phiếu chi</form:option>
-				<form:option value="${ChungTu.CHUNG_TU_BAO_NO}">Báo nợ</form:option>
-				<form:option value="${ChungTu.CHUNG_TU_BAO_CO}">Báo co</form:option>
-			</form:select>
+			<label for="dau">Kỳ:</label>
+			<div class="input-group smallform pull-right">
+				<form:select path="kyKeToan.maKyKt" class="form-control">
+					<form:options items="${kyKeToanDs}" itemLabel="tenKyKt"
+						itemValue="maKyKt" />
+				</form:select>
+			</div>
 		</div>
 
 		<div class="form-group">
 			<label for="dau">Từ:</label>
-			<div class="input-group date datetime smallform">
-				<form:input path="dau" class="form-control" readonly="true" />
+			<div class="input-group date datetime smallform pull-right">
+				<form:input path="dau" class="form-control" />
 				<span class="input-group-addon"><span
 					class="glyphicon glyphicon-calendar"></span></span>
 			</div>
+			<br />
+			<form:errors path="dau" cssClass="error smallform pull-right" />
 		</div>
 
 		<div class="form-group">
 			<label for="cuoi">Đến:</label>
-			<div class="input-group date datetime smallform">
-				<form:input path="cuoi" class="form-control" readonly="true" />
+			<div class="input-group date datetime smallform pull-right">
+				<form:input path="cuoi" class="form-control" />
 				<span class="input-group-addon"><span
 					class="glyphicon glyphicon-calendar"></span></span>
 			</div>
+			<br />
+			<form:errors path="cuoi" cssClass="error smallform pull-right" />
 		</div>
 
-		<script type="text/javascript">
-			//Khởi tạo ngày sau khi 2 select trên được load đủ nội dung
-			$("#loaiCts").multiselect({
-				maxHeight : 200,
-				buttonWidth : '170px',
-				nonSelectedText : 'Chứng từ',
-				nSelectedText : 'Được chọn',
-				includeSelectAllOption : true,
-				allSelectedText : 'Tất cả',
-				selectAllText : 'Tất cả',
-				selectAllValue : '${ChungTu.TAT_CA}'
-			});
-
-			$(".datetime").datetimepicker({
-				language : 'vi',
-				todayBtn : 1,
-				autoclose : 1,
-				todayHighlight : 1,
-				startView : 2,
-				minView : 2,
-				forceParse : 0,
-				pickerPosition : "top-left"
-			});
-		</script>
+		<%-- <div class="form-group">
+			<label for="loaiKy">Khoảng:</label>
+			<form:select path="loaiKy" multiple="false"
+				class="form-control smallform pull-right">
+				<form:option value="${KyKeToanCon.NAN}">Toàn bộ</form:option>
+				<form:option value="${KyKeToanCon.WEEK}">Tuần</form:option>
+				<form:option value="${KyKeToanCon.MONTH}">Tháng</form:option>
+				<form:option value="${KyKeToanCon.QUARTER}">Quý</form:option>
+				<form:option value="${KyKeToanCon.YEAR}">Năm</form:option>
+			</form:select>
+		</div> --%>
 	</div>
 	<div class="panel-footer">
 		<button id="submitBut" type="button" class="btn btn-info btn-sm">Tìm

@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -18,11 +19,14 @@ import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.idi.finance.bean.bctc.BalanceAssetData;
+import com.idi.finance.bean.bctc.BalanceAssetItem;
 import com.idi.finance.bean.bieudo.KpiChart;
 import com.idi.finance.bean.bieudo.KpiGroup;
-import com.idi.finance.bean.cdkt.BalanceAssetData;
-import com.idi.finance.bean.cdkt.BalanceAssetItem;
+import com.idi.finance.bean.diachi.CapDiaChi;
+import com.idi.finance.bean.diachi.VungDiaChi;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
+import com.idi.finance.dao.DiaChiDAO;
 
 public class ExcelProcessor {
 	private static final Logger logger = Logger.getLogger(ExcelProcessor.class);
@@ -162,6 +166,16 @@ public class ExcelProcessor {
 					case STRING:
 						bs.getAsset().setAssetCode(cell.getStringCellValue());
 						break;
+					}
+
+					if (bs.getAsset().getAssetCode() != null) {
+						if (bs.getAsset().getAssetCode().substring(0, 1).equals("1")
+								|| bs.getAsset().getAssetCode().substring(0, 1).equals("2")) {
+							bs.getAsset().setSoDu(-1);
+						} else if (bs.getAsset().getAssetCode().substring(0, 1).equals("3")
+								|| bs.getAsset().getAssetCode().substring(0, 1).equals("4")) {
+							bs.getAsset().setSoDu(1);
+						}
 					}
 				}
 
@@ -326,6 +340,8 @@ public class ExcelProcessor {
 						bs.getAsset().setAssetCode(cell.getStringCellValue());
 						break;
 					}
+
+					// Set soDu here, it depend on assetCode
 				}
 
 				// Read description
@@ -489,6 +505,8 @@ public class ExcelProcessor {
 						bs.getAsset().setAssetCode(cell.getStringCellValue());
 						break;
 					}
+
+					// Set soDu here, it depend on assetCode
 				}
 
 				// Read description
@@ -692,6 +710,281 @@ public class ExcelProcessor {
 		return taiKhoanDm;
 	}
 
+	public static List<VungDiaChi> docVungMienExcel(InputStream in, DiaChiDAO diaChiDAO) throws IOException {
+		if (in == null || diaChiDAO == null) {
+			return null;
+		}
+
+		List<CapDiaChi> mienDs = diaChiDAO.danhSachCapDiaChi(1);
+		List<CapDiaChi> thanhPhoDs = diaChiDAO.danhSachCapDiaChi(2);
+		List<CapDiaChi> quanDs = diaChiDAO.danhSachCapDiaChi(3);
+		List<CapDiaChi> phuongDs = diaChiDAO.danhSachCapDiaChi(4);
+		logger.info(mienDs);
+		logger.info(thanhPhoDs);
+		logger.info(quanDs);
+		logger.info(phuongDs);
+
+		List<VungDiaChi> vungDiaChiDs = new ArrayList<VungDiaChi>();
+
+		// Reading xls file
+		XSSFWorkbook workbook = new XSSFWorkbook(in);
+
+		// Reading sheet 1
+		XSSFSheet sheet = workbook.getSheetAt(0);
+		logger.info(sheet.getSheetName());
+
+		VungDiaChi mien = new VungDiaChi();
+		VungDiaChi thanhPho = new VungDiaChi();
+		VungDiaChi quan = new VungDiaChi();
+		VungDiaChi phuong = new VungDiaChi();
+		int count = 0;
+		// Reading each row
+		Iterator<Row> rowIter = sheet.iterator();
+		while (rowIter.hasNext()) {
+			Row row = rowIter.next();
+			if (row.getRowNum() < 1) {
+				continue;
+			}
+			count++;
+			VungDiaChi mienTt = new VungDiaChi();
+			VungDiaChi thanhPhoTt = new VungDiaChi();
+			VungDiaChi quanTt = new VungDiaChi();
+			VungDiaChi phuongTt = new VungDiaChi();
+
+			// Read by shell
+			Iterator<Cell> cellIter = row.iterator();
+			while (cellIter.hasNext()) {
+				Cell cell = cellIter.next();
+				String columnStrIndex = CellReference.convertNumToColString(cell.getColumnIndex());
+
+				// Đọc cột tên miền
+				if (columnStrIndex.equalsIgnoreCase("A")) {
+					CellType cellType = cell.getCellTypeEnum();
+					switch (cellType) {
+					case STRING:
+						String value = cell.getStringCellValue();
+
+						if (value != null && !value.trim().equals("")) {
+							value = WordUtils.capitalize(value).trim();
+
+							Iterator<CapDiaChi> tpIter = mienDs.iterator();
+							while (tpIter.hasNext()) {
+								CapDiaChi capMien = tpIter.next();
+								String tenCapDc = WordUtils.capitalize(capMien.getTenCapDc().trim()).trim();
+								if (value.indexOf(tenCapDc) > -1) {
+									value = value.substring(tenCapDc.length(), value.length()).trim();
+									mienTt.setTenDc(value);
+									mienTt.setCap(capMien);
+									break;
+								}
+							}
+						}
+
+						break;
+					}
+				}
+
+				// Đọc mã miền
+				if (columnStrIndex.equalsIgnoreCase("B")) {
+					CellType cellType = cell.getCellTypeEnum();
+					switch (cellType) {
+					case STRING:
+						String value = cell.getStringCellValue();
+
+						if (value != null && !value.trim().equals("")) {
+							value = value.trim();
+							mienTt.setMaDc(value);
+						}
+						break;
+					}
+				}
+
+				// Đọc cột tên thành phố
+				if (columnStrIndex.equalsIgnoreCase("C")) {
+					CellType cellType = cell.getCellTypeEnum();
+					switch (cellType) {
+					case STRING:
+						String value = cell.getStringCellValue();
+
+						if (value != null && !value.trim().equals("")) {
+							value = WordUtils.capitalize(value).trim();
+
+							Iterator<CapDiaChi> tpIter = thanhPhoDs.iterator();
+							while (tpIter.hasNext()) {
+								CapDiaChi capTp = tpIter.next();
+								String tenCapDc = WordUtils.capitalize(capTp.getTenCapDc().trim()).trim();
+								if (value.indexOf(tenCapDc) > -1) {
+									value = value.substring(tenCapDc.length(), value.length()).trim();
+									thanhPhoTt.setTenDc(value);
+									thanhPhoTt.setCap(capTp);
+									break;
+								}
+							}
+
+						}
+						break;
+					}
+				}
+
+				// Đọc mã thành phố
+				if (columnStrIndex.equalsIgnoreCase("D")) {
+					CellType cellType = cell.getCellTypeEnum();
+					switch (cellType) {
+					case STRING:
+						String value = cell.getStringCellValue();
+
+						if (value != null && !value.trim().equals("")) {
+							value = value.trim();
+							thanhPhoTt.setMaDc(value);
+						}
+						break;
+					}
+				}
+
+				// Đọc tên quận
+				if (columnStrIndex.equalsIgnoreCase("E")) {
+					CellType cellType = cell.getCellTypeEnum();
+					switch (cellType) {
+					case STRING:
+						String value = cell.getStringCellValue();
+
+						if (value != null && !value.trim().equals("")) {
+							value = WordUtils.capitalize(value).trim();
+
+							Iterator<CapDiaChi> tpIter = quanDs.iterator();
+							while (tpIter.hasNext()) {
+								CapDiaChi capQuan = tpIter.next();
+								String tenCapDc = WordUtils.capitalize(capQuan.getTenCapDc().trim()).trim();
+								if (value.indexOf(tenCapDc) > -1) {
+									value = value.substring(tenCapDc.length(), value.length()).trim();
+									quanTt.setTenDc(value);
+									quanTt.setCap(capQuan);
+									break;
+								}
+							}
+						}
+						break;
+					}
+				}
+
+				// Đọc mã quận
+				if (columnStrIndex.equalsIgnoreCase("F")) {
+					CellType cellType = cell.getCellTypeEnum();
+					switch (cellType) {
+					case STRING:
+						String value = cell.getStringCellValue();
+
+						if (value != null && !value.trim().equals("")) {
+							value = value.trim();
+							quanTt.setMaDc(value);
+						}
+						break;
+					}
+				}
+
+				// Đọc tên phường
+				if (columnStrIndex.equalsIgnoreCase("G")) {
+					CellType cellType = cell.getCellTypeEnum();
+					switch (cellType) {
+					case STRING:
+						String value = cell.getStringCellValue();
+
+						if (value != null && !value.trim().equals("")) {
+							value = WordUtils.capitalize(value).trim();
+
+							Iterator<CapDiaChi> tpIter = phuongDs.iterator();
+							while (tpIter.hasNext()) {
+								CapDiaChi capPhuong = tpIter.next();
+								String tenCapDc = WordUtils.capitalize(capPhuong.getTenCapDc().trim()).trim();
+								if (value.indexOf(tenCapDc) > -1) {
+									value = value.substring(tenCapDc.length(), value.length()).trim();
+									phuongTt.setTenDc(value);
+									phuongTt.setCap(capPhuong);
+									break;
+								}
+							}
+						}
+						break;
+					}
+				}
+
+				// Đọc mã phường
+				if (columnStrIndex.equalsIgnoreCase("H")) {
+					CellType cellType = cell.getCellTypeEnum();
+					switch (cellType) {
+					case STRING:
+						String value = cell.getStringCellValue();
+
+						if (value != null && !value.trim().equals("")) {
+							value = value.trim();
+							phuongTt.setMaDc(value);
+						}
+						break;
+					}
+				}
+			}
+
+			if (mien.equals(mienTt)) {
+				if (thanhPho.equals(thanhPhoTt)) {
+					if (quan.equals(quanTt)) {
+						if (phuong.equals(phuongTt)) {
+							// Không làm gì cả
+						} else {
+							phuongTt.setVungDiaChi(quan);
+
+							phuong = phuongTt;
+							quan.themVungDiaChi(phuongTt);
+						}
+					} else {
+						phuongTt.setVungDiaChi(quanTt);
+
+						quanTt.themVungDiaChi(phuongTt);
+						quanTt.setVungDiaChi(thanhPho);
+
+						phuong = phuongTt;
+						quan = quanTt;
+						thanhPho.themVungDiaChi(quan);
+					}
+				} else {
+					phuongTt.setVungDiaChi(quanTt);
+
+					quanTt.themVungDiaChi(phuongTt);
+					quanTt.setVungDiaChi(thanhPhoTt);
+
+					thanhPhoTt.themVungDiaChi(quanTt);
+					thanhPhoTt.setVungDiaChi(mien);
+
+					phuong = phuongTt;
+					quan = quanTt;
+					thanhPho = thanhPhoTt;
+
+					mien.themVungDiaChi(thanhPho);
+				}
+			} else {
+				phuongTt.setVungDiaChi(quanTt);
+
+				quanTt.themVungDiaChi(phuongTt);
+				quanTt.setVungDiaChi(thanhPhoTt);
+
+				thanhPhoTt.themVungDiaChi(quanTt);
+				thanhPhoTt.setVungDiaChi(mienTt);
+
+				mienTt.themVungDiaChi(thanhPhoTt);
+
+				phuong = phuongTt;
+				quan = quanTt;
+				thanhPho = thanhPhoTt;
+				mien = mienTt;
+
+				vungDiaChiDs.add(mien);
+			}
+
+			logger.info(count + ": " + phuong + ", " + quan + ", " + thanhPho + ", " + mien);
+		}
+
+		return vungDiaChiDs;
+	}
+
 	public boolean validateData() {
 		return true;
 	}
@@ -699,7 +992,7 @@ public class ExcelProcessor {
 	private static Date getPeriod(String month) {
 		Calendar cal = Calendar.getInstance();
 		try {
-			month = month.substring(5).trim();
+			month = month.trim().substring(5).trim();
 			int monthNum = Integer.parseInt(month) - 1;
 			cal.set(Calendar.MONTH, monthNum);
 		} catch (Exception e) {
@@ -707,7 +1000,7 @@ public class ExcelProcessor {
 			return null;
 		}
 
-		return Utils.standardDate(cal.getTime());
+		return Utils.getStartDateOfMonth(cal.getTime());
 	}
 
 	private static String parseRule(String name) {

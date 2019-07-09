@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.idi.finance.bean.cdkt.BalanceAssetItem;
+import com.idi.finance.bean.bctc.BalanceAssetItem;
 
 public class KpiMeasure {
 	private int measureId;

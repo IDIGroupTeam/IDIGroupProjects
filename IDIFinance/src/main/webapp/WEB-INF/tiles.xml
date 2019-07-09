@@ -2,216 +2,774 @@
 <!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 
 <tiles-definitions>
-	<!-- Base Definition -->
-	<definition name="layouts" template="/pages/layouts/main.jsp">
-		<put-attribute name="title" value="Tập đoàn IDI" />
-		<put-attribute name="header" value="/pages/layouts/header.jsp" />
-		<put-attribute name="navigator" value="/pages/layouts/navigator.jsp" />
+	<!-- Khung trang phần tài chính -->
+	<definition name="taichinh"
+		template="/pages/layouts/financeTmpl.jsp">
+		<put-attribute name="title"
+			value="Tập đoàn IDI - Tài chính, kế toán" />
+		<put-attribute name="header"
+			value="/pages/layouts/header.jsp" />
+		<put-attribute name="navigator"
+			value="/pages/layouts/financeNav.jsp" />
+		<put-attribute name="tabnav"
+			value="/pages/layouts/financeTab.jsp" />
 		<put-attribute name="search" value="" />
 		<put-attribute name="body" value="" />
-		<put-attribute name="footer" value="/pages/layouts/footer.jsp" />
+		<put-attribute name="footer"
+			value="/pages/layouts/footer.jsp" />
+		<put-attribute name="modal" value="" />
+	</definition>
+
+	<definition name="koKyKeToanMacDinh" extends="taichinh">
+		<put-attribute name="title"
+			value="Không có kỳ kế toán mặc định" />
+		<put-attribute name="body"
+			value="/pages/koKyKeToanMacDinh.jsp" />
 	</definition>
 
 	<!-- Bắt đầu Tab biểu đồ KPI -->
-	<definition name="kpiChart" extends="layouts">
+	<definition name="kpiChart" extends="taichinh">
 		<put-attribute name="title" value="Biểu đồ KPI" />
 		<put-attribute name="search"
-			value="/pages/layouts/kpiCharts/search.jsp" />
-		<put-attribute name="body" value="/pages/kpiChart.jsp" />
+			value="/pages/bieudo/kpiChartTk.jsp" />
+		<put-attribute name="body"
+			value="/pages/bieudo/kpiChart.jsp" />
 	</definition>
 
-	<definition name="chartManagement" extends="layouts">
+	<definition name="chartManagement" extends="taichinh">
 		<put-attribute name="title" value="Quản lý biểu đồ" />
-		<put-attribute name="body" value="/pages/chartManagement.jsp" />
+		<put-attribute name="body"
+			value="/pages/bieudo/chartManagement.jsp" />
 	</definition>
 	<!-- Kết thúc Tab biểu đồ KPI -->
 
 
 	<!-- Bắt đầu Tab chứng từ -->
 	<!-- Phiếu thu -->
-	<definition name="danhSachPhieuThu" extends="layouts">
+	<definition name="danhSachPhieuThu" extends="taichinh">
 		<put-attribute name="title" value="Danh sách phiếu thu" />
-		<put-attribute name="body" value="/pages/chungtu/phieuThuDs.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/phieuthu/phieuThuDs.jsp" />
 	</definition>
 
-	<definition name="xemPhieuThu" extends="layouts">
+	<definition name="xemPhieuThu" extends="taichinh">
 		<put-attribute name="title" value="Chi tiết phiếu thu" />
-		<put-attribute name="body" value="/pages/chungtu/phieuThuXm.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/phieuthu/phieuThuXm.jsp" />
 	</definition>
 
-	<definition name="suaPhieuThu" extends="layouts">
+	<definition name="suaPhieuThu" extends="taichinh">
 		<put-attribute name="title" value="Sửa phiếu thu" />
-		<put-attribute name="body" value="/pages/chungtu/phieuThuSu.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/phieuthu/phieuThuSu.jsp" />
 	</definition>
 
-	<definition name="taoMoiPhieuThu" extends="layouts">
+	<definition name="saoChepPhieuThu" extends="taichinh">
+		<put-attribute name="title" value="Sao chép phiếu thu" />
+		<put-attribute name="body"
+			value="/pages/chungtu/phieuthu/phieuThuSc.jsp" />
+	</definition>
+
+	<definition name="taoMoiPhieuThu" extends="taichinh">
 		<put-attribute name="title" value="Tạo mới phiếu thu" />
-		<put-attribute name="body" value="/pages/chungtu/phieuThuTm.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/phieuthu/phieuThuTm.jsp" />
 	</definition>
 
 	<!-- Phiếu chi -->
-	<definition name="danhSachPhieuChi" extends="layouts">
+	<definition name="danhSachPhieuChi" extends="taichinh">
 		<put-attribute name="title" value="Danh sách phiếu chi" />
-		<put-attribute name="body" value="/pages/chungtu/phieuChiDs.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/phieuchi/phieuChiDs.jsp" />
 	</definition>
 
-	<definition name="xemPhieuChi" extends="layouts">
+	<definition name="xemPhieuChi" extends="taichinh">
 		<put-attribute name="title" value="Chi tiết phiếu chi" />
-		<put-attribute name="body" value="/pages/chungtu/phieuChiXm.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/phieuchi/phieuChiXm.jsp" />
 	</definition>
 
-	<definition name="suaPhieuChi" extends="layouts">
+	<definition name="suaPhieuChi" extends="taichinh">
 		<put-attribute name="title" value="Sửa phiếu chi" />
-		<put-attribute name="body" value="/pages/chungtu/phieuChiSu.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/phieuchi/phieuChiSu.jsp" />
 	</definition>
 
-	<definition name="taoMoiPhieuChi" extends="layouts">
+	<definition name="saoChepPhieuChi" extends="taichinh">
+		<put-attribute name="title" value="Sao chép phiếu chi" />
+		<put-attribute name="body"
+			value="/pages/chungtu/phieuchi/phieuChiSc.jsp" />
+	</definition>
+
+	<definition name="taoMoiPhieuChi" extends="taichinh">
 		<put-attribute name="title" value="Tạo mới phiếu chi" />
-		<put-attribute name="body" value="/pages/chungtu/phieuChiTm.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/phieuchi/phieuChiTm.jsp" />
 	</definition>
 
 	<!-- Báo có -->
-	<definition name="danhSachBaoCo" extends="layouts">
+	<definition name="danhSachBaoCo" extends="taichinh">
 		<put-attribute name="title" value="Danh sách báo có" />
-		<put-attribute name="body" value="/pages/chungtu/baoCoDs.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/baoco/baoCoDs.jsp" />
 	</definition>
 
-	<definition name="xemBaoCo" extends="layouts">
+	<definition name="xemBaoCo" extends="taichinh">
 		<put-attribute name="title" value="Chi tiết báo có" />
-		<put-attribute name="body" value="/pages/chungtu/baoCoXm.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/baoco/baoCoXm.jsp" />
 	</definition>
 
-	<definition name="suaBaoCo" extends="layouts">
+	<definition name="suaBaoCo" extends="taichinh">
 		<put-attribute name="title" value="Sửa báo có" />
-		<put-attribute name="body" value="/pages/chungtu/baoCoSu.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/baoco/baoCoSu.jsp" />
 	</definition>
 
-	<definition name="taoMoiBaoCo" extends="layouts">
+	<definition name="saoChepBaoCo" extends="taichinh">
+		<put-attribute name="title" value="Sao chép báo có" />
+		<put-attribute name="body"
+			value="/pages/chungtu/baoco/baoCoSc.jsp" />
+	</definition>
+
+	<definition name="taoMoiBaoCo" extends="taichinh">
 		<put-attribute name="title" value="Tạo mới báo có" />
-		<put-attribute name="body" value="/pages/chungtu/baoCoTm.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/baoco/baoCoTm.jsp" />
 	</definition>
 
 	<!-- Báo nợ -->
-	<definition name="danhSachBaoNo" extends="layouts">
+	<definition name="danhSachBaoNo" extends="taichinh">
 		<put-attribute name="title" value="Danh sách báo nợ" />
-		<put-attribute name="body" value="/pages/chungtu/baoNoDs.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/baono/baoNoDs.jsp" />
 	</definition>
 
-	<definition name="xemBaoNo" extends="layouts">
+	<definition name="xemBaoNo" extends="taichinh">
 		<put-attribute name="title" value="Chi tiết báo nợ" />
-		<put-attribute name="body" value="/pages/chungtu/baoNoXm.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/baono/baoNoXm.jsp" />
 	</definition>
 
-	<definition name="suaBaoNo" extends="layouts">
+	<definition name="suaBaoNo" extends="taichinh">
 		<put-attribute name="title" value="Sửa báo nợ" />
-		<put-attribute name="body" value="/pages/chungtu/baoNoSu.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/baono/baoNoSu.jsp" />
 	</definition>
 
-	<definition name="taoMoiBaoNo" extends="layouts">
+	<definition name="saoChepBaoNo" extends="taichinh">
+		<put-attribute name="title" value="Sao chép báo nợ" />
+		<put-attribute name="body"
+			value="/pages/chungtu/baono/baoNoSc.jsp" />
+	</definition>
+
+	<definition name="taoMoiBaoNo" extends="taichinh">
 		<put-attribute name="title" value="Tạo mới báo nợ" />
-		<put-attribute name="body" value="/pages/chungtu/baoNoTm.jsp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/baono/baoNoTm.jsp" />
+	</definition>
+
+	<!-- Kế toán tổng hợp -->
+	<definition name="danhSachKeToanTongHop" extends="taichinh">
+		<put-attribute name="title"
+			value="Danh sách kế toán tổng hợp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketoantonghop/keToanTongHopDs.jsp" />
+	</definition>
+
+	<definition name="xemKeToanTongHop" extends="taichinh">
+		<put-attribute name="title"
+			value="Chi tiết kế toán tổng hợp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketoantonghop/keToanTongHopXm.jsp" />
+	</definition>
+
+	<definition name="suaKeToanTongHop" extends="taichinh">
+		<put-attribute name="title" value="Sửa kế toán tổng hợp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketoantonghop/keToanTongHopSu.jsp" />
+	</definition>
+
+	<definition name="saoChepKeToanTongHop" extends="taichinh">
+		<put-attribute name="title"
+			value="Sao chép kế toán tổng hợp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketoantonghop/keToanTongHopSc.jsp" />
+	</definition>
+
+	<definition name="taoMoiKeToanTongHop" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới kế toán tổng hợp" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketoantonghop/keToanTongHopTm.jsp" />
+	</definition>
+
+	<!-- Chứng từ mua hàng -->
+	<definition name="danhSachMuaHang" extends="taichinh">
+		<put-attribute name="title"
+			value="Danh sách chứng từ mua hàng" />
+		<put-attribute name="body"
+			value="/pages/chungtu/muahang/muaHangDs.jsp" />
+	</definition>
+
+	<definition name="xemMuaHang" extends="taichinh">
+		<put-attribute name="title"
+			value="Chi tiết chứng từ mua hàng" />
+		<put-attribute name="body"
+			value="/pages/chungtu/muahang/muaHangXm.jsp" />
+	</definition>
+
+	<definition name="suaMuaHang" extends="taichinh">
+		<put-attribute name="title"
+			value="Sửa chứng từ mua hàng" />
+		<put-attribute name="body"
+			value="/pages/chungtu/muahang/muaHangSu.jsp" />
+	</definition>
+
+	<definition name="taoMoiMuaHang" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới chứng từ mua hàng" />
+		<put-attribute name="body"
+			value="/pages/chungtu/muahang/muaHangTm.jsp" />
+	</definition>
+
+
+	<!-- Chứng từ bán hàng -->
+	<definition name="danhSachBanHang" extends="taichinh">
+		<put-attribute name="title" value="Danh sách bán hàng" />
+		<put-attribute name="body"
+			value="/pages/chungtu/banhang/banHangDs.jsp" />
+	</definition>
+
+	<definition name="xemBanHang" extends="taichinh">
+		<put-attribute name="title" value="Chi tiết bán hàng" />
+		<put-attribute name="body"
+			value="/pages/chungtu/banhang/banHangXm.jsp" />
+	</definition>
+
+	<definition name="suaBanHang" extends="taichinh">
+		<put-attribute name="title" value="Sửa bán hàng" />
+		<put-attribute name="body"
+			value="/pages/chungtu/banhang/banHangSu.jsp" />
+	</definition>
+
+	<definition name="taoMoiBanHang" extends="taichinh">
+		<put-attribute name="title" value="Tạo mới bán hàng" />
+		<put-attribute name="body"
+			value="/pages/chungtu/banhang/banHangTm.jsp" />
+	</definition>
+
+	<!-- Kết chuyển -->
+	<definition name="danhSachKetChuyen" extends="taichinh">
+		<put-attribute name="title" value="Danh sách kết chuyển" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketchuyen/ketChuyenDs.jsp" />
+	</definition>
+
+	<definition name="xemKetChuyen" extends="taichinh">
+		<put-attribute name="title" value="Chi tiết kết chuyển" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketchuyen/ketChuyenXm.jsp" />
+	</definition>
+
+	<definition name="taoMoiKetChuyen" extends="taichinh">
+		<put-attribute name="title" value="Tạo mới kết chuyển" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketchuyen/ketChuyenTm.jsp" />
+	</definition>
+
+	<!-- Bút toán kết chuyển tự động -->
+	<definition name="danhSachKetChuyenButToan"
+		extends="taichinh">
+		<put-attribute name="title"
+			value="Danh sách bút toán kết chuyển tự động" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketchuyen/ketChuyenButToanDs.jsp" />
+	</definition>
+
+	<definition name="xemKetChuyenButToan" extends="taichinh">
+		<put-attribute name="title"
+			value="Chi tiết bút toán kết chuyển tự động" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketchuyen/ketChuyenButToanXm.jsp" />
+	</definition>
+
+	<definition name="suaKetChuyenButToan" extends="taichinh">
+		<put-attribute name="title"
+			value="Sửa bút toán kết chuyển tự động" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketchuyen/ketChuyenButToanSu.jsp" />
+	</definition>
+
+	<definition name="taoMoiKetChuyenButToan" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới bút toán kết chuyển tự động" />
+		<put-attribute name="body"
+			value="/pages/chungtu/ketchuyen/ketChuyenButToanTm.jsp" />
 	</definition>
 	<!-- Kết thúc Tab chứng từ -->
 
 
 	<!-- Bắt đầu Tab sổ kế toán -->
-	<definition name="sktNhatKyChung" extends="layouts">
+	<definition name="sktNhatKyChung" extends="taichinh">
 		<put-attribute name="title" value="Sổ nhật ký chung" />
-		<put-attribute name="search" value="/pages/soketoan/sktNhatKyChungTk.jsp" />
-		<put-attribute name="body" value="/pages/soketoan/sktNhatKyChung.jsp" />
-	</definition>
-
-	<definition name="sktSoCai" extends="layouts">
-		<put-attribute name="title" value="Sổ cái" />
-		<put-attribute name="search" value="/pages/soketoan/sktSoCaiTk.jsp" />
-		<put-attribute name="body" value="/pages/soketoan/sktSoCai.jsp" />
-	</definition>
-
-	<definition name="sktSoTienMat" extends="layouts">
-		<put-attribute name="title" value="Sổ tiền mặt" />
-		<!-- <put-attribute name="search" value="/pages/soketoan/sktSoTienMatTk.jsp" /> -->
-		<put-attribute name="body" value="/pages/soketoan/sktSoTienMat.jsp" />
-	</definition>
-
-	<definition name="sktSoCongNo" extends="layouts">
-		<put-attribute name="title" value="Sổ chi tiết công nợ" />
-		<put-attribute name="body" value="/pages/soketoan/sktSoCongNo.jsp" />
-	</definition>
-
-	<definition name="sktSoTienGuiNganHang" extends="layouts">
-		<put-attribute name="title" value="Sổ tiền gửi ngân hàng" />
-		<!-- <put-attribute name="search" value="/pages/soketoan/sktSoTienGuiNganHangTk.jsp" /> -->
+		<put-attribute name="search"
+			value="/pages/soketoan/sktNhatKyChungTk.jsp" />
 		<put-attribute name="body"
-			value="/pages/soketoan/sktSoTienGuiNganHang.jsp" />
+			value="/pages/soketoan/sktNhatKyChung.jsp" />
+	</definition>
+
+	<definition name="sktSoCai" extends="taichinh">
+		<put-attribute name="title" value="Sổ cái" />
+		<put-attribute name="search"
+			value="/pages/soketoan/sktSoCaiTk.jsp" />
+		<put-attribute name="body"
+			value="/pages/soketoan/sktSoCai.jsp" />
+	</definition>
+
+	<definition name="sktSoTongHopCongNo" extends="taichinh">
+		<put-attribute name="title" value="Sổ tổng hợp công nợ" />
+		<put-attribute name="body"
+			value="/pages/soketoan/sktSoThCongNo.jsp" />
+		<put-attribute name="search"
+			value="/pages/soketoan/sktSoThCongNoTk.jsp" />
+	</definition>
+
+	<definition name="sktSoChiTietCongNo" extends="taichinh">
+		<put-attribute name="title" value="Sổ chi tiết công nợ" />
+		<put-attribute name="body"
+			value="/pages/soketoan/sktSoCtCongNo.jsp" />
+		<put-attribute name="search"
+			value="/pages/soketoan/sktSoCtCongNoTk.jsp" />
+	</definition>
+
+	<definition name="sktSoThNhapXuatTon" extends="taichinh">
+		<put-attribute name="title"
+			value="Sổ tổng hợp nhập xuất tồn" />
+		<put-attribute name="body"
+			value="/pages/soketoan/sktSoThNhapXuatTon.jsp" />
+		<put-attribute name="search"
+			value="/pages/soketoan/sktSoThNhapXuatTonTk.jsp" />
+	</definition>
+
+	<definition name="sktSoCtNhapXuatTon" extends="taichinh">
+		<put-attribute name="title"
+			value="Sổ chi tiết nhập xuất tồn" />
+		<put-attribute name="body"
+			value="/pages/soketoan/sktSoCtNhapXuatTon.jsp" />
+		<put-attribute name="search"
+			value="/pages/soketoan/sktSoCtNhapXuatTonTk.jsp" />
 	</definition>
 	<!-- Kết thúc Tab sổ kế toán -->
 
 
 	<!-- Bắt đầu Tab báo cáo tài chính -->
-	<definition name="balanceAsset" extends="layouts">
+	<definition name="balanceAsset" extends="taichinh">
 		<put-attribute name="title" value="Bảng cân đối kế toán" />
 		<put-attribute name="search"
-			value="/pages/layouts/balanceAssets/search.jsp" />
-		<put-attribute name="body" value="/pages/balanceAsset.jsp" />
+			value="/pages/bctc/balanceAssetTk.jsp" />
+		<put-attribute name="body"
+			value="/pages/bctc/balanceAsset.jsp" />
+	</definition>
+
+	<definition name="showUpdateBS" extends="taichinh">
+		<put-attribute name="title"
+			value="Sinh bảng cân đối kế toán" />
+		<put-attribute name="body"
+			value="/pages/bctc/balanceAssetUpdate.jsp" />
+	</definition>
+
+	<definition name="balanceSheetCodes" extends="taichinh">
+		<put-attribute name="title"
+			value="Danh sách chỉ tiêu cân đối kế toán" />
+		<put-attribute name="body"
+			value="/pages/bctc/balanceSheetCodeDs.jsp" />
+	</definition>
+
+	<definition name="taoMoiBalanceSheetCode" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới chỉ tiêu cân đối kế toán" />
+		<put-attribute name="body"
+			value="/pages/bctc/balanceSheetCodeTm.jsp" />
+	</definition>
+
+	<definition name="bangCanDoiPhatSinh" extends="taichinh">
+		<put-attribute name="title"
+			value="Bảng cân đối phát sinh" />
+		<put-attribute name="search"
+			value="/pages/bctc/bangCanDoiPhatSinhTk.jsp" />
+		<put-attribute name="body"
+			value="/pages/bctc/bangCanDoiPhatSinh.jsp" />
+	</definition>
+
+	<definition name="saleResult" extends="taichinh">
+		<put-attribute name="title"
+			value="Bảng kết quả hoạt động kinh doanh" />
+		<put-attribute name="search"
+			value="/pages/bctc/saleResultTk.jsp" />
+		<put-attribute name="body"
+			value="/pages/bctc/saleResult.jsp" />
+	</definition>
+
+	<definition name="showUpdateSR" extends="taichinh">
+		<put-attribute name="title"
+			value="Sinh bảng kết quả hoạt động kinh doanh" />
+		<put-attribute name="body"
+			value="/pages/bctc/saleResultUpdate.jsp" />
+	</definition>
+
+	<definition name="cashFlow" extends="taichinh">
+		<put-attribute name="title"
+			value="Bảng lưu chuyển tiền tệ" />
+		<put-attribute name="search"
+			value="/pages/bctc/cashFlowTk.jsp" />
+		<put-attribute name="body"
+			value="/pages/bctc/cashFlow.jsp" />
+	</definition>
+
+	<definition name="showUpdateCF" extends="taichinh">
+		<put-attribute name="title"
+			value="Sinh bảng lưu chuyển tiền tệ" />
+		<put-attribute name="body"
+			value="/pages/bctc/cashFlowUpdate.jsp" />
+	</definition>
+
+	<definition name="danhSachChiTieuLctt" extends="taichinh">
+		<put-attribute name="title"
+			value="Danh sách chỉ tiêu lưu chuyển tiền tệ" />
+		<put-attribute name="body"
+			value="/pages/bctc/cashFlowCodeDs.jsp" />
+	</definition>
+
+	<definition name="taoMoiChiTieuLctt" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới chỉ tiêu lưu chuyển tiền tệ" />
+		<put-attribute name="body"
+			value="/pages/bctc/cashFlowCodeTm.jsp" />
 	</definition>
 	<!-- Kết thúc Tab báo cáo tài chính -->
 
+	<!-- Bắt đầu Tab công việc -->
+	<!-- Quản lý lĩnh vực -->
+	<definition name="danhSachLinhVuc" extends="taichinh">
+		<put-attribute name="title" value="Danh sách lĩnh vực" />
+		<put-attribute name="body"
+			value="/pages/congviec/linhVucDs.jsp" />
+	</definition>
+
+	<definition name="taoMoiLinhVuc" extends="taichinh">
+		<put-attribute name="title" value="Tạo mới lĩnh vực" />
+		<put-attribute name="body"
+			value="/pages/congviec/linhVucTm.jsp" />
+	</definition>
+
+	<definition name="suaLoaiLinhVuc" extends="taichinh">
+		<put-attribute name="title" value="Sửa lĩnh vực" />
+		<put-attribute name="body"
+			value="/pages/congviec/linhVucSu.jsp" />
+	</definition>
+
+	<!-- Quản lý nghiệp vụ -->
+	<definition name="danhSachNghiepVu" extends="taichinh">
+		<put-attribute name="title" value="Danh sách nghiệp vụ" />
+		<put-attribute name="body"
+			value="/pages/congviec/nghiepVuDs.jsp" />
+	</definition>
+
+	<definition name="xemNghiepVu" extends="taichinh">
+		<put-attribute name="title" value="Xem nghiệp vụ" />
+		<put-attribute name="body"
+			value="/pages/congviec/nghiepVuXm.jsp" />
+	</definition>
+
+	<definition name="taoMoiNghiepVu" extends="taichinh">
+		<put-attribute name="title" value="Tạo mới nghiệp vụ" />
+		<put-attribute name="body"
+			value="/pages/congviec/nghiepVuTm.jsp" />
+	</definition>
+
+	<definition name="suaNghiepVu" extends="taichinh">
+		<put-attribute name="title" value="Sửa nghiệp vụ" />
+		<put-attribute name="body"
+			value="/pages/congviec/nghiepVuSu.jsp" />
+	</definition>
+	<!-- Kết thúc Tab công việc -->
 
 	<!-- Bắt đầu Tab quản trị -->
-	<definition name="danhSachTaiKhoan" extends="layouts">
-		<put-attribute name="title" value="Danh mục tài khoản kế toán" />
-		<put-attribute name="body" value="/pages/taiKhoanDs.jsp" />
+	<!-- Quản lý kỳ kế toán và số dư đầu kỳ -->
+	<definition name="danhSachKyKeToan" extends="taichinh">
+		<put-attribute name="title" value="Danh sách kỳ kế toán" />
+		<put-attribute name="body"
+			value="/pages/kyketoan/kyKeToanDs.jsp" />
 	</definition>
 
-	<definition name="danhSachKhachHang" extends="layouts">
-		<put-attribute name="title" value="Danh sách khách hàng" />
-		<put-attribute name="body" value="/pages/khachHangDs.jsp" />
+	<definition name="taoMoiKyKeToan" extends="taichinh">
+		<put-attribute name="title" value="Tạo mới kỳ kế toán" />
+		<put-attribute name="body"
+			value="/pages/kyketoan/kyKeToanTm.jsp" />
 	</definition>
 
-	<definition name="xemKhachHang" extends="layouts">
-		<put-attribute name="title" value="Chi tiết khách hàng" />
-		<put-attribute name="body" value="/pages/khachHangXm.jsp" />
+	<definition name="suaKyKeToan" extends="taichinh">
+		<put-attribute name="title" value="Sửa kỳ kế toán" />
+		<put-attribute name="body"
+			value="/pages/kyketoan/kyKeToanSu.jsp" />
 	</definition>
 
-	<definition name="suaKhachHang" extends="layouts">
-		<put-attribute name="title" value="Sửa khách hàng" />
-		<put-attribute name="body" value="/pages/khachHangSu.jsp" />
+	<definition name="xemKyKeToan" extends="taichinh">
+		<put-attribute name="title" value="Xem kỳ kế toán" />
+		<put-attribute name="body"
+			value="/pages/kyketoan/kyKeToanXm.jsp" />
+		<put-attribute name="modal"
+			value="/pages/kyketoan/kyKeToanModal.jsp" />
 	</definition>
 
-	<definition name="taoMoiKhachHang" extends="layouts">
-		<put-attribute name="title" value="Tạo mới khách hàng" />
-		<put-attribute name="body" value="/pages/khachHangTm.jsp" />
+	<definition name="nhapSoDuKyKeToan" extends="taichinh">
+		<put-attribute name="title"
+			value="Nhập số dư đầu kỳ kế toán" />
+		<put-attribute name="body"
+			value="/pages/kyketoan/nhapSoDuKyKeToan.jsp" />
 	</definition>
 
-	<definition name="danhSachNhaCungCap" extends="layouts">
-		<put-attribute name="title" value="Danh sách nhà cung cấp" />
-		<put-attribute name="body" value="/pages/nhaCungCapDs.jsp" />
+	<!-- Quản lý cấu hình -->
+	<definition name="danhSachCauHinh" extends="taichinh">
+		<put-attribute name="title" value="Danh sách cấu hình" />
+		<put-attribute name="body"
+			value="/pages/cauhinh/cauhinhDs.jsp" />
 	</definition>
 
-	<definition name="xemNhaCungCap" extends="layouts">
-		<put-attribute name="title" value="Chi tiết nhà cung cấp" />
-		<put-attribute name="body" value="/pages/nhaCungCapXm.jsp" />
+	<!-- Quản lý tài khoản kế toán -->
+	<definition name="danhSachTaiKhoan" extends="taichinh">
+		<put-attribute name="title"
+			value="Danh mục tài khoản kế toán" />
+		<put-attribute name="body"
+			value="/pages/taikhoan/taiKhoanDs.jsp" />
 	</definition>
 
-	<definition name="suaNhaCungCap" extends="layouts">
-		<put-attribute name="title" value="Sửa nhà cung cấp" />
-		<put-attribute name="body" value="/pages/nhaCungCapSu.jsp" />
+	<definition name="taoMoiLoaiTaiKhoan" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới tài khoản kế toán" />
+		<put-attribute name="body"
+			value="/pages/taikhoan/taiKhoanTm.jsp" />
 	</definition>
 
-	<definition name="taoMoiNhaCungCap" extends="layouts">
-		<put-attribute name="title" value="Tạo mới nhà cung cấp" />
-		<put-attribute name="body" value="/pages/nhaCungCapTm.jsp" />
+	<definition name="suaLoaiTaiKhoan" extends="taichinh">
+		<put-attribute name="title"
+			value="Sửa tài khoản kế toán" />
+		<put-attribute name="body"
+			value="/pages/taikhoan/taiKhoanSu.jsp" />
 	</definition>
 
-	<definition name="update" extends="layouts">
+	<definition name="update" extends="taichinh">
 		<put-attribute name="title" value="Cập nhật dữ liệu" />
 		<put-attribute name="body" value="/pages/update.jsp" />
+	</definition>
+
+	<!-- Quản lý hàng hóa và nhóm hàng hóa -->
+	<definition name="danhSachDonViHangHoa" extends="taichinh">
+		<put-attribute name="title" value="Đơn vị tính hàng hóa" />
+		<put-attribute name="body"
+			value="/pages/hanghoa/donViHangHoaDs.jsp" />
+	</definition>
+
+	<definition name="taoMoiDonVi" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới đơn vị hàng hóa" />
+		<put-attribute name="body"
+			value="/pages/hanghoa/donViHangHoaTm.jsp" />
+	</definition>
+
+	<definition name="suaDonVi" extends="taichinh">
+		<put-attribute name="title" value="Sửa đơn vị hàng hóa" />
+		<put-attribute name="body"
+			value="/pages/hanghoa/donViHangHoaSu.jsp" />
+	</definition>
+
+	<definition name="danhSachNhomHangHoa" extends="taichinh">
+		<put-attribute name="title" value="Nhóm hàng hóa" />
+		<put-attribute name="body"
+			value="/pages/hanghoa/nhomHangHoaDs.jsp" />
+	</definition>
+
+	<definition name="taoMoiNhomHangHoa" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới nhóm hàng hóa" />
+		<put-attribute name="body"
+			value="/pages/hanghoa/nhomHangHoaTm.jsp" />
+	</definition>
+
+	<definition name="suaNhomHangHoa" extends="taichinh">
+		<put-attribute name="title" value="Sửa nhóm hàng hóa" />
+		<put-attribute name="body"
+			value="/pages/hanghoa/nhomHangHoaSu.jsp" />
+	</definition>
+
+	<definition name="danhSachHangHoa" extends="taichinh">
+		<put-attribute name="title" value="Danh sách Hàng hóa" />
+		<put-attribute name="body"
+			value="/pages/hanghoa/hangHoaDs.jsp" />
+	</definition>
+
+	<definition name="xemHangHoa" extends="taichinh">
+		<put-attribute name="title" value="Chi tiết hàng hóa" />
+		<put-attribute name="body"
+			value="/pages/hanghoa/hangHoaXm.jsp" />
+	</definition>
+
+	<definition name="taoMoiHangHoa" extends="taichinh">
+		<put-attribute name="title" value="Tạo mới hàng hóa" />
+		<put-attribute name="body"
+			value="/pages/hanghoa/hangHoaTm.jsp" />
+	</definition>
+
+	<definition name="suaHangHoa" extends="taichinh">
+		<put-attribute name="title" value="Sửa hàng hóa" />
+		<put-attribute name="body"
+			value="/pages/hanghoa/hangHoaSu.jsp" />
+	</definition>
+
+	<definition name="danhSachKhoBai" extends="taichinh">
+		<put-attribute name="title" value="Danh sách kho" />
+		<put-attribute name="body"
+			value="/pages/hanghoa/khoBaiDs.jsp" />
+	</definition>
+
+	<definition name="taoMoiKhoBai" extends="taichinh">
+		<put-attribute name="title" value="Tạo mới kho" />
+		<put-attribute name="body"
+			value="/pages/hanghoa/khoBaiTm.jsp" />
+	</definition>
+
+	<definition name="suaKhoBai" extends="taichinh">
+		<put-attribute name="title" value="Sửa kho" />
+		<put-attribute name="body"
+			value="/pages/hanghoa/khoBaiSu.jsp" />
+	</definition>
+
+	<!-- Quản lý kỳ ngân hàng và tài khoản ngân hàng -->
+	<definition name="danhSachNganHang" extends="taichinh">
+		<put-attribute name="title" value="Danh sách ngân hàng" />
+		<put-attribute name="body"
+			value="/pages/doitac/nganhang/nganHangDs.jsp" />
+	</definition>
+
+	<definition name="taoMoiNganHang" extends="taichinh">
+		<put-attribute name="title" value="Tạo mới ngân hàng" />
+		<put-attribute name="body"
+			value="/pages/doitac/nganhang/nganHangTm.jsp" />
+	</definition>
+
+	<definition name="suaNganHang" extends="taichinh">
+		<put-attribute name="title" value="Sửa ngân hàng" />
+		<put-attribute name="body"
+			value="/pages/doitac/nganhang/nganHangSu.jsp" />
+	</definition>
+
+	<definition name="danhSachTaiKhoanNganHang"
+		extends="taichinh">
+		<put-attribute name="title"
+			value="Danh sách tài khoản ngân hàng" />
+		<put-attribute name="body"
+			value="/pages/doitac/nganhang/nganHangTaiKhoanDs.jsp" />
+	</definition>
+
+	<definition name="taoMoiTaiKhoanNganHang" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới tài khoản ngân hàng" />
+		<put-attribute name="body"
+			value="/pages/doitac/nganhang/nganHangTaiKhoanTm.jsp" />
+	</definition>
+
+	<definition name="suaTaiKhoanNganHang" extends="taichinh">
+		<put-attribute name="title"
+			value="Sửa tài khoản ngân hàng" />
+		<put-attribute name="body"
+			value="/pages/doitac/nganhang/nganHangTaiKhoanSu.jsp" />
 	</definition>
 	<!-- Kết thúc Tab quản trị -->
 
 
-	<definition name="error" extends="layouts">
+	<definition name="error" extends="taichinh">
 		<put-attribute name="title" value="Lỗi hệ thống" />
 		<put-attribute name="body" value="/pages/error.jsp" />
+	</definition>
+
+	<!-- Khung trang phần khách hàng, nhà cung cấp -->
+	<definition name="crm" template="/pages/layouts/crmTmpl.jsp">
+		<put-attribute name="title"
+			value="Tập đoàn IDI - Khách hàng, nhà cung cấp" />
+		<put-attribute name="header"
+			value="/pages/layouts/header.jsp" />
+		<put-attribute name="navigator"
+			value="/pages/layouts/crmNav.jsp" />
+		<put-attribute name="tabnav"
+			value="/pages/layouts/crmTab.jsp" />
+		<put-attribute name="search" value="" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer"
+			value="/pages/layouts/footer.jsp" />
+	</definition>
+
+	<definition name="danhSachKhachHang" extends="crm">
+		<put-attribute name="title" value="Danh sách khách hàng" />
+		<put-attribute name="body"
+			value="/pages/doitac/khachhang/khachHangDs.jsp" />
+	</definition>
+
+	<definition name="xemKhachHang" extends="crm">
+		<put-attribute name="title" value="Chi tiết khách hàng" />
+		<put-attribute name="body"
+			value="/pages/doitac/khachhang/khachHangXm.jsp" />
+	</definition>
+
+	<definition name="suaKhachHang" extends="crm">
+		<put-attribute name="title" value="Sửa khách hàng" />
+		<put-attribute name="body"
+			value="/pages/doitac/khachhang/khachHangSu.jsp" />
+	</definition>
+
+	<definition name="taoMoiKhachHang" extends="crm">
+		<put-attribute name="title" value="Tạo mới khách hàng" />
+		<put-attribute name="body"
+			value="/pages/doitac/khachhang/khachHangTm.jsp" />
+	</definition>
+
+	<definition name="danhSachNhaCungCap" extends="crm">
+		<put-attribute name="title"
+			value="Danh sách nhà cung cấp" />
+		<put-attribute name="body"
+			value="/pages/doitac/nhacungcap/nhaCungCapDs.jsp" />
+	</definition>
+
+	<definition name="xemNhaCungCap" extends="crm">
+		<put-attribute name="title"
+			value="Chi tiết nhà cung cấp" />
+		<put-attribute name="body"
+			value="/pages/doitac/nhacungcap/nhaCungCapXm.jsp" />
+	</definition>
+
+	<definition name="suaNhaCungCap" extends="crm">
+		<put-attribute name="title" value="Sửa nhà cung cấp" />
+		<put-attribute name="body"
+			value="/pages/doitac/nhacungcap/nhaCungCapSu.jsp" />
+	</definition>
+
+	<definition name="taoMoiNhaCungCap" extends="crm">
+		<put-attribute name="title" value="Tạo mới nhà cung cấp" />
+		<put-attribute name="body"
+			value="/pages/doitac/nhacungcap/nhaCungCapTm.jsp" />
+	</definition>
+
+	<definition name="danhSachDiaChi" extends="crm">
+		<put-attribute name="title" value="Danh sách địa chỉ" />
+		<put-attribute name="body"
+			value="/pages/doitac/diachi/diaChiDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/doitac/diachi/diaChiTk.jsp" />
+	</definition>
+
+	<definition name="capNhatDiaChi" extends="crm">
+		<put-attribute name="title" value="Cập nhật địa chỉ" />
+		<put-attribute name="body"
+			value="/pages/doitac/diachi/diaChiCn.jsp" />
 	</definition>
 </tiles-definitions>

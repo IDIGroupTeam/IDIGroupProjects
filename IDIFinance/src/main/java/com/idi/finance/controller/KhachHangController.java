@@ -14,18 +14,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.idi.finance.bean.KhachHang;
-import com.idi.finance.bean.bieudo.KpiGroup;
+import com.idi.finance.bean.doituong.KhachHang;
 import com.idi.finance.dao.KhachHangDAO;
-import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.validator.KhachHangValidator;
 
 @Controller
 public class KhachHangController {
 	private static final Logger logger = Logger.getLogger(KhachHangController.class);
-
-	@Autowired
-	KpiChartDAO kpiChartDAO;
 
 	@Autowired
 	KhachHangDAO khachHangDAO;
@@ -47,13 +42,9 @@ public class KhachHangController {
 		}
 	}
 
-	@RequestMapping("/danhsachkhachhang")
+	@RequestMapping("/khachhang/danhsach")
 	public String danhSachKhachHang(Model model) {
 		try {
-			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
-
 			// Lấy danh sách khách hàng
 			List<KhachHang> khachhangDs = khachHangDAO.danhSachKhachHang();
 			model.addAttribute("khachhangDs", khachhangDs);
@@ -66,13 +57,9 @@ public class KhachHangController {
 		}
 	}
 
-	@RequestMapping("/xemkhachhang/{id}")
+	@RequestMapping("/khachhang/xem/{id}")
 	public String xemKhachHang(@PathVariable("id") int maKh, Model model) {
 		try {
-			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
-
 			KhachHang khachHang = khachHangDAO.layKhachHang(maKh);
 			model.addAttribute("khachHang", khachHang);
 
@@ -84,13 +71,9 @@ public class KhachHangController {
 		}
 	}
 
-	@RequestMapping("/suakhachhang/{id}")
+	@RequestMapping("/khachhang/sua/{id}")
 	public String suaKhachHang(@PathVariable("id") int maKh, Model model) {
 		try {
-			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
-
 			KhachHang khachHang = khachHangDAO.layKhachHang(maKh);
 			model.addAttribute("mainFinanceForm", khachHang);
 
@@ -102,13 +85,9 @@ public class KhachHangController {
 		}
 	}
 
-	@RequestMapping("/taomoikhachhang")
+	@RequestMapping("/khachhang/taomoi")
 	public String taoMoiKhachHang(Model model) {
 		try {
-			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-			List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
-			model.addAttribute("kpiGroups", kpiGroups);
-
 			KhachHang khachHang = new KhachHang();
 			model.addAttribute("mainFinanceForm", khachHang);
 
@@ -120,17 +99,18 @@ public class KhachHangController {
 		}
 	}
 
-	// @RequestMapping(value = "/luutaomoikhachhang", produces =
+	// @RequestMapping(value = "khachhang/luu", produces =
 	// "text/plain;charset=UTF-8")
-	@RequestMapping("/luutaomoikhachhang")
-	public String luuTaoMoiKhachHang(@ModelAttribute("mainFinanceForm") @Validated KhachHang khachHang, BindingResult result, Model model) {
+	@RequestMapping("/khachhang/luu")
+	public String luuTaoMoiKhachHang(@ModelAttribute("mainFinanceForm") @Validated KhachHang khachHang,
+			BindingResult result, Model model) {
 		try {
 			logger.info("Khách hàng: " + khachHang);
 			if (result.hasErrors()) {
 				model.addAttribute("mainFinanceForm", khachHang);
 				model.addAttribute("tab", "tabDSKH");
-				
-				if (khachHang.getMaKh()	 > 0) {
+
+				if (khachHang.getMaKh() > 0) {
 					// Đây là trường hợp sửa KH
 					return "suaKhachHang";
 				} else {
@@ -138,22 +118,29 @@ public class KhachHangController {
 					return "taoMoiKhachHang";
 				}
 			}
-			
+
 			khachHangDAO.luuCapNhatKhachHang(khachHang);
-			return "redirect:/danhsachkhachhang";
+
+			if (khachHang.getMaKh() > 0) {
+				// Đây là trường hợp sửa KH
+				return "redirect:/khachhang/xem/" + khachHang.getMaKh();
+			} else {
+				// Đây là trường hợp tạo mới KH
+				return "redirect:/khachhang/danhsach";
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
 		}
 	}
 
-	@RequestMapping("/xoakhachhang/{id}")
+	@RequestMapping("/khachhang/xoa/{id}")
 	public String xoaKhachHang(@PathVariable("id") int maKh, Model model) {
 		try {
 			// Xóa khách hàng có MA_KH là maKh
 			khachHangDAO.xoaKhachHang(maKh);
 
-			return "redirect:/danhsachkhachhang";
+			return "redirect:/khachhang/danhsach";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";

@@ -3,17 +3,19 @@ package com.idi.finance.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.idi.finance.bean.KhachHang;
+import com.idi.finance.bean.doituong.DoiTuong;
+import com.idi.finance.bean.doituong.KhachHang;
 import com.idi.finance.dao.KhachHangDAO;
 
 public class KhachHangDAOImpl implements KhachHangDAO {
 	private static final Logger logger = Logger.getLogger(KhachHangDAOImpl.class);
-	
+
 	@Value("${DANH_SACH_KHACH_HANG_THEO_MA_HOAC_TEN}")
 	private String DANH_SACH_KHACH_HANG_THEO_MA_HOAC_TEN;
 
@@ -28,8 +30,57 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 	}
 
 	@Override
+	public List<DoiTuong> danhSachDoiTuong() {
+		String query = "SELECT * FROM KHACH_HANG WHERE MA_KH!=1 ORDER BY TEN_KH";
+
+		logger.info("Danh sách khách hàng ...");
+		logger.info(query);
+
+		List<DoiTuong> doiTuongDs = jdbcTmpl.query(query, new DoiTuongMapper());
+		return doiTuongDs;
+	}
+	
+	@Override
+	public List<DoiTuong> danhSachDoiTuong(String maHoacTen) {
+		if (maHoacTen == null || maHoacTen.trim().equals("")) {
+			return null;
+		}
+
+		String query = DANH_SACH_KHACH_HANG_THEO_MA_HOAC_TEN;
+		query = query.replaceAll("\\?", maHoacTen.trim());
+
+		logger.info("Danh sách khách hàng theo MA_KH hoặc TEN_KH ...");
+		logger.info(query);
+
+		List<DoiTuong> doiTuongDs = jdbcTmpl.query(query, new DoiTuongMapper());
+		return doiTuongDs;
+	}
+
+	public class DoiTuongMapper implements RowMapper<DoiTuong> {
+		public DoiTuong mapRow(ResultSet rs, int rowNum) throws SQLException {
+			try {
+				DoiTuong doiTuong = new DoiTuong();
+
+				doiTuong.setMaDt(rs.getInt("MA_KH"));
+				doiTuong.setLoaiDt(DoiTuong.KHACH_HANG);
+				doiTuong.setKhDt(rs.getString("KH_KH"));
+				doiTuong.setTenDt(rs.getString("TEN_KH"));
+				doiTuong.setMaThue(rs.getString("MA_THUE"));
+				doiTuong.setDiaChi(rs.getString("DIA_CHI"));
+				doiTuong.setSdt(rs.getString("SDT"));
+				doiTuong.setEmail(rs.getString("EMAIL"));
+				doiTuong.setWebSite(rs.getString("WEBSITE"));
+
+				return doiTuong;
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	}
+
+	@Override
 	public List<KhachHang> danhSachKhachHang() {
-		String query = "SELECT * FROM KHACH_HANG";
+		String query = "SELECT * FROM KHACH_HANG WHERE MA_KH!=1 ORDER BY TEN_KH";
 
 		logger.info("Danh sách khách hàng ...");
 		logger.info(query);
@@ -44,6 +95,7 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 				KhachHang khachHang = new KhachHang();
 
 				khachHang.setMaKh(rs.getInt("MA_KH"));
+				khachHang.setKhKh(rs.getString("KH_KH"));
 				khachHang.setTenKh(rs.getString("TEN_KH"));
 				khachHang.setMaThue(rs.getString("MA_THUE"));
 				khachHang.setDiaChi(rs.getString("DIA_CHI"));
@@ -79,19 +131,38 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 
 	@Override
 	public void luuCapNhatKhachHang(KhachHang khachHang) {
+		if (khachHang == null) {
+			return;
+		}
+
 		int count = 0;
-		String capNhat = "UPDATE KHACH_HANG SET TEN_KH=?, MA_THUE=?, DIA_CHI=?, EMAIL=?, SDT=?, WEBSITE=? WHERE MA_KH=?";
-		String taoMoi = "INSERT INTO KHACH_HANG(TEN_KH, MA_THUE, DIA_CHI, EMAIL, SDT, WEBSITE) VALUES(?,?,?,?,?,?)";
+		String capNhat = "";
+		if (khachHang.getMaKh() > 0) {
+			capNhat = "UPDATE KHACH_HANG SET TEN_KH=?, MA_THUE=?, DIA_CHI=?, EMAIL=?, SDT=?, WEBSITE=? WHERE MA_KH=?";
+		} else if (khachHang.getKhKh() != null && !khachHang.getKhKh().trim().equals("")) {
+			capNhat = "UPDATE KHACH_HANG SET TEN_KH=?, MA_THUE=?, DIA_CHI=?, EMAIL=?, SDT=?, WEBSITE=? WHERE KH_KH=?";
+		} else {
+			return;
+		}
+
+		String taoMoi = "INSERT INTO KHACH_HANG(KH_KH, TEN_KH, MA_THUE, DIA_CHI, EMAIL, SDT, WEBSITE) VALUES(?,?,?,?,?,?,?)";
 		try {
-			// update firstly, if now row is updated, we will be insert data
-			count = jdbcTmpl.update(capNhat, khachHang.getTenKh(), khachHang.getMaThue(), khachHang.getDiaChi(),
-					khachHang.getEmail(), khachHang.getSdt(), khachHang.getWebSite(), khachHang.getMaKh());
+			if (khachHang.getMaKh() > 0) {
+				// update firstly, if now row is updated, we will be insert data
+				count = jdbcTmpl.update(capNhat, khachHang.getTenKh(), khachHang.getMaThue(), khachHang.getDiaChi(),
+						khachHang.getEmail(), khachHang.getSdt(), khachHang.getWebSite(), khachHang.getMaKh());
+			} else if (khachHang.getKhKh() != null && !khachHang.getKhKh().trim().equals("")) {
+				// update firstly, if now row is updated, we will be insert data
+				count = jdbcTmpl.update(capNhat, khachHang.getTenKh(), khachHang.getMaThue(), khachHang.getDiaChi(),
+						khachHang.getEmail(), khachHang.getSdt(), khachHang.getWebSite(), khachHang.getKhKh());
+			}
 
 			// This is new data, so insert it.
 			if (count == 0) {
-				if (khachHang.getTenKh() != null && !khachHang.getTenKh().trim().equals("")) {
-					count = jdbcTmpl.update(taoMoi, khachHang.getTenKh(), khachHang.getMaThue(), khachHang.getDiaChi(),
-							khachHang.getEmail(), khachHang.getSdt(), khachHang.getWebSite());
+				if (khachHang.getKhKh() != null && !khachHang.getKhKh().trim().equals("")
+						&& khachHang.getTenKh() != null && !khachHang.getTenKh().trim().equals("")) {
+					count = jdbcTmpl.update(taoMoi, khachHang.getKhKh(), khachHang.getTenKh(), khachHang.getMaThue(),
+							khachHang.getDiaChi(), khachHang.getEmail(), khachHang.getSdt(), khachHang.getWebSite());
 				}
 			}
 		} catch (Exception e) {
@@ -104,7 +175,7 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 		if (maHoacTen == null || maHoacTen.trim().equals("")) {
 			return null;
 		}
-		
+
 		String query = DANH_SACH_KHACH_HANG_THEO_MA_HOAC_TEN;
 		query = query.replaceAll("\\?", maHoacTen.trim());
 
@@ -113,5 +184,21 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 
 		List<KhachHang> khachHangDs = jdbcTmpl.query(query, new KhachHangMapper());
 		return khachHangDs;
+	}
+
+	public boolean kiemTraKhKhachHang(String khKh) {
+		int rs = 0;
+		if (khKh != null && !khKh.trim().equals("")) {
+			String query = "SELECT COUNT(KH_KH) AS RS FROM KHACH_HANG WHERE KH_KH=?";
+
+			try {
+				Object[] params = { khKh };
+				rs = jdbcTmpl.queryForObject(query, params, Integer.class);
+			} catch (Exception e) {
+
+			}
+		}
+
+		return rs > 0;
 	}
 }
