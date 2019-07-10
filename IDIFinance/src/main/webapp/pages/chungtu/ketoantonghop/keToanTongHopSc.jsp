@@ -540,7 +540,10 @@
 								itemValue="khoaDt" />
 						</form:select> <form:hidden path="taiKhoanKtthDs[${status.index}].doiTuong.maDt" />
 						<form:hidden
-							path="taiKhoanKtthDs[${status.index}].doiTuong.loaiDt" /></td>
+							path="taiKhoanKtthDs[${status.index}].doiTuong.loaiDt" />
+						<form:errors
+							path="taiKhoanKtthDs[${status.index}].doiTuong.khoaDt"
+							cssClass="error"></form:errors></td>
 					<td style="width: 50px;"><form:input cssClass="form-control"
 							path="taiKhoanKtthDs[${status.index}].nhomDk" placeholder="0" />
 						<form:errors path="taiKhoanKtthDs[${status.index}].nhomDk"
