@@ -14,6 +14,7 @@ import org.springframework.validation.Validator;
 import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;
+import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
@@ -252,12 +253,12 @@ public class ChungTuValidator implements Validator {
 								// Invalid data, send message
 								if (taiKhoanNo == null || taiKhoanNo.getLoaiTaiKhoan().getMaTk() == null
 										|| taiKhoanNo.getLoaiTaiKhoan().getMaTk().isEmpty()) {
-									//errors.rejectValue("nvktDs[" + id + "].taiKhoanNo.loaiTaiKhoan.maTk", "");
+									// errors.rejectValue("nvktDs[" + id + "].taiKhoanNo.loaiTaiKhoan.maTk", "");
 								} else if (taiKhoanNo.getSoTien() == null || taiKhoanNo.getSoTien().getSoTien() == 0) {
-									//errors.rejectValue("nvktDs[" + id + "].taiKhoanNo.soTien.soTien", "");
+									// errors.rejectValue("nvktDs[" + id + "].taiKhoanNo.soTien.soTien", "");
 								} else if (taiKhoanCo == null || taiKhoanCo.getLoaiTaiKhoan().getMaTk() == null
 										|| taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty()) {
-									//errors.rejectValue("nvktDs[" + id + "].taiKhoanCo.loaiTaiKhoan.maTk", "");
+									// errors.rejectValue("nvktDs[" + id + "].taiKhoanCo.loaiTaiKhoan.maTk", "");
 								}
 							}
 							id++;
@@ -409,6 +410,34 @@ public class ChungTuValidator implements Validator {
 					if (taiKhoanTmpl != null && !taiKhoanTmpl.isCanBang()) {
 						errors.rejectValue("taiKhoanKtthDs[" + j + "].lyDo",
 								"ThieuDinhKhoan.NhomDinhKhoan.KhongCanBang");
+					}
+				}
+
+				// Kiểm tra, trong cùng nhóm tài khoản,
+				// đối tượng ghi vào các tài khoản phải giống nhau
+				HashMap<Integer, DoiTuong> nhomDkDtMap = new HashMap<>();
+				for (int j = 0; j < taiKhoanDs.size(); j++) {
+					TaiKhoan taiKhoan = taiKhoanDs.get(j);
+
+					DoiTuong doiTuong = nhomDkDtMap.get(taiKhoan.getNhomDk());
+					if (doiTuong == null) {
+						if (taiKhoan.getDoiTuong().getMaDt() != 0 && taiKhoan.getDoiTuong().getLoaiDt() != 0) {
+							nhomDkDtMap.put(taiKhoan.getNhomDk(), taiKhoan.getDoiTuong());
+						}
+					} else {
+						if (!taiKhoan.getDoiTuong().equals(doiTuong)) {
+							if (taiKhoan.getDoiTuong().getMaDt() == 0 || taiKhoan.getDoiTuong().getLoaiDt() == 0) {
+								taiKhoan.setDoiTuong(doiTuong);
+							}
+						}
+					}
+				}
+				for (int j = 0; j < taiKhoanDs.size(); j++) {
+					TaiKhoan taiKhoan = taiKhoanDs.get(j);
+					DoiTuong doiTuong = nhomDkDtMap.get(taiKhoan.getNhomDk());
+					if (doiTuong == null) {
+						errors.rejectValue("taiKhoanKtthDs[" + j + "].doiTuong.khoaDt",
+								"NotEmpty.chungTu.doiTuong.tenDt");
 					}
 				}
 
