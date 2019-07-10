@@ -1711,6 +1711,9 @@ public class KyKeToanController {
 
 				// CẬP NHẬT CHO PHẦN SỐ DƯ TÀI KHOẢN
 				SoDuKy soDuKyTk = new SoDuKy();
+				soDuKyTk.setKyKeToan(kyKeToan);
+				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
+
 				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
 				if (soDuKyTkDs != null) {
 					Iterator<SoDuKy> soDuKyIter = soDuKyTkDs.iterator();
@@ -1723,8 +1726,6 @@ public class KyKeToanController {
 						}
 					}
 				}
-				soDuKyTk.setKyKeToan(kyKeToan);
-				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
 
 				logger.info("soDuKyTk hiện tại: " + soDuKyTk);
 				// Cập nhật dữ liệu mới
@@ -1785,6 +1786,9 @@ public class KyKeToanController {
 
 				// CẬP NHẬT CHO PHẦN SỐ DƯ TÀI KHOẢN
 				SoDuKy soDuKyTk = new SoDuKy();
+				soDuKyTk.setKyKeToan(kyKeToan);
+				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
+
 				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
 				if (soDuKyTkDs != null) {
 					Iterator<SoDuKy> soDuKyIter = soDuKyTkDs.iterator();
@@ -1797,8 +1801,6 @@ public class KyKeToanController {
 						}
 					}
 				}
-				soDuKyTk.setKyKeToan(kyKeToan);
-				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
 
 				logger.info("soDuKyTk hiện tại: " + soDuKyTk);
 				// Cập nhật dữ liệu mới
@@ -1820,6 +1822,10 @@ public class KyKeToanController {
 
 				// CẬP NHẬT CHO PHẦN CÔNG NỢ
 				SoDuKy soDuKyDt = new SoDuKy();
+				soDuKyDt.setKyKeToan(kyKeToan);
+				soDuKyDt.setLoaiTaiKhoan(loaiTaiKhoan);
+				soDuKyDt.setDoiTuong(soDuKy.getDoiTuong());
+
 				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
 				if (soDuKyDtDs != null) {
 					Iterator<SoDuKy> soDuKyDtIter = soDuKyDtDs.iterator();
@@ -1832,9 +1838,6 @@ public class KyKeToanController {
 						}
 					}
 				}
-				soDuKyDt.setKyKeToan(kyKeToan);
-				soDuKyDt.setLoaiTaiKhoan(loaiTaiKhoan);
-				soDuKyDt.setDoiTuong(soDuKy.getDoiTuong());
 
 				logger.info("soDuKyDt hiện tại: " + soDuKyDt);
 				// Cập nhật dữ liệu mới
@@ -1897,6 +1900,9 @@ public class KyKeToanController {
 				// CẬP NHẬT CHO PHẦN SỐ DƯ TÀI KHOẢN
 				logger.info("CẬP NHẬT CHO PHẦN SỐ DƯ TÀI KHOẢN");
 				SoDuKy soDuKyTk = new SoDuKy();
+				soDuKyTk.setKyKeToan(kyKeToan);
+				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
+
 				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
 				if (soDuKyTkDs != null) {
 					Iterator<SoDuKy> soDuKyIter = soDuKyTkDs.iterator();
@@ -1909,8 +1915,6 @@ public class KyKeToanController {
 						}
 					}
 				}
-				soDuKyTk.setKyKeToan(kyKeToan);
-				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
 
 				logger.info("soDuKyTk hiện tại: " + soDuKyTk);
 				// Cập nhật dữ liệu mới
@@ -1933,6 +1937,11 @@ public class KyKeToanController {
 				logger.info("CẬP NHẬT CHO PHẦN CÔNG NỢ");
 				// CẬP NHẬT CHO PHẦN CÔNG NỢ
 				SoDuKy soDuKyHh = new SoDuKy();
+				soDuKyHh.setKyKeToan(kyKeToan);
+				soDuKyHh.setLoaiTaiKhoan(loaiTaiKhoan);
+				soDuKyHh.setHangHoa(soDuKy.getHangHoa());
+				soDuKyHh.setKhoHang(soDuKy.getKhoHang());
+
 				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
 				if (soDuKyHhDs != null) {
 					Iterator<SoDuKy> soDuKyHhIter = soDuKyHhDs.iterator();
@@ -1945,10 +1954,6 @@ public class KyKeToanController {
 						}
 					}
 				}
-				soDuKyHh.setKyKeToan(kyKeToan);
-				soDuKyHh.setLoaiTaiKhoan(loaiTaiKhoan);
-				soDuKyHh.setHangHoa(soDuKy.getHangHoa());
-				soDuKyHh.setKhoHang(soDuKy.getKhoHang());
 
 				logger.info("soDuKyHh hiện tại: " + soDuKyHh);
 				// Cập nhật dữ liệu mới
@@ -1956,12 +1961,7 @@ public class KyKeToanController {
 				soDuKyHh.setCoDauKy(soDuKyHh.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
 				soDuKyHh.setNoCuoiKy(soDuKyHh.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
 				soDuKyHh.setCoCuoiKy(soDuKyHh.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
-				logger.info("soDuKyHh: " + soDuKyHh.getHangHoa().getSoLuong());
-				logger.info("soDuKy: " + soDuKy.getHangHoa().getSoLuong());
-				logger.info("soDuKyTruoc: " + soDuKyTruoc.getHangHoa().getSoLuong());
-				double soLuong = soDuKyHh.getHangHoa().getSoLuong() + soDuKy.getHangHoa().getSoLuong()
-						- soDuKyTruoc.getHangHoa().getSoLuong();
-				soDuKyHh.getHangHoa().setSoLuong(soLuong);
+				soDuKyHh.setSoLuong(soDuKyHh.getSoLuong() + soDuKy.getSoLuong() - soDuKyTruoc.getSoLuong());
 				if (soDuKyHh.getLoaiTaiKhoan().equals(soDuKy.getLoaiTaiKhoan())) {
 					soDuKyHh.setLoaiTien(soDuKy.getLoaiTien());
 				}

@@ -163,8 +163,8 @@
 								$(form).find("#noDauKy").val(soDuKy.noDauKy);
 								$(form).find("#coDauKy").val(soDuKy.coDauKy);
 								if (soDuKy.hangHoa != null) {
-									$(form).find("#hangHoa\\.soLuong").val(
-											soDuKy.hangHoa.soLuong);
+									$(form).find("#soLuong").val(
+											soDuKy.soLuong);
 									$(form).find("#hangHoa\\.donVi\\.maDv")
 											.val(soDuKy.hangHoa.donVi.maDv);
 								}
@@ -176,7 +176,7 @@
 								console.log("success", "There is no data");
 								$(form).find("#noDauKy").val(0);
 								$(form).find("#coDauKy").val(0);
-								$(form).find("#hangHoa\\.soLuong").val(0);
+								$(form).find("#soLuong").val(0);
 								$(form).find("#hangHoa\\.donVi\\.maDv").val(0);
 
 								$(form).find("#loaiTien\\.maLt").val("");
@@ -190,7 +190,7 @@
 							console.log(data);
 							$(form).find("#noDauKy").val(0);
 							$(form).find("#coDauKy").val(0);
-							$(form).find("#hangHoa\\.soLuong").val(0);
+							$(form).find("#soLuong").val(0);
 							$(form).find("#hangHoa\\.donVi\\.maDv").val(0);
 							$(form).find('#hangHoa\\.donVi\\.maDv').data(
 									'combobox').refresh();
@@ -539,8 +539,8 @@
 							</form:select>
 						</div>
 						<div class="form-group col-sm-6">
-							<label for="hangHoa.soLuong">Số lượng</label>
-							<form:input path="hangHoa.soLuong" class="form-control" />
+							<label for="soLuong">Số lượng</label>
+							<form:input path="soLuong" class="form-control" />
 						</div>
 					</div>
 					<div class="row">
