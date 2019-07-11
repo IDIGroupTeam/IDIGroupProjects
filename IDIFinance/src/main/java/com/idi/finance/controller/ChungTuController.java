@@ -1641,6 +1641,7 @@ public class ChungTuController {
 			while (hhIter.hasNext()) {
 				HangHoa hangHoa = hhIter.next();
 				hangHoa.getGiaKho().setLoaiTien(chungTu.getLoaiTien());
+				hangHoa.getDonGia().setLoaiTien(chungTu.getLoaiTien());
 
 				// Tính tổng tiền mua hàng đề ghi vào tài khoản công nợ
 				double tongDonGia = hangHoa.getSoLuong() * hangHoa.getDonGia().getSoTien();

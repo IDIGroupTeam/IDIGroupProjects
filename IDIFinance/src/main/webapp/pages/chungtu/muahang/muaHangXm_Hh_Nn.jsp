@@ -47,7 +47,7 @@
 						<td><fmt:formatNumber value="${hangHoa.soLuong}"
 								maxFractionDigits="2"></fmt:formatNumber></td>
 						<td class="text-right"><c:choose>
-								<c:when test="${chungTu.loaiTien.maLt=='VND'}">
+								<c:when test="${chungTu.loaiTien.maLt eq LoaiTien.VND}">
 									<fmt:formatNumber value="${hangHoa.donGia.soTien}"
 										maxFractionDigits="2"></fmt:formatNumber>
 							&nbsp;${chungTu.loaiTien.maLt}</c:when>
@@ -61,7 +61,7 @@
 							&nbsp;VND</c:otherwise>
 							</c:choose></td>
 						<td class="text-right"><c:choose>
-								<c:when test="${chungTu.loaiTien.maLt=='VND'}">
+								<c:when test="${chungTu.loaiTien.maLt eq LoaiTien.VND}">
 									<fmt:formatNumber
 										value="${hangHoa.soLuong*hangHoa.donGia.soTien}"
 										maxFractionDigits="2"></fmt:formatNumber>
@@ -80,7 +80,7 @@
 						<td>${hangHoa.tkThanhtoan.loaiTaiKhoan.maTk}</td>
 						<td>${hangHoa.kho.tenKho}</td>
 						<td class="text-right"><c:choose>
-								<c:when test="${chungTu.loaiTien.maLt=='VND'}">
+								<c:when test="${chungTu.loaiTien.maLt eq LoaiTien.VND}">
 									<fmt:formatNumber value="${hangHoa.giaKho.soTien}"
 										maxFractionDigits="2"></fmt:formatNumber>
 							&nbsp;${chungTu.loaiTien.maLt}</c:when>
@@ -94,7 +94,7 @@
 							&nbsp;VND</c:otherwise>
 							</c:choose></td>
 						<td class="text-right"><c:choose>
-								<c:when test="${chungTu.loaiTien.maLt=='VND'}">
+								<c:when test="${chungTu.loaiTien.maLt eq LoaiTien.VND}">
 									<fmt:formatNumber
 										value="${hangHoa.soLuong*hangHoa.giaKho.soTien}"
 										maxFractionDigits="2"></fmt:formatNumber>

@@ -1,5 +1,7 @@
 package com.idi.finance.bean;
 
+import java.text.DecimalFormat;
+
 import org.springframework.format.annotation.NumberFormat;
 
 public class Tien {
@@ -44,8 +46,7 @@ public class Tien {
 
 	@Override
 	public String toString() {
-		// return soTien * loaiTien.getBanRa() + " " + loaiTien.getMaLt();
-		return soTien + " " + giaTri;
+		return maGia + " - " + loaiTien + " - " + soTien + " - " + giaTri;
 	}
 
 	@Override

@@ -193,7 +193,7 @@
 					<tr>
 						<td></td>
 						<td></td>
-						<td><i>Tổng phát sinh trong kỳ</i></td>
+						<td><b>Tổng phát sinh trong kỳ</b></td>
 						<td></td>
 						<td class="text-right"><fmt:formatNumber
 								value="${doiTuong.duLieuKeToan.tongNoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>

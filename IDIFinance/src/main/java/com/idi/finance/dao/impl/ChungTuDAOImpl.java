@@ -595,6 +595,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				taiKhoan.setChungTu(chungTu);
 				chungTu.themHangHoa(hangHoa);
 
+				logger.info(chungTu);
+
 				return chungTu;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1231,10 +1233,12 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				// Thêm vào chung_tu_hang_hoa
 				if (hangHoa.getKho() != null) {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
-							hangHoa.getDonGia().getSoTien(), maGia, chungTu.getChieu(), hangHoa.getKho().getMaKho());
+							hangHoa.getDonGia().getSoTien() * hangHoa.getDonGia().getLoaiTien().getBanRa(), maGia,
+							chungTu.getChieu(), hangHoa.getKho().getMaKho());
 				} else {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
-							hangHoa.getDonGia().getSoTien(), maGia, chungTu.getChieu(), KhoHang.MA_KHO_MAC_DINH);
+							hangHoa.getDonGia().getSoTien() * hangHoa.getDonGia().getLoaiTien().getBanRa(), maGia,
+							chungTu.getChieu(), KhoHang.MA_KHO_MAC_DINH);
 				}
 
 				logger.info("Thêm vào bảng nghiep_vu_ke_toan: ");
@@ -1247,7 +1251,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkKho().getSoTien().getSoTien());
+							stt.setDouble(2,
+									hangHoa.getTkKho().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkKho().getSoDu());
 							stt.setString(4, hangHoa.getTkKho().getLyDo());
 
@@ -1267,7 +1272,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkGiaVon().getSoTien().getSoTien());
+							stt.setDouble(2,
+									hangHoa.getTkGiaVon().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkGiaVon().getSoDu());
 							stt.setString(4, hangHoa.getTkGiaVon().getLyDo());
 
@@ -1287,7 +1293,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkDoanhThu().getSoTien().getSoTien());
+							stt.setDouble(2,
+									hangHoa.getTkDoanhThu().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkDoanhThu().getSoDu());
 							stt.setString(4, hangHoa.getTkDoanhThu().getLyDo());
 
@@ -1308,7 +1315,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkChiPhi().getSoTien().getSoTien());
+							stt.setDouble(2,
+									hangHoa.getTkChiPhi().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkChiPhi().getSoDu());
 							stt.setString(4, hangHoa.getTkChiPhi().getLyDo());
 
@@ -1328,7 +1336,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkThanhtoan().getSoTien().getSoTien());
+							stt.setDouble(2, hangHoa.getTkThanhtoan().getSoTien().getSoTien()
+									* chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkThanhtoan().getSoDu());
 							stt.setString(4, hangHoa.getTkThanhtoan().getLyDo());
 
@@ -1351,7 +1360,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkThueNk().getSoTien().getSoTien());
+							stt.setDouble(2,
+									hangHoa.getTkThueNk().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkThueNk().getSoDu());
 							stt.setString(4, hangHoa.getTkThueNk().getLyDo());
 
@@ -1372,7 +1382,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkThueXk().getSoTien().getSoTien());
+							stt.setDouble(2,
+									hangHoa.getTkThueXk().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkThueXk().getSoDu());
 							stt.setString(4, hangHoa.getTkThueXk().getLyDo());
 
@@ -1394,7 +1405,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkThueTtdb().getSoTien().getSoTien());
+							stt.setDouble(2,
+									hangHoa.getTkThueTtdb().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkThueTtdb().getSoDu());
 							stt.setString(4, hangHoa.getTkThueTtdb().getLyDo());
 
@@ -1415,7 +1427,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkThueGtgtDu().getSoTien().getSoTien());
+							stt.setDouble(2, hangHoa.getTkThueGtgtDu().getSoTien().getSoTien()
+									* chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkThueGtgtDu().getSoDu());
 							stt.setString(4, hangHoa.getTkThueGtgtDu().getLyDo());
 
@@ -1441,7 +1454,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 								PreparedStatement stt = con.prepareStatement(themTaiKhoan,
 										Statement.RETURN_GENERATED_KEYS);
 								stt.setString(1, hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk());
-								stt.setDouble(2, hangHoa.getTkThueGtgt().getSoTien().getSoTien());
+								stt.setDouble(2, hangHoa.getTkThueGtgt().getSoTien().getSoTien()
+										* chungTu.getLoaiTien().getBanRa());
 								stt.setInt(3, hangHoa.getTkThueGtgt().getSoDu());
 								stt.setString(4, hangHoa.getTkThueGtgt().getLyDo());
 
@@ -1604,10 +1618,12 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				// Thêm vào chung_tu_hang_hoa
 				if (hangHoa.getKho() != null) {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
-							hangHoa.getDonGia().getSoTien(), maGia, chungTu.getChieu(), hangHoa.getKho().getMaKho());
+							hangHoa.getDonGia().getSoTien() * hangHoa.getDonGia().getLoaiTien().getBanRa(), maGia,
+							chungTu.getChieu(), hangHoa.getKho().getMaKho());
 				} else {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
-							hangHoa.getDonGia().getSoTien(), maGia, chungTu.getChieu(), KhoHang.MA_KHO_MAC_DINH);
+							hangHoa.getDonGia().getSoTien() * hangHoa.getDonGia().getLoaiTien().getBanRa(), maGia,
+							chungTu.getChieu(), KhoHang.MA_KHO_MAC_DINH);
 				}
 
 				logger.info("Thêm vào bảng nghiep_vu_ke_toan: ");
@@ -1616,12 +1632,12 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					logger.info("Tài khoản kho: " + hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
-
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkKho().getSoTien().getSoTien());
+							stt.setDouble(2,
+									hangHoa.getTkKho().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkKho().getSoDu());
 							stt.setString(4, hangHoa.getTkKho().getLyDo());
 
@@ -1641,7 +1657,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkGiaVon().getSoTien().getSoTien());
+							stt.setDouble(2,
+									hangHoa.getTkGiaVon().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkGiaVon().getSoDu());
 							stt.setString(4, hangHoa.getTkGiaVon().getLyDo());
 
@@ -1661,7 +1678,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkDoanhThu().getSoTien().getSoTien());
+							stt.setDouble(2,
+									hangHoa.getTkDoanhThu().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkDoanhThu().getSoDu());
 							stt.setString(4, hangHoa.getTkDoanhThu().getLyDo());
 
@@ -1682,7 +1700,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkChiPhi().getSoTien().getSoTien());
+							stt.setDouble(2,
+									hangHoa.getTkChiPhi().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkChiPhi().getSoDu());
 							stt.setString(4, hangHoa.getTkChiPhi().getLyDo());
 
@@ -1702,7 +1721,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkThanhtoan().getSoTien().getSoTien());
+							stt.setDouble(2, hangHoa.getTkThanhtoan().getSoTien().getSoTien()
+									* chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkThanhtoan().getSoDu());
 							stt.setString(4, hangHoa.getTkThanhtoan().getLyDo());
 
@@ -1725,7 +1745,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkThueNk().getSoTien().getSoTien());
+							stt.setDouble(2,
+									hangHoa.getTkThueNk().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkThueNk().getSoDu());
 							stt.setString(4, hangHoa.getTkThueNk().getLyDo());
 
@@ -1746,7 +1767,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkThueXk().getSoTien().getSoTien());
+							stt.setDouble(2,
+									hangHoa.getTkThueXk().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkThueXk().getSoDu());
 							stt.setString(4, hangHoa.getTkThueXk().getLyDo());
 
@@ -1768,7 +1790,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkThueTtdb().getSoTien().getSoTien());
+							stt.setDouble(2,
+									hangHoa.getTkThueTtdb().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkThueTtdb().getSoDu());
 							stt.setString(4, hangHoa.getTkThueTtdb().getLyDo());
 
@@ -1789,7 +1812,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, hangHoa.getTkThueGtgtDu().getSoTien().getSoTien());
+							stt.setDouble(2, hangHoa.getTkThueGtgtDu().getSoTien().getSoTien()
+									* chungTu.getLoaiTien().getBanRa());
 							stt.setInt(3, hangHoa.getTkThueGtgtDu().getSoDu());
 							stt.setString(4, hangHoa.getTkThueGtgtDu().getLyDo());
 
@@ -1813,7 +1837,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 								PreparedStatement stt = con.prepareStatement(themTaiKhoan,
 										Statement.RETURN_GENERATED_KEYS);
 								stt.setString(1, hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk());
-								stt.setDouble(2, hangHoa.getTkThueGtgt().getSoTien().getSoTien());
+								stt.setDouble(2, hangHoa.getTkThueGtgt().getSoTien().getSoTien()
+										* chungTu.getLoaiTien().getBanRa());
 								stt.setInt(3, hangHoa.getTkThueGtgt().getSoDu());
 								stt.setString(4, hangHoa.getTkThueGtgt().getLyDo());
 

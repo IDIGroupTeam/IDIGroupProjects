@@ -1,5 +1,6 @@
 <%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
 <%@page import="com.idi.finance.bean.doituong.DoiTuong"%>
+<%@page import="com.idi.finance.bean.LoaiTien"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
@@ -47,7 +48,7 @@
 						<td><fmt:formatNumber value="${hangHoa.soLuong}"
 								maxFractionDigits="2"></fmt:formatNumber></td>
 						<td class="text-right"><c:choose>
-								<c:when test="${chungTu.loaiTien.maLt=='VND'}">
+								<c:when test="${chungTu.loaiTien.maLt eq LoaiTien.VND}">
 									<fmt:formatNumber value="${hangHoa.donGia.soTien}"
 										maxFractionDigits="2"></fmt:formatNumber>
 							&nbsp;${chungTu.loaiTien.maLt}</c:when>
@@ -61,7 +62,7 @@
 							&nbsp;VND</c:otherwise>
 							</c:choose></td>
 						<td class="text-right"><c:choose>
-								<c:when test="${chungTu.loaiTien.maLt=='VND'}">
+								<c:when test="${chungTu.loaiTien.maLt eq LoaiTien.VND}">
 									<fmt:formatNumber
 										value="${hangHoa.soLuong*hangHoa.donGia.soTien}"
 										maxFractionDigits="2"></fmt:formatNumber>
@@ -72,7 +73,7 @@
 										maxFractionDigits="2"></fmt:formatNumber>
 							&nbsp;${chungTu.loaiTien.maLt} <br />
 									<fmt:formatNumber
-										value="${hangHoa.soLuong*hangHoa.donGia.soTien * chungTu.loaiTien.banRa}"
+										value="${hangHoa.soLuong*hangHoa.donGia.soTien*chungTu.loaiTien.banRa}"
 										maxFractionDigits="2"></fmt:formatNumber>
 							&nbsp;VND</c:otherwise>
 							</c:choose></td>
@@ -80,7 +81,7 @@
 						<td>${hangHoa.tkThanhtoan.loaiTaiKhoan.maTk}</td>
 						<td>${hangHoa.kho.tenKho}</td>
 						<td class="text-right"><c:choose>
-								<c:when test="${chungTu.loaiTien.maLt=='VND'}">
+								<c:when test="${chungTu.loaiTien.maLt eq LoaiTien.VND}">
 									<fmt:formatNumber value="${hangHoa.giaKho.soTien}"
 										maxFractionDigits="2"></fmt:formatNumber>
 							&nbsp;${chungTu.loaiTien.maLt}</c:when>
@@ -94,7 +95,7 @@
 							&nbsp;VND</c:otherwise>
 							</c:choose></td>
 						<td class="text-right"><c:choose>
-								<c:when test="${chungTu.loaiTien.maLt=='VND'}">
+								<c:when test="${chungTu.loaiTien.maLt eq LoaiTien.VND}">
 									<fmt:formatNumber
 										value="${hangHoa.soLuong*hangHoa.giaKho.soTien}"
 										maxFractionDigits="2"></fmt:formatNumber>
