@@ -97,7 +97,7 @@
 					});
 
 			$("#taiKhoanNoDs0\\.soTien\\.soTien").val(
-					accounting.formatNumber(tongGiaTri, 2, ","));
+					accounting.formatNumber(tongGiaTri, thapPhan, ","));
 			console.log("tongGiaTri", $("#taiKhoanNoDs0\\.soTien\\.soTien")
 					.val());
 
@@ -113,10 +113,10 @@
 			console.log("tongGiaTri vnd", tongGiaTri * tyGia);
 
 			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTri, 2, ",") + " "
+					accounting.formatNumber(tongGiaTri, thapPhan, ",") + " "
 							+ loaiTien.maLt);
 			$("#soTien\\.giaTriQdTxt").html(
-					accounting.formatNumber(tongGiaTri * tyGia, 2, ",")
+					accounting.formatNumber(tongGiaTri * tyGia, 0, ",")
 							+ " VND");
 		}
 

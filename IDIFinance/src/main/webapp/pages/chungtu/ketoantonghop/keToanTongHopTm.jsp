@@ -81,6 +81,14 @@
 		function capNhatTongTxt() {
 			var tongGiaTri = tongGiaTriNo > tongGiaTriCo ? tongGiaTriNo
 					: tongGiaTriCo;
+			tongGiaTri = tongGiaTri.replace(/,/g, "");
+			tongGiaTriNo = tongGiaTriNo.replace(/,/g, "");
+			tongGiaTriCo = tongGiaTriCo.replace(/,/g, "");
+			console.log("tongGiaTri", tongGiaTri);
+			console.log("tongGiaTriNo", tongGiaTriNo);
+			console.log("tongGiaTriCo", tongGiaTriCo);
+			console.log("tongGiaTri vnd", tongGiaTri * loaiTien.banRa);
+
 			$("#soTien\\.giaTriTxt").html(
 					accounting
 							.formatNumber(tongGiaTri * loaiTien.banRa, 0, ",")
