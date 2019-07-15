@@ -327,7 +327,6 @@ public class ChungTuController {
 	public String luuTaoMoiPhieuThu(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu, BindingResult result,
 			Model model) {
 		try {
-			logger.info("Error: " + result.getAllErrors());
 			if (result.hasErrors()) {
 				return chuanBiFormPhieuThu(model, chungTu);
 			}
@@ -363,11 +362,11 @@ public class ChungTuController {
 			// Lấy danh sách tài khoản tiền mặt, dùng cho bên nợ
 			CauHinh taiKhoanDs = props.getCauHinh(PropCont.PHIEU_THU_DS_TK_NO);
 			List<String> maTkDs = Utils.parseString(taiKhoanDs.getGiaTri());
-			List<LoaiTaiKhoan> loaiTaiKhoanTmDs = taiKhoanDAO.danhSachTaiKhoan(maTkDs);
+			List<LoaiTaiKhoan> loaiTaiKhoanTmDs = taiKhoanDAO.danhSachTaiKhoanCon(maTkDs);
 			model.addAttribute("loaiTaiKhoanTmDs", loaiTaiKhoanTmDs);
 
 			// Lấy danh sách tài khoản, dùng cho bên có
-			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoanCon();
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
 			model.addAttribute("tab", "tabCTPT");
@@ -624,11 +623,11 @@ public class ChungTuController {
 			// Lấy danh sách tài khoản tiền mặt, dùng cho bên có
 			CauHinh taiKhoanDs = props.getCauHinh(PropCont.PHIEU_CHI_DS_TK_CO);
 			List<String> maTkDs = Utils.parseString(taiKhoanDs.getGiaTri());
-			List<LoaiTaiKhoan> loaiTaiKhoanTmDs = taiKhoanDAO.danhSachTaiKhoan(maTkDs);
+			List<LoaiTaiKhoan> loaiTaiKhoanTmDs = taiKhoanDAO.danhSachTaiKhoanCon(maTkDs);
 			model.addAttribute("loaiTaiKhoanTmDs", loaiTaiKhoanTmDs);
 
 			// Lấy danh sách tài khoản, dùng cho bên nợ
-			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoanCon();
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
 			model.addAttribute("tab", "tabCTPC");
@@ -882,15 +881,13 @@ public class ChungTuController {
 			model.addAttribute("loaiTienDs", loaiTienDs);
 
 			// Lấy danh sách tài khoản tiền gửi ngân hàng, dùng cho bên nợ
-			List<LoaiTaiKhoan> loaiTaiKhoanTgnhDs = taiKhoanDAO
-					.danhSachTaiKhoanTheoCap1(LoaiTaiKhoan.TIEN_GUI_NGAN_HANG);
 			CauHinh taiKhoanDs = props.getCauHinh(PropCont.BAO_CO_DS_TK_CO);
 			List<String> maTkDs = Utils.parseString(taiKhoanDs.getGiaTri());
-			loaiTaiKhoanTgnhDs = taiKhoanDAO.danhSachTaiKhoan(maTkDs);
+			List<LoaiTaiKhoan> loaiTaiKhoanTgnhDs = taiKhoanDAO.danhSachTaiKhoanCon(maTkDs);
 			model.addAttribute("loaiTaiKhoanTgnhDs", loaiTaiKhoanTgnhDs);
 
 			// Lấy danh sách tài khoản, dùng cho bên có
-			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoanCon();
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
 			model.addAttribute("tab", "tabCTBC");
@@ -1144,15 +1141,13 @@ public class ChungTuController {
 			model.addAttribute("loaiTienDs", loaiTienDs);
 
 			// Lấy danh sách tài khoản tiền gửi ngân hàng, dùng cho bên có
-			List<LoaiTaiKhoan> loaiTaiKhoanTgnhDs = taiKhoanDAO
-					.danhSachTaiKhoanTheoCap1(LoaiTaiKhoan.TIEN_GUI_NGAN_HANG);
 			CauHinh taiKhoanDs = props.getCauHinh(PropCont.BAO_NO_DS_TK_NO);
 			List<String> maTkDs = Utils.parseString(taiKhoanDs.getGiaTri());
-			loaiTaiKhoanTgnhDs = taiKhoanDAO.danhSachTaiKhoan(maTkDs);
+			List<LoaiTaiKhoan> loaiTaiKhoanTgnhDs = taiKhoanDAO.danhSachTaiKhoanCon(maTkDs);
 			model.addAttribute("loaiTaiKhoanTgnhDs", loaiTaiKhoanTgnhDs);
 
 			// Lấy danh sách tài khoản, dùng cho bên nợ
-			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoanCon();
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
 			model.addAttribute("tab", "tabCTBN");

@@ -37,6 +37,7 @@
 <script src="${url}/public/js/jquery.formatCurrency.vi-VN.js"></script>
 <script src="${url}/public/js/accounting.min.js"></script>
 <script src="${url}/public/js/jquery.maskx.js"></script>
+<script src="${url}/public/js/jquery.number.js"></script>
 <script src="${url}/public/js/celleditable.js"></script>
 <script src="${url}/public/js/jquery.boot.treetable.js"></script>
 <script src="${url}/public/js/jquery.dataTables.js"></script>

@@ -1,15 +1,13 @@
 package com.idi.finance.bean;
 
-import java.text.DecimalFormat;
-
 import org.springframework.format.annotation.NumberFormat;
 
 public class Tien {
 	private int maGia;
 	private LoaiTien loaiTien = new LoaiTien();
-	@NumberFormat(pattern = "#")
+	@NumberFormat(pattern = "###,###,###,###,###,###.##")
 	private double soTien;
-	@NumberFormat(pattern = "#")
+	@NumberFormat(pattern = "###,###,###,###,###,###.##")
 	private double giaTri;
 
 	public int getMaGia() {
@@ -46,7 +44,7 @@ public class Tien {
 
 	@Override
 	public String toString() {
-		return maGia + " - " + loaiTien + " - " + soTien + " - " + giaTri;
+		return loaiTien + " - " + soTien + " - " + giaTri;
 	}
 
 	@Override

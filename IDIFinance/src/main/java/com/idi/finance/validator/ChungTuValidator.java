@@ -66,7 +66,7 @@ public class ChungTuValidator implements Validator {
 						}
 					}
 				} catch (Exception e) {
-					logger.info(e.getMessage());
+					// logger.info(e.getMessage());
 				}
 
 				List<TaiKhoan> taiKhoanCoDs = chungTu.getTaiKhoanCoDs();

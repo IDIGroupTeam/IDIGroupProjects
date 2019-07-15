@@ -246,19 +246,21 @@
 					noSoTienNameObj.remove();
 					noSoTienObj.prop("name", noName);
 					noSoTienObj.val("");
-					noSoTienObj.maskx({
+					/* noSoTienObj.maskx({
 						maskxTo : 'moneyTo',
 						maskxFrom : 'moneyFrom'
-					});
+					}); */
+					noSoTienObj.number( true, 2 );
 
 					var coName = coSoTienNameObj.prop("name");
 					coSoTienNameObj.remove();
 					coSoTienObj.prop("name", coName);
 					coSoTienObj.val("");
-					coSoTienObj.maskx({
+					/* coSoTienObj.maskx({
 						maskxTo : 'moneyTo',
 						maskxFrom : 'moneyFrom'
-					});
+					}); */
+					coSoTienObj.number( true, 2 );
 
 					newTr.find(".error").remove();
 
@@ -366,12 +368,13 @@
 				$(this).combobox();
 			});
 
-			$("input[id$='\\.soTien']").each(function() {
+			/* $("input[id$='\\.soTien']").each(function() {
 				$(this).maskx({
 					maskxTo : 'moneyTo',
 					maskxFrom : 'moneyFrom'
 				});
-			});
+			}); */
+			$("input[id$='\\.soTien']").number( true, 2 );
 
 			$("tr#" + selectedRow).addClass("active");
 

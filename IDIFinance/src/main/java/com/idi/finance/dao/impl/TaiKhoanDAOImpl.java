@@ -29,6 +29,12 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 	@Value("${LAY_LOAI_TAI_KHOAN_THEO_MA_TK}")
 	private String LAY_LOAI_TAI_KHOAN_THEO_MA_TK;
 
+	@Value("${DANH_SACH_TAI_KHOAN_CON}")
+	private String DANH_SACH_TAI_KHOAN_CON;
+
+	@Value("${DANH_SACH_TAI_KHOAN_CON_TAT_CA}")
+	private String DANH_SACH_TAI_KHOAN_CON_TAT_CA;
+
 	private JdbcTemplate jdbcTmpl;
 
 	public JdbcTemplate getJdbcTmpl() {
@@ -286,12 +292,6 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 		if (maTkDs == null || maTkDs == null || maTkDs.size() == 0)
 			return null;
 
-		/*
-		 * String condition = ""; for (String maTk : maTkDs) { condition += "'" + maTk +
-		 * "',"; } if (!condition.trim().isEmpty()) { condition = condition.substring(0,
-		 * condition.length() - 1); }
-		 */
-
 		String condition = "'";
 		for (String maTk : maTkDs) {
 			condition += "^" + maTk + "|";
@@ -301,6 +301,40 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 
 		String query = DANH_SACH_TAI_KHOAN_THEO_MA_TK;
 		query = query.replaceAll("\\$MA_TK_LIST\\$", condition);
+		logger.info(query);
+
+		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, new LoaiTaiKhoanMapper());
+
+		return taiKhoanDs;
+	}
+
+	@Override
+	public List<LoaiTaiKhoan> danhSachTaiKhoanCon(List<String> maTkDs) {
+		if (maTkDs == null || maTkDs.size() == 0) {
+			return null;
+		}
+
+		String condition = "'";
+		for (String maTk : maTkDs) {
+			condition += "^" + maTk + "|";
+		}
+		condition = condition.substring(0, condition.length() - 1);
+		condition += "'";
+
+		logger.info("Danh sách tài khoản con");
+		String query = DANH_SACH_TAI_KHOAN_CON;
+		query = query.replaceAll("\\$MA_TK_LIST\\$", condition);
+		logger.info(query);
+
+		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, new LoaiTaiKhoanMapper());
+
+		return taiKhoanDs;
+	}
+
+	@Override
+	public List<LoaiTaiKhoan> danhSachTaiKhoanCon() {
+		logger.info("Danh sách tài khoản con");
+		String query = DANH_SACH_TAI_KHOAN_CON_TAT_CA;
 		logger.info(query);
 
 		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, new LoaiTaiKhoanMapper());

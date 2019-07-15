@@ -50,6 +50,7 @@
 		var tongGiaTriNo = 0;
 		var tongGiaTriCo = 0;
 		var loaiTien = null;
+		var thapPhan = 0;
 
 		// Khởi tạo danh sách các loại tiền
 		var loaiTienDsStr = "${loaiTienDs}";
@@ -69,6 +70,11 @@
 
 			if (tien.maLt == $("#loaiTien\\.maLt").val()) {
 				loaiTien = tien;
+				if (tien.maLt == 'VND' || tien.maLt == 'VANG') {
+					thapPhan = 0;
+				} else {
+					thapPhan = 2;
+				}
 			}
 		}
 
@@ -77,15 +83,15 @@
 					: tongGiaTriCo;
 			$("#soTien\\.giaTriTxt").html(
 					accounting
-							.formatNumber(tongGiaTri * loaiTien.banRa, 2, ",")
+							.formatNumber(tongGiaTri * loaiTien.banRa, 0, ",")
 							+ " VND");
 
 			$("#no\\.soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTriNo, 2, ",") + " "
+					accounting.formatNumber(tongGiaTriNo, thapPhan, ",") + " "
 							+ loaiTien.maLt);
 
 			$("#co\\.soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTriCo, 2, ",") + " "
+					accounting.formatNumber(tongGiaTriCo, thapPhan, ",") + " "
 							+ loaiTien.maLt);
 		}
 
@@ -210,25 +216,26 @@
 					var currentTr = $("tr#" + id);
 
 					var newTr = "<tr>" + $(currentTr).html() + "</tr>";
+					console.log("newTr", newTr);
 					var pat = new RegExp("\\[" + id + "\\]", "g");
 					var pat1 = new RegExp("Ds" + id, "g");
 					newTr = newTr.replace(pat, "[" + newId + "]");
 					newTr = newTr.replace(pat1, "Ds" + newId);
+					console.log("newTr", newTr);
 
 					// Thêm dòng mới và tăng số dòng
 					$(newTr).insertAfter($(currentTr)).prop("id", newId);
 					soDongTk++;
 
 					// Làm mới nội dung
-					var newTr = $("#" + newId);
-					var taiKhoanObj = newTr.find("[id$='\\.maTk']");
-					var noSoTienObj = newTr.find("[id$='no\\.soTien']");
-					var noSoTienNameObj = newTr.find("[name$='no\\.soTien']");
-					var coSoTienObj = newTr.find("[id$='co\\.soTien']");
-					var coSoTienNameObj = newTr.find("[name$='co\\.soTien']");
-					var doiTuongObj = newTr.find("[id$='doiTuong\\.khoaDt']");
+					var newLn = $("#" + newId);
+					console.log("newLn", $(newLn).html());
+					var taiKhoanObj = newLn.find("[id$='\\.maTk']");
+					var noSoTienObj = newLn.find("[id$='no\\.soTien']");
+					var coSoTienObj = newLn.find("[id$='co\\.soTien']");
+					var doiTuongObj = newLn.find("[id$='doiTuong\\.khoaDt']");
 
-					newTr.find(".combobox-container").remove();
+					newLn.find(".combobox-container").remove();
 					taiKhoanObj.prop("name", "taiKhoanKtthDs[" + newId
 							+ "].loaiTaiKhoan.maTk");
 					taiKhoanObj.val("");
@@ -239,28 +246,15 @@
 					doiTuongObj.val("");
 					doiTuongObj.combobox();
 
-					newTr.find("[id$='\\.nhomDk']").val("");
-					newTr.find("[id$='\\.lyDo']").val("");
+					newLn.find("[id$='\\.nhomDk']").val("");
+					newLn.find("[id$='\\.lyDo']").val("");
 
-					var noName = noSoTienNameObj.prop("name");
-					noSoTienNameObj.remove();
-					noSoTienObj.prop("name", noName);
 					noSoTienObj.val("");
-					noSoTienObj.maskx({
-						maskxTo : 'moneyTo',
-						maskxFrom : 'moneyFrom'
-					});
-
-					var coName = coSoTienNameObj.prop("name");
-					coSoTienNameObj.remove();
-					coSoTienObj.prop("name", coName);
+					noSoTienObj.number(true, thapPhan);
 					coSoTienObj.val("");
-					coSoTienObj.maskx({
-						maskxTo : 'moneyTo',
-						maskxFrom : 'moneyFrom'
-					});
+					coSoTienObj.number(true, thapPhan);
 
-					newTr.find(".error").remove();
+					newLn.find(".error").remove();
 
 					// Đăng ký sự kiện thay đổi
 					dangKySuKien();
@@ -315,20 +309,30 @@
 			}
 		});
 
-		$("#loaiTien\\.maLt").change(function() {
-			// Thay đổi loại tiền
-			for (i = 0; i < loaiTienDs.length; i++) {
-				if (loaiTienDs[i].maLt == this.value) {
-					loaiTien = loaiTienDs[i];
-					break;
-				}
-			}
+		$("#loaiTien\\.maLt").change(
+				function() {
+					// Thay đổi loại tiền
+					for (i = 0; i < loaiTienDs.length; i++) {
+						if (loaiTienDs[i].maLt == this.value) {
+							loaiTien = loaiTienDs[i];
+							if (loaiTien.maLt == 'VND'
+									|| loaiTien.maLt == 'VANG') {
+								thapPhan = 0;
+							} else {
+								thapPhan = 2;
+							}
+							break;
+						}
+					}
 
-			// Cập nhật tỷ giá
-			$("#loaiTien\\.banRa").val(loaiTien.banRa);
+					// Cập nhật tỷ giá
+					$("#loaiTien\\.banRa").val(loaiTien.banRa);
+					$("input[id$='\\.soTien']").unbind(
+							'keydown.format keyup.format paste.format');
+					$("input[id$='\\.soTien']").number(true, thapPhan);
 
-			capNhatTongTxt();
-		});
+					capNhatTongTxt();
+				});
 
 		$("#loaiTien\\.banRa").change(function() {
 			loaiTien.banRa = $(this).val();
@@ -366,12 +370,8 @@
 				$(this).combobox();
 			});
 
-			$("input[id$='\\.soTien']").each(function() {
-				$(this).maskx({
-					maskxTo : 'moneyTo',
-					maskxFrom : 'moneyFrom'
-				});
-			});
+			$("input[id$='\\.soTien']").number(true, thapPhan);
+			$("#loaiTien\\.banRa").number(true);
 
 			$("tr#" + selectedRow).addClass("active");
 
@@ -554,12 +554,12 @@
 				<td class="text-right" style="width: 100px;"><span
 					id="no.soTien.giaTriTxt"> <fmt:formatNumber
 							value="${mainFinanceForm.soTien.soTien}"></fmt:formatNumber>
-						&nbsp;VND
+						&nbsp;${mainFinanceForm.loaiTien.maLt}
 				</span></td>
 				<td class="text-right" style="width: 100px;"><span
 					id="co.soTien.giaTriTxt"> <fmt:formatNumber
 							value="${mainFinanceForm.soTien.soTien}"></fmt:formatNumber>
-						&nbsp;VND
+						&nbsp;${mainFinanceForm.loaiTien.maLt}
 				</span></td>
 				<td class="text-left"><b>Quy đổi:</b></td>
 				<td class="text-right" style="width: 120px;"><form:hidden

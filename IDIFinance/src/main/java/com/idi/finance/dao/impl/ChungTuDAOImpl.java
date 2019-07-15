@@ -278,6 +278,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				chungTu.themTaiKhoan(taiKhoan);
 				taiKhoan.setChungTu(chungTu);
 
+				logger.info(chungTu + " - " + taiKhoan);
+
 				return chungTu;
 			} catch (Exception e) {
 				return null;
@@ -798,6 +800,9 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				try {
 					if (!taiKhoan.getLoaiTaiKhoan().getMaTk().equals("0")) {
 						logger.info("Tài khoản: " + taiKhoan.getLoaiTaiKhoan().getMaTk());
+						logger.info("So tien: " + taiKhoan.getSoTien().getSoTien());
+						logger.info("Gia tri: " + taiKhoan.getSoTien().getGiaTri() * chungTu.getLoaiTien().getBanRa());
+						logger.info("Ty gia: " + chungTu.getLoaiTien().getBanRa());
 						GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 						jdbcTmpl.update(new PreparedStatementCreator() {
 							@Override
@@ -865,6 +870,9 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					// Những nghiệp vụ kế toán có định khoản mới được cập nhật/thêm mới
 					if (taiKhoan.getLoaiTaiKhoan() != null && !taiKhoan.getLoaiTaiKhoan().getMaTk().equals("0")) {
 						logger.info("Tài khoản: " + taiKhoan.getLoaiTaiKhoan().getMaTk());
+						logger.info("So tien: " + taiKhoan.getSoTien().getSoTien());
+						logger.info("Gia tri: " + taiKhoan.getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
+						logger.info("Ty gia: " + chungTu.getLoaiTien().getBanRa());
 						if (taiKhoan.getMaNvkt() == 0) {
 							// Thêm mới nvkt người dùng vừa thêm
 							try {
