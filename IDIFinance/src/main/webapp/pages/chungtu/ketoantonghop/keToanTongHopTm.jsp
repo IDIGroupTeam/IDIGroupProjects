@@ -78,31 +78,6 @@
 			}
 		}
 
-		function capNhatTongTxt() {
-			var tongGiaTri = tongGiaTriNo > tongGiaTriCo ? tongGiaTriNo
-					: tongGiaTriCo;
-			tongGiaTri = tongGiaTri.replace(/,/g, "");
-			tongGiaTriNo = tongGiaTriNo.replace(/,/g, "");
-			tongGiaTriCo = tongGiaTriCo.replace(/,/g, "");
-			console.log("tongGiaTri", tongGiaTri);
-			console.log("tongGiaTriNo", tongGiaTriNo);
-			console.log("tongGiaTriCo", tongGiaTriCo);
-			console.log("tongGiaTri vnd", tongGiaTri * loaiTien.banRa);
-
-			$("#soTien\\.giaTriTxt").html(
-					accounting
-							.formatNumber(tongGiaTri * loaiTien.banRa, 0, ",")
-							+ " VND");
-
-			$("#no\\.soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTriNo, thapPhan, ",") + " "
-							+ loaiTien.maLt);
-
-			$("#co\\.soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTriCo, thapPhan, ",") + " "
-							+ loaiTien.maLt);
-		}
-
 		function capNhatTong() {
 			// Tính tổng các tài khoản nợ
 			tongGiaTriNo = 0;
@@ -116,6 +91,7 @@
 							tongGiaTriNo += parseFloat(giaTriSo);
 						}
 					});
+			console.log("capNhatTong tongGiaTriNo", tongGiaTriNo);
 
 			$("input[id^='taiKhoanKtthDs'][id$='\\.co\\.soTien']").each(
 					function() {
@@ -126,9 +102,31 @@
 							tongGiaTriCo += parseFloat(giaTriSo);
 						}
 					});
+			console.log("capNhatTong", "no", tongGiaTriNo, "co", tongGiaTriCo);
 
 			// Cập nhật các vị trí txt nợ
 			capNhatTongTxt();
+		}
+
+		function capNhatTongTxt() {
+			var tongGiaTri = tongGiaTriNo > tongGiaTriCo ? tongGiaTriNo
+					: tongGiaTriCo;
+			console.log("tongGiaTri", tongGiaTri, "No", tongGiaTriNo, "Co",
+					tongGiaTriCo, "tygia", loaiTien.banRa, "vnd", tongGiaTri
+							* loaiTien.banRa);
+
+			$("#soTien\\.giaTriTxt").html(
+					accounting
+							.formatNumber(tongGiaTri * loaiTien.banRa, 0, ",")
+							+ " VND");
+
+			$("#no\\.soTien\\.giaTriTxt").html(
+					accounting.formatNumber(tongGiaTriNo, thapPhan, ",") + " "
+							+ loaiTien.maLt);
+
+			$("#co\\.soTien\\.giaTriTxt").html(
+					accounting.formatNumber(tongGiaTriCo, thapPhan, ",") + " "
+							+ loaiTien.maLt);
 		}
 
 		function dangKySuKien() {
@@ -224,7 +222,6 @@
 					var currentTr = $("tr#" + id);
 
 					var newTr = "<tr>" + $(currentTr).html() + "</tr>";
-					console.log("newTr", newTr);
 					var pat = new RegExp("\\[" + id + "\\]", "g");
 					var pat1 = new RegExp("Ds" + id, "g");
 					newTr = newTr.replace(pat, "[" + newId + "]");
@@ -237,7 +234,6 @@
 
 					// Làm mới nội dung
 					var newLn = $("#" + newId);
-					console.log("newLn", $(newLn).html());
 					var taiKhoanObj = newLn.find("[id$='\\.maTk']");
 					var noSoTienObj = newLn.find("[id$='no\\.soTien']");
 					var coSoTienObj = newLn.find("[id$='co\\.soTien']");

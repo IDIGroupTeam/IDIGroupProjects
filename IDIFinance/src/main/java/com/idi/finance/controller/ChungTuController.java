@@ -1400,7 +1400,7 @@ public class ChungTuController {
 			model.addAttribute("loaiTienDs", loaiTienDs);
 
 			// Lấy danh sách tài khoản, dùng cho bên nợ & có
-			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoanCon();
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
 			List<DoiTuong> khachHangDs = khachHangDAO.danhSachDoiTuong();

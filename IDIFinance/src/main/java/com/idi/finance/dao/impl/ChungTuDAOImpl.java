@@ -1,5 +1,6 @@
 package com.idi.finance.dao.impl;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -799,9 +800,13 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 				try {
 					if (!taiKhoan.getLoaiTaiKhoan().getMaTk().equals("0")) {
+						BigDecimal tyGia = new BigDecimal(chungTu.getLoaiTien().getBanRa() + "");
+						BigDecimal soTien = new BigDecimal(taiKhoan.getSoTien().getSoTien() + "");
+						double giaTri = soTien.multiply(tyGia).doubleValue();
+
 						logger.info("Tài khoản: " + taiKhoan.getLoaiTaiKhoan().getMaTk());
 						logger.info("So tien: " + taiKhoan.getSoTien().getSoTien());
-						logger.info("Gia tri: " + taiKhoan.getSoTien().getGiaTri() * chungTu.getLoaiTien().getBanRa());
+						logger.info("Gia tri: " + giaTri);
 						logger.info("Ty gia: " + chungTu.getLoaiTien().getBanRa());
 						GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 						jdbcTmpl.update(new PreparedStatementCreator() {
@@ -810,7 +815,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 								PreparedStatement stt = con.prepareStatement(themTaiKhoan,
 										Statement.RETURN_GENERATED_KEYS);
 								stt.setString(1, taiKhoan.getLoaiTaiKhoan().getMaTk());
-								stt.setDouble(2, taiKhoan.getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
+								stt.setDouble(2, giaTri);
 								stt.setInt(3, taiKhoan.getSoDu());
 								stt.setString(4, taiKhoan.getLyDo());
 
@@ -869,9 +874,13 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 					// Những nghiệp vụ kế toán có định khoản mới được cập nhật/thêm mới
 					if (taiKhoan.getLoaiTaiKhoan() != null && !taiKhoan.getLoaiTaiKhoan().getMaTk().equals("0")) {
+						BigDecimal tyGia = new BigDecimal(chungTu.getLoaiTien().getBanRa() + "");
+						BigDecimal soTien = new BigDecimal(taiKhoan.getSoTien().getSoTien() + "");
+						double giaTri = soTien.multiply(tyGia).doubleValue();
+
 						logger.info("Tài khoản: " + taiKhoan.getLoaiTaiKhoan().getMaTk());
 						logger.info("So tien: " + taiKhoan.getSoTien().getSoTien());
-						logger.info("Gia tri: " + taiKhoan.getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
+						logger.info("Gia tri: " + giaTri);
 						logger.info("Ty gia: " + chungTu.getLoaiTien().getBanRa());
 						if (taiKhoan.getMaNvkt() == 0) {
 							// Thêm mới nvkt người dùng vừa thêm
@@ -885,8 +894,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 										PreparedStatement stt = con.prepareStatement(themTaiKhoan,
 												Statement.RETURN_GENERATED_KEYS);
 										stt.setString(1, taiKhoan.getLoaiTaiKhoan().getMaTk());
-										stt.setDouble(2,
-												taiKhoan.getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
+										stt.setDouble(2, giaTri);
 										stt.setInt(3, taiKhoan.getSoDu());
 										stt.setString(4, taiKhoan.getLyDo());
 
@@ -905,8 +913,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							try {
 								// Chỉ cân cập nhật trong bảng NGHIEP_VU_KE_TOAN là đủ
 								// Trong bảng CHUNG_TU_NVKT không có thay đổi gì
-								jdbcTmpl.update(capNhatChungTuNvkt, taiKhoan.getLoaiTaiKhoan().getMaTk(),
-										taiKhoan.getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa(),
+								jdbcTmpl.update(capNhatChungTuNvkt, taiKhoan.getLoaiTaiKhoan().getMaTk(), giaTri,
 										taiKhoan.getSoDu(), taiKhoan.getLyDo(), taiKhoan.getMaNvkt());
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -988,7 +995,19 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				try {
 					if (taiKhoan.getLoaiTaiKhoan() != null && taiKhoan.getLoaiTaiKhoan().getMaTk() != null
 							&& !taiKhoan.getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						BigDecimal tyGia = new BigDecimal(chungTu.getLoaiTien().getBanRa() + "");
+						BigDecimal soTienNo = new BigDecimal(taiKhoan.getNo().getSoTien() + "");
+						BigDecimal soTienCo = new BigDecimal(taiKhoan.getCo().getSoTien() + "");
+						double giaTriNo = soTienNo.multiply(tyGia).doubleValue();
+						double giaTriCo = soTienCo.multiply(tyGia).doubleValue();
+
 						logger.info("Tài khoản: " + taiKhoan.getLoaiTaiKhoan().getMaTk());
+						logger.info("So du: " + taiKhoan.getSoDu());
+						logger.info("So tien no: " + taiKhoan.getNo().getSoTien());
+						logger.info("Gia tri no: " + giaTriNo);
+						logger.info("So tien co: " + taiKhoan.getCo().getSoTien());
+						logger.info("Gia tri co: " + giaTriCo);
+						logger.info("Ty gia: " + chungTu.getLoaiTien().getBanRa());
 						GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 						jdbcTmpl.update(new PreparedStatementCreator() {
 							@Override
@@ -997,9 +1016,9 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 										Statement.RETURN_GENERATED_KEYS);
 								stt.setString(1, taiKhoan.getLoaiTaiKhoan().getMaTk());
 								if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
-									stt.setDouble(2, taiKhoan.getNo().getSoTien() * chungTu.getLoaiTien().getBanRa());
+									stt.setDouble(2, giaTriNo);
 								} else {
-									stt.setDouble(2, taiKhoan.getCo().getSoTien() * chungTu.getLoaiTien().getBanRa());
+									stt.setDouble(2, giaTriCo);
 								}
 								stt.setInt(3, taiKhoan.getSoDu());
 								stt.setString(4, taiKhoan.getLyDo());
@@ -1063,7 +1082,19 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					// Những nghiệp vụ kế toán có định khoản mới được cập nhật/thêm mới
 					if (taiKhoan.getLoaiTaiKhoan() != null && taiKhoan.getLoaiTaiKhoan().getMaTk() != null
 							&& !taiKhoan.getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						BigDecimal tyGia = new BigDecimal(chungTu.getLoaiTien().getBanRa() + "");
+						BigDecimal soTienNo = new BigDecimal(taiKhoan.getNo().getSoTien() + "");
+						BigDecimal soTienCo = new BigDecimal(taiKhoan.getCo().getSoTien() + "");
+						double giaTriNo = soTienNo.multiply(tyGia).doubleValue();
+						double giaTriCo = soTienCo.multiply(tyGia).doubleValue();
+
 						logger.info("Tài khoản: " + taiKhoan.getLoaiTaiKhoan().getMaTk());
+						logger.info("So du: " + taiKhoan.getSoDu());
+						logger.info("So tien no: " + taiKhoan.getNo().getSoTien());
+						logger.info("Gia tri no: " + giaTriNo);
+						logger.info("So tien co: " + taiKhoan.getCo().getSoTien());
+						logger.info("Gia tri co: " + giaTriCo);
+						logger.info("Ty gia: " + chungTu.getLoaiTien().getBanRa());
 						if (taiKhoan.getMaNvkt() == 0) {
 							// Thêm mới nvkt người dùng vừa thêm
 							try {
@@ -1077,11 +1108,9 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 												Statement.RETURN_GENERATED_KEYS);
 										stt.setString(1, taiKhoan.getLoaiTaiKhoan().getMaTk());
 										if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
-											stt.setDouble(2,
-													taiKhoan.getNo().getSoTien() * chungTu.getLoaiTien().getBanRa());
+											stt.setDouble(2, giaTriNo);
 										} else {
-											stt.setDouble(2,
-													taiKhoan.getCo().getSoTien() * chungTu.getLoaiTien().getBanRa());
+											stt.setDouble(2, giaTriCo);
 										}
 										stt.setInt(3, taiKhoan.getSoDu());
 										stt.setString(4, taiKhoan.getLyDo());
@@ -1104,8 +1133,13 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							try {
 								// Chỉ cân cập nhật trong bảng NGHIEP_VU_KE_TOAN là đủ
 								// Trong bảng CHUNG_TU_NVKT không có thay đổi gì
-								jdbcTmpl.update(capNhatChungTuNvkt, taiKhoan.getLoaiTaiKhoan().getMaTk(),
-										taiKhoan.getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa(),
+								double soTien = 0;
+								if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
+									soTien = giaTriNo;
+								} else {
+									soTien = giaTriCo;
+								}
+								jdbcTmpl.update(capNhatChungTuNvkt, taiKhoan.getLoaiTaiKhoan().getMaTk(), soTien,
 										taiKhoan.getSoDu(), taiKhoan.getLyDo(), taiKhoan.getMaNvkt());
 							} catch (Exception e) {
 								e.printStackTrace();
