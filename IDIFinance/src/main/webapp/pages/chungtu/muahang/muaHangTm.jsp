@@ -444,6 +444,8 @@
 					$("#loaiTien\\.banRa").val(loaiTien.banRa);
 					$("input[id$='\\.soTien']").unbind(
 							'keydown.format keyup.format paste.format');
+					$("input[id$='\\.giaTri']").unbind(
+							'keydown.format keyup.format paste.format');
 
 					for (i = 0; i < soDongTk; i++) {
 						dangKyTien(i);
