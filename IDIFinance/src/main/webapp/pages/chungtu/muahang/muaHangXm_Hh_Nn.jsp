@@ -1,5 +1,6 @@
 <%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
 <%@page import="com.idi.finance.bean.doituong.DoiTuong"%>
+<%@page import="com.idi.finance.bean.LoaiTien"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
@@ -12,13 +13,12 @@
 <ul class="nav nav-tabs nav-pills nav-justified">
 	<li class="active"><a data-toggle="tab" href="#hangTien">Hàng
 			tiền</a></li>
+	<li><a data-toggle="tab" href="#kho">Kho</a></li>
 	<li><a data-toggle="tab" href="#thue">Thuế</a></li>
 	<li><a data-toggle="tab" href="#chiPhi">Chi phí</a></li>
 </ul>
-<div class="tab-content table-responsive sub-content"
-	style="overflow-x: auto; overflow-y: visiable;">
-	<div id="hangTien" class="tab-pane fade in active"
-		style="width: 1700px;">
+<div class="tab-content sub-content">
+	<div id="hangTien" class="tab-pane fade in active table-responsive">
 		<table class="table table-bordered table-hover text-center hanghoa"
 			id="hangTienTbl">
 			<thead>
@@ -29,12 +29,7 @@
 					<th class="text-center">Số lượng</th>
 					<th class="text-center">Giá mua</th>
 					<th class="text-center">Thành tiền</th>
-					<th class="text-center">TK Kho (Nợ)</th>
 					<th class="text-center">TK công nợ (Có)</th>
-					<th class="text-center">Kho</th>
-					<th class="text-center">Giá nhập kho</th>
-					<th class="text-center">Tổng tiền<br />nhập kho
-					</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -76,8 +71,30 @@
 										maxFractionDigits="2"></fmt:formatNumber>
 							&nbsp;VND</c:otherwise>
 							</c:choose></td>
-						<td>${hangHoa.tkKho.loaiTaiKhoan.maTk}</td>
 						<td>${hangHoa.tkThanhtoan.loaiTaiKhoan.maTk}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+	</div>
+	<div id="kho" class="tab-pane fade table-responsive">
+		<table class="table table-bordered table-hover text-center hanghoa"
+			id="khoTbl">
+			<thead>
+				<tr>
+					<th class="text-center">Vật tư, hàng hóa</th>
+					<th class="text-center">Kho</th>
+					<th class="text-center">Giá nhập kho</th>
+					<th class="text-center">Tổng tiền<br />nhập kho
+					</th>
+					<th class="text-center">TK Kho (Nợ)</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach items="${chungTu.hangHoaDs}" var="hangHoa"
+					varStatus="status">
+					<tr id="kho${status.index}">
+						<td>${hangHoa.tenHh}</td>
 						<td>${hangHoa.kho.tenKho}</td>
 						<td class="text-right"><c:choose>
 								<c:when test="${chungTu.loaiTien.maLt eq LoaiTien.VND}">
@@ -109,12 +126,13 @@
 										maxFractionDigits="2"></fmt:formatNumber>
 							&nbsp;VND</c:otherwise>
 							</c:choose></td>
+						<td>${hangHoa.tkKho.loaiTaiKhoan.maTk}</td>
 					</tr>
 				</c:forEach>
 			</tbody>
 		</table>
 	</div>
-	<div id="thue" class="tab-pane fade">
+	<div id="thue" class="tab-pane fade table-responsive">
 		<table class="table table-bordered table-hover text-center hanghoa"
 			id="thueTbl">
 			<thead>
@@ -165,7 +183,7 @@
 			</tbody>
 		</table>
 	</div>
-	<div id="chiPhi" class="tab-pane fade">
+	<div id="chiPhi" class="tab-pane fade table-responsive">
 		<table class="table table-bordered table-hover text-center hanghoa"
 			id="chiPhiTbl">
 			<thead>

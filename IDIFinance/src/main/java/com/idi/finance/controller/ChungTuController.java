@@ -218,19 +218,17 @@ public class ChungTuController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-			KyKeToan kyKeToan = dungChung.getKyKeToan();
-			if (kyKeToan == null) {
-				return "koKyKeToanMacDinh";
-			}
-			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
-				return "redirect:/chungtu/phieuthu/xem/" + maCt;
-			}
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
 			if (chungTu == null) {
 				return "redirect:/chungtu/phieuthu/danhsach";
 			}
 			chungTu.setNghiepVu("suaPhieuThu");
+
+			KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
+			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+				return "redirect:/chungtu/phieuthu/xem/" + maCt;
+			}
 
 			return chuanBiFormPhieuThu(model, chungTu);
 		} catch (Exception e) {
@@ -379,12 +377,14 @@ public class ChungTuController {
 
 	@RequestMapping("/chungtu/phieuthu/xoa/{id}")
 	public String xoaPhieuThu(@PathVariable("id") int maCt, Model model) {
-		KyKeToan kyKeToan = dungChung.getKyKeToan();
-		if (kyKeToan == null) {
-			return "koKyKeToanMacDinh";
-		}
-		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+		ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_THU);
+		if (chungTu == null) {
 			return "redirect:/chungtu/phieuthu/danhsach";
+		}
+
+		KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
+		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+			return "redirect:/chungtu/phieuthu/xem/" + maCt;
 		}
 
 		try {
@@ -479,19 +479,17 @@ public class ChungTuController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-			KyKeToan kyKeToan = dungChung.getKyKeToan();
-			if (kyKeToan == null) {
-				return "koKyKeToanMacDinh";
-			}
-			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
-				return "redirect:/chungtu/phieuchi/xem/" + maCt;
-			}
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_CHI);
 			if (chungTu == null) {
 				return "redirect:/chungtu/phieuchi/danhsach";
 			}
 			chungTu.setNghiepVu("suaPhieuChi");
+
+			KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
+			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+				return "redirect:/chungtu/phieuchi/xem/" + maCt;
+			}
 
 			return chuanBiFormPhieuChi(model, chungTu);
 		} catch (Exception e) {
@@ -640,12 +638,14 @@ public class ChungTuController {
 
 	@RequestMapping("/chungtu/phieuchi/xoa/{id}")
 	public String xoaPhieuChi(@PathVariable("id") int maCt, Model model) {
-		KyKeToan kyKeToan = dungChung.getKyKeToan();
-		if (kyKeToan == null) {
-			return "koKyKeToanMacDinh";
-		}
-		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+		ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_PHIEU_CHI);
+		if (chungTu == null) {
 			return "redirect:/chungtu/phieuchi/danhsach";
+		}
+
+		KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
+		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+			return "redirect:/chungtu/phieuchi/xem/" + maCt;
 		}
 
 		try {
@@ -739,19 +739,17 @@ public class ChungTuController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-			KyKeToan kyKeToan = dungChung.getKyKeToan();
-			if (kyKeToan == null) {
-				return "koKyKeToanMacDinh";
-			}
-			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
-				return "redirect:/chungtu/baoco/xem/" + maCt;
-			}
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_CO);
 			if (chungTu == null) {
 				return "redirect:/chungtu/baoco/danhsach";
 			}
 			chungTu.setNghiepVu("suaBaoCo");
+
+			KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
+			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+				return "redirect:/chungtu/baoco/xem/" + maCt;
+			}
 
 			return chuanBiFormBaoCo(model, chungTu);
 		} catch (Exception e) {
@@ -900,12 +898,14 @@ public class ChungTuController {
 
 	@RequestMapping("/chungtu/baoco/xoa/{id}")
 	public String xoaBaoCo(@PathVariable("id") int maCt, Model model) {
-		KyKeToan kyKeToan = dungChung.getKyKeToan();
-		if (kyKeToan == null) {
-			return "koKyKeToanMacDinh";
-		}
-		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+		ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_CO);
+		if (chungTu == null) {
 			return "redirect:/chungtu/baoco/danhsach";
+		}
+
+		KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
+		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+			return "redirect:/chungtu/baoco/xem/" + maCt;
 		}
 
 		try {
@@ -999,19 +999,17 @@ public class ChungTuController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-			KyKeToan kyKeToan = dungChung.getKyKeToan();
-			if (kyKeToan == null) {
-				return "koKyKeToanMacDinh";
-			}
-			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
-				return "redirect:/chungtu/baono/xem/" + maCt;
-			}
 
 			ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_NO);
 			if (chungTu == null) {
 				return "redirect:/chungtu/baono/danhsach";
 			}
 			chungTu.setNghiepVu("suaBaoNo");
+
+			KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
+			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+				return "redirect:/chungtu/baono/xem/" + maCt;
+			}
 
 			return chuanBiFormBaoNo(model, chungTu);
 		} catch (Exception e) {
@@ -1160,12 +1158,15 @@ public class ChungTuController {
 
 	@RequestMapping("/chungtu/baono/xoa/{id}")
 	public String xoaBaoNo(@PathVariable("id") int maCt, Model model) {
-		KyKeToan kyKeToan = dungChung.getKyKeToan();
-		if (kyKeToan == null) {
-			return "koKyKeToanMacDinh";
-		}
-		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+		ChungTu chungTu = chungTuDAO.layChungTu(maCt, ChungTu.CHUNG_TU_BAO_NO);
+		if (chungTu == null) {
 			return "redirect:/chungtu/baono/danhsach";
+		}
+		chungTu.setNghiepVu("suaBaoNo");
+
+		KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
+		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+			return "redirect:/chungtu/baono/xem/" + maCt;
 		}
 
 		try {
@@ -1261,19 +1262,17 @@ public class ChungTuController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-			KyKeToan kyKeToan = dungChung.getKyKeToan();
-			if (kyKeToan == null) {
-				return "koKyKeToanMacDinh";
-			}
-			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
-				return "redirect:/chungtu/ktth/xem/" + maCt;
-			}
 
 			ChungTu chungTu = chungTuDAO.layChungTuKtth(maCt, ChungTu.CHUNG_TU_KT_TH);
 			if (chungTu == null) {
 				return "redirect:/chungtu/ktth/danhsach";
 			}
 			chungTu.setNghiepVu("suaKeToanTongHop");
+
+			KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
+			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+				return "redirect:/chungtu/ktth/xem/" + maCt;
+			}
 
 			return chuanBiFormKeToanTongHop(model, chungTu);
 		} catch (Exception e) {
@@ -1423,12 +1422,15 @@ public class ChungTuController {
 
 	@RequestMapping("/chungtu/ktth/xoa/{id}")
 	public String xoaKeToanTongHop(@PathVariable("id") int maCt, Model model) {
-		KyKeToan kyKeToan = dungChung.getKyKeToan();
-		if (kyKeToan == null) {
-			return "koKyKeToanMacDinh";
-		}
-		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+		ChungTu chungTu = chungTuDAO.layChungTuKtth(maCt, ChungTu.CHUNG_TU_KT_TH);
+		if (chungTu == null) {
 			return "redirect:/chungtu/ktth/danhsach";
+		}
+		chungTu.setNghiepVu("suaKeToanTongHop");
+
+		KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
+		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+			return "redirect:/chungtu/ktth/xem/" + maCt;
 		}
 
 		try {
@@ -1528,6 +1530,7 @@ public class ChungTuController {
 			if (chungTu == null) {
 				return "redirect:/chungtu/muahang/danhsach";
 			}
+			chungTu.setNghiepVu("suaMuaHang");
 
 			KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
 			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
@@ -1537,6 +1540,39 @@ public class ChungTuController {
 			// Thêm một dòng hàng hóa sạch ở cuối để js lấy làm mẫu
 			HangHoa hangHoa = new HangHoa();
 			chungTu.themHangHoa(hangHoa);
+
+			return chuanBiFormMuaHang(model, chungTu);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/chungtu/muahang/saochep/{id}")
+	public String saoChepMuaHang(@PathVariable("id") int maCt, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
+			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+				return "redirect:/chungtu/muahang/danhsach";
+			}
+
+			ChungTu chungTu = chungTuDAO.layChungTuKho(maCt, ChungTu.CHUNG_TU_MUA_HANG);
+			if (chungTu == null) {
+				return "redirect:/chungtu/muahang/danhsach";
+			}
+			logger.info("Danh sach hang hoa: " + chungTu.getHangHoaDs());
+
+			// Lấy số phiếu thu của năm hiện tại
+			int soMuaHang = chungTuDAO.laySoChungTuLonNhatTheoLoaiCtVaKy(ChungTu.CHUNG_TU_MUA_HANG,
+					kyKeToan.getBatDau(), kyKeToan.getKetThuc());
+			soMuaHang++;
+			chungTu.setSoCt(soMuaHang);
+			chungTu.setNghiepVu("saoChepMuaHang");
 
 			return chuanBiFormMuaHang(model, chungTu);
 		} catch (Exception e) {
@@ -1560,6 +1596,7 @@ public class ChungTuController {
 
 			ChungTu chungTu = new ChungTu();
 			chungTu.setLoaiCt(ChungTu.CHUNG_TU_MUA_HANG);
+			chungTu.setNghiepVu("taoMoiMuaHang");
 
 			// Lấy số phiếu thu của năm hiện tại
 			int soKeToanTongHop = chungTuDAO.laySoChungTuLonNhatTheoLoaiCtVaKy(ChungTu.CHUNG_TU_MUA_HANG,
@@ -1574,6 +1611,7 @@ public class ChungTuController {
 			chungTu.setNgayLap(homNay);
 			chungTu.setNgayHt(homNay);
 
+			// Tạo tạm một hàng hóa mới làm mẫu, sau js sẽ xóa đi
 			HangHoa hangHoa = new HangHoa();
 			chungTu.themHangHoa(hangHoa);
 
@@ -1584,41 +1622,14 @@ public class ChungTuController {
 		}
 	}
 
-	@RequestMapping(value = "/chungtu/muahang/nhapkho/{id}")
-	public String nhapKhoMuaHang(@PathVariable("id") int maCt, Model model) {
-		logger.info("Nhập kho các hàng hóa của chứng từ có maCt " + maCt);
-		try {
-			ChungTu chungTu = chungTuDAO.layChungTuKho(maCt, ChungTu.CHUNG_TU_MUA_HANG);
-			if (chungTu != null) {
-				if (chungTu.getHangHoaDs() != null) {
-					Iterator<HangHoa> iter = chungTu.getHangHoaDs().iterator();
-					while (iter.hasNext()) {
-						HangHoa hangHoa = iter.next();
-
-						double soLuong = khoHangDAO.laySoLuong(hangHoa);
-						if (soLuong == -1) {
-							khoHangDAO.themNhapKho(hangHoa);
-						} else {
-							hangHoa.setSoLuong(soLuong + hangHoa.getSoLuong() - hangHoa.getSoLuongBanDau());
-							khoHangDAO.suaNhapKho(hangHoa);
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			logger.info(e.getMessage());
-		}
-
-		return "redirect:/chungtu/muahang/xem/" + maCt;
-	}
-
 	@RequestMapping(value = "/chungtu/muahang/luu", method = RequestMethod.POST)
 	public String luuTaoMoiMuaHang(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu, BindingResult result,
 			Model model) {
 		try {
 			if (result.hasErrors()) {
+				// Tạo tạm một hàng hóa mới làm mẫu, sau js sẽ xóa đi
 				HangHoa hangHoa = new HangHoa();
-				// chungTu.themHangHoa(hangHoa);
+				chungTu.themHangHoa(hangHoa);
 
 				return chuanBiFormMuaHang(model, chungTu);
 			}
@@ -1639,18 +1650,20 @@ public class ChungTuController {
 				hangHoa.getDonGia().setLoaiTien(chungTu.getLoaiTien());
 
 				// Tính tổng tiền mua hàng đề ghi vào tài khoản công nợ
-				double tongDonGia = hangHoa.getSoLuong() * hangHoa.getDonGia().getSoTien();
+				double tongDonGia = Utils.multiply(hangHoa.getSoLuong(), hangHoa.getDonGia().getSoTien());
 
 				// Tổng thuế nhập khẩu, tiêu thụ đặc biệt, thuế GTGT (phương pháp trực tiếp)
 				double tongThue = 0;
+				double tongThueToanBo = 0;
 
 				// Chuyển các loại thuế về loại tiền chính của chứng từ
 				if (hangHoa.getTkThueNk() != null && hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk() != null
 						&& hangHoa.getTkThueNk().getSoTien() != null) {
-					double thue = hangHoa.getTkThueNk().getSoTien().getSoTien() / chungTu.getLoaiTien().getBanRa();
+					double thue = Utils.divide(hangHoa.getTkThueNk().getSoTien().getGiaTri(),
+							chungTu.getLoaiTien().getBanRa());
 					hangHoa.getTkThueNk().getSoTien().setSoTien(thue);
 					hangHoa.getTkThueNk().getSoTien().setLoaiTien(chungTu.getLoaiTien());
-					tongThue += thue;
+					tongThue = Utils.add(tongThue, thue);
 
 					if (soHangHoa > 1) {
 						hangHoa.getTkThueNk().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -1661,10 +1674,11 @@ public class ChungTuController {
 
 				if (hangHoa.getTkThueTtdb() != null && hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk() != null
 						&& hangHoa.getTkThueTtdb().getSoTien() != null) {
-					double thue = hangHoa.getTkThueTtdb().getSoTien().getSoTien() / chungTu.getLoaiTien().getBanRa();
+					double thue = Utils.divide(hangHoa.getTkThueTtdb().getSoTien().getGiaTri(),
+							chungTu.getLoaiTien().getBanRa());
 					hangHoa.getTkThueTtdb().getSoTien().setSoTien(thue);
 					hangHoa.getTkThueTtdb().getSoTien().setLoaiTien(chungTu.getLoaiTien());
-					tongThue += thue;
+					tongThue = Utils.add(tongThue, thue);
 
 					if (soHangHoa > 1) {
 						hangHoa.getTkThueTtdb().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -1677,7 +1691,8 @@ public class ChungTuController {
 						&& !hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")
 						&& hangHoa.getTkThueGtgt().getSoTien() != null) {
 					// Có thuế Gtgt
-					double thue = hangHoa.getTkThueGtgt().getSoTien().getSoTien() / chungTu.getLoaiTien().getBanRa();
+					double thue = Utils.divide(hangHoa.getTkThueGtgt().getSoTien().getGiaTri(),
+							chungTu.getLoaiTien().getBanRa());
 					hangHoa.getTkThueGtgt().getSoTien().setSoTien(thue);
 					hangHoa.getTkThueGtgt().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 
@@ -1687,10 +1702,11 @@ public class ChungTuController {
 						hangHoa.getTkThueGtgt().setLyDo(chungTu.getLyDo());
 					}
 
+					tongThueToanBo = Utils.add(tongThue, thue);
 					if (hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						// Đây là trường hợp thuế Gtgt tính theo phương pháp trực tiếp
 						// Ghi thuế gtgt vào hàng hóa
-						tongThue += thue;
+						tongThue = Utils.add(tongThue, thue);
 					}
 				}
 
@@ -1700,14 +1716,28 @@ public class ChungTuController {
 
 				// Từ đó tính ra giá nhập kho
 				// Đã tính ở phần client gằng js nên không cần tính lại
-
-				Tien tongTien = new Tien();
-				tongTien.setLoaiTien(chungTu.getLoaiTien());
-				tongTien.setSoTien(tongDonGia + tongThue);
+				double tongTien = Utils.add(tongDonGia, tongThue);
+				double tongTienToanBo = Utils.add(tongDonGia, tongThueToanBo);
 
 				// Tính giá trị tài khoản kho
 				if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null) {
-					hangHoa.getTkKho().setSoTien(tongTien);
+					hangHoa.getTkKho().getSoTien().setLoaiTien(chungTu.getLoaiTien());
+					hangHoa.getTkKho().getSoTien().setSoTien(tongTien);
+					if (chungTu.getTinhChatCt() == ChungTu.HANG_HOA_TRONG_NUOC
+							|| chungTu.getTinhChatCt() == ChungTu.DICH_VU_TRONG_NUOC) {
+						if (hangHoa.getTkThueGtgt() != null
+								&& hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() != null
+								&& !hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")
+								&& hangHoa.getTkThueGtgt().getSoTien() != null) {
+							// Trường hợp có thuế Gtgt
+							// Thuế Gtgt: Phương pháp khấu trừ
+							hangHoa.getTkKho().getSoTien().setSoTien(tongDonGia);
+						} else {
+							// Trường hợp có thuế Gtgt
+							// Thuế Gtgt: Phương pháp trực tiếp
+							hangHoa.getTkKho().getSoTien().setSoTien(tongTienToanBo);
+						}
+					}
 
 					if (soHangHoa > 1) {
 						hangHoa.getTkKho().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -1717,22 +1747,13 @@ public class ChungTuController {
 				}
 
 				// Tính giá trị tài khoản thanh toán (công nợ)
-				Tien thanhToan = new Tien();
-				thanhToan.setLoaiTien(chungTu.getLoaiTien());
-				thanhToan.setSoTien(tongDonGia);
-				if (chungTu.getTinhChatCt() == ChungTu.HANG_HOA_TRONG_NUOC
-						|| chungTu.getTinhChatCt() == ChungTu.DICH_VU_TRONG_NUOC) {
-					if (hangHoa.getTkThueGtgt() != null && hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() != null
-							&& !hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")
-							&& hangHoa.getTkThueGtgt().getSoTien() != null) {
-						// Trường hợp có thuế Gtgt
-						// Phương pháp trực tiếp hay khấu trừ đều như nhau
-						thanhToan.setSoTien(tongDonGia + hangHoa.getTkThueGtgt().getSoTien().getSoTien());
-					}
-				}
-
 				if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null) {
-					hangHoa.getTkThanhtoan().setSoTien(thanhToan);
+					hangHoa.getTkThanhtoan().getSoTien().setLoaiTien(chungTu.getLoaiTien());
+					hangHoa.getTkThanhtoan().getSoTien().setSoTien(tongDonGia);
+					if (chungTu.getTinhChatCt() == ChungTu.HANG_HOA_TRONG_NUOC
+							|| chungTu.getTinhChatCt() == ChungTu.DICH_VU_TRONG_NUOC) {
+						hangHoa.getTkThanhtoan().getSoTien().setSoTien(tongTienToanBo);
+					}
 
 					if (soHangHoa > 1) {
 						hangHoa.getTkThanhtoan().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -1804,27 +1825,27 @@ public class ChungTuController {
 
 			CauHinh taiKhoanKhoDs = props.getCauHinh(PropCont.MUA_HANG_DS_TK_KHO_NO);
 			List<String> maTkKhoDs = Utils.parseString(taiKhoanKhoDs.getGiaTri());
-			List<LoaiTaiKhoan> loaiTaiKhoanKhoDs = taiKhoanDAO.danhSachTaiKhoan(maTkKhoDs);
+			List<LoaiTaiKhoan> loaiTaiKhoanKhoDs = taiKhoanDAO.danhSachTaiKhoanCon(maTkKhoDs);
 			model.addAttribute("loaiTaiKhoanKhoDs", loaiTaiKhoanKhoDs);
 
 			CauHinh taiKhoanThanhToanDs = props.getCauHinh(PropCont.MUA_HANG_DS_TK_THANH_TOAN_CO);
 			List<String> maTkThanhToanDs = Utils.parseString(taiKhoanThanhToanDs.getGiaTri());
-			List<LoaiTaiKhoan> loaiTaiKhoanThanhToanDs = taiKhoanDAO.danhSachTaiKhoan(maTkThanhToanDs);
+			List<LoaiTaiKhoan> loaiTaiKhoanThanhToanDs = taiKhoanDAO.danhSachTaiKhoanCon(maTkThanhToanDs);
 			model.addAttribute("loaiTaiKhoanThanhToanDs", loaiTaiKhoanThanhToanDs);
 
 			CauHinh taiKhoanGtgtDs = props.getCauHinh(PropCont.MUA_HANG_DS_TK_GTGT_NO);
 			List<String> maTkGtgtDs = Utils.parseString(taiKhoanGtgtDs.getGiaTri());
-			List<LoaiTaiKhoan> loaiTaiKhoanGtgtDs = taiKhoanDAO.danhSachTaiKhoan(maTkGtgtDs);
+			List<LoaiTaiKhoan> loaiTaiKhoanGtgtDs = taiKhoanDAO.danhSachTaiKhoanCon(maTkGtgtDs);
 			model.addAttribute("loaiTaiKhoanGtgtDs", loaiTaiKhoanGtgtDs);
 
 			CauHinh taiKhoanTtdbDs = props.getCauHinh(PropCont.MUA_HANG_DS_TK_TTDB_CO);
 			List<String> maTkTtdbDs = Utils.parseString(taiKhoanTtdbDs.getGiaTri());
-			List<LoaiTaiKhoan> loaiTaiKhoanTtdbDs = taiKhoanDAO.danhSachTaiKhoan(maTkTtdbDs);
+			List<LoaiTaiKhoan> loaiTaiKhoanTtdbDs = taiKhoanDAO.danhSachTaiKhoanCon(maTkTtdbDs);
 			model.addAttribute("loaiTaiKhoanTtdbDs", loaiTaiKhoanTtdbDs);
 
 			CauHinh taiKhoanNkDs = props.getCauHinh(PropCont.MUA_HANG_DS_TK_NK_CO);
 			List<String> maTkNkDs = Utils.parseString(taiKhoanNkDs.getGiaTri());
-			List<LoaiTaiKhoan> loaiTaiKhoanNkDs = taiKhoanDAO.danhSachTaiKhoan(maTkNkDs);
+			List<LoaiTaiKhoan> loaiTaiKhoanNkDs = taiKhoanDAO.danhSachTaiKhoanCon(maTkNkDs);
 			model.addAttribute("loaiTaiKhoanNkDs", loaiTaiKhoanNkDs);
 
 			// Lấy danh sách các loại tiền
@@ -1832,7 +1853,7 @@ public class ChungTuController {
 			model.addAttribute("loaiTienDs", loaiTienDs);
 
 			// Lấy danh sách tài khoản, dùng cho bên nợ & có
-			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoanCon();
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
 			// Lấy danh sách kho
@@ -1844,13 +1865,7 @@ public class ChungTuController {
 			model.addAttribute("khHangHoaDs", khHangHoaDs);
 
 			model.addAttribute("tab", "tabCTMH");
-			if (chungTu.getMaCt() > 0) {
-				// Đây là trường hợp sửa CT
-				return "suaMuaHang";
-			} else {
-				// Đây là trường hợp tạo mới CT
-				return "taoMoiMuaHang";
-			}
+			return chungTu.getNghiepVu();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
@@ -1859,22 +1874,19 @@ public class ChungTuController {
 
 	@RequestMapping("/chungtu/muahang/xoa/{id}")
 	public String xoaMuaHang(@PathVariable("id") int maCt, Model model) {
-		KyKeToan kyKeToan = dungChung.getKyKeToan();
-		if (kyKeToan == null) {
-			return "koKyKeToanMacDinh";
-		}
-		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+		ChungTu chungTu = chungTuDAO.layChungTuKho(maCt, ChungTu.CHUNG_TU_MUA_HANG);
+		if (chungTu == null) {
 			return "redirect:/chungtu/muahang/danhsach";
 		}
 
-		try {
-			// Lấy chứng từ
-			ChungTu chungTu = chungTuDAO.layChungTuKho(maCt, ChungTu.CHUNG_TU_MUA_HANG);
+		KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
+		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+			return "redirect:/chungtu/muahang/xem/" + maCt;
+		}
 
-			if (chungTu != null) {
-				// Xóa phiếu thu có MA_CT là maCt, LOAI_CT là ChungTu.CHUNG_TU_MUA_HANG
-				chungTuDAO.xoaChungTuKho(chungTu);
-			}
+		try {
+			// Xóa phiếu thu có MA_CT là maCt, LOAI_CT là ChungTu.CHUNG_TU_MUA_HANG
+			chungTuDAO.xoaChungTuKho(chungTu);
 
 			return "redirect:/chungtu/muahang/danhsach";
 		} catch (Exception e) {
@@ -1969,11 +1981,44 @@ public class ChungTuController {
 			if (chungTu == null) {
 				return "redirect:/chungtu/banhang/danhsach";
 			}
+			chungTu.setNghiepVu("suaBanHang");
 
 			KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
 			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
 				return "redirect:/chungtu/banhang/xem/" + maCt;
 			}
+
+			return chuanBiFormBanHang(model, chungTu);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/chungtu/banhang/saochep/{id}")
+	public String saoChepBanHang(@PathVariable("id") int maCt, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
+			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+				return "redirect:/chungtu/banhang/danhsach";
+			}
+
+			ChungTu chungTu = chungTuDAO.layChungTuKho(maCt, ChungTu.CHUNG_TU_BAN_HANG);
+			if (chungTu == null) {
+				return "redirect:/chungtu/banhang/danhsach";
+			}
+
+			// Lấy số phiếu thu của năm hiện tại
+			int soBanHang = chungTuDAO.laySoChungTuLonNhatTheoLoaiCtVaKy(ChungTu.CHUNG_TU_BAN_HANG,
+					kyKeToan.getBatDau(), kyKeToan.getKetThuc());
+			soBanHang++;
+			chungTu.setSoCt(soBanHang);
+			chungTu.setNghiepVu("saoChepBanHang");
 
 			return chuanBiFormBanHang(model, chungTu);
 		} catch (Exception e) {
@@ -1997,6 +2042,7 @@ public class ChungTuController {
 
 			ChungTu chungTu = new ChungTu();
 			chungTu.setLoaiCt(ChungTu.CHUNG_TU_BAN_HANG);
+			chungTu.setNghiepVu("taoMoiBanHang");
 
 			// Lấy số phiếu thu của năm hiện tại
 			int soKeToanTongHop = chungTuDAO.laySoChungTuLonNhatTheoLoaiCtVaKy(ChungTu.CHUNG_TU_BAN_HANG,
@@ -2294,13 +2340,7 @@ public class ChungTuController {
 			}
 
 			model.addAttribute("tab", "tabCTBH");
-			if (chungTu.getMaCt() > 0) {
-				// Đây là trường hợp sửa CT
-				return "suaBanHang";
-			} else {
-				// Đây là trường hợp tạo mới CT
-				return "taoMoiBanHang";
-			}
+			return chungTu.getNghiepVu();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
@@ -2309,22 +2349,19 @@ public class ChungTuController {
 
 	@RequestMapping("/chungtu/banhang/xoa/{id}")
 	public String xoaBanHang(@PathVariable("id") int maCt, Model model) {
-		KyKeToan kyKeToan = dungChung.getKyKeToan();
-		if (kyKeToan == null) {
-			return "koKyKeToanMacDinh";
-		}
-		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+		ChungTu chungTu = chungTuDAO.layChungTuKho(maCt, ChungTu.CHUNG_TU_BAN_HANG);
+		if (chungTu == null) {
 			return "redirect:/chungtu/banhang/danhsach";
 		}
 
-		try {
-			// Lấy chứng từ
-			ChungTu chungTu = chungTuDAO.layChungTuKho(maCt, ChungTu.CHUNG_TU_BAN_HANG);
+		KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
+		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+			return "redirect:/chungtu/banhang/xem/" + maCt;
+		}
 
-			if (chungTu != null) {
-				// Xóa phiếu thu có MA_CT là maCt, LOAI_CT là ChungTu.CHUNG_TU_BAN_HANG
-				chungTuDAO.xoaChungTuKho(chungTu);
-			}
+		try {
+			// Xóa phiếu thu có MA_CT là maCt, LOAI_CT là ChungTu.CHUNG_TU_BAN_HANG
+			chungTuDAO.xoaChungTuKho(chungTu);
 
 			return "redirect:/chungtu/banhang/danhsach";
 		} catch (Exception e) {
@@ -2465,17 +2502,17 @@ public class ChungTuController {
 
 	@RequestMapping("/chungtu/ketchuyen/xoa/{id}")
 	public String xoaKetChuyen(@PathVariable("id") int maCt, Model model) {
-		KyKeToan kyKeToan = dungChung.getKyKeToan();
-		if (kyKeToan == null) {
-			return "koKyKeToanMacDinh";
-		}
-		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+		ChungTu chungTu = chungTuDAO.layKetChuyen(maCt);
+		if (chungTu == null) {
 			return "redirect:/chungtu/ketchuyen/danhsach";
 		}
 
-		try {
-			ChungTu chungTu = chungTuDAO.layKetChuyen(maCt);
+		KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
+		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+			return "redirect:/chungtu/ketchuyen/xem/" + maCt;
+		}
 
+		try {
 			// Xóa kết chuyển có MA_CT là maCt, LOAI_CT là ChungTu.CHUNG_TU_PHIEU_THU
 			chungTuDAO.xoaKetChuyen(chungTu);
 
@@ -2566,13 +2603,6 @@ public class ChungTuController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-			KyKeToan kyKeToan = dungChung.getKyKeToan();
-			if (kyKeToan == null) {
-				return "koKyKeToanMacDinh";
-			}
-			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
-				return "redirect:/chungtu/ketchuyen/buttoan/xem/" + maKc;
-			}
 
 			KetChuyenButToan ketChuyenButToan = chungTuDAO.layKetChuyenButToan(maKc);
 			if (ketChuyenButToan == null) {
@@ -2657,14 +2687,6 @@ public class ChungTuController {
 
 	@RequestMapping("/chungtu/ketchuyen/buttoan/xoa/{id}")
 	public String xoaKetChuyenButToan(@PathVariable("id") int maKc, Model model) {
-		KyKeToan kyKeToan = dungChung.getKyKeToan();
-		if (kyKeToan == null) {
-			return "koKyKeToanMacDinh";
-		}
-		if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
-			return "redirect:/chungtu/ketchuyen/buttoan/xem/" + maKc;
-		}
-
 		try {
 			// Xóa bút toán kết chuyển có MA_KC là maKc
 			chungTuDAO.xoaKetChuyenButToan(maKc);

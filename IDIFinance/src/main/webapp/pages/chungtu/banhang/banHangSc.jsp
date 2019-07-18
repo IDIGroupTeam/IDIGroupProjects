@@ -13,7 +13,7 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		$("#mainFinanceForm").attr("action", "${url}/chungtu/muahang/luu");
+		$("#mainFinanceForm").attr("action", "${url}/chungtu/banhang/luu");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		$("#submitBt").click(function() {
@@ -23,7 +23,6 @@
 		var soDongTk = '${mainFinanceForm.soHangHoa}';
 		var currentTr = 0;
 		var hangTienDong = "";
-		var khoDong = "";
 		var thueDong = "";
 		var chiPhiDong = "";
 		var ktthDong = "";
@@ -31,9 +30,8 @@
 		var patt1 = new RegExp("Ds" + (soDongTk - 1), "g");
 
 		var loaiTien = null;
-		var url = "${url}/chungtu/nhacungcap/";
-		var loaiDt = 3;
-		var thapPhan = 0;
+		var url = "${url}/chungtu/khachhang/";
+		var loaiDt = 2;
 
 		// Đăng ký autocomplete
 		var autocomplete = $('#doiTuong\\.tenDt').bootcomplete({
@@ -123,11 +121,6 @@
 
 			if (tien.maLt == $("#loaiTien\\.maLt").val()) {
 				loaiTien = tien;
-				if (tien.maLt == 'VND' || tien.maLt == 'VANG') {
-					thapPhan = 0;
-				} else {
-					thapPhan = 2;
-				}
 			}
 		}
 
@@ -143,75 +136,45 @@
 
 			// CẬP NHẬT HIỂN THỊ
 			var tongTienVn = tongTien * loaiTien.banRa;
-			tongTienVn = accounting.formatNumber(tongTienVn, 0, ",") + " VND";
-			console.log("tongTienHangHoa id", id, "soLuong", soLuong, "gia",
-					gia, "loaiTien.banRa", loaiTien.banRa, "tongTien",
-					tongTien, "tongTienVn", tongTienVn);
+			tongTienVn = accounting.formatNumber(tongTienVn, 2, ",") + " VND";
 
 			// Hiển thị tổng tiền ở tab hàng tiền
-			var tongTxt = accounting.formatNumber(tongTien, thapPhan, ",")
-					+ " " + loaiTien.maLt;
-
-			// Hiển thị tổng tiền ở tab thuế
-			$("#hangHoaDs" + id + "\\.thue\\.tongTien").html(tongTxt);
-
+			var tongTxt = accounting.formatNumber(tongTien, 2, ",") + " "
+					+ loaiTien.maLt;
 			if (loaiTien.maLt != "VND") {
 				tongTxt += "<br/>" + tongTienVn;
 			}
 			$("#hangHoaDs" + id + "\\.hangTien\\.tongTien").html(tongTxt);
 
+			// Hiển thị tổng tiền ở tab thuế
+			$("#hangHoaDs" + id + "\\.thue\\.tongTien").html(tongTienVn);
+
 			return tongTien;
 		}
 
 		function tongThueHangHoa(id) {
-			// Tổng tiền hàng hóa
-			var ketQua = new Object();
+			// Tổng tiền hàng hóa VND
 			var tong = tongTienHangHoa(id) * loaiTien.banRa;
-			var tongTien = tong;
 
 			// Cập nhật tiền thuế nhập khẩu
 			try {
-				var thueSuatNk = $("#hangHoaDs" + id + "\\.thueSuatNk").val();
-				if (!isNaN(thueSuatNk)) {
-					if (thueSuatNk > 0) {
-						var thue = tong * thueSuatNk / 100;
-						$("#hangHoaDs" + id + "\\.tkThueNk\\.soTien\\.giaTri")
-								.val(thue);
+				var thueSuatXk = $("#hangHoaDs" + id + "\\.thueSuatXk").val();
+				if (!isNaN(thueSuatXk)) {
+					if (thueSuatXk > 0) {
+						var thue = tong * thueSuatXk / 100;
+						$("#hangHoaDs" + id + "\\.tkThueXk\\.soTien\\.soTien")
+								.val(tong * thueSuatXk / 100);
 					}
 				}
 
-				var thueNk = $(
-						"#hangHoaDs" + id + "\\.tkThueNk\\.soTien\\.giaTri")
+				var thueXk = $(
+						"#hangHoaDs" + id + "\\.tkThueXk\\.soTien\\.soTien")
 						.val();
-				if (!isNaN(thueNk)) {
-					tong += eval(thueNk);
-					tongTien += eval(thueNk);
+				if (!isNaN(thueXk)) {
+					tong += eval(thueXk);
 				}
 			} catch (e) {
 				// alert("nk " + e);
-			}
-
-			// Cập nhật tiền thuế ttdb
-			try {
-				var thueSuatTtdb = $("#hangHoaDs" + id + "\\.thueSuatTtdb")
-						.val();
-				if (!isNaN(thueSuatTtdb)) {
-					if (thueSuatTtdb > 0) {
-						var thue = tong * thueSuatTtdb / 100;
-						$("#hangHoaDs" + id + "\\.tkThueTtdb\\.soTien\\.giaTri")
-								.val(thue);
-					}
-				}
-
-				var thueTtdb = $(
-						"#hangHoaDs" + id + "\\.tkThueTtdb\\.soTien\\.giaTri")
-						.val();
-				if (!isNaN(thueTtdb)) {
-					tong += eval(thueTtdb);
-					tongTien += eval(thueTtdb);
-				}
-			} catch (e) {
-				// alert("ttdb " + e);
 			}
 
 			// Tính tiền thuế giá trị gia tăng
@@ -221,7 +184,7 @@
 				if (!isNaN(thueSuatGtgt)) {
 					if (thueSuatGtgt > 0) {
 						var thue = tong * thueSuatGtgt / 100;
-						$("#hangHoaDs" + id + "\\.tkThueGtgt\\.soTien\\.giaTri")
+						$("#hangHoaDs" + id + "\\.tkThueGtgt\\.soTien\\.soTien")
 								.val(thue);
 					}
 				}
@@ -230,38 +193,31 @@
 				var maTk = $(
 						"#hangHoaDs" + id
 								+ "\\.tkThueGtgt\\.loaiTaiKhoan\\.maTk").val();
-				var thueGtgt = $(
-						"#hangHoaDs" + id + "\\.tkThueGtgt\\.soTien\\.giaTri")
-						.val();
 				if (tinhChatCt == 2 || ((tinhChatCt != 2) && (maTk == '0'))) {
-					// Đây là trường hợp tính thuế GTGT theo phương pháp trực tiếp, 
+					//Đây là trường hợp tính thuế GTGT theo phương pháp trực tiếp, 
 					// Tiền thuế GTGT được cộng vào giá nhập kho
 
-					// Nếu là mua hàng nước ngoài
+					// Nếu là bán hàng nước ngoài
 					// và tính theo phương pháp khấu trừ thì lập một phiếu kế toán tổng hợp riêng, 
 					// form này sẽ để trắng các cột liên quan đến thuế GTGT
 
 					// Hoặc
-					// Nếu là mua trong nước
+					// Nếu là bán trong nước
 					// Tính theo phương pháp khấu trừ thì phải chọn mã tài khoản
+
+					var thueGtgt = $(
+							"#hangHoaDs" + id
+									+ "\\.tkThueGtgt\\.soTien\\.soTien").val();
 
 					if (!isNaN(thueGtgt)) {
 						tong += eval(thueGtgt);
 					}
 				}
-
-				if (!isNaN(thueGtgt)) {
-					tongTien += eval(thueGtgt);
-				}
 			} catch (e) {
-				console.log("tongThueHangHoa error", e);
+
 			}
 
-			ketQua.thue = tong;
-			ketQua.tien = tongTien;
-			console.log("tongThueHangHoa id", id, "thue", ketQua.thue, "tien",
-					ketQua.tien);
-			return ketQua;
+			return tong;
 		}
 
 		function capNhatTongTienHangHoa(i) {
@@ -271,98 +227,28 @@
 
 			// CẬP NHẬT THUẾ
 			// Kết quả trả về là tổng hàng tiền và tổng thuế
-			console.log("capNhatTongTienHangHoa id", i);
-			var tong = tongThueHangHoa(i);
+			var tong = tongThueHangHoa(i) / loaiTien.banRa;
 
-			// CẬP NHẬT CHI PHÍ
-
-			// CẬP NHẬT GIÁ NHẬP KHO: tổng hàng tiền, tổng thuế, tổng chi phí
-			try {
-				var tongGiaKho = tong.thue / loaiTien.banRa;
-				var tongGiaKhoVn = tong.thue;
-				var tongGiaKhoTxt = "";
-
-				var soLuong = $.trim($("#hangHoaDs" + i + "\\.soLuong").val());
-				var giaKho = tongGiaKho / soLuong;
-				var giaKhoVn = tongGiaKhoVn / soLuong;
-				var giaKhoTxt = "";
-
-				var tongCongNo = tong.tien / loaiTien.banRa;
-				var tongCongNoVn = tong.tien;
-				var tongCongNoTxt = "";
-
-				if (!isNaN(giaKho)) {
-					$("#hangHoaDs" + i + "\\.giaKho\\.soTien").val(giaKho);
-				} else {
-					$("#hangHoaDs" + i + "\\.giaKho\\.soTien").val(0);
-				}
-
-				if (loaiTien.maLt != "VND") {
-					tongGiaKhoTxt = accounting.formatNumber(tongGiaKho,
-							thapPhan, ",")
-							+ " " + loaiTien.maLt;
-					tongGiaKhoTxt = tongGiaKhoTxt + "<br/>"
-							+ accounting.formatNumber(tongGiaKhoVn, 0, ",")
-							+ " VND";
-
-					giaKhoTxt = accounting.formatNumber(giaKho, thapPhan, ",")
-							+ " " + loaiTien.maLt;
-					giaKhoTxt = giaKhoTxt + "<br/>"
-							+ accounting.formatNumber(giaKhoVn, 0, ",")
-							+ " VND";
-
-					tongCongNoTxt = accounting.formatNumber(tongCongNo,
-							thapPhan, ",")
-							+ " " + loaiTien.maLt;
-					tongCongNoTxt = tongCongNoTxt + "<br/>"
-							+ accounting.formatNumber(tongCongNoVn, 0, ",")
-							+ " VND";
-				} else {
-					tongGiaKhoTxt = accounting.formatNumber(tongGiaKhoVn, 0,
-							",")
-							+ " VND";
-
-					giaKhoTxt = accounting.formatNumber(giaKhoVn, 0, ",")
-							+ " VND";
-
-					tongCongNoTxt = accounting.formatNumber(tongCongNoVn, 0,
-							",")
-							+ " VND";
-				}
-
-				$("#hangHoaDs" + i + "\\.giaKho\\.soTienTxt").html(giaKhoTxt);
-
-				$("#hangHoaDs" + i + "\\.giaKho\\.tongSoTienTxt").html(
-						tongGiaKhoTxt);
-
-				$("#hangHoaDs" + i + "\\.tongCongNoTxt").html(tongCongNoTxt);
-			} catch (e) {
-				console.log("capNhatTongTienHangHoa error", e);
-			}
+			// CẬP NHẬT GIÁ VỐN
+			soLuong = $("#hangHoaDs" + i + "\\.soLuong").val();
+			$("#hangHoaDs" + i + "\\.giaVon\\.soLuongTxt").text(soLuong);
 		}
 
 		function capNhapTongTienChungTu() {
 			var tongTienChungTu = 0;
-
-			console.log("capNhapTongTienChungTu", tongTienChungTu, "soDongTk",
-					soDongTk);
 			for (i = 0; i < soDongTk; i++) {
-				var giaKho = $("#hangHoaDs" + i + "\\.giaKho\\.soTien").val();
+				var donGia = $("#hangHoaDs" + i + "\\.donGia\\.soTien").val();
 				var soLuong = $.trim($("#hangHoaDs" + i + "\\.soLuong").val());
 
-				if (!isNaN(giaKho) && !isNaN(soLuong)) {
-					tongTienChungTu += eval(giaKho) * eval(soLuong)
+				if (!isNaN(donGia) && !isNaN(soLuong)) {
+					tongTienChungTu += eval(donGia) * eval(soLuong)
 							* loaiTien.banRa;
 				}
-
-				console.log("capNhapTongTienChungTu", tongTienChungTu,
-						"giaKho", giaKho, "soLuong", soLuong, "loaiTien.banRa",
-						loaiTien.banRa);
 			}
 
 			// Sau đó cập nhật tổng tiền cả chứng từ
 			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongTienChungTu, 0, ",") + " VND");
+					accounting.formatNumber(tongTienChungTu, 2, ",") + " VND");
 		}
 
 		$("#themHh").click(
@@ -374,12 +260,6 @@
 							+ soDongTk);
 					$(hangTienDongMoi).appendTo($("#hangTienTbl")).prop("id",
 							"hangTien" + soDongTk);
-
-					// Thêm dòng mới vào tab kho
-					khoDongMoi = khoDong.replace(patt, "[" + soDongTk + "]");
-					khoDongMoi = khoDongMoi.replace(patt1, "Ds" + soDongTk);
-					$(khoDongMoi).appendTo($("#khoTbl")).prop("id",
-							"kho" + soDongTk);
 
 					// Thêm dòng mới vào tab thuế
 					thueDongMoi = thueDong.replace(patt, "[" + soDongTk + "]");
@@ -395,7 +275,7 @@
 					$(chiPhiDongMoi).appendTo($("#chiPhiTbl")).prop("id",
 							"chiPhi" + soDongTk);
 
-					// Thêm dòng mới vào tab ktth nếu có
+					// Thêm dòng mới vào tab ktth
 					ktthDongMoi = ktthDong.replace(patt, "[" + soDongTk + "]");
 					ktthDongMoi = ktthDongMoi.replace(patt1, "Ds" + soDongTk);
 					$(ktthDongMoi).appendTo($("#ktthTbl")).prop("id",
@@ -412,7 +292,6 @@
 			soDongTk--;
 
 			$("#hangTien" + soDongTk).remove();
-			$("#kho" + soDongTk).remove();
 			$("#thue" + soDongTk).remove();
 			$("#chiPhi" + soDongTk).remove();
 			$("#ktth" + soDongTk).remove();
@@ -421,36 +300,26 @@
 				$("#xoaHh").addClass("disabled");
 			}
 
-			capNhapTongTienChungTu();
+			capNhapTongTien();
 		});
 
-		$("#loaiTien\\.maLt").change(
-				function() {
-					// Thay đổi loại tiền
-					for (i = 0; i < loaiTienDs.length; i++) {
-						if (loaiTienDs[i].maLt == this.value) {
-							loaiTien = loaiTienDs[i];
-							if (loaiTien.maLt == 'VND'
-									|| loaiTien.maLt == 'VANG') {
-								thapPhan = 0;
-							} else {
-								thapPhan = 2;
-							}
-							break;
-						}
-					}
+		$("#loaiTien\\.maLt").change(function() {
+			// Thay đổi loại tiền
+			for (i = 0; i < loaiTienDs.length; i++) {
+				if (loaiTienDs[i].maLt == this.value) {
+					loaiTien = loaiTienDs[i];
+					break;
+				}
+			}
 
-					// Cập nhật tỷ giá
-					$("#loaiTien\\.banRa").val(loaiTien.banRa);
-					$("input[id$='\\.soTien']").unbind(
-							'keydown.format keyup.format paste.format');
+			// Cập nhật tỷ giá
+			$("#loaiTien\\.banRa").val(loaiTien.banRa);
 
-					for (i = 0; i < soDongTk; i++) {
-						dangKyTien(i);
-						capNhatTongTienHangHoa(i);
-					}
-					capNhapTongTienChungTu();
-				});
+			for (i = 0; i < soDongTk; i++) {
+				capNhatTongTienHangHoa(i);
+			}
+			capNhapTongTienChungTu();
+		});
 
 		$("#loaiTien\\.banRa").change(function() {
 			loaiTien.banRa = $(this).val();
@@ -461,22 +330,62 @@
 			capNhapTongTienChungTu();
 		});
 
-		function dangKyTien(id) {
-			$("input[id^='hangHoaDs" + id + "'][id$='soTien']").number(true,
-					thapPhan);
-			$("input[id^='hangHoaDs" + id + "'][id$='giaTri']").number(true);
-			$("input[id^='nvktDs" + id + "'][id$='soTien']").number(true,
-					thapPhan);
+		function danhSachGiaVon(maHh, id) {
+			if (maHh == null) {
+				html = "<option value='0' class='giaVon'></option>";
+				$("#hangHoaDs" + id + "\\.giaKho\\.maGia").html(html);
+				return;
+			}
+
+			maKho = $("#hangHoaDs" + id + "\\.kho\\.maKho").val();
+
+			var param = 'maHh=' + maHh;
+			if (maKho != null && maKho != 0) {
+				param += "&maKho=" + maKho;
+			} else {
+				param += "&maKho=0";
+			}
+			console.log("danhSachGiaVon", param);
+			$
+					.ajax({
+						url : "${url}/chungtu/hanghoa/giavonds",
+						data : param,
+						dataType : "json",
+						type : "POST",
+						success : function(donGiaDs) {
+							html = "<option value='0' class='giaVon'></option>";
+							if (donGiaDs != null) {
+								for (var i = 0; i < donGiaDs.length; i++) {
+									donGia = donGiaDs[i];
+									htmlTmpl = "<option value='"+donGia.maGia+"' class='giaVon'>"
+											+ donGia.donGia.soTien
+											+ "</option>";
+									html += htmlTmpl;
+								}
+							}
+
+							$("#hangHoaDs" + id + "\\.giaKho\\.maGia").html(
+									html);
+						},
+						error : function(data) {
+							html = "<option value='0'></option>";
+							$("#hangHoaDs" + id + "\\.giaKho\\.maGia").html(
+									html);
+						}
+					});
 		}
 
 		function dangKy(id) {
-			dangKyTien(id);
-
 			var tenHh = $("#hangHoaDs" + id + "\\.tenHh").val();
-			$("#hangHoaDs" + id + "\\.hangTien\\.tenHhTxt").text(tenHh);
-			$("#hangHoaDs" + id + "\\.kho\\.tenHhTxt").text(tenHh);
 			$("#hangHoaDs" + id + "\\.thue\\.tenHhTxt").text(tenHh);
-			$("#hangHoaDs" + id + "\\.chiPhi\\.tenHhTxt").text(tenHh);
+			$("#hangHoaDs" + id + "\\.giaVon\\.tenHhTxt").text(tenHh);
+
+			var donVi = $("#hangHoaDs" + id + "\\.donVi\\.tenDv").val();
+			$("#hangHoaDs" + id + "\\.giaVon\\.tenDvTxt").text(donVi);
+
+			$("#lyDo").change(function() {
+				$("#nvktDs" + id + "\\.taiKhoanNo\\.lyDo").val($(this).val());
+			});
 
 			// Đăng ký thay đổi số lượng
 			$("#hangHoaDs" + id + "\\.soLuong").change(function() {
@@ -490,7 +399,7 @@
 				capNhapTongTienChungTu();
 			});
 
-			// Đăng ký thay đổi đơn giá
+			// Đăng ký thay đổi đơn giá bán
 			$("#hangHoaDs" + id + "\\.donGia\\.soTien").change(function() {
 				var value = $(this).val();
 				if (isNaN(value)) {
@@ -502,15 +411,8 @@
 				capNhapTongTienChungTu();
 			});
 
-			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk").val("");
-			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk")
-					.combobox();
-			$("#nvktDs" + id + "\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk").val("");
-			$("#nvktDs" + id + "\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk")
-					.combobox();
-
 			// Thuế suất nhập khẩu thay đổi
-			$("#hangHoaDs" + id + "\\.thueSuatNk").change(function() {
+			$("#hangHoaDs" + id + "\\.thueSuatXk").change(function() {
 				var value = $(this).val();
 				if (isNaN(value)) {
 					value = 0;
@@ -522,36 +424,9 @@
 			});
 
 			// Thuế suất nhập khẩu thay đổi
-			$("#hangHoaDs" + id + "\\.tkThueNk\\.soTien\\.giaTri").change(
+			$("#hangHoaDs" + id + "\\.tkThueXk\\.soTien\\.soTien").change(
 					function() {
-						$("#hangHoaDs" + id + "\\.thueSuatNk").val(0);
-
-						var value = $(this).val();
-						if (isNaN(value)) {
-							value = 0;
-						}
-						$(this).val(value * 1);
-
-						capNhatTongTienHangHoa(id);
-						capNhapTongTienChungTu();
-					});
-
-			// Thuế suất tiêu thụ đặc biệt thay đổi
-			$("#hangHoaDs" + id + "\\.thueSuatTtdb").change(function() {
-				var value = $(this).val();
-				if (isNaN(value)) {
-					value = 0;
-				}
-				$(this).val(value * 1);
-
-				capNhatTongTienHangHoa(id);
-				capNhapTongTienChungTu();
-			});
-
-			// Thuế suất nhập khẩu thay đổi
-			$("#hangHoaDs" + id + "\\.tkThueTtdb\\.soTien\\.giaTri").change(
-					function() {
-						$("#hangHoaDs" + id + "\\.thueSuatTtdb").val(0);
+						$("#hangHoaDs" + id + "\\.thueSuatXk").val(0);
 
 						var value = $(this).val();
 						if (isNaN(value)) {
@@ -575,7 +450,7 @@
 				capNhapTongTienChungTu();
 			});
 
-			$("#hangHoaDs" + id + "\\.tkThueGtgt\\.soTien\\.giaTri").change(
+			$("#hangHoaDs" + id + "\\.tkThueGtgt\\.soTien\\.soTien").change(
 					function() {
 						$("#hangHoaDs" + id + "\\.thueSuatGtgt").val(0);
 
@@ -591,16 +466,49 @@
 
 			$("#hangHoaDs" + id + "\\.tkThueGtgt\\.loaiTaiKhoan\\.maTk")
 					.change(function() {
-						// Thay đổi cách tính thuế gtgt trực tiếp hoặc khấu trừ
 						capNhatTongTienHangHoa(id);
 						capNhapTongTienChungTu();
 					});
 
+			$("#hangHoaDs" + id + "\\.giaKho\\.maGia")
+					.change(
+							function() {
+								var tongGiaVon = 0;
+								maGia = $(this).val();
+								var giaVon = $(
+										"option[value='" + maGia
+												+ "'][class='giaVon']").text();
+
+								var soLuong = $
+										.trim($(
+												"#hangHoaDs" + id
+														+ "\\.soLuong").val());
+
+								var soLuong = $
+										.trim($(
+												"#hangHoaDs" + id
+														+ "\\.soLuong").val())
+								if (soLuong != '' && !isNaN(soLuong)
+										&& giaVon != '' && !isNaN(giaVon)) {
+									tongGiaVon = soLuong * giaVon;
+								}
+
+								$(
+										"#hangHoaDs" + id
+												+ "\\.giaVon\\.thanhTienTxt")
+										.text(tongGiaVon);
+								$("#hangHoaDs" + id + "\\.giaKho\\.soTien")
+										.val(giaVon);
+							});
+
+			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk").val("");
+			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk")
+					.combobox();
+			$("#nvktDs" + id + "\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk").val("");
+			$("#nvktDs" + id + "\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk")
+					.combobox();
+
 			// Đăng ký chọn hàng hóa
-			var kyHieuHh = $("#hangHoaDs" + id + "\\.kyHieuHh").val();
-			if (kyHieuHh == '') {
-				$("#hangHoaDs" + id + "\\.maHh").val("");
-			}
 			$("#hangHoaDs" + id + "\\.maHh").combobox();
 			$("#hangHoaDs" + id + "\\.maHh")
 					.change(
@@ -629,17 +537,12 @@
 												$(
 														"#hangHoaDs"
 																+ id
-																+ "\\.kho\\.tenHhTxt")
-														.text(hangHoa.tenHh);
-												$(
-														"#hangHoaDs"
-																+ id
 																+ "\\.thue\\.tenHhTxt")
 														.text(hangHoa.tenHh);
 												$(
 														"#hangHoaDs"
 																+ id
-																+ "\\.chiPhi\\.tenHhTxt")
+																+ "\\.giaVon\\.tenHhTxt")
 														.text(hangHoa.tenHh);
 
 												$(
@@ -659,6 +562,13 @@
 																+ "\\.donVi\\.tenDvTxt")
 														.text(
 																hangHoa.donVi.tenDv);
+												$(
+														"#hangHoaDs"
+																+ id
+																+ "\\.giaVon\\.tenDvTxt")
+														.text(
+																hangHoa.donVi.tenDv);
+
 												$(
 														"#hangHoaDs"
 																+ id
@@ -683,7 +593,8 @@
 																+ id
 																+ "\\.donGia\\.soTien")
 														.val(0);
-												// Các thuế suất cũng đưa về 0 ?
+
+												danhSachGiaVon(hangHoa.maHh, id);
 
 												capNhatTongTienHangHoa(id);
 												capNhapTongTienChungTu();
@@ -698,13 +609,10 @@
 														"#hangHoaDs" + id
 																+ "\\.tenHh")
 														.val("");
-												$("#hangHoaDs"
-														+ id
-														+ "\\.hangTien\\.tenHhTxt")
 												$(
 														"#hangHoaDs"
 																+ id
-																+ "\\.kho\\.tenHhTxt")
+																+ "\\.hangTien\\.tenHhTxt")
 														.text("");
 												$(
 														"#hangHoaDs"
@@ -714,7 +622,7 @@
 												$(
 														"#hangHoaDs"
 																+ id
-																+ "\\.chiPhi\\.tenHhTxt")
+																+ "\\.giaVon\\.tenHhTxt")
 														.text("");
 
 												$(
@@ -732,6 +640,12 @@
 																+ id
 																+ "\\.donVi\\.tenDvTxt")
 														.text("");
+												$(
+														"#hangHoaDs"
+																+ id
+																+ "\\.giaVon\\.tenDvTxt")
+														.text("");
+
 												$(
 														"#hangHoaDs"
 																+ id
@@ -757,33 +671,19 @@
 												$(
 														"#hangHoaDs"
 																+ id
-																+ "\\.thueSuatNk")
+																+ "\\.thueSuatXk")
 														.val(0);
 												$(
 														"#hangHoaDs"
 																+ id
-																+ "\\.tkThueNk\\.loaiTaiKhoan\\.maTk")
+																+ "\\.tkThueXk\\.loaiTaiKhoan\\.maTk")
 														.val("");
 												$(
 														"#hangHoaDs"
 																+ id
-																+ "\\.tkThueNk\\.soTien\\.giaTri")
+																+ "\\.tkThueXk\\.soTien\\.soTien")
 														.val(0);
-												$(
-														"#hangHoaDs"
-																+ id
-																+ "\\.thueSuatTtdb")
-														.val(0);
-												$(
-														"#hangHoaDs"
-																+ id
-																+ "\\.tkThueTtdb\\.loaiTaiKhoan\\.maTk")
-														.val("");
-												$(
-														"#hangHoaDs"
-																+ id
-																+ "\\.tkThueTtdb\\.soTien\\.giaTri")
-														.val(0);
+
 												$(
 														"#hangHoaDs"
 																+ id
@@ -797,27 +697,37 @@
 												$(
 														"#hangHoaDs"
 																+ id
-																+ "\\.tkThueGtgt\\.soTien\\.giaTri")
+																+ "\\.tkThueGtgt\\.soTien\\.soTien")
 														.val(0);
+
+												$(
+														"#hangHoaDs"
+																+ id
+																+ "\\.giaKho\\.maGia")
+														.val(0);
+												$(
+														"#hangHoaDs"
+																+ id
+																+ "\\.tkGiaVon\\.loaiTaiKhoan.\\maTk")
+														.val(0);
+
+												$(
+														"span[id^='hangHoaDs'][id$='errors']")
+														.html("");
+
+												danhSachGiaVon(null, id);
 
 												capNhatTongTienHangHoa(id);
 												capNhapTongTienChungTu();
 											}
 										})
 							});
-
-			$("#lyDo").change(function() {
-				$("#nvktDs" + id + "\\.taiKhoanNo\\.lyDo").val($(this).val());
-			});
 		}
 
 		function khoiTao() {
 			// Lấy các dòng mẫu sạch
 			hangTienDong = $("#hangTien" + (soDongTk - 1)).html();
 			hangTienDong = "<tr>" + hangTienDong + "</tr>";
-
-			khoDong = $("#kho" + (soDongTk - 1)).html();
-			khoDong = "<tr>" + khoDong + "</tr>";
 
 			thueDong = $("#thue" + (soDongTk - 1)).html();
 			thueDong = "<tr>" + thueDong + "</tr>";
@@ -830,18 +740,14 @@
 
 			if (soDongTk > 1) {
 				$("#hangTien" + (soDongTk - 1)).remove();
-				$("#kho" + (soDongTk - 1)).remove();
 				$("#thue" + (soDongTk - 1)).remove();
 				$("#chiPhi" + (soDongTk - 1)).remove();
-				$("#ktth" + (soDongTk - 1)).remove();
 				soDongTk--;
 			}
 
 			if (soDongTk > 1) {
 				$("#xoaHh").removeClass("disabled");
 			}
-
-			$("#loaiTien\\.banRa").number(true);
 
 			// Đăng ký sự kiện cho các dòng
 			for (i = 0; i < soDongTk; i++) {
@@ -862,24 +768,6 @@
 			forceParse : 0,
 			pickerPosition : "bottom-left"
 		});
-
-		$("#goiYBt").click(function() {
-			var loaiCt = $("#loaiCt").val();
-			var param = "loaiCt=" + loaiCt;
-			$.ajax({
-				url : "${url}/chungtu/sochungtu",
-				data : param,
-				dataType : "text",
-				type : "GET",
-				success : function(soCt) {
-					soCt = soCt * 1 + 1;
-					$("#soCt").val(soCt);
-				},
-				error : function(error) {
-					console.log("Error", error);
-				}
-			});
-		});
 	});
 </script>
 
@@ -893,34 +781,26 @@
 
 <c:choose>
 	<c:when test="${mainFinanceForm.tinhChatCt==2}">
-		<h4>TẠO MỚI CHỨNG TỪ MUA HÀNG NƯỚC NGOÀI</h4>
+		<h4>SAO CHÉP CHỨNG TỪ XUẤT KHẨU HÀNG HÓA</h4>
 	</c:when>
 	<c:when test="${mainFinanceForm.tinhChatCt==3}">
-		<h4>TẠO MỚI CHỨNG TỪ MUA DỊCH VỤ TRONG NƯỚC</h4>
+		<h4>SAO CHÉP CHỨNG TỪ CUNG CẤP DỊCH VỤ TRONG NƯỚC</h4>
 	</c:when>
 	<c:otherwise>
-		<h4>TẠO MỚI CHỨNG TỪ MUA HÀNG TRONG NƯỚC</h4>
+		<h4>SAO CHÉP CHỨNG TỪ BÁN HÀNG TRONG NƯỚC</h4>
 	</c:otherwise>
 </c:choose>
 <hr />
 <form:hidden path="loaiCt" />
 <form:hidden path="tinhChatCt" />
 <form:hidden path="chieu" />
-<form:hidden path="nghiepVu" />
+
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="soCt">Số dự chứng từ
 		kiến:</label>
-	<%-- <div class="col-sm-4">
+	<div class="col-sm-4">
 		${mainFinanceForm.loaiCt}${mainFinanceForm.soCt}
 		<form:hidden path="soCt" />
-	</div> --%>
-	<div class="col-sm-2">
-		<form:input path="soCt" class="form-control" />
-		<form:errors path="soCt" cssClass="error" />
-	</div>
-	<div class="col-sm-2">
-		<button id="goiYBt" type="button" class="btn btn-info btn-sm">Gợi
-			ý</button>
 	</div>
 
 	<label class="control-label col-sm-2" for=ngayLap>Ngày lập
@@ -941,7 +821,7 @@
 	<div class="col-sm-4">
 		<form:select path="doiTuong.loaiDt" cssClass="form-control"
 			placeholder="Loại đối tượng">
-			<form:option value="${DoiTuong.NHA_CUNG_CAP}" label="Nhà cung cấp"></form:option>
+			<form:option value="${DoiTuong.KHACH_HANG}" label="Khách hàng"></form:option>
 		</form:select>
 	</div>
 
@@ -1052,22 +932,17 @@
 	</div>
 </div>
 
-<div class="row">
-	<label class="control-label col-sm-12">Danh sách hàng hóa, dịch
-		vụ</label>
-</div>
+<label class="control-label">Danh sách hàng hóa, dịch vụ</label>
 <div class="row">
 	<c:choose>
 		<c:when test="${mainFinanceForm.tinhChatCt==2}">
-			<jsp:include page="muaHangSu_Hh_Nn.jsp"></jsp:include>
-		</c:when>
-		<c:when test="${mainFinanceForm.tinhChatCt==3}">
-			<jsp:include page="muaHangSu_Dv_Tn.jsp"></jsp:include>
+			<jsp:include page="banHangSu_Hh_Nn.jsp"></jsp:include>
 		</c:when>
 		<c:otherwise>
-			<jsp:include page="muaHangSu_Hh_Tn.jsp"></jsp:include>
+			<jsp:include page="banHangSu_Hh_Tn.jsp"></jsp:include>
 		</c:otherwise>
 	</c:choose>
+	<br />
 </div>
 
 <div class="row form-group" align="center">
@@ -1083,7 +958,7 @@
 
 <div class="row form-group">
 	<div class="col-sm-12">
-		<a href="${url}/chungtu/muahang/danhsach" class="btn btn-info btn-sm">Hủy</a>
+		<a href="${url}/chungtu/banhang/danhsach" class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu</button>
 	</div>
 </div>

@@ -174,10 +174,10 @@
 				<td class="text-left"><b>Thành tiền:</b></td>
 				<td class="text-right"><span id="soTien.giaTriTxt"> <fmt:formatNumber
 							value="${chungTu.soTien.soTien}"></fmt:formatNumber>
-						&nbsp;${chungTu.loaiTien.maLt}
+						${chungTu.loaiTien.maLt}
 				</span></td>
 				<td class="text-right"><span id="soTien.giaTriQdTxt"> <fmt:formatNumber
-							value="${chungTu.soTien.giaTri}"></fmt:formatNumber> &nbsp;VND
+							value="${chungTu.soTien.giaTri}"></fmt:formatNumber> VND
 				</span></td>
 			</tr>
 		</tbody>

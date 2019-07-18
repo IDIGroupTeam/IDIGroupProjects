@@ -39,7 +39,7 @@
 					<tr id="hangTien${status.index}">
 						<td class="text-left" style="width: 200px;"><form:select
 								path="hangHoaDs[${status.index}].maHh" cssClass="form-control">
-								<form:option value="0" label=""></form:option>
+								<%-- <form:option value="0" label=""></form:option> --%>
 								<form:options items="${khHangHoaDs}" itemValue="maHh"
 									itemLabel="kyHieuHh" />
 							</form:select> <form:errors path="hangHoaDs[${status.index}].maHh"
@@ -53,8 +53,8 @@
 							id="hangHoaDs${status.index}.donVi.tenDvTxt">${hangHoa.donVi.tenDv}</span></td>
 						<td><form:input cssClass="form-control"
 								path="hangHoaDs[${status.index}].soLuong" /> <form:errors
-								path="hangHoaDs[${status.index}].soLuong" cssClass="error" />
-							<form:hidden path="hangHoaDs[${status.index}].soLuongBanDau" /></td>
+								path="hangHoaDs[${status.index}].soLuong" cssClass="error" /> <form:hidden
+								path="hangHoaDs[${status.index}].soLuongBanDau" /></td>
 						<td><form:input cssClass="form-control"
 								path="hangHoaDs[${status.index}].donGia.soTien" /> <form:errors
 								path="hangHoaDs[${status.index}].donGia.soTien" cssClass="error" /></td>
@@ -116,13 +116,14 @@
 						<td><form:input cssClass="form-control"
 								path="hangHoaDs[${status.index}].thueSuatGtgt" /></td>
 						<td><form:input cssClass="form-control"
-								path="hangHoaDs[${status.index}].tkThueGtgt.soTien.soTien" /> <input
+								path="hangHoaDs[${status.index}].tkThueGtgt.soTien.giaTri" /> <form:hidden
+								path="hangHoaDs[${status.index}].tkThueGtgt.maNvkt" /> <input
 							type="hidden" name="hangHoaDs[${status.index}].tkThueGtgt.soDu"
 							value="-1" /></td>
 						<td><form:select cssClass="form-control"
 								path="hangHoaDs[${status.index}].tkThueGtgt.loaiTaiKhoan.maTk">
 								<form:option value="" label=""></form:option>
-								<form:option value="0" label="Thuế GTGT tính trực tiếp"></form:option>
+								<%-- <form:option value="0" label="Thuế GTGT tính trực tiếp"></form:option> --%>
 								<form:options items="${loaiTaiKhoanGtgtDs}" itemValue="maTk"
 									itemLabel="maTenTk" />
 							</form:select> <form:errors

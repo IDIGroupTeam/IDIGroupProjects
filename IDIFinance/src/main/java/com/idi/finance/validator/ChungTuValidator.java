@@ -20,6 +20,7 @@ import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.TaiKhoan;
 import com.idi.finance.dao.ChungTuDAO;
+import com.idi.finance.dao.KyKeToanDAO;
 
 public class ChungTuValidator implements Validator {
 	private static final Logger logger = Logger.getLogger(ChungTuValidator.class);
@@ -36,6 +37,9 @@ public class ChungTuValidator implements Validator {
 	@Autowired
 	ChungTuDAO chungTuDAO;
 
+	@Autowired
+	KyKeToanDAO kyKeToanDAO;
+
 	@Override
 	public boolean supports(Class<?> cls) {
 		return cls == ChungTu.class;
@@ -45,6 +49,10 @@ public class ChungTuValidator implements Validator {
 	public void validate(Object target, Errors errors) {
 		ChungTu chungTu = (ChungTu) target;
 		KyKeToan kyKeToan = dungChung.getKyKeToan();
+
+		if (!kiemTraKyketoanMo(chungTu)) {
+			errors.rejectValue("ngayHt", "chungTu.ngayHt.kyKeToan.dong");
+		}
 
 		if (chungTu.getLoaiCt() != null) {
 			if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_PHIEU_THU)
@@ -194,7 +202,7 @@ public class ChungTuValidator implements Validator {
 									|| hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk() == null
 									|| hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 								if (hangHoa.getTkThueNk().getSoTien() != null
-										&& hangHoa.getTkThueNk().getSoTien().getSoTien() > 0) {
+										&& hangHoa.getTkThueNk().getSoTien().getGiaTri() > 0) {
 									errors.rejectValue("hangHoaDs[" + id + "].tkThueNk.loaiTaiKhoan.maTk",
 											"NotEmpty.hangHoa.tkThueNk.loaiTaiKhoan.maTk");
 								}
@@ -206,7 +214,7 @@ public class ChungTuValidator implements Validator {
 									|| hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk() == null
 									|| hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 								if (hangHoa.getTkThueTtdb().getSoTien() != null
-										&& hangHoa.getTkThueTtdb().getSoTien().getSoTien() > 0) {
+										&& hangHoa.getTkThueTtdb().getSoTien().getGiaTri() > 0) {
 									errors.rejectValue("hangHoaDs[" + id + "].tkThueTtdb.loaiTaiKhoan.maTk",
 											"NotEmpty.hangHoa.tkThueTtdb.loaiTaiKhoan.maTk");
 								}
@@ -218,7 +226,7 @@ public class ChungTuValidator implements Validator {
 									|| hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() == null
 									|| hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 								if (hangHoa.getTkThueGtgt().getSoTien() != null
-										&& hangHoa.getTkThueGtgt().getSoTien().getSoTien() > 0) {
+										&& hangHoa.getTkThueGtgt().getSoTien().getGiaTri() > 0) {
 									errors.rejectValue("hangHoaDs[" + id + "].tkThueGtgt.loaiTaiKhoan.maTk",
 											"NotEmpty.hangHoa.tkThueGtgt.loaiTaiKhoan.maTk");
 								}
@@ -476,5 +484,14 @@ public class ChungTuValidator implements Validator {
 		if (chungTu.getNgayLap() == null && !errors.hasFieldErrors("ngayLap")) {
 			errors.rejectValue("ngayLap", "NotEmpty.mainFinanceForm.ngayLap");
 		}
+	}
+
+	private boolean kiemTraKyketoanMo(ChungTu chungTu) {
+		KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(chungTu);
+		if (kyKeToan != null && kyKeToan.getTrangThai() == KyKeToan.DONG) {
+			return false;
+		}
+
+		return true;
 	}
 }

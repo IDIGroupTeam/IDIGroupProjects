@@ -1,5 +1,6 @@
 package com.idi.finance.utils;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -249,5 +250,29 @@ public class Utils {
 		}
 
 		return rs;
+	}
+
+	public static double multiply(double a, double b) {
+		BigDecimal aObj = new BigDecimal(a + "");
+		BigDecimal bObj = new BigDecimal(b + "");
+		return aObj.multiply(bObj).doubleValue();
+	}
+
+	public static double divide(double a, double b) {
+		BigDecimal aObj = new BigDecimal(a + "");
+		BigDecimal bObj = new BigDecimal(b + "");
+		return aObj.divide(bObj).doubleValue();
+	}
+
+	public static double add(double a, double b) {
+		BigDecimal aObj = new BigDecimal(a + "");
+		BigDecimal bObj = new BigDecimal(b + "");
+		return aObj.add(bObj).doubleValue();
+	}
+
+	public static double subtract(double a, double b) {
+		BigDecimal aObj = new BigDecimal(a + "");
+		BigDecimal bObj = new BigDecimal(b + "");
+		return aObj.subtract(bObj).doubleValue();
 	}
 }

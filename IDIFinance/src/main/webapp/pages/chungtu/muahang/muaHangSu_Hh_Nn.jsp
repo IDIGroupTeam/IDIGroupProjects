@@ -12,13 +12,12 @@
 <ul class="nav nav-tabs nav-pills nav-justified">
 	<li class="active"><a data-toggle="tab" href="#hangTien">Hàng
 			tiền</a></li>
+	<li><a data-toggle="tab" href="#kho">Kho</a></li>
 	<li><a data-toggle="tab" href="#thue">Thuế</a></li>
 	<li><a data-toggle="tab" href="#chiPhi">Chi phí</a></li>
 </ul>
-<div class="tab-content table-responsive sub-content"
-	style="overflow-x: auto; overflow-y: none;">
-	<div id="hangTien" class="tab-pane fade in active"
-		style="width: 1700px;">
+<div class="tab-content sub-content">
+	<div id="hangTien" class="tab-pane fade in active table-responsive">
 		<table class="table table-bordered table-hover text-center hanghoa"
 			id="hangTienTbl">
 			<thead>
@@ -29,12 +28,7 @@
 					<th class="text-center">Số lượng</th>
 					<th class="text-center">Giá mua</th>
 					<th class="text-center">Thành tiền</th>
-					<th class="text-center">TK Kho (Nợ)</th>
 					<th class="text-center">TK công nợ (Có)</th>
-					<th class="text-center">Kho</th>
-					<th class="text-center">Giá nhập kho</th>
-					<th class="text-center">Tổng tiền<br />nhập kho
-					</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -43,7 +37,7 @@
 					<tr id="hangTien${status.index}">
 						<td class="text-left" style="width: 200px;"><form:select
 								path="hangHoaDs[${status.index}].maHh" cssClass="form-control">
-								<form:option value="0" label=""></form:option>
+								<%-- <form:option value="0"></form:option> --%>
 								<form:options items="${khHangHoaDs}" itemValue="maHh"
 									itemLabel="kyHieuHh" />
 							</form:select> <form:errors path="hangHoaDs[${status.index}].maHh"
@@ -64,17 +58,8 @@
 								path="hangHoaDs[${status.index}].donGia.soTien" cssClass="error" /></td>
 						<td class="text-right" style="width: 180px;"><span
 							id="hangHoaDs${status.index}.hangTien.tongTien"></span></td>
-						<td><input type="hidden"
-							name="hangHoaDs[${status.index}].tkKho.soDu" value="-1" /> <form:hidden
-								path="hangHoaDs[${status.index}].tkKho.maNvkt" /> <form:select
-								cssClass="form-control"
-								path="hangHoaDs[${status.index}].tkKho.loaiTaiKhoan.maTk">
-								<form:option value="" label=""></form:option>
-								<form:options items="${loaiTaiKhoanKhoDs}" itemValue="maTk"
-									itemLabel="maTenTk" />
-							</form:select> <form:errors
-								path="hangHoaDs[${status.index}].tkKho.loaiTaiKhoan.maTk"
-								cssClass="error" /></td>
+
+
 						<td><input type="hidden"
 							name="hangHoaDs[${status.index}].tkThanhtoan.soDu" value="1" />
 							<form:hidden path="hangHoaDs[${status.index}].tkThanhtoan.maNvkt" />
@@ -86,6 +71,30 @@
 							</form:select> <form:errors
 								path="hangHoaDs[${status.index}].tkThanhtoan.loaiTaiKhoan.maTk"
 								cssClass="error" /></td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+	</div>
+	<div id="kho" class="tab-pane fade table-responsive">
+		<table class="table table-bordered table-hover text-center hanghoa"
+			id="khoTbl">
+			<thead>
+				<tr>
+					<th class="text-center">Vật tư, hàng hóa</th>
+					<th class="text-center">Kho</th>
+					<th class="text-center">Giá nhập kho</th>
+					<th class="text-center">Tổng tiền<br />nhập kho
+					</th>
+					<th class="text-center">TK Kho (Nợ)</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach items="${mainFinanceForm.hangHoaDs}" var="hangHoa"
+					varStatus="status">
+					<tr id="kho${status.index}">
+						<td class="text-left" style="width: 230px;"><span
+							id="hangHoaDs${status.index}.kho.tenHhTxt">${hangHoa.tenHh}</span></td>
 						<td style="width: 200px;"><form:select
 								cssClass="form-control"
 								path="hangHoaDs[${status.index}].kho.maKho">
@@ -99,12 +108,23 @@
 							id="hangHoaDs${status.index}.giaKho.soTienTxt">${giaKho.soTien}</span></td>
 						<td class="text-right"><span
 							id="hangHoaDs${status.index}.giaKho.tongSoTienTxt">${giaKho.soTien}</span></td>
+						<td><input type="hidden"
+							name="hangHoaDs[${status.index}].tkKho.soDu" value="-1" /> <form:hidden
+								path="hangHoaDs[${status.index}].tkKho.maNvkt" /> <form:select
+								cssClass="form-control"
+								path="hangHoaDs[${status.index}].tkKho.loaiTaiKhoan.maTk">
+								<form:option value="" label=""></form:option>
+								<form:options items="${loaiTaiKhoanKhoDs}" itemValue="maTk"
+									itemLabel="maTenTk" />
+							</form:select> <form:errors
+								path="hangHoaDs[${status.index}].tkKho.loaiTaiKhoan.maTk"
+								cssClass="error" /></td>
 					</tr>
 				</c:forEach>
 			</tbody>
 		</table>
 	</div>
-	<div id="thue" class="tab-pane fade">
+	<div id="thue" class="tab-pane fade table-responsive">
 		<table class="table table-bordered table-hover text-center hanghoa"
 			id="thueTbl">
 			<thead>
@@ -138,7 +158,8 @@
 						<td><form:input cssClass="form-control"
 								path="hangHoaDs[${status.index}].thueSuatNk" /></td>
 						<td><form:input cssClass="form-control"
-								path="hangHoaDs[${status.index}].tkThueNk.soTien.soTien" /> <input
+								path="hangHoaDs[${status.index}].tkThueNk.soTien.giaTri" /> <form:hidden
+								path="hangHoaDs[${status.index}].tkThueNk.maNvkt" /> <input
 							type="hidden" name="hangHoaDs[${status.index}].tkThueNk.soDu"
 							value="1" /></td>
 						<td><form:select cssClass="form-control"
@@ -152,7 +173,8 @@
 						<td><form:input cssClass="form-control"
 								path="hangHoaDs[${status.index}].thueSuatTtdb" /></td>
 						<td><form:input cssClass="form-control"
-								path="hangHoaDs[${status.index}].tkThueTtdb.soTien.soTien" /> <input
+								path="hangHoaDs[${status.index}].tkThueTtdb.soTien.giaTri" /> <form:hidden
+								path="hangHoaDs[${status.index}].tkThueTtdb.maNvkt" /> <input
 							type="hidden" name="hangHoaDs[${status.index}].tkThueTtdb.soDu"
 							value="1" /></td>
 						<td><form:select cssClass="form-control"
@@ -166,7 +188,8 @@
 						<%-- <td><form:input cssClass="form-control"
 								path="hangHoaDs[${status.index}].thueSuatGtgt" /></td>
 						<td><form:input cssClass="form-control"
-								path="hangHoaDs[${status.index}].tkThueGtgt.soTien.soTien" /> <input
+								path="hangHoaDs[${status.index}].tkThueGtgt.soTien.giaTri" /> <form:hidden
+								path="hangHoaDs[${status.index}].tkThueGtgt.maNvkt" /> <input
 							type="hidden" name="hangHoaDs[${status.index}].tkThueGtgt.soDu"
 							value="1" /></td>
 						<td><form:select cssClass="form-control"
@@ -182,18 +205,18 @@
 			</tbody>
 		</table>
 	</div>
-	<div id="chiPhi" class="tab-pane fade">
+	<div id="chiPhi" class="tab-pane fade table-responsive">
 		<table class="table table-bordered table-hover text-center hanghoa"
 			id="chiPhiTbl">
 			<thead>
 				<tr>
 					<th class="text-center">Vật tư, hàng hóa</th>
-					<th class="text-center">Đơn vị tính</th>
-					<th class="text-center">Số lượng</th>
-					<th class="text-center">Giá mua</th>
-					<th class="text-center">Thành tiền</th>
-					<th class="text-center">Kho</th>
-					<th class="text-center">TK Kho (Nợ)</th>
+					<th class="text-center"></th>
+					<th class="text-center"></th>
+					<th class="text-center"></th>
+					<th class="text-center"></th>
+					<th class="text-center"></th>
+					<th class="text-center"></th>
 				</tr>
 			</thead>
 			<tbody>

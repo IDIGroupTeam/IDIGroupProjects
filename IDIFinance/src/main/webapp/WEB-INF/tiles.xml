@@ -226,6 +226,12 @@
 			value="/pages/chungtu/muahang/muaHangSu.jsp" />
 	</definition>
 
+	<definition name="saoChepMuaHang" extends="taichinh">
+		<put-attribute name="title" value="Sao chép mua hàng" />
+		<put-attribute name="body"
+			value="/pages/chungtu/muahang/muaHangSc.jsp" />
+	</definition>
+
 	<definition name="taoMoiMuaHang" extends="taichinh">
 		<put-attribute name="title"
 			value="Tạo mới chứng từ mua hàng" />
@@ -251,6 +257,12 @@
 		<put-attribute name="title" value="Sửa bán hàng" />
 		<put-attribute name="body"
 			value="/pages/chungtu/banhang/banHangSu.jsp" />
+	</definition>
+
+	<definition name="saoChepBanHang" extends="taichinh">
+		<put-attribute name="title" value="Sao chép bán hàng" />
+		<put-attribute name="body"
+			value="/pages/chungtu/banhang/banHangSc.jsp" />
 	</definition>
 
 	<definition name="taoMoiBanHang" extends="taichinh">
