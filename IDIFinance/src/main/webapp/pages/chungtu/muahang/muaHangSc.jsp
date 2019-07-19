@@ -895,13 +895,13 @@
 
 <c:choose>
 	<c:when test="${mainFinanceForm.tinhChatCt==2}">
-		<h4>TẠO MỚI CHỨNG TỪ MUA HÀNG NƯỚC NGOÀI</h4>
+		<h4>SAO CHÉP CHỨNG TỪ MUA HÀNG NƯỚC NGOÀI</h4>
 	</c:when>
 	<c:when test="${mainFinanceForm.tinhChatCt==3}">
-		<h4>TẠO MỚI CHỨNG TỪ MUA DỊCH VỤ TRONG NƯỚC</h4>
+		<h4>SAO CHÉP CHỨNG TỪ MUA DỊCH VỤ TRONG NƯỚC</h4>
 	</c:when>
 	<c:otherwise>
-		<h4>TẠO MỚI CHỨNG TỪ MUA HÀNG TRONG NƯỚC</h4>
+		<h4>SAO CHÉP CHỨNG TỪ MUA HÀNG TRONG NƯỚC</h4>
 	</c:otherwise>
 </c:choose>
 <hr />

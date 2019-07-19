@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.idi.finance.bean.CauHinh;
 import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.LoaiTien;
-import com.idi.finance.bean.Tien;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;
 import com.idi.finance.bean.doituong.DoiTuong;
@@ -2071,6 +2070,7 @@ public class ChungTuController {
 	public String luuTaoMoiBanHang(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu, BindingResult result,
 			Model model) {
 		try {
+			logger.info("Has error: " + result.getAllErrors());
 			if (result.hasErrors()) {
 				HangHoa hangHoa = new HangHoa();
 				chungTu.themHangHoa(hangHoa);
@@ -2098,11 +2098,11 @@ public class ChungTuController {
 							&& !hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")
 							&& hangHoa.getTkThueGtgt().getSoTien() != null) {
 						// Có thuế Gtgt, tính theo phương pháp khấu trừ
-						double thue = hangHoa.getTkThueGtgt().getSoTien().getSoTien()
-								/ chungTu.getLoaiTien().getBanRa();
+						double thue = Utils.divide(hangHoa.getTkThueGtgt().getSoTien().getGiaTri(),
+								chungTu.getLoaiTien().getBanRa());
 						hangHoa.getTkThueGtgt().getSoTien().setSoTien(thue);
 						hangHoa.getTkThueGtgt().getSoTien().setLoaiTien(chungTu.getLoaiTien());
-						tongThue += thue;
+						tongThue = Utils.add(tongThue, thue);
 
 						if (soHangHoa > 1) {
 							hangHoa.getTkThueGtgt().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -2114,10 +2114,11 @@ public class ChungTuController {
 					if (hangHoa.getTkThueXk() != null && hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk().trim().equals("")
 							&& hangHoa.getTkThueXk().getSoTien() != null) {
-						double thue = hangHoa.getTkThueXk().getSoTien().getSoTien() / chungTu.getLoaiTien().getBanRa();
+						double thue = Utils.divide(hangHoa.getTkThueXk().getSoTien().getGiaTri(),
+								chungTu.getLoaiTien().getBanRa());
 						hangHoa.getTkThueXk().getSoTien().setSoTien(thue);
 						hangHoa.getTkThueXk().getSoTien().setLoaiTien(chungTu.getLoaiTien());
-						tongThue += thue;
+						tongThue = Utils.add(tongThue, thue);
 
 						if (soHangHoa > 1) {
 							hangHoa.getTkThueXk().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -2127,15 +2128,11 @@ public class ChungTuController {
 					}
 
 					// Tổng doanh thu
-					double tongDoanhThu = hangHoa.getSoLuong() * hangHoa.getDonGia().getSoTien()
-							* chungTu.getLoaiTien().getBanRa();
-					Tien doanhThu = new Tien();
-					doanhThu.setLoaiTien(chungTu.getLoaiTien());
-					doanhThu.setSoTien(tongDoanhThu);
-
+					double tongDoanhThu = Utils.multiply(hangHoa.getSoLuong(), hangHoa.getDonGia().getSoTien());
 					if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
-						hangHoa.getTkDoanhThu().setSoTien(doanhThu);
+						hangHoa.getTkDoanhThu().getSoTien().setLoaiTien(chungTu.getLoaiTien());
+						hangHoa.getTkDoanhThu().getSoTien().setSoTien(tongDoanhThu);
 
 						if (soHangHoa > 1) {
 							hangHoa.getTkDoanhThu().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -2145,14 +2142,11 @@ public class ChungTuController {
 					}
 
 					// Tổng thanh toán
-					double tongThanhToan = tongDoanhThu + tongThue;
-					Tien thanhToan = new Tien();
-					thanhToan.setLoaiTien(chungTu.getLoaiTien());
-					thanhToan.setSoTien(tongThanhToan);
-
+					double tongThanhToan = Utils.add(tongDoanhThu, tongThue);
 					if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
-						hangHoa.getTkThanhtoan().setSoTien(thanhToan);
+						hangHoa.getTkThanhtoan().getSoTien().setLoaiTien(chungTu.getLoaiTien());
+						hangHoa.getTkThanhtoan().getSoTien().setSoTien(tongThanhToan);
 
 						if (soHangHoa > 1) {
 							hangHoa.getTkThanhtoan().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -2162,14 +2156,11 @@ public class ChungTuController {
 					}
 
 					// Tổng giá vốn
-					double tongGiaVon = hangHoa.getSoLuong() * hangHoa.getGiaKho().getSoTien();
-					Tien giaVon = new Tien();
-					giaVon.setLoaiTien(chungTu.getLoaiTien());
-					giaVon.setSoTien(tongGiaVon);
-
+					double tongGiaVon = Utils.multiply(hangHoa.getSoLuong(), hangHoa.getGiaKho().getSoTien());
 					if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
-						hangHoa.getTkGiaVon().setSoTien(giaVon);
+						hangHoa.getTkGiaVon().getSoTien().setLoaiTien(chungTu.getLoaiTien());
+						hangHoa.getTkGiaVon().getSoTien().setSoTien(tongGiaVon);
 						hangHoa.getTkGiaVon().setNhomDk(1);
 
 						if (soHangHoa > 1) {
@@ -2181,7 +2172,8 @@ public class ChungTuController {
 
 					if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
-						hangHoa.getTkKho().setSoTien(giaVon);
+						hangHoa.getTkKho().getSoTien().setLoaiTien(chungTu.getLoaiTien());
+						hangHoa.getTkKho().getSoTien().setSoTien(tongGiaVon);
 						hangHoa.getTkKho().setNhomDk(1);
 
 						if (soHangHoa > 1) {
@@ -2197,29 +2189,6 @@ public class ChungTuController {
 					return "redirect:/chungtu/banhang/xem/" + chungTu.getMaCt();
 				} else {
 					chungTuDAO.themChungTuKho(chungTu);
-				}
-
-				// Xuất kho: cần thực hiện việc xuất kho
-				// Coi như dữ liệu đã được kiểm tra từ trước
-				// Cần phải làm chức năng kiểm tra đó sau
-				// Ta cũng có thể tách phần này thành một nút riêng
-				// giống phần mua hàng có nút nhập kho riêng
-				Iterator<HangHoa> iter = chungTu.getHangHoaDs().iterator();
-				while (iter.hasNext()) {
-					HangHoa hangHoa = iter.next();
-
-					// Kiểm tra số lượng tổn kho
-					double soLuong = khoHangDAO.laySoLuong(hangHoa);
-					if (hangHoa.getSoLuong() < soLuong) {
-						hangHoa.setSoLuong(soLuong - hangHoa.getSoLuong());
-						khoHangDAO.suaNhapKho(hangHoa);
-					} else if (hangHoa.getSoLuong() < soLuong) {
-						// Vì đã xuất hết hàng, có thể xóa kho, xóa giá
-						khoHangDAO.xoaKho(hangHoa);
-					} else {
-						// Không đủ hàng hóa để bán
-						// Cần bắn ra lỗi và thông báo
-					}
 				}
 
 				// Tạo phiếu kế toán tổng hợp kèm theo nếu cần
@@ -2278,32 +2247,32 @@ public class ChungTuController {
 
 			CauHinh taiKhoanThanhToanDs = props.getCauHinh(PropCont.BAN_HANG_DS_TK_THANH_TOAN_NO);
 			List<String> maTkThanhToanDs = Utils.parseString(taiKhoanThanhToanDs.getGiaTri());
-			List<LoaiTaiKhoan> loaiTaiKhoanThanhToanDs = taiKhoanDAO.danhSachTaiKhoan(maTkThanhToanDs);
+			List<LoaiTaiKhoan> loaiTaiKhoanThanhToanDs = taiKhoanDAO.danhSachTaiKhoanCon(maTkThanhToanDs);
 			model.addAttribute("loaiTaiKhoanThanhToanDs", loaiTaiKhoanThanhToanDs);
 
 			CauHinh taiKhoanDoanhThuDs = props.getCauHinh(PropCont.BAN_HANG_DS_TK_DOANH_THU_CO);
 			List<String> maTkDoanhThuDs = Utils.parseString(taiKhoanDoanhThuDs.getGiaTri());
-			List<LoaiTaiKhoan> loaiTaiKhoanDoanhThuDs = taiKhoanDAO.danhSachTaiKhoan(maTkDoanhThuDs);
+			List<LoaiTaiKhoan> loaiTaiKhoanDoanhThuDs = taiKhoanDAO.danhSachTaiKhoanCon(maTkDoanhThuDs);
 			model.addAttribute("loaiTaiKhoanDoanhThuDs", loaiTaiKhoanDoanhThuDs);
 
 			CauHinh taiKhoanGiaVonDs = props.getCauHinh(PropCont.BAN_HANG_DS_TK_GIA_VON_NO);
 			List<String> maTkGiaVonDs = Utils.parseString(taiKhoanGiaVonDs.getGiaTri());
-			List<LoaiTaiKhoan> loaiTaiKhoanGiaVonDs = taiKhoanDAO.danhSachTaiKhoan(maTkGiaVonDs);
+			List<LoaiTaiKhoan> loaiTaiKhoanGiaVonDs = taiKhoanDAO.danhSachTaiKhoanCon(maTkGiaVonDs);
 			model.addAttribute("loaiTaiKhoanGiaVonDs", loaiTaiKhoanGiaVonDs);
 
 			CauHinh taiKhoanKhoDs = props.getCauHinh(PropCont.BAN_HANG_DS_TK_KHO_NO);
 			List<String> maTkKhoDs = Utils.parseString(taiKhoanKhoDs.getGiaTri());
-			List<LoaiTaiKhoan> loaiTaiKhoanKhoDs = taiKhoanDAO.danhSachTaiKhoan(maTkKhoDs);
+			List<LoaiTaiKhoan> loaiTaiKhoanKhoDs = taiKhoanDAO.danhSachTaiKhoanCon(maTkKhoDs);
 			model.addAttribute("loaiTaiKhoanKhoDs", loaiTaiKhoanKhoDs);
 
 			CauHinh taiKhoanGtgtDs = props.getCauHinh(PropCont.BAN_HANG_DS_TK_GTGT_CO);
 			List<String> maTkGtgtDs = Utils.parseString(taiKhoanGtgtDs.getGiaTri());
-			List<LoaiTaiKhoan> loaiTaiKhoanGtgtDs = taiKhoanDAO.danhSachTaiKhoan(maTkGtgtDs);
+			List<LoaiTaiKhoan> loaiTaiKhoanGtgtDs = taiKhoanDAO.danhSachTaiKhoanCon(maTkGtgtDs);
 			model.addAttribute("loaiTaiKhoanGtgtDs", loaiTaiKhoanGtgtDs);
 
 			CauHinh taiKhoanXkDs = props.getCauHinh(PropCont.BAN_HANG_DS_TK_XK_CO);
 			List<String> maTkXkDs = Utils.parseString(taiKhoanXkDs.getGiaTri());
-			List<LoaiTaiKhoan> loaiTaiKhoanXkDs = taiKhoanDAO.danhSachTaiKhoan(maTkXkDs);
+			List<LoaiTaiKhoan> loaiTaiKhoanXkDs = taiKhoanDAO.danhSachTaiKhoanCon(maTkXkDs);
 			model.addAttribute("loaiTaiKhoanXkDs", loaiTaiKhoanXkDs);
 
 			// Lấy danh sách các loại tiền
@@ -2311,7 +2280,7 @@ public class ChungTuController {
 			model.addAttribute("loaiTienDs", loaiTienDs);
 
 			// Lấy danh sách tài khoản, dùng cho bên nợ & có
-			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoanCon();
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
 			// Lấy danh sách kho

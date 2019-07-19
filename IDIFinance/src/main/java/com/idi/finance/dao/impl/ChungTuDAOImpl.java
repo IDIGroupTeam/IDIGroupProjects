@@ -1225,12 +1225,11 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				logger.info("Hàng hóa: " + hangHoa);
 
 				logger.info("Thêm vào chung_tu_hang_hoa");
-				int maGia = 0;
+				int maGia = hangHoa.getGiaKho().getMaGia();
 				// Thêm vào hang_hoa_gia trước
 				// Kiểm tra xem có chưa, chưa có thì mới thêm, có rồi thì lấy maGia ra
-				if (hangHoa.getGiaKho() != null) {
-					double giaKho = Utils.multiply(hangHoa.getGiaKho().getSoTien(),
-							hangHoa.getGiaKho().getLoaiTien().getBanRa());
+				if (hangHoa.getGiaKho() != null && hangHoa.getGiaKho().getMaGia() == 0) {
+					double giaKho = Utils.multiply(hangHoa.getGiaKho().getSoTien(), chungTu.getLoaiTien().getBanRa());
 					try {
 						maGia = jdbcTmpl.queryForObject(kiemTraDonGia, new Object[] { hangHoa.getMaHh(), giaKho },
 								Integer.class);
@@ -1257,13 +1256,12 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							}
 						}, dgHolder);
 						maGia = dgHolder.getKey().intValue();
-						logger.info("Mã đơn giá " + maGia);
 					}
 				}
 
 				// Thêm vào chung_tu_hang_hoa
-				double donGia = Utils.multiply(hangHoa.getDonGia().getSoTien(),
-						hangHoa.getGiaKho().getLoaiTien().getBanRa());
+				logger.info("Mã đơn giá " + maGia);
+				double donGia = Utils.multiply(hangHoa.getDonGia().getSoTien(), chungTu.getLoaiTien().getBanRa());
 				if (hangHoa.getKho() != null) {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
 							donGia, maGia, chungTu.getChieu(), hangHoa.getKho().getMaKho());
@@ -1613,12 +1611,11 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				logger.info("Hàng hóa: " + hangHoa);
 
 				logger.info("Thêm vào chung_tu_hang_hoa");
-				int maGia = 0;
+				int maGia = hangHoa.getGiaKho().getMaGia();
 				// Thêm vào hang_hoa_gia trước
 				// Kiểm tra xem có chưa, chưa có thì mới thêm, có rồi thì lấy maGia ra
-				if (hangHoa.getGiaKho() != null) {
-					double giaKho = Utils.multiply(hangHoa.getGiaKho().getSoTien(),
-							hangHoa.getGiaKho().getLoaiTien().getBanRa());
+				if (hangHoa.getGiaKho() != null && hangHoa.getGiaKho().getMaGia() == 0) {
+					double giaKho = Utils.multiply(hangHoa.getGiaKho().getSoTien(), chungTu.getLoaiTien().getBanRa());
 					try {
 						maGia = jdbcTmpl.queryForObject(kiemTraDonGia, new Object[] { hangHoa.getMaHh(), giaKho },
 								Integer.class);
@@ -1645,13 +1642,12 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							}
 						}, dgHolder);
 						maGia = dgHolder.getKey().intValue();
-						logger.info("Mã đơn giá " + maGia);
 					}
 				}
 
 				// Thêm vào chung_tu_hang_hoa
-				double donGia = Utils.multiply(hangHoa.getDonGia().getSoTien(),
-						hangHoa.getGiaKho().getLoaiTien().getBanRa());
+				logger.info("Mã đơn giá " + maGia);
+				double donGia = Utils.multiply(hangHoa.getDonGia().getSoTien(), chungTu.getLoaiTien().getBanRa());
 				if (hangHoa.getKho() != null) {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
 							donGia, maGia, chungTu.getChieu(), hangHoa.getKho().getMaKho());
@@ -2032,6 +2028,11 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 			while (hhIter.hasNext()) {
 				HangHoa hangHoa = hhIter.next();
 
+				if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan() != null
+						&& hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null) {
+					jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkThanhtoan().getMaNvkt());
+				}
+
 				if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan() != null
 						&& hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null) {
 					jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkKho().getMaNvkt());
@@ -2047,9 +2048,9 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkChiPhi().getMaNvkt());
 				}
 
-				if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan() != null
-						&& hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null) {
-					jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkThanhtoan().getMaNvkt());
+				if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan() != null
+						&& hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null) {
+					jdbcTmpl.update(xoaChungTuNvkt, hangHoa.getTkGiaVon().getMaNvkt());
 				}
 
 				if (hangHoa.getTkThueNk() != null && hangHoa.getTkThueNk().getLoaiTaiKhoan() != null

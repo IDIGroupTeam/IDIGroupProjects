@@ -171,7 +171,7 @@ public class ChungTuValidator implements Validator {
 					Iterator<HangHoa> iter = chungTu.getHangHoaDs().iterator();
 					while (iter.hasNext()) {
 						HangHoa hangHoa = iter.next();
-						logger.info("Kiểm tra dữ liệu từng mặt hóa " + hangHoa);
+						logger.info("Kiểm tra dữ liệu từng mặt hàng hóa " + hangHoa);
 
 						if (hangHoa.getMaHh() == 0) {
 							errors.rejectValue("hangHoaDs[" + id + "].maHh", "NotEmpty.hangHoa.maHh");
@@ -287,7 +287,7 @@ public class ChungTuValidator implements Validator {
 					Iterator<HangHoa> iter = chungTu.getHangHoaDs().iterator();
 					while (iter.hasNext()) {
 						HangHoa hangHoa = iter.next();
-						logger.info("Kiểm tra dữ liệu từng mặt hóa " + hangHoa);
+						logger.info("Kiểm tra dữ liệu từng mặt hàng hóa " + hangHoa);
 
 						if (hangHoa.getMaHh() == 0) {
 							errors.rejectValue("hangHoaDs[" + id + "].maHh", "NotEmpty.hangHoa.maHh");

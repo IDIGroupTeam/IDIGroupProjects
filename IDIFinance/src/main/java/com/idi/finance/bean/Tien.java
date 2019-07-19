@@ -44,7 +44,7 @@ public class Tien {
 
 	@Override
 	public String toString() {
-		return loaiTien + " - " + soTien + " - " + giaTri;
+		return maGia + " - " + loaiTien + " - " + soTien + " - " + giaTri;
 	}
 
 	@Override

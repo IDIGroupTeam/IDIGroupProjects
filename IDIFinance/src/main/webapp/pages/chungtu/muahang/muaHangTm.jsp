@@ -188,7 +188,7 @@
 					tongTien += eval(thueNk);
 				}
 			} catch (e) {
-				// alert("nk " + e);
+				console.log("tongThueHangHoa tkThueNk error", e);
 			}
 
 			// Cập nhật tiền thuế ttdb
@@ -211,7 +211,7 @@
 					tongTien += eval(thueTtdb);
 				}
 			} catch (e) {
-				// alert("ttdb " + e);
+				console.log("tongThueHangHoa tkThueTtdb error", e);
 			}
 
 			// Tính tiền thuế giá trị gia tăng
@@ -254,7 +254,7 @@
 					tongTien += eval(thueGtgt);
 				}
 			} catch (e) {
-				console.log("tongThueHangHoa error", e);
+				console.log("tongThueHangHoa tkThueGtgt error", e);
 			}
 
 			ketQua.thue = tong;
