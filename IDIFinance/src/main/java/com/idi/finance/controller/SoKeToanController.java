@@ -236,40 +236,45 @@ public class SoKeToanController {
 					taiKhoanDs.addAll(chungTu.getTaiKhoanKtthDs());
 				} else if (chungTu.getLoaiCt().equals(ChungTu.CHUNG_TU_MUA_HANG)
 						|| chungTu.getLoaiCt().equals(ChungTu.CHUNG_TU_BAN_HANG)) {
-					if (chungTu.getTkChietKhau() != null && chungTu.getTkChietKhau().getLoaiTaiKhoan() != null
-							&& chungTu.getTkChietKhau().getLoaiTaiKhoan().getMaTk() != null
-							&& !chungTu.getTkChietKhau().getLoaiTaiKhoan().getMaTk().isEmpty()) {
-						taiKhoanDs.add(chungTu.getTkChietKhau());
-					}
-					if (chungTu.getTkChiPhi() != null && chungTu.getTkChiPhi().getLoaiTaiKhoan() != null
-							&& chungTu.getTkChiPhi().getLoaiTaiKhoan().getMaTk() != null
-							&& !chungTu.getTkChiPhi().getLoaiTaiKhoan().getMaTk().isEmpty()) {
-						taiKhoanDs.add(chungTu.getTkChiPhi());
-					}
-					if (chungTu.getTkDoanhThu() != null && chungTu.getTkDoanhThu().getLoaiTaiKhoan() != null
-							&& chungTu.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
-							&& !chungTu.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().isEmpty()) {
-						taiKhoanDs.add(chungTu.getTkDoanhThu());
-					}
-					if (chungTu.getTkGiamGia() != null && chungTu.getTkGiamGia().getLoaiTaiKhoan() != null
-							&& chungTu.getTkGiamGia().getLoaiTaiKhoan().getMaTk() != null
-							&& !chungTu.getTkGiamGia().getLoaiTaiKhoan().getMaTk().isEmpty()) {
-						taiKhoanDs.add(chungTu.getTkGiamGia());
-					}
-					if (chungTu.getTkGiaVon() != null && chungTu.getTkGiaVon().getLoaiTaiKhoan() != null
-							&& chungTu.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
-							&& !chungTu.getTkGiaVon().getLoaiTaiKhoan().getMaTk().isEmpty()) {
-						taiKhoanDs.add(chungTu.getTkGiaVon());
+					if (chungTu.getTkThanhtoan() != null && chungTu.getTkThanhtoan().getLoaiTaiKhoan() != null
+							&& chungTu.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkThanhtoan());
 					}
 					if (chungTu.getTkKho() != null && chungTu.getTkKho().getLoaiTaiKhoan() != null
 							&& chungTu.getTkKho().getLoaiTaiKhoan().getMaTk() != null
 							&& !chungTu.getTkKho().getLoaiTaiKhoan().getMaTk().isEmpty()) {
 						taiKhoanDs.add(chungTu.getTkKho());
 					}
-					if (chungTu.getTkThanhtoan() != null && chungTu.getTkThanhtoan().getLoaiTaiKhoan() != null
-							&& chungTu.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
-							&& !chungTu.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().isEmpty()) {
-						taiKhoanDs.add(chungTu.getTkThanhtoan());
+					if (chungTu.getTkDoanhThu() != null && chungTu.getTkDoanhThu().getLoaiTaiKhoan() != null
+							&& chungTu.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkDoanhThu());
+					}
+					if (chungTu.getTkChiPhi() != null && chungTu.getTkChiPhi().getLoaiTaiKhoan() != null
+							&& chungTu.getTkChiPhi().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkChiPhi().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkChiPhi());
+					}
+					if (chungTu.getTkGiaVon() != null && chungTu.getTkGiaVon().getLoaiTaiKhoan() != null
+							&& chungTu.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkGiaVon().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkGiaVon());
+					}
+					if (chungTu.getTkChietKhau() != null && chungTu.getTkChietKhau().getLoaiTaiKhoan() != null
+							&& chungTu.getTkChietKhau().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkChietKhau().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkChietKhau());
+					}
+					if (chungTu.getTkGiamGia() != null && chungTu.getTkGiamGia().getLoaiTaiKhoan() != null
+							&& chungTu.getTkGiamGia().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkGiamGia().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkGiamGia());
+					}
+					if (chungTu.getTkTraLai() != null && chungTu.getTkTraLai().getLoaiTaiKhoan() != null
+							&& chungTu.getTkTraLai().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkTraLai().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkTraLai());
 					}
 					if (chungTu.getTkThue() != null && chungTu.getTkThue().getLoaiTaiKhoan() != null
 							&& chungTu.getTkThue().getLoaiTaiKhoan().getMaTk() != null
@@ -281,11 +286,6 @@ public class SoKeToanController {
 							&& !chungTu.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().isEmpty()) {
 						taiKhoanDs.add(chungTu.getTkThueGtgt());
 					}
-					if (chungTu.getTkThueNk() != null && chungTu.getTkThueNk().getLoaiTaiKhoan() != null
-							&& chungTu.getTkThueNk().getLoaiTaiKhoan().getMaTk() != null
-							&& !chungTu.getTkThueNk().getLoaiTaiKhoan().getMaTk().isEmpty()) {
-						taiKhoanDs.add(chungTu.getTkThueNk());
-					}
 					if (chungTu.getTkThueTtdb() != null && chungTu.getTkThueTtdb().getLoaiTaiKhoan() != null
 							&& chungTu.getTkThueTtdb().getLoaiTaiKhoan().getMaTk() != null
 							&& !chungTu.getTkThueTtdb().getLoaiTaiKhoan().getMaTk().isEmpty()) {
@@ -296,15 +296,15 @@ public class SoKeToanController {
 							&& !chungTu.getTkThueXk().getLoaiTaiKhoan().getMaTk().isEmpty()) {
 						taiKhoanDs.add(chungTu.getTkThueXk());
 					}
+					if (chungTu.getTkThueNk() != null && chungTu.getTkThueNk().getLoaiTaiKhoan() != null
+							&& chungTu.getTkThueNk().getLoaiTaiKhoan().getMaTk() != null
+							&& !chungTu.getTkThueNk().getLoaiTaiKhoan().getMaTk().isEmpty()) {
+						taiKhoanDs.add(chungTu.getTkThueNk());
+					}
 					if (chungTu.getTkThueXk() != null && chungTu.getTkThueXk().getLoaiTaiKhoan() != null
 							&& chungTu.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null
 							&& !chungTu.getTkThueXk().getLoaiTaiKhoan().getMaTk().isEmpty()) {
 						taiKhoanDs.add(chungTu.getTkThueXk());
-					}
-					if (chungTu.getTkTraLai() != null && chungTu.getTkTraLai().getLoaiTaiKhoan() != null
-							&& chungTu.getTkTraLai().getLoaiTaiKhoan().getMaTk() != null
-							&& !chungTu.getTkTraLai().getLoaiTaiKhoan().getMaTk().isEmpty()) {
-						taiKhoanDs.add(chungTu.getTkTraLai());
 					}
 				} else if (chungTu.getLoaiCt().equals(ChungTu.CHUNG_TU_KET_CHUYEN)) {
 					if (chungTu.getKcbtDs() != null) {

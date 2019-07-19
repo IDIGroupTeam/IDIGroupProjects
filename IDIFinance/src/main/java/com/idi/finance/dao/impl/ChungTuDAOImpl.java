@@ -598,7 +598,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				taiKhoan.setChungTu(chungTu);
 				chungTu.themHangHoa(hangHoa);
 
-				logger.info(chungTu);
+				logger.info(chungTu + " ||| " + taiKhoan);
 
 				return chungTu;
 			} catch (Exception e) {
