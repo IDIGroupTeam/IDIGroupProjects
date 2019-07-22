@@ -32,7 +32,7 @@
 		var loaiTien = null;
 		var url = "${url}/chungtu/khachhang/";
 		var loaiDt = 2;
-		var thapPhan = 0;
+		var thapPhan = 2;
 
 		// Đăng ký autocomplete
 		var autocomplete = $('#doiTuong\\.tenDt').bootcomplete({
@@ -123,7 +123,7 @@
 			if (tien.maLt == $("#loaiTien\\.maLt").val()) {
 				loaiTien = tien;
 				if (tien.maLt == 'VND' || tien.maLt == 'VANG') {
-					thapPhan = 0;
+					thapPhan = 2;
 				} else {
 					thapPhan = 2;
 				}
@@ -142,7 +142,7 @@
 
 			// CẬP NHẬT HIỂN THỊ
 			var tongTienVn = tongTien * loaiTien.banRa;
-			tongTienVn = accounting.formatNumber(tongTienVn, 0, ",") + " VND";
+			tongTienVn = accounting.formatNumber(tongTienVn, thapPhan, ",") + " VND";
 
 			// Hiển thị tổng tiền ở tab hàng tiền
 			var tongTxt = accounting.formatNumber(tongTien, thapPhan, ",")
@@ -263,10 +263,10 @@
 							thapPhan, ",")
 							+ " " + loaiTien.maLt;
 					tongCongNoTxt = tongCongNoTxt + "<br/>"
-							+ accounting.formatNumber(tongCongNoVn, 0, ",")
+							+ accounting.formatNumber(tongCongNoVn, thapPhan, ",")
 							+ " VND";
 				} else {
-					tongCongNoTxt = accounting.formatNumber(tongCongNoVn, 0,
+					tongCongNoTxt = accounting.formatNumber(tongCongNoVn, thapPhan,
 							",")
 							+ " VND";
 				}
@@ -289,7 +289,7 @@
 					tongGiaVon = soLuong * giaVon;
 				}
 
-				var tongGiaVonTxt = accounting.formatNumber(tongGiaVon, 0, ",")
+				var tongGiaVonTxt = accounting.formatNumber(tongGiaVon, thapPhan, ",")
 						+ " VND";
 				console.log("capNhatTongTienHangHoa giaKho", giaVon, "soLuong",
 						soLuong, "tongGiaVon", tongGiaVon, "tongGiaVonTxt",
@@ -315,7 +315,7 @@
 
 			// Sau đó cập nhật tổng tiền cả chứng từ
 			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongTienChungTu, 0, ",") + " VND");
+					accounting.formatNumber(tongTienChungTu, thapPhan, ",") + " VND");
 		}
 
 		$("#themHh").click(
@@ -378,7 +378,7 @@
 							loaiTien = loaiTienDs[i];
 							if (loaiTien.maLt == 'VND'
 									|| loaiTien.maLt == 'VANG') {
-								thapPhan = 0;
+								thapPhan = 2;
 							} else {
 								thapPhan = 2;
 							}
@@ -437,7 +437,7 @@
 								for (var i = 0; i < donGiaDs.length; i++) {
 									donGia = donGiaDs[i];
 									var value = accounting.formatNumber(
-											donGia.donGia.giaTri, 0, ",");
+											donGia.donGia.giaTri, thapPhan, ",");
 									htmlTmpl = "<option value='"+donGia.maGia+"' class='giaVon'>"
 											+ value + "</option>";
 									html += htmlTmpl;
@@ -584,7 +584,7 @@
 								}
 
 								var tongGiaVonTxt = accounting.formatNumber(
-										tongGiaVon, 0, ",")
+										tongGiaVon, thapPhan, ",")
 										+ " VND";
 								console.log("giaKho", giaVon, "soLuong",
 										soLuong, "tongGiaVon", tongGiaVon,

@@ -24,7 +24,7 @@
 		var loaiTien = null;
 		var url = "${url}/chungtu/doituong";
 		var selectedRow = soDongTk - 1;
-		var thapPhan = 0;
+		var thapPhan = 2;
 
 		// Đăng ký autocomplete
 		var autocomplete = $('#doiTuong\\.tenDt').bootcomplete({
@@ -72,7 +72,7 @@
 			if (tien.maLt == $("#loaiTien\\.maLt").val()) {
 				loaiTien = tien;
 				if (tien.maLt == 'VND' || tien.maLt == 'VANG') {
-					thapPhan = 0;
+					thapPhan = 2;
 				} else {
 					thapPhan = 2;
 				}
@@ -116,7 +116,7 @@
 					accounting.formatNumber(tongGiaTri, thapPhan, ",") + " "
 							+ loaiTien.maLt);
 			$("#soTien\\.giaTriQdTxt").html(
-					accounting.formatNumber(tongGiaTri * tyGia, 0, ",")
+					accounting.formatNumber(tongGiaTri * tyGia, 2, ",")
 							+ " VND");
 		}
 
@@ -270,7 +270,7 @@
 							loaiTien = loaiTienDs[i];
 							if (loaiTien.maLt == 'VND'
 									|| loaiTien.maLt == 'VANG') {
-								thapPhan = 0;
+								thapPhan = 2;
 							} else {
 								thapPhan = 2;
 							}

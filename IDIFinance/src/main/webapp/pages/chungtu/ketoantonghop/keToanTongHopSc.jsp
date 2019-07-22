@@ -50,7 +50,7 @@
 		var tongGiaTriNo = 0;
 		var tongGiaTriCo = 0;
 		var loaiTien = null;
-		var thapPhan = 0;
+		var thapPhan = 2;
 
 		// Khởi tạo danh sách các loại tiền
 		var loaiTienDsStr = "${loaiTienDs}";
@@ -71,7 +71,7 @@
 			if (tien.maLt == $("#loaiTien\\.maLt").val()) {
 				loaiTien = tien;
 				if (tien.maLt == 'VND' || tien.maLt == 'VANG') {
-					thapPhan = 0;
+					thapPhan = 2;
 				} else {
 					thapPhan = 2;
 				}
@@ -115,7 +115,7 @@
 
 			$("#soTien\\.giaTriTxt").html(
 					accounting
-							.formatNumber(tongGiaTri * loaiTien.banRa, 0, ",")
+							.formatNumber(tongGiaTri * loaiTien.banRa, thapPhan, ",")
 							+ " VND");
 
 			$("#no\\.soTien\\.giaTriTxt").html(
@@ -318,7 +318,7 @@
 							loaiTien = loaiTienDs[i];
 							if (loaiTien.maLt == 'VND'
 									|| loaiTien.maLt == 'VANG') {
-								thapPhan = 0;
+								thapPhan = 2;
 							} else {
 								thapPhan = 2;
 							}

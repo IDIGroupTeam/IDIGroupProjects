@@ -1802,6 +1802,14 @@ public class ChungTuController {
 					taiKhoanCo.setNhomDk(nhomDk);
 					taiKhoanCo.setDoiTuong(doiTuong);
 
+					if ((taiKhoanNo.getLoaiTaiKhoan() == null || taiKhoanNo.getLoaiTaiKhoan().getMaTk() == null
+							|| taiKhoanNo.getLoaiTaiKhoan().getMaTk().isEmpty())
+							&& (taiKhoanCo.getLoaiTaiKhoan() == null || taiKhoanCo.getLoaiTaiKhoan().getMaTk() == null
+									|| taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty())) {
+						// Không có dữ liệu, bỏ qua
+						continue;
+					}
+
 					taiKhoanKtthDs.add(taiKhoanNo);
 					taiKhoanKtthDs.add(taiKhoanCo);
 					nhomDk++;

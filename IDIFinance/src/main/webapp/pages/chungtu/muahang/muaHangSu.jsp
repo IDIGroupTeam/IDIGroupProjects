@@ -33,7 +33,7 @@
 		var loaiTien = null;
 		var url = "${url}/chungtu/nhacungcap/";
 		var loaiDt = 3;
-		var thapPhan = 0;
+		var thapPhan = 2;
 
 		// Đăng ký autocomplete
 		var autocomplete = $('#doiTuong\\.tenDt').bootcomplete({
@@ -124,7 +124,7 @@
 			if (tien.maLt == $("#loaiTien\\.maLt").val()) {
 				loaiTien = tien;
 				if (tien.maLt == 'VND' || tien.maLt == 'VANG') {
-					thapPhan = 0;
+					thapPhan = 2;
 				} else {
 					thapPhan = 2;
 				}
@@ -143,7 +143,7 @@
 
 			// CẬP NHẬT HIỂN THỊ
 			var tongTienVn = tongTien * loaiTien.banRa;
-			tongTienVn = accounting.formatNumber(tongTienVn, 0, ",") + " VND";
+			tongTienVn = accounting.formatNumber(tongTienVn, thapPhan, ",") + " VND";
 			console.log("tongTienHangHoa id", id, "soLuong", soLuong, "gia",
 					gia, "loaiTien.banRa", loaiTien.banRa, "tongTien",
 					tongTien, "tongTienVn", tongTienVn);
@@ -302,30 +302,30 @@
 							thapPhan, ",")
 							+ " " + loaiTien.maLt;
 					tongGiaKhoTxt = tongGiaKhoTxt + "<br/>"
-							+ accounting.formatNumber(tongGiaKhoVn, 0, ",")
+							+ accounting.formatNumber(tongGiaKhoVn, thapPhan, ",")
 							+ " VND";
 
 					giaKhoTxt = accounting.formatNumber(giaKho, thapPhan, ",")
 							+ " " + loaiTien.maLt;
 					giaKhoTxt = giaKhoTxt + "<br/>"
-							+ accounting.formatNumber(giaKhoVn, 0, ",")
+							+ accounting.formatNumber(giaKhoVn, thapPhan, ",")
 							+ " VND";
 
 					tongCongNoTxt = accounting.formatNumber(tongCongNo,
 							thapPhan, ",")
 							+ " " + loaiTien.maLt;
 					tongCongNoTxt = tongCongNoTxt + "<br/>"
-							+ accounting.formatNumber(tongCongNoVn, 0, ",")
+							+ accounting.formatNumber(tongCongNoVn, thapPhan, ",")
 							+ " VND";
 				} else {
-					tongGiaKhoTxt = accounting.formatNumber(tongGiaKhoVn, 0,
+					tongGiaKhoTxt = accounting.formatNumber(tongGiaKhoVn, thapPhan,
 							",")
 							+ " VND";
 
-					giaKhoTxt = accounting.formatNumber(giaKhoVn, 0, ",")
+					giaKhoTxt = accounting.formatNumber(giaKhoVn, thapPhan, ",")
 							+ " VND";
 
-					tongCongNoTxt = accounting.formatNumber(tongCongNoVn, 0,
+					tongCongNoTxt = accounting.formatNumber(tongCongNoVn, thapPhan,
 							",")
 							+ " VND";
 				}
@@ -362,7 +362,7 @@
 
 			// Sau đó cập nhật tổng tiền cả chứng từ
 			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongTienChungTu, 0, ",") + " VND");
+					accounting.formatNumber(tongTienChungTu, thapPhan, ",") + " VND");
 		}
 
 		$("#themHh").click(
@@ -432,7 +432,7 @@
 							loaiTien = loaiTienDs[i];
 							if (loaiTien.maLt == 'VND'
 									|| loaiTien.maLt == 'VANG') {
-								thapPhan = 0;
+								thapPhan = 2;
 							} else {
 								thapPhan = 2;
 							}
@@ -503,6 +503,11 @@
 				capNhatTongTienHangHoa(id);
 				capNhapTongTienChungTu();
 			});
+
+			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk")
+					.combobox();
+			$("#nvktDs" + id + "\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk")
+					.combobox();
 
 			// Thuế suất nhập khẩu thay đổi
 			$("#hangHoaDs" + id + "\\.thueSuatNk").change(function() {
@@ -803,7 +808,7 @@
 							});
 
 			$("#lyDo").change(function() {
-				$("#nvktDs" + id + "\\.taiKhoanNo\\.lyDo").val($(this).val());
+				//$("#nvktDs" + id + "\\.taiKhoanNo\\.lyDo").val($(this).val());
 			});
 		}
 

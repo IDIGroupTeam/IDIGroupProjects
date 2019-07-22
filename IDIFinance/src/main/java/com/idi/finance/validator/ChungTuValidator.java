@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.bouncycastle.crypto.engines.ISAACEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -251,22 +252,45 @@ public class ChungTuValidator implements Validator {
 							logger.info("taiKhoanNo: " + taiKhoanNo);
 							logger.info("taiKhoanCo: " + taiKhoanCo);
 
-							if (taiKhoanNo != null && taiKhoanNo.getLoaiTaiKhoan().getMaTk() != null
+							if ((taiKhoanNo.getLyDo() == null || taiKhoanNo.getLyDo().isEmpty())
+									&& taiKhoanNo.getSoTien().getSoTien() == 0
+									&& (taiKhoanNo.getLoaiTaiKhoan() == null
+											|| taiKhoanNo.getLoaiTaiKhoan().getMaTk() == null
+											|| taiKhoanNo.getLoaiTaiKhoan().getMaTk().isEmpty())
+									&& (taiKhoanCo.getLoaiTaiKhoan() == null
+											|| taiKhoanCo.getLoaiTaiKhoan().getMaTk() == null
+											|| taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty())) {
+								// Không có nghiệp vụ kế toán, bỏ qua
+								logger.info("Không có nghiệp vụ kế toán, bỏ qua");
+							} else if (taiKhoanNo.getLyDo() != null && !taiKhoanNo.getLyDo().isEmpty()
+									&& taiKhoanNo.getLoaiTaiKhoan() != null
+									&& taiKhoanNo.getLoaiTaiKhoan().getMaTk() != null
 									&& !taiKhoanNo.getLoaiTaiKhoan().getMaTk().isEmpty()
 									&& taiKhoanNo.getSoTien() != null && taiKhoanNo.getSoTien().getSoTien() > 0
-									&& taiKhoanCo != null && taiKhoanCo.getLoaiTaiKhoan().getMaTk() != null
+									&& taiKhoanCo.getLoaiTaiKhoan() != null
+									&& taiKhoanCo.getLoaiTaiKhoan().getMaTk() != null
 									&& !taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty()) {
-								// Valid data, do nothing
+								// Dữ liệu tốt, không cần làm gì
+								logger.info("Dữ liệu tốt, không cần làm gì");
 							} else {
 								// Invalid data, send message
-								if (taiKhoanNo == null || taiKhoanNo.getLoaiTaiKhoan().getMaTk() == null
+								if (taiKhoanNo.getLyDo() == null || taiKhoanNo.getLyDo().isEmpty()) {
+									errors.rejectValue("nvktDs[" + id + "].taiKhoanNo.lyDo",
+											"NotEmpty.nvktDs.taiKhoanNo.lyDo");
+								}
+								if (taiKhoanNo.getLoaiTaiKhoan().getMaTk() == null
 										|| taiKhoanNo.getLoaiTaiKhoan().getMaTk().isEmpty()) {
-									// errors.rejectValue("nvktDs[" + id + "].taiKhoanNo.loaiTaiKhoan.maTk", "");
-								} else if (taiKhoanNo.getSoTien() == null || taiKhoanNo.getSoTien().getSoTien() == 0) {
-									// errors.rejectValue("nvktDs[" + id + "].taiKhoanNo.soTien.soTien", "");
-								} else if (taiKhoanCo == null || taiKhoanCo.getLoaiTaiKhoan().getMaTk() == null
+									errors.rejectValue("nvktDs[" + id + "].taiKhoanNo.loaiTaiKhoan.maTk",
+											"NotEmpty.nvktDs.taiKhoanNo.loaiTaiKhoan.maTk");
+								}
+								if (taiKhoanCo.getLoaiTaiKhoan().getMaTk() == null
 										|| taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty()) {
-									// errors.rejectValue("nvktDs[" + id + "].taiKhoanCo.loaiTaiKhoan.maTk", "");
+									errors.rejectValue("nvktDs[" + id + "].taiKhoanCo.loaiTaiKhoan.maTk",
+											"NotEmpty.nvktDs.taiKhoanCo.loaiTaiKhoan.maTk");
+								}
+								if (taiKhoanNo.getSoTien().getSoTien() == 0) {
+									errors.rejectValue("nvktDs[" + id + "].taiKhoanNo.soTien.soTien",
+											"NotEmpty.nvktDs.taiKhoanNo.soTien.soTien");
 								}
 							}
 							id++;
