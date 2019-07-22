@@ -1807,6 +1807,7 @@ public class ChungTuController {
 							&& (taiKhoanCo.getLoaiTaiKhoan() == null || taiKhoanCo.getLoaiTaiKhoan().getMaTk() == null
 									|| taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty())) {
 						// Không có dữ liệu, bỏ qua
+						logger.info("Không có dữ liệu, bỏ qua");
 						continue;
 					}
 

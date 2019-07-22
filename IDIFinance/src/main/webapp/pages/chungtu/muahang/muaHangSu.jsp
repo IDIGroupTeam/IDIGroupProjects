@@ -143,7 +143,8 @@
 
 			// CẬP NHẬT HIỂN THỊ
 			var tongTienVn = tongTien * loaiTien.banRa;
-			tongTienVn = accounting.formatNumber(tongTienVn, thapPhan, ",") + " VND";
+			tongTienVn = accounting.formatNumber(tongTienVn, thapPhan, ",")
+					+ " VND";
 			console.log("tongTienHangHoa id", id, "soLuong", soLuong, "gia",
 					gia, "loaiTien.banRa", loaiTien.banRa, "tongTien",
 					tongTien, "tongTienVn", tongTienVn);
@@ -301,9 +302,10 @@
 					tongGiaKhoTxt = accounting.formatNumber(tongGiaKho,
 							thapPhan, ",")
 							+ " " + loaiTien.maLt;
-					tongGiaKhoTxt = tongGiaKhoTxt + "<br/>"
-							+ accounting.formatNumber(tongGiaKhoVn, thapPhan, ",")
-							+ " VND";
+					tongGiaKhoTxt = tongGiaKhoTxt
+							+ "<br/>"
+							+ accounting.formatNumber(tongGiaKhoVn, thapPhan,
+									",") + " VND";
 
 					giaKhoTxt = accounting.formatNumber(giaKho, thapPhan, ",")
 							+ " " + loaiTien.maLt;
@@ -314,19 +316,21 @@
 					tongCongNoTxt = accounting.formatNumber(tongCongNo,
 							thapPhan, ",")
 							+ " " + loaiTien.maLt;
-					tongCongNoTxt = tongCongNoTxt + "<br/>"
-							+ accounting.formatNumber(tongCongNoVn, thapPhan, ",")
-							+ " VND";
+					tongCongNoTxt = tongCongNoTxt
+							+ "<br/>"
+							+ accounting.formatNumber(tongCongNoVn, thapPhan,
+									",") + " VND";
 				} else {
-					tongGiaKhoTxt = accounting.formatNumber(tongGiaKhoVn, thapPhan,
-							",")
+					tongGiaKhoTxt = accounting.formatNumber(tongGiaKhoVn,
+							thapPhan, ",")
 							+ " VND";
 
-					giaKhoTxt = accounting.formatNumber(giaKhoVn, thapPhan, ",")
+					giaKhoTxt = accounting
+							.formatNumber(giaKhoVn, thapPhan, ",")
 							+ " VND";
 
-					tongCongNoTxt = accounting.formatNumber(tongCongNoVn, thapPhan,
-							",")
+					tongCongNoTxt = accounting.formatNumber(tongCongNoVn,
+							thapPhan, ",")
 							+ " VND";
 				}
 
@@ -362,7 +366,8 @@
 
 			// Sau đó cập nhật tổng tiền cả chứng từ
 			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongTienChungTu, thapPhan, ",") + " VND");
+					accounting.formatNumber(tongTienChungTu, thapPhan, ",")
+							+ " VND");
 		}
 
 		$("#themHh").click(
@@ -466,7 +471,8 @@
 		function dangKyTien(id) {
 			$("input[id^='hangHoaDs" + id + "'][id$='soTien']").number(true,
 					thapPhan);
-			$("input[id^='hangHoaDs" + id + "'][id$='giaTri']").number(true);
+			$("input[id^='hangHoaDs" + id + "'][id$='giaTri']").number(true,
+					thapPhan);
 			$("input[id^='nvktDs" + id + "'][id$='soTien']").number(true,
 					thapPhan);
 		}
@@ -841,6 +847,8 @@
 			if (soDongTk > 1) {
 				$("#xoaHh").removeClass("disabled");
 			}
+			
+			$("#loaiTien\\.banRa").number(true, thapPhan);
 
 			// Đăng ký sự kiện cho các dòng
 			for (i = 0; i < soDongTk; i++) {

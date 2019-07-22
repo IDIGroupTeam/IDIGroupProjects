@@ -307,7 +307,7 @@
 
 			$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']").number(
 					true, thapPhan);
-			$("#loaiTien\\.banRa").number(true);
+			$("#loaiTien\\.banRa").number(true, thapPhan);
 
 			$("tr#" + selectedRow).addClass("active");
 

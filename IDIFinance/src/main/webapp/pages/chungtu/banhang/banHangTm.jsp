@@ -142,7 +142,8 @@
 
 			// CẬP NHẬT HIỂN THỊ
 			var tongTienVn = tongTien * loaiTien.banRa;
-			tongTienVn = accounting.formatNumber(tongTienVn, thapPhan, ",") + " VND";
+			tongTienVn = accounting.formatNumber(tongTienVn, thapPhan, ",")
+					+ " VND";
 
 			// Hiển thị tổng tiền ở tab hàng tiền
 			var tongTxt = accounting.formatNumber(tongTien, thapPhan, ",")
@@ -262,12 +263,13 @@
 					tongCongNoTxt = accounting.formatNumber(tongCongNo,
 							thapPhan, ",")
 							+ " " + loaiTien.maLt;
-					tongCongNoTxt = tongCongNoTxt + "<br/>"
-							+ accounting.formatNumber(tongCongNoVn, thapPhan, ",")
-							+ " VND";
+					tongCongNoTxt = tongCongNoTxt
+							+ "<br/>"
+							+ accounting.formatNumber(tongCongNoVn, thapPhan,
+									",") + " VND";
 				} else {
-					tongCongNoTxt = accounting.formatNumber(tongCongNoVn, thapPhan,
-							",")
+					tongCongNoTxt = accounting.formatNumber(tongCongNoVn,
+							thapPhan, ",")
 							+ " VND";
 				}
 
@@ -289,7 +291,8 @@
 					tongGiaVon = soLuong * giaVon;
 				}
 
-				var tongGiaVonTxt = accounting.formatNumber(tongGiaVon, thapPhan, ",")
+				var tongGiaVonTxt = accounting.formatNumber(tongGiaVon,
+						thapPhan, ",")
 						+ " VND";
 				console.log("capNhatTongTienHangHoa giaKho", giaVon, "soLuong",
 						soLuong, "tongGiaVon", tongGiaVon, "tongGiaVonTxt",
@@ -315,7 +318,8 @@
 
 			// Sau đó cập nhật tổng tiền cả chứng từ
 			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongTienChungTu, thapPhan, ",") + " VND");
+					accounting.formatNumber(tongTienChungTu, thapPhan, ",")
+							+ " VND");
 		}
 
 		$("#themHh").click(
@@ -436,8 +440,9 @@
 							if (donGiaDs != null) {
 								for (var i = 0; i < donGiaDs.length; i++) {
 									donGia = donGiaDs[i];
-									var value = accounting.formatNumber(
-											donGia.donGia.giaTri, thapPhan, ",");
+									var value = accounting
+											.formatNumber(donGia.donGia.giaTri,
+													thapPhan, ",");
 									htmlTmpl = "<option value='"+donGia.maGia+"' class='giaVon'>"
 											+ value + "</option>";
 									html += htmlTmpl;
@@ -459,7 +464,8 @@
 			console.log("dangKyTien thapPhan", thapPhan);
 			$("input[id^='hangHoaDs" + id + "'][id$='soTien']").number(true,
 					thapPhan);
-			$("input[id^='hangHoaDs" + id + "'][id$='giaTri']").number(true);
+			$("input[id^='hangHoaDs" + id + "'][id$='giaTri']").number(true,
+					thapPhan);
 			$("input[id^='nvktDs" + id + "'][id$='soTien']").number(true,
 					thapPhan);
 		}
@@ -847,6 +853,8 @@
 			if (soDongTk > 1) {
 				$("#xoaHh").removeClass("disabled");
 			}
+
+			$("#loaiTien\\.banRa").number(true, thapPhan);
 
 			// Đăng ký sự kiện cho các dòng
 			for (i = 0; i < soDongTk; i++) {
