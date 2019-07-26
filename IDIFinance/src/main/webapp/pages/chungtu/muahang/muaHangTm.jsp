@@ -836,6 +836,7 @@
 			ktthDong = $("#ktth" + (soDongTk - 1)).html();
 			ktthDong = "<tr>" + ktthDong + "</tr>";
 
+			console.log("soDongTk", soDongTk);
 			if (soDongTk > 1) {
 				$("#hangTien" + (soDongTk - 1)).remove();
 				$("#kho" + (soDongTk - 1)).remove();

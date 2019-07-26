@@ -481,7 +481,7 @@
 			$("#hangHoaDs" + id + "\\.giaVon\\.tenDvTxt").text(donVi);
 
 			$("#lyDo").change(function() {
-				$("#nvktDs" + id + "\\.taiKhoanNo\\.lyDo").val($(this).val());
+				//$("#nvktDs" + id + "\\.taiKhoanNo\\.lyDo").val($(this).val());
 			});
 
 			// Đăng ký thay đổi số lượng
@@ -600,11 +600,13 @@
 										.html(tongGiaVonTxt);
 							});
 
-			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk").val("");
-			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk")
+			$(
+					"#hangHoaDs" + id
+							+ "\\.nvktDs0\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk")
 					.combobox();
-			$("#nvktDs" + id + "\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk").val("");
-			$("#nvktDs" + id + "\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk")
+			$(
+					"#hangHoaDs" + id
+							+ "\\.nvktDs0\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk")
 					.combobox();
 
 			// Đăng ký chọn hàng hóa
@@ -845,6 +847,7 @@
 				$("#hangTien" + (soDongTk - 1)).remove();
 				$("#thue" + (soDongTk - 1)).remove();
 				$("#chiPhi" + (soDongTk - 1)).remove();
+				$("#ktth" + (soDongTk - 1)).remove();
 				soDongTk--;
 			}
 

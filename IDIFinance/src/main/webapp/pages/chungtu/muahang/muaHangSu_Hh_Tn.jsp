@@ -229,7 +229,6 @@
 								cssClass="form-control"
 								path="nvktDs[${status.index}].taiKhoanNo.loaiTaiKhoan.maTk"
 								multiple="false">
-								<%-- <form:option value="0"></form:option> --%>
 								<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
 									itemLabel="maTenTk" />
 							</form:select> <form:hidden path="nvktDs[${status.index}].taiKhoanNo.maNvkt" />
@@ -241,7 +240,6 @@
 								cssClass="form-control"
 								path="nvktDs[${status.index}].taiKhoanCo.loaiTaiKhoan.maTk"
 								multiple="false">
-								<%-- <form:option value="0"></form:option> --%>
 								<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
 									itemLabel="maTenTk" />
 							</form:select> <form:hidden path="nvktDs[${status.index}].taiKhoanCo.maNvkt" />

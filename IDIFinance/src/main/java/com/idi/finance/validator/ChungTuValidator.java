@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.bouncycastle.crypto.engines.ISAACEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -365,7 +364,7 @@ public class ChungTuValidator implements Validator {
 									|| hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk() == null
 									|| hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 								if (hangHoa.getTkThueXk().getSoTien() != null
-										&& hangHoa.getTkThueXk().getSoTien().getSoTien() > 0) {
+										&& hangHoa.getTkThueXk().getSoTien().getGiaTri() > 0) {
 									errors.rejectValue("hangHoaDs[" + id + "].tkThueXk.loaiTaiKhoan.maTk",
 											"NotEmpty.hangHoa.tkThueXk.loaiTaiKhoan.maTk");
 								}
@@ -377,15 +376,71 @@ public class ChungTuValidator implements Validator {
 									|| hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() == null
 									|| hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 								if (hangHoa.getTkThueGtgt().getSoTien() != null
-										&& hangHoa.getTkThueGtgt().getSoTien().getSoTien() > 0) {
+										&& hangHoa.getTkThueGtgt().getSoTien().getGiaTri() > 0) {
 									errors.rejectValue("hangHoaDs[" + id + "].tkThueGtgt.loaiTaiKhoan.maTk",
 											"NotEmpty.hangHoa.tkThueGtgt.loaiTaiKhoan.maTk");
 								}
 							}
 						}
 
+						// Validate kế toán tổng hợp - nếu có
+						if (hangHoa != null && hangHoa.getNvktDs() != null && hangHoa.getNvktDs().size() > 0) {
+							NghiepVuKeToan nvkt = hangHoa.getNvktDs().get(0);
+
+							TaiKhoan taiKhoanNo = nvkt.getTaiKhoanNo();
+							TaiKhoan taiKhoanCo = nvkt.getTaiKhoanCo();
+
+							logger.info("nvkt: " + nvkt);
+							logger.info("taiKhoanNo: " + taiKhoanNo);
+							logger.info("taiKhoanCo: " + taiKhoanCo);
+
+							if ((taiKhoanNo.getLyDo() == null || taiKhoanNo.getLyDo().isEmpty())
+									&& taiKhoanNo.getSoTien().getSoTien() == 0
+									&& (taiKhoanNo.getLoaiTaiKhoan() == null
+											|| taiKhoanNo.getLoaiTaiKhoan().getMaTk() == null
+											|| taiKhoanNo.getLoaiTaiKhoan().getMaTk().isEmpty())
+									&& (taiKhoanCo.getLoaiTaiKhoan() == null
+											|| taiKhoanCo.getLoaiTaiKhoan().getMaTk() == null
+											|| taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty())) {
+								// Không có nghiệp vụ kế toán, bỏ qua
+								logger.info("Không có dữ liệu ktth, bỏ qua");
+							} else if (taiKhoanNo.getLyDo() != null && !taiKhoanNo.getLyDo().isEmpty()
+									&& taiKhoanNo.getLoaiTaiKhoan() != null
+									&& taiKhoanNo.getLoaiTaiKhoan().getMaTk() != null
+									&& !taiKhoanNo.getLoaiTaiKhoan().getMaTk().isEmpty()
+									&& taiKhoanNo.getSoTien() != null && taiKhoanNo.getSoTien().getSoTien() > 0
+									&& taiKhoanCo.getLoaiTaiKhoan() != null
+									&& taiKhoanCo.getLoaiTaiKhoan().getMaTk() != null
+									&& !taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty()) {
+								// Dữ liệu tốt, không cần làm gì
+								logger.info("Dữ liệu ktth tốt, không cần làm gì");
+							} else {
+								logger.info("Dữ liệu ktth có lỗi");
+								if (taiKhoanNo.getLyDo() == null || taiKhoanNo.getLyDo().isEmpty()) {
+									errors.rejectValue("hangHoaDs[" + id + "].nvktDs[0].taiKhoanNo.lyDo",
+											"NotEmpty.nvktDs.taiKhoanNo.lyDo");
+								}
+								if (taiKhoanNo.getLoaiTaiKhoan().getMaTk() == null
+										|| taiKhoanNo.getLoaiTaiKhoan().getMaTk().isEmpty()) {
+									errors.rejectValue("hangHoaDs[" + id + "].nvktDs[0].taiKhoanNo.loaiTaiKhoan.maTk",
+											"NotEmpty.nvktDs.taiKhoanNo.loaiTaiKhoan.maTk");
+								}
+								if (taiKhoanCo.getLoaiTaiKhoan().getMaTk() == null
+										|| taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty()) {
+									errors.rejectValue("hangHoaDs[" + id + "].nvktDs[0].taiKhoanCo.loaiTaiKhoan.maTk",
+											"NotEmpty.nvktDs.taiKhoanCo.loaiTaiKhoan.maTk");
+								}
+								if (taiKhoanNo.getSoTien().getSoTien() == 0) {
+									errors.rejectValue("hangHoaDs[" + id + "].nvktDs[0].taiKhoanNo.soTien.soTien",
+											"NotEmpty.nvktDs.taiKhoanNo.soTien.soTien");
+								}
+							}
+							id++;
+						}
+
 						id++;
 					}
+
 				}
 			} else if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_KT_TH)) {
 				// Validate cho phần kế toán tổng hợp

@@ -466,8 +466,8 @@
 					thapPhan);
 			$("input[id^='hangHoaDs" + id + "'][id$='giaTri']").number(true,
 					thapPhan);
-			$("input[id^='nvktDs" + id + "'][id$='soTien']").number(true,
-					thapPhan);
+			/* $("input[id^='nvktDs" + id + "'][id$='soTien']").number(true,
+					thapPhan); */
 		}
 
 		function dangKy(id) {
@@ -481,7 +481,7 @@
 			$("#hangHoaDs" + id + "\\.giaVon\\.tenDvTxt").text(donVi);
 
 			$("#lyDo").change(function() {
-				$("#nvktDs" + id + "\\.taiKhoanNo\\.lyDo").val($(this).val());
+				//$("#nvktDs" + id + "\\.taiKhoanNo\\.lyDo").val($(this).val());
 			});
 
 			// Đăng ký thay đổi số lượng
@@ -602,14 +602,17 @@
 										.html(tongGiaVonTxt);
 							});
 
-			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk").val("");
-			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk")
+			$(
+					"#hangHoaDs" + id
+							+ "\\.nvktDs0\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk")
 					.combobox();
-			$("#nvktDs" + id + "\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk").val("");
-			$("#nvktDs" + id + "\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk")
+			$(
+					"#hangHoaDs" + id
+							+ "\\.nvktDs0\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk")
 					.combobox();
 
 			// Đăng ký chọn hàng hóa
+
 			var kyHieuHh = $("#hangHoaDs" + id + "\\.kyHieuHh").val();
 			if (kyHieuHh == '') {
 				$("#hangHoaDs" + id + "\\.maHh").val("");
@@ -843,10 +846,12 @@
 			ktthDong = $("#ktth" + (soDongTk - 1)).html();
 			ktthDong = "<tr>" + ktthDong + "</tr>";
 
+			console.log("soDongTk", soDongTk);
 			if (soDongTk > 1) {
 				$("#hangTien" + (soDongTk - 1)).remove();
 				$("#thue" + (soDongTk - 1)).remove();
 				$("#chiPhi" + (soDongTk - 1)).remove();
+				$("#ktth" + (soDongTk - 1)).remove();
 				soDongTk--;
 			}
 
@@ -920,6 +925,7 @@
 <form:hidden path="tinhChatCt" />
 <form:hidden path="chieu" />
 <form:hidden path="nghiepVu" />
+
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="soCt">Số dự chứng từ
 		kiến:</label>

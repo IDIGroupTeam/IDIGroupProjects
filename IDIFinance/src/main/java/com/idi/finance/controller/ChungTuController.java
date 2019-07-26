@@ -1802,8 +1802,10 @@ public class ChungTuController {
 					taiKhoanCo.setNhomDk(nhomDk);
 					taiKhoanCo.setDoiTuong(doiTuong);
 
-					if ((taiKhoanNo.getLoaiTaiKhoan() == null || taiKhoanNo.getLoaiTaiKhoan().getMaTk() == null
-							|| taiKhoanNo.getLoaiTaiKhoan().getMaTk().isEmpty())
+					if ((taiKhoanNo.getLyDo() == null || taiKhoanNo.getLyDo().isEmpty())
+							&& taiKhoanNo.getSoTien().getSoTien() == 0
+							&& (taiKhoanNo.getLoaiTaiKhoan() == null || taiKhoanNo.getLoaiTaiKhoan().getMaTk() == null
+									|| taiKhoanNo.getLoaiTaiKhoan().getMaTk().isEmpty())
 							&& (taiKhoanCo.getLoaiTaiKhoan() == null || taiKhoanCo.getLoaiTaiKhoan().getMaTk() == null
 									|| taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty())) {
 						// Không có dữ liệu, bỏ qua
@@ -2074,6 +2076,7 @@ public class ChungTuController {
 			chungTu.setNgayLap(homNay);
 			chungTu.setNgayHt(homNay);
 
+			// Tạo tạm một hàng hóa mới làm mẫu, sau js sẽ xóa đi
 			HangHoa hangHoa = new HangHoa();
 			chungTu.themHangHoa(hangHoa);
 
@@ -2088,7 +2091,6 @@ public class ChungTuController {
 	public String luuTaoMoiBanHang(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu, BindingResult result,
 			Model model) {
 		try {
-			logger.info("Has error: " + result.getAllErrors());
 			if (result.hasErrors()) {
 				HangHoa hangHoa = new HangHoa();
 				chungTu.themHangHoa(hangHoa);
@@ -2105,6 +2107,11 @@ public class ChungTuController {
 				// Đảm bảo các trường dữ liệu đúng với ý nghĩa của nó
 				// Đảm bảo giá trị được tính thống nhất theo loại tiền đã chọn
 				// Với từng loại hàng hóa
+				KyKeToan kyKeToan = dungChung.getKyKeToan();
+				int nhomDk = 1;
+				DoiTuong doiTuong = chungTu.getDoiTuong();
+				List<TaiKhoan> taiKhoanKtthDs = new ArrayList<>();
+
 				int soHangHoa = chungTu.getHangHoaDs().size();
 				Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
 				while (hhIter.hasNext()) {
@@ -2200,25 +2207,10 @@ public class ChungTuController {
 							hangHoa.getTkKho().setLyDo(chungTu.getLyDo());
 						}
 					}
-				}
 
-				if (chungTu.getMaCt() > 0) {
-					chungTuDAO.capNhatChungTuKho(chungTu);
-					return "redirect:/chungtu/banhang/xem/" + chungTu.getMaCt();
-				} else {
-					chungTuDAO.themChungTuKho(chungTu);
-				}
-
-				// Tạo phiếu kế toán tổng hợp kèm theo nếu cần
-				if (chungTu != null && chungTu.getNvktDs() != null) {
-					KyKeToan kyKeToan = dungChung.getKyKeToan();
-
-					int nhomDk = 1;
-					DoiTuong doiTuong = chungTu.getDoiTuong();
-					List<TaiKhoan> taiKhoanKtthDs = new ArrayList<>();
-					Iterator<NghiepVuKeToan> ktthIter = chungTu.getNvktDs().iterator();
-					while (ktthIter.hasNext()) {
-						NghiepVuKeToan nvkt = ktthIter.next();
+					// Chuẩn bị dữ liệu ktth, nếu có
+					if (hangHoa != null && hangHoa.getNvktDs() != null && hangHoa.getNvktDs().size() > 0) {
+						NghiepVuKeToan nvkt = hangHoa.getNvktDs().get(0);
 
 						TaiKhoan taiKhoanNo = nvkt.getTaiKhoanNo();
 						taiKhoanNo.setSoDu(LoaiTaiKhoan.NO);
@@ -2233,22 +2225,42 @@ public class ChungTuController {
 						taiKhoanCo.setNhomDk(nhomDk);
 						taiKhoanCo.setDoiTuong(doiTuong);
 
-						taiKhoanKtthDs.add(taiKhoanNo);
-						taiKhoanKtthDs.add(taiKhoanCo);
-						nhomDk++;
+						if ((taiKhoanNo.getLyDo() == null || taiKhoanNo.getLyDo().isEmpty())
+								&& taiKhoanNo.getSoTien().getSoTien() == 0
+								&& (taiKhoanNo.getLoaiTaiKhoan() == null
+										|| taiKhoanNo.getLoaiTaiKhoan().getMaTk() == null
+										|| taiKhoanNo.getLoaiTaiKhoan().getMaTk().isEmpty())
+								&& (taiKhoanCo.getLoaiTaiKhoan() == null
+										|| taiKhoanCo.getLoaiTaiKhoan().getMaTk() == null
+										|| taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty())) {
+							// Không có dữ liệu, bỏ qua
+							logger.info("Không có dữ liệu, bỏ qua");
+						} else {
+							taiKhoanKtthDs.add(taiKhoanNo);
+							taiKhoanKtthDs.add(taiKhoanCo);
+							nhomDk++;
+						}
 					}
+				}
 
-					if (taiKhoanKtthDs != null && taiKhoanKtthDs.size() > 0) {
-						chungTu.setDoiTuong(new DoiTuong());
-						chungTu.setLoaiCt(ChungTu.CHUNG_TU_KT_TH);
-						// Lấy số phiếu thu của năm hiện tại
-						int soKeToanTongHop = chungTuDAO.laySoChungTuLonNhatTheoLoaiCtVaKy(ChungTu.CHUNG_TU_KT_TH,
-								kyKeToan.getBatDau(), kyKeToan.getKetThuc());
-						soKeToanTongHop++;
-						chungTu.setSoCt(soKeToanTongHop);
-						chungTu.setTaiKhoanKtthDs(taiKhoanKtthDs);
-						chungTuDAO.themChungTuKtth(chungTu);
-					}
+				if (chungTu.getMaCt() > 0) {
+					chungTuDAO.capNhatChungTuKho(chungTu);
+					return "redirect:/chungtu/banhang/xem/" + chungTu.getMaCt();
+				} else {
+					chungTuDAO.themChungTuKho(chungTu);
+				}
+
+				// Tạo phiếu kế toán tổng hợp kèm theo nếu cần
+				if (taiKhoanKtthDs != null && taiKhoanKtthDs.size() > 0) {
+					chungTu.setDoiTuong(new DoiTuong());
+					chungTu.setLoaiCt(ChungTu.CHUNG_TU_KT_TH);
+					// Lấy số phiếu thu của năm hiện tại
+					int soKeToanTongHop = chungTuDAO.laySoChungTuLonNhatTheoLoaiCtVaKy(ChungTu.CHUNG_TU_KT_TH,
+							kyKeToan.getBatDau(), kyKeToan.getKetThuc());
+					soKeToanTongHop++;
+					chungTu.setSoCt(soKeToanTongHop);
+					chungTu.setTaiKhoanKtthDs(taiKhoanKtthDs);
+					chungTuDAO.themChungTuKtth(chungTu);
 				}
 			}
 
@@ -2655,7 +2667,7 @@ public class ChungTuController {
 			model.addAttribute("mainFinanceForm", ketChuyenButToan);
 
 			// Lấy danh sách tài khoản
-			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoanCon();
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 
 			model.addAttribute("tab", "tabCTKC");
