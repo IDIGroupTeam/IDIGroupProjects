@@ -612,7 +612,6 @@
 					.combobox();
 
 			// Đăng ký chọn hàng hóa
-
 			var kyHieuHh = $("#hangHoaDs" + id + "\\.kyHieuHh").val();
 			if (kyHieuHh == '') {
 				$("#hangHoaDs" + id + "\\.maHh").val("");

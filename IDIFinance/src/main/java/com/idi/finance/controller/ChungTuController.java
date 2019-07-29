@@ -1641,6 +1641,11 @@ public class ChungTuController {
 			// Đảm bảo các trường dữ liệu đúng với ý nghĩa của nó
 			// Đảm bảo giá trị được tính thống nhất theo loại tiền đã chọn
 			// Với từng loại hàng hóa
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			int nhomDk = 1;
+			DoiTuong doiTuong = chungTu.getDoiTuong();
+			List<TaiKhoan> taiKhoanKtthDs = new ArrayList<>();
+
 			int soHangHoa = chungTu.getHangHoaDs().size();
 			Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
 			while (hhIter.hasNext()) {
@@ -1769,25 +1774,10 @@ public class ChungTuController {
 						hangHoa.getTkThanhtoan().setLyDo(chungTu.getLyDo());
 					}
 				}
-			}
 
-			if (chungTu.getMaCt() > 0) {
-				chungTuDAO.capNhatChungTuKho(chungTu);
-				return "redirect:/chungtu/muahang/xem/" + chungTu.getMaCt();
-			} else {
-				chungTuDAO.themChungTuKho(chungTu);
-			}
-
-			// Tạo phiếu kế toán tổng hợp kèm theo nếu cần
-			if (chungTu != null && chungTu.getNvktDs() != null) {
-				KyKeToan kyKeToan = dungChung.getKyKeToan();
-
-				int nhomDk = 1;
-				DoiTuong doiTuong = chungTu.getDoiTuong();
-				List<TaiKhoan> taiKhoanKtthDs = new ArrayList<>();
-				Iterator<NghiepVuKeToan> ktthIter = chungTu.getNvktDs().iterator();
-				while (ktthIter.hasNext()) {
-					NghiepVuKeToan nvkt = ktthIter.next();
+				// Chuẩn bị dữ liệu ktth, nếu có
+				if (hangHoa != null && hangHoa.getNvktDs() != null && hangHoa.getNvktDs().size() > 0) {
+					NghiepVuKeToan nvkt = hangHoa.getNvktDs().get(0);
 
 					TaiKhoan taiKhoanNo = nvkt.getTaiKhoanNo();
 					taiKhoanNo.setSoDu(LoaiTaiKhoan.NO);
@@ -1810,25 +1800,32 @@ public class ChungTuController {
 									|| taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty())) {
 						// Không có dữ liệu, bỏ qua
 						logger.info("Không có dữ liệu, bỏ qua");
-						continue;
+					} else {
+						taiKhoanKtthDs.add(taiKhoanNo);
+						taiKhoanKtthDs.add(taiKhoanCo);
+						nhomDk++;
 					}
-
-					taiKhoanKtthDs.add(taiKhoanNo);
-					taiKhoanKtthDs.add(taiKhoanCo);
-					nhomDk++;
 				}
+			}
 
-				if (taiKhoanKtthDs != null && taiKhoanKtthDs.size() > 0) {
-					chungTu.setDoiTuong(new DoiTuong());
-					chungTu.setLoaiCt(ChungTu.CHUNG_TU_KT_TH);
-					// Lấy số phiếu thu của năm hiện tại
-					int soKeToanTongHop = chungTuDAO.laySoChungTuLonNhatTheoLoaiCtVaKy(ChungTu.CHUNG_TU_KT_TH,
-							kyKeToan.getBatDau(), kyKeToan.getKetThuc());
-					soKeToanTongHop++;
-					chungTu.setSoCt(soKeToanTongHop);
-					chungTu.setTaiKhoanKtthDs(taiKhoanKtthDs);
-					chungTuDAO.themChungTuKtth(chungTu);
-				}
+			if (chungTu.getMaCt() > 0) {
+				chungTuDAO.capNhatChungTuKho(chungTu);
+				return "redirect:/chungtu/muahang/xem/" + chungTu.getMaCt();
+			} else {
+				chungTuDAO.themChungTuKho(chungTu);
+			}
+
+			// Tạo phiếu kế toán tổng hợp kèm theo nếu cần
+			if (taiKhoanKtthDs != null && taiKhoanKtthDs.size() > 0) {
+				chungTu.setDoiTuong(new DoiTuong());
+				chungTu.setLoaiCt(ChungTu.CHUNG_TU_KT_TH);
+				// Lấy số phiếu thu của năm hiện tại
+				int soKeToanTongHop = chungTuDAO.laySoChungTuLonNhatTheoLoaiCtVaKy(ChungTu.CHUNG_TU_KT_TH,
+						kyKeToan.getBatDau(), kyKeToan.getKetThuc());
+				soKeToanTongHop++;
+				chungTu.setSoCt(soKeToanTongHop);
+				chungTu.setTaiKhoanKtthDs(taiKhoanKtthDs);
+				chungTuDAO.themChungTuKtth(chungTu);
 			}
 
 			return "redirect:/chungtu/muahang/danhsach";

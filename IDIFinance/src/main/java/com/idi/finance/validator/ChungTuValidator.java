@@ -233,16 +233,9 @@ public class ChungTuValidator implements Validator {
 							}
 						}
 
-						id++;
-					}
-
-					// Validate kế toán tổng hợp - nếu có
-					if (chungTu != null && chungTu.getNvktDs() != null) {
-						id = 0;
-						logger.info("chungTu.getNvktDs(): " + chungTu.getNvktDs().size());
-						Iterator<NghiepVuKeToan> ktthIter = chungTu.getNvktDs().iterator();
-						while (ktthIter.hasNext()) {
-							NghiepVuKeToan nvkt = ktthIter.next();
+						// Validate kế toán tổng hợp - nếu có
+						if (hangHoa != null && hangHoa.getNvktDs() != null && hangHoa.getNvktDs().size() > 0) {
+							NghiepVuKeToan nvkt = hangHoa.getNvktDs().get(0);
 
 							TaiKhoan taiKhoanNo = nvkt.getTaiKhoanNo();
 							TaiKhoan taiKhoanCo = nvkt.getTaiKhoanCo();
@@ -260,7 +253,7 @@ public class ChungTuValidator implements Validator {
 											|| taiKhoanCo.getLoaiTaiKhoan().getMaTk() == null
 											|| taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty())) {
 								// Không có nghiệp vụ kế toán, bỏ qua
-								logger.info("Không có nghiệp vụ kế toán, bỏ qua");
+								logger.info("Không có dữ liệu ktth, bỏ qua");
 							} else if (taiKhoanNo.getLyDo() != null && !taiKhoanNo.getLyDo().isEmpty()
 									&& taiKhoanNo.getLoaiTaiKhoan() != null
 									&& taiKhoanNo.getLoaiTaiKhoan().getMaTk() != null
@@ -270,30 +263,31 @@ public class ChungTuValidator implements Validator {
 									&& taiKhoanCo.getLoaiTaiKhoan().getMaTk() != null
 									&& !taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty()) {
 								// Dữ liệu tốt, không cần làm gì
-								logger.info("Dữ liệu tốt, không cần làm gì");
+								logger.info("Dữ liệu ktth tốt, không cần làm gì");
 							} else {
-								// Invalid data, send message
+								logger.info("Dữ liệu ktth có lỗi");
 								if (taiKhoanNo.getLyDo() == null || taiKhoanNo.getLyDo().isEmpty()) {
-									errors.rejectValue("nvktDs[" + id + "].taiKhoanNo.lyDo",
+									errors.rejectValue("hangHoaDs[" + id + "].nvktDs[0].taiKhoanNo.lyDo",
 											"NotEmpty.nvktDs.taiKhoanNo.lyDo");
 								}
 								if (taiKhoanNo.getLoaiTaiKhoan().getMaTk() == null
 										|| taiKhoanNo.getLoaiTaiKhoan().getMaTk().isEmpty()) {
-									errors.rejectValue("nvktDs[" + id + "].taiKhoanNo.loaiTaiKhoan.maTk",
+									errors.rejectValue("hangHoaDs[" + id + "].nvktDs[0].taiKhoanNo.loaiTaiKhoan.maTk",
 											"NotEmpty.nvktDs.taiKhoanNo.loaiTaiKhoan.maTk");
 								}
 								if (taiKhoanCo.getLoaiTaiKhoan().getMaTk() == null
 										|| taiKhoanCo.getLoaiTaiKhoan().getMaTk().isEmpty()) {
-									errors.rejectValue("nvktDs[" + id + "].taiKhoanCo.loaiTaiKhoan.maTk",
+									errors.rejectValue("hangHoaDs[" + id + "].nvktDs[0].taiKhoanCo.loaiTaiKhoan.maTk",
 											"NotEmpty.nvktDs.taiKhoanCo.loaiTaiKhoan.maTk");
 								}
 								if (taiKhoanNo.getSoTien().getSoTien() == 0) {
-									errors.rejectValue("nvktDs[" + id + "].taiKhoanNo.soTien.soTien",
+									errors.rejectValue("hangHoaDs[" + id + "].nvktDs[0].taiKhoanNo.soTien.soTien",
 											"NotEmpty.nvktDs.taiKhoanNo.soTien.soTien");
 								}
 							}
-							id++;
 						}
+
+						id++;
 					}
 				}
 			} else if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_BAN_HANG)) {
@@ -435,7 +429,6 @@ public class ChungTuValidator implements Validator {
 											"NotEmpty.nvktDs.taiKhoanNo.soTien.soTien");
 								}
 							}
-							id++;
 						}
 
 						id++;

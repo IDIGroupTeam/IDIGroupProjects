@@ -222,36 +222,35 @@
 					<tr id="ktth${status.index}">
 						<td class="text-left" style="width: 220px;"><form:input
 								cssClass="form-control"
-								path="nvktDs[${status.index}].taiKhoanNo.lyDo"
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanNo.lyDo"
 								placeholder="Lý do" /> <form:errors
-								path="nvktDs[${status.index}].taiKhoanNo.lyDo" cssClass="error" /></td>
-						<td class="text-left" style="width: 180px;"><form:select
-								cssClass="form-control"
-								path="nvktDs[${status.index}].taiKhoanNo.loaiTaiKhoan.maTk"
-								multiple="false">
-								<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
-									itemLabel="maTenTk" />
-							</form:select> <form:hidden path="nvktDs[${status.index}].taiKhoanNo.maNvkt" />
-							<input type="hidden"
-							name="nvktDs[${status.index}].taiKhoanNo.soDu" value="-1" /> <form:errors
-								path="nvktDs[${status.index}].taiKhoanNo.loaiTaiKhoan.maTk"
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanNo.lyDo"
 								cssClass="error" /></td>
 						<td class="text-left" style="width: 180px;"><form:select
 								cssClass="form-control"
-								path="nvktDs[${status.index}].taiKhoanCo.loaiTaiKhoan.maTk"
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanNo.loaiTaiKhoan.maTk"
 								multiple="false">
+								<form:option value="" label=" "></form:option>
 								<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
 									itemLabel="maTenTk" />
-							</form:select> <form:hidden path="nvktDs[${status.index}].taiKhoanCo.maNvkt" />
-							<input type="hidden"
-							name="nvktDs[${status.index}].taiKhoanCo.soDu" value="1" /> <form:errors
-								path="nvktDs[${status.index}].taiKhoanCo.loaiTaiKhoan.maTk"
+							</form:select> <form:errors
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanNo.loaiTaiKhoan.maTk"
+								cssClass="error" /></td>
+						<td class="text-left" style="width: 180px;"><form:select
+								cssClass="form-control"
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanCo.loaiTaiKhoan.maTk"
+								multiple="false">
+								<form:option value="" label=" "></form:option>
+								<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
+									itemLabel="maTenTk" />
+							</form:select> <form:errors
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanCo.loaiTaiKhoan.maTk"
 								cssClass="error" /></td>
 						<td class="text-right" style="width: 180px;"><form:input
 								cssClass="form-control"
-								path="nvktDs[${status.index}].taiKhoanNo.soTien.soTien"
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanNo.soTien.soTien"
 								placeholder="" /> <form:errors
-								path="nvktDs[${status.index}].taiKhoanNo.soTien.soTien"
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanNo.soTien.soTien"
 								cssClass="error" /></td>
 					</tr>
 				</c:forEach>
