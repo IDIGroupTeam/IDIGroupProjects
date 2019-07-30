@@ -8,16 +8,31 @@
 <html>
 <head>
 <!-- Include Twitter Bootstrap and jQuery: -->
-<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
-
+<script type="text/javascript" src="${url}/public/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" src="${url}/public/js/jquery.min.js"></script>
 <!-- Include the plugin's CSS and JS: -->
-<script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
+
 
 <!-- Initialize the plugin: -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript">
-	
+//alert("send report ...xxx");
+$(function(){
+	//alert("send report ...");
+	$("#sendTo").multiselect({
+		enableFiltering : true,
+		filterPlaceholder : 'Tìm kiếm',
+		maxHeight : 200,
+		buttonWidth : '170px',
+		nonSelectedText : 'Chọn email',
+		nSelectedText : 'Được chọn',
+		includeSelectAllOption : true,
+		allSelectedText : 'Chọn tất cả',
+		selectAllText : 'Tất cả',
+		selectAllValue : 'ALL'
+	});		
+	//alert("send report ...yyy");	
+}); 
+
 </script>
 <title>Gửi báo cáo công việc</title>
 </head>
@@ -35,8 +50,13 @@
 		<table class="table table-bordered table-hover">
 			<tr>
 				<td nowrap="nowrap" title="Nhập chính xác địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com, các email cách nhau bằng dấu ; ">Gửi tới:(*)</td>
-				<td><form:input path="sendTo" required="required"
-						class="form-control animated" /></td>
+				<td>
+					<form:select path="sendTo" multiple="multiple" class="form-control animated"> 
+						<form:options items="${employeeEmailMap}" />
+					</form:select>
+					
+<%-- 				<td><form:input path="sendTo" required="required"
+						class="form-control animated" /></td> --%>
 			</tr>
 <%-- 			<tr>
 				<td nowrap="nowrap" title="Phần này khi hoàn thiên chức năng phân quyền sẽ không cần nữa hệ thống sẽ tự động sác định được người gửi ...">Người gửi:</td>

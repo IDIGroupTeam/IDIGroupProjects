@@ -17,6 +17,11 @@ public class ReportForm implements Serializable{
 	private String sender;
 	private String comment;
 	
+	private String idCheck;
+	private String estimateCheck;
+	private String updateTimeCheck;
+	private String dueDateCheck;
+	
 	public String getFromDate() {
 		return fromDate;
 	}
@@ -58,5 +63,29 @@ public class ReportForm implements Serializable{
 	}
 	public void setComment(String comment) {
 		this.comment = comment;
-	}	
+	}
+	public String getIdCheck() {
+		return idCheck;
+	}
+	public void setIdCheck(String idCheck) {
+		this.idCheck = idCheck;
+	}
+	public String getEstimateCheck() {
+		return estimateCheck;
+	}
+	public void setEstimateCheck(String estimateCheck) {
+		this.estimateCheck = estimateCheck;
+	}
+	public String getUpdateTimeCheck() {
+		return updateTimeCheck;
+	}
+	public void setUpdateTimeCheck(String updateTimeCheck) {
+		this.updateTimeCheck = updateTimeCheck;
+	}
+	public String getDueDateCheck() {
+		return dueDateCheck;
+	}
+	public void setDueDateCheck(String dueDateCheck) {
+		this.dueDateCheck = dueDateCheck;
+	}		
 }

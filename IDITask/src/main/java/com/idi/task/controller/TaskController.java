@@ -14,7 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.stream.Stream;
+//import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartFactory;
@@ -86,7 +86,7 @@ public class TaskController {
 	@Autowired
 	private TaskDAO taskDAO;
 
-	@Autowired 
+	@Autowired
 	private EmployeeDAO employeeDAO;
 
 	@Autowired
@@ -94,32 +94,33 @@ public class TaskController {
 
 	@Autowired
 	private UserRoleDAO userRoleDAO;
-	
+
 	@Autowired
 	private JavaMailSender mailSender;
-	
+
 	@Autowired
 	TaskValidator taskValidator;
 
 	PropertiesManager properties = new PropertiesManager("task.properties");
 
 	public static File fontFile = new File("/home/idi/properties/vuTimes.ttf");
-	//public static File fontBFile = new File("/home/idi/properties/vni.common.VTIMESB.ttf");
-	
+	// public static File fontBFile = new
+	// File("/home/idi/properties/vni.common.VTIMESB.ttf");
+
 	@RequestMapping(value = { "/" })
 	public String listTasks(Model model, @ModelAttribute("taskForm") TaskForm form) throws Exception {
 		try {
 			List<Task> list = null;
-			
+
 			// get list department
 			Map<String, String> departmentMap = this.listDepartments();
 			model.addAttribute("departmentMap", departmentMap);
 
 			// get list employee id who is owner of the tasks
 			model.addAttribute("employeesList", employeesOwner());
-			
+
 			model.addAttribute("statusList", taskDAO.getListStatus());
-			
+
 			// Paging:
 			// Number records of a Page: Default: 25
 			// Page Index: Default: 1
@@ -135,12 +136,13 @@ public class TaskController {
 
 			boolean search = false;
 			if ((form.getSearchValue() != null && form.getSearchValue().length() > 0)
-					|| (form.getArea() != null && form.getArea() != "") 
-					|| form.getOwnedBy() > 0
-					|| form.getStatus() != null && form.getStatus().length() > 0){
-				log.info("Searching for: '" + form.getSearchValue()+ "', phòng: " + form.getArea() + ", Người làm có id: " + form.getOwnedBy() + ", trạng thái công viêc: " + form.getStatus() );
+					|| (form.getArea() != null && form.getArea() != "") || form.getOwnedBy() > 0
+					|| form.getStatus() != null && form.getStatus().length() > 0) {
+				log.info("Searching for: '" + form.getSearchValue() + "', phòng: " + form.getArea()
+						+ ", Người làm có id: " + form.getOwnedBy() + ", trạng thái công viêc: " + form.getStatus());
 				search = true;
-				list = taskDAO.getTasksBySearch(form.getSearchValue(), form.getArea(), form.getOwnedBy(), form.getStatus());
+				list = taskDAO.getTasksBySearch(form.getSearchValue(), form.getArea(), form.getOwnedBy(),
+						form.getStatus());
 			} else
 				list = taskDAO.getTasks();
 			form.setTotalRecords(list.size());
@@ -182,8 +184,9 @@ public class TaskController {
 			else if (list != null && list.size() < 1 && search)
 				model.addAttribute("message",
 						"Không có công việc nào khớp với thông tin: Mã việc/Tên việc/Người được giao/Trạng thái công việc/Mã phòng/Kế hoạch cho tháng = '"
-				+ form.getSearchValue() + "', người làm có id = " + form.getOwnedBy() + ", phòng ban có mã = '" + form.getArea() 
-				+ "', trạng thái công việc = '" + form.getStatus() + "'.\n \n (Note: id = 0 tức là không chọn ai)");
+								+ form.getSearchValue() + "', người làm có id = " + form.getOwnedBy()
+								+ ", phòng ban có mã = '" + form.getArea() + "', trạng thái công việc = '"
+								+ form.getStatus() + "'.\n \n (Note: id = 0 tức là không chọn ai)");
 
 			model.addAttribute("tasks", listTaskForPage);
 			model.addAttribute("formTitle", "Danh sách tất cả công việc");
@@ -194,32 +197,32 @@ public class TaskController {
 		return "listTask";
 	}
 
-	@RequestMapping(value = {"/listTasksOwner"})
+	@RequestMapping(value = { "/listTasksOwner" })
 	public String listTasksOwner(Model model, @ModelAttribute("taskForm") TaskForm form) throws Exception {
 		try {
-			//System.err.println("owner .....");
-			//inject from Login account
+			// System.err.println("owner .....");
+			// inject from Login account
 			int userId = -1;
-			String username = new LoginController().getPrincipal();		
-			//System.err.println("user name: " + username);
-		    if (username != null && username.length() > 0 && !username.equalsIgnoreCase("anonymousUser")) {
-		    	UserLogin userLogin  =  userRoleDAO.getAUserLoginFull(username);
-		    	userId = userLogin.getUserID();
-		    }else {
-		    	return "/login"; 
-		    }
-		    //System.err.println("user userId: " + userId);
+			String username = new LoginController().getPrincipal();
+			// System.err.println("user name: " + username);
+			if (username != null && username.length() > 0 && !username.equalsIgnoreCase("anonymousUser")) {
+				UserLogin userLogin = userRoleDAO.getAUserLoginFull(username);
+				userId = userLogin.getUserID();
+			} else {
+				return "/login";
+			}
+			// System.err.println("user userId: " + userId);
 			List<Task> list = null;
-			
+
 			// get list department
 			Map<String, String> departmentMap = this.listDepartments();
 			model.addAttribute("departmentMap", departmentMap);
 
 			// get list employee id who is owner of the tasks
 			model.addAttribute("employeesList", employeesOwner());
-			
+
 			model.addAttribute("statusList", taskDAO.getListStatus());
-			
+
 			// Paging:
 			// Number records of a Page: Default: 25
 			// Page Index: Default: 1
@@ -234,9 +237,9 @@ public class TaskController {
 			}
 
 			boolean search = false;
-			if ((form.getSearchValue() != null && form.getSearchValue().length() > 0)					
-					|| form.getStatus() != null && form.getStatus().length() > 0){
-				log.info("Searching for: '" + form.getSearchValue() + "', trạng thái công viêc: " + form.getStatus() );
+			if ((form.getSearchValue() != null && form.getSearchValue().length() > 0)
+					|| form.getStatus() != null && form.getStatus().length() > 0) {
+				log.info("Searching for: '" + form.getSearchValue() + "', trạng thái công viêc: " + form.getStatus());
 				search = true;
 				list = taskDAO.getTasksBySearch(form.getSearchValue(), null, userId, form.getStatus());
 			} else
@@ -280,19 +283,21 @@ public class TaskController {
 			else if (list != null && list.size() < 1 && search)
 				model.addAttribute("message",
 						"Không có công việc nào khớp với thông tin: Mã việc/Tên việc/Người được giao/Trạng thái công việc/Mã phòng/Kế hoạch cho tháng = '"
-				+ form.getSearchValue() + "', trạng thái công việc = '" + form.getStatus() + "' được giao cho bạn");
+								+ form.getSearchValue() + "', trạng thái công việc = '" + form.getStatus()
+								+ "' được giao cho bạn");
 
 			model.addAttribute("tasks", listTaskForPage);
-			model.addAttribute("formTitle", "Danh sách công việc được giao cho bạn");			
+			model.addAttribute("formTitle", "Danh sách công việc được giao cho bạn");
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
 		}
 		return "listTaskOwner";
 	}
-	
+
 	@RequestMapping(value = "/removeTaskRelated")
-	public String removeTaskRelated(Model model, @RequestParam("taskId") int taskId, @RequestParam("taskIdRemove") int taskIdRemove) throws Exception{
+	public String removeTaskRelated(Model model, @RequestParam("taskId") int taskId,
+			@RequestParam("taskIdRemove") int taskIdRemove) throws Exception {
 		try {
 
 			// Get danh sach cv lien quan
@@ -300,27 +305,27 @@ public class TaskController {
 			task = taskDAO.getTask(taskId);
 			String tasksRelated = task.getRelated();
 			String tasksRelatedNew = "";
-			if ( tasksRelated!= null && tasksRelated.length() > 0) {
-				//System.err.println(tasksRelated);
+			if (tasksRelated != null && tasksRelated.length() > 0) {
+				// System.err.println(tasksRelated);
 				StringTokenizer st = new StringTokenizer(tasksRelated, ",");
-				while(st.hasMoreElements()) {
+				while (st.hasMoreElements()) {
 					String temp = st.nextElement().toString();
-					if(!(taskIdRemove == Integer.parseInt(temp))) {
+					if (!(taskIdRemove == Integer.parseInt(temp))) {
 						tasksRelatedNew = tasksRelatedNew + "," + temp;
-						//System.err.println("element " + tasksRelatedNew);
+						// System.err.println("element " + tasksRelatedNew);
 					}
 				}
 				tasksRelatedNew = Utils.cutComma(tasksRelatedNew);
-				//if(tasksRelatedNew.startsWith(","))
-				//	tasksRelatedNew= tasksRelatedNew.substring(1, tasksRelatedNew.length());
+				// if(tasksRelatedNew.startsWith(","))
+				// tasksRelatedNew= tasksRelatedNew.substring(1, tasksRelatedNew.length());
 				taskDAO.updateRelated(tasksRelatedNew, taskId);
 			}
-			
+
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
 		}
-		
+
 		model.addAttribute("active3", "active");
 		model.addAttribute("tabActive1", "tab-pane");
 		model.addAttribute("tabActive2", "tab-pane");
@@ -336,8 +341,8 @@ public class TaskController {
 			String sub = taskDAO.getTaskSubscriber(taskForm.getTaskId());
 			String subRemove = taskForm.getSubscriber();
 			String subAddNew = taskForm.getForSubscriber();
-			//System.out.println("sub new current: " + subRemove);
-			//System.out.println("sub new select: " + subAddNew);
+			// System.out.println("sub new current: " + subRemove);
+			// System.out.println("sub new select: " + subAddNew);
 
 			String subUpdated = "";
 			if (sub != null && sub.length() > 0) {
@@ -345,7 +350,7 @@ public class TaskController {
 				if (subRemove != null) {
 					// System.err.println("vi tri remove" + sub.indexOf(subRemove));
 					// (sub.indexOf(subRemove), sub.indexOf(subRemove) + subRemove.length());
-					//System.out.println(subUpdated);
+					// System.out.println(subUpdated);
 					if (subAddNew != null) {
 						subUpdated = sub.replace(subRemove, subAddNew);
 						System.out.println("Co remove cu va add them moi " + subUpdated);
@@ -356,61 +361,57 @@ public class TaskController {
 				} else {
 					if (subAddNew != null) {
 						System.out.println("Chi add them, truoc co roi " + subUpdated);
-						log.info("Thông tin nguoi liên quan không có gì cập nhật ... subUpdated = subAddNew");						
+						log.info("Thông tin nguoi liên quan không có gì cập nhật ... subUpdated = subAddNew");
 						subUpdated = sub + "," + subAddNew;
 					} else {
 						log.info("Thông tin nguoi liên quan không có gì cập nhật ...");
 					}
-					//subUpdated = sub + "," + subAddNew;					
+					// subUpdated = sub + "," + subAddNew;
 				}
 			} else {
-				if(subAddNew != null)
+				if (subAddNew != null)
 					System.out.println("Chi add them, truoc chua co " + subUpdated);
-					subUpdated = subAddNew;
+				subUpdated = subAddNew;
 			}
-			if(subUpdated != null  && subUpdated.length() > 0) {
-				 subUpdated = Utils.cutComma(subUpdated);
-				 taskDAO.updateSubscriber(subUpdated, taskForm.getTaskId());
-			}				
-			
+			if (subUpdated != null && subUpdated.length() > 0) {
+				subUpdated = Utils.cutComma(subUpdated);
+				taskDAO.updateSubscriber(subUpdated, taskForm.getTaskId());
+			}
+
 			Task task = taskDAO.getTask(taskForm.getTaskId());
-			
-			//inject from Login account
+
+			// inject from Login account
 			String username = new LoginController().getPrincipal();
 			UserLogin userLogin = new UserLogin();
-		    log.info("Using usename =" + username +" in update subcriber");
-		    if (username !=null && username.length() >0 ) {
-		    	userLogin  =  userRoleDAO.getAUserLoginFull(username);		    	
-		    }	
-						
+			log.info("Using usename =" + username + " in update subcriber");
+			if (username != null && username.length() > 0) {
+				userLogin = userRoleDAO.getAUserLoginFull(username);
+			}
+
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-			//allEmployeesMap();
-			String htmlMsg = "Dear you, <br/>\n<br/>\n"
-					+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+			// allEmployeesMap();
+			String htmlMsg = "Dear you, <br/>\n<br/>\n" + "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
 					+ "<b>Người làm: " + allEmployeesMap().get(task.getOwnedBy()) + " </b><br/>\n"
 					+ "<b>Người thêm người liên quan: " + allEmployeesMap().get(userLogin.getUserID()) + " </b><br/>\n"
-					+ "Công việc thuộc phòng: " + task.getArea() + " <br/>\n " 
-					+ "Trạng thái: Tạo mới <br/>\n "
-					+ "Kế hoạch cho tháng: " + task.getPlannedFor() + " <br/>\n " 
-					+ "Độ ưu tiên: " + task.getPriority()
-					+ "<br/> <br/> \n" 
-					+ "Mô tả nội dung công việc: "	+ task.getDescription()
+					+ "Công việc thuộc phòng: " + task.getArea() + " <br/>\n " + "Trạng thái: Tạo mới <br/>\n "
+					+ "Kế hoạch cho tháng: " + task.getPlannedFor() + " <br/>\n " + "Độ ưu tiên: " + task.getPriority()
+					+ "<br/> <br/> \n" + "Mô tả nội dung công việc: " + task.getDescription()
 					+ "<br/> \n <br/> \n Trân trọng, <br/> \n"
-					+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" ;
+					+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n";
 			mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
 			List<String> mailList = taskDAO.getEmail(subUpdated);
-			
+
 			for (int i = 0; i < mailList.size(); i++) {
 				String sendTo = mailList.get(i);
-				//System.err.println("chuan bi send mail");
+				// System.err.println("chuan bi send mail");
 				if (sendTo != null && sendTo.length() > 0) {
-					//System.err.println("send mail cho " + sendTo);
+					// System.err.println("send mail cho " + sendTo);
 					helper.setTo(sendTo);
 					helper.setSubject("[Thêm người liên quan cho công việc] - " + task.getTaskName());
 					helper.setFrom("IDITaskNotReply");
 					mailSender.send(mimeMessage);
-					//System.err.println("sent");
+					// System.err.println("sent");
 				}
 			}
 
@@ -421,7 +422,8 @@ public class TaskController {
 			 * the lua chon model.addAttribute("employeesList", employeesForSub(sub));
 			 */
 
-			model.addAttribute("formTitle",	"Quản lý danh sách người liên quan đến công việc mã " + taskForm.getTaskId());
+			model.addAttribute("formTitle",
+					"Quản lý danh sách người liên quan đến công việc mã " + taskForm.getTaskId());
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -444,10 +446,10 @@ public class TaskController {
 	 * "Danh sách công việc được tìm"); } catch (Exception e) { log.error(e, e);
 	 * e.printStackTrace(); } return "listTask"; }
 	 */
-	
+
 	// Set a form validator
 	@InitBinder
-	protected void initBinder(WebDataBinder dataBinder) {        
+	protected void initBinder(WebDataBinder dataBinder) {
 		// Form mục tiêu
 		Object target = dataBinder.getTarget();
 		if (target == null) {
@@ -459,84 +461,80 @@ public class TaskController {
 	}
 
 	@RequestMapping(value = "/insertNewTask", method = RequestMethod.POST)
-	public String insertNewTask(Model model, @ModelAttribute("taskForm") @Validated Task task,
-			BindingResult result, final RedirectAttributes redirectAttributes) throws Exception {
+	public String insertNewTask(Model model, @ModelAttribute("taskForm") @Validated Task task, BindingResult result,
+			final RedirectAttributes redirectAttributes) throws Exception {
 		try {
-			//System.err.println("insert new task");
-			if(task.getDueDate() != null && task.getDueDate().length() > 10 ) {
+			// System.err.println("insert new task");
+			if (task.getDueDate() != null && task.getDueDate().length() > 10) {
 				if (result.hasErrors()) {
 					// System.err.println("co loi validate");
 					return this.addNewTask(model, task);
 				}
 			}
-			if(taskDAO.taskIsExits(task.getTaskName())) {
-				log.info("Da ton tai task name nay ");				
+			if (taskDAO.taskIsExits(task.getTaskName())) {
+				log.info("Da ton tai task name nay ");
 				if (result.hasErrors()) {
 					// System.err.println("co loi validate");
 					return this.addNewTask(model, task);
 				}
-			}else {			
-				//inject from Login account
+			} else {
+				// inject from Login account
 				String username = new LoginController().getPrincipal();
-			    log.info("Using usename =" + username +" in insert new task");
-			    if (username !=null && username.length() >0 ) {
-			    	UserLogin userLogin  =  userRoleDAO.getAUserLoginFull(username);
-			    	task.setCreatedBy(userLogin.getUserID());
-			    }
-				
-				Timestamp ts = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());			
-				
-				//System.out.println("Month: "+ task.getMonth() +", Year: " + task.getYear());
-				if(Integer.parseInt(task.getMonth()) < 10 && Integer.parseInt(task.getMonth()) > 0)
+				log.info("Using usename =" + username + " in insert new task");
+				if (username != null && username.length() > 0) {
+					UserLogin userLogin = userRoleDAO.getAUserLoginFull(username);
+					task.setCreatedBy(userLogin.getUserID());
+				}
+
+				Timestamp ts = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+
+				// System.out.println("Month: "+ task.getMonth() +", Year: " + task.getYear());
+				if (Integer.parseInt(task.getMonth()) < 10 && Integer.parseInt(task.getMonth()) > 0)
 					task.setPlannedFor(task.getYear() + "-0" + task.getMonth());
-				else if(Integer.parseInt(task.getMonth()) > 9)
+				else if (Integer.parseInt(task.getMonth()) > 9)
 					task.setPlannedFor(task.getYear() + "-" + task.getMonth());
 				task.setCreationDate(ts);
 				task.setUpdateTS(ts);
 				taskDAO.insertTask(task);
-				
+
 				// Add message to flash scope
 				redirectAttributes.addFlashAttribute("message", "Thêm thông tin công việc thành công!");
 				String owner = "Chưa giao cho ai";
-				if(task.getOwnedBy() > 0)
+				if (task.getOwnedBy() > 0)
 					owner = allEmployeesMap().get(task.getOwnedBy());
 				String createdName = "";
-				if(task.getCreatedBy() > 0)
+				if (task.getCreatedBy() > 0)
 					createdName = allEmployeesMap().get(task.getCreatedBy());
 				MimeMessage mimeMessage = mailSender.createMimeMessage();
 				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-				String htmlMsg = "Dear you, <br/>\n<br/>\n"
-						+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
-						+ "<b>Người làm: " + owner + " </b><br/>\n"
-						+ "Công việc thuộc phòng: " + task.getArea() + " <br/>\n " 
-						+ "Trạng thái: Tạo mới <br/>\n "
-						+ "Kế hoạch cho tháng: " + task.getPlannedFor() + " <br/>\n " 
-						+ "Độ ưu tiên: " + task.getPriority()
-						+ "<br/> <br/> \n" 
-						+ "<b>Người tạo " + createdName + " </b> <e-mail> lúc "	+ ts + " <br/>\n" 
-						+ "Mô tả nội dung công việc: "	+ task.getDescription()
-						+ "<br/> \n <br/> \n Trân trọng, <br/> \n"
-						+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" ;
+				String htmlMsg = "Dear you, <br/>\n<br/>\n" + "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+						+ "<b>Người làm: " + owner + " </b><br/>\n" + "Công việc thuộc phòng: " + task.getArea()
+						+ " <br/>\n " + "Trạng thái: Tạo mới <br/>\n " + "Kế hoạch cho tháng: " + task.getPlannedFor()
+						+ " <br/>\n " + "Độ ưu tiên: " + task.getPriority() + "<br/> <br/> \n" + "<b>Người tạo "
+						+ createdName + " </b> <e-mail> lúc " + ts + " <br/>\n" + "Mô tả nội dung công việc: "
+						+ task.getDescription() + "<br/> \n <br/> \n Trân trọng, <br/> \n"
+						+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n";
 				mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
-				List<String> mailList = taskDAO.getEmail(task.getOwnedBy() + "," + task.getVerifyBy() + "," + task.getSecondOwned());
-				
+				List<String> mailList = taskDAO
+						.getEmail(task.getOwnedBy() + "," + task.getVerifyBy() + "," + task.getSecondOwned());
+
 				for (int i = 0; i < mailList.size(); i++) {
 					String sendTo = mailList.get(i);
-					//System.err.println("chuan bi send mail");
+					// System.err.println("chuan bi send mail");
 					if (sendTo != null && sendTo.length() > 0) {
-						//System.err.println("send mail cho " + sendTo);
+						// System.err.println("send mail cho " + sendTo);
 						helper.setTo(sendTo);
 						helper.setSubject("[Tạo mới công việc] - " + task.getTaskName());
 						helper.setFrom("IDITaskNotReply");
 						mailSender.send(mimeMessage);
-						//System.err.println("sent");
+						// System.err.println("sent");
 					}
 				}
 			}
 		} catch (Exception e) {
 			log.error(e, e);
 		}
-		
+
 		return "redirect:/";
 	}
 
@@ -544,14 +542,14 @@ public class TaskController {
 	public String updateTask(Model model, @ModelAttribute("taskForm") @Validated TaskForm taskForm,
 			BindingResult result, final RedirectAttributes redirectAttributes) throws Exception {
 		try {
-			if(taskForm.getDueDate() != null && taskForm.getDueDate().length() > 10 ) {		
+			if (taskForm.getDueDate() != null && taskForm.getDueDate().length() > 10) {
 				model.addAttribute("message", "Vui lòng nhập ngày phải xong đúng định dạng, ví dụ như 06/24/2019");
-				System.err.println("sai dinh dang ngay fai xong");				
-			}else {			
+				System.err.println("sai dinh dang ngay fai xong");
+			} else {
 				// Xu ly cho task comment
 				TaskComment taskComment = new TaskComment();
 				int currentMaxCommentIndex = 0;
-				 UserLogin userLogin = new UserLogin();
+				UserLogin userLogin = new UserLogin();
 				if (taskForm.getContent() != null && taskForm.getContent().length() > 0) {
 					currentMaxCommentIndex = taskDAO.getMaxCommentIndex(taskForm.getTaskId());
 					currentMaxCommentIndex = currentMaxCommentIndex + 1;
@@ -559,19 +557,19 @@ public class TaskController {
 					taskComment.setTaskId(taskForm.getTaskId());
 					taskComment.setCommentedBy(taskForm.getCommentedBy());
 					taskComment.setContent(taskForm.getContent());
-	
-					//inject from Login account
+
+					// inject from Login account
 					String username = new LoginController().getPrincipal();
-				    log.info("Using usename = " + username +" in insert new task");
-				   
-				    if (username !=null && username.length() >0 ) {
-				    	userLogin  =  userRoleDAO.getAUserLoginFull(username);
-				    	taskComment.setCommentedBy(userLogin.getUserID());
-				    }
-					
+					log.info("Using usename = " + username + " in insert new task");
+
+					if (username != null && username.length() > 0) {
+						userLogin = userRoleDAO.getAUserLoginFull(username);
+						taskComment.setCommentedBy(userLogin.getUserID());
+					}
+
 					taskDAO.insertTaskComment(taskComment);
 				}
-	
+
 				// Xu ly cho task
 				Task task = new Task();
 				// get info from taskForm then put to task bean
@@ -591,12 +589,12 @@ public class TaskController {
 				task.setArea(taskForm.getArea()); // viec cua phong kt , cntt, ns, ...
 				task.setPriority(taskForm.getPriority());
 				task.setStatus(taskForm.getStatus());
-				if(taskForm.getPlannedFor() != null && taskForm.getPlannedFor().length() > 0)
+				if (taskForm.getPlannedFor() != null && taskForm.getPlannedFor().length() > 0)
 					task.setPlannedFor(taskForm.getPlannedFor());
 				else {
-					if(Integer.parseInt(taskForm.getMonth()) < 10 && Integer.parseInt(taskForm.getMonth()) > 0)
+					if (Integer.parseInt(taskForm.getMonth()) < 10 && Integer.parseInt(taskForm.getMonth()) > 0)
 						task.setPlannedFor(taskForm.getYear() + "-0" + taskForm.getMonth());
-					else if(Integer.parseInt(taskForm.getMonth()) > 9)
+					else if (Integer.parseInt(taskForm.getMonth()) > 9)
 						task.setPlannedFor(taskForm.getYear() + "-" + taskForm.getMonth());
 				}
 				task.setTimeSpent(taskForm.getTimeSpent());
@@ -605,132 +603,179 @@ public class TaskController {
 				task.setEstimateTimeType(taskForm.getEstimateTimeType());
 				task.setDescription(taskForm.getDescription());
 				task.setReviewComment(taskForm.getReviewComment());
-	
+
 				Task currentTask = new Task();
 				currentTask = taskDAO.getTask(taskForm.getTaskId());
-	
+
 				taskDAO.updateTask(task);
-	
+
 				// Gui mail notification
 				// Lấy ds email can gui
 				String owner = "Chưa giao cho ai";
-				if(taskForm.getOwnedBy() > 0)
+				if (taskForm.getOwnedBy() > 0)
 					owner = allEmployeesMap().get(taskForm.getOwnedBy());
-				
+
 				String updatedBy = "";
-				if(userLogin.getUserID() > 0)
+				if (userLogin.getUserID() > 0)
 					updatedBy = allEmployeesMap().get(userLogin.getUserID());
-				
+
 				List<String> mailList = taskDAO.getMailList(taskForm.getTaskId());
 				MimeMessage mimeMessage = mailSender.createMimeMessage();
 				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 				if (taskForm.getDescription().equalsIgnoreCase(currentTask.getDescription())) {
-					//System.err.println("Ko thay doi description");
-					//System.err.println(
-					//"Ko thay doi description:" + taskForm.getDescription() + "|" + currentTask.getDescription());
+					// System.err.println("Ko thay doi description");
+					// System.err.println(
+					// "Ko thay doi description:" + taskForm.getDescription() + "|" +
+					// currentTask.getDescription());
 					String htmlMsg = "";
-					if(taskForm.getReviewComment() != null && taskForm.getReviewComment().length() > 0) {
-						htmlMsg ="Dear you, <br/>\n <br/>\n"
-								+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
-								+ "<b>Người làm: " + owner + "</b><br/>\n"
-								+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
-								+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n " 
-								+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n " 
-								+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
-								+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
-								+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" 
-								+ "<b>Người cập nhật: " + updatedBy
-								+ "</b> <e-mail> lúc " + task.getUpdateTS() + " <br/>\n"
-								+ "<tabel border='1'>"
-								+ "<br/>\n<tr><td>Nhận xét/đánh giá của người giám sát: </td><td><textarea>" + taskForm.getReviewComment() 
-								+ "</textarea></td></tr><tr><td><br/>Nội dung thảo luận:<textarea> " + taskForm.getContent()
-								+ "</textarea><br/>\n<br/>Trân trọng, <br/> \n"
-								+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
-								+ " </td></tr></table><br/> \n";
-					}else {
-						htmlMsg = "Dear you, <br/>\n <br/>\n"
-								+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
-								+ "<b>Người làm: " + owner + " </b><br/>\n"
-								+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n "
-								+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "							
-								+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n "
-								+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
-								+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
-								+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" 
-								+ "<b>Người cập nhật: " + updatedBy
-								+ "</b><e-mail> lúc " +  task.getUpdateTS() + " <br/>\n"
-								+ "<tabel border='1'>"
-								+ "<tr><td>Nội dung thảo luận:<textarea> " + taskForm.getContent()
-								+ "</textarea><br/>\n<br/>Trân trọng, <br/> \n"
-								+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
-								+ "</td></tr></table><br/> \n";
+					if (taskForm.getReviewComment() != null && taskForm.getReviewComment().length() > 0) {
+						if(taskForm.getContent() != null && taskForm.getContent().length() > 0) 
+							htmlMsg = "Dear you, <br/>\n <br/>\n "
+									+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+									+ "<b>Người làm: " + owner + "</b><br/>\n "
+									+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n "
+									+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "
+									+ "Công việc thuộc phòng: " + taskForm.getArea() + " <br/>\n "
+									+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
+									+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor()	+ " <br/>\n "
+									+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n"
+									+ "<b>Người cập nhật: " + updatedBy + "</b> <e-mail> lúc " + task.getUpdateTS()	+ "<br/>\n<tr><td>"
+									+ "Nhận xét/đánh giá của người giám sát: </td><td><textarea disabled=\"true\">" + taskForm.getReviewComment() + "</textarea></td></tr><br/><tr><td>"
+									+ "Nội dung thảo luận:<textarea disabled=\"true\"> " + taskForm.getContent() + "</textarea><br/>\n<br/>"
+									+ "Trân trọng, <br/> \n"
+									+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n"
+									+ " </td></tr><br/> ";
+						else
+							htmlMsg = "Dear you, <br/>\n <br/>\n Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+									+ "<b>Người làm: " + owner + "</b><br/>\n "
+									+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n "
+									+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "
+									+ "Công việc thuộc phòng: " + taskForm.getArea() + " <br/>\n "
+									+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n " 
+									+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor()	+ " <br/>\n " 
+									+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n"
+									+ "<b>Người cập nhật: " + updatedBy + "</b> <e-mail> lúc " + task.getUpdateTS()	+ " <br/>\n "
+									+ "<br/>\n<tr><td>Nhận xét/đánh giá của người giám sát: </td><td><textarea disabled=\"true\">"	+ taskForm.getReviewComment()+ "</textarea></td></tr><tr><td><br/><br/>"
+									+ "Trân trọng, <br/> \n"
+									+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n"
+									+ " </td></tr><br/>";
+					} else {
+						if(taskForm.getContent() != null && taskForm.getContent().length() > 0) 
+							htmlMsg = "Dear you, <br/>\n <br/>\n" + "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+									+ "<b>Người làm: " + owner + " </b><br/>\n" 
+									+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n "
+									+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "
+									+ "Công việc thuộc phòng: " + taskForm.getArea() + " <br/>\n " 
+									+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n " 
+									+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor()	+ " <br/>\n " 
+									+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n"
+									+ "<b>Người cập nhật: " + updatedBy + "</b><e-mail> lúc " + task.getUpdateTS()	+ " <br/>\n <tr><td>"
+									+ "Nội dung thảo luận:<textarea disabled=\"true\"> " + taskForm.getContent() + "</textarea><br/>\n<br/>"
+									+ "Trân trọng, <br/> \n"
+									+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n"
+									+ "</td></tr><br/> \n";
+						else
+							htmlMsg = "Dear you, <br/>\n <br/>\n" + "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+									+ "<b>Người làm: " + owner + " </b><br/>\n" 
+									+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
+									+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "
+									+ "Công việc thuộc phòng: " + taskForm.getArea() + " <br/>\n " 
+									+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n " 
+									+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor()	+ " <br/>\n " 
+									+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n"
+									+ "<b>Người cập nhật: " + updatedBy + "</b><e-mail> lúc " + task.getUpdateTS()
+									+ "<br/>\n <tr><td><br/>Trân trọng, <br/> \n"
+									+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n"
+									+ "</td></tr><br/> ";
 					}
-	
+
 					mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
 					// mimeMessage.setContent(new String(htmlMsg.getBytes("UTF-8"),
 					// "UTF-8"),"text/html; charset=UTF-8");
 					// mimeMessage.setContent(htmlMsg, "text/html");
 				} else {
-					//System.err.println("Thay doi description");
+					// System.err.println("Thay doi description");
 					String htmlMsg = "";
-					if(taskForm.getReviewComment() != null && taskForm.getReviewComment().length() > 0) {
-						htmlMsg = "Dear you, <br/>\n <br/>\n"
-								+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n" 
-								+ "<b>Người làm: " + owner + " </b><br/>\n"
-								+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
-								+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "							
-								+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n " 
-								+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
-								+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n " 
-								+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n" 
-								+ "<b>Người cập nhật: " + updatedBy
-								+ "</b><e-mail> lúc " +  task.getUpdateTS() + " <br/>\n"
-								+ "<tabel border='1'><tr>" 
-								+ "<td>Mô tả công việc: </td><td><textarea> " + taskForm.getDescription()
-								+ " </textarea></td></tr><br/> \n "
-								+ "+ <tr><td>Nhận xét/đánh giá của người giám sát: " + taskForm.getReviewComment() 
-								+ "</td></tr><br/> \n "
-								+ "<tr><td>Nội dung thảo luận: <textarea>" + taskForm.getContent()
-								+ "</textarea><br/>\n<br/>\n Trân trọng, <br/> \n"
-								+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
-								+ "</td></tr></table><br/> \n";
-					}else {
-						htmlMsg = "Dear you, <br/>\n <br/>\n"
-								+ "Bạn nhận được mail này vì bạn có liên quan. <br/>\n" 
-								+ "<b>Người làm: " + owner + " </b><br/>\n"
-								+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
-								+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "							
-								+ "Công việc thuộc phòng: "	+ taskForm.getArea() + " <br/>\n " 
-								+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n "
-								+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor() + " <br/>\n "
-								+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n "
-								+ "<b>Người cập nhật: " + updatedBy
-								+ "</b> <e-mail> lúc " +  task.getUpdateTS() + " <br/>\n"
-								+ "<tabel border='1'>"
-								+ "<tr><td>Mô tả công việc: </td><td><textarea>" + taskForm.getDescription()
-								+ "</textarea></td></tr><br/>\n "
-								+ "<tr><td>Nội dung thảo luận: <textarea>" + taskForm.getContent()
-								+ "</textarea><br/>\n<br/>\n Trân trọng, <br/> \n"
-								+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n" 
-								+ "</td></tr></table><br/> \n";
-					}					
-					
+					if (taskForm.getReviewComment() != null && taskForm.getReviewComment().length() > 0) {
+						if(taskForm.getContent() != null && taskForm.getContent().length() > 0) 
+							htmlMsg = "Dear you, <br/>\n <br/>\n Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+									+ "<b>Người làm: " + owner + " </b><br/>\n" 
+									+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n"
+									+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "
+									+ "Công việc thuộc phòng: " + taskForm.getArea() + " <br/>\n " 
+									+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n " 
+									+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor()	+ " <br/>\n"
+									+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n"
+									+ "<b>Người cập nhật: " + updatedBy + "</b><e-mail> lúc " + task.getUpdateTS()	+ "<br/>\n <tr>" 
+									+ "<td>Mô tả công việc: </td><td><textarea disabled=\"true\"> "	+ taskForm.getDescription() + " </textarea></td></tr><br/> \n "
+									+ "<tr><td>Nhận xét/đánh giá của người giám sát: " + taskForm.getReviewComment()
+									+ "</td></tr><br/> \n <tr><td>"
+									+ "Nội dung thảo luận: </td> <td><textarea disabled=\"true\">"	+ taskForm.getContent() + "</textarea><br/>\n<br/>\n Trân trọng, <br/> \n"
+									+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n"
+									+ "</td></tr><br/>";
+						else
+							htmlMsg = "Dear you, <br/>\n <br/>\n" + "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+									+ "<b>Người làm: " + owner + " </b><br/>\n" 
+									+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n "
+									+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "
+									+ "Công việc thuộc phòng: " + taskForm.getArea() + " <br/>\n " 
+									+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n " 
+									+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor()	+ " <br/>\n " 
+									+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n"
+									+ "<b>Người cập nhật: " + updatedBy + "</b><e-mail> lúc " + task.getUpdateTS()	+ " <br/> \n <tr>" 
+									+ "<td>Mô tả công việc: </td><td><textarea disabled=\"true\"> "	+ taskForm.getDescription() + " </textarea></td></tr><br/> \n "
+									+ "<tr><td>Nhận xét/đánh giá của người giám sát: " + taskForm.getReviewComment()
+									+ "</td></tr><br/> \n <tr><td><br/>\n Trân trọng, <br/> \n"
+									+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n"
+									+ "</td></tr><br/>";
+					} else {
+						if(taskForm.getContent() != null && taskForm.getContent().length() > 0) 
+							htmlMsg = "Dear you, <br/>\n <br/>\n" + "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+									+ "<b>Người làm: " + owner + " </b><br/>\n" 
+									+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
+									+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "
+									+ "Công việc thuộc phòng: " + taskForm.getArea() + " <br/>\n " 
+									+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n " 
+									+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor()	+ " <br/>\n " 
+									+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n "
+									+ "<b>Người cập nhật: " + updatedBy + "</b> <e-mail> lúc " + task.getUpdateTS()
+									+ "<br/>\n <tr><td>Mô tả công việc: </td><td><textarea disabled=\"true\">"	+ taskForm.getDescription() + "</textarea></td></tr><br/>\n "
+									+ "<tr><td>Nội dung thảo luận: <textarea disabled=\"true\">" + taskForm.getContent() + "</textarea><br/>\n<br/>\n "
+									+ "Trân trọng, <br/> \n"
+									+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n"
+									+ "</td></tr><br/>";
+						else
+							htmlMsg = "Dear you, <br/>\n <br/>\n" + "Bạn nhận được mail này vì bạn có liên quan. <br/>\n"
+									+ "<b>Người làm: " + owner + " </b><br/>\n" 
+									+ "Mã công việc: " + taskForm.getTaskId() + " <br/>\n " 
+									+ "Tên công việc: " + taskForm.getTaskName() + " <br/>\n "
+									+ "Công việc thuộc phòng: " + taskForm.getArea() + " <br/>\n " 
+									+ "Trạng thái: " + taskForm.getStatus() + " <br/>\n " 
+									+ "Kế hoạch cho tháng: " + taskForm.getPlannedFor()	+ " <br/>\n " 
+									+ "Độ ưu tiên: " + taskForm.getPriority() + "<br/> \n "
+									+ "<b>Người cập nhật: " + updatedBy + "</b> <e-mail> lúc " + task.getUpdateTS()
+									+ "<br/>\n <tr><td>Mô tả công việc: </td><td><textarea disabled=\"true\">"	+ taskForm.getDescription() + "</textarea></td></tr><br/>\n "
+									+ "<tr><td><br/>\n Trân trọng, <br/> \n"
+									+ "Được gửi từ Phần mềm Quản lý công việc của IDIGroup <br/> \n"
+									+ "</td></tr><br/>";
+					}
+
 					mimeMessage.setContent(htmlMsg, "text/html; charset=UTF-8");
 					// mimeMessage.setContent(new String(htmlMsg.getBytes("UTF-8"),
 					// "UTF-8"),"text/html; charset=UTF-8");
 					// mimeMessage.setContent(htmlMsg, "text/html");
 				}
-				//System.err.println("chuan bi send mail " + mailList.size());
+				// System.err.println("chuan bi send mail " + mailList.size());
 				for (int i = 0; i < mailList.size(); i++) {
 					String sendTo = mailList.get(i);
-					//System.err.println("chuan bi send mail");
+					// System.err.println("chuan bi send mail");
 					if (sendTo != null && sendTo.length() > 0) {
-						//System.err.println("send mail cho " + sendTo);
+						// System.err.println("send mail cho " + sendTo);
 						helper.setTo(sendTo);
 						helper.setSubject("[Mã công việc: " + taskForm.getTaskId() + "] - " + taskForm.getTaskName());
 						helper.setFrom("IDITaskNotReply");
 						mailSender.send(mimeMessage);
-						//System.err.println("sent");
+						// System.err.println("sent");
 					}
 				}
 				// Add message to flash scope
@@ -744,7 +789,7 @@ public class TaskController {
 	}
 
 	@RequestMapping("/addNewTask")
-	public String addNewTask(Model model, Task task) throws Exception {		
+	public String addNewTask(Model model, Task task) throws Exception {
 		model.addAttribute("formTitle", "Thêm mới thông tin công việc");
 
 		// get list department
@@ -761,11 +806,11 @@ public class TaskController {
 
 	@RequestMapping("/editTask")
 	public String editTask(Model model, @RequestParam("taskId") int taskId, @RequestParam("tab") int tab,
-			@RequestParam(required=false, value="taskIds") String taskIds, 
+			@RequestParam(required = false, value = "taskIds") String taskIds,
 			@ModelAttribute("taskForm") @Validated TaskForm taskForm) throws Exception {
-		//System.err.println("current tab "+ tab);
+		// System.err.println("current tab "+ tab);
 		Task task = new Task();
-		//TaskForm taskForm = new TaskForm();
+		// TaskForm taskForm = new TaskForm();
 
 		if (taskId > 0) {
 			// get danh sach subscriber hien tai
@@ -775,7 +820,7 @@ public class TaskController {
 				model.addAttribute("subscriberList", employeesSub(sub));
 			else
 				model.addAttribute("subscriberList", null);
-			
+
 			// get toan bo sach sach nguoi co the lua chon
 			model.addAttribute("employeesListS", employeesForSub(sub));
 
@@ -788,14 +833,14 @@ public class TaskController {
 			// get info from task bean put to task form
 			taskForm.setTaskId(task.getTaskId());
 			taskForm.setTaskName(task.getTaskName());
-			
+
 			int createBy = task.getCreatedBy();
-			taskForm.setCreatedBy(createBy);			
-			Map<Integer, String> employeeMap = this.allEmployeesMap();			
-			if(createBy > 0) {
-					taskForm.setCreatedByName(employeeMap.get(createBy));
+			taskForm.setCreatedBy(createBy);
+			Map<Integer, String> employeeMap = this.allEmployeesMap();
+			if (createBy > 0) {
+				taskForm.setCreatedByName(employeeMap.get(createBy));
 			}
-			//taskForm.setCommentedByName(commentedByName);
+			// taskForm.setCommentedByName(commentedByName);
 			taskForm.setOwnedBy(task.getOwnedBy());
 			taskForm.setSecondOwned(task.getSecondOwned());
 			taskForm.setVerifyBy(task.getVerifyBy());
@@ -814,42 +859,42 @@ public class TaskController {
 			taskForm.setTimeSpentType(task.getTimeSpentType());
 			taskForm.setEstimate(task.getEstimate());
 			taskForm.setEstimateTimeType(task.getEstimateTimeType());
-			taskForm.setDescription(task.getDescription());			
+			taskForm.setDescription(task.getDescription());
 			taskForm.setReviewComment(task.getReviewComment());
-			
+
 			// Get danh sach cv lien quan
 			List<Task> listTaskRelated;
 			if (task.getRelated() != null && task.getRelated().length() > 0) {
-				//System.err.println(task.getRelated());
+				// System.err.println(task.getRelated());
 				listTaskRelated = taskDAO.getTasksRelated(task.getRelated());
 				model.addAttribute("tasksRelated", listTaskRelated);
 			} else {
 				model.addAttribute("tasksRelated", null);
 			}
-			
-			if(taskIds != null) {
-				//System.out.println("cv da chon: " + taskIds);
+
+			if (taskIds != null) {
+				// System.out.println("cv da chon: " + taskIds);
 				String relatedUpdated = null;
-				if(task.getRelated() != null && task.getRelated().length() > 0){
-					//da co cv lien quan + then 
+				if (task.getRelated() != null && task.getRelated().length() > 0) {
+					// da co cv lien quan + then
 					relatedUpdated = task.getRelated() + "," + taskIds;
-				}else {
-					//hien tai chua co cv lien quan + them
+				} else {
+					// hien tai chua co cv lien quan + them
 					relatedUpdated = taskIds;
 				}
-				//Update task related
-				//System.out.println("task related updated: " + relatedUpdated);
-				taskDAO.updateRelated(relatedUpdated, taskId);				
+				// Update task related
+				// System.out.println("task related updated: " + relatedUpdated);
+				taskDAO.updateRelated(relatedUpdated, taskId);
 
 				listTaskRelated = taskDAO.getTasksRelated(task.getRelated());
 				model.addAttribute("tasksRelated", listTaskRelated);
 
-				//Reset data for task related
+				// Reset data for task related
 				taskForm.setSearchValue("");
 				taskIds = null;
 				return "redirect:/editTask?tab=3&taskId=" + taskForm.getTaskId();
 			}
-			
+
 			// For comment
 			model.addAttribute("listComment", taskDAO.getTaskComments(taskId));
 
@@ -867,8 +912,9 @@ public class TaskController {
 			if (taskForm.getSearchValue() != null && taskForm.getSearchValue().length() > 0) {
 				log.info("Searching for: " + taskForm.getSearchValue());
 				// search = true;
-				if(task.getRelated()!= null )
-					list = taskDAO.getTasksBySearchForRelated(taskForm.getSearchValue(), task.getRelated() + "," + taskId);
+				if (task.getRelated() != null)
+					list = taskDAO.getTasksBySearchForRelated(taskForm.getSearchValue(),
+							task.getRelated() + "," + taskId);
 				else
 					list = taskDAO.getTasksBySearchForRelated(taskForm.getSearchValue(), String.valueOf(taskId));
 			}
@@ -879,7 +925,7 @@ public class TaskController {
 			model.addAttribute("tasksFound", list);
 			model.addAttribute("formTitle",
 					"Quản lý danh sách công việc liên quan đến công việc mã " + taskForm.getTaskId());
-			
+
 			if (tab == 1) {
 				model.addAttribute("active1", "active");
 				model.addAttribute("tabActive1", "tab-pane active");
@@ -901,18 +947,18 @@ public class TaskController {
 		}
 
 		return "updateTask";
-	}	
-	
+	}
+
 	@RequestMapping("/prepareReport")
 	public String prepareReport(Model model) throws Exception {
 		ReportForm taskReportForm = new ReportForm();
-		
-	    Date dNow = new Date( );
-	    SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
-	    String today = ft.format(dNow);
-	    //System.err.println(today);
-	    taskReportForm.setToDate(today);
-	   // model.addAttribute("today", today);
+
+		Date dNow = new Date();
+		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+		String today = ft.format(dNow);
+		// System.err.println(today);
+		taskReportForm.setToDate(today);
+		// model.addAttribute("today", today);
 		model.addAttribute("formTitle", "Lựa chọn thông tin báo cáo công việc");
 
 		// get list department
@@ -925,26 +971,30 @@ public class TaskController {
 
 		return "prepareReport";
 	}
-	
+
 	@RequestMapping(value = "/generateTaskReport", params = "chat")
-	public String generateTaskReportToChat(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm, HttpServletResponse response, HttpServletRequest request ) {		
-		
+	public String generateTaskReportToChat(Model model,
+			@ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm, HttpServletResponse response,
+			HttpServletRequest request) {
+
 		TaskSummay taskSummay = new TaskSummay();
 		try {
 			String fDate = taskReportForm.getFromDate();
-			String tDate = taskReportForm.getToDate();	
+			String tDate = taskReportForm.getToDate();
 			/*
 			 * int totalT = 0; int newT = 0; int inprogressT= 0; int stopedT = 0; int
 			 * invalidT = 0; int reviewingT = 0; int completedT = 0;
 			 */
 			String title = "Biểu đồ thông kê khối lượng công việc";
-			if(taskReportForm.getEmployeeId() > 0) {
+			if (taskReportForm.getEmployeeId() > 0) {
 				taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, taskReportForm.getEmployeeId());
 				title = title + " của " + allEmployeesMap().get(taskReportForm.getEmployeeId());
-				//listTaskSummary.add(taskSummay);
-				/*}else if(taskReportForm.getDepartment() != null && !taskReportForm.getDepartment().equalsIgnoreCase("all")) {
-				List<EmployeeInfo > employees = employees(taskReportForm.getDepartment());
-				
+				// listTaskSummary.add(taskSummay);
+				/*
+				 * }else if(taskReportForm.getDepartment() != null &&
+				 * !taskReportForm.getDepartment().equalsIgnoreCase("all")) { List<EmployeeInfo
+				 * > employees = employees(taskReportForm.getDepartment());
+				 * 
 				 * for(int i=0; i < employees.size(); i++) { EmployeeInfo e = new
 				 * EmployeeInfo(); e = employees.get(i); TaskSummay taskSummayD =
 				 * taskDAO.getSummaryTasksForReport(fDate, tDate, e.getEmployeeId()); totalT =
@@ -960,13 +1010,13 @@ public class TaskController {
 				 * taskSummay.setTaskinvalid(invalidT); taskSummay.setTaskReviewing(reviewingT);
 				 * taskSummay.setTaskCompleted(completedT);
 				 */
-			}else {
-				if(taskReportForm.getDepartment().equalsIgnoreCase("all")) {
+			} else {
+				if (taskReportForm.getDepartment().equalsIgnoreCase("all")) {
 					title = title + " của tất cả phòng ban";
-				}else {
+				} else {
 					title = title + " của phòng " + taskReportForm.getDepartment();
 				}
-					
+
 				taskSummay = taskDAO.getSummaryTasksForChat(fDate, tDate, taskReportForm.getDepartment());
 				/*
 				 * List<EmployeeInfo > employees = employees("all"); for(int i=0; i <
@@ -984,10 +1034,9 @@ public class TaskController {
 				 * taskSummay.setTaskInprogess(inprogressT); taskSummay.setTaskStoped(stopedT);
 				 * taskSummay.setTaskinvalid(invalidT); taskSummay.setTaskReviewing(reviewingT);
 				 * taskSummay.setTaskCompleted(completedT);
-				 */					
-			}	
-			
-			
+				 */
+			}
+
 			Map<String, Integer> values = new LinkedHashMap<String, Integer>();
 			log.info("Ve bieu thong ke khoi luong cong viec ");
 
@@ -997,21 +1046,20 @@ public class TaskController {
 			values.put("Tạm dừng: " + taskSummay.getTaskStoped(), taskSummay.getTaskStoped());
 			values.put("Chờ đánh giá: " + taskSummay.getTaskReviewing(), taskSummay.getTaskReviewing());
 			values.put("Đã xong: " + taskSummay.getTaskCompleted(), taskSummay.getTaskCompleted());
-	
+
 			// Create Dataset
 			CategoryDataset dataset = createDatasetI(values);
 
-			//lam ro/chi tiet tieu de bao cao cho ....
-			
-			
+			// lam ro/chi tiet tieu de bao cao cho ....
+
 			// Create chart
 			JFreeChart chart = ChartFactory.createBarChart(title, // Chart Title
-					"Từ ngày " + fDate + " đến ngày " + tDate , // Category axis
+					"Từ ngày " + fDate + " đến ngày " + tDate, // Category axis
 					"Số lượng công việc (Tổng số: " + taskSummay.getTaskTotal() + ")", // Value axis
 					dataset, PlotOrientation.VERTICAL, true, true, false);
 
 			try {
-				
+
 				String rootPath = request.getSession().getServletContext().getRealPath("/");
 				File dir = new File(rootPath + "charts/");
 				if (!dir.exists()) {
@@ -1021,50 +1069,52 @@ public class TaskController {
 				File file = new File(dir + "/tasksummaryChart.png");
 				model.addAttribute("chart", "/charts/tasksummaryChart.png");
 				ChartUtilities.saveChartAsJPEG(file, chart, 750, 400);
-				
+
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
-			
+
 			// get list department
 			Map<String, String> departmentMap = this.listDepartments();
 			model.addAttribute("departmentMap", departmentMap);
 			// get list employee id
 			model.addAttribute("employeesList", employeesMap("all"));
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
-		}		
+		}
 
-		model.addAttribute("taskReportForm", taskReportForm);		
+		model.addAttribute("taskReportForm", taskReportForm);
 		model.addAttribute("chat", 1);
 		model.addAttribute("taskSummay", taskSummay);
 		model.addAttribute("formTitle", "Biểu đồ thống kê khối lượng công việc");
 		return "prepareReport";
 	}
-	
+
 	@RequestMapping(value = "/generateTaskReport", params = "summary")
-	public String generateTaskReportSummary(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) {	
+	public String generateTaskReportSummary(Model model,
+			@ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) {
 		List<TaskSummay> listTaskSummary = new ArrayList<TaskSummay>();
 		try {
 			String eName = allEmployeesMap().get(taskReportForm.getEmployeeId());
 			taskReportForm.setEmployeeName(eName);
 			String fDate = taskReportForm.getFromDate();
-			String tDate = taskReportForm.getToDate();			
-			if(taskReportForm.getEmployeeId() > 0) {
+			String tDate = taskReportForm.getToDate();
+			if (taskReportForm.getEmployeeId() > 0) {
 				TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, taskReportForm.getEmployeeId());
 				listTaskSummary.add(taskSummay);
-			}else if(taskReportForm.getDepartment() != null && !taskReportForm.getDepartment().equalsIgnoreCase("all")) {
-				List<EmployeeInfo > employees = employees(taskReportForm.getDepartment());
-				for(int i=0; i < employees.size(); i++) {
+			} else if (taskReportForm.getDepartment() != null
+					&& !taskReportForm.getDepartment().equalsIgnoreCase("all")) {
+				List<EmployeeInfo> employees = employees(taskReportForm.getDepartment());
+				for (int i = 0; i < employees.size(); i++) {
 					EmployeeInfo e = new EmployeeInfo();
 					e = employees.get(i);
 					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, e.getEmployeeId());
 					listTaskSummary.add(taskSummay);
-				}			
-			}else {
-				List<EmployeeInfo > employees = employees("all");			
-				for(int i=0; i < employees.size(); i++) {
+				}
+			} else {
+				List<EmployeeInfo> employees = employees("all");
+				for (int i = 0; i < employees.size(); i++) {
 					EmployeeInfo e = new EmployeeInfo();
 					e = employees.get(i);
 					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, e.getEmployeeId());
@@ -1080,41 +1130,48 @@ public class TaskController {
 		model.addAttribute("formTitle", "Thông tin thống kê khối lượng công việc");
 		return "taskSummaryReport";
 	}
-	
+
 	@RequestMapping(value = "/generateTaskReport", params = "generateTaskReport")
-	public String generateTaskReport(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) {		
+	public String generateTaskReport(Model model,
+			@ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) throws Exception {
 		List<Task> list = null;
 		list = taskDAO.getTasksForReport(taskReportForm);
-		
-		//inject from Login account		
-		
-		/*
-		 * String username = new LoginController().getPrincipal();
-		 * log.info("Using usename =" + username + " in insert new task"); if (username
-		 * != null && username.length() > 0) { taskReportForm.setSender(username); }
-		 */		 
-		
+
+		// inject from Login account
+
+		LoginController lc = new LoginController(); 
+		if(lc.getPrincipal() != null) {
+			String username = lc.getPrincipal();
+			log.info("Using usename =" + username);
+			if (username != null && username.length() > 0) {
+				taskReportForm.setSender(username);
+			}
+		}		 
+
+		// get list employee email
+		//model.addAttribute("employeeEmailMap", employeesEmail("all"));
 		model.addAttribute("reportForm", taskReportForm);
 		model.addAttribute("tasks", list);
 		model.addAttribute("formTitle", "Thông tin báo cáo công việc");
 		return "taskReport";
 	}
-		
+
 	@RequestMapping("/sendReportForm")
-	public String sendReportForm(Model model,  @ModelAttribute("fDate") String fDate, @ModelAttribute("tDate") String tDate,
-			@ModelAttribute("eName") String eName, @ModelAttribute("dept") String dept, @ModelAttribute("eId") int eId) throws Exception {
+	public String sendReportForm(Model model, @ModelAttribute("fDate") String fDate,
+			@ModelAttribute("tDate") String tDate, @ModelAttribute("eName") String eName,
+			@ModelAttribute("dept") String dept, @ModelAttribute("eId") int eId) throws Exception {
 		SendReportForm sendReportForm = new SendReportForm();
-		if(eId > 0)
-			if(dept != null && !dept.equalsIgnoreCase("all"))
-				sendReportForm.setFileName("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept);
+		if (eId > 0)
+			if (dept != null && !dept.equalsIgnoreCase("all"))
+				sendReportForm.setFileName(
+						"BCCV từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept);
 			else
 				sendReportForm.setFileName("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của " + eName);
+		else if (dept != null && !dept.equalsIgnoreCase("all"))
+			sendReportForm.setFileName("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept);
 		else
-			if(dept != null && !dept.equalsIgnoreCase("all"))
-				sendReportForm.setFileName("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept);
-			else
-				sendReportForm.setFileName("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban");
-		
+			sendReportForm.setFileName("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban");
+
 		sendReportForm.setSubject(sendReportForm.getFileName() + " --> Gửi từ PM Quản lý công việc");
 		List<Task> list = null;
 		ReportForm taskReportForm = new ReportForm();
@@ -1123,82 +1180,113 @@ public class TaskController {
 		taskReportForm.setEmployeeId(eId);
 		taskReportForm.setDepartment(dept);
 		list = taskDAO.getTasksForReport(taskReportForm);
+		
+		// get list employee email
+		model.addAttribute("employeeEmailMap", employeesEmail("all"));
+		
 		model.addAttribute("tasks", list);
 		model.addAttribute("formTitle", "Gửi báo cáo công việc");
 		model.addAttribute("sendReportForm", sendReportForm);
 
 		return "sendReportForm";
 	}
-	
-	@RequestMapping(value ="/sendReport")
-	public String sendReport(Model model, @ModelAttribute("sendReportForm") @Validated SendReportForm sendReportForm, @RequestParam(required=false, value="formTitle") String formTitle) throws Exception {
+
+	@RequestMapping(value = "/sendReport")
+	public String sendReport(Model model, @ModelAttribute("sendReportForm") @Validated SendReportForm sendReportForm,
+			@RequestParam(required = false, value = "formTitle") String formTitle) throws Exception {
 		log.info("sending report");
 		try {
-			if(formTitle == null) {
-				
+			if (formTitle == null) {
+
 				MimeMessage mimeMessage = mailSender.createMimeMessage();
 				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 				String path = properties.getProperty("REPORT_PATH");
-				
+
 				File file = new File(path + sendReportForm.getFileName() + ".pdf");
-			//	log.info("sending report: " + path +"|" + sendReportForm.getSubject()+"|"+sendReportForm.getFileName());
-				if(file.exists()) {
-					
+				// log.info("sending report: " + path +"|" +
+				// sendReportForm.getSubject()+"|"+sendReportForm.getFileName());
+				if (file.exists()) {
+
 					mimeMessage.setFrom("IDITask-NotReply");
 					helper.setSubject(sendReportForm.getSubject());
 					mimeMessage.setContent(sendReportForm.getFileName(), "text/html; charset=UTF-8");
-					
+
 					Multipart multipart = new MimeMultipart();
 					BodyPart attach = new MimeBodyPart();
 					DataSource source = new FileDataSource(path + sendReportForm.getFileName() + ".pdf");
 					attach.setDataHandler(new DataHandler(source));
 					attach.setFileName(path + sendReportForm.getFileName() + ".pdf");
-					
+
 					multipart.addBodyPart(attach);
 					BodyPart content = new MimeBodyPart();
 					content.setContent("Báo cáo công việc", "text/html; charset=UTF-8");
 					multipart.addBodyPart(content);
-					
+
 					mimeMessage.setContent(multipart, "text/html; charset=UTF-8");
-					
+
 					StringTokenizer st = new StringTokenizer(sendReportForm.getSendTo(), ";");
-					while(st.hasMoreTokens()) {
-						
-						String sendTo = st.nextToken(";");
-						if(sendTo != null && sendTo.length() > 0 && sendTo.contains("@") && sendTo.contains(".com")) {
+					while (st.hasMoreTokens()) {
+
+						String sendTo = st.nextToken(",");
+						if (sendTo != null && sendTo.length() > 0 && sendTo.contains("@") && sendTo.contains(".com")) {
 							log.info("send report cho " + sendTo);
-							helper.setTo(sendTo);			
-							
+							helper.setTo(sendTo);
+
 							mailSender.send(mimeMessage);
-						//System.err.println("sent");
-						}			
+							// System.err.println("sent");
+						}
 					}
-					//model.addAttribute("isReload","Yes");
+					// model.addAttribute("isReload","Yes");
 					model.addAttribute("formTitle", "Gửi báo cáo công việc");
 					return "redirect:/sendReport";
-				}else {
+				} else {
 					model.addAttribute("formTitle", "Vui lòng export file trước khi gửi báo cáo công việc");
 				}
-			}else {
+			} else {
 				log.info("try to sending report again...");
 				model.addAttribute("formTitle", "Gửi báo cáo công việc");
-			}	
-		}catch(Exception e) {
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "sentReport";
 	}
 	
+	private boolean isTaskId = false;
+	private boolean isEstimateTime = false;
+	private boolean isUpdatedTime = false;
+	private boolean isdueDate = false;
+
 	@RequestMapping("/exportToPDF")
-	public String getPDF(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) throws Exception {
+	public String getPDF(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm)
+			throws Exception {
 		try {
-						
-			//Document document = new Document();
+
+			// Document document = new Document();
 			Document document = new Document(PageSize.A4.rotate());
 			String path = properties.getProperty("REPORT_PATH");
 			File dir = new File(path);
 			if (!dir.exists()) {
 				dir.mkdirs();
+			}
+			//System.err.println("iD check: " + taskReportForm.getIdCheck());
+			//System.err.println("estimateCheck: " + taskReportForm.getEstimateCheck());
+			int columnAdded = 0;
+			if(taskReportForm.getIdCheck() != null && taskReportForm.getIdCheck().equalsIgnoreCase("Y")) {
+				columnAdded = columnAdded + 1;
+				isTaskId = true;
+			}	
+			if(taskReportForm.getEstimateCheck() != null && taskReportForm.getEstimateCheck().equalsIgnoreCase("Y")) {
+				columnAdded = columnAdded + 1;
+				isEstimateTime = true;
+			}	
+			if(taskReportForm.getUpdateTimeCheck() != null && taskReportForm.getUpdateTimeCheck().equalsIgnoreCase("Y")) {
+				columnAdded = columnAdded + 1;
+				isUpdatedTime = true;
+			}	
+			if(taskReportForm.getDueDateCheck() != null && taskReportForm.getDueDateCheck().equalsIgnoreCase("Y")) {
+				columnAdded = columnAdded + 1;
+				isdueDate = true;
 			}
 			
 			int eId = taskReportForm.getEmployeeId();
@@ -1208,59 +1296,61 @@ public class TaskController {
 			String eName = allEmployeesMap().get(taskReportForm.getEmployeeId());
 			taskReportForm.setEmployeeName(eName);
 			String fileName = "";
-			if(eId > 0 && !dept.equalsIgnoreCase("all"))
-				fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
-				+ " của " + eName + " phòng " + dept + ".pdf";
+			if (eId > 0 && !dept.equalsIgnoreCase("all"))
+				fileName = "BCCV từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept + ".pdf";
 			else if (eId < 1 && !dept.equalsIgnoreCase("all"))
-				fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
-				+ " của phòng " + dept + ".pdf";
+				fileName = "BCCV từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept + ".pdf";
 			else if (eId > 0 && dept.equalsIgnoreCase("all"))
-				fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate 
-				+ " của " + eName + ".pdf";
+				fileName = "BCCV từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + ".pdf";
 			else
-				fileName = "BCCV từ ngày "+ fDate + " đến ngày " + tDate + " của tất cả các phòng ban.pdf";
-			
+				fileName = "BCCV từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban.pdf";
+
 			PdfWriter.getInstance(document, new FileOutputStream(dir + "/" + fileName));
 			BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-			//BaseFont bfB = BaseFont.createFont(fontBFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-		    Font fontB = new Font(bf,18);
-		   // Font fontB14 = new Font(bfB,14);
-		    Font font = new Font(bf,14);
+			// BaseFont bfB = BaseFont.createFont(fontBFile.getAbsolutePath(),
+			// BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+			Font fontB = new Font(bf, 18);
+			// Font fontB14 = new Font(bfB,14);
+			Font font = new Font(bf, 14);
 			document.open();
-			//Font font = FontFactory.getFont(FontFactory.TIMES_ROMAN, "UTF-8");
-			//Chunk chunk = new Chunk(fileName, font);		 
-			//document.add(chunk);
-			
-			PdfPTable table = new PdfPTable(7);
+			// Font font = FontFactory.getFont(FontFactory.TIMES_ROMAN, "UTF-8");
+			// Chunk chunk = new Chunk(fileName, font);
+			// document.add(chunk);
+
+			PdfPTable table = new PdfPTable(5 + columnAdded);
 			addTableHeader(table, font);
 			List<Task> list = null;
 			list = taskDAO.getTasksForReport(taskReportForm);
-			
-			//tinh tong thoi gian da lam va estimate
+
+			// tinh tong thoi gian da lam va estimate
 			float timeEstimateTotal = 0;
 			float timeSpentTotal = 0;
-			for(int i=0;i<list.size();i++) {
+			for (int i = 0; i < list.size(); i++) {
 				Task taskDTO = new Task();
 				taskDTO = list.get(i);
-				if(taskDTO.getTimeSpent() != null && taskDTO.getTimeSpent().length() > 0) {
-					if(taskDTO.getTimeSpentType().equalsIgnoreCase("w"))
-						timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent())*Float.valueOf(properties.getProperty("w"));
-					else if(taskDTO.getTimeSpentType().equalsIgnoreCase("d"))
-						timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent())*Float.valueOf(properties.getProperty("d"));
-					else if(taskDTO.getTimeSpentType().equalsIgnoreCase("m"))
-						timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent())/60;
+				if (taskDTO.getTimeSpent() != null && taskDTO.getTimeSpent().length() > 0) {
+					if (taskDTO.getTimeSpentType().equalsIgnoreCase("w"))
+						timeSpentTotal = timeSpentTotal
+								+ Float.valueOf(taskDTO.getTimeSpent()) * Float.valueOf(properties.getProperty("w"));
+					else if (taskDTO.getTimeSpentType().equalsIgnoreCase("d"))
+						timeSpentTotal = timeSpentTotal
+								+ Float.valueOf(taskDTO.getTimeSpent()) * Float.valueOf(properties.getProperty("d"));
+					else if (taskDTO.getTimeSpentType().equalsIgnoreCase("m"))
+						timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent()) / 60;
 					else
 						timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent());
 				}
-				if(taskDTO.getEstimate() != null && taskDTO.getEstimate().length() > 0) {
-					if(taskDTO.getEstimateTimeType().equalsIgnoreCase("w"))
-						timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate())*Float.valueOf(properties.getProperty("w"));
-					else if(taskDTO.getEstimateTimeType().equalsIgnoreCase("d"))
-						timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate())*Float.valueOf(properties.getProperty("d"));
-					else if(taskDTO.getEstimateTimeType().equalsIgnoreCase("m"))
-						timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate())/60;
+				if (taskDTO.getEstimate() != null && taskDTO.getEstimate().length() > 0) {
+					if (taskDTO.getEstimateTimeType().equalsIgnoreCase("w"))
+						timeEstimateTotal = timeEstimateTotal
+								+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("w"));
+					else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("d"))
+						timeEstimateTotal = timeEstimateTotal
+								+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("d"));
+					else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("m"))
+						timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate()) / 60;
 					else
-						timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate());					 
+						timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate());
 				}
 			}
 			BigDecimal s = new BigDecimal(timeSpentTotal);
@@ -1268,87 +1358,156 @@ public class TaskController {
 
 			BigDecimal e = new BigDecimal(timeEstimateTotal);
 			BigDecimal estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
-			
-			float percent = (timeSpentTotal/timeEstimateTotal)*100;
+
+			float percent = (timeSpentTotal / timeEstimateTotal) * 100;
 			BigDecimal p = new BigDecimal(percent);
 			BigDecimal percentCurrent = p.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-			
-			//System.err.println("time estimate:= " + estimateTT + "/time spent: " + spentTT);
-			
+
+			// System.err.println("time estimate:= " + estimateTT + "/time spent: " +
+			// spentTT);
+
 			addRows(table, list);
-			//addCustomRows(table);
+			// addCustomRows(table);
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = new Date();
 			String currentDate = dateFormat.format(date);
-			document.add(new Paragraph("                     " + fileName.substring(0, fileName.length() - 4), fontB));		
+			document.add(new Paragraph("                     " + fileName.substring(0, fileName.length() - 4), fontB));
 			document.add(new Paragraph("                     ", font));
-			document.add(table);		
+			document.add(table);
 			document.add(new Paragraph("                     ", font));
-			document.add(new Paragraph("                       Tổng thời gian thực tế đã làm / Tổng thời gian ước lượng: " + spentTT + " giờ / " + estimateTT + " giờ, tương đương " +  percentCurrent + "%", font));
+			document.add(
+					new Paragraph(
+							"                       Tổng thời gian thực tế đã làm / Tổng thời gian ước lượng: "
+									+ spentTT + " giờ / " + estimateTT + " giờ, tương đương " + percentCurrent + "%",
+							font));
 			document.add(new Paragraph("                       Ý kiến/ Đề xuất: " + taskReportForm.getComment(), font));
 			document.add(new Paragraph("                       ", font));
 			document.add(new Paragraph("                       ", font));
 			document.add(new Paragraph("                       ", font));
-			document.add(new Paragraph("                                                                                                                                  Ngày tạo báo cáo: " + currentDate, font));
-			document.add(new Paragraph("                                                                                                                                  Người báo cáo ", font));
+			document.add(new Paragraph(
+					"                                                                                                                                  Ngày tạo báo cáo: "
+							+ currentDate,
+					font));
+			document.add(new Paragraph(
+					"                                                                                                                                  Người báo cáo ",
+					font));
 			document.add(new Paragraph("                       ", font));
-			document.add(new Paragraph("                                                                                                                                  " + taskReportForm.getSender(), font));
-			
+			document.add(new Paragraph(
+					"                                                                                                                                  "
+							+ taskReportForm.getSender(),
+					font));
+
 			document.close();
-			model.addAttribute("reportForm", taskReportForm); 
+			model.addAttribute("reportForm", taskReportForm);
 			model.addAttribute("path", path);
 			model.addAttribute("formTitle", "Export báo cáo công việc");
-		}catch(Exception e) {			
+		} catch (Exception e) {
 			model.addAttribute("isOpen", "Yes");
 			e.printStackTrace();
 		}
 		return "taskExport";
 	}
 
-	private void addTableHeader(PdfPTable table, Font font) throws Exception {//throws DocumentException, IOException {
-	    Stream.of("Tên việc", "Người làm", "Trạng thái", "Thời gian ước lượng", "Thời gian đã làm", "Ngày phải xong", "Nhận xét/đánh giá")
-	      .forEach(columnTitle -> {
-	        PdfPCell header = new PdfPCell();
-	        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-	        header.setPhrase(new Phrase(columnTitle, font));	       
-	        table.addCell(header);
-	    });
+	private void addTableHeader(PdfPTable table, Font font) throws Exception {
+		/*
+		 * Stream.of("Tên việc", "Người làm", "Trạng thái", "Thời gian ước lượng",
+		 * "Thời gian đã làm", "Ngày phải xong",
+		 * "Nhận xét/đánh giá").forEach(columnTitle -> { PdfPCell header = new
+		 * PdfPCell(); header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		 * header.setPhrase(new Phrase(columnTitle, font)); table.addCell(header); });
+		 */
+		
+		//Stream.of("Tên việc", "Người làm", "Trạng thái", "Thời gian ước lượng", "Thời gian đã làm", "Ngày phải xong",
+		//		"Nhận xét/đánh giá").forEach(columnTitle -> {
+		PdfPCell header = new PdfPCell();		
+		if(isTaskId) {			
+			header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+			header.setPhrase(new Phrase("Mã việc", font));
+			table.addCell(header);
+		}			
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Tên việc", font));
+		table.addCell(header);
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Người làm", font));
+		table.addCell(header);
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Trạng thái", font));
+		table.addCell(header);
+		
+		if(isEstimateTime) {
+			header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+			header.setPhrase(new Phrase("Thời gian ước lượng", font));
+			table.addCell(header);
+		}
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Thời gian đã làm", font));
+		table.addCell(header);
+		
+		if(isUpdatedTime) {
+			header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+			header.setPhrase(new Phrase("Cập nhật gần nhất", font));
+			table.addCell(header);
+		}					
+		
+		if(isdueDate) {
+			header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+			header.setPhrase(new Phrase("Ngày phải xong", font));
+			table.addCell(header);
+		}			
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Nhận xét/đánh giá", font));
+		table.addCell(header);
+		//		});
 	}
-	
+
 	private void addRows(PdfPTable table, List<Task> tasks) throws DocumentException, IOException {
 		BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-	    Font font = new Font(bf,12); 
-	 
-	    //SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");        
-        
-		for(int i = 0; i < tasks.size(); i++) {
+		Font font = new Font(bf, 12);
+
+		// SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+
+		for (int i = 0; i < tasks.size(); i++) {
 			Task task = new Task();
-			task = (Task)tasks.get(i);
-			
-			//table.addCell(String.valueOf(task.getTaskId()));
-		    table.addCell(new Paragraph(task.getTaskName(), font));
-		    table.addCell(new Paragraph(task.getOwnerName(), font));
-		    table.addCell(new Paragraph(task.getStatus(), font));
-		    if(task.getEstimate() != null)
-		    	if(task.getEstimateTimeType() != null)
-		    		table.addCell(new Paragraph(task.getEstimate() + " " + timeStypeMap().get(task.getEstimateTimeType()), font));
-		    	else 
-		    		table.addCell(new Paragraph(task.getEstimate() + " phút", font));
-		    else
-		    	table.addCell(new Paragraph("0 phút ", font));
-		    if(task.getTimeSpent() != null)
-		    	if(task.getTimeSpentType() != null)
-		    		table.addCell(new Paragraph(task.getTimeSpent() + " " + timeStypeMap().get(task.getTimeSpentType()), font));
-		    	else
-		    		table.addCell(new Paragraph(task.getTimeSpent() + " phút", font));
-		    else
-		    	table.addCell(new Paragraph("0 phút", font));
-		   // table.addCell(String.valueOf(task.getUpdateTS()));
-		    table.addCell(task.getDueDate());	
-		    table.addCell(new Paragraph(task.getReviewComment(), font));
-		}	        
+			task = (Task) tasks.get(i);
+			if(isTaskId)
+				table.addCell(String.valueOf(task.getTaskId()));
+			table.addCell(new Paragraph(task.getTaskName(), font));
+			if(task.getOwnerName() != null && task.getOwnerName().length() > 0)
+				table.addCell(new Paragraph(task.getOwnerName(), font));
+			else
+				table.addCell(new Paragraph("Chưa giao cho ai", font));
+			table.addCell(new Paragraph(task.getStatus(), font));
+			if(isEstimateTime) {
+				if (task.getEstimate() != null)
+					if (task.getEstimateTimeType() != null)
+						table.addCell(new Paragraph(
+								task.getEstimate() + " " + timeStypeMap().get(task.getEstimateTimeType()), font));
+					else
+						table.addCell(new Paragraph(task.getEstimate() + " phút", font));
+				else
+					table.addCell(new Paragraph("0 phút ", font));
+			}
+			if (task.getTimeSpent() != null)
+				if (task.getTimeSpentType() != null)
+					table.addCell(new Paragraph(task.getTimeSpent() + " " + timeStypeMap().get(task.getTimeSpentType()),
+							font));
+				else
+					table.addCell(new Paragraph(task.getTimeSpent() + " phút", font));
+			else
+				table.addCell(new Paragraph("0 phút", font));
+			if(isUpdatedTime)
+				table.addCell(String.valueOf(task.getUpdateTS()));
+			if(isdueDate)
+				table.addCell(task.getDueDate());
+			table.addCell(new Paragraph(task.getReviewComment(), font));
+		}
 	}
-	
+
 	private List<EmployeeInfo> employeesForSub(String subscriber) throws Exception {
 		List<EmployeeInfo> list = null;
 		list = employeeDAO.getEmployeesForSub(subscriber);
@@ -1360,10 +1519,10 @@ public class TaskController {
 		list = employeeDAO.getEmployeesSub(subscriber);
 		return list;
 	}
-	
+
 	private List<EmployeeInfo> employeesOwner() throws Exception {
-		List<EmployeeInfo> list = null;		
-		list = employeeDAO.getListOwner();		
+		List<EmployeeInfo> list = null;
+		list = employeeDAO.getListOwner();
 
 		return list;
 	}
@@ -1377,22 +1536,40 @@ public class TaskController {
 
 		return list;
 	}
-	
+
+	private Map<String, String> employeesEmail(String department) throws Exception {
+		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
+		List<EmployeeInfo> list = null;
+		if (!department.equalsIgnoreCase("all"))
+			list = employeeDAO.getEmployeesByDepartment(department);
+		else
+			list = employeeDAO.getEmployees();
+
+		EmployeeInfo employee = new EmployeeInfo();
+		for (int i = 0; i < list.size(); i++) {
+			employee = (EmployeeInfo) list.get(i);
+			String email = employee.getEmail();
+			employeeMap.put(email, employee.getFullName() + ": " + email);
+		}
+
+		return employeeMap;
+	}
+
 	private Map<Integer, String> allEmployeesMap() throws Exception {
 		Map<Integer, String> employeeMap = new LinkedHashMap<Integer, String>();
 		List<EmployeeInfo> list = null;
 		list = employeeDAO.getAllEmployees();
-		
+
 		EmployeeInfo employee = new EmployeeInfo();
 		for (int i = 0; i < list.size(); i++) {
 			employee = (EmployeeInfo) list.get(i);
 			Integer id = employee.getEmployeeId();
 			employeeMap.put(id, employee.getFullName());
 		}
-		
+
 		return employeeMap;
 	}
-	
+
 	private Map<String, String> employeesMap(String department) throws Exception {
 		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
 		List<EmployeeInfo> list = null;
@@ -1400,15 +1577,14 @@ public class TaskController {
 			list = employeeDAO.getEmployeesByDepartment(department);
 		else
 			list = employeeDAO.getEmployees();
-		
+
 		EmployeeInfo employee = new EmployeeInfo();
 		for (int i = 0; i < list.size(); i++) {
 			employee = (EmployeeInfo) list.get(i);
 			Integer id = employee.getEmployeeId();
-			employeeMap.put(id.toString(),
-					"Mã NV " + id + ", " + employee.getFullName());
+			employeeMap.put(id.toString(), "Mã NV " + id + ", " + employee.getFullName());
 		}
-		
+
 		return employeeMap;
 	}
 
@@ -1429,7 +1605,6 @@ public class TaskController {
 		return departmentMap;
 	}
 
-
 	public static Map<String, String> timeStypeMap() {
 		Map<String, String> timeStype = new LinkedHashMap<String, String>();
 		timeStype.put("m", "Phút");
@@ -1438,7 +1613,7 @@ public class TaskController {
 		timeStype.put("w", "Tuần");
 		return timeStype;
 	}
-	
+
 	private CategoryDataset createDatasetI(Map<String, Integer> values) {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -1451,7 +1626,8 @@ public class TaskController {
 
 	// For Ajax
 	@RequestMapping("/selection")
-	public @ResponseBody List<EmployeeInfo> employeesByDepartment(@RequestParam("department") String department) throws Exception {
+	public @ResponseBody List<EmployeeInfo> employeesByDepartment(@RequestParam("department") String department)
+			throws Exception {
 		System.out.println("AJax");
 		List<EmployeeInfo> list = null;
 		if (!department.equalsIgnoreCase("all"))
@@ -1473,14 +1649,14 @@ public class TaskController {
 
 		return list;
 	}
-	
-/*	@RequestMapping("/lookingTask")
-	public @ResponseBody List<Task> getTaskForAddingRelated(@RequestParam("relatedAdding") String relatedAdding) throws Exception {
-		System.err.println("AJax");
-		List<Task> list = null;
-		if (relatedAdding != null && relatedAdding.length() > 0)
-			list = taskDAO.getTasksBySearch(relatedAdding);
 
-		return list;
-	}*/
+	/*
+	 * @RequestMapping("/lookingTask") public @ResponseBody List<Task>
+	 * getTaskForAddingRelated(@RequestParam("relatedAdding") String relatedAdding)
+	 * throws Exception { System.err.println("AJax"); List<Task> list = null; if
+	 * (relatedAdding != null && relatedAdding.length() > 0) list =
+	 * taskDAO.getTasksBySearch(relatedAdding);
+	 * 
+	 * return list; }
+	 */
 }

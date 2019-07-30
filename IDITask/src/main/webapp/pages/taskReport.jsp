@@ -28,6 +28,15 @@ tr:nth-child(even) {
 } */
 </style>
 </head>
+<script src="${url}/public/js/bootstrap-combobox.js"></script>
+<script>
+    // var $x = jQuery.noConflict(true);
+    //alert($x.fn.jquery);
+/* 	$(function() {		
+		$('#sender').combobox();		
+	});  */	
+ 
+</script> 
 <body>
 	<a href="${url}/prepareReport"><button class="btn btn-primary btn-sm">Lựa chọn lại thông tin cần báo cáo</button></a>
 <%-- 	<c:if test="${tasks.size() > 0}">
@@ -50,26 +59,31 @@ tr:nth-child(even) {
 			<form:hidden path="employeeId" />
 			<form:hidden path="employeeName" />
 			<tr>
-				<td width="15%">Người báo cáo:</td>
+				<td width="15%">&nbsp; Người báo cáo:</td>
 				<td width="85%"><form:input path="sender" type="text" class="form-control animated" /></td>			
+<%-- 				<td>						
+					<form:select path="sender" class="form-control animated">
+						<form:options items="${employeeEmailMap}" />
+					</form:select>
+				</td> --%>	
 			</tr>
 			<tr>
-				<td>Ý kiến/ Đề xuất:</td>
+				<td>&nbsp; Ý kiến/ Đề xuất:</td>
 				<td><form:input path="comment" type="text" class="form-control animated" /></td>
 			</tr>
 		</table>
-	</form:form>
-	<br/>
+		<br/>
+	
 	<table class="table table-striped">
 			<tr>
-				<th nowrap="nowrap">Mã việc</th>
+				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Mã việc &nbsp;<form:checkbox path="idCheck" class="form-check-input" value="Y" id="idCheck"/></th>
 				<th>Tên việc</th>
 				<th>Người làm</th>
 				<th nowrap="nowrap">Trạng thái</th>			
-				<th nowrap="nowrap">Thời gian ước lượng</th>
+				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Thời gian ước lượng  &nbsp;<form:checkbox path="estimateCheck" value="Y" class="form-check-input" id="estimateCheck"/></th>
 				<th nowrap="nowrap">Thời gian đã làm</th>	
-				<th nowrap="nowrap">Cập nhật gần nhất</th>
-				<th nowrap="nowrap">Ngày phải xong</th>
+				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Cập nhật gần nhất  &nbsp;<form:checkbox path="updateTimeCheck" value="Y" class="form-check-input" id="updateTimeCheck"/></th>
+				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Ngày phải xong  &nbsp;<form:checkbox path="dueDateCheck" value="Y" class="form-check-input" id="dueDateCheck"/></th>
 				<th nowrap="nowrap">Nhận xét đánh giá</th>
 			</tr>
 			<c:forEach var="task" items="${tasks}">
@@ -92,7 +106,7 @@ tr:nth-child(even) {
 				</tr>
 			</c:forEach>
 		</table>
-
+	</form:form>
 		<c:if test="${tasks.size() < 1}">
 			<div class="alert alert-success">Không có công việc nào được làm trong thời gian và điều kiện như trên!
 			Vui lòng chọn lại thông tin ...
