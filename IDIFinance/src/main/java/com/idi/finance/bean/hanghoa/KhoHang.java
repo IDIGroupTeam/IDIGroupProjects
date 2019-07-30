@@ -5,7 +5,7 @@ import java.util.List;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class KhoHang {
-	public static final int MA_KHO_MAC_DINH = 1;
+	public static final int MA_KHO_MAC_DINH = 0;
 
 	private int maKho;
 	private String kyHieuKho;

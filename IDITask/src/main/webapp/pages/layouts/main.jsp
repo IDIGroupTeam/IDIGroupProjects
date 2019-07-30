@@ -28,10 +28,7 @@
 
 	<div class="container-fluid">
 		<div class="row content">
-			<div class="col-sm-2 sidenav" style="padding: 1px;">
-				<%@ include file="navigator.jsp"%>
-			</div>
-			<div class="col-sm-10" style="padding: 1px;" >
+			<div style="padding: 1px;" >
 				<div class="panel panel-default">
 					<div class="panel-heading" >
 						<h5><b>${formTitle}</b></h5>

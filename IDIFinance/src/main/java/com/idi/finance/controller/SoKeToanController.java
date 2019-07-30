@@ -539,7 +539,7 @@ public class SoKeToanController {
 		}
 	}
 
-	@RequestMapping("/soketoan/sothcongno")
+	@RequestMapping("/soketoan/socongno/tonghop")
 	public String sktSoTongHopCongNo(@ModelAttribute("mainFinanceForm") @Validated TkSoKeToanForm form,
 			BindingResult result, Model model) {
 		try {
@@ -620,10 +620,10 @@ public class SoKeToanController {
 						form.getKyKeToan().getMaKyKt());
 
 				// Tính nợ/có đầu kỳ của tất cả các đối tượng
-				List<DuLieuKeToan> noCoDauKyDs = soKeToanDAO.danhSachTongHopCongNo(form.getTaiKhoan(), form.getDau(),
-						Utils.prevPeriod(kyKt).getCuoi());
+				List<DuLieuKeToan> noCoDauKyDs = soKeToanDAO.danhSachTongHopCongNo(form.getTaiKhoan(),
+						form.getKyKeToan().getBatDau(), Utils.prevPeriod(kyKt).getCuoi());
 				List<DuLieuKeToan> noCoDauKyKtthDs = soKeToanDAO.danhSachTongHopCongNoKtth(form.getTaiKhoan(),
-						form.getDau(), Utils.prevPeriod(kyKt).getCuoi());
+						form.getKyKeToan().getBatDau(), Utils.prevPeriod(kyKt).getCuoi());
 				if (noCoDauKyDs != null) {
 					if (noCoDauKyKtthDs != null) {
 						Iterator<DuLieuKeToan> noCoDauKyKtthIter = noCoDauKyKtthDs.iterator();
@@ -635,7 +635,7 @@ public class SoKeToanController {
 								DuLieuKeToan duLieuKeToanTmpl = noCoDauKyDs.get(pos);
 								duLieuKeToanTmpl.tron(duLieuKeToanKtthTmpl);
 							} else {
-								noCoDauKyDs.add(duLieuKeToan);
+								noCoDauKyDs.add(duLieuKeToanKtthTmpl);
 							}
 						}
 					}
@@ -789,7 +789,7 @@ public class SoKeToanController {
 		}
 	}
 
-	@RequestMapping(value = "/soketoan/soctcongno/{maKyKt}/{maTk}/{loaiDt}/{maDt}/{dau}/{cuoi}", method = {
+	@RequestMapping(value = "/soketoan/socongno/chitiet/{maKyKt}/{maTk}/{loaiDt}/{maDt}/{dau}/{cuoi}", method = {
 			RequestMethod.GET })
 	public String sktSoChiTietCongNo(@PathVariable("maKyKt") int maKyKt, @PathVariable("maTk") String maTk,
 			@PathVariable("loaiDt") int loaiDt, @PathVariable("maDt") int maDt, @PathVariable("dau") String dau,
@@ -817,7 +817,7 @@ public class SoKeToanController {
 		return sktSoChiTietCongNo(form, binder.getBindingResult(), model);
 	}
 
-	@RequestMapping("/soketoan/soctcongno")
+	@RequestMapping("/soketoan/socongno/chitiet")
 	public String sktSoChiTietCongNo(@ModelAttribute("mainFinanceForm") @Validated TkSoKeToanForm form,
 			BindingResult result, Model model) {
 		try {
@@ -888,12 +888,14 @@ public class SoKeToanController {
 
 			// Lấy danh sách đối tượng được chọn
 			List<DoiTuong> doiTuongDuocChonDs = new ArrayList<>();
+			logger.info("Khóa đối tượng được chọn:");
 			if (form.getDoiTuongDs() != null) {
 				// Không phải lần đầu
 				for (String khoaDt : form.getDoiTuongDs()) {
 					try {
 						DoiTuong doiTuong = new DoiTuong();
 						String[] khoaDts = khoaDt.split("_");
+						logger.info("khoaDt: " + khoaDt);
 
 						doiTuong.setLoaiDt(Integer.parseInt(khoaDts[0]));
 						doiTuong.setMaDt(Integer.parseInt(khoaDts[1]));
@@ -915,9 +917,18 @@ public class SoKeToanController {
 			} else {
 				// Nếu là lần đầu thì lấy tất cả đối tượng
 				doiTuongDuocChonDs.addAll(doiTuongTatCaDs);
+				String[] doiTuongDuocChonStrDs = new String[doiTuongTatCaDs.size()];
+				int i = 0;
+				for (Iterator<DoiTuong> iter = doiTuongDuocChonDs.iterator(); iter.hasNext();) {
+					DoiTuong doiTuong = iter.next();
+					doiTuongDuocChonStrDs[i] = doiTuong.getLoaiDt() + "_" + doiTuong.getMaDt();
+					logger.info("khoaDt: " + doiTuongDuocChonStrDs[i]);
+					i++;
+				}
+				form.setDoiTuongDs(doiTuongDuocChonStrDs);
 			}
 
-			logger.info("Sổ chi tiết công nợ tài khoản: " + form.getTaiKhoan());
+			logger.info("Sổ chi tiết công nợ tài khoản " + form.getTaiKhoan() + " của đối tượng " + doiTuongDuocChonDs);
 			// Lấy danh sách các nghiệp vụ kế toán theo tài khoản, loại chứng từ, và từng kỳ
 			List<DuLieuKeToan> duLieuKeToanDs = new ArrayList<>();
 			LoaiTaiKhoan loaiTaiKhoan = taiKhoanDAO.layTaiKhoan(form.getTaiKhoan());
@@ -936,6 +947,24 @@ public class SoKeToanController {
 					form.getKyKeToan().getBatDau(), Utils.prevPeriod(kyKt).getCuoi());
 			List<DuLieuKeToan> noCoDauKyKtthDs = soKeToanDAO.danhSachTongPhatSinhDoiTuongKtth(form.getTaiKhoan(),
 					form.getKyKeToan().getBatDau(), Utils.prevPeriod(kyKt).getCuoi());
+			if (noCoDauKyDs != null) {
+				if (noCoDauKyKtthDs != null) {
+					Iterator<DuLieuKeToan> noCoDauKyKtthIter = noCoDauKyKtthDs.iterator();
+					while (noCoDauKyKtthIter.hasNext()) {
+						DuLieuKeToan duLieuKeToanKtthTmpl = noCoDauKyKtthIter.next();
+
+						int pos = noCoDauKyDs.indexOf(duLieuKeToanKtthTmpl);
+						if (pos > -1) {
+							DuLieuKeToan duLieuKeToanTmpl = noCoDauKyDs.get(pos);
+							duLieuKeToanTmpl.tron(duLieuKeToanKtthTmpl);
+						} else {
+							noCoDauKyDs.add(duLieuKeToanKtthTmpl);
+						}
+					}
+				}
+			} else {
+				noCoDauKyDs = noCoDauKyKtthDs;
+			}
 
 			Iterator<DuLieuKeToan> noCoDauKyIter = noCoDauKyDs.iterator();
 			while (noCoDauKyIter.hasNext()) {
@@ -961,6 +990,9 @@ public class SoKeToanController {
 					doiTuongTmpl.setTenDt(doiTuong.getTenDt());
 
 					DuLieuKeToan duLieuKeToan = new DuLieuKeToan();
+					duLieuKeToan.setLoaiTaiKhoan(loaiTaiKhoan);
+					duLieuKeToan.setKyKeToan(kyKt);
+					duLieuKeToan.setDoiTuong(doiTuongTmpl);
 
 					if (soDuKyDs != null) {
 						Iterator<SoDuKy> soDuKyIter = soDuKyDs.iterator();
@@ -987,12 +1019,8 @@ public class SoKeToanController {
 						}
 					}
 
-					duLieuKeToan.setLoaiTaiKhoan(loaiTaiKhoan);
-					duLieuKeToan.setKyKeToan(kyKt);
-					duLieuKeToan.setDoiTuong(doiTuongTmpl);
-
 					doiTuongTmpl.setDuLieuKeToan(duLieuKeToan);
-					logger.info("Đối tượng " + doiTuongTmpl);
+					logger.info("Dữ liệu kế toán đầu kỳ: " + duLieuKeToan);
 					logger.info(duLieuKeToan);
 
 					doiTuongDs.add(doiTuongTmpl);
@@ -1003,23 +1031,45 @@ public class SoKeToanController {
 				logger.info("========== Kỳ: " + kyKt);
 				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
 
-				// Lấy danh sách nghiệp vụ kế toán ghi vào chứng từ PT, PC, BN, BC, KTTH
+				// Lấy danh sách nghiệp vụ kế toán ghi vào chứng từ PT, PC, BN, BC
 				List<NghiepVuKeToan> nvktDs = soKeToanDAO.danhSachNghiepVuKeToanTheoLoaiTaiKhoan(form.getTaiKhoan(),
 						kyKt.getDau(), kyKt.getCuoi());
-				logger.info("nvktDs " + nvktDs);
+				logger.info("nvktDs: " + nvktDs);
+
+				List<NghiepVuKeToan> nvktKtthDs = soKeToanDAO
+						.danhSachNghiepVuKeToanKtthTheoLoaiTaiKhoan(form.getTaiKhoan(), kyKt.getDau(), kyKt.getCuoi());
+				logger.info("nvktKtthDs: " + nvktKtthDs);
 
 				// Lấy danh sách nghiệp vụ kế toán phát sinh ghi từ chứng từ MH, BH
 				List<NghiepVuKeToan> nvktKhoDs = soKeToanDAO
 						.danhSachNghiepVuKeToanKhoTheoLoaiTaiKhoan(form.getTaiKhoan(), kyKt.getDau(), kyKt.getCuoi());
-				logger.info("nvktKhoDs " + nvktKhoDs);
-
-				// Lấy nghiệp vụ kế toán được ghi từ các kết chuyển
-				// Trường hợp kết chuyển này đối tượng bằng null, không có dữ liệu có sổ công nợ
+				logger.info("nvktKhoDs: " + nvktKhoDs);
 
 				// Lấy tổng phát sinh
 				List<DuLieuKeToan> tongPhatSinhDs = soKeToanDAO.danhSachTongPhatSinhDoiTuong(form.getTaiKhoan(),
 						kyKt.getDau(), kyKt.getCuoi());
-				logger.info("tongPhatSinhDs " + tongPhatSinhDs);
+				logger.info("tongPhatSinhDs: " + tongPhatSinhDs);
+				List<DuLieuKeToan> tongPhatSinhKtthDs = soKeToanDAO.danhSachTongPhatSinhDoiTuongKtth(form.getTaiKhoan(),
+						kyKt.getDau(), kyKt.getCuoi());
+				logger.info("tongPhatSinhKtthDs: " + tongPhatSinhKtthDs);
+				if (tongPhatSinhDs != null) {
+					if (tongPhatSinhKtthDs != null) {
+						Iterator<DuLieuKeToan> tongPhatSinhKtthIter = tongPhatSinhKtthDs.iterator();
+						while (tongPhatSinhKtthIter.hasNext()) {
+							DuLieuKeToan duLieuKeToanKtthTmpl = tongPhatSinhKtthIter.next();
+
+							int pos = tongPhatSinhDs.indexOf(duLieuKeToanKtthTmpl);
+							if (pos > -1) {
+								DuLieuKeToan duLieuKeToanTmpl = tongPhatSinhDs.get(pos);
+								duLieuKeToanTmpl.tron(duLieuKeToanKtthTmpl);
+							} else {
+								tongPhatSinhDs.add(duLieuKeToanKtthTmpl);
+							}
+						}
+					}
+				} else {
+					tongPhatSinhDs = tongPhatSinhKtthDs;
+				}
 
 				// Xác định tổng phát sinh và các nvkt cho các đối tượng được chọn
 				if (doiTuongDs != null) {
@@ -1041,31 +1091,50 @@ public class SoKeToanController {
 							}
 
 							// Thêm nghiệp vụ kế toán vào danh sách
+							logger.info("nvktDs: " + doiTuongTmpl.getDuLieuKeToan().getNghiepVuKeToanDs());
 							if (nvktDs != null) {
 								Iterator<NghiepVuKeToan> nvktIter = nvktDs.iterator();
 								while (nvktIter.hasNext()) {
 									NghiepVuKeToan nvkt = nvktIter.next();
+									logger.info("nvktDs: " + nvkt);
 
 									if (doiTuongTmpl.equals(nvkt.getChungTu().getDoiTuong())) {
 										doiTuongTmpl.getDuLieuKeToan().themNghiepVuKeToan(nvkt);
-										break;
+									}
+								}
+							}
+
+							// Thêm nghiệp vụ kế toán vào danh sách
+							logger.info("nvktKtth: " + doiTuongTmpl.getDuLieuKeToan().getNghiepVuKeToanDs());
+							if (nvktKtthDs != null) {
+								Iterator<NghiepVuKeToan> nvktKtthIter = nvktKtthDs.iterator();
+								while (nvktKtthIter.hasNext()) {
+									NghiepVuKeToan nvktKtth = nvktKtthIter.next();
+									logger.info("nvktKtth: " + nvktKtth);
+
+									if (doiTuongTmpl.equals(nvktKtth.getTaiKhoanNo().getDoiTuong())
+											|| doiTuongTmpl.equals(nvktKtth.getTaiKhoanCo().getDoiTuong())) {
+										doiTuongTmpl.getDuLieuKeToan().themNghiepVuKeToan(nvktKtth);
 									}
 								}
 							}
 
 							// Thêm nghiệp vụ kế toán kho vào danh sách
+							logger.info("nvktKhoDs: " + doiTuongTmpl.getDuLieuKeToan().getNghiepVuKeToanDs());
 							if (nvktKhoDs != null) {
 								Iterator<NghiepVuKeToan> nvktKhoIter = nvktKhoDs.iterator();
 								while (nvktKhoIter.hasNext()) {
 									NghiepVuKeToan nvktKho = nvktKhoIter.next();
+									logger.info("nvktKho: " + nvktKho);
 
 									if (doiTuongTmpl.equals(nvktKho.getChungTu().getDoiTuong())) {
 										doiTuongTmpl.getDuLieuKeToan().themNghiepVuKeToan(nvktKho);
-										break;
 									}
 								}
 							}
+							logger.info("nvktDs: " + doiTuongTmpl.getDuLieuKeToan().getNghiepVuKeToanDs());
 						} catch (Exception e) {
+							e.printStackTrace();
 						}
 
 						logger.info(doiTuongTmpl + " " + doiTuongTmpl.getDuLieuKeToan());
@@ -1098,7 +1167,7 @@ public class SoKeToanController {
 						duLieuKeToanTt.setDoiTuong(doiTuongTmpl);
 
 						doiTuongTmpl.setDuLieuKeToan(duLieuKeToanTt);
-						logger.info(doiTuongTmpl + " " + doiTuongTmpl.getDuLieuKeToan());
+						logger.info("Dữ liệu kế toán kỳ sau: " + doiTuongTmpl.getDuLieuKeToan());
 
 						doiTuongTiepDs.add(doiTuongTmpl);
 					}
@@ -1169,7 +1238,7 @@ public class SoKeToanController {
 				form.themLoaiCt(ChungTu.TAT_CA);
 			}
 
-			// Lấy danh sách tài khoản công nợ 152;153;154;155;156
+			// Lấy danh sách tài khoản kho 152;153;154;155;156
 			List<LoaiTaiKhoan> loaiTaiKhoanDs = new ArrayList<>();
 			try {
 				String[] khoVthhs = props.getCauHinh(PropCont.TAI_KHOAN_KHO_VTHH).getGiaTri().split(";");
@@ -1189,12 +1258,9 @@ public class SoKeToanController {
 				form.setKhoDs(khoHangDs);
 			}
 
-			boolean tatCaKho = false;
-			List<Integer> maKhoDs = new ArrayList<>();
-			if (khoHangDs != null && form.getKhoDs() != null && khoHangDs.size() == form.getKhoDs().size()) {
-				tatCaKho = true;
-			} else {
-				tatCaKho = false;
+			List<Integer> maKhoDs = null;
+			if (form != null && form.getKhoDs() != null) {
+				maKhoDs = new ArrayList<>();
 				for (Iterator<KhoHang> iter = form.getKhoDs().iterator(); iter.hasNext();) {
 					KhoHang khoHang = iter.next();
 					maKhoDs.add(khoHang.getMaKho());
@@ -1219,38 +1285,78 @@ public class SoKeToanController {
 
 				// Lấy danh sách số dư đầu kỳ nhập xuất tồn
 				// theo mã tài khoản và danh sách kho
-				List<SoDuKy> soDuKyDs = null;
-				if (tatCaKho) {
-					soDuKyDs = kyKeToanDAO.danhSachSoDuKyTheoHangHoa(loaiTaiKhoan.getMaTk(), kyKeToan.getMaKyKt());
-				} else {
-					// Lấy dữ liệu từ các kho được lựa chọn
-					soDuKyDs = kyKeToanDAO.danhSachSoDuKyTheoHangHoa(loaiTaiKhoan.getMaTk(), kyKeToan.getMaKyKt(),
-							maKhoDs);
-				}
+				List<SoDuKy> soDuKyDs = kyKeToanDAO.danhSachSoDuKyTheoHangHoa(loaiTaiKhoan.getMaTk(),
+						kyKeToan.getMaKyKt(), maKhoDs);
 
 				// Tính nợ/có phát sinh kỳ trước tất cả các hàng hóa
 				// trong danh sách kho cho trước
-				List<DuLieuKeToan> noCoDauKyDs = null;
-				if (tatCaKho) {
-					noCoDauKyDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), form.getDau(),
-							Utils.prevPeriod(kyKt).getCuoi());
-				} else {
-					// Lấy dữ liệu từ các kho được lựa chọn
-					noCoDauKyDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), maKhoDs, form.getDau(),
-							Utils.prevPeriod(kyKt).getCuoi());
-				}
+				List<DuLieuKeToan> noCoDauKyDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), maKhoDs,
+						form.getDau(), Utils.prevPeriod(kyKt).getCuoi());
 
 				// Trộn số dư đầu kỳ nhập xuất tồn các loại hàng hóa
 				// trong danh sách kho cho trước
+				if (noCoDauKyDs != null) {
+					logger.info("Đặt lại giá trị từ tổng phát sinh sang số dư đầu");
+					Iterator<DuLieuKeToan> noCoDauKyIter = noCoDauKyDs.iterator();
+					while (noCoDauKyIter.hasNext()) {
+						DuLieuKeToan duLieuKeToanTmpl = noCoDauKyIter.next();
+
+						duLieuKeToanTmpl.setNoDauKy(duLieuKeToanTmpl.getTongNoPhatSinh());
+						duLieuKeToanTmpl.setCoDauKy(duLieuKeToanTmpl.getTongCoPhatSinh());
+						duLieuKeToanTmpl.setTongNoPhatSinh(0);
+						duLieuKeToanTmpl.setTongCoPhatSinh(0);
+					}
+
+					logger.info("Trộn số dư đầu kỳ");
+					noCoDauKyIter = noCoDauKyDs.iterator();
+					while (noCoDauKyIter.hasNext()) {
+						DuLieuKeToan duLieuKeToanTmpl = noCoDauKyIter.next();
+
+						if (soDuKyDs != null) {
+							Iterator<SoDuKy> soDuKyIter = soDuKyDs.iterator();
+							while (soDuKyIter.hasNext()) {
+								SoDuKy soDuKy = soDuKyIter.next();
+
+								if (duLieuKeToanTmpl.getDoiTuong().equals(soDuKy.getDoiTuong())) {
+									duLieuKeToanTmpl.setNoDauKy(duLieuKeToanTmpl.getNoDauKy() + soDuKy.getNoDauKy());
+									duLieuKeToanTmpl.setCoDauKy(duLieuKeToanTmpl.getCoDauKy() + soDuKy.getCoDauKy());
+									break;
+								}
+							}
+						}
+					}
+
+					if (soDuKyDs != null) {
+						Iterator<SoDuKy> soDuKyIter = soDuKyDs.iterator();
+						while (soDuKyIter.hasNext()) {
+							SoDuKy soDuKy = soDuKyIter.next();
+
+							boolean coDoiTuong = false;
+							noCoDauKyIter = noCoDauKyDs.iterator();
+							while (noCoDauKyIter.hasNext()) {
+								DuLieuKeToan duLieuKeToanTmpl = noCoDauKyIter.next();
+
+								if (duLieuKeToanTmpl.getDoiTuong().equals(soDuKy.getDoiTuong())) {
+									coDoiTuong = true;
+									break;
+								}
+							}
+
+							if (!coDoiTuong) {
+								DuLieuKeToan duLieuKeToanTmpl = new DuLieuKeToan();
+								duLieuKeToanTmpl.setLoaiTaiKhoan(soDuKy.getLoaiTaiKhoan());
+								duLieuKeToanTmpl.setDoiTuong(soDuKy.getDoiTuong());
+								duLieuKeToanTmpl.setNoDauKy(soDuKy.getNoDauKy());
+								duLieuKeToanTmpl.setCoDauKy(soDuKy.getCoDauKy());
+								noCoDauKyDs.add(duLieuKeToanTmpl);
+							}
+						}
+					}
+				}
 
 				// Tính nợ/có phát sinh nhập xuất tồn trong kỳ của tất cả các hàng hóa
-				List<DuLieuKeToan> tongNoCoPsDs = null;
-				if (tatCaKho) {
-					tongNoCoPsDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), kyKt.getDau(), kyKt.getCuoi());
-				} else {
-					tongNoCoPsDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), maKhoDs, kyKt.getDau(),
-							kyKt.getCuoi());
-				}
+				List<DuLieuKeToan> tongNoCoPsDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), maKhoDs,
+						kyKt.getDau(), kyKt.getCuoi());
 
 				duLieuKeToan.capNhatDuLieuKeToan(tongNoCoPsDs);
 				duLieuKeToanDs.add(duLieuKeToan);
