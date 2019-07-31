@@ -1261,7 +1261,10 @@ public class TaskController {
 	public String getPDF(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm)
 			throws Exception {
 		try {
-
+			isTaskId = false;
+			isEstimateTime = false;
+			isUpdatedTime = false;
+			isdueDate = false;
 			// Document document = new Document();
 			Document document = new Document(PageSize.A4.rotate());
 			String path = properties.getProperty("REPORT_PATH");
@@ -1320,9 +1323,10 @@ public class TaskController {
 			PdfPTable table = new PdfPTable(5 + columnAdded);
 			addTableHeader(table, font);
 			List<Task> list = null;
+			//List<Task> listTask = null;
 			list = taskDAO.getTasksForReport(taskReportForm);
-
-			// tinh tong thoi gian da lam va estimate
+			//System.err.println("uncheck " + taskReportForm.getUnSelect());
+			// tinh tong thoi gian da lam va tg estimate
 			float timeEstimateTotal = 0;
 			float timeSpentTotal = 0;
 			for (int i = 0; i < list.size(); i++) {
@@ -1420,6 +1424,7 @@ public class TaskController {
 		//Stream.of("Tên việc", "Người làm", "Trạng thái", "Thời gian ước lượng", "Thời gian đã làm", "Ngày phải xong",
 		//		"Nhận xét/đánh giá").forEach(columnTitle -> {
 		PdfPCell header = new PdfPCell();		
+		//System.err.println("isTaskId: " + isTaskId);
 		if(isTaskId) {			
 			header.setBackgroundColor(BaseColor.LIGHT_GRAY);
 			header.setPhrase(new Phrase("Mã việc", font));

@@ -21,6 +21,7 @@ public class ReportForm implements Serializable{
 	private String estimateCheck;
 	private String updateTimeCheck;
 	private String dueDateCheck;
+	private String unSelect;
 	
 	public String getFromDate() {
 		return fromDate;
@@ -87,5 +88,12 @@ public class ReportForm implements Serializable{
 	}
 	public void setDueDateCheck(String dueDateCheck) {
 		this.dueDateCheck = dueDateCheck;
+	}
+	public String getUnSelect() {
+		return unSelect;
+	}
+	public void setUnSelect(String unSelect) {
+		this.unSelect = unSelect;
 	}		
+	
 }

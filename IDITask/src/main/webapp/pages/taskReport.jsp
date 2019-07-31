@@ -76,6 +76,7 @@ tr:nth-child(even) {
 	
 	<table class="table table-striped">
 			<tr>
+				<th title="Check để loại bỏ trong báo cáo">Bỏ</th>
 				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Mã việc &nbsp;<form:checkbox path="idCheck" class="form-check-input" value="Y" id="idCheck"/></th>
 				<th>Tên việc</th>
 				<th>Người làm</th>
@@ -88,6 +89,7 @@ tr:nth-child(even) {
 			</tr>
 			<c:forEach var="task" items="${tasks}">
 				<tr>
+					<td  title="Check để loại bỏ dòng này trong báo cáo"><form:checkbox path="unSelect" class="form-check-input" value="${task.taskId}" id="unSelect"/></td>
 					<td>${task.taskId}</td>
 					<td>${task.taskName}</td>
 					<c:if test="${task.ownedBy == 0}">
