@@ -921,6 +921,7 @@
 <form:hidden path="tinhChatCt" />
 <form:hidden path="chieu" />
 <form:hidden path="nghiepVu" />
+
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="soCt">Số dự chứng từ
 		kiến:</label>

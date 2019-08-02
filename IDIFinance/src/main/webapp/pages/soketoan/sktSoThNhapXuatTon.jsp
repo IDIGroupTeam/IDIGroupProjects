@@ -24,6 +24,10 @@
 	</i>
 </p>
 
+<div class="pull-right">
+	<i>(*): Mặc định là tiền VND</i>
+</div>
+
 <div class="table-responsive">
 	<table class="table table-bordered table-hover">
 		<thead>
@@ -39,57 +43,59 @@
 			</tr>
 			<tr>
 				<th class="text-center">Số lượng</th>
-				<th class="text-center">Thành tiền</th>
+				<th class="text-center">Thành tiền (*)</th>
 				<th class="text-center">Số lượng</th>
-				<th class="text-center">Thành tiền</th>
+				<th class="text-center">Thành tiền (*)</th>
 				<th class="text-center">Số lượng</th>
-				<th class="text-center">Thành tiền</th>
+				<th class="text-center">Thành tiền (*)</th>
 				<th class="text-center">Số lượng</th>
-				<th class="text-center">Thành tiền</th>
+				<th class="text-center">Thành tiền (*)</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td><a href="${url}/soketoan/nhapxuatton/chitiet">TOYOTA</a></td>
-				<td>Xe Toyota</td>
-				<td>Chiếc</td>
-				<td>10</td>
-				<td>20000</td>
-				<td>2</td>
-				<td>4000</td>
-				<td>0</td>
-				<td>0</td>
-				<td>12</td>
-				<td>24000</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<!-- <td></td> -->
-			</tr>
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<!-- <td></td> -->
-			</tr>
+			<c:forEach items="${duLieuKeToanDs}" var="duLieuKeToan">
+				<tr>
+					<td colspan="11"><b>Kỳ <fmt:formatDate
+								value="${duLieuKeToan.kyKeToan.dau}" pattern="dd/M/yyyy"></fmt:formatDate>
+							- <fmt:formatDate value="${duLieuKeToan.kyKeToan.cuoi}"
+								pattern="dd/M/yyyy"></fmt:formatDate></b></td>
+				</tr>
+				<c:choose>
+					<c:when
+						test="${not empty duLieuKeToan.duLieuKeToanDs and duLieuKeToan.duLieuKeToanDs.size()>0}">
+						<c:forEach items="${duLieuKeToan.duLieuKeToanDs}"
+							var="duLieuKeToanCon">
+							<tr>
+								<td>${duLieuKeToanCon.hangHoa.kyHieuHh}</td>
+								<td>${duLieuKeToanCon.hangHoa.tenHh}</td>
+								<td>${duLieuKeToanCon.hangHoa.donVi.tenDv}</td>
+								<td><fmt:formatNumber
+										value="${duLieuKeToanCon.soLuongDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+								<td class="text-right"><fmt:formatNumber
+										value="${duLieuKeToanCon.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+								<td><fmt:formatNumber
+										value="${duLieuKeToanCon.soLuongNhapPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+								<td class="text-right"><fmt:formatNumber
+										value="${duLieuKeToanCon.tongNoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+								<td><fmt:formatNumber
+										value="${duLieuKeToanCon.soLuongXuatPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+								<td class="text-right"><fmt:formatNumber
+										value="${duLieuKeToanCon.tongCoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+								<td><fmt:formatNumber
+										value="${duLieuKeToanCon.soLuongDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+								<td class="text-right"><fmt:formatNumber
+										value="${duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+							</tr>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<tr>
+							<td colspan="11">Không có dữ liệu</td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
+
+			</c:forEach>
 		</tbody>
 	</table>
 </div>

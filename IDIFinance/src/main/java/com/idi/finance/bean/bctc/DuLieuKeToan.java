@@ -7,8 +7,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.hanghoa.HangHoa;
+import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
@@ -19,6 +21,8 @@ public class DuLieuKeToan {
 	private DoiTuong doiTuong;
 	private List<DoiTuong> doiTuongDs;
 	private HangHoa hangHoa;
+	private KhoHang khoHang;
+	private int chieu = ChungTu.MUA;
 
 	private double soDuDauKy;
 	private double noDauKy;
@@ -31,10 +35,16 @@ public class DuLieuKeToan {
 	private double tongNoPhatSinh;
 	private double tongCoPhatSinh;
 
-	private int soLuongDauKy;
-	private int soLuongNhap;
-	private int soLuongXuat;
-	private int soLuongCuoiKy;
+	private double soLuongDuDauKy;
+	private double soLuongNhapDauKy;
+	private double soLuongXuatDauKy;
+
+	private double soLuongDuCuoiKy;
+	private double soLuongNhapCuoiKy;
+	private double soLuongXuatCuoiKy;
+
+	private double soLuongNhapPhatSinh;
+	private double soLuongXuatPhatSinh;
 
 	private DuLieuKeToan duLieuKeToan;
 	private List<DuLieuKeToan> duLieuKeToanDs;
@@ -91,6 +101,22 @@ public class DuLieuKeToan {
 
 	public void setHangHoa(HangHoa hangHoa) {
 		this.hangHoa = hangHoa;
+	}
+
+	public KhoHang getKhoHang() {
+		return khoHang;
+	}
+
+	public void setKhoHang(KhoHang khoHang) {
+		this.khoHang = khoHang;
+	}
+
+	public int getChieu() {
+		return chieu;
+	}
+
+	public void setChieu(int chieu) {
+		this.chieu = chieu;
 	}
 
 	public double getSoDuDauKy() {
@@ -161,39 +187,72 @@ public class DuLieuKeToan {
 		capNhatNoCoCuoiKy();
 	}
 
-	public int getSoLuongDauKy() {
+	public double getSoLuongDuDauKy() {
+		return soLuongDuDauKy;
+	}
+
+	public void setSoLuongDuDauKy(double soLuongDuDauKy) {
+		this.soLuongDuDauKy = soLuongDuDauKy;
+	}
+
+	public double getSoLuongNhapDauKy() {
+		return soLuongNhapDauKy;
+	}
+
+	public void setSoLuongNhapDauKy(double soLuongNhapDauKy) {
+		this.soLuongNhapDauKy = soLuongNhapDauKy;
 		capNhatNoCoCuoiKy();
-		return soLuongDauKy;
 	}
 
-	public void setSoLuongDauKy(int soLuongDauKy) {
-		this.soLuongDauKy = soLuongDauKy;
+	public double getSoLuongXuatDauKy() {
+		return soLuongXuatDauKy;
 	}
 
-	public int getSoLuongNhap() {
-		return soLuongNhap;
-	}
-
-	public void setSoLuongNhap(int soLuongNhap) {
+	public void setSoLuongXuatDauKy(double soLuongXuatDauKy) {
+		this.soLuongXuatDauKy = soLuongXuatDauKy;
 		capNhatNoCoCuoiKy();
-		this.soLuongNhap = soLuongNhap;
 	}
 
-	public int getSoLuongXuat() {
-		return soLuongXuat;
+	public double getSoLuongDuCuoiKy() {
+		return soLuongDuCuoiKy;
 	}
 
-	public void setSoLuongXuat(int soLuongXuat) {
+	public void setSoLuongDuCuoiKy(double soLuongDuCuoiKy) {
+		this.soLuongDuCuoiKy = soLuongDuCuoiKy;
+	}
+
+	public double getSoLuongNhapCuoiKy() {
+		return soLuongNhapCuoiKy;
+	}
+
+	public void setSoLuongNhapCuoiKy(double soLuongNhapCuoiKy) {
+		this.soLuongNhapCuoiKy = soLuongNhapCuoiKy;
+	}
+
+	public double getSoLuongXuatCuoiKy() {
+		return soLuongXuatCuoiKy;
+	}
+
+	public void setSoLuongXuatCuoiKy(double soLuongXuatCuoiKy) {
+		this.soLuongXuatCuoiKy = soLuongXuatCuoiKy;
+	}
+
+	public double getSoLuongNhapPhatSinh() {
+		return soLuongNhapPhatSinh;
+	}
+
+	public void setSoLuongNhapPhatSinh(double soLuongNhapPhatSinh) {
+		this.soLuongNhapPhatSinh = soLuongNhapPhatSinh;
 		capNhatNoCoCuoiKy();
-		this.soLuongXuat = soLuongXuat;
 	}
 
-	public int getSoLuongCuoiKy() {
-		return soLuongCuoiKy;
+	public double getSoLuongXuatPhatSinh() {
+		return soLuongXuatPhatSinh;
 	}
 
-	public void setSoLuongCuoiKy(int soLuongCuoiKy) {
-		this.soLuongCuoiKy = soLuongCuoiKy;
+	public void setSoLuongXuatPhatSinh(double soLuongXuatPhatSinh) {
+		this.soLuongXuatPhatSinh = soLuongXuatPhatSinh;
+		capNhatNoCoCuoiKy();
 	}
 
 	public List<NghiepVuKeToan> getNghiepVuKeToanDs() {
@@ -205,13 +264,19 @@ public class DuLieuKeToan {
 	}
 
 	private void capNhatNoCoCuoiKy() {
+		// Số tiền
 		noCuoiKy = noDauKy + tongNoPhatSinh;
 		coCuoiKy = coDauKy + tongCoPhatSinh;
 
 		soDuDauKy = noDauKy - coDauKy;
 		soDuCuoiKy = noCuoiKy - coCuoiKy;
 
-		soLuongCuoiKy = soLuongDauKy + soLuongNhap - soLuongXuat;
+		// Số lượng
+		soLuongNhapCuoiKy = soLuongNhapDauKy + soLuongNhapPhatSinh;
+		soLuongXuatCuoiKy = soLuongXuatDauKy + soLuongXuatPhatSinh;
+
+		soLuongDuDauKy = soLuongNhapDauKy - soLuongXuatDauKy;
+		soLuongDuCuoiKy = soLuongNhapCuoiKy - soLuongXuatCuoiKy;
 	}
 
 	public void themNghiepVuKeToan(NghiepVuKeToan nghiepVuKeToan) {
@@ -296,24 +361,35 @@ public class DuLieuKeToan {
 			Iterator<DuLieuKeToan> iter = this.duLieuKeToanDs.iterator();
 			while (iter.hasNext()) {
 				DuLieuKeToan duLieuKeToan = iter.next();
+
+				// Số tiền
 				noDauKy += duLieuKeToan.getNoDauKy();
 				coDauKy += duLieuKeToan.getCoDauKy();
 
 				tongNoPhatSinh += duLieuKeToan.getTongNoPhatSinh();
 				tongCoPhatSinh += duLieuKeToan.getTongCoPhatSinh();
 
-				soLuongDauKy += duLieuKeToan.getSoLuongDauKy();
-				soLuongNhap += duLieuKeToan.getSoLuongNhap();
-				soLuongXuat += duLieuKeToan.getSoLuongXuat();
+				// Số lượng
+				soLuongNhapDauKy += duLieuKeToan.getSoLuongNhapDauKy();
+				soLuongXuatDauKy += duLieuKeToan.getSoLuongXuatDauKy();
+
+				soLuongNhapPhatSinh += duLieuKeToan.getSoLuongNhapPhatSinh();
+				soLuongXuatPhatSinh += duLieuKeToan.getSoLuongXuatPhatSinh();
 			}
 
+			// Số tiền
 			noCuoiKy = noDauKy + tongNoPhatSinh;
 			coCuoiKy = coDauKy + tongCoPhatSinh;
 
 			soDuDauKy = noDauKy - coDauKy;
 			soDuCuoiKy = noCuoiKy - coCuoiKy;
 
-			soLuongCuoiKy = soLuongDauKy + soLuongNhap - soLuongXuat;
+			// Số lượng
+			soLuongNhapCuoiKy = soLuongNhapDauKy + soLuongNhapPhatSinh;
+			soLuongXuatCuoiKy = soLuongXuatDauKy + soLuongXuatPhatSinh;
+
+			soLuongDuDauKy = soLuongNhapDauKy - soLuongXuatDauKy;
+			soLuongDuCuoiKy = soLuongNhapCuoiKy - soLuongXuatCuoiKy;
 		}
 	}
 
@@ -363,10 +439,23 @@ public class DuLieuKeToan {
 			doiTuong = duLieuKeToan.getDoiTuong();
 		}
 
+		if (hangHoa == null) {
+			hangHoa = duLieuKeToan.getHangHoa();
+		}
+
+		if (khoHang == null) {
+			khoHang = duLieuKeToan.getKhoHang();
+		}
+
 		if (this.duLieuKeToan == null) {
 			this.duLieuKeToan = duLieuKeToan.getDuLieuKeToan();
 		}
 
+		if (chieu != ChungTu.MUA && chieu != ChungTu.BAN) {
+			chieu = duLieuKeToan.getChieu();
+		}
+
+		// Số tiền
 		noDauKy += duLieuKeToan.getNoDauKy();
 		coDauKy += duLieuKeToan.getCoDauKy();
 
@@ -379,14 +468,29 @@ public class DuLieuKeToan {
 		soDuDauKy = noDauKy - coDauKy;
 		soDuCuoiKy = noCuoiKy - coCuoiKy;
 
+		// Số lượng
+		soLuongNhapDauKy += duLieuKeToan.getSoLuongNhapDauKy();
+		soLuongXuatDauKy += duLieuKeToan.getSoLuongXuatDauKy();
+
+		soLuongNhapPhatSinh += duLieuKeToan.getSoLuongNhapPhatSinh();
+		soLuongXuatPhatSinh += duLieuKeToan.getSoLuongXuatPhatSinh();
+
+		soLuongNhapCuoiKy = soLuongNhapDauKy + soLuongNhapPhatSinh;
+		soLuongXuatCuoiKy = soLuongXuatDauKy + soLuongXuatPhatSinh;
+
+		soLuongDuDauKy = soLuongNhapDauKy - soLuongXuatDauKy;
+		soLuongDuCuoiKy = soLuongNhapCuoiKy - soLuongXuatCuoiKy;
+
 		themDuLieuKeToan(duLieuKeToan.getDuLieuKeToanDs());
 		themNghiepVuKeToan(duLieuKeToan.getNghiepVuKeToanDs());
 	}
 
 	@Override
 	public String toString() {
-		String out = kyKeToan + ":  " + loaiTaiKhoan + ": " + doiTuong + ": " + noDauKy + " " + coDauKy + " "
-				+ tongNoPhatSinh + " " + tongCoPhatSinh + " " + noCuoiKy + " " + coCuoiKy;
+		String out = kyKeToan + ":  " + loaiTaiKhoan + ": " + doiTuong + ": " + hangHoa + ": " + khoHang + ": "
+				+ noDauKy + " " + coDauKy + " " + tongNoPhatSinh + " " + tongCoPhatSinh + " " + noCuoiKy + " "
+				+ coCuoiKy + " " + soLuongNhapDauKy + " " + soLuongXuatDauKy + " " + soLuongNhapPhatSinh + " "
+				+ soLuongXuatPhatSinh;
 		return out;
 	}
 
@@ -435,6 +539,15 @@ public class DuLieuKeToan {
 		} else if (item.getHangHoa() == null) {
 			return false;
 		} else if (!hangHoa.equals(item.getHangHoa())) {
+			return false;
+		}
+
+		if (khoHang == null) {
+			if (item.getKhoHang() != null)
+				return false;
+		} else if (item.getKhoHang() == null) {
+			return false;
+		} else if (!khoHang.equals(item.getKhoHang())) {
 			return false;
 		}
 

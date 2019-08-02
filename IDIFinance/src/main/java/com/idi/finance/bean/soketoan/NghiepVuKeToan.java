@@ -104,7 +104,7 @@ public class NghiepVuKeToan implements Comparable<NghiepVuKeToan> {
 
 	@Override
 	public String toString() {
-		String out = chungTu + "  " + taiKhoanNo + " " + taiKhoanCo;
+		String out = chungTu + " : " + hangHoa + " : " + taiKhoanNo + " : " + taiKhoanCo;
 		return out;
 	}
 

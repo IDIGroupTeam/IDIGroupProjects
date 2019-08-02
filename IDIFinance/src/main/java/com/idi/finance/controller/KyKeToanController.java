@@ -189,9 +189,6 @@ public class KyKeToanController {
 			// Danh sách loại tiền
 			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
 
-			// Danh sách tài khoản
-			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
-
 			// Danh sách khách hàng
 			List<KhachHang> khDs = khachHangDAO.danhSachKhachHang();
 
@@ -205,7 +202,7 @@ public class KyKeToanController {
 			List<LoaiTaiKhoan> tienMatTkDs = new ArrayList<>();
 			try {
 				String[] tienMats = props.getCauHinh(PropCont.TAI_KHOAN_TIEN_MAT).getGiaTri().split(";");
-				tienMatTkDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(tienMats));
+				tienMatTkDs = taiKhoanDAO.danhSachTaiKhoanCon(Arrays.asList(tienMats));
 			} catch (Exception e) {
 			}
 			logger.info("tienMatTkDs: " + tienMatTkDs);
@@ -214,7 +211,7 @@ public class KyKeToanController {
 			List<LoaiTaiKhoan> tienGuiTkDs = new ArrayList<>();
 			try {
 				String[] tienGuis = props.getCauHinh(PropCont.TAI_KHOAN_TIEN_GUI).getGiaTri().split(";");
-				tienGuiTkDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(tienGuis));
+				tienGuiTkDs = taiKhoanDAO.danhSachTaiKhoanCon(Arrays.asList(tienGuis));
 			} catch (Exception e) {
 			}
 			tienMatTkDs.addAll(tienGuiTkDs);
@@ -223,7 +220,7 @@ public class KyKeToanController {
 			List<LoaiTaiKhoan> congNoTkDs = new ArrayList<>();
 			try {
 				String[] congNos = props.getCauHinh(PropCont.TAI_KHOAN_CONG_NO).getGiaTri().split(";");
-				congNoTkDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(congNos));
+				congNoTkDs = taiKhoanDAO.danhSachTaiKhoanCon(Arrays.asList(congNos));
 			} catch (Exception e) {
 			}
 
@@ -231,7 +228,7 @@ public class KyKeToanController {
 			List<LoaiTaiKhoan> khoTkDs = new ArrayList<>();
 			try {
 				String[] khos = props.getCauHinh(PropCont.TAI_KHOAN_KHO_VTHH).getGiaTri().split(";");
-				khoTkDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(khos));
+				khoTkDs = taiKhoanDAO.danhSachTaiKhoanCon(Arrays.asList(khos));
 			} catch (Exception e) {
 			}
 
@@ -245,7 +242,6 @@ public class KyKeToanController {
 			List<DonVi> donViDs = hangHoaDAO.danhSachDonViHangHoa();
 
 			model.addAttribute("loaiTienDs", loaiTienDs);
-			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 			model.addAttribute("khDs", khDs);
 			model.addAttribute("nccDs", nccDs);
 			model.addAttribute("nvDs", nvDs);

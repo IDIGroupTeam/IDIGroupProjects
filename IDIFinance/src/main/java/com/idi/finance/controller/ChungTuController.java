@@ -1667,7 +1667,7 @@ public class ChungTuController {
 							chungTu.getLoaiTien().getBanRa());
 					hangHoa.getTkThueNk().getSoTien().setSoTien(thue);
 					hangHoa.getTkThueNk().getSoTien().setLoaiTien(chungTu.getLoaiTien());
-					hangHoa.getTkThueNk().setNhomDk(1);
+					// hangHoa.getTkThueNk().setNhomDk(1);
 					tongThue = Utils.add(tongThue, thue);
 
 					if (soHangHoa > 1) {
@@ -1683,7 +1683,7 @@ public class ChungTuController {
 							chungTu.getLoaiTien().getBanRa());
 					hangHoa.getTkThueTtdb().getSoTien().setSoTien(thue);
 					hangHoa.getTkThueTtdb().getSoTien().setLoaiTien(chungTu.getLoaiTien());
-					hangHoa.getTkThueTtdb().setNhomDk(1);
+					// hangHoa.getTkThueTtdb().setNhomDk(1);
 					tongThue = Utils.add(tongThue, thue);
 
 					if (soHangHoa > 1) {
@@ -1703,9 +1703,9 @@ public class ChungTuController {
 					hangHoa.getTkThueGtgt().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 					if (chungTu.getTinhChatCt() == ChungTu.HANG_HOA_TRONG_NUOC
 							|| chungTu.getTinhChatCt() == ChungTu.DICH_VU_TRONG_NUOC) {
-						hangHoa.getTkThueGtgt().setNhomDk(0);
+						// hangHoa.getTkThueGtgt().setNhomDk(0);
 					} else {
-						hangHoa.getTkThueGtgt().setNhomDk(1);
+						// hangHoa.getTkThueGtgt().setNhomDk(1);
 					}
 
 					if (soHangHoa > 1) {
@@ -1762,7 +1762,7 @@ public class ChungTuController {
 				if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null) {
 					hangHoa.getTkThanhtoan().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 					hangHoa.getTkThanhtoan().getSoTien().setSoTien(tongDonGia);
-					hangHoa.getTkThanhtoan().setNhomDk(1);
+					// hangHoa.getTkThanhtoan().setNhomDk(1);
 					if (chungTu.getTinhChatCt() == ChungTu.HANG_HOA_TRONG_NUOC
 							|| chungTu.getTinhChatCt() == ChungTu.DICH_VU_TRONG_NUOC) {
 						hangHoa.getTkThanhtoan().getSoTien().setSoTien(tongTienToanBo);

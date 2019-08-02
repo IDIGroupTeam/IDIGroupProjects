@@ -131,8 +131,13 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 	@Override
 	public List<KyKeToan> danhSachKyKeToan() {
 		String query = DANH_SACH_KY_KE_TOAN;
-
+		logger.info("Danh sách kỳ kế toán");
 		List<KyKeToan> kyKeToanDs = jdbcTmpl.query(query, new KyKeToanMapper());
+		if (kyKeToanDs != null) {
+			logger.info("Kết quả: " + kyKeToanDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
 
 		return kyKeToanDs;
 	}
@@ -149,6 +154,8 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 				kyKeToan.setTrangThai(rs.getInt("TRANG_THAI"));
 				kyKeToan.setMacDinh(rs.getInt("MAC_DINH"));
 
+				logger.info(kyKeToan);
+
 				return kyKeToan;
 			} catch (Exception e) {
 				return null;
@@ -159,10 +166,16 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 	@Override
 	public KyKeToan layKyKeToan(int maKyKt) {
 		String query = LAY_KY_KE_TOAN;
+		logger.info("Lấy kỳ kế toán theo mã");
+		logger.info(query);
+		logger.info("Mã kỳ kế toán: " + maKyKt);
 
 		try {
 			Object[] objs = { maKyKt };
 			KyKeToan kyKeToan = jdbcTmpl.queryForObject(query, objs, new KyKeToanMapper());
+			logger.info("Kết quả: " + kyKeToan);
+
+			kyKeToan.setSoDuKyDs(danhSachSoDuKy(kyKeToan.getMaKyKt()));
 
 			return kyKeToan;
 		} catch (Exception e) {
@@ -185,6 +198,8 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 			Object[] objs = { ngayHt, ngayHt };
 			KyKeToan kyKeToan = jdbcTmpl.queryForObject(query, objs, new KyKeToanMapper());
 
+			kyKeToan.setSoDuKyDs(danhSachSoDuKy(kyKeToan.getMaKyKt()));
+
 			return kyKeToan;
 		} catch (Exception e) {
 			return null;
@@ -196,7 +211,14 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 		String query = LAY_KY_KE_TOAN_MAC_DINH;
 
 		try {
+			logger.info("Lấy kỳ kế toán mặc định");
+			logger.info(query);
 			List<KyKeToan> kyKeToanDs = jdbcTmpl.query(query, new KyKeToanMapper());
+			if (kyKeToanDs != null) {
+				logger.info("Kết quả: " + kyKeToanDs.size());
+			} else {
+				logger.info("Kết quả: " + 0);
+			}
 
 			KyKeToan kyKeToan = kyKeToanDs.get(0);
 			kyKeToan.setSoDuKyDs(danhSachSoDuKy(kyKeToan.getMaKyKt()));
@@ -418,6 +440,12 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 
 			Object[] objs = { maKkt };
 			List<SoDuKy> soDuKyDs = jdbcTmpl.query(query, objs, new SoDuKyMapper());
+			if (soDuKyDs != null) {
+				logger.info("Kết quả: " + soDuKyDs.size());
+			} else {
+				logger.info("Kết quả: " + 0);
+			}
+
 			return soDuKyDs;
 		} catch (Exception e) {
 			return null;
@@ -529,7 +557,6 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 
 		logger.info("Danh sách số dư kỳ theo hàng hóa");
 		String query = LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK;
-		logger.info(query);
 
 		try {
 			if (maKhoDs != null) {
@@ -556,7 +583,13 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 			logger.info("Mã kho " + maKhoDs);
 
 			Object[] objs = { maKkt, maTk };
-			return jdbcTmpl.query(query, objs, new SoDuKyHangHoaKhoMapper());
+			List<SoDuKy> soDuKyDs = jdbcTmpl.query(query, objs, new SoDuKyHangHoaKhoMapper());
+			if (soDuKyDs != null) {
+				logger.info("Kết quả: " + soDuKyDs.size());
+			} else {
+				logger.info("Kết quả: " + 0);
+			}
+			return soDuKyDs;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -591,9 +624,14 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 		String query = LAY_SO_DU_KY_THEO_TK_KKT;
 
 		try {
+			logger.info("Lấy số dư kỳ");
+			logger.info(query);
+			logger.info("maTk: " + maTk);
+			logger.info("maKkt: " + maKkt);
 			Object[] objs = { maTk, maKkt };
 			SoDuKy soDuKy = jdbcTmpl.queryForObject(query, objs, new SoDuKyMapper());
 
+			logger.info("Kết quả: " + 1);
 			return soDuKy;
 		} catch (Exception e) {
 			return null;
@@ -812,7 +850,7 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 				soDuKy.setHangHoa(hangHoa);
 				soDuKy.setKhoHang(khoHang);
 
-				logger.info(soDuKy + " - " + hangHoa.getSoLuong());
+				logger.info(soDuKy);
 				return soDuKy;
 			} catch (Exception e) {
 				e.printStackTrace();

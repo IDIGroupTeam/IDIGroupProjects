@@ -49,8 +49,16 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 	public LoaiTaiKhoan layTaiKhoan(String maTk) {
 		String query = LAY_LOAI_TAI_KHOAN_THEO_MA_TK;
 
+		logger.info("Lấy tài khoản");
+		logger.info(query);
+		logger.info("Mã tài khoản: " + maTk);
 		Object[] objs = { maTk };
 		List<LoaiTaiKhoan> loaiTaiKhoanDs = jdbcTmpl.query(query, objs, new LoaiTaiKhoanMapper());
+		if (loaiTaiKhoanDs != null) {
+			logger.info("Kết quả: " + loaiTaiKhoanDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
 
 		if (loaiTaiKhoanDs != null && loaiTaiKhoanDs.size() > 0) {
 			return loaiTaiKhoanDs.get(0);
@@ -291,7 +299,7 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 	public List<LoaiTaiKhoan> danhSachTaiKhoan(List<String> maTkDs) {
 		if (maTkDs == null || maTkDs == null || maTkDs.size() == 0)
 			return null;
-
+		logger.info("Danh sách tài khoản");
 		String condition = "'";
 		for (String maTk : maTkDs) {
 			condition += "^" + maTk + "|";
@@ -302,8 +310,14 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 		String query = DANH_SACH_TAI_KHOAN_THEO_MA_TK;
 		query = query.replaceAll("\\$MA_TK_LIST\\$", condition);
 		logger.info(query);
+		logger.info("Mã tài khoản: " + maTkDs);
 
 		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, new LoaiTaiKhoanMapper());
+		if (taiKhoanDs != null) {
+			logger.info("Kết quả: " + taiKhoanDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
 
 		return taiKhoanDs;
 	}

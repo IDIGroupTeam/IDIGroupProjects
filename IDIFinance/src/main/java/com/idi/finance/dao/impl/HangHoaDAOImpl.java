@@ -487,6 +487,11 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 		logger.info(query);
 
 		List<KhoHang> hangHoaDs = jdbcTmpl.query(query, new KhoBaiMapper());
+		if (hangHoaDs != null) {
+			logger.info("Kết quả: " + hangHoaDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
 		return hangHoaDs;
 	}
 

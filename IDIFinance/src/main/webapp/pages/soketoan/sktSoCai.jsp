@@ -333,17 +333,17 @@
 					</c:choose>
 
 					<c:forEach items="${duLieuKeToanDs}" var="duLieuKeToan">
-						<tr>
+						<%-- <tr>
 							<td></td>
 							<td></td>
 							<td colspan="5"><b>Kỳ <fmt:formatDate
 										value="${duLieuKeToan.kyKeToan.dau}" pattern="dd/M/yyyy"></fmt:formatDate>
 									- <fmt:formatDate value="${duLieuKeToan.kyKeToan.cuoi}"
 										pattern="dd/M/yyyy"></fmt:formatDate></b></td>
-						</tr>
+						</tr> --%>
 						<c:choose>
 							<c:when test="${loaiTaiKhoan.luongTinh}">
-								<tr>
+								<%-- <tr>
 									<td></td>
 									<td></td>
 									<td><i>Số dư đầu kỳ</i></td>
@@ -353,10 +353,10 @@
 									<td class="text-right"><fmt:formatNumber
 											value="${duLieuKeToan.coDauKy}" type="NUMBER"></fmt:formatNumber></td>
 									<td></td>
-								</tr>
+								</tr> --%>
 							</c:when>
 							<c:otherwise>
-								<tr>
+								<%-- <tr>
 									<td></td>
 									<td></td>
 									<td><i>Số dư đầu kỳ</i></td>
@@ -372,7 +372,7 @@
 												value="${0-duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
 									</c:if>
 									<td></td>
-								</tr>
+								</tr> --%>
 							</c:otherwise>
 						</c:choose>
 						<c:forEach items="${duLieuKeToan.nghiepVuKeToanDs}"
@@ -482,7 +482,7 @@
 								</c:choose>
 							</tr>
 						</c:forEach>
-						<tr>
+						<%-- <tr>
 							<td></td>
 							<td></td>
 							<td><i>Tổng phát sinh trong kỳ</i></td>
@@ -492,10 +492,10 @@
 							<td class="text-right"><fmt:formatNumber
 									value="${duLieuKeToan.tongCoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
 							<td></td>
-						</tr>
+						</tr> --%>
 						<c:choose>
 							<c:when test="${loaiTaiKhoan.luongTinh}">
-								<tr>
+								<%-- <tr>
 									<td></td>
 									<td></td>
 									<td><i>Số dư cuối kỳ</i></td>
@@ -505,10 +505,10 @@
 									<td class="text-right"><fmt:formatNumber
 											value="${duLieuKeToan.coCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
 									<td></td>
-								</tr>
+								</tr> --%>
 							</c:when>
 							<c:otherwise>
-								<tr>
+								<%-- <tr>
 									<td></td>
 									<td></td>
 									<td><i>Số dư cuối kỳ</i></td>
@@ -524,7 +524,7 @@
 												value="${0-duLieuKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
 									</c:if>
 									<td></td>
-								</tr>
+								</tr> --%>
 							</c:otherwise>
 						</c:choose>
 					</c:forEach>

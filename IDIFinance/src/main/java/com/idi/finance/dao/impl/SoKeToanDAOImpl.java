@@ -84,7 +84,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		String query = TONG_PHAT_SINH;
 		query = query.replaceAll("\\$MA_TK\\$", maTk);
 
-		logger.info("Danh sách tổng phát sinh");
+		logger.info("Tổng phát sinh");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
 		if (dau != null) {
 			String batDau = sdf.format(dau);
@@ -102,14 +102,16 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "");
 		}
 
-		logger.info("maTk " + maTk);
 		logger.info(query);
+		logger.info("maTk " + maTk);
 
 		try {
 			Object[] objs = { soDu };
 			double result = jdbcTmpl.queryForObject(query, objs, Double.class);
+			logger.info("Kết quả: " + result);
 			return result;
 		} catch (Exception e) {
+			logger.info("Kết quả: " + 0);
 			return 0;
 		}
 	}
@@ -247,6 +249,12 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		logger.info(query);
 
 		List<NghiepVuKeToan> nghiepVuKeToanDs = jdbcTmpl.query(query, new NghiepVuKeToanMapper());
+		if (nghiepVuKeToanDs != null) {
+			logger.info("Kết quả: " + nghiepVuKeToanDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
+
 		return nghiepVuKeToanDs;
 	}
 
@@ -277,10 +285,12 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		}
 
 		logger.info(query);
-
 		List<NghiepVuKeToan> nghiepVuKeToanDs = jdbcTmpl.query(query, new NghiepVuKeToanMapper());
-
-		logger.info("PT/PC: " + nghiepVuKeToanDs.size());
+		if (nghiepVuKeToanDs != null) {
+			logger.info("Kết quả: " + nghiepVuKeToanDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
 
 		return nghiepVuKeToanDs;
 	}
@@ -359,6 +369,8 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				nghiepVuKeToan.setTaiKhoanNo(taiKhoanNo);
 				nghiepVuKeToan.setTaiKhoanCo(taiKhoanCo);
 
+				logger.info(nghiepVuKeToan);
+
 				return nghiepVuKeToan;
 			} catch (Exception e) {
 				return null;
@@ -374,7 +386,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		String query = DANH_SACH_NGHIEP_VU_KE_TOAN_KTTH_THEO_DIEU_KIEN;
 		query = query.replaceAll("\\$MA_TK\\$", maTk);
 
-		logger.info("Danh sách nghiệp vụ kế toán theo loại tài khoản: '" + maTk + "' ...");
+		logger.info("Danh sách nghiệp vụ kế toán tổng hợp theo loại tài khoản: '" + maTk + "' ...");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
 		if (dau != null) {
 			String batDau = sdf.format(dau);
@@ -394,6 +406,11 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 		logger.info(query);
 		List<NghiepVuKeToan> nghiepVuKeToanDs = jdbcTmpl.query(query, new NghiepVuKeToanKtthMapper());
+		if (nghiepVuKeToanDs != null) {
+			logger.info("Kết quả: " + nghiepVuKeToanDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
 
 		return nghiepVuKeToanDs;
 	}
@@ -480,6 +497,8 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				nghiepVuKeToan.setTaiKhoanNo(taiKhoanNo);
 				nghiepVuKeToan.setTaiKhoanCo(taiKhoanCo);
 
+				logger.info(nghiepVuKeToan);
+
 				return nghiepVuKeToan;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -517,6 +536,11 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 		logger.info(query);
 		List<NghiepVuKeToan> nghiepVuKeToanDs = jdbcTmpl.query(query, new NghiepVuKeToanKhoMapper());
+		if (nghiepVuKeToanDs != null) {
+			logger.info("Kết quả: " + nghiepVuKeToanDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
 
 		return nghiepVuKeToanDs;
 	}
@@ -599,6 +623,8 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				nghiepVuKeToan.setTaiKhoanNo(taiKhoanNo);
 				nghiepVuKeToan.setTaiKhoanCo(taiKhoanCo);
 
+				logger.info(nghiepVuKeToan);
+
 				return nghiepVuKeToan;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -636,6 +662,11 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 		logger.info(query);
 		List<NghiepVuKeToan> nghiepVuKeToanDs = jdbcTmpl.query(query, new NghiepVuKeToanKcMapper());
+		if (nghiepVuKeToanDs != null) {
+			logger.info("Kết quả: " + nghiepVuKeToanDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
 
 		return nghiepVuKeToanDs;
 	}
@@ -706,6 +737,8 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				nghiepVuKeToan.setTaiKhoanNo(taiKhoanNo);
 				nghiepVuKeToan.setTaiKhoanCo(taiKhoanCo);
 
+				logger.info(nghiepVuKeToan);
+
 				return nghiepVuKeToan;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -737,6 +770,11 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		try {
 			logger.info(query);
 			taiKhoanDs = jdbcTmpl.query(query, new TongPhatSinhMapper());
+			if (taiKhoanDs != null) {
+				logger.info("Kết quả: " + taiKhoanDs.size());
+			} else {
+				logger.info("Kết quả: " + 0);
+			}
 		} catch (Exception e) {
 
 		}
@@ -761,6 +799,8 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				taiKhoan.setLoaiTaiKhoan(loaiTaiKhoan);
 				taiKhoan.setSoTien(tien);
 				taiKhoan.setSoDu(rs.getInt("SO_DU"));
+
+				logger.info(taiKhoan);
 
 				return taiKhoan;
 			} catch (Exception e) {
@@ -799,6 +839,11 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		logger.info(query);
 
 		List<DuLieuKeToan> duLieuKeToanDs = jdbcTmpl.query(query, new DuLieuKeToanMapper());
+		if (duLieuKeToanDs != null) {
+			logger.info("Kết quả: " + duLieuKeToanDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
 
 		List<DuLieuKeToan> ketQua = null;
 		// Ghép dữ liệu tại đây
@@ -816,6 +861,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 					ketQua.add(duLieuKeToan);
 				}
 			}
+			logger.info("Kết quả trả về: " + ketQua.size());
 		}
 
 		return ketQua;
@@ -920,10 +966,16 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		logger.info(query);
 
 		List<DuLieuKeToan> duLieuKeToanDs = jdbcTmpl.query(query, new DuLieuKeToanHangHoaMapper());
+		if (duLieuKeToanDs != null) {
+			logger.info("Kết quả: " + duLieuKeToanDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
 
 		List<DuLieuKeToan> ketQua = null;
 		// Ghép dữ liệu tại đây
 		if (duLieuKeToanDs != null) {
+			logger.info("Ghép dữ liệu");
 			ketQua = new ArrayList<>();
 			Iterator<DuLieuKeToan> iter = duLieuKeToanDs.iterator();
 			while (iter.hasNext()) {
@@ -937,6 +989,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 					ketQua.add(duLieuKeToan);
 				}
 			}
+			logger.info("Kết quả trả về: " + ketQua.size());
 		}
 
 		return ketQua;
@@ -958,20 +1011,37 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				donVi.setMoTa(rs.getString("MO_TA"));
 				hangHoa.setDonVi(donVi);
 
+				// KhoHang khoHang = new KhoHang();
+				// khoHang.setMaKho(rs.getInt("MA_KHO_GIA_TRI"));
+				// khoHang.setKyHieuKho(rs.getString("KH_KHO"));
+				// khoHang.setTenKho(rs.getString("TEN_KHO"));
+				// khoHang.setChieu(rs.getInt("CHIEU"));
+				// hangHoa.setKho(khoHang);
+
 				duLieuKeToan.setHangHoa(hangHoa);
-				int chieu = rs.getInt("CHIEU");
+				duLieuKeToan.setChieu(rs.getInt("CHIEU"));
+				// duLieuKeToan.setKhoHang(khoHang);
 
 				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
-				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
-				loaiTaiKhoan.setSoDu(rs.getInt("SO_DU"));
-				loaiTaiKhoan.setLuongTinh(rs.getBoolean("LUONG_TINH"));
+				loaiTaiKhoan.setSoDuGiaTri(rs.getInt("SO_DU_GIA_TRI"));
+				loaiTaiKhoan.setMaTk(rs.getString("MA_TK_GIA_TRI"));
+				// loaiTaiKhoan.setSoDu(rs.getInt("SO_DU"));
+				// loaiTaiKhoan.setLuongTinh(rs.getBoolean("LUONG_TINH"));
 				duLieuKeToan.setLoaiTaiKhoan(loaiTaiKhoan);
 
-				if (loaiTaiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
+				if (loaiTaiKhoan.getSoDuGiaTri() == LoaiTaiKhoan.NO) {
 					duLieuKeToan.setTongNoPhatSinh(rs.getDouble("SO_TIEN"));
 				} else {
 					duLieuKeToan.setTongCoPhatSinh(rs.getDouble("SO_TIEN"));
 				}
+
+				if (duLieuKeToan.getChieu() == ChungTu.MUA) {
+					duLieuKeToan.setSoLuongNhapPhatSinh(rs.getDouble("SO_LUONG"));
+				} else {
+					duLieuKeToan.setSoLuongXuatPhatSinh(rs.getDouble("SO_LUONG"));
+				}
+
+				logger.info(duLieuKeToan);
 
 				return duLieuKeToan;
 			} catch (Exception e) {
