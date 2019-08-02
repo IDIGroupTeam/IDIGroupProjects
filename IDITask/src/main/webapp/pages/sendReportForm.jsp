@@ -12,6 +12,19 @@
 <script type="text/javascript" src="${url}/public/js/jquery.min.js"></script>
 <!-- Include the plugin's CSS and JS: -->
 
+<style type="text/css">
+table {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+td, th {
+	border: 1px solid #E8E3E3;
+	text-align: left;
+	padding: 8px;
+}
+</style>
 
 <!-- Initialize the plugin: -->
 <script type="text/javascript">
@@ -72,20 +85,36 @@ $(function(){
 				<td>
 					<table class="table table-striped">
 						<tr>
-							<th nowrap="nowrap">Mã việc</th>
+							<c:if test="${ not empty isTaskId}">
+								<th nowrap="nowrap">Mã việc</th>
+							</c:if>
 							<th>Tên việc</th>
+							<c:if test="${ not empty isDes}">
+								<th>Mô tả</th>
+							</c:if>	
 							<th>Người làm</th>
 							<th nowrap="nowrap">Trạng thái</th>
-							<th nowrap="nowrap">Thời gian ước lượng</th>
+							<c:if test="${ not empty isEstimateTime}">
+								<th nowrap="nowrap">Thời gian ước lượng</th>
+							</c:if>
 							<th nowrap="nowrap">Thời gian đã làm</th>
-							<th nowrap="nowrap">Cập nhật gần nhất</th>
-							<th nowrap="nowrap">Ngày phải xong</th>
+							<c:if test="${ not empty isUpdatedTime}">
+								<th nowrap="nowrap">Cập nhật gần nhất</th>
+							</c:if>
+							<c:if test="${ not empty isdueDate}">
+								<th nowrap="nowrap">Ngày phải xong</th>
+							</c:if>
 							<th nowrap="nowrap">Nhận xét đánh giá</th>
 						</tr>
 						<c:forEach var="task" items="${tasks}">
 							<tr>
-								<td>${task.taskId}</td>
+								<c:if test="${ not empty isTaskId}">
+									<td>${task.taskId}</td>
+								</c:if>
 								<td>${task.taskName}</td>
+								<c:if test="${ not empty isDes}">
+									<td>${task.description}</td>
+								</c:if>
 								<c:if test="${task.ownedBy == 0}">
 									<td>Chưa giao cho ai</td>
 								</c:if>
@@ -93,10 +122,16 @@ $(function(){
 									<td nowrap="nowrap">${task.ownerName}</td>
 								</c:if>
 								<td>${task.status}</td>
-								<td>${task.estimate} ${task.estimateTimeType}</td>
-								<td>${task.timeSpent} ${task.timeSpentType}</td>								
-								<td>${task.updateTS}</td>
-								<td>${task.dueDate}</td>
+								<c:if test="${ not empty isEstimateTime}">
+									<td>${task.estimate} ${task.estimateTimeType}</td>
+								</c:if>
+								<td>${task.timeSpent} ${task.timeSpentType}</td>		
+								<c:if test="${ not empty isUpdatedTime}">						
+									<td>${task.updateTS}</td>
+								</c:if>
+								<c:if test="${ not empty isdueDate}">
+									<td>${task.dueDate}</td>
+								</c:if>
 								<td>${task.reviewComment}</td>
 							</tr>
 						</c:forEach>

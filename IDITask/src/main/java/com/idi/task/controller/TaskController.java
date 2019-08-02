@@ -1156,6 +1156,13 @@ public class TaskController {
 		return "taskReport";
 	}
 
+	private boolean isTaskId = false;
+	private boolean isEstimateTime = false;
+	private boolean isUpdatedTime = false;
+	private boolean isdueDate = false;
+	private boolean isDes = false;
+	private String unSelected = "";
+	
 	@RequestMapping("/sendReportForm")
 	public String sendReportForm(Model model, @ModelAttribute("fDate") String fDate,
 			@ModelAttribute("tDate") String tDate, @ModelAttribute("eName") String eName,
@@ -1179,7 +1186,19 @@ public class TaskController {
 		taskReportForm.setToDate(tDate);
 		taskReportForm.setEmployeeId(eId);
 		taskReportForm.setDepartment(dept);
+		taskReportForm.setUnSelect(unSelected);
 		list = taskDAO.getTasksForReport(taskReportForm);
+		
+		if(isTaskId)
+			model.addAttribute("isTaskId", "Y");
+		if(isDes) 
+			model.addAttribute("isDes", "Y");		
+		if(isEstimateTime)
+			model.addAttribute("isEstimateTime", "Y");
+		if(isUpdatedTime) 
+			model.addAttribute("isUpdatedTime", "Y");
+		if(isdueDate)
+			model.addAttribute("isdueDate", "Y");
 		
 		// get list employee email
 		model.addAttribute("employeeEmailMap", employeesEmail("all"));
@@ -1250,12 +1269,7 @@ public class TaskController {
 			e.printStackTrace();
 		}
 		return "sentReport";
-	}
-	
-	private boolean isTaskId = false;
-	private boolean isEstimateTime = false;
-	private boolean isUpdatedTime = false;
-	private boolean isdueDate = false;
+	}	
 
 	@RequestMapping("/exportToPDF")
 	public String getPDF(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm)
@@ -1265,6 +1279,8 @@ public class TaskController {
 			isEstimateTime = false;
 			isUpdatedTime = false;
 			isdueDate = false;
+			isDes = false;
+			
 			// Document document = new Document();
 			Document document = new Document(PageSize.A4.rotate());
 			String path = properties.getProperty("REPORT_PATH");
@@ -1290,6 +1306,10 @@ public class TaskController {
 			if(taskReportForm.getDueDateCheck() != null && taskReportForm.getDueDateCheck().equalsIgnoreCase("Y")) {
 				columnAdded = columnAdded + 1;
 				isdueDate = true;
+			}
+			if(taskReportForm.getDesCheck() != null && taskReportForm.getDesCheck().equalsIgnoreCase("Y")) {
+				columnAdded = columnAdded + 1;
+				isDes = true;
 			}
 			
 			int eId = taskReportForm.getEmployeeId();
@@ -1325,7 +1345,7 @@ public class TaskController {
 			List<Task> list = null;
 			//List<Task> listTask = null;
 			list = taskDAO.getTasksForReport(taskReportForm);
-			//System.err.println("uncheck " + taskReportForm.getUnSelect());
+			unSelected = taskReportForm.getUnSelect();
 			// tinh tong thoi gian da lam va tg estimate
 			float timeEstimateTotal = 0;
 			float timeSpentTotal = 0;
@@ -1435,6 +1455,12 @@ public class TaskController {
 		header.setPhrase(new Phrase("Tên việc", font));
 		table.addCell(header);
 		
+		if(isDes) {
+			header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+			header.setPhrase(new Phrase("Mô tả", font));
+			table.addCell(header);
+		}
+		
 		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
 		header.setPhrase(new Phrase("Người làm", font));
 		table.addCell(header);
@@ -1482,6 +1508,8 @@ public class TaskController {
 			if(isTaskId)
 				table.addCell(String.valueOf(task.getTaskId()));
 			table.addCell(new Paragraph(task.getTaskName(), font));
+			if(isDes)
+				table.addCell(new Paragraph(task.getDescription(), font));
 			if(task.getOwnerName() != null && task.getOwnerName().length() > 0)
 				table.addCell(new Paragraph(task.getOwnerName(), font));
 			else

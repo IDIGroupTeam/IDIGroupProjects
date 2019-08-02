@@ -79,6 +79,7 @@ tr:nth-child(even) {
 				<th title="Check để loại bỏ trong báo cáo">Bỏ</th>
 				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Mã việc &nbsp;<form:checkbox path="idCheck" class="form-check-input" value="Y" id="idCheck"/></th>
 				<th>Tên việc</th>
+				<th title="Check để thêm cột này vào báo cáo">Mô tả &nbsp;<form:checkbox path="desCheck" value="Y" class="form-check-input" id="desCheck"/></th>
 				<th>Người làm</th>
 				<th nowrap="nowrap">Trạng thái</th>			
 				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Thời gian ước lượng  &nbsp;<form:checkbox path="estimateCheck" value="Y" class="form-check-input" id="estimateCheck"/></th>
@@ -92,6 +93,7 @@ tr:nth-child(even) {
 					<td  title="Check để loại bỏ dòng này trong báo cáo"><form:checkbox path="unSelect" class="form-check-input" value="${task.taskId}" id="unSelect"/></td>
 					<td>${task.taskId}</td>
 					<td>${task.taskName}</td>
+					<td>${task.description}</td>
 					<c:if test="${task.ownedBy == 0}">
 						<td nowrap="nowrap">Chưa giao cho ai</td>
 					</c:if>
