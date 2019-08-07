@@ -314,6 +314,7 @@ public class DuLieuKeToan {
 			Collections.sort(nghiepVuKeToanDs);
 
 			double ton = soDuDauKy * loaiTaiKhoan.getSoDu() * -1;
+			double slTon = soLuongDuDauKy;
 
 			Iterator<NghiepVuKeToan> iter = nghiepVuKeToanDs.iterator();
 			while (iter.hasNext()) {
@@ -325,8 +326,10 @@ public class DuLieuKeToan {
 					} else if (nghiepVuKeToan.getTaiKhoanCo().getLoaiTaiKhoan().isTrucHe(loaiTaiKhoan)) {
 						ton += nghiepVuKeToan.getTaiKhoanCo().getSoTien().getGiaTri() * loaiTaiKhoan.getSoDu();
 					}
+					slTon += nghiepVuKeToan.getHangHoa().getSoLuong() * nghiepVuKeToan.getChungTu().getChieu();
 
 					nghiepVuKeToan.setTon(ton);
+					nghiepVuKeToan.setSlTon(slTon);
 				} catch (Exception e) {
 					// e.printStackTrace();
 				}
@@ -348,6 +351,14 @@ public class DuLieuKeToan {
 
 	public void setDuLieuKeToanDs(List<DuLieuKeToan> duLieuKeToanDs) {
 		this.duLieuKeToanDs = duLieuKeToanDs;
+	}
+
+	public void capNhatDuLieuKeToan(DuLieuKeToan duLieuKeToan) {
+		if (duLieuKeToan != null) {
+			List<DuLieuKeToan> ketQuaDs = new ArrayList<>();
+			ketQuaDs.add(duLieuKeToan);
+			capNhatDuLieuKeToan(ketQuaDs);
+		}
 	}
 
 	public void capNhatDuLieuKeToan(List<DuLieuKeToan> duLieuKeToanDs) {

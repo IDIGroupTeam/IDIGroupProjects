@@ -58,5 +58,7 @@ public interface KyKeToanDAO {
 
 	public SoDuKy laySoDuKyTheoHangHoa(String maTk, int maKkt, int maHh, int maKho);
 
+	public SoDuKy laySoDuKyTheoHangHoa(String maTk, int maKkt, int maHh, List<Integer> maKhoDs);
+
 	public void themCapNhatSoDuDauKy(SoDuKy soDuKy);
 }

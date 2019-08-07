@@ -40,7 +40,7 @@
 				<th class="text-center" rowspan="2">Diễn dải</th>
 				<th class="text-center" rowspan="2" style="width: 100px;">Tài
 					khoản đối ứng</th>
-				<th class="text-center" colspan="2">Số tiền (*)</th>
+				<th class="text-center" colspan="3">Số tiền (*)</th>
 				<th class="text-center" rowspan="2" style="width: 100px;">Ghi
 					chú</th>
 			</tr>
@@ -49,19 +49,20 @@
 				<th class="text-center" style="width: 50px;">Số</th>
 				<th class="text-center">Nợ</th>
 				<th class="text-center">Có</th>
+				<th class="text-center">Tồn</th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:forEach items="${duLieuKeToanDs}" var="duLieuKeToan">
 				<%-- <tr>
-					<td colspan="7"><b>Kỳ <fmt:formatDate
+					<td colspan="8"><b>Kỳ <fmt:formatDate
 								value="${duLieuKeToan.kyKeToan.dau}" pattern="dd/M/yyyy"></fmt:formatDate>
 							- <fmt:formatDate value="${duLieuKeToan.kyKeToan.cuoi}"
 								pattern="dd/M/yyyy"></fmt:formatDate></b></td>
 				</tr> --%>
 				<c:forEach items="${duLieuKeToan.doiTuongDs}" var="doiTuong">
 					<tr>
-						<td colspan="7"><c:choose>
+						<td colspan="8"><c:choose>
 								<c:when test="${doiTuong.loaiDt==DoiTuong.KHACH_HANG}">
 									<b>Khách hàng:&nbsp;${doiTuong.tenDt}</b>
 								</c:when>
@@ -82,6 +83,7 @@
 								value="${doiTuong.duLieuKeToan.noDauKy}" type="NUMBER"></fmt:formatNumber></td>
 						<td class="text-right"><fmt:formatNumber
 								value="${doiTuong.duLieuKeToan.coDauKy}" type="NUMBER"></fmt:formatNumber></td>
+						<td></td>
 						<td></td>
 					</tr>
 					<c:forEach items="${doiTuong.duLieuKeToan.nghiepVuKeToanDs}"
@@ -163,6 +165,7 @@
 												type="NUMBER"></fmt:formatNumber></td>
 									</c:if>
 									<td></td>
+									<td></td>
 								</c:when>
 								<c:when
 									test="${nghiepVuKeToan.taiKhoanCo.soTien.soTien > nghiepVuKeToan.taiKhoanNo.soTien.soTien}">
@@ -186,6 +189,7 @@
 												type="NUMBER"></fmt:formatNumber></td>
 									</c:if>
 									<td></td>
+									<td></td>
 								</c:when>
 							</c:choose>
 						</tr>
@@ -200,6 +204,7 @@
 						<td class="text-right"><fmt:formatNumber
 								value="${doiTuong.duLieuKeToan.tongCoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
 						<td></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td></td>
@@ -210,6 +215,7 @@
 								value="${doiTuong.duLieuKeToan.noCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
 						<td class="text-right"><fmt:formatNumber
 								value="${doiTuong.duLieuKeToan.coCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+						<td></td>
 						<td></td>
 					</tr>
 				</c:forEach>

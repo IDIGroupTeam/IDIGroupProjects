@@ -127,16 +127,18 @@ public class SoKeToanController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-			KyKeToan kyKeToan = dungChung.getKyKeToan();
-			if (kyKeToan == null) {
-				return "koKyKeToanMacDinh";
-			}
 
 			// Lấy kỳ kế toán mặc định
+			KyKeToan kyKeToan = null;
 			if (form.getKyKeToan() == null) {
-				form.setKyKeToan(dungChung.getKyKeToan());
+				kyKeToan = dungChung.getKyKeToan();
 			} else {
-				form.setKyKeToan(kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt()));
+				kyKeToan = kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt());
+			}
+
+			form.setKyKeToan(kyKeToan);
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
 			}
 
 			Date homNay = new Date();
@@ -550,16 +552,18 @@ public class SoKeToanController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-			KyKeToan kyKeToan = dungChung.getKyKeToan();
-			if (kyKeToan == null) {
-				return "koKyKeToanMacDinh";
-			}
 
 			// Lấy kỳ kế toán mặc định
+			KyKeToan kyKeToan = null;
 			if (form.getKyKeToan() == null) {
-				form.setKyKeToan(dungChung.getKyKeToan());
+				kyKeToan = dungChung.getKyKeToan();
 			} else {
-				form.setKyKeToan(kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt()));
+				kyKeToan = kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt());
+			}
+
+			form.setKyKeToan(kyKeToan);
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
 			}
 
 			Date homNay = new Date();
@@ -625,9 +629,9 @@ public class SoKeToanController {
 						form.getKyKeToan().getMaKyKt());
 
 				// Tính nợ/có đầu kỳ của tất cả các đối tượng
-				List<DuLieuKeToan> noCoDauKyDs = soKeToanDAO.danhSachTongHopCongNo(form.getTaiKhoan(),
+				List<DuLieuKeToan> noCoDauKyDs = soKeToanDAO.danhSachPhatSinhCongNo(form.getTaiKhoan(),
 						form.getKyKeToan().getBatDau(), Utils.prevPeriod(kyKt).getCuoi());
-				List<DuLieuKeToan> noCoDauKyKtthDs = soKeToanDAO.danhSachTongHopCongNoKtth(form.getTaiKhoan(),
+				List<DuLieuKeToan> noCoDauKyKtthDs = soKeToanDAO.danhSachPhatSinhCongNoKtth(form.getTaiKhoan(),
 						form.getKyKeToan().getBatDau(), Utils.prevPeriod(kyKt).getCuoi());
 				if (noCoDauKyDs != null) {
 					if (noCoDauKyKtthDs != null) {
@@ -709,9 +713,9 @@ public class SoKeToanController {
 				}
 
 				// Tính nợ/có phát sinh trong kỳ của tất cả các đối tượng
-				List<DuLieuKeToan> tongNoCoPsDs = soKeToanDAO.danhSachTongHopCongNo(form.getTaiKhoan(), kyKt.getDau(),
+				List<DuLieuKeToan> tongNoCoPsDs = soKeToanDAO.danhSachPhatSinhCongNo(form.getTaiKhoan(), kyKt.getDau(),
 						kyKt.getCuoi());
-				List<DuLieuKeToan> tongNoCoPsKtthDs = soKeToanDAO.danhSachTongHopCongNoKtth(form.getTaiKhoan(),
+				List<DuLieuKeToan> tongNoCoPsKtthDs = soKeToanDAO.danhSachPhatSinhCongNoKtth(form.getTaiKhoan(),
 						kyKt.getDau(), kyKt.getCuoi());
 				if (tongNoCoPsDs != null) {
 					if (tongNoCoPsKtthDs != null) {
@@ -828,16 +832,18 @@ public class SoKeToanController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-			KyKeToan kyKeToan = dungChung.getKyKeToan();
-			if (kyKeToan == null) {
-				return "koKyKeToanMacDinh";
-			}
 
 			// Lấy kỳ kế toán mặc định
+			KyKeToan kyKeToan = null;
 			if (form.getKyKeToan() == null) {
-				form.setKyKeToan(dungChung.getKyKeToan());
+				kyKeToan = dungChung.getKyKeToan();
 			} else {
-				form.setKyKeToan(kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt()));
+				kyKeToan = kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt());
+			}
+
+			form.setKyKeToan(kyKeToan);
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
 			}
 
 			Date homNay = new Date();
@@ -1256,7 +1262,8 @@ public class SoKeToanController {
 
 			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định
 			if (form.getTaiKhoan() == null) {
-				form.setTaiKhoan(loaiTaiKhoanDs.get(0).getMaTk());
+				// form.setTaiKhoan(loaiTaiKhoanDs.get(0).getMaTk());
+				form.setTaiKhoan(LoaiTaiKhoan.HANG_HOA);
 			}
 			LoaiTaiKhoan loaiTaiKhoan = taiKhoanDAO.layTaiKhoan(form.getTaiKhoan());
 
@@ -1267,11 +1274,17 @@ public class SoKeToanController {
 			}
 
 			List<Integer> maKhoDs = null;
+			String khoDs = "";
 			if (form != null && form.getKhoDs() != null) {
 				maKhoDs = new ArrayList<>();
 				for (Iterator<KhoHang> iter = form.getKhoDs().iterator(); iter.hasNext();) {
 					KhoHang khoHang = iter.next();
 					maKhoDs.add(khoHang.getMaKho());
+					if (iter.hasNext()) {
+						khoDs += khoHang.getMaKho() + "_";
+					} else {
+						khoDs += khoHang.getMaKho();
+					}
 				}
 			}
 
@@ -1286,23 +1299,23 @@ public class SoKeToanController {
 				kyKt = new KyKeToanCon(form.getDau(), form.getCuoi());
 			}
 
+			// Lấy danh sách số dư đầu kỳ nhập xuất tồn
+			// theo mã tài khoản và danh sách kho
+			List<SoDuKy> soDuKyDs = kyKeToanDAO.danhSachSoDuKyTheoHangHoa(loaiTaiKhoan.getMaTk(), kyKeToan.getMaKyKt(),
+					maKhoDs);
+			for (Iterator<SoDuKy> iter = soDuKyDs.iterator(); iter.hasNext();) {
+				SoDuKy soDuKy = iter.next();
+				soDuKy.setKhoHang(null);
+			}
+
 			while (kyKt != null && kyKt.getCuoi() != null && !kyKt.getCuoi().after(form.getCuoi())) {
 				logger.info("========== Kỳ: " + kyKt);
 				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
 
-				// Lấy danh sách số dư đầu kỳ nhập xuất tồn
-				// theo mã tài khoản và danh sách kho
-				List<SoDuKy> soDuKyDs = kyKeToanDAO.danhSachSoDuKyTheoHangHoa(loaiTaiKhoan.getMaTk(),
-						kyKeToan.getMaKyKt(), maKhoDs);
-				for (Iterator<SoDuKy> iter = soDuKyDs.iterator(); iter.hasNext();) {
-					SoDuKy soDuKy = iter.next();
-					soDuKy.setKhoHang(null);
-				}
-
 				// Tính nợ/có phát sinh kỳ trước tất cả các hàng hóa
 				// trong danh sách kho cho trước
-				List<DuLieuKeToan> noCoDauKyDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), maKhoDs,
-						form.getDau(), Utils.prevPeriod(kyKt).getCuoi());
+				List<DuLieuKeToan> noCoDauKyDs = soKeToanDAO.danhSachPhatSinhNxt(form.getTaiKhoan(), maKhoDs,
+						form.getKyKeToan().getBatDau(), Utils.prevPeriod(kyKt).getCuoi());
 
 				// Trộn số dư đầu kỳ nhập xuất tồn các loại hàng hóa
 				// trong danh sách kho cho trước
@@ -1333,14 +1346,11 @@ public class SoKeToanController {
 							while (soDuKyIter.hasNext()) {
 								SoDuKy soDuKy = soDuKyIter.next();
 
-								if (duLieuKeToanTmpl.getHangHoa().equals(soDuKy.getHangHoa())
-										&& duLieuKeToanTmpl.getKhoHang().equals(soDuKy.getKhoHang())) {
+								if (duLieuKeToanTmpl.getHangHoa().equals(soDuKy.getHangHoa())) {
 									duLieuKeToanTmpl.setNoDauKy(duLieuKeToanTmpl.getNoDauKy() + soDuKy.getNoDauKy());
 									duLieuKeToanTmpl.setCoDauKy(duLieuKeToanTmpl.getCoDauKy() + soDuKy.getCoDauKy());
 									duLieuKeToanTmpl.setSoLuongNhapDauKy(
 											duLieuKeToanTmpl.getSoLuongNhapDauKy() + soDuKy.getSoLuong());
-									duLieuKeToanTmpl.setSoLuongXuatDauKy(
-											duLieuKeToanTmpl.getSoLuongXuatDauKy() - soDuKy.getSoLuong());
 									break;
 								}
 							}
@@ -1357,8 +1367,7 @@ public class SoKeToanController {
 							while (noCoDauKyIter.hasNext()) {
 								DuLieuKeToan duLieuKeToanTmpl = noCoDauKyIter.next();
 
-								if (duLieuKeToanTmpl.getHangHoa().equals(soDuKy.getHangHoa())
-										&& duLieuKeToanTmpl.getKhoHang().equals(soDuKy.getKhoHang())) {
+								if (duLieuKeToanTmpl.getHangHoa().equals(soDuKy.getHangHoa())) {
 									coHangKho = true;
 									break;
 								}
@@ -1389,7 +1398,7 @@ public class SoKeToanController {
 				}
 
 				// Tính nợ/có phát sinh nhập xuất tồn trong kỳ của tất cả các hàng hóa
-				List<DuLieuKeToan> tongNoCoPsDs = soKeToanDAO.danhSachTongHopNxt(form.getTaiKhoan(), maKhoDs,
+				List<DuLieuKeToan> tongNoCoPsDs = soKeToanDAO.danhSachPhatSinhNxt(form.getTaiKhoan(), maKhoDs,
 						kyKt.getDau(), kyKt.getCuoi());
 
 				logger.info("Kết quả phát sinh trong kỳ");
@@ -1458,6 +1467,7 @@ public class SoKeToanController {
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 			model.addAttribute("loaiTaiKhoan", loaiTaiKhoan);
 			model.addAttribute("khoHangDs", khoHangDs);
+			model.addAttribute("khoStrDs", khoDs);
 			model.addAttribute("kyKeToanDs", kyKeToanDAO.danhSachKyKeToan());
 			model.addAttribute("duLieuKeToanDs", duLieuKeToanDs);
 			model.addAttribute("mainFinanceForm", form);
@@ -1470,22 +1480,67 @@ public class SoKeToanController {
 		}
 	}
 
+	@RequestMapping(value = "/soketoan/nhapxuatton/chitiet/{maKyKt}/{maTk}/{maHh}/{maKhoDs}/{dau}/{cuoi}", method = {
+			RequestMethod.GET })
+	public String sktSoCtNhapXuatTon(@PathVariable("maKyKt") int maKyKt, @PathVariable("maTk") String maTk,
+			@PathVariable("maHh") int maHh, @PathVariable("maKhoDs") String maKhoDs, @PathVariable("dau") String dau,
+			@PathVariable("cuoi") String cuoi, Model model) {
+		KyKeToan kyKeToan = new KyKeToan();
+		kyKeToan.setMaKyKt(maKyKt);
+
+		HangHoa hangHoa = new HangHoa();
+		hangHoa.setMaHh(maHh);
+
+		String[] khoDs = maKhoDs.split("_");
+		List<KhoHang> khoHangDs = new ArrayList<>();
+		for (int i = 0; i < khoDs.length; i++) {
+			try {
+				int maKho = Integer.parseInt(khoDs[i]);
+				KhoHang khoHang = hangHoaDAO.layKhoBai(maKho);
+				khoHangDs.add(khoHang);
+			} catch (Exception e) {
+			}
+		}
+
+		Date batDau = null;
+		Date ketThuc = null;
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+			batDau = sdf.parse(dau);
+			ketThuc = sdf.parse(cuoi);
+		} catch (ParseException e) {
+		}
+
+		TkSoKeToanForm form = new TkSoKeToanForm();
+		form.setKyKeToan(kyKeToan);
+		form.setTaiKhoan(maTk);
+		form.setHangHoa(hangHoa);
+		form.setKhoDs(khoHangDs);
+		form.setDau(batDau);
+		form.setCuoi(ketThuc);
+
+		return sktSoCtNhapXuatTon(form, binder.getBindingResult(), model);
+	}
+
 	@RequestMapping(value = "/soketoan/nhapxuatton/chitiet", method = { RequestMethod.GET, RequestMethod.POST })
 	public String sktSoCtNhapXuatTon(@ModelAttribute("mainFinanceForm") @Validated TkSoKeToanForm form,
 			BindingResult result, Model model) {
 		try {
+			logger.info("Sổ chi tiết nhập xuất tồn ... ");
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-			KyKeToan kyKeToan = dungChung.getKyKeToan();
-			if (kyKeToan == null) {
-				return "koKyKeToanMacDinh";
-			}
 
 			// Lấy kỳ kế toán mặc định
+			KyKeToan kyKeToan = null;
 			if (form.getKyKeToan() == null) {
-				form.setKyKeToan(dungChung.getKyKeToan());
+				kyKeToan = dungChung.getKyKeToan();
 			} else {
-				form.setKyKeToan(kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt()));
+				kyKeToan = kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt());
+			}
+
+			form.setKyKeToan(kyKeToan);
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
 			}
 
 			Date homNay = new Date();
@@ -1516,25 +1571,132 @@ public class SoKeToanController {
 				form.themLoaiCt(ChungTu.TAT_CA);
 			}
 
-			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định là 111
-			if (form.getTaiKhoan() == null) {
-				form.setTaiKhoan(LoaiTaiKhoan.HANG_HOA);
+			// Lấy danh sách tài khoản kho 152;153;154;155;156
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = new ArrayList<>();
+			try {
+				String[] khoVthhs = props.getCauHinh(PropCont.TAI_KHOAN_KHO_VTHH).getGiaTri().split(";");
+				loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(khoVthhs));
+			} catch (Exception e) {
 			}
 
-			// Lấy danh sách tài khoản
-			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			// Nếu không có đầu vào tài khoản thì đặt giá trị mặc định
+			if (form.getTaiKhoan() == null) {
+				// form.setTaiKhoan(loaiTaiKhoanDs.get(0).getMaTk());
+				form.setTaiKhoan(LoaiTaiKhoan.HANG_HOA);
+			}
 			LoaiTaiKhoan loaiTaiKhoan = taiKhoanDAO.layTaiKhoan(form.getTaiKhoan());
 
 			// Lấy danh sách kho
 			List<KhoHang> khoHangDs = hangHoaDAO.danhSachKhoBai();
+			if (form != null && form.getKhoDs() == null) {
+				form.setKhoDs(khoHangDs);
+			}
+
+			List<Integer> maKhoDs = null;
+			if (form != null && form.getKhoDs() != null) {
+				maKhoDs = new ArrayList<>();
+				for (Iterator<KhoHang> iter = form.getKhoDs().iterator(); iter.hasNext();) {
+					KhoHang khoHang = iter.next();
+					maKhoDs.add(khoHang.getMaKho());
+				}
+			}
 
 			// Lấy danh sách hàng hóa
 			List<HangHoa> hangHoaDs = hangHoaDAO.danhSachHangHoa();
+			int maHh = form.getHangHoa().getMaHh();
+			if (form.getHangHoa().getMaHh() == 0) {
+				form.setHangHoa(hangHoaDs.get(0));
+			} else {
+				form.setHangHoa(hangHoaDAO.layHangHoa(maHh));
+			}
 
-			logger.info("Sổ chi tiết nhập xuất tồn ... ");
 			logger.info("Tài khoản: " + form.getTaiKhoan());
+			logger.info("Kho hàng: " + form.getKhoDs());
+			logger.info("Hàng hóa: " + form.getHangHoa());
+
 			// Lấy danh sách các nghiệp vụ kế toán theo tài khoản, loại chứng từ, và từng kỳ
 			List<DuLieuKeToan> duLieuKeToanDs = new ArrayList<>();
+
+			KyKeToanCon kyKt = new KyKeToanCon(form.getDau(), form.getLoaiKy());
+			if (form.getLoaiKy() == KyKeToanCon.NAN) {
+				kyKt = new KyKeToanCon(form.getDau(), form.getCuoi());
+			}
+
+			// Lấy danh sách số dư đầu kỳ nhập xuất tồn
+			// theo mã tài khoản và danh sách kho
+			SoDuKy soDuKy = kyKeToanDAO.laySoDuKyTheoHangHoa(loaiTaiKhoan.getMaTk(), kyKeToan.getMaKyKt(),
+					form.getHangHoa().getMaHh(), maKhoDs);
+			if (soDuKy != null) {
+				soDuKy.setKhoHang(null);
+			}
+
+			while (kyKt != null && kyKt.getCuoi() != null && !kyKt.getCuoi().after(form.getCuoi())) {
+				logger.info("========== Kỳ: " + kyKt);
+				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
+				duLieuKeToan.setHangHoa(form.getHangHoa());
+
+				// Tính nợ/có phát sinh kỳ trước tất cả các hàng hóa
+				// trong danh sách kho cho trước
+				DuLieuKeToan noCoDauKy = soKeToanDAO.tongPhatSinhNxt(form.getTaiKhoan(), form.getHangHoa().getMaHh(),
+						maKhoDs, form.getKyKeToan().getBatDau(), Utils.prevPeriod(kyKt).getCuoi());
+
+				// Trộn số dư đầu kỳ nhập xuất tồn của hàng hóa trong danh sách kho cho trước
+				logger.info("Đặt lại giá trị từ tổng phát sinh sang số dư đầu");
+				logger.info("Trộn số dư đầu kỳ");
+				if (noCoDauKy != null) {
+					// Đặt lại giá trị từ tổng phát sinh sang số dư đầu
+					noCoDauKy.setNoDauKy(noCoDauKy.getTongNoPhatSinh());
+					noCoDauKy.setCoDauKy(noCoDauKy.getTongCoPhatSinh());
+					noCoDauKy.setTongNoPhatSinh(0);
+					noCoDauKy.setTongCoPhatSinh(0);
+
+					noCoDauKy.setSoLuongNhapDauKy(noCoDauKy.getSoLuongNhapPhatSinh());
+					noCoDauKy.setSoLuongXuatDauKy(noCoDauKy.getSoLuongXuatPhatSinh());
+					noCoDauKy.setSoLuongNhapPhatSinh(0);
+					noCoDauKy.setSoLuongXuatPhatSinh(0);
+
+					// Trộn số dư đầu kỳ
+					if (soDuKy != null) {
+						noCoDauKy.setNoDauKy(noCoDauKy.getNoDauKy() + soDuKy.getNoDauKy());
+						noCoDauKy.setCoDauKy(noCoDauKy.getCoDauKy() + soDuKy.getCoDauKy());
+						noCoDauKy.setSoLuongNhapDauKy(noCoDauKy.getSoLuongNhapDauKy() + soDuKy.getSoLuong());
+					}
+				} else {
+					if (soDuKy != null) {
+						noCoDauKy = new DuLieuKeToan();
+						noCoDauKy.setLoaiTaiKhoan(soDuKy.getLoaiTaiKhoan());
+						noCoDauKy.setHangHoa(soDuKy.getHangHoa());
+						noCoDauKy.setKhoHang(soDuKy.getKhoHang());
+
+						noCoDauKy.setNoDauKy(soDuKy.getNoDauKy());
+						noCoDauKy.setCoDauKy(soDuKy.getCoDauKy());
+
+						noCoDauKy.setSoLuongNhapDauKy(soDuKy.getSoLuong());
+						noCoDauKy.setSoLuongXuatDauKy(0);
+					}
+				}
+
+				logger.info("Kết quả số dư đầu kỳ");
+				logger.info(noCoDauKy);
+
+				logger.info("Lấy nghiệp vụ kế toán được ghi từ chứng từ mua hàng, bán hàng");
+				duLieuKeToan.themNghiepVuKeToan(soKeToanDAO.danhSachNghiepVuKeToanKhoTheoLoaiTaiKhoan(
+						form.getTaiKhoan(), form.getHangHoa().getMaHh(), maKhoDs, kyKt.getDau(), kyKt.getCuoi()));
+
+				logger.info("Lấy tổng phát sinh dữ liệu kế toán kho trong kỳ");
+				DuLieuKeToan tongNoCoPs = soKeToanDAO.tongPhatSinhNxt(form.getTaiKhoan(), form.getHangHoa().getMaHh(),
+						maKhoDs, kyKt.getDau(), kyKt.getCuoi());
+
+				duLieuKeToan.tron(noCoDauKy);
+				duLieuKeToan.tron(tongNoCoPs);
+
+				logger.info("Kết quả cuối");
+				logger.info(duLieuKeToan);
+
+				duLieuKeToan.tinhSoTienTonNghiepVuKeToanDs(loaiTaiKhoan);
+				duLieuKeToanDs.add(duLieuKeToan);
+				kyKt = Utils.nextPeriod(kyKt);
+			}
 
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 			model.addAttribute("loaiTaiKhoan", loaiTaiKhoan);

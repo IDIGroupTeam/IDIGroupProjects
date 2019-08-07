@@ -79,6 +79,21 @@
 		});
 
 		$('#taiKhoan').combobox();
+
+		$("#khoDs").multiselect({
+			enableFiltering : true,
+			filterPlaceholder : 'Tìm kiếm',
+			maxHeight : 200,
+			buttonWidth : '170px',
+			nonSelectedText : 'Chọn kho',
+			nSelectedText : 'Được chọn',
+			includeSelectAllOption : true,
+			allSelectedText : 'Chọn tất cả',
+			selectAllText : 'Tất cả',
+			selectAllValue : 'ALL'
+		});
+
+		$('#hangHoa\\.maHh').combobox();
 	});
 </script>
 
@@ -89,7 +104,7 @@
 	<div class="panel-body">
 		<div class="form-group">
 			<label for="taiKhoan">Tài khoản:</label>
-			<div class="input-group date smallform pull-right">
+			<div class="input-group smallform pull-right">
 				<form:select path="taiKhoan" multiple="false" class="form-control">
 					<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
 						itemLabel="maTenTk" />
@@ -99,8 +114,8 @@
 
 		<div class="form-group">
 			<label for="kho.maKho">Kho:</label>
-			<div class="input-group date smallform pull-right">
-				<form:select path="kho.maKho" multiple="false" class="form-control">
+			<div class="input-group smallform pull-right">
+				<form:select path="khoDs" multiple="true" class="form-control">
 					<form:options items="${khoHangDs}" itemValue="maKho"
 						itemLabel="tenKho" />
 				</form:select>
@@ -109,7 +124,7 @@
 
 		<div class="form-group">
 			<label for="hangHoa.maHh">VTHH:</label>
-			<div class="input-group date smallform pull-right">
+			<div class="input-group smallform pull-right">
 				<form:select path="hangHoa.maHh" multiple="false"
 					class="form-control">
 					<form:options items="${hangHoaDs}" itemValue="maHh"

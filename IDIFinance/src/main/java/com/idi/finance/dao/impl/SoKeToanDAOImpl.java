@@ -25,6 +25,7 @@ import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.bean.taikhoan.TaiKhoan;
 import com.idi.finance.dao.SoKeToanDAO;
+import com.idi.finance.utils.Utils;
 
 public class SoKeToanDAOImpl implements SoKeToanDAO {
 	private static final Logger logger = Logger.getLogger(SoKeToanDAOImpl.class);
@@ -40,6 +41,12 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 	@Value("${DANH_SACH_NGHIEP_VU_KE_TOAN_KHO_THEO_DIEU_KIEN}")
 	private String DANH_SACH_NGHIEP_VU_KE_TOAN_KHO_THEO_DIEU_KIEN;
+
+	@Value("${DANH_SACH_NGHIEP_VU_KE_TOAN_KHO_THEO_MA_HH}")
+	private String DANH_SACH_NGHIEP_VU_KE_TOAN_KHO_THEO_MA_HH;
+
+	@Value("${DANH_SACH_NGHIEP_VU_KE_TOAN_KHO_THEO_MA_HH_MA_KHOS}")
+	private String DANH_SACH_NGHIEP_VU_KE_TOAN_KHO_THEO_MA_HH_MA_KHOS;
 
 	@Value("${DANH_SACH_NGHIEP_VU_KE_TOAN_KC_THEO_DIEU_KIEN}")
 	private String DANH_SACH_NGHIEP_VU_KE_TOAN_KC_THEO_DIEU_KIEN;
@@ -64,6 +71,9 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 	@Value("${DANH_SACH_TONG_HOP_NXT}")
 	private String DANH_SACH_TONG_HOP_NXT;
+
+	@Value("${DANH_SACH_TONG_HOP_NXT_MA_HH}")
+	private String DANH_SACH_TONG_HOP_NXT_MA_HH;
 
 	private JdbcTemplate jdbcTmpl;
 
@@ -545,6 +555,111 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		return nghiepVuKeToanDs;
 	}
 
+	@Override
+	public List<NghiepVuKeToan> danhSachNghiepVuKeToanKhoTheoLoaiTaiKhoan(String maTk, int maHh, Date dau, Date cuoi) {
+		if (maTk == null) {
+			return null;
+		}
+
+		String query = DANH_SACH_NGHIEP_VU_KE_TOAN_KHO_THEO_MA_HH;
+		query = query.replaceAll("\\$MA_TK\\$", maTk);
+
+		logger.info("Danh sách nghiệp vụ kế toán kho theo loại tài khoản, mã hàng hóa: '" + maTk + "' ...");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		if (dau != null) {
+			String batDau = sdf.format(dau);
+			logger.info("Từ " + batDau);
+			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "AND CT.NGAY_HT >= '" + batDau + "'");
+		} else {
+			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "");
+		}
+
+		if (cuoi != null) {
+			String ketThuc = sdf.format(cuoi);
+			logger.info("Đến " + ketThuc);
+			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "AND CT.NGAY_HT <= '" + ketThuc + "'");
+		} else {
+			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "");
+		}
+
+		logger.info(query);
+		logger.info("Mã tài khoản: " + maTk);
+		logger.info("Mã hàng hóa: " + maHh);
+
+		Object[] objs = { maHh, maHh, maHh };
+		List<NghiepVuKeToan> nghiepVuKeToanDs = jdbcTmpl.query(query, objs, new NghiepVuKeToanKhoMapper());
+		if (nghiepVuKeToanDs != null) {
+			logger.info("Kết quả: " + nghiepVuKeToanDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
+
+		return nghiepVuKeToanDs;
+	}
+
+	@Override
+	public List<NghiepVuKeToan> danhSachNghiepVuKeToanKhoTheoLoaiTaiKhoan(String maTk, int maHh, List<Integer> maKhoDs,
+			Date dau, Date cuoi) {
+		if (maTk == null) {
+			return null;
+		}
+
+		String query = DANH_SACH_NGHIEP_VU_KE_TOAN_KHO_THEO_MA_HH_MA_KHOS;
+		query = query.replaceAll("\\$MA_TK\\$", maTk);
+
+		if (maKhoDs != null) {
+			StringBuffer dieuKienKhoBuff = new StringBuffer("AND CTHH.MA_KHO IN (");
+
+			for (Iterator<Integer> iter = maKhoDs.iterator(); iter.hasNext();) {
+				Integer maKho = iter.next();
+
+				dieuKienKhoBuff = dieuKienKhoBuff.append(maKho);
+				if (iter.hasNext()) {
+					dieuKienKhoBuff = dieuKienKhoBuff.append(", ");
+				}
+			}
+			dieuKienKhoBuff = dieuKienKhoBuff.append(")");
+
+			query = query.replace("$DIEU_KIEN_MA_KHO$", dieuKienKhoBuff.toString());
+		} else {
+			query = query.replace("$DIEU_KIEN_MA_KHO$", "");
+		}
+
+		logger.info(
+				"Danh sách nghiệp vụ kế toán kho theo loại tài khoản, mã hàng hóa, danh sách kho: '" + maTk + "' ...");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		if (dau != null) {
+			String batDau = sdf.format(dau);
+			logger.info("Từ " + batDau);
+			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "AND CT.NGAY_HT >= '" + batDau + "'");
+		} else {
+			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "");
+		}
+
+		if (cuoi != null) {
+			String ketThuc = sdf.format(cuoi);
+			logger.info("Đến " + ketThuc);
+			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "AND CT.NGAY_HT <= '" + ketThuc + "'");
+		} else {
+			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "");
+		}
+
+		logger.info(query);
+		logger.info("Mã tài khoản: " + maTk);
+		logger.info("Mã hàng hóa: " + maHh);
+		logger.info("Danh sách kho: " + maKhoDs);
+
+		Object[] objs = { maHh, maHh, maHh };
+		List<NghiepVuKeToan> nghiepVuKeToanDs = jdbcTmpl.query(query, objs, new NghiepVuKeToanKhoMapper());
+		if (nghiepVuKeToanDs != null) {
+			logger.info("Kết quả: " + nghiepVuKeToanDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
+
+		return nghiepVuKeToanDs;
+	}
+
 	public class NghiepVuKeToanKhoMapper implements RowMapper<NghiepVuKeToan> {
 		public NghiepVuKeToan mapRow(ResultSet rs, int rowNum) throws SQLException {
 			try {
@@ -557,6 +672,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				chungTu.setNgayLap(rs.getDate("NGAY_LAP"));
 				chungTu.setNgayHt(rs.getDate("NGAY_HT"));
 				chungTu.setNgayTt(rs.getDate("NGAY_TT"));
+				chungTu.setChieu(rs.getInt("CHIEU"));
 
 				LoaiTien loaiTien = new LoaiTien();
 				loaiTien.setMaLt(rs.getString("LOAI_TIEN"));
@@ -576,6 +692,20 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 				HangHoa hangHoa = new HangHoa();
 				hangHoa.setMaHh(rs.getInt("MA_HH"));
+				hangHoa.setSoLuong(rs.getDouble("SO_LUONG_TN"));
+
+				Tien donGia = new Tien();
+				donGia.setLoaiTien(loaiTien);
+				donGia.setGiaTri(rs.getDouble("DON_GIA"));
+				donGia.setSoTien(Utils.divide(donGia.getGiaTri(), loaiTien.getBanRa()));
+				hangHoa.setDonGia(donGia);
+
+				Tien giaKho = new Tien();
+				giaKho.setLoaiTien(loaiTien);
+				giaKho.setMaGia(rs.getInt("MA_GIA"));
+				giaKho.setGiaTri(rs.getDouble("GIA_KHO"));
+				giaKho.setSoTien(Utils.divide(giaKho.getGiaTri(), loaiTien.getBanRa()));
+				hangHoa.setGiaKho(giaKho);
 
 				TaiKhoan taiKhoanNo = new TaiKhoan();
 				taiKhoanNo.setSoDu(LoaiTaiKhoan.NO);
@@ -810,7 +940,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		}
 	}
 
-	public List<DuLieuKeToan> danhSachTongHopCongNo(String maTk, Date dau, Date cuoi) {
+	public List<DuLieuKeToan> danhSachPhatSinhCongNo(String maTk, Date dau, Date cuoi) {
 		if (maTk == null) {
 			return null;
 		}
@@ -867,7 +997,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		return ketQua;
 	}
 
-	public List<DuLieuKeToan> danhSachTongHopCongNoKtth(String maTk, Date dau, Date cuoi) {
+	public List<DuLieuKeToan> danhSachPhatSinhCongNoKtth(String maTk, Date dau, Date cuoi) {
 		if (maTk == null) {
 			return null;
 		}
@@ -919,7 +1049,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 	}
 
 	@Override
-	public List<DuLieuKeToan> danhSachTongHopNxt(String maTk, List<Integer> maKhoDs, Date dau, Date cuoi) {
+	public List<DuLieuKeToan> danhSachPhatSinhNxt(String maTk, List<Integer> maKhoDs, Date dau, Date cuoi) {
 		if (maTk == null) {
 			return null;
 		}
@@ -964,6 +1094,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		}
 
 		logger.info(query);
+		logger.info("Mã tài khoản: " + maTk);
 
 		List<DuLieuKeToan> duLieuKeToanDs = jdbcTmpl.query(query, new DuLieuKeToanHangHoaMapper());
 		if (duLieuKeToanDs != null) {
@@ -993,6 +1124,90 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		}
 
 		return ketQua;
+	}
+
+	@Override
+	public DuLieuKeToan tongPhatSinhNxt(String maTk, int maHh, List<Integer> maKhoDs, Date dau, Date cuoi) {
+		if (maTk == null) {
+			return null;
+		}
+
+		String query = DANH_SACH_TONG_HOP_NXT_MA_HH;
+		query = query.replaceAll("\\$MA_TK\\$", maTk);
+
+		if (maKhoDs != null) {
+			StringBuffer dieuKienKhoBuff = new StringBuffer("AND CTHH.MA_KHO IN (");
+
+			for (Iterator<Integer> iter = maKhoDs.iterator(); iter.hasNext();) {
+				Integer maKho = iter.next();
+
+				dieuKienKhoBuff = dieuKienKhoBuff.append(maKho);
+				if (iter.hasNext()) {
+					dieuKienKhoBuff = dieuKienKhoBuff.append(", ");
+				}
+			}
+			dieuKienKhoBuff = dieuKienKhoBuff.append(")");
+
+			query = query.replace("$DIEU_KIEN_MA_KHO$", dieuKienKhoBuff.toString());
+		} else {
+			query = query.replace("$DIEU_KIEN_MA_KHO$", "");
+		}
+
+		logger.info("Danh sách tổng hợp nhập xuất tồn theo loại tài khoản: '" + maTk + "' ...");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		if (dau != null) {
+			String batDau = sdf.format(dau);
+			logger.info("Từ " + batDau);
+			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "AND CT.NGAY_HT >= '" + batDau + "'");
+		} else {
+			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "");
+		}
+
+		if (cuoi != null) {
+			String ketThuc = sdf.format(cuoi);
+			logger.info("Đến " + ketThuc);
+			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "AND CT.NGAY_HT <= '" + ketThuc + "'");
+		} else {
+			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "");
+		}
+
+		logger.info(query);
+		logger.info("Mã tài khoản: " + maTk);
+		logger.info("Mã hàng hóa: " + maHh);
+
+		Object[] objs = { maHh };
+		List<DuLieuKeToan> duLieuKeToanDs = jdbcTmpl.query(query, objs, new DuLieuKeToanHangHoaMapper());
+		if (duLieuKeToanDs != null) {
+			logger.info("Kết quả: " + duLieuKeToanDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
+
+		List<DuLieuKeToan> ketQua = null;
+		// Ghép dữ liệu tại đây
+		if (duLieuKeToanDs != null) {
+			logger.info("Ghép dữ liệu");
+			ketQua = new ArrayList<>();
+			Iterator<DuLieuKeToan> iter = duLieuKeToanDs.iterator();
+			while (iter.hasNext()) {
+				DuLieuKeToan duLieuKeToan = iter.next();
+
+				int pos = ketQua.indexOf(duLieuKeToan);
+				if (pos > -1) {
+					DuLieuKeToan duLieuKeToanTmpl = ketQua.get(pos);
+					duLieuKeToanTmpl.tron(duLieuKeToan);
+				} else {
+					ketQua.add(duLieuKeToan);
+				}
+			}
+			logger.info("Kết quả trả về: " + ketQua.size());
+		}
+
+		if (ketQua != null && ketQua.size() > 0) {
+			return ketQua.get(0);
+		}
+
+		return null;
 	}
 
 	public class DuLieuKeToanHangHoaMapper implements RowMapper<DuLieuKeToan> {

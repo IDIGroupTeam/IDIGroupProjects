@@ -85,17 +85,20 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 	@Value("${LAY_SO_DU_KY_THEO_KKT_DOI_TUONG_MA_TK_CON}")
 	private String LAY_SO_DU_KY_THEO_KKT_DOI_TUONG_MA_TK_CON;
 
-	@Value("${LAY_SO_DU_KY_THEO_KKT_HANG_HOA}")
-	private String LAY_SO_DU_KY_THEO_KKT_HANG_HOA;
+	@Value("${LAY_SO_DU_KY_KHO_THEO_MA_KKT}")
+	private String LAY_SO_DU_KY_KHO_THEO_MA_KKT;
 
-	@Value("${LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK_CON_KHO}")
-	private String LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK_CON_KHO;
+	@Value("${LAY_SO_DU_KY_KHO_THEO_MA_KKT_MA_HH_MA_KHO_MA_TK_CON}")
+	private String LAY_SO_DU_KY_KHO_THEO_MA_KKT_MA_HH_MA_KHO_MA_TK_CON;
 
-	@Value("${LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK}")
-	private String LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK;
+	@Value("${LAY_SO_DU_KY_KHO_THEO_MA_KKT_MA_TK_MA_KHOS}")
+	private String LAY_SO_DU_KY_KHO_THEO_MA_KKT_MA_TK_MA_KHOS;
 
-	@Value("${LAY_SO_DU_KY_THEO_KKT_HANG_HOA_CU_THE}")
-	private String LAY_SO_DU_KY_THEO_KKT_HANG_HOA_CU_THE;
+	@Value("${LAY_SO_DU_KY_KHO_THEO_MA_KKT_MA_HH_MA_TK_MA_KHOS}")
+	private String LAY_SO_DU_KY_KHO_THEO_MA_KKT_MA_HH_MA_TK_MA_KHOS;
+
+	@Value("${LAY_SO_DU_KY_KHO_THEO_MA_KKT_MA_HH_MA_TK_MA_KHO}")
+	private String LAY_SO_DU_KY_KHO_THEO_MA_KKT_MA_HH_MA_TK_MA_KHO;
 
 	@Value("${LAY_SO_DU_KY_THEO_HO_TK_KKT}")
 	private String LAY_SO_DU_KY_THEO_HO_TK_KKT;
@@ -534,7 +537,7 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 
 	@Override
 	public List<SoDuKy> danhSachSoDuKyTheoHangHoa(int maKkt) {
-		String query = LAY_SO_DU_KY_THEO_KKT_HANG_HOA;
+		String query = LAY_SO_DU_KY_KHO_THEO_MA_KKT;
 
 		try {
 			logger.info("Danh sách số dư kỳ theo hàng hóa");
@@ -556,7 +559,7 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 		}
 
 		logger.info("Danh sách số dư kỳ theo hàng hóa");
-		String query = LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK;
+		String query = LAY_SO_DU_KY_KHO_THEO_MA_KKT_MA_TK_MA_KHOS;
 
 		try {
 			if (maKhoDs != null) {
@@ -608,7 +611,7 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 			logger.info("Mã tài khoản " + maTk);
 			logger.info("Mã hàng hóa " + maHh);
 			logger.info("Mã kho " + maKho);
-			String query = LAY_SO_DU_KY_THEO_KKT_HANG_HOA_MA_TK_CON_KHO;
+			String query = LAY_SO_DU_KY_KHO_THEO_MA_KKT_MA_HH_MA_KHO_MA_TK_CON;
 			logger.info(query);
 
 			Object[] objs = { maKkt, maTk, maHh, maKho };
@@ -666,7 +669,7 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 			return null;
 		}
 
-		String query = LAY_SO_DU_KY_THEO_KKT_HANG_HOA_CU_THE;
+		String query = LAY_SO_DU_KY_KHO_THEO_MA_KKT_MA_HH_MA_TK_MA_KHO;
 		logger.info("Lấy số dư kỳ theo hàng hóa");
 		logger.info("Mã tài khoản " + maTk);
 		logger.info("Mã kỳ kế toán " + maKkt);
@@ -676,6 +679,48 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 
 		try {
 			Object[] objs = { maKkt, maTk, maHh, maKho };
+			return jdbcTmpl.queryForObject(query, objs, new SoDuKyHangHoaKhoMapper());
+		} catch (Exception e) {
+			// e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public SoDuKy laySoDuKyTheoHangHoa(String maTk, int maKkt, int maHh, List<Integer> maKhoDs) {
+		if (maTk == null) {
+			return null;
+		}
+
+		logger.info("Lấy số dư kỳ theo hàng hóa");
+		String query = LAY_SO_DU_KY_KHO_THEO_MA_KKT_MA_HH_MA_TK_MA_KHOS;
+
+		try {
+			if (maKhoDs != null) {
+				StringBuffer dieuKienKhoBuff = new StringBuffer("AND SD.MA_KHO IN (");
+
+				for (Iterator<Integer> iter = maKhoDs.iterator(); iter.hasNext();) {
+					Integer maKho = iter.next();
+
+					dieuKienKhoBuff = dieuKienKhoBuff.append(maKho);
+					if (iter.hasNext()) {
+						dieuKienKhoBuff = dieuKienKhoBuff.append(", ");
+					}
+				}
+				dieuKienKhoBuff = dieuKienKhoBuff.append(")");
+
+				query = query.replace("$DIEU_KIEN_MA_KHO$", dieuKienKhoBuff.toString());
+			} else {
+				query = query.replace("$DIEU_KIEN_MA_KHO$", "");
+			}
+
+			logger.info(query);
+			logger.info("Mã kỳ kế toán " + maKkt);
+			logger.info("Mã tài khoản " + maTk);
+			logger.info("Mã hàng hóa " + maHh);
+			logger.info("Mã kho " + maKhoDs);
+
+			Object[] objs = { maKkt, maTk, maHh };
 			return jdbcTmpl.queryForObject(query, objs, new SoDuKyHangHoaKhoMapper());
 		} catch (Exception e) {
 			// e.printStackTrace();

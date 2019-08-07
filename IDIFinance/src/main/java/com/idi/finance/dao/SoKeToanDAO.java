@@ -16,6 +16,11 @@ public interface SoKeToanDAO {
 
 	public List<NghiepVuKeToan> danhSachNghiepVuKeToanKhoTheoLoaiTaiKhoan(String maTk, Date dau, Date cuoi);
 
+	public List<NghiepVuKeToan> danhSachNghiepVuKeToanKhoTheoLoaiTaiKhoan(String maTk, int maHh, Date dau, Date cuoi);
+
+	public List<NghiepVuKeToan> danhSachNghiepVuKeToanKhoTheoLoaiTaiKhoan(String maTk, int maHh, List<Integer> maKhoDs,
+			Date dau, Date cuoi);
+
 	public List<NghiepVuKeToan> danhSachNghiepVuKeToanKcTheoLoaiTaiKhoan(String maTk, Date dau, Date cuoi);
 
 	public double tongPhatSinh(String maTk, int soDu, Date dau, Date cuoi);
@@ -26,9 +31,11 @@ public interface SoKeToanDAO {
 
 	public List<DuLieuKeToan> danhSachTongPhatSinhDoiTuongKtth(String maTk, Date dau, Date cuoi);
 
-	public List<DuLieuKeToan> danhSachTongHopCongNo(String maTk, Date dau, Date cuoi);
+	public List<DuLieuKeToan> danhSachPhatSinhCongNo(String maTk, Date dau, Date cuoi);
 
-	public List<DuLieuKeToan> danhSachTongHopCongNoKtth(String maTk, Date dau, Date cuoi);
+	public List<DuLieuKeToan> danhSachPhatSinhCongNoKtth(String maTk, Date dau, Date cuoi);
 
-	public List<DuLieuKeToan> danhSachTongHopNxt(String maTk, List<Integer> maKhoDs, Date dau, Date cuoi);
+	public List<DuLieuKeToan> danhSachPhatSinhNxt(String maTk, List<Integer> maKhoDs, Date dau, Date cuoi);
+
+	public DuLieuKeToan tongPhatSinhNxt(String maTk, int maHh, List<Integer> maKhoDs, Date dau, Date cuoi);
 }

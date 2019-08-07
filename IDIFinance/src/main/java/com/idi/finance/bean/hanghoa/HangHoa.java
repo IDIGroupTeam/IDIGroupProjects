@@ -489,12 +489,6 @@ public class HangHoa {
 		this.donGiaDs = donGiaDs;
 	}
 
-	@Override
-	public String toString() {
-		String out = maHh + "  " + kyHieuHh + "  " + tenHh;
-		return out;
-	}
-
 	public void tronTk(HangHoa hangHoa) {
 		if (hangHoa == null)
 			return;
@@ -541,6 +535,12 @@ public class HangHoa {
 		if (this.getTkThueGtgtDu() == null && hangHoa.getTkThueGtgtDu() != null) {
 			this.setTkThueGtgtDu(hangHoa.getTkThueGtgtDu());
 		}
+	}
+
+	@Override
+	public String toString() {
+		String out = maHh + "  " + kyHieuHh + "  " + tenHh;
+		return out;
 	}
 
 	@Override

@@ -12,6 +12,7 @@ public class NghiepVuKeToan implements Comparable<NghiepVuKeToan> {
 	private TaiKhoan taiKhoanNo;
 	private TaiKhoan taiKhoanCo;
 	private double ton;
+	private double slTon;
 
 	public ChungTu getChungTu() {
 		return chungTu;
@@ -59,6 +60,14 @@ public class NghiepVuKeToan implements Comparable<NghiepVuKeToan> {
 
 	public void setTon(double ton) {
 		this.ton = ton;
+	}
+
+	public double getSlTon() {
+		return slTon;
+	}
+
+	public void setSlTon(double slTon) {
+		this.slTon = slTon;
 	}
 
 	@Override
