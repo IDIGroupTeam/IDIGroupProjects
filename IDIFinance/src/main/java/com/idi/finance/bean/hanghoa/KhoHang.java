@@ -18,6 +18,8 @@ public class KhoHang {
 
 	private int chieu = ChungTu.MUA;
 
+	private boolean xoa = true;
+
 	public int getMaKho() {
 		return maKho;
 	}
@@ -80,6 +82,14 @@ public class KhoHang {
 
 	public void setChieu(int chieu) {
 		this.chieu = chieu;
+	}
+
+	public boolean isXoa() {
+		return xoa;
+	}
+
+	public void setXoa(boolean xoa) {
+		this.xoa = xoa;
 	}
 
 	@Override

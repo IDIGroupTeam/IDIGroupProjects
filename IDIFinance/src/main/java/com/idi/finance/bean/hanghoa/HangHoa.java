@@ -97,6 +97,8 @@ public class HangHoa {
 
 	private List<DonGia> donGiaDs;
 
+	private boolean xoa = true;
+
 	public int getMaHh() {
 		return maHh;
 	}
@@ -487,6 +489,14 @@ public class HangHoa {
 
 	public void setDonGiaDs(List<DonGia> donGiaDs) {
 		this.donGiaDs = donGiaDs;
+	}
+
+	public boolean isXoa() {
+		return xoa;
+	}
+
+	public void setXoa(boolean xoa) {
+		this.xoa = xoa;
 	}
 
 	public void tronTk(HangHoa hangHoa) {

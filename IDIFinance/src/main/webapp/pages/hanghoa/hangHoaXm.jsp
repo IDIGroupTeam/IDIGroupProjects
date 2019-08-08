@@ -165,9 +165,12 @@ $(function() {
 	<div class="col-sm-12">
 		<a href="${url}/hanghoa/danhsach" class="btn btn-info btn-sm">Danh
 			sách hàng hóa</a> <a href="${url}/hanghoa/sua/${hangHoa.maHh}"
-			class="btn btn-info btn-sm" title="Sửa">Sửa</a> <a
-			href="${url}/hanghoa/xoa/${hangHoa.maHh}" class="btn btn-info btn-sm"
-			title="Xóa" onclick="return xacNhanXoa(${hangHoa.maHh});">Xóa</span>
-		</a>
+			class="btn btn-info btn-sm" title="Sửa">Sửa</a>
+		<c:if test="${hangHoa.xoa}">
+			<a href="${url}/hanghoa/xoa/${hangHoa.maHh}"
+				class="btn btn-info btn-sm" title="Xóa"
+				onclick="return xacNhanXoa(${hangHoa.maHh});">Xóa</span>
+			</a>
+		</c:if>
 	</div>
 </div>
