@@ -30,7 +30,6 @@ public class KhachHangController {
 
 	@InitBinder
 	protected void initBinder(WebDataBinder dataBinder) {
-
 		// Form mục tiêu
 		Object target = dataBinder.getTarget();
 		if (target == null) {
@@ -47,8 +46,8 @@ public class KhachHangController {
 		try {
 			// Lấy danh sách khách hàng
 			List<KhachHang> khachhangDs = khachHangDAO.danhSachKhachHang();
-			model.addAttribute("khachhangDs", khachhangDs);
 
+			model.addAttribute("khachhangDs", khachhangDs);
 			model.addAttribute("tab", "tabDSKH");
 			return "danhSachKhachHang";
 		} catch (Exception e) {

@@ -849,6 +849,7 @@
 			}
 			
 			$("#loaiTien\\.banRa").number(true, thapPhan);
+			loaiTien.banRa = $("#loaiTien\\.banRa").val();
 
 			// Đăng ký sự kiện cho các dòng
 			for (i = 0; i < soDongTk; i++) {
