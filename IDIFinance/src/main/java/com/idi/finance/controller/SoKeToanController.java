@@ -1687,6 +1687,9 @@ public class SoKeToanController {
 				DuLieuKeToan tongNoCoPs = soKeToanDAO.tongPhatSinhNxt(form.getTaiKhoan(), form.getHangHoa().getMaHh(),
 						maKhoDs, kyKt.getDau(), kyKt.getCuoi());
 
+				logger.info("Kết quả phát sinh trong kỳ");
+				logger.info(tongNoCoPs);
+
 				duLieuKeToan.tron(noCoDauKy);
 				duLieuKeToan.tron(tongNoCoPs);
 
