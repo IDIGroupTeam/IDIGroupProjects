@@ -11,6 +11,8 @@ public interface KhachHangDAO {
 	public List<DoiTuong> danhSachDoiTuong(String maHoacTen);
 
 	public List<KhachHang> danhSachKhachHang();
+	
+	public List<KhachHang> danhSachKhachHangPhatSinh();
 
 	public KhachHang layKhachHang(Integer maKh);
 

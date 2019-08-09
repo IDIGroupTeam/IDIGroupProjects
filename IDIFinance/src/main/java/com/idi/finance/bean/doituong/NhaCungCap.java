@@ -10,6 +10,8 @@ public class NhaCungCap {
 	private String sdt;
 	private String webSite;
 
+	private boolean xoa = true;
+
 	public int getMaNcc() {
 		return maNcc;
 	}
@@ -74,6 +76,14 @@ public class NhaCungCap {
 		this.webSite = webSite;
 	}
 
+	public boolean isXoa() {
+		return xoa;
+	}
+
+	public void setXoa(boolean xoa) {
+		this.xoa = xoa;
+	}
+
 	@Override
 	public String toString() {
 		String out = maNcc + "  " + tenNcc;
@@ -96,14 +106,6 @@ public class NhaCungCap {
 				return false;
 			}
 
-			// if (tenNcc == null) {
-			// if (item.getTenNcc() != null)
-			// return false;
-			// } else if (item.getTenNcc() == null) {
-			// return false;
-			// } else if (!tenNcc.trim().equals(item.getTenNcc().trim())) {
-			// return false;
-			// }
 		} catch (Exception e) {
 			return false;
 		}

@@ -2,6 +2,7 @@ package com.idi.finance.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -18,6 +19,18 @@ public class NhaCungCapDAOImpl implements NhaCungCapDAO {
 
 	@Value("${DANH_SACH_NHA_CUNG_CAP_THEO_MA_HOAC_TEN}")
 	private String DANH_SACH_NHA_CUNG_CAP_THEO_MA_HOAC_TEN;
+
+	@Value("${DANH_SACH_NHA_CUNG_CAP_PHAT_SINH_CHUNG_TU}")
+	private String DANH_SACH_NHA_CUNG_CAP_PHAT_SINH_CHUNG_TU;
+
+	@Value("${DANH_SACH_NHA_CUNG_CAP_PHAT_SINH_NVKT}")
+	private String DANH_SACH_NHA_CUNG_CAP_PHAT_SINH_NVKT;
+
+	@Value("${KIEM_TRA_NHA_CUNG_CAP_PHAT_SINH_CHUNG_TU}")
+	private String KIEM_TRA_NHA_CUNG_CAP_PHAT_SINH_CHUNG_TU;
+
+	@Value("${KIEM_TRA_NHA_CUNG_CAP_PHAT_SINH_NVKT}")
+	private String KIEM_TRA_NHA_CUNG_CAP_PHAT_SINH_NVKT;
 
 	private JdbcTemplate jdbcTmpl;
 
@@ -112,6 +125,45 @@ public class NhaCungCapDAOImpl implements NhaCungCapDAO {
 	}
 
 	@Override
+	public List<NhaCungCap> danhSachNhaCungCapPhatSinh() {
+		String queryCt = DANH_SACH_NHA_CUNG_CAP_PHAT_SINH_CHUNG_TU;
+		String queryNvkt = DANH_SACH_NHA_CUNG_CAP_PHAT_SINH_NVKT;
+
+		logger.info("Danh sách nhà cung cấp phát sinh ...");
+		logger.info(queryCt);
+		logger.info(queryNvkt);
+
+		List<NhaCungCap> nhaCcDs = new ArrayList<NhaCungCap>();
+		try {
+			nhaCcDs = jdbcTmpl.query(queryCt, new NhaCungCapPhatSinhMapper());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		try {
+			nhaCcDs.addAll(jdbcTmpl.query(queryNvkt, new NhaCungCapPhatSinhMapper()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return nhaCcDs;
+	}
+
+	public class NhaCungCapPhatSinhMapper implements RowMapper<NhaCungCap> {
+		public NhaCungCap mapRow(ResultSet rs, int rowNum) throws SQLException {
+			try {
+				NhaCungCap nhaCungCap = new NhaCungCap();
+				nhaCungCap.setMaNcc(rs.getInt("MA_DT"));
+
+				logger.info(nhaCungCap);
+				return nhaCungCap;
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	}
+
+	@Override
 	public NhaCungCap layNhaCungCap(Integer maNcc) {
 		String query = "SELECT * FROM NHA_CUNG_CAP WHERE MA_NCC=?";
 
@@ -124,9 +176,32 @@ public class NhaCungCapDAOImpl implements NhaCungCapDAO {
 
 	@Override
 	public void xoaNhaCungCap(Integer maNcc) {
-		String xoa = "DELETE FROM NHA_CUNG_CAP WHERE MA_NCC=?";
-		jdbcTmpl.update(xoa, maNcc);
-		logger.info("Xóa nhà cung cấp có MA_NCC = " + maNcc);
+		logger.info("Kiểm tra việc xóa nhà cung cấp có MA_NCC = " + maNcc);
+		String phatSinhcT = KIEM_TRA_NHA_CUNG_CAP_PHAT_SINH_CHUNG_TU;
+		String phatSinhnVKT = KIEM_TRA_NHA_CUNG_CAP_PHAT_SINH_NVKT;
+		Integer phatSinhCtCount = 0;
+		Integer phatSinhNvktCount = 0;
+
+		Object[] objs = { maNcc };
+		try {
+			phatSinhCtCount = jdbcTmpl.queryForObject(phatSinhcT, objs, Integer.class);
+		} catch (Exception e) {
+		}
+
+		try {
+			phatSinhNvktCount = jdbcTmpl.queryForObject(phatSinhnVKT, objs, Integer.class);
+		} catch (Exception e) {
+		}
+
+		if (phatSinhCtCount == 0 && phatSinhNvktCount == 0) {
+			logger.info("Xóa nhà cung cấp có MA_NCC = " + maNcc);
+			String xoa = "DELETE FROM NHA_CUNG_CAP WHERE MA_NCC=?";
+			jdbcTmpl.update(xoa, maNcc);
+		} else {
+			logger.info("Không thể xóa nhà cung cấp có MA_NCC = " + maNcc + " vì nó vẫn đang được sử dụng");
+			logger.info("Phát sinh chứng từ " + phatSinhCtCount);
+			logger.info("Phát sinh nghiệp vụ kế toán" + phatSinhNvktCount);
+		}
 	}
 
 	@Override

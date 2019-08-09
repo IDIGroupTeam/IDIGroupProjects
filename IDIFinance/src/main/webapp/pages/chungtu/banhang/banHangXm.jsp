@@ -188,8 +188,8 @@
 					class="btn btn-info btn-sm">Sửa</a>
 				<a href="${url}/chungtu/banhang/pdf/${chungTu.maCt}"
 					class="btn btn-info btn-sm">In</a>
-				<a id="xoaNut" href="${url}/chungtu/banhang/xoa/${chungTu.maCt}"
-					class="btn btn-info btn-sm">Xóa</a>
+				<%-- <a id="xoaNut" href="${url}/chungtu/banhang/xoa/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Xóa</a> --%>
 				<a href="${url}/chungtu/banhang/saochep/${chungTu.maCt}"
 					class="btn btn-info btn-sm">Sao chép</a>
 				<a href="${url}/chungtu/banhang/taomoi/${chungTu.tinhChatCt}"

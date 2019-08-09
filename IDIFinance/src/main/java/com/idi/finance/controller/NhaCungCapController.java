@@ -46,8 +46,8 @@ public class NhaCungCapController {
 		try {
 			// Lấy danh sách nhà cung cấp
 			List<NhaCungCap> nhaCungCapDs = nhaCungCapDAO.danhSachNhaCungCap();
-			model.addAttribute("nhaCungCapDs", nhaCungCapDs);
 
+			model.addAttribute("nhaCungCapDs", nhaCungCapDs);
 			model.addAttribute("tab", "tabDSNCC");
 			return "danhSachNhaCungCap";
 		} catch (Exception e) {
@@ -60,8 +60,13 @@ public class NhaCungCapController {
 	public String xemNhaCungCap(@PathVariable("id") int maNcc, Model model) {
 		try {
 			NhaCungCap nhaCungCap = nhaCungCapDAO.layNhaCungCap(maNcc);
-			model.addAttribute("nhaCungCap", nhaCungCap);
 
+			List<NhaCungCap> nhaCungCapPhatSinhDs = nhaCungCapDAO.danhSachNhaCungCapPhatSinh();
+			if (nhaCungCapPhatSinhDs != null && nhaCungCapPhatSinhDs.contains(nhaCungCap)) {
+				nhaCungCap.setXoa(false);
+			}
+
+			model.addAttribute("nhaCungCap", nhaCungCap);
 			model.addAttribute("tab", "tabDSNCC");
 			return "xemNhaCungCap";
 		} catch (Exception e) {

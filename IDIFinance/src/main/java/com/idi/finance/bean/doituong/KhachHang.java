@@ -10,6 +10,8 @@ public class KhachHang {
 	private String sdt;
 	private String webSite;
 
+	private boolean xoa = true;
+
 	public int getMaKh() {
 		return maKh;
 	}
@@ -74,6 +76,14 @@ public class KhachHang {
 		this.webSite = webSite;
 	}
 
+	public boolean isXoa() {
+		return xoa;
+	}
+
+	public void setXoa(boolean xoa) {
+		this.xoa = xoa;
+	}
+
 	@Override
 	public String toString() {
 		String out = maKh + "  " + tenKh;
@@ -96,14 +106,6 @@ public class KhachHang {
 				return false;
 			}
 
-			// if (tenKh == null) {
-			// if (item.getTenKh() != null)
-			// return false;
-			// } else if (item.getTenKh() == null) {
-			// return false;
-			// } else if (!tenKh.trim().equals(item.getTenKh().trim())) {
-			// return false;
-			// }
 		} catch (Exception e) {
 			return false;
 		}

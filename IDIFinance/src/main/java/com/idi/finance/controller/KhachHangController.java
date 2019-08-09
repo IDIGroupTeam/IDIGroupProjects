@@ -1,5 +1,6 @@
 package com.idi.finance.controller;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -60,8 +61,13 @@ public class KhachHangController {
 	public String xemKhachHang(@PathVariable("id") int maKh, Model model) {
 		try {
 			KhachHang khachHang = khachHangDAO.layKhachHang(maKh);
-			model.addAttribute("khachHang", khachHang);
 
+			List<KhachHang> khachhangPhatSinhDs = khachHangDAO.danhSachKhachHangPhatSinh();
+			if (khachhangPhatSinhDs != null && khachhangPhatSinhDs.contains(khachHang)) {
+				khachHang.setXoa(false);
+			}
+
+			model.addAttribute("khachHang", khachHang);
 			model.addAttribute("tab", "tabDSKH");
 			return "xemKhachHang";
 		} catch (Exception e) {
