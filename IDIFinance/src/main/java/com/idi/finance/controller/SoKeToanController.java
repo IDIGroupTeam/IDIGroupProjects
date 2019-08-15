@@ -461,7 +461,7 @@ public class SoKeToanController {
 				noDauKy += soDuKy.getNoDauKy();
 				coDauKy += soDuKy.getCoDauKy();
 			} catch (Exception e) {
-
+				e.printStackTrace();
 			}
 
 			double soDuDauKy = noDauKy - coDauKy;

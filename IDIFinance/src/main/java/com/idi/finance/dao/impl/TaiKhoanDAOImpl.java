@@ -170,6 +170,8 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 	@Override
 	public List<LoaiTaiKhoan> cayTaiKhoan() {
 		String query = "SELECT * FROM TAI_KHOAN_DANH_MUC WHERE MA_TK_CHA IS NULL ORDER BY MA_TK";
+		logger.info("Danh sách loại tài khoản cấp trên");
+		logger.info("query: " + query);
 
 		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, new LoaiTaiKhoanMapper());
 		if (taiKhoanDs != null) {
@@ -189,6 +191,8 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 		}
 
 		String query = "SELECT * FROM TAI_KHOAN_DANH_MUC WHERE MA_TK_CHA=? ORDER BY MA_TK";
+		logger.info("Danh sách loại tài khoản cấp dưới");
+		logger.info("query: " + query);
 
 		Object[] objs = { loaiTaiKhoan.getMaTk().trim() };
 		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, objs, new LoaiTaiKhoanMapper());

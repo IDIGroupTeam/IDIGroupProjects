@@ -1,6 +1,8 @@
 package com.idi.finance.utils;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,6 +14,8 @@ import java.util.Locale;
 import com.idi.finance.bean.bctc.KyKeToanCon;
 
 public class Utils {
+	private static MathContext mc = new MathContext(2, RoundingMode.HALF_UP);
+
 	public static List<String> parseString(String str) {
 		if (str == null) {
 			return null;
@@ -253,26 +257,42 @@ public class Utils {
 	}
 
 	public static double multiply(double a, double b) {
+		if (mc == null) {
+			mc = new MathContext(2, RoundingMode.HALF_UP);
+		}
+
 		BigDecimal aObj = new BigDecimal(a + "");
 		BigDecimal bObj = new BigDecimal(b + "");
-		return aObj.multiply(bObj).doubleValue();
+		return aObj.multiply(bObj, mc).doubleValue();
 	}
 
 	public static double divide(double a, double b) {
+		if (mc == null) {
+			mc = new MathContext(2, RoundingMode.HALF_UP);
+		}
+
 		BigDecimal aObj = new BigDecimal(a + "");
 		BigDecimal bObj = new BigDecimal(b + "");
-		return aObj.divide(bObj).doubleValue();
+		return aObj.divide(bObj, mc).doubleValue();
 	}
 
 	public static double add(double a, double b) {
+		if (mc == null) {
+			mc = new MathContext(2, RoundingMode.HALF_UP);
+		}
+
 		BigDecimal aObj = new BigDecimal(a + "");
 		BigDecimal bObj = new BigDecimal(b + "");
-		return aObj.add(bObj).doubleValue();
+		return aObj.add(bObj, mc).doubleValue();
 	}
 
 	public static double subtract(double a, double b) {
+		if (mc == null) {
+			mc = new MathContext(2, RoundingMode.HALF_UP);
+		}
+
 		BigDecimal aObj = new BigDecimal(a + "");
 		BigDecimal bObj = new BigDecimal(b + "");
-		return aObj.subtract(bObj).doubleValue();
+		return aObj.subtract(bObj, mc).doubleValue();
 	}
 }

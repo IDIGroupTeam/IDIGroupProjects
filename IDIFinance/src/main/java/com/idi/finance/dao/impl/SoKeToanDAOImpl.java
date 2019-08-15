@@ -882,8 +882,10 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 		String query = TONG_PHAT_SINH_TOAN_BO;
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
+		logger.info("Tổng phát sinh");
 		if (dau != null) {
 			String batDau = sdf.format(dau);
+			logger.info("Từ: " + batDau);
 			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "AND CT.NGAY_HT >= '" + batDau + "'");
 		} else {
 			query = query.replaceAll("\\$DIEU_KIEN_BAT_DAT\\$", "");
@@ -891,6 +893,7 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 		if (cuoi != null) {
 			String ketThuc = sdf.format(cuoi);
+			logger.info("Đến: " + ketThuc);
 			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "AND CT.NGAY_HT <= '" + ketThuc + "'");
 		} else {
 			query = query.replaceAll("\\$DIEU_KIEN_KET_THUC\\$", "");
@@ -924,7 +927,6 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 
 				Tien tien = new Tien();
 				tien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tien.setSoTien(tien.getGiaTri() / tien.getLoaiTien().getBanRa());
 
 				taiKhoan.setLoaiTaiKhoan(loaiTaiKhoan);
 				taiKhoan.setSoTien(tien);
@@ -1257,7 +1259,6 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				}
 
 				logger.info(duLieuKeToan);
-
 				return duLieuKeToan;
 			} catch (Exception e) {
 				e.printStackTrace();

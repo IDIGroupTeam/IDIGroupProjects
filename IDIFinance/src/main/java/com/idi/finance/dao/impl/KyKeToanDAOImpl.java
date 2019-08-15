@@ -637,6 +637,7 @@ public class KyKeToanDAOImpl implements KyKeToanDAO {
 			logger.info("Kết quả: " + 1);
 			return soDuKy;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

@@ -1803,16 +1803,22 @@ public class BalanceSheetController {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
-			KyKeToan kyKeToan = dungChung.getKyKeToan();
+
+			// Lấy kỳ kế toán mặc định
+			KyKeToan kyKeToan = null;
+			if (form.getKyKeToan() == null) {
+				kyKeToan = dungChung.getKyKeToan();
+			} else {
+				kyKeToan = kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt());
+			}
+
+			form.setKyKeToan(kyKeToan);
 			if (kyKeToan == null) {
 				return "koKyKeToanMacDinh";
 			}
 
-			// Lấy kỳ kế toán mặc định
-			if (form.getKyKeToan() == null) {
-				form.setKyKeToan(dungChung.getKyKeToan());
-			} else {
-				form.setKyKeToan(kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt()));
+			if (kyKeToan.getSoDuKyDs() == null) {
+				kyKeToan.setSoDuKyDs(kyKeToanDAO.danhSachSoDuKy(kyKeToan.getMaKyKt()));
 			}
 
 			Date homNay = new Date();
@@ -1838,7 +1844,6 @@ public class BalanceSheetController {
 				}
 			}
 
-			List<SoDuKy> soDuKyDs = kyKeToanDAO.danhSachSoDuKy(form.getKyKeToan().getMaKyKt());
 			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.cayTaiKhoan();
 			LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
 			loaiTaiKhoan.themLoaiTaiKhoan(loaiTaiKhoanDs);
@@ -1855,12 +1860,12 @@ public class BalanceSheetController {
 			while (kyKt != null && kyKt.getCuoi() != null && !kyKt.getCuoi().after(form.getCuoi())) {
 				logger.info("KỲ: " + kyKt);
 				KyKeToanCon kyKtTruoc = kyKt.kyTruoc();
-
 				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
-				List<TaiKhoan> tongPsDs = soKeToanDAO.tongPhatSinh(kyKt.getDau(), kyKt.getCuoi());
-				List<TaiKhoan> dauKyDs = soKeToanDAO.tongPhatSinh(form.getKyKeToan().getBatDau(), kyKtTruoc.getCuoi());
 
-				dauKyDs = tronNoCoDauKy(dauKyDs, soDuKyDs);
+				List<TaiKhoan> dauKyDs = soKeToanDAO.tongPhatSinh(form.getKyKeToan().getBatDau(), kyKtTruoc.getCuoi());
+				dauKyDs = tronNoCoDauKy(dauKyDs, kyKeToan.getSoDuKyDs());
+
+				List<TaiKhoan> tongPsDs = soKeToanDAO.tongPhatSinh(kyKt.getDau(), kyKt.getCuoi());
 				duLieuKeToan = tongPhatSinh(duLieuKeToan, tongPsDs, dauKyDs);
 
 				duLieuKeToanMap.put(kyKt, duLieuKeToan);
@@ -1887,10 +1892,16 @@ public class BalanceSheetController {
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			// Lấy kỳ kế toán mặc định
+			KyKeToan kyKeToan = null;
 			if (form.getKyKeToan() == null) {
-				form.setKyKeToan(dungChung.getKyKeToan());
+				kyKeToan = dungChung.getKyKeToan();
 			} else {
-				form.setKyKeToan(kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt()));
+				kyKeToan = kyKeToanDAO.layKyKeToan(form.getKyKeToan().getMaKyKt());
+			}
+			form.setKyKeToan(kyKeToan);
+
+			if (kyKeToan.getSoDuKyDs() == null) {
+				kyKeToan.setSoDuKyDs(kyKeToanDAO.danhSachSoDuKy(kyKeToan.getMaKyKt()));
 			}
 
 			Date homNay = new Date();
@@ -1918,7 +1929,6 @@ public class BalanceSheetController {
 
 			form.setLoaiKy(KyKeToanCon.NAN);
 
-			List<SoDuKy> soDuKyDs = kyKeToanDAO.danhSachSoDuKy(form.getKyKeToan().getMaKyKt());
 			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.cayTaiKhoan();
 			LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
 			loaiTaiKhoan.themLoaiTaiKhoan(loaiTaiKhoanDs);
@@ -1926,12 +1936,12 @@ public class BalanceSheetController {
 			// Lặp theo kỳ
 			KyKeToanCon kyKt = new KyKeToanCon(form.getDau(), form.getCuoi());
 			KyKeToanCon kyKtTruoc = kyKt.kyTruoc();
-
 			DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
-			List<TaiKhoan> tongPsDs = soKeToanDAO.tongPhatSinh(kyKt.getDau(), kyKt.getCuoi());
-			List<TaiKhoan> dauKyDs = soKeToanDAO.tongPhatSinh(form.getKyKeToan().getBatDau(), kyKtTruoc.getCuoi());
-			dauKyDs = tronNoCoDauKy(dauKyDs, soDuKyDs);
 
+			List<TaiKhoan> dauKyDs = soKeToanDAO.tongPhatSinh(form.getKyKeToan().getBatDau(), kyKtTruoc.getCuoi());
+			dauKyDs = tronNoCoDauKy(dauKyDs, kyKeToan.getSoDuKyDs());
+
+			List<TaiKhoan> tongPsDs = soKeToanDAO.tongPhatSinh(kyKt.getDau(), kyKt.getCuoi());
 			duLieuKeToan = tongPhatSinh(duLieuKeToan, tongPsDs, dauKyDs);
 
 			// Sinh bảng cân đối phát sinh ra pdf
@@ -1965,7 +1975,7 @@ public class BalanceSheetController {
 			return dauKyDs;
 		}
 
-		// Trộn nợ/có đầu kỳ
+		logger.info("Trộn nợ/có đầu kỳ");
 		Iterator<TaiKhoan> dkIter = dauKyDs.iterator();
 		while (dkIter.hasNext()) {
 			TaiKhoan taiKhoan = dkIter.next();
@@ -1978,13 +1988,11 @@ public class BalanceSheetController {
 					Tien soTien = taiKhoan.getSoTien();
 					if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
 						soTien.setGiaTri(soTien.getGiaTri() + soDuKy.getNoDauKy());
-						soTien.setSoTien(soTien.getGiaTri() / soTien.getLoaiTien().getBanRa());
-						taiKhoan.setSoTien(soTien);
 					} else {
 						soTien.setGiaTri(soTien.getGiaTri() + soDuKy.getCoDauKy());
-						soTien.setSoTien(soTien.getGiaTri() / soTien.getLoaiTien().getBanRa());
-						taiKhoan.setSoTien(soTien);
 					}
+
+					taiKhoan.setSoTien(soTien);
 				}
 			}
 		}
@@ -2010,7 +2018,6 @@ public class BalanceSheetController {
 
 					Tien tien = new Tien();
 					tien.setGiaTri(soDuKy.getNoDauKy());
-					tien.setSoTien(tien.getGiaTri() / tien.getLoaiTien().getBanRa());
 
 					taiKhoan.setLoaiTaiKhoan(soDuKy.getLoaiTaiKhoan());
 					taiKhoan.setSoTien(tien);
@@ -2024,7 +2031,6 @@ public class BalanceSheetController {
 
 					Tien tien = new Tien();
 					tien.setGiaTri(soDuKy.getCoDauKy());
-					tien.setSoTien(tien.getGiaTri() / tien.getLoaiTien().getBanRa());
 
 					taiKhoan.setLoaiTaiKhoan(soDuKy.getLoaiTaiKhoan());
 					taiKhoan.setSoTien(tien);
@@ -2033,6 +2039,12 @@ public class BalanceSheetController {
 					dauKyDs.add(taiKhoan);
 				}
 			}
+		}
+
+		logger.info("Số dư đầu kỳ");
+		for (Iterator<TaiKhoan> iter = dauKyDs.iterator(); iter.hasNext();) {
+			TaiKhoan taiKhoan = iter.next();
+			logger.info(taiKhoan);
 		}
 
 		return dauKyDs;
