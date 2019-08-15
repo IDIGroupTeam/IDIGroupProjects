@@ -40,6 +40,8 @@
 <script src="${url}/public/js/celleditable.js"></script>
 <script src="${url}/public/js/jquery.boot.treetable.js"></script>
 <script src="${url}/public/js/jquery.dataTables.js"></script>
+<script src="${url}/public/js/jquery.dataTables.en.js"></script>
+<script src="${url}/public/js/jquery.dataTables.vi.js"></script>
 <script src="${url}/public/js/dataTables.bootstrap.js"></script>
 <script src="${url}/public/js/script.js"></script>
 

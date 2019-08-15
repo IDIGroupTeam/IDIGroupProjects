@@ -35,7 +35,8 @@
 		// Khởi tạo action/method cho mainFinanceForm form
 		$(document).ready(function() {
 			$('#dataTable').DataTable({
-				ordering : false
+				ordering : false,
+				language : vi
 			});
 		});
 	});

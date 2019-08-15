@@ -11,7 +11,10 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-
+		$('#dataTable').DataTable({
+			ordering : false,
+			language: vi
+		});
 	});
 </script>
 
@@ -21,14 +24,17 @@
 </p>
 
 <div class="pull-right">
-	<i>(*): Mặc định là tiền VND</i>&nbsp;&nbsp;&nbsp;&nbsp; <%-- <a
+	<i>(*): Mặc định là tiền VND</i>&nbsp;&nbsp;&nbsp;&nbsp;
+	<%-- <a
 		href="${url}/chungtu/banhang/taomoi" class="btn btn-info btn-sm">
 		<span class="glyphicon glyphicon-plus"></span> Tạo mới
-	</a> --%> <a href="${url}/chungtu/banhang/taomoi/1" class="btn btn-info btn-sm">
+	</a> --%>
+	<a href="${url}/chungtu/banhang/taomoi/1" class="btn btn-info btn-sm">
 		<span class="glyphicon glyphicon-plus"></span> Bán hàng trong nước
 	</a> <a href="${url}/chungtu/banhang/taomoi/2" class="btn btn-info btn-sm">
 		<span class="glyphicon glyphicon-plus"></span> Xuất khẩu hàng hóa
-	</a> <%-- <a href="${url}/chungtu/banhang/taomoi/3" class="btn btn-info btn-sm">
+	</a>
+	<%-- <a href="${url}/chungtu/banhang/taomoi/3" class="btn btn-info btn-sm">
 		<span class="glyphicon glyphicon-plus"></span> Cung cấp dịch vụ trong
 		nước
 	</a> --%>
@@ -40,7 +46,7 @@
 <br />
 
 <div class="table-responsive">
-	<table class="table table-bordered table-hover">
+	<table id="dataTable" class="table table-bordered table-hover">
 		<thead>
 			<tr>
 				<th class="text-center" colspan="2">Phiếu nhập kho</th>

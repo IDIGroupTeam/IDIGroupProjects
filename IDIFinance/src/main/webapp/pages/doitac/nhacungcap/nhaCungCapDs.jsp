@@ -10,7 +10,8 @@
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
 		$('#dataTable').DataTable({
-			ordering : false
+			ordering : false,
+			language : vi
 		});
 	});
 </script>

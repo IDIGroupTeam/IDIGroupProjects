@@ -12,7 +12,10 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-
+		$('#dataTable').DataTable({
+			ordering : false,
+			language : vi
+		});
 	});
 </script>
 
@@ -49,7 +52,7 @@
 <br />
 
 <div class="table-responsive">
-	<table class="table table-bordered table-hover">
+	<table id="dataTable" class="table table-bordered table-hover">
 		<thead>
 			<tr>
 				<th class="text-center" colspan="2">Báo nợ</th>

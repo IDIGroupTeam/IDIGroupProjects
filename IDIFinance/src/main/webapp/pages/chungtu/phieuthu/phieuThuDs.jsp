@@ -11,10 +11,9 @@
 <script type="text/javascript">
 	//Shorthand for $( document ).ready()
 	$(function() {
-		// Khởi tạo action/method cho mainFinanceForm form
-		// Khởi tạo action/method cho mainFinanceForm form
-		$(document).ready(function() {
-			
+		$('#dataTable').DataTable({
+			ordering : false,
+			language : vi
 		});
 	});
 </script>
@@ -51,8 +50,8 @@
 <br />
 <br />
 
-<div id="dataTable" class="table-responsive">
-	<table class="table table-bordered table-hover">
+<div class="table-responsive">
+	<table id="dataTable" class="table table-bordered table-hover">
 		<thead>
 			<tr>
 				<th class="text-center" colspan="2">Phiếu thu</th>

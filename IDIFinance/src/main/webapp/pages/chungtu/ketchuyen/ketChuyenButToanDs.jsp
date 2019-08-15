@@ -12,7 +12,10 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-
+		$('#dataTable').DataTable({
+			ordering : false,
+			language : vi
+		});
 	});
 </script>
 
@@ -44,7 +47,7 @@
 <br />
 
 <div class="table-responsive">
-	<table class="table table-bordered table-hover">
+	<table id="dataTable" class="table table-bordered table-hover">
 		<thead>
 			<tr>
 				<!-- <th class="text-center">Mã kết chuyển</th> -->
@@ -64,9 +67,9 @@
 					<%-- <td class="text-center" style="width: 50px;">${ketChuyenButToan.maKc}</td> --%>
 					<td style="width: 300px;"><a
 						href="${url}/chungtu/ketchuyen/buttoan/xem/${ketChuyenButToan.maKc}">${ketChuyenButToan.tenKc}</a></td>
-					<td  style="width: 300px;">${ketChuyenButToan.taiKhoanNo.loaiTaiKhoan.maTk}-
+					<td style="width: 300px;">${ketChuyenButToan.taiKhoanNo.loaiTaiKhoan.maTk}-
 						${ketChuyenButToan.taiKhoanNo.loaiTaiKhoan.tenTk}</td>
-					<td  style="width: 300px;">${ketChuyenButToan.taiKhoanCo.loaiTaiKhoan.maTk}-
+					<td style="width: 300px;">${ketChuyenButToan.taiKhoanCo.loaiTaiKhoan.maTk}-
 						${ketChuyenButToan.taiKhoanCo.loaiTaiKhoan.tenTk}</td>
 					<td>${ketChuyenButToan.congThuc}</td>
 					<td>${ketChuyenButToan.thuTu}</td>
