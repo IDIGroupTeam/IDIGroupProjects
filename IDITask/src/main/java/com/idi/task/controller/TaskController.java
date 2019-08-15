@@ -1246,7 +1246,7 @@ public class TaskController {
 					StringTokenizer st = new StringTokenizer(sendReportForm.getSendTo(), ";");
 					while (st.hasMoreTokens()) {
 
-						String sendTo = st.nextToken(",");
+						String sendTo = st.nextToken(";");
 						if (sendTo != null && sendTo.length() > 0 && sendTo.contains("@") && sendTo.contains(".com")) {
 							log.info("send report cho " + sendTo);
 							helper.setTo(sendTo);

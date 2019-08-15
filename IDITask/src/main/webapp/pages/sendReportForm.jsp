@@ -31,7 +31,7 @@ td, th {
 //alert("send report ...xxx");
 $(function(){
 	//alert("send report ...");
-	$("#sendTo").multiselect({
+/* 	$("#sendTo").multiselect({
 		enableFiltering : true,
 		filterPlaceholder : 'Tìm kiếm',
 		maxHeight : 200,
@@ -42,7 +42,7 @@ $(function(){
 		allSelectedText : 'Chọn tất cả',
 		selectAllText : 'Tất cả',
 		selectAllValue : 'ALL'
-	});		
+	});	 */	
 	//alert("send report ...yyy");	
 }); 
 
@@ -62,14 +62,14 @@ $(function(){
 		<form:input type="hidden" path="subject" value="${sendReportForm.subject}" />
 		<table class="table table-bordered table-hover">
 			<tr>
-				<td nowrap="nowrap" title="Nhập chính xác địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com, các email cách nhau bằng dấu ; ">Gửi tới:(*)</td>
-				<td>
+				<td nowrap="nowrap" title="Nhập chính xác địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com. Các email cách nhau bằng dấu ';' ">Gửi tới:(*)</td>
+	<%-- 			<td>
 					<form:select path="sendTo" multiple="multiple" class="form-control animated"> 
 						<form:options items="${employeeEmailMap}" />
-					</form:select>
+					</form:select> --%>
 					
-<%-- 				<td><form:input path="sendTo" required="required"
-						class="form-control animated" /></td> --%>
+				<td><form:input path="sendTo" required="required"
+						class="form-control animated" /></td>
 			</tr>
 <%-- 			<tr>
 				<td nowrap="nowrap" title="Phần này khi hoàn thiên chức năng phân quyền sẽ không cần nữa hệ thống sẽ tự động sác định được người gửi ...">Người gửi:</td>
