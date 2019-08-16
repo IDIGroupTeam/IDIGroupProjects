@@ -273,7 +273,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien tien = new Tien();
 				tien.setLoaiTien(loaiTien);
 				tien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tien.setSoTien(tien.getGiaTri() / tien.getLoaiTien().getBanRa());
+				tien.setSoTien(Utils.divide(tien.getGiaTri(), tien.getLoaiTien().getBanRa()));
 				taiKhoan.setSoTien(tien);
 
 				chungTu.themTaiKhoan(taiKhoan);
@@ -393,7 +393,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien tien = new Tien();
 				tien.setLoaiTien(loaiTien);
 				tien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tien.setSoTien(tien.getGiaTri() / tien.getLoaiTien().getBanRa());
+				tien.setSoTien(Utils.divide(tien.getGiaTri(), tien.getLoaiTien().getBanRa()));
 
 				if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
 					taiKhoan.setNo(tien);
@@ -532,13 +532,13 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien donGia = new Tien();
 				donGia.setLoaiTien(loaiTien);
 				donGia.setGiaTri(rs.getDouble("DON_GIA"));
-				donGia.setSoTien(donGia.getGiaTri() / loaiTien.getBanRa());
+				donGia.setSoTien(Utils.divide(donGia.getGiaTri(), loaiTien.getBanRa()));
 				hangHoa.setDonGia(donGia);
 
 				Tien giaKho = new Tien();
 				giaKho.setLoaiTien(loaiTien);
 				giaKho.setGiaTri(rs.getDouble("GIA_KHO"));
-				giaKho.setSoTien(giaKho.getGiaTri() / loaiTien.getBanRa());
+				giaKho.setSoTien(Utils.divide(giaKho.getGiaTri(), loaiTien.getBanRa()));
 				giaKho.setMaGia(rs.getInt("MA_GIA_KHO"));
 				hangHoa.setGiaKho(giaKho);
 
@@ -565,7 +565,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien tkTien = new Tien();
 				tkTien.setLoaiTien(loaiTien);
 				tkTien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tkTien.setSoTien(tkTien.getGiaTri() / tkTien.getLoaiTien().getBanRa());
+				tkTien.setSoTien(Utils.divide(tkTien.getGiaTri(), tkTien.getLoaiTien().getBanRa()));
 				taiKhoan.setSoTien(tkTien);
 
 				int loaiTk = rs.getInt("LOAI_TK");
@@ -2327,7 +2327,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien tien = new Tien();
 				tien.setLoaiTien(loaiTien);
 				tien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tien.setSoTien(tien.getGiaTri() / tien.getLoaiTien().getBanRa());
+				tien.setSoTien(Utils.divide(tien.getGiaTri(), tien.getLoaiTien().getBanRa()));
 				taiKhoan.setSoTien(tien);
 
 				KetChuyenButToan ketChuyenButToan = new KetChuyenButToan();
@@ -2439,10 +2439,10 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					soTien.setLoaiTien(chungTu.getLoaiTien());
 
 					if (ketQua >= 0) {
-						soTien.setSoTien(ketQua / chungTu.getLoaiTien().getBanRa());
+						soTien.setSoTien(Utils.divide(ketQua, chungTu.getLoaiTien().getBanRa()));
 						soTien.setGiaTri(ketQua);
 					} else {
-						soTien.setSoTien((ketQua * -1) / chungTu.getLoaiTien().getBanRa());
+						soTien.setSoTien(Utils.divide((ketQua * -1), chungTu.getLoaiTien().getBanRa()));
 						soTien.setGiaTri(ketQua * -1);
 
 						TaiKhoan taiKhoanNo = ketChuyenButToan.getTaiKhoanNo();

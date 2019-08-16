@@ -263,7 +263,7 @@ public class Utils {
 
 		BigDecimal aObj = new BigDecimal(a + "");
 		BigDecimal bObj = new BigDecimal(b + "");
-		return aObj.multiply(bObj, mc).doubleValue();
+		return aObj.multiply(bObj).doubleValue();
 	}
 
 	public static double divide(double a, double b) {
@@ -273,7 +273,7 @@ public class Utils {
 
 		BigDecimal aObj = new BigDecimal(a + "");
 		BigDecimal bObj = new BigDecimal(b + "");
-		return aObj.divide(bObj, mc).doubleValue();
+		return aObj.divide(bObj).doubleValue();
 	}
 
 	public static double add(double a, double b) {
@@ -283,7 +283,7 @@ public class Utils {
 
 		BigDecimal aObj = new BigDecimal(a + "");
 		BigDecimal bObj = new BigDecimal(b + "");
-		return aObj.add(bObj, mc).doubleValue();
+		return aObj.add(bObj).doubleValue();
 	}
 
 	public static double subtract(double a, double b) {
@@ -293,6 +293,6 @@ public class Utils {
 
 		BigDecimal aObj = new BigDecimal(a + "");
 		BigDecimal bObj = new BigDecimal(b + "");
-		return aObj.subtract(bObj, mc).doubleValue();
+		return aObj.subtract(bObj).doubleValue();
 	}
 }
