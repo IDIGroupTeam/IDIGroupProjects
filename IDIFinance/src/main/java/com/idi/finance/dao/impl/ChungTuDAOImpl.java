@@ -283,6 +283,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 				return chungTu;
 			} catch (Exception e) {
+				e.printStackTrace();
 				return null;
 			}
 		}
