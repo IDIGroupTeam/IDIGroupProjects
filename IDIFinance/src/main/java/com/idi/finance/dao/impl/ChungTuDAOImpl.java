@@ -207,6 +207,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 		Object[] objs = { batDauStr, ketThucStr, batDauStr, ketThucStr, batDauStr, ketThucStr };
 		List<ChungTu> chungTuDs = jdbcTmpl.query(query, objs, new ChungTuMapper());
+		logger.info("chungTuDs.size: " + chungTuDs.size());
+		logger.info("chungTuDs: " + chungTuDs);
 
 		// Gộp chứng từ trùng nhau nhưng có tài khoản ảnh hường khác nhau
 		List<ChungTu> ketQua = null;
@@ -215,12 +217,17 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 			Iterator<ChungTu> iter = chungTuDs.iterator();
 			while (iter.hasNext()) {
 				ChungTu chungTu = iter.next();
+				logger.info("chungTu: " + chungTu);
 
 				int pos = ketQua.indexOf(chungTu);
+				logger.info("pos: " + pos);
 				if (pos > -1) {
+					logger.info("capnhat: " + pos);
 					ChungTu chungTuTmpl = ketQua.get(pos);
+					logger.info("chungTuTmpl: " + chungTuTmpl);
 					chungTuTmpl.themTaiKhoan(chungTu.getTaiKhoanDs());
 				} else {
+					logger.info("themmoi: " + chungTu);
 					ketQua.add(chungTu);
 				}
 			}

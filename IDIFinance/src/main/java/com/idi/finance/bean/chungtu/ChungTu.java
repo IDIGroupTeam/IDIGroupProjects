@@ -206,6 +206,7 @@ public class ChungTu implements Comparable<ChungTu> {
 	}
 
 	public void themTaiKhoan(TaiKhoan taiKhoan) {
+		logger.info("themTaiKhoan: " + taiKhoan);
 		if (taiKhoan == null) {
 			return;
 		}
