@@ -950,15 +950,31 @@ public class TaskController {
 	}
 
 	@RequestMapping("/prepareReport")
-	public String prepareReport(Model model) throws Exception {
+	public String prepareReport(Model model, @RequestParam(required = false, value = "fDate") String fDate,
+			@RequestParam(required = false, value = "tDate") String tDate, 
+			@RequestParam(required = false, value = "dept") String dept) throws Exception {
 		ReportForm taskReportForm = new ReportForm();
-
-		Date dNow = new Date();
-		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
-		String today = ft.format(dNow);
-		// System.err.println(today);
-		taskReportForm.setToDate(today);
-		// model.addAttribute("today", today);
+		//, @RequestParam(required = false, value = "eId") String eId
+		//fDate=2019-05-26&tDate=2019-08-22&eName=&dept=CNTT&eId=69
+		if(fDate != null && fDate.length() > 0)
+			taskReportForm.setFromDate(fDate);
+		else {
+			Date dNow = new Date();
+			SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+			String today = ft.format(dNow);
+			// System.err.println(today);
+			taskReportForm.setToDate(today);
+			// model.addAttribute("today", today);
+		}
+		if(tDate != null && tDate.length() > 0)
+			taskReportForm.setToDate(tDate);
+		if(dept != null && dept.length() > 0)
+			taskReportForm.setDepartment(dept);
+		/*
+		 * if(eId != null && Integer.parseInt(eId) > 0)
+		 * taskReportForm.setEmployeeId(Integer.parseInt(eId));
+		 */
+		
 		model.addAttribute("formTitle", "Lựa chọn thông tin báo cáo công việc");
 
 		// get list department
@@ -1102,26 +1118,161 @@ public class TaskController {
 			String tDate = taskReportForm.getToDate();
 			if (taskReportForm.getEmployeeId() > 0) {
 				TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, taskReportForm.getEmployeeId());
+				
+				// tinh tong thoi gian da lam va thoi gian estimate
+				List<Task> list = null;
+				list = taskDAO.getTasksForReport(taskReportForm);			
+				float timeEstimateTotal = 0;
+				float timeSpentTotal = 0;
+				for (int i = 0; i < list.size(); i++) {
+					Task taskDTO = new Task();
+					taskDTO = list.get(i);
+					if (taskDTO.getTimeSpent() != null && taskDTO.getTimeSpent().length() > 0) {
+						if (taskDTO.getTimeSpentType().equalsIgnoreCase("w"))
+							timeSpentTotal = timeSpentTotal
+									+ Float.valueOf(taskDTO.getTimeSpent()) * Float.valueOf(properties.getProperty("w"));
+						else if (taskDTO.getTimeSpentType().equalsIgnoreCase("d"))
+							timeSpentTotal = timeSpentTotal
+									+ Float.valueOf(taskDTO.getTimeSpent()) * Float.valueOf(properties.getProperty("d"));
+						else if (taskDTO.getTimeSpentType().equalsIgnoreCase("m"))
+							timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent()) / 60;
+						else
+							timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent());
+					}
+					if (taskDTO.getEstimate() != null && taskDTO.getEstimate().length() > 0) {
+						if (taskDTO.getEstimateTimeType().equalsIgnoreCase("w"))
+							timeEstimateTotal = timeEstimateTotal
+									+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("w"));
+						else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("d"))
+							timeEstimateTotal = timeEstimateTotal
+									+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("d"));
+						else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("m"))
+							timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate()) / 60;
+						else
+							timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate());
+					}
+				}
+				BigDecimal s = new BigDecimal(timeSpentTotal);
+				BigDecimal spentTT = s.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+
+				BigDecimal e = new BigDecimal(timeEstimateTotal);
+				BigDecimal estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+				
+				System.err.println("spent: " + timeSpentTotal + ":" + s + ":" + spentTT);
+				System.err.println("estimate:" + timeEstimateTotal +":" + e + ":" + estimateTT);
+				taskSummay.setTotalEstimate(estimateTT.toString());
+				taskSummay.setTotalSpent(spentTT.toString());
 				listTaskSummary.add(taskSummay);
 			} else if (taskReportForm.getDepartment() != null
 					&& !taskReportForm.getDepartment().equalsIgnoreCase("all")) {
 				List<EmployeeInfo> employees = employees(taskReportForm.getDepartment());
-				for (int i = 0; i < employees.size(); i++) {
-					EmployeeInfo e = new EmployeeInfo();
-					e = employees.get(i);
-					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, e.getEmployeeId());
+				for (int j = 0; j < employees.size(); j++) {
+					EmployeeInfo emp = new EmployeeInfo();
+					emp = employees.get(j);
+					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, emp.getEmployeeId());
+					
+					// tinh tong thoi gian da lam va thoi gian estimate
+					List<Task> list = null;
+					taskReportForm.setEmployeeId(emp.getEmployeeId());
+					list = taskDAO.getTasksForReport(taskReportForm);			
+					float timeEstimateTotal = 0;
+					float timeSpentTotal = 0;
+					for (int i = 0; i < list.size(); i++) {
+						Task taskDTO = new Task();
+						taskDTO = list.get(i);
+						if (taskDTO.getTimeSpent() != null && taskDTO.getTimeSpent().length() > 0) {
+							if (taskDTO.getTimeSpentType().equalsIgnoreCase("w"))
+								timeSpentTotal = timeSpentTotal
+										+ Float.valueOf(taskDTO.getTimeSpent()) * Float.valueOf(properties.getProperty("w"));
+							else if (taskDTO.getTimeSpentType().equalsIgnoreCase("d"))
+								timeSpentTotal = timeSpentTotal
+										+ Float.valueOf(taskDTO.getTimeSpent()) * Float.valueOf(properties.getProperty("d"));
+							else if (taskDTO.getTimeSpentType().equalsIgnoreCase("m"))
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent()) / 60;
+							else
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent());
+						}
+						if (taskDTO.getEstimate() != null && taskDTO.getEstimate().length() > 0) {
+							if (taskDTO.getEstimateTimeType().equalsIgnoreCase("w"))
+								timeEstimateTotal = timeEstimateTotal
+										+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("w"));
+							else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("d"))
+								timeEstimateTotal = timeEstimateTotal
+										+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("d"));
+							else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("m"))
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate()) / 60;
+							else
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate());
+						}
+					}
+					BigDecimal s = new BigDecimal(timeSpentTotal);
+					BigDecimal spentTT = s.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+
+					BigDecimal e = new BigDecimal(timeEstimateTotal);
+					BigDecimal estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+					
+					System.err.println("spent: " + timeSpentTotal + ":" + s + ":" + spentTT);
+					System.err.println("estimate:" + timeEstimateTotal +":" + e + ":" + estimateTT);
+					taskSummay.setTotalEstimate(estimateTT.toString());
+					taskSummay.setTotalSpent(spentTT.toString());
+					
 					listTaskSummary.add(taskSummay);
 				}
 			} else {
 				List<EmployeeInfo> employees = employees("all");
 				for (int i = 0; i < employees.size(); i++) {
-					EmployeeInfo e = new EmployeeInfo();
-					e = employees.get(i);
-					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, e.getEmployeeId());
+					EmployeeInfo emp = new EmployeeInfo();
+					emp = employees.get(i);
+					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, emp.getEmployeeId());
+					
+					// tinh tong thoi gian da lam va thoi gian estimate
+					List<Task> list = null;
+					taskReportForm.setEmployeeId(emp.getEmployeeId());
+					list = taskDAO.getTasksForReport(taskReportForm);			
+					float timeEstimateTotal = 0;
+					float timeSpentTotal = 0;
+					for (int j = 0; j < list.size(); j++) {
+						Task taskDTO = new Task();
+						taskDTO = list.get(j);
+						if (taskDTO.getTimeSpent() != null && taskDTO.getTimeSpent().length() > 0) {
+							if (taskDTO.getTimeSpentType().equalsIgnoreCase("w"))
+								timeSpentTotal = timeSpentTotal
+										+ Float.valueOf(taskDTO.getTimeSpent()) * Float.valueOf(properties.getProperty("w"));
+							else if (taskDTO.getTimeSpentType().equalsIgnoreCase("d"))
+								timeSpentTotal = timeSpentTotal
+										+ Float.valueOf(taskDTO.getTimeSpent()) * Float.valueOf(properties.getProperty("d"));
+							else if (taskDTO.getTimeSpentType().equalsIgnoreCase("m"))
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent()) / 60;
+							else
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent());
+						}
+						if (taskDTO.getEstimate() != null && taskDTO.getEstimate().length() > 0) {
+							if (taskDTO.getEstimateTimeType().equalsIgnoreCase("w"))
+								timeEstimateTotal = timeEstimateTotal
+										+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("w"));
+							else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("d"))
+								timeEstimateTotal = timeEstimateTotal
+										+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("d"));
+							else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("m"))
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate()) / 60;
+							else
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate());
+						}
+					}
+					BigDecimal s = new BigDecimal(timeSpentTotal);
+					BigDecimal spentTT = s.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+
+					BigDecimal e = new BigDecimal(timeEstimateTotal);
+					BigDecimal estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+					
+					System.err.println("spent: " + timeSpentTotal + ":" + s + ":" + spentTT);
+					System.err.println("estimate:" + timeEstimateTotal +":" + e + ":" + estimateTT);
+					taskSummay.setTotalEstimate(estimateTT.toString());
+					taskSummay.setTotalSpent(spentTT.toString());					
+					
 					listTaskSummary.add(taskSummay);
 				}
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -29,15 +29,15 @@ tr:nth-child(even) {
 </style>
 </head>
 <body>
-	<a href="${url}/prepareReport?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${tasks[0].ownerName}&dept=${reportForm.department}&eId=${reportForm.employeeId}"><button
+	<a href="${url}/prepareReport?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${tasks[0].ownerName}&dept=${reportForm.department}"><button
 			class="btn btn-primary btn-sm">Lựa chọn lại thông tin cần
 			thống kê khối lượng công việc</button></a>
-	<c:if test="${tasks.size() > 0}">
+<%-- 	<c:if test="${tasks.size() > 0}">
 		<a
 			href="${url}/exportToPDF?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${tasks[0].ownerName}&dept=${reportForm.department}&eId=${reportForm.employeeId}"><button
 				class="btn btn-primary btn-sm">Export ra file PDF và gửi
 				báo cáo</button></a>
-	</c:if>
+	</c:if> --%>
 	<br />
 	<h3>
 		Thống kê khối lượng công việc từ ngày ${reportForm.fromDate} đến ngày
@@ -45,31 +45,35 @@ tr:nth-child(even) {
 		<c:if test="${reportForm.employeeId > 0}">
 			của ${reportForm.employeeName}
        	</c:if>
-		<c:if test="${reportForm.department != 'all'}"> phòng ${reportForm.department} làm</c:if>
+		<c:if test="${reportForm.department != 'all'}"> phòng ${reportForm.department}</c:if>
 	</h3>
 	<br />
 	<input type="hidden" name="employeeName" value="${tasks[0].ownerName}">
 	<table class="table table-striped">
 		<tr>
-			<th nowrap="nowrap">Người làm</th>
-			<th nowrap="nowrap">Tổng số</th>
+			<th nowrap="nowrap">Người làm</th>			
 			<th nowrap="nowrap">Mới</th>
 			<th nowrap="nowrap">Đang làm</th>
 			<th nowrap="nowrap">Tạm dừng</th>
 			<th nowrap="nowrap">Hủy bỏ</th>
 			<th nowrap="nowrap">Chờ đánh giá</th>
 			<th nowrap="nowrap">Đã xong</th>
+			<th nowrap="nowrap">Tổng số</th>
+			<th nowrap="nowrap">Thời gian đã làm</th>
+			<th nowrap="nowrap">Thời gian ước lượng</th>
 		</tr>
 		<c:forEach var="task" items="${listTaskSummary}">
 			<tr>
-				<td>${task.employeeName}</td>
-				<td><B>${task.taskTotal}</B></td>			
+				<td>${task.employeeName}</td>						
 				<td>${task.taskNew}</td>				
 				<td>${task.taskInprogess}</td>
 				<td>${task.taskStoped}</td>
 				<td>${task.taskinvalid}</td>
 				<td>${task.taskReviewing}</td>
-				<td>${task.taskCompleted}</td>				
+				<td>${task.taskCompleted}</td>	
+				<td><B>${task.taskTotal}</B></td>			
+				<td>${task.totalSpent} h</td>
+				<td>${task.totalEstimate} h</td>	
 			</tr>
 		</c:forEach>
 	</table>

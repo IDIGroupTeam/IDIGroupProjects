@@ -38,7 +38,7 @@ tr:nth-child(even) {
  
 </script> 
 <body>
-	<a href="${url}/prepareReport"><button class="btn btn-primary btn-sm">Lựa chọn lại thông tin cần báo cáo</button></a>
+	<a href="${url}/prepareReport?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${tasks[0].ownerName}&dept=${reportForm.department}"><button class="btn btn-primary btn-sm">Lựa chọn lại thông tin cần báo cáo</button></a>
 <%-- 	<c:if test="${tasks.size() > 0}">
 		<a href="${url}/exportToPDF?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${tasks[0].ownerName}&dept=${reportForm.department}&eId=${reportForm.employeeId}&sender=${sender}&comment=${comment}"><button class="btn btn-primary btn-sm">Export ra file PDF và gửi báo cáo</button></a>
 	</c:if>	 --%>
@@ -51,7 +51,9 @@ tr:nth-child(even) {
 	</h3>
 	<br />
 	<form:form action="exportToPDF" modelAttribute="reportForm" method="POST">
-		<input class="btn btn-lg btn-primary btn-sm" type="submit" name="Export ra file PDF và gửi báo cáo" value="Export ra file PDF và gửi báo cáo" /> <br/><br/>
+		<c:if test="${tasks.size() > 0}">
+			<input class="btn btn-lg btn-primary btn-sm" type="submit" name="Export ra file PDF và gửi báo cáo" value="Export ra file PDF và gửi báo cáo" /> <br/><br/>
+		</c:if>
 		<table>
 			<form:hidden path="fromDate" />
 			<form:hidden path="toDate" />

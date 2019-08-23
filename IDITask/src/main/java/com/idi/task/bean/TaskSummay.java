@@ -17,6 +17,8 @@ public class TaskSummay implements Serializable {
 	private int taskStoped;
 	private int taskReviewing;
 	private int taskCompleted;
+	private String totalEstimate;
+	private String totalSpent;
 	
 	public TaskSummay() {
 
@@ -97,6 +99,22 @@ public class TaskSummay implements Serializable {
 
 	public void setTaskCompleted(int taskCompleted) {
 		this.taskCompleted = taskCompleted;
+	}
+
+	public String getTotalEstimate() {
+		return totalEstimate;
+	}
+
+	public void setTotalEstimate(String totalEstimate) {
+		this.totalEstimate = totalEstimate;
+	}
+
+	public String getTotalSpent() {
+		return totalSpent;
+	}
+
+	public void setTotalSpent(String totalSpent) {
+		this.totalSpent = totalSpent;
 	}
 
 }
