@@ -1654,7 +1654,7 @@ public class ChungTuController {
 				hangHoa.getDonGia().setLoaiTien(chungTu.getLoaiTien());
 
 				// Tính tổng tiền mua hàng đề ghi vào tài khoản công nợ
-				double tongDonGia = Utils.multiply(hangHoa.getSoLuong(), hangHoa.getDonGia().getSoTien());
+				double tongDonGia = Utils.round(hangHoa.getSoLuong() * hangHoa.getDonGia().getSoTien());
 
 				// Tổng thuế nhập khẩu, tiêu thụ đặc biệt, thuế GTGT (phương pháp trực tiếp)
 				double tongThue = 0;
@@ -1663,12 +1663,12 @@ public class ChungTuController {
 				// Chuyển các loại thuế về loại tiền chính của chứng từ
 				if (hangHoa.getTkThueNk() != null && hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk() != null
 						&& hangHoa.getTkThueNk().getSoTien() != null) {
-					double thue = Utils.divide(hangHoa.getTkThueNk().getSoTien().getGiaTri(),
-							chungTu.getLoaiTien().getBanRa());
+					double thue = Utils
+							.round(hangHoa.getTkThueNk().getSoTien().getGiaTri() / chungTu.getLoaiTien().getBanRa());
 					hangHoa.getTkThueNk().getSoTien().setSoTien(thue);
 					hangHoa.getTkThueNk().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 					// hangHoa.getTkThueNk().setNhomDk(1);
-					tongThue = Utils.add(tongThue, thue);
+					tongThue = Utils.round(tongThue + thue);
 
 					if (soHangHoa > 1) {
 						hangHoa.getTkThueNk().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -1679,12 +1679,12 @@ public class ChungTuController {
 
 				if (hangHoa.getTkThueTtdb() != null && hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk() != null
 						&& hangHoa.getTkThueTtdb().getSoTien() != null) {
-					double thue = Utils.divide(hangHoa.getTkThueTtdb().getSoTien().getGiaTri(),
-							chungTu.getLoaiTien().getBanRa());
+					double thue = Utils
+							.round(hangHoa.getTkThueTtdb().getSoTien().getGiaTri() / chungTu.getLoaiTien().getBanRa());
 					hangHoa.getTkThueTtdb().getSoTien().setSoTien(thue);
 					hangHoa.getTkThueTtdb().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 					// hangHoa.getTkThueTtdb().setNhomDk(1);
-					tongThue = Utils.add(tongThue, thue);
+					tongThue = Utils.round(tongThue + thue);
 
 					if (soHangHoa > 1) {
 						hangHoa.getTkThueTtdb().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -1697,8 +1697,8 @@ public class ChungTuController {
 						&& !hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")
 						&& hangHoa.getTkThueGtgt().getSoTien() != null) {
 					// Có thuế Gtgt
-					double thue = Utils.divide(hangHoa.getTkThueGtgt().getSoTien().getGiaTri(),
-							chungTu.getLoaiTien().getBanRa());
+					double thue = Utils
+							.round(hangHoa.getTkThueGtgt().getSoTien().getGiaTri() / chungTu.getLoaiTien().getBanRa());
 					hangHoa.getTkThueGtgt().getSoTien().setSoTien(thue);
 					hangHoa.getTkThueGtgt().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 					if (chungTu.getTinhChatCt() == ChungTu.HANG_HOA_TRONG_NUOC
@@ -1714,11 +1714,11 @@ public class ChungTuController {
 						hangHoa.getTkThueGtgt().setLyDo(chungTu.getLyDo());
 					}
 
-					tongThueToanBo = Utils.add(tongThue, thue);
+					tongThueToanBo = Utils.round(tongThue + thue);
 					if (hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						// Đây là trường hợp thuế Gtgt tính theo phương pháp trực tiếp
 						// Ghi thuế gtgt vào hàng hóa
-						tongThue = Utils.add(tongThue, thue);
+						tongThue = Utils.round(tongThue + thue);
 					}
 				}
 
@@ -1728,8 +1728,8 @@ public class ChungTuController {
 
 				// Từ đó tính ra giá nhập kho
 				// Đã tính ở phần client gằng js nên không cần tính lại
-				double tongTien = Utils.add(tongDonGia, tongThue);
-				double tongTienToanBo = Utils.add(tongDonGia, tongThueToanBo);
+				double tongTien = Utils.round(tongDonGia + tongThue);
+				double tongTienToanBo = Utils.round(tongDonGia + tongThueToanBo);
 
 				// Tính giá trị tài khoản kho
 				if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null) {
@@ -2120,11 +2120,11 @@ public class ChungTuController {
 							&& !hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")
 							&& hangHoa.getTkThueGtgt().getSoTien() != null) {
 						// Có thuế Gtgt, tính theo phương pháp khấu trừ
-						double thue = Utils.divide(hangHoa.getTkThueGtgt().getSoTien().getGiaTri(),
-								chungTu.getLoaiTien().getBanRa());
+						double thue = Utils.round(
+								hangHoa.getTkThueGtgt().getSoTien().getGiaTri() / chungTu.getLoaiTien().getBanRa());
 						hangHoa.getTkThueGtgt().getSoTien().setSoTien(thue);
 						hangHoa.getTkThueGtgt().getSoTien().setLoaiTien(chungTu.getLoaiTien());
-						tongThue = Utils.add(tongThue, thue);
+						tongThue = Utils.round(tongThue + thue);
 
 						if (soHangHoa > 1) {
 							hangHoa.getTkThueGtgt().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -2136,11 +2136,11 @@ public class ChungTuController {
 					if (hangHoa.getTkThueXk() != null && hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk().trim().equals("")
 							&& hangHoa.getTkThueXk().getSoTien() != null) {
-						double thue = Utils.divide(hangHoa.getTkThueXk().getSoTien().getGiaTri(),
-								chungTu.getLoaiTien().getBanRa());
+						double thue = Utils.round(
+								hangHoa.getTkThueXk().getSoTien().getGiaTri() / chungTu.getLoaiTien().getBanRa());
 						hangHoa.getTkThueXk().getSoTien().setSoTien(thue);
 						hangHoa.getTkThueXk().getSoTien().setLoaiTien(chungTu.getLoaiTien());
-						tongThue = Utils.add(tongThue, thue);
+						tongThue = Utils.round(tongThue + thue);
 
 						if (soHangHoa > 1) {
 							hangHoa.getTkThueXk().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -2150,7 +2150,7 @@ public class ChungTuController {
 					}
 
 					// Tổng doanh thu
-					double tongDoanhThu = Utils.multiply(hangHoa.getSoLuong(), hangHoa.getDonGia().getSoTien());
+					double tongDoanhThu = Utils.round(hangHoa.getSoLuong() * hangHoa.getDonGia().getSoTien());
 					if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						hangHoa.getTkDoanhThu().getSoTien().setLoaiTien(chungTu.getLoaiTien());
@@ -2164,7 +2164,7 @@ public class ChungTuController {
 					}
 
 					// Tổng thanh toán
-					double tongThanhToan = Utils.add(tongDoanhThu, tongThue);
+					double tongThanhToan = Utils.round(tongDoanhThu + tongThue);
 					if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						hangHoa.getTkThanhtoan().getSoTien().setLoaiTien(chungTu.getLoaiTien());
@@ -2178,7 +2178,7 @@ public class ChungTuController {
 					}
 
 					// Tổng giá vốn
-					double tongGiaVon = Utils.multiply(hangHoa.getSoLuong(), hangHoa.getGiaKho().getSoTien());
+					double tongGiaVon = Utils.round(hangHoa.getSoLuong() * hangHoa.getGiaKho().getSoTien());
 					if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						hangHoa.getTkGiaVon().getSoTien().setLoaiTien(chungTu.getLoaiTien());

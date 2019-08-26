@@ -280,7 +280,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien tien = new Tien();
 				tien.setLoaiTien(loaiTien);
 				tien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tien.setSoTien(Utils.divide(tien.getGiaTri(), tien.getLoaiTien().getBanRa()));
+				tien.setSoTien(Utils.round(tien.getGiaTri() / tien.getLoaiTien().getBanRa()));
 				taiKhoan.setSoTien(tien);
 
 				chungTu.themTaiKhoan(taiKhoan);
@@ -401,7 +401,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien tien = new Tien();
 				tien.setLoaiTien(loaiTien);
 				tien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tien.setSoTien(Utils.divide(tien.getGiaTri(), tien.getLoaiTien().getBanRa()));
+				tien.setSoTien(Utils.round(tien.getGiaTri() / tien.getLoaiTien().getBanRa()));
 
 				if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
 					taiKhoan.setNo(tien);
@@ -540,13 +540,13 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien donGia = new Tien();
 				donGia.setLoaiTien(loaiTien);
 				donGia.setGiaTri(rs.getDouble("DON_GIA"));
-				donGia.setSoTien(Utils.divide(donGia.getGiaTri(), loaiTien.getBanRa()));
+				donGia.setSoTien(Utils.round(donGia.getGiaTri() / loaiTien.getBanRa()));
 				hangHoa.setDonGia(donGia);
 
 				Tien giaKho = new Tien();
 				giaKho.setLoaiTien(loaiTien);
 				giaKho.setGiaTri(rs.getDouble("GIA_KHO"));
-				giaKho.setSoTien(Utils.divide(giaKho.getGiaTri(), loaiTien.getBanRa()));
+				giaKho.setSoTien(Utils.round(giaKho.getGiaTri() / loaiTien.getBanRa()));
 				giaKho.setMaGia(rs.getInt("MA_GIA_KHO"));
 				hangHoa.setGiaKho(giaKho);
 
@@ -573,7 +573,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien tkTien = new Tien();
 				tkTien.setLoaiTien(loaiTien);
 				tkTien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tkTien.setSoTien(Utils.divide(tkTien.getGiaTri(), tkTien.getLoaiTien().getBanRa()));
+				tkTien.setSoTien(Utils.round(tkTien.getGiaTri() / tkTien.getLoaiTien().getBanRa()));
 				taiKhoan.setSoTien(tkTien);
 
 				int loaiTk = rs.getInt("LOAI_TK");
@@ -808,8 +808,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 				try {
 					if (!taiKhoan.getLoaiTaiKhoan().getMaTk().equals("0")) {
-						double giaTri = Utils.multiply(chungTu.getLoaiTien().getBanRa(),
-								taiKhoan.getSoTien().getSoTien());
+						double giaTri = Utils
+								.round(chungTu.getLoaiTien().getBanRa() * taiKhoan.getSoTien().getSoTien());
 
 						logger.info("Tài khoản: " + taiKhoan.getLoaiTaiKhoan().getMaTk());
 						logger.info("So tien: " + taiKhoan.getSoTien().getSoTien());
@@ -881,8 +881,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 					// Những nghiệp vụ kế toán có định khoản mới được cập nhật/thêm mới
 					if (taiKhoan.getLoaiTaiKhoan() != null && !taiKhoan.getLoaiTaiKhoan().getMaTk().equals("0")) {
-						double giaTri = Utils.multiply(chungTu.getLoaiTien().getBanRa(),
-								taiKhoan.getSoTien().getSoTien());
+						double giaTri = Utils
+								.round(chungTu.getLoaiTien().getBanRa() * taiKhoan.getSoTien().getSoTien());
 
 						logger.info("Tài khoản: " + taiKhoan.getLoaiTaiKhoan().getMaTk());
 						logger.info("So tien: " + taiKhoan.getSoTien().getSoTien());
@@ -1001,10 +1001,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				try {
 					if (taiKhoan.getLoaiTaiKhoan() != null && taiKhoan.getLoaiTaiKhoan().getMaTk() != null
 							&& !taiKhoan.getLoaiTaiKhoan().getMaTk().isEmpty()) {
-						double giaTriNo = Utils.multiply(chungTu.getLoaiTien().getBanRa(),
-								taiKhoan.getNo().getSoTien());
-						double giaTriCo = Utils.multiply(chungTu.getLoaiTien().getBanRa(),
-								taiKhoan.getCo().getSoTien());
+						double giaTriNo = Utils.round(chungTu.getLoaiTien().getBanRa() * taiKhoan.getNo().getSoTien());
+						double giaTriCo = Utils.round(chungTu.getLoaiTien().getBanRa() * taiKhoan.getCo().getSoTien());
 
 						logger.info("Tài khoản: " + taiKhoan.getLoaiTaiKhoan().getMaTk());
 						logger.info("So du: " + taiKhoan.getSoDu());
@@ -1087,10 +1085,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					// Những nghiệp vụ kế toán có định khoản mới được cập nhật/thêm mới
 					if (taiKhoan.getLoaiTaiKhoan() != null && taiKhoan.getLoaiTaiKhoan().getMaTk() != null
 							&& !taiKhoan.getLoaiTaiKhoan().getMaTk().isEmpty()) {
-						double giaTriNo = Utils.multiply(chungTu.getLoaiTien().getBanRa(),
-								taiKhoan.getNo().getSoTien());
-						double giaTriCo = Utils.multiply(chungTu.getLoaiTien().getBanRa(),
-								taiKhoan.getCo().getSoTien());
+						double giaTriNo = Utils.round(chungTu.getLoaiTien().getBanRa() * taiKhoan.getNo().getSoTien());
+						double giaTriCo = Utils.round(chungTu.getLoaiTien().getBanRa() * taiKhoan.getCo().getSoTien());
 
 						logger.info("Tài khoản: " + taiKhoan.getLoaiTaiKhoan().getMaTk());
 						logger.info("So du: " + taiKhoan.getSoDu());
@@ -1237,7 +1233,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				// Thêm vào hang_hoa_gia trước
 				// Kiểm tra xem có chưa, chưa có thì mới thêm, có rồi thì lấy maGia ra
 				if (hangHoa.getGiaKho() != null && hangHoa.getGiaKho().getMaGia() == 0) {
-					double giaKho = Utils.multiply(hangHoa.getGiaKho().getSoTien(), chungTu.getLoaiTien().getBanRa());
+					double giaKho = Utils.round(hangHoa.getGiaKho().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					try {
 						maGia = jdbcTmpl.queryForObject(kiemTraDonGia, new Object[] { hangHoa.getMaHh(), giaKho },
 								Integer.class);
@@ -1269,7 +1265,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 				// Thêm vào chung_tu_hang_hoa
 				logger.info("Mã đơn giá " + maGia);
-				double donGia = Utils.multiply(hangHoa.getDonGia().getSoTien(), chungTu.getLoaiTien().getBanRa());
+				double donGia = Utils.round(hangHoa.getDonGia().getSoTien() * chungTu.getLoaiTien().getBanRa());
 				if (hangHoa.getKho() != null) {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
 							donGia, maGia, chungTu.getChieu(), hangHoa.getKho().getMaKho());
@@ -1282,8 +1278,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản kho: " + hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
-					double kho = Utils.multiply(hangHoa.getTkKho().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double kho = Utils
+							.round(hangHoa.getTkKho().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1304,8 +1300,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản giá vốn: " + hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk());
-					double giaVon = Utils.multiply(hangHoa.getTkGiaVon().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double giaVon = Utils
+							.round(hangHoa.getTkGiaVon().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1326,8 +1322,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản doanh thu:" + hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
-					double doanhThu = Utils.multiply(hangHoa.getTkDoanhThu().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double doanhThu = Utils
+							.round(hangHoa.getTkDoanhThu().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1349,8 +1345,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkChiPhi() != null && hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản chi phí:" + hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
-					double chiPhi = Utils.multiply(hangHoa.getTkChiPhi().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double chiPhi = Utils
+							.round(hangHoa.getTkChiPhi().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1371,8 +1367,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thanh toán:" + hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
-					double thanhToan = Utils.multiply(hangHoa.getTkThanhtoan().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double thanhToan = Utils
+							.round(hangHoa.getTkThanhtoan().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1396,8 +1392,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueNk() != null && hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thuế nhập khẩu:" + hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk());
-					double nhapKhau = Utils.multiply(hangHoa.getTkThueNk().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double nhapKhau = Utils
+							.round(hangHoa.getTkThueNk().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1419,8 +1415,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueXk() != null && hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thuế xuất khẩu:" + hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk());
-					double xuatKhau = Utils.multiply(hangHoa.getTkThueXk().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double xuatKhau = Utils
+							.round(hangHoa.getTkThueXk().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1443,8 +1439,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						&& !hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info(
 							"Tài khoản thuế tiêu thụ đặc biệt:" + hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk());
-					double ttdb = Utils.multiply(hangHoa.getTkThueTtdb().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double ttdb = Utils
+							.round(hangHoa.getTkThueTtdb().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1466,8 +1462,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueGtgtDu() != null && hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản đối ứng thuế gtgt:" + hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk());
-					double gtgtDu = Utils.multiply(hangHoa.getTkThueGtgtDu().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double gtgtDu = Utils.round(
+							hangHoa.getTkThueGtgtDu().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1489,8 +1485,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueGtgt() != null && hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thuế gtgt:" + hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk());
-					double gtgt = Utils.multiply(hangHoa.getTkThueGtgt().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double gtgt = Utils
+							.round(hangHoa.getTkThueGtgt().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					int nvKtId = 1;
 					if (!hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("0")) {
 						// Đây là trường hợp tính thuế Gtgt bằng phương pháp khấu trừ
@@ -1623,7 +1619,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				// Thêm vào hang_hoa_gia trước
 				// Kiểm tra xem có chưa, chưa có thì mới thêm, có rồi thì lấy maGia ra
 				if (hangHoa.getGiaKho() != null && hangHoa.getGiaKho().getMaGia() == 0) {
-					double giaKho = Utils.multiply(hangHoa.getGiaKho().getSoTien(), chungTu.getLoaiTien().getBanRa());
+					double giaKho = Utils.round(hangHoa.getGiaKho().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					try {
 						maGia = jdbcTmpl.queryForObject(kiemTraDonGia, new Object[] { hangHoa.getMaHh(), giaKho },
 								Integer.class);
@@ -1655,7 +1651,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 				// Thêm vào chung_tu_hang_hoa
 				logger.info("Mã đơn giá " + maGia);
-				double donGia = Utils.multiply(hangHoa.getDonGia().getSoTien(), chungTu.getLoaiTien().getBanRa());
+				double donGia = Utils.round(hangHoa.getDonGia().getSoTien() * chungTu.getLoaiTien().getBanRa());
 				if (hangHoa.getKho() != null) {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
 							donGia, maGia, chungTu.getChieu(), hangHoa.getKho().getMaKho());
@@ -1668,8 +1664,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản kho: " + hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
-					double kho = Utils.multiply(hangHoa.getTkKho().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double kho = Utils
+							.round(hangHoa.getTkKho().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1690,8 +1686,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản giá vốn: " + hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk());
-					double giaVon = Utils.multiply(hangHoa.getTkGiaVon().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double giaVon = Utils
+							.round(hangHoa.getTkGiaVon().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1712,8 +1708,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản doanh thu:" + hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
-					double doanhThu = Utils.multiply(hangHoa.getTkDoanhThu().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double doanhThu = Utils
+							.round(hangHoa.getTkDoanhThu().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1735,8 +1731,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkChiPhi() != null && hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản chi phí:" + hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
-					double chiPhi = Utils.multiply(hangHoa.getTkChiPhi().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double chiPhi = Utils
+							.round(hangHoa.getTkChiPhi().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1757,8 +1753,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thanh toán:" + hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
-					double thanhToan = Utils.multiply(hangHoa.getTkThanhtoan().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double thanhToan = Utils
+							.round(hangHoa.getTkThanhtoan().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1782,8 +1778,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueNk() != null && hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thuế nhập khẩu:" + hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk());
-					double nhapKhau = Utils.multiply(hangHoa.getTkThueNk().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double nhapKhau = Utils
+							.round(hangHoa.getTkThueNk().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1805,8 +1801,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueXk() != null && hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thuế xuất khẩu:" + hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk());
-					double xuatKhau = Utils.multiply(hangHoa.getTkThueXk().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double xuatKhau = Utils
+							.round(hangHoa.getTkThueXk().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1829,8 +1825,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						&& !hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info(
 							"Tài khoản thuế tiêu thụ đặc biệt:" + hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk());
-					double ttdb = Utils.multiply(hangHoa.getTkThueTtdb().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double ttdb = Utils
+							.round(hangHoa.getTkThueTtdb().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1852,8 +1848,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueGtgtDu() != null && hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản đối ứng thuế gtgt:" + hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk());
-					double gtgtDu = Utils.multiply(hangHoa.getTkThueGtgtDu().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double gtgtDu = Utils.round(
+							hangHoa.getTkThueGtgtDu().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
@@ -1875,8 +1871,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueGtgt() != null && hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thuế gtgt:" + hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk());
-					double gtgt = Utils.multiply(hangHoa.getTkThueGtgt().getSoTien().getSoTien(),
-							chungTu.getLoaiTien().getBanRa());
+					double gtgt = Utils
+							.round(hangHoa.getTkThueGtgt().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					int nvKtId = 1;
 					if (!hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("0")) {
 						GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
@@ -2335,7 +2331,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien tien = new Tien();
 				tien.setLoaiTien(loaiTien);
 				tien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tien.setSoTien(Utils.divide(tien.getGiaTri(), tien.getLoaiTien().getBanRa()));
+				tien.setSoTien(Utils.round(tien.getGiaTri() / tien.getLoaiTien().getBanRa()));
 				taiKhoan.setSoTien(tien);
 
 				KetChuyenButToan ketChuyenButToan = new KetChuyenButToan();
@@ -2447,10 +2443,10 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					soTien.setLoaiTien(chungTu.getLoaiTien());
 
 					if (ketQua >= 0) {
-						soTien.setSoTien(Utils.divide(ketQua, chungTu.getLoaiTien().getBanRa()));
+						soTien.setSoTien(Utils.round(ketQua / chungTu.getLoaiTien().getBanRa()));
 						soTien.setGiaTri(ketQua);
 					} else {
-						soTien.setSoTien(Utils.divide((ketQua * -1), chungTu.getLoaiTien().getBanRa()));
+						soTien.setSoTien(Utils.round((ketQua * -1) / chungTu.getLoaiTien().getBanRa()));
 						soTien.setGiaTri(ketQua * -1);
 
 						TaiKhoan taiKhoanNo = ketChuyenButToan.getTaiKhoanNo();

@@ -14,7 +14,8 @@ import java.util.Locale;
 import com.idi.finance.bean.bctc.KyKeToanCon;
 
 public class Utils {
-	private static MathContext mc = new MathContext(2, RoundingMode.HALF_UP);
+	private static int precision = 2;
+	private static MathContext mc = new MathContext(precision, RoundingMode.HALF_UP);
 
 	public static List<String> parseString(String str) {
 		if (str == null) {
@@ -258,41 +259,72 @@ public class Utils {
 
 	public static double multiply(double a, double b) {
 		if (mc == null) {
-			mc = new MathContext(2, RoundingMode.HALF_UP);
+			mc = new MathContext(precision, RoundingMode.HALF_UP);
 		}
 
 		BigDecimal aObj = new BigDecimal(a + "");
 		BigDecimal bObj = new BigDecimal(b + "");
-		return aObj.multiply(bObj).doubleValue();
+		return aObj.multiply(bObj, mc).doubleValue();
 	}
 
 	public static double divide(double a, double b) {
 		if (mc == null) {
-			mc = new MathContext(2, RoundingMode.HALF_UP);
+			mc = new MathContext(precision, RoundingMode.HALF_UP);
 		}
 
 		BigDecimal aObj = new BigDecimal(a + "");
 		BigDecimal bObj = new BigDecimal(b + "");
-		return aObj.divide(bObj).doubleValue();
+		return aObj.divide(bObj, mc).doubleValue();
 	}
 
 	public static double add(double a, double b) {
 		if (mc == null) {
-			mc = new MathContext(2, RoundingMode.HALF_UP);
+			mc = new MathContext(precision, RoundingMode.HALF_UP);
 		}
 
 		BigDecimal aObj = new BigDecimal(a + "");
 		BigDecimal bObj = new BigDecimal(b + "");
-		return aObj.add(bObj).doubleValue();
+		return aObj.add(bObj, mc).doubleValue();
 	}
 
 	public static double subtract(double a, double b) {
 		if (mc == null) {
-			mc = new MathContext(2, RoundingMode.HALF_UP);
+			mc = new MathContext(precision, RoundingMode.HALF_UP);
 		}
 
 		BigDecimal aObj = new BigDecimal(a + "");
 		BigDecimal bObj = new BigDecimal(b + "");
-		return aObj.subtract(bObj).doubleValue();
+		return aObj.subtract(bObj, mc).doubleValue();
+	}
+
+	public static void main(String[] args) {
+		Double a = Double.valueOf("4.6");
+		Double b = Double.valueOf("5.8");
+		Double mul = a * b;
+		Double div = a / b;
+		Double add = a + b;
+		Double sub = a - b;
+
+		System.out.println(Float.valueOf("4.6") + Float.valueOf("5.8"));
+		System.out.println(Float.valueOf(4.6f) + Float.valueOf(5.8f));
+		System.out.println(Double.valueOf("4.6") + Double.valueOf("5.8"));
+		System.out.println((Double.valueOf(4.6) + Double.valueOf(5.8)));
+	}
+
+	public static double round(double value) {
+		long factor = (long) Math.pow(10, precision);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
+	}
+
+	public static double round(double value, int precision) {
+		if (precision < 0)
+			throw new IllegalArgumentException();
+
+		long factor = (long) Math.pow(10, precision);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
 	}
 }
