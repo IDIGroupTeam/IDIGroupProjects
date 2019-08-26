@@ -1528,16 +1528,21 @@ public class TaskController {
 						timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate());
 				}
 			}
-			BigDecimal s = new BigDecimal(timeSpentTotal);
-			BigDecimal spentTT = s.setScale(1, BigDecimal.ROUND_HALF_EVEN);
-
-			BigDecimal e = new BigDecimal(timeEstimateTotal);
-			BigDecimal estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
-
-			float percent = (timeSpentTotal / timeEstimateTotal) * 100;
-			BigDecimal p = new BigDecimal(percent);
-			BigDecimal percentCurrent = p.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-
+			
+			BigDecimal spentTT = new BigDecimal(0);
+			BigDecimal estimateTT = new BigDecimal(0);
+			BigDecimal percentCurrent = new BigDecimal(0);
+			if(timeEstimateTotal > 0 && timeSpentTotal > 0) {
+				BigDecimal s = new BigDecimal(timeSpentTotal);
+				spentTT = s.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+	
+				BigDecimal e = new BigDecimal(timeEstimateTotal);
+				estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+	
+				float percent = (timeSpentTotal / timeEstimateTotal) * 100;
+				BigDecimal p = new BigDecimal(percent);
+				percentCurrent = p.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+			}
 			// System.err.println("time estimate:= " + estimateTT + "/time spent: " +
 			// spentTT);
 
