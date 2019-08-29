@@ -88,6 +88,9 @@ public class ChungTuValidator implements Validator {
 						errors.rejectValue("taiKhoanCoDs[" + j + "].loaiTaiKhoan.maTk",
 								"NotEmpty.taiKhoanCoDs.loaiTaiKhoan.maTk");
 					}
+					if (taiKhoanCo.getLyDo() == null || taiKhoanCo.getLyDo().isEmpty()) {
+						errors.rejectValue("taiKhoanCoDs[" + j + "].lyDo", "NotEmpty.taiKhoanCoDs.lyDo");
+					}
 				}
 
 				// Kiểm tra tài khoản trùng lặp ở bên có
@@ -138,6 +141,9 @@ public class ChungTuValidator implements Validator {
 					if (taiKhoanNo.getLoaiTaiKhoan().getMaTk().isEmpty()) {
 						errors.rejectValue("taiKhoanNoDs[" + j + "].loaiTaiKhoan.maTk",
 								"NotEmpty.taiKhoanNoDs.loaiTaiKhoan.maTk");
+					}
+					if (taiKhoanNo.getLyDo() == null || taiKhoanNo.getLyDo().isEmpty()) {
+						errors.rejectValue("taiKhoanNoDs[" + j + "].lyDo", "NotEmpty.taiKhoanNoDs.lyDo");
 					}
 				}
 
