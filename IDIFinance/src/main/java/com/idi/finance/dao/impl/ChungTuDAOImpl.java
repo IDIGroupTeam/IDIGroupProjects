@@ -391,8 +391,6 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				doiTuong.setMaDt(rs.getInt("MA_DT"));
 				doiTuong.setKhDt(rs.getString("KH_DT"));
 				doiTuong.setTenDt(rs.getString("TEN_DT"));
-				logger.info(
-						"doiTuong: " + doiTuong.getMaDt() + " - " + doiTuong.getTenDt() + " - " + doiTuong.getKhDt());
 				doiTuong.setLoaiDt(rs.getInt("LOAI_DT"));
 				doiTuong.setDiaChi(rs.getString("DIA_CHI"));
 				doiTuong.setMaThue(rs.getString("MA_THUE"));
@@ -401,7 +399,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien tien = new Tien();
 				tien.setLoaiTien(loaiTien);
 				tien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tien.setSoTien(Utils.round(tien.getGiaTri() / tien.getLoaiTien().getBanRa()));
+				tien.setSoTien(rs.getDouble("SO_TIEN_NT"));
 
 				if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
 					taiKhoan.setNo(tien);

@@ -50,7 +50,7 @@
 		var tongGiaTriNo = 0;
 		var tongGiaTriCo = 0;
 		var loaiTien = null;
-		var thapPhan = 2;
+		var thapPhan = 0;
 
 		// Khởi tạo danh sách các loại tiền
 		var loaiTienDsStr = "${loaiTienDs}";
@@ -71,12 +71,30 @@
 			if (tien.maLt == $("#loaiTien\\.maLt").val()) {
 				loaiTien = tien;
 				if (tien.maLt == 'VND' || tien.maLt == 'VANG') {
-					thapPhan = 2;
+					thapPhan = 0;
 				} else {
 					thapPhan = 2;
 				}
 			}
 		}
+
+		$("#goiYBt").click(function() {
+			var loaiCt = $("#loaiCt").val();
+			var param = "loaiCt=" + loaiCt;
+			$.ajax({
+				url : "${url}/chungtu/sochungtu",
+				data : param,
+				dataType : "text",
+				type : "GET",
+				success : function(soCt) {
+					soCt = soCt * 1 + 1;
+					$("#soCt").val(soCt);
+				},
+				error : function(error) {
+					console.log("Error", error);
+				}
+			});
+		});
 
 		function capNhatTong() {
 			// Tính tổng các tài khoản nợ
@@ -116,8 +134,8 @@
 							* loaiTien.banRa);
 
 			$("#soTien\\.giaTriTxt").html(
-					accounting
-							.formatNumber(tongGiaTri * loaiTien.banRa, thapPhan, ",")
+					accounting.formatNumber(tongGiaTri * loaiTien.banRa,
+							thapPhan, ",")
 							+ " VND");
 
 			$("#no\\.soTien\\.giaTriTxt").html(
@@ -129,39 +147,42 @@
 							+ loaiTien.maLt);
 		}
 
-		function dangKySuKien() {
-			$("input[id^='taiKhoanKtthDs'][id$='\\.no\\.soTien']").change(
-					function() {
-						var parent = $(this).parents("tr");
-						var giaTri = $.trim($(this).val());
-						var giaTriSo = giaTri.replace(/,/g, "");
+		function khoiTaoDong(dong) {
+			if (dong == null) {
+				return;
+			}
+			console.log("khoiTaoDong dong", $(dong).prop("id"));
 
-						console.log("dangKySuKien", "Nợ", giaTriSo);
-						if (giaTriSo > 0) {
-							parent.find("input[id$='co\\.soTien']").val("");
-							parent.find("[name$='co\\.soTien']").val(0);
-							parent.find("input[id$='\\.soDu']").val("-1");
-						}
+			$(dong).find("[id$='\\.no\\.soTien']").change(function() {
+				var parent = $(this).parents("tr");
+				var giaTri = $.trim($(this).val());
+				var giaTriSo = giaTri.replace(/,/g, "");
 
-						capNhatTong();
-					});
-			$("input[id^='taiKhoanKtthDs'][id$='\\.co\\.soTien']").change(
-					function() {
-						var parent = $(this).parents("tr");
-						var giaTri = $.trim($(this).val());
-						var giaTriSo = giaTri.replace(/,/g, "");
+				console.log("dangKySuKien", "Nợ", giaTriSo);
+				if (giaTriSo > 0) {
+					parent.find("input[id$='co\\.soTien']").val("");
+					parent.find("[name$='co\\.soTien']").val(0);
+					parent.find("input[id$='\\.soDu']").val("-1");
+				}
 
-						console.log("dangKySuKien", "Có", giaTriSo);
-						if (giaTriSo > 0) {
-							parent.find("input[id$='no\\.soTien']").val("");
-							parent.find("[name$='no\\.soTien']").val(0);
-							parent.find("input[id$='\\.soDu']").val("1");
-						}
+				capNhatTong();
+			});
+			$(dong).find("[id$='\\.co\\.soTien']").change(function() {
+				var parent = $(this).parents("tr");
+				var giaTri = $.trim($(this).val());
+				var giaTriSo = giaTri.replace(/,/g, "");
 
-						capNhatTong();
-					});
+				console.log("dangKySuKien", "Có", giaTriSo);
+				if (giaTriSo > 0) {
+					parent.find("input[id$='no\\.soTien']").val("");
+					parent.find("[name$='no\\.soTien']").val(0);
+					parent.find("input[id$='\\.soDu']").val("1");
+				}
 
-			$("[id$='doiTuong\\.khoaDt']").change(function() {
+				capNhatTong();
+			});
+
+			$(dong).find("[id$='doiTuong\\.khoaDt']").change(function() {
 				var tr = $(this).parents("tr");
 				var khoaDt = $(this).val();
 				console.log("khoaDt", khoaDt);
@@ -175,7 +196,7 @@
 				}
 			});
 
-			$("input[id^='taiKhoanKtthDs']").click(function() {
+			$(dong).find("td, input").click(function() {
 				var tr = $(this).parents("tr");
 				var table = tr.parents("table");
 				table.find("tr.active").removeClass("active");
@@ -184,33 +205,6 @@
 				var curRow = selectedRow;
 				var newRow = tr.prop("id");
 				selectedRow = newRow;
-			});
-			$("select[id^='taiKhoanKtthDs']").click(function() {
-				var tr = $(this).parents("tr");
-				var tbody = tr.parent();
-				tbody.find("tr.active").removeClass("active");
-				tr.addClass("active");
-
-				var curRow = selectedRow;
-				var newRow = tr.prop("id");
-				selectedRow = newRow;
-			});
-			$("#goiYBt").click(function() {
-				var loaiCt = $("#loaiCt").val();
-				var param = "loaiCt=" + loaiCt;
-				$.ajax({
-					url : "${url}/chungtu/sochungtu",
-					data : param,
-					dataType : "text",
-					type : "GET",
-					success : function(soCt) {
-						soCt = soCt * 1 + 1;
-						$("#soCt").val(soCt);
-					},
-					error : function(error) {
-						console.log("Error", error);
-					}
-				});
 			});
 		}
 
@@ -321,7 +315,7 @@
 							loaiTien = loaiTienDs[i];
 							if (loaiTien.maLt == 'VND'
 									|| loaiTien.maLt == 'VANG') {
-								thapPhan = 2;
+								thapPhan = 0;
 							} else {
 								thapPhan = 2;
 							}
@@ -500,20 +494,31 @@
 		class="table table-bordered table-hover text-center dinhkhoan">
 		<thead>
 			<tr>
-				<th class="text-center">Tài khoản</th>
-				<th class="text-center" style="width: 100px;">Nợ</th>
-				<th class="text-center" style="width: 100px;">Có</th>
-				<th class="text-center">Lý do</th>
-				<th class="text-center">Đối tượng</th>
-				<th class="text-center" style="width: 50px;">Nhóm</th>
+				<th class="text-center" rowspan="2" style="width: 200px;">Lý do</th>
+				<th class="text-center" rowspan="2">Tài khoản</th>
+				<th class="text-center" colspan="2" style="width: 120px;">Nợ</th>
+				<th class="text-center" colspan="2" style="width: 120px;">Có</th>
+				<th class="text-center" rowspan="2" style="width: 150px;">Đối
+					tượng</th>
+				<th class="text-center" rowspan="2" style="width: 50px;">Nhóm</th>
+			</tr>
+			<tr>
+				<th class="text-center" style="width: 120px;">Số tiền</th>
+				<th class="text-center" style="width: 120px;">Quy đổi</th>
+				<th class="text-center" style="width: 120px;">Số tiền</th>
+				<th class="text-center" style="width: 120px;">Quy đổi</th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:forEach items="${mainFinanceForm.taiKhoanKtthDs}"
 				varStatus="status">
 				<tr id="${status.index}">
-					<td class="text-left" style="width: 120px;"><form:select
+					<td class="text-left" style="width: 200px;"><form:input
 							cssClass="form-control"
+							path="taiKhoanKtthDs[${status.index}].lyDo" placeholder="Lý do" />
+						<form:errors path="taiKhoanKtthDs[${status.index}].lyDo"
+							cssClass="error" /></td>
+					<td class="text-left"><form:select cssClass="form-control"
 							path="taiKhoanKtthDs[${status.index}].loaiTaiKhoan.maTk"
 							multiple="false">
 							<form:option value="0"></form:option>
@@ -522,21 +527,23 @@
 						</form:select> <form:hidden path="taiKhoanKtthDs[${status.index}].soDu" /> <form:errors
 							path="taiKhoanKtthDs[${status.index}].loaiTaiKhoan.maTk"
 							cssClass="error" /></td>
-					<td style="width: 100px;"><form:input
+					<td style="width: 120px;"><form:input
 							cssClass="text-right form-control"
 							path="taiKhoanKtthDs[${status.index}].no.soTien" placeholder="0" />
+						<form:hidden path="taiKhoanKtthDs[${status.index}].no.giaTri" />
 						<form:errors path="taiKhoanKtthDs[${status.index}].no.soTien"
 							cssClass="error" /></td>
-					<td style="width: 100px;"><form:input
+					<td class="text-right" style="width: 120px;"><span
+						id="taiKhoanKtthDs[${status.index}].no.giaTriTxt"></span></td>
+					<td style="width: 120px;"><form:input
 							cssClass="text-right form-control"
 							path="taiKhoanKtthDs[${status.index}].co.soTien" placeholder="0" />
+						<form:hidden path="taiKhoanKtthDs[${status.index}].co.giaTri" />
 						<form:errors path="taiKhoanKtthDs[${status.index}].co.soTien"
 							cssClass="error" /></td>
-					<td><form:input cssClass="form-control"
-							path="taiKhoanKtthDs[${status.index}].lyDo" placeholder="Lý do" />
-						<form:errors path="taiKhoanKtthDs[${status.index}].lyDo"
-							cssClass="error" /></td>
-					<td class="text-left" style="width: 120px;"><form:select
+					<td class="text-right" style="width: 120px;"><span
+						id="taiKhoanKtthDs[${status.index}].co.giaTriTxt"></span></td>
+					<td class="text-left" style="width: 150px;"><form:select
 							cssClass="form-control"
 							path="taiKhoanKtthDs[${status.index}].doiTuong.khoaDt"
 							multiple="false">
@@ -555,27 +562,21 @@
 				</tr>
 			</c:forEach>
 			<tr>
-				<td class="text-left" style="width: 120px;"><b>Tổng tiền:</b></td>
-				<td class="text-right" style="width: 100px;"><span
-					id="no.soTien.giaTriTxt"> <fmt:formatNumber
-							value="${mainFinanceForm.soTien.soTien}"></fmt:formatNumber>
-						&nbsp;${mainFinanceForm.loaiTien.maLt}
-				</span></td>
-				<td class="text-right" style="width: 100px;"><span
-					id="co.soTien.giaTriTxt"> <fmt:formatNumber
-							value="${mainFinanceForm.soTien.soTien}"></fmt:formatNumber>
-						&nbsp;${mainFinanceForm.loaiTien.maLt}
-				</span></td>
-				<td class="text-left"><b>Quy đổi:</b></td>
-				<td class="text-right" style="width: 120px;"><form:hidden
-						path="soTien.giaTri" /> <span id="soTien.giaTriTxt"> <fmt:formatNumber
-							value="${mainFinanceForm.soTien.giaTri}"></fmt:formatNumber>
-						&nbsp;VND
-				</span></td>
+				<td class="text-left" style="width: 200px;"><b>Tổng tiền:</b></td>
+				<td></td>
+				<td class="text-right" style="width: 120px;"><span
+					id="no.tongSoTienTxt">${mainFinanceForm.loaiTien.maLt}</span></td>
+				<td class="text-right" style="width: 120px;"><span
+					id="no.tongGiaTriTxt">VND</span></td>
+				<td class="text-right" class="text-right" style="width: 120px;"><span
+					id="co.tongSoTienTxt">${mainFinanceForm.loaiTien.maLt}</span></td>
+				<td class="text-right" class="text-right" style="width: 120px;"><span
+					id="co.tongGiaTriTxt">VND</span></td>
+				<td style="width: 150px;"></td>
 				<td style="width: 50px;"></td>
 			</tr>
 			<tr>
-				<td colspan="6">
+				<td colspan="8">
 					<button id="themTk" type="button" class="btn btn-info btn-sm"
 						title="Thêm nghiệp vụ kế toán">
 						<span class="glyphicon glyphicon-plus"></span> Thêm

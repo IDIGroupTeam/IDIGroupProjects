@@ -600,7 +600,7 @@
 				<th class="text-center">Lý do</th>
 				<th class="text-center">Tài khoản có</th>
 				<th class="text-center">Giá trị</th>
-				<th class="text-center">Chuyển đổi VND</th>
+				<th class="text-center">Quy đổi</th>
 			</tr>
 		</thead>
 		<tbody>

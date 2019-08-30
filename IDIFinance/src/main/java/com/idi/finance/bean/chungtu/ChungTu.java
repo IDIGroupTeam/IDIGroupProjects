@@ -253,7 +253,7 @@ public class ChungTu implements Comparable<ChungTu> {
 		if (!taiKhoanKtthDs.contains(taiKhoan)) {
 			taiKhoanKtthDs.add(taiKhoan);
 			if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
-				soTien.setGiaTri(soTien.getGiaTri() + taiKhoan.getNo().getSoTien() * loaiTien.getBanRa());
+				soTien.setGiaTri(soTien.getGiaTri() + taiKhoan.getNo().getGiaTri());
 				soTien.setSoTien(soTien.getSoTien() + taiKhoan.getNo().getSoTien());
 			}
 		}
