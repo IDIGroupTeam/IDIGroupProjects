@@ -11,7 +11,7 @@ public class EmployeeForm implements Serializable {
 	
 	private int quarter;
 	private String searchValue;
-
+	private String status;
 	//Paging
 	private int pageIndex;
 	private int totalRecords;
@@ -64,6 +64,14 @@ public class EmployeeForm implements Serializable {
 
 	public void setTotalPages(int totalPages) {
 		this.totalPages = totalPages;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}	
 
 }

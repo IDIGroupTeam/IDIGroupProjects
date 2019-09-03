@@ -25,6 +25,9 @@ tr:nth-child(even) {
 </style>
 </head>
 <body>
+	<a href="${pageContext.request.contextPath}/"><button class="btn btn-lg btn-primary btn-sm">
+			Quay lại danh sách NV</button></a>
+	<br/><br/>		
 	<div class="table-responsive">
 		<form:form action="listEmployeeBirth" modelAttribute="bithForm"
 			method="GET">
@@ -76,9 +79,7 @@ tr:nth-child(even) {
 					</c:if>
 				</tr>
 			</c:forEach>
-		</table>
-		<a href="${pageContext.request.contextPath}/"><button class="btn btn-lg btn-primary btn-sm">
-			Quay lại danh sách NV</button></a>
+		</table>	
 		<c:if test="${not empty message}">
 			<div class="alert alert-success">${message}</div>
 		</c:if>

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +21,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -46,6 +53,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.idi.hr.bean.Department;
 import com.idi.hr.bean.EmployeeInfo;
 import com.idi.hr.bean.JobTitle;
+import com.idi.hr.common.PropertiesManager;
 import com.idi.hr.common.Utils;
 import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
@@ -69,6 +77,8 @@ public class EmployeeController {
 
 	@Autowired
 	private EmployeeValidator employeeValidator;
+	
+	PropertiesManager properties = new PropertiesManager("hr.properties");
 
 	@RequestMapping(value = { "/" })
 	public String listEmployees(Model model, @ModelAttribute("employeeForm") EmployeeForm form) throws Exception {
@@ -90,12 +100,21 @@ public class EmployeeController {
 			}
 			
 			boolean search = false;
+			boolean status = false;
 			if (form.getSearchValue() != null && form.getSearchValue().length() > 0) {
 				log.info("Searching for: " + form.getSearchValue());
 				search = true;
-				list = employeeDAO.getEmployeesBySearch(form.getSearchValue());
-			} else
-				list = employeeDAO.getAllEmployees();
+				list = employeeDAO.getEmployeesBySearch(form.getSearchValue(), form.getStatus());
+			} else {
+				if(form.getStatus() != null && form.getStatus().equalsIgnoreCase("on")) {
+					list = employeeDAO.getEmployees();
+					status = true;
+				}else if(form.getStatus() != null && form.getStatus().equalsIgnoreCase("off")) {
+					list = employeeDAO.getEmployeesOff();
+					status = true;
+				}else
+					list = employeeDAO.getAllEmployees();
+			}
 			form.setTotalRecords(list.size());
 			
 			int totalPages = form.getTotalRecords() % form.getNumberRecordsOfPage() > 0
@@ -143,6 +162,7 @@ public class EmployeeController {
 			int currentQuarter = cal.get(Calendar.MONTH)/3 + 1;
 			model.addAttribute("employeeForm", form);
 			model.addAttribute("search", search);
+			model.addAttribute("status", status);
 			model.addAttribute("quarter", currentQuarter);
 			model.addAttribute("formTitle", "Danh sách nhân viên");
 		} catch (Exception e) {
@@ -152,6 +172,135 @@ public class EmployeeController {
 		return "listEmployee";
 	}
 
+	
+	@RequestMapping(value = "/exportToExcel", method = RequestMethod.GET)
+	public String exportToExcel(Model model, @RequestParam("searchValue") String searchValue, @RequestParam("status") String status)  throws Exception{
+		String path = properties.getProperty("REPORT_PATH");
+		File dir = new File(path);
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet = workbook.createSheet("data");
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		Date date = new Date();
+		String currentDate = dateFormat.format(date);
+
+		CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+		Font font = sheet.getWorkbook().createFont();
+		font.setBold(true);
+		font.setFontHeightInPoints((short) 13);
+		cellStyle.setFont(font);
+		String fileName = "Danh sách nhân viên";
+		Row row1 = sheet.createRow(0);
+		Cell cell = row1.createCell(3);
+		cell.setCellStyle(cellStyle);		
+		if (status.equalsIgnoreCase("on")) {
+		//	cell = row1.createCell(4);
+		//	cell.setCellStyle(cellStyle);
+		//	cell.setCellValue(" đang làm việc tại công ty" );
+			fileName = fileName + " đang làm việc tại công ty";
+		} else if (status.equalsIgnoreCase("off")) {
+			//cell = row1.createCell(4);
+			//cell.setCellStyle(cellStyle);
+			//cell.setCellValue(" đã nghỉ khỏi công ty ");
+			fileName = fileName + " đã nghỉ khỏi công ty";
+		}
+
+		if (searchValue != null && searchValue.length() > 0) {
+			//cell = row1.createCell(5);
+			//cell.setCellStyle(cellStyle);
+			//cell.setCellValue(", theo '" + searchValue +"'");
+			fileName = fileName + ", theo '" + searchValue +"'";
+		}
+		cell.setCellValue(fileName);
+		
+		List<EmployeeInfo> list = new ArrayList<EmployeeInfo>();
+		if (searchValue != null && searchValue.length() > 0) {
+			list = employeeDAO.getEmployeesBySearch(searchValue, status);
+		} else {
+			if(status.equalsIgnoreCase("on")) {
+				list = employeeDAO.getEmployees();
+			}else if(status.equalsIgnoreCase("off")) {
+				list = employeeDAO.getEmployeesOff();
+			}else
+				list = employeeDAO.getAllEmployees();
+		}		
+				
+		// gen column name
+		int rowNum = 2;
+		Row row = sheet.createRow(rowNum);
+		Cell cell11 = row.createCell(0);
+		cell11.setCellValue("Mã NV");
+		Cell cell21 = row.createCell(1);
+		cell21.setCellValue("Họ tên");
+		Cell cell31 = row.createCell(2);
+		cell31.setCellValue("Giới tính");
+		Cell cell41 = row.createCell(3);
+		cell41.setCellValue("Email");
+		Cell cell51 = row.createCell(4);
+		cell51.setCellValue("Ngày vào cty");
+		Cell cell61 = row.createCell(5);
+		cell61.setCellValue("Phòng");
+		Cell cell71 = row.createCell(6);
+		cell71.setCellValue("Chức vụ");
+		Cell cell81 = row.createCell(7);
+		cell81.setCellValue("Số điện thoại");
+		Cell cell91 = row.createCell(8);
+		cell91.setCellValue("Trạng thái");
+		
+		// gen value
+		rowNum = 3;
+		for (int i = 0; i < list.size(); i++) {
+			row = sheet.createRow(rowNum++);
+			int colNum = 0;
+			EmployeeInfo emp = new EmployeeInfo();
+			emp = list.get(i);
+			Cell cell1 = row.createCell(colNum++);
+			cell1.setCellValue((Integer) emp.getEmployeeId());
+			Cell cell2 = row.createCell(colNum++);
+			cell2.setCellValue((String) emp.getFullName());
+			Cell cell3 = row.createCell(colNum++);
+			cell3.setCellValue((String) emp.getGender());
+			Cell cell4 = row.createCell(colNum++);
+			cell4.setCellValue((String) emp.getEmail());
+			Cell cell5 = row.createCell(colNum++);
+			cell5.setCellValue((String) emp.getJoinDate());
+			Cell cell6 = row.createCell(colNum++);			
+			cell6.setCellValue((String) emp.getDepartment());
+			Cell cell7 = row.createCell(colNum++);
+			cell7.setCellValue((String) emp.getJobTitle());
+			Cell cell8 = row.createCell(colNum++);
+			cell8.setCellValue((String) emp.getPhoneNo());
+			Cell cell9 = row.createCell(colNum++);
+			cell9.setCellValue((String) emp.getWorkStatus());
+		}
+
+		try {
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			FileOutputStream outputStream = new FileOutputStream(
+					dir + "/" + fileName + " " + currentDate + ".xlsx");
+			workbook.write(outputStream);
+			workbook.close();
+		} catch (FileNotFoundException e) {
+			model.addAttribute("message", "Vui lòng đóng file đang mở trước khi gen lại!");
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		// System.out.println("Done");
+		model.addAttribute("message",
+				"Dữ liệu đã được export ra file " + path + fileName + " " + currentDate + ".xlsx!");
+		model.addAttribute("formTitle", "Xuất danh sách nhân viên ra file excel");
+		
+		EmployeeForm form = new EmployeeForm();
+		form.setStatus(status);
+		form.setSearchValue(searchValue);
+		
+		return listEmployees(model, form);
+
+	}	
+	
 /*	@RequestMapping(value = "/listEmployeeSearch", method = RequestMethod.GET)
 	public String listEmployeeSearch(Model model, @RequestParam("searchValue") String searchValue) throws Exception{
 		try {			

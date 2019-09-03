@@ -85,7 +85,14 @@ tr:nth-child(even) {
 		<tr>
 			<td style="color: purple;"><i>Nhập thông tin nhân viên muốn tìm kiếm: Tên/Email/Account/Mã NV/Mã phòng/Mã chức vụ/trạng thái LĐ </i></td>
 			<td align="center">
-				<form:input path="searchValue" required="required" class="form-control animated"/>
+				<form:input path="searchValue" class="form-control animated"/>
+			</td>
+			<td>
+				<form:select path="status" class="form-control animated">
+					<form:option value="all" label="Tất cả NV"></form:option> 		
+					<form:option value="on" label="NV đang làm việc"></form:option> 	
+					<form:option value="off" label="NV đã nghỉ việc"></form:option> 								
+				</form:select>
 			</td>
 			<td>
 				<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Tìm" />
@@ -189,9 +196,11 @@ tr:nth-child(even) {
 	</table>
 	
 	</form:form>
-	<c:if test="${search}">
-		<a href="${url}"><button class="btn btn-primary btn-sm">Hiển thị tất cả nhân viên</button></a> <br/> <br/>
+	<a href="${url}/exportToExcel?searchValue=${employeeForm.searchValue}&status=${employeeForm.status}"><button class="btn btn-primary btn-sm">Xuất ra file excel </button></a>
+	<c:if test="${search || status}">
+		<a href="${url}"><button class="btn btn-primary btn-sm">Hiển thị tất cả nhân viên</button></a> 
 	</c:if>
+	<br/> <br/>
 	<div class="table-responsive">
 		<c:if test="${not empty message}">
 			<div class="alert alert-success">${message}</div>

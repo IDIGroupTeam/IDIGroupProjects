@@ -194,6 +194,31 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	}
 	
 	/**
+	 * Get employees from DB
+	 * 
+	 * @return List of employee
+	 * @throws Exception
+	 */
+	public List<EmployeeInfo> getEmployeesOff() {
+
+		String sql = hr.getProperty("GET_EMPLOYEES_OFF").toString();
+		String sqlUnicode = "";
+		try {
+			byte[] ptext = sql.getBytes(ISO_8859_1); 
+			sqlUnicode = new String(ptext, UTF_8); 
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		log.info("GET_EMPLOYEES_OFF query: " + sqlUnicode);
+		Object[] params = new Object[] {};
+		EmployeeMapper mapper = new EmployeeMapper();
+
+		List<EmployeeInfo> list = jdbcTmpl.query(sqlUnicode, params, mapper);
+
+		return list;
+	}	
+	
+	/**
 	 * Get employees from DB that not create for salary info 
 	 * 
 	 * @return List of employee
@@ -317,9 +342,14 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	 * @return List of employee
 	 * @throws Exception
 	 */
-	public List<EmployeeInfo> getEmployeesBySearch(String value) {
+	public List<EmployeeInfo> getEmployeesBySearch(String value, String status) {
 
 		String sql = hr.getProperty("GET_EMPLOYEE_BY_SEARCH").toString();
+		if(status.equalsIgnoreCase("on"))
+			sql = sql + " AND E.WORK_STATUS NOT IN('DaThoiViec') ";
+		else if(status.equalsIgnoreCase("off"))
+			sql = sql + " AND E.WORK_STATUS IN('DaThoiViec') ";
+		
 		log.info("GET_EMPLOYEE_BY_SEARCH query: " + sql);
 		value = "%" + value + "%";
 		Object[] params = new Object[] {value, value, value, value, value, value, value};
