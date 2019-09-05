@@ -73,7 +73,7 @@
 					<td class="text-center" style="width: 50px;">${keToanTongHop.loaiCt}${keToanTongHop.soCt}</td>
 					<td><a href="${url}/chungtu/ktth/xem/${keToanTongHop.maCt}">${keToanTongHop.lyDo}</a></td>
 					<td align="right"><fmt:formatNumber
-							value="${keToanTongHop.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
+							value="${keToanTongHop.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber></td>
 				</tr>
 			</c:forEach>
 		</tbody>

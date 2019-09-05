@@ -77,7 +77,7 @@
 					<td class="text-center" style="width: 50px;">${baoNo.loaiCt}${baoNo.soCt}</td>
 					<td><a href="${url}/chungtu/baono/xem/${baoNo.maCt}">${baoNo.lyDo}</a></td>
 					<td align="right"><fmt:formatNumber
-							value="${baoNo.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
+							value="${baoNo.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber></td>
 					<td><c:choose>
 							<c:when
 								test="${baoNo.doiTuong.loaiDt == DoiTuong.KHACH_VANG_LAI}">

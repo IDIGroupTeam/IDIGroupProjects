@@ -528,7 +528,6 @@ public class ChungTuValidator implements Validator {
 				}
 
 				// Giới hạn quan hệ 1-n của nhóm ĐK
-
 			} else if (chungTu.getLoaiCt().trim().equals(ChungTu.CHUNG_TU_KET_CHUYEN)) {
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lyDo", "NotEmpty.chungTu.tenKetChuyen");
 

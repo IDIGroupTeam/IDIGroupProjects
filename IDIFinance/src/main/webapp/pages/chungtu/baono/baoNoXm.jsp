@@ -154,31 +154,36 @@
 		class="table table-bordered table-hover text-center dinhkhoan">
 		<thead>
 			<tr>
-				<th class="text-center">Tài khoản nợ</th>
-				<th class="text-center">Giá trị</th>
 				<th class="text-center">Lý do</th>
+				<th class="text-center">Tài khoản có</th>
+				<th class="text-center">Giá trị</th>
+				<th class="text-center">Quy đổi</th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:forEach items="${chungTu.taiKhoanNoDs}" var="taiKhoanNo"
 				varStatus="status">
 				<tr id="${status.index}">
+					<td class="text-left">${taiKhoanNo.lyDo}</td>
 					<td class="text-left">${taiKhoanNo.loaiTaiKhoan.maTk}-${taiKhoanNo.loaiTaiKhoan.tenTk}</td>
 					<td class="text-right"><fmt:formatNumber
 							value="${taiKhoanNo.soTien.soTien}" maxFractionDigits="2"></fmt:formatNumber>
 						${taiKhoanNo.soTien.loaiTien.maLt}</td>
-					<td class="text-left">${taiKhoanNo.lyDo}</td>
+					<td class="text-right"><fmt:formatNumber
+							value="${taiKhoanNo.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber>
+						VND</td>
 				</tr>
 			</c:forEach>
 			<tr>
 				<td class="text-left"><b>Thành tiền:</b></td>
+				<td></td>
 				<td class="text-right"><span id="soTien.giaTriTxt"> <fmt:formatNumber
 							value="${chungTu.soTien.soTien}" maxFractionDigits="2"></fmt:formatNumber>
-						&nbsp;${chungTu.loaiTien.maLt}
+						${chungTu.loaiTien.maLt}
 				</span></td>
 				<td class="text-right"><span id="soTien.giaTriQdTxt"> <fmt:formatNumber
-							value="${chungTu.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber>
-						&nbsp;VND
+							value="${chungTu.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber>
+						VND
 				</span></td>
 			</tr>
 		</tbody>

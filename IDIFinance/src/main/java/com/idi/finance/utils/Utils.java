@@ -305,8 +305,8 @@ public class Utils {
 		Double add = a + b;
 		Double sub = a - b;
 
-		System.out.println(Float.valueOf("4.6") + Float.valueOf("5.8"));
-		System.out.println(Float.valueOf(4.6f) + Float.valueOf(5.8f));
+		// System.out.println(Float.valueOf("4.6") + Float.valueOf("5.8"));
+		// System.out.println(Float.valueOf(4.6f) + Float.valueOf(5.8f));
 		System.out.println(Double.valueOf("4.6") + Double.valueOf("5.8"));
 		System.out.println((Double.valueOf(4.6) + Double.valueOf(5.8)));
 	}

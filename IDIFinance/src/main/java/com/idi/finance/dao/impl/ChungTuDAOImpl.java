@@ -410,6 +410,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				chungTu.themTaiKhoanKtth(taiKhoan);
 				taiKhoan.setChungTu(chungTu);
 
+				logger.info(chungTu + " - " + taiKhoan);
+
 				return chungTu;
 			} catch (Exception e) {
 				return null;
@@ -676,6 +678,9 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				}
 			}
 		}
+
+		logger.info(ketQua);
+		logger.info(ketQua.get(0).getTaiKhoanKtthDs());
 
 		if (ketQua != null && ketQua.size() > 0) {
 			return ketQua.get(0);
@@ -998,15 +1003,12 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				try {
 					if (taiKhoan.getLoaiTaiKhoan() != null && taiKhoan.getLoaiTaiKhoan().getMaTk() != null
 							&& !taiKhoan.getLoaiTaiKhoan().getMaTk().isEmpty()) {
-						double giaTriNo = Utils.round(chungTu.getLoaiTien().getBanRa() * taiKhoan.getNo().getSoTien());
-						double giaTriCo = Utils.round(chungTu.getLoaiTien().getBanRa() * taiKhoan.getCo().getSoTien());
-
 						logger.info("Tài khoản: " + taiKhoan.getLoaiTaiKhoan().getMaTk());
 						logger.info("So du: " + taiKhoan.getSoDu());
 						logger.info("So tien no: " + taiKhoan.getNo().getSoTien());
-						logger.info("Gia tri no: " + giaTriNo);
+						logger.info("Gia tri no: " + taiKhoan.getNo().getGiaTri());
 						logger.info("So tien co: " + taiKhoan.getCo().getSoTien());
-						logger.info("Gia tri co: " + giaTriCo);
+						logger.info("Gia tri co: " + taiKhoan.getCo().getGiaTri());
 						logger.info("Ty gia: " + chungTu.getLoaiTien().getBanRa());
 						GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 						jdbcTmpl.update(new PreparedStatementCreator() {
@@ -1016,14 +1018,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 										Statement.RETURN_GENERATED_KEYS);
 								stt.setString(1, taiKhoan.getLoaiTaiKhoan().getMaTk());
 								if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
-									stt.setDouble(2, giaTriNo);
+									stt.setDouble(2, taiKhoan.getNo().getGiaTri());
+									stt.setDouble(3, taiKhoan.getNo().getSoTien());
 								} else {
-									stt.setDouble(2, giaTriCo);
+									stt.setDouble(2, taiKhoan.getCo().getGiaTri());
+									stt.setDouble(3, taiKhoan.getCo().getSoTien());
 								}
-								stt.setInt(3, taiKhoan.getSoDu());
-								stt.setString(4, taiKhoan.getLyDo());
-								stt.setInt(5, taiKhoan.getDoiTuong().getMaDt());
-								stt.setInt(6, taiKhoan.getDoiTuong().getLoaiDt());
+								stt.setInt(4, taiKhoan.getSoDu());
+								stt.setString(5, taiKhoan.getLyDo());
+								stt.setInt(6, taiKhoan.getDoiTuong().getMaDt());
+								stt.setInt(7, taiKhoan.getDoiTuong().getLoaiDt());
 
 								return stt;
 							}
@@ -1082,15 +1086,12 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					// Những nghiệp vụ kế toán có định khoản mới được cập nhật/thêm mới
 					if (taiKhoan.getLoaiTaiKhoan() != null && taiKhoan.getLoaiTaiKhoan().getMaTk() != null
 							&& !taiKhoan.getLoaiTaiKhoan().getMaTk().isEmpty()) {
-						double giaTriNo = Utils.round(chungTu.getLoaiTien().getBanRa() * taiKhoan.getNo().getSoTien());
-						double giaTriCo = Utils.round(chungTu.getLoaiTien().getBanRa() * taiKhoan.getCo().getSoTien());
-
 						logger.info("Tài khoản: " + taiKhoan.getLoaiTaiKhoan().getMaTk());
 						logger.info("So du: " + taiKhoan.getSoDu());
 						logger.info("So tien no: " + taiKhoan.getNo().getSoTien());
-						logger.info("Gia tri no: " + giaTriNo);
+						logger.info("Gia tri no: " + taiKhoan.getNo().getGiaTri());
 						logger.info("So tien co: " + taiKhoan.getCo().getSoTien());
-						logger.info("Gia tri co: " + giaTriCo);
+						logger.info("Gia tri co: " + taiKhoan.getCo().getGiaTri());
 						logger.info("Ty gia: " + chungTu.getLoaiTien().getBanRa());
 						if (taiKhoan.getMaNvkt() == 0) {
 							// Thêm mới nvkt người dùng vừa thêm
@@ -1105,14 +1106,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 												Statement.RETURN_GENERATED_KEYS);
 										stt.setString(1, taiKhoan.getLoaiTaiKhoan().getMaTk());
 										if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
-											stt.setDouble(2, giaTriNo);
+											stt.setDouble(2, taiKhoan.getNo().getGiaTri());
+											stt.setDouble(3, taiKhoan.getNo().getSoTien());
 										} else {
-											stt.setDouble(2, giaTriCo);
+											stt.setDouble(2, taiKhoan.getCo().getGiaTri());
+											stt.setDouble(3, taiKhoan.getCo().getSoTien());
 										}
-										stt.setInt(3, taiKhoan.getSoDu());
-										stt.setString(4, taiKhoan.getLyDo());
-										stt.setInt(5, taiKhoan.getDoiTuong().getMaDt());
-										stt.setInt(6, taiKhoan.getDoiTuong().getLoaiDt());
+										stt.setInt(4, taiKhoan.getSoDu());
+										stt.setString(5, taiKhoan.getLyDo());
+										stt.setInt(6, taiKhoan.getDoiTuong().getMaDt());
+										stt.setInt(7, taiKhoan.getDoiTuong().getLoaiDt());
 
 										return stt;
 									}
@@ -1130,14 +1133,17 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							try {
 								// Chỉ cân cập nhật trong bảng NGHIEP_VU_KE_TOAN là đủ
 								// Trong bảng CHUNG_TU_NVKT không có thay đổi gì
+								double giaTri = 0;
 								double soTien = 0;
 								if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
-									soTien = giaTriNo;
+									giaTri = taiKhoan.getNo().getGiaTri();
+									soTien = taiKhoan.getNo().getSoTien();
 								} else {
-									soTien = giaTriCo;
+									giaTri = taiKhoan.getCo().getGiaTri();
+									soTien = taiKhoan.getCo().getSoTien();
 								}
-								jdbcTmpl.update(capNhatChungTuNvkt, taiKhoan.getLoaiTaiKhoan().getMaTk(), soTien,
-										taiKhoan.getSoDu(), taiKhoan.getLyDo(), taiKhoan.getMaNvkt());
+								jdbcTmpl.update(capNhatChungTuNvkt, taiKhoan.getLoaiTaiKhoan().getMaTk(), giaTri,
+										soTien, taiKhoan.getSoDu(), taiKhoan.getLyDo(), taiKhoan.getMaNvkt());
 							} catch (Exception e) {
 								e.printStackTrace();
 							}

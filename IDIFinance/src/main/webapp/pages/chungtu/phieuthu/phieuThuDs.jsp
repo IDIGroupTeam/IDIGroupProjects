@@ -76,7 +76,7 @@
 					<td class="text-center" style="width: 50px;">${phieuThu.loaiCt}${phieuThu.soCt}</td>
 					<td><a href="${url}/chungtu/phieuthu/xem/${phieuThu.maCt}">${phieuThu.lyDo}</a></td>
 					<td align="right"><fmt:formatNumber
-							value="${phieuThu.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
+							value="${phieuThu.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber></td>
 					<td><c:choose>
 							<c:when
 								test="${phieuThu.doiTuong.loaiDt == DoiTuong.KHACH_VANG_LAI}">

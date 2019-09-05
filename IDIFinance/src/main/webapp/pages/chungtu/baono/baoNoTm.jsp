@@ -99,9 +99,7 @@
 
 		function hienThiTongTien() {
 			console.log("hienThiTongTien");
-			var tongSoTien = $(
-					"input[id^='taiKhoanCoDs'][id$='\\.soTien\\.soTien']")
-					.val();
+			var tongSoTien = $("#taiKhoanCoDs0\\.soTien\\.soTien").val();
 
 			tongSoTien = accounting.formatNumber(tongSoTien, thapPhan, ",");
 			$("#soTien\\.tongSoTienTxt").html(tongSoTien + " " + loaiTien.maLt);
@@ -110,9 +108,7 @@
 
 		function hienThiTongTienVn() {
 			console.log("hienThiTongTienVn");
-			var tongGiaTri = $(
-					"input[id^='taiKhoanCoDs'][id$='\\.soTien\\.giaTri']")
-					.val();
+			var tongGiaTri = $("#taiKhoanCoDs0\\.soTien\\.giaTri").val();
 
 			tongGiaTri = accounting.formatNumber(tongGiaTri, 0, ",");
 			$("#soTien\\.tongGiaTriTxt").html(tongGiaTri + " VND");
@@ -122,20 +118,19 @@
 		function capNhatTongTien() {
 			console.log("capNhatTongTien soTien");
 			var tongSoTien = 0;
-			$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.soTien']").each(
-					function() {
-						try {
-							var giaTri = $(this).val();
-							console.log("tongSoTien", tongSoTien, "soTien",
-									giaTri);
+			$("[id^='taiKhoanNoDs'][id$='\\.soTien']").each(function() {
+				try {
+					var giaTri = $(this).val();
+					console.log("tongSoTien", tongSoTien, "soTien", giaTri);
 
-							tongSoTien += giaTri * 1;
-						} catch (e) {
-							console.log("capNhatTongTien loi soTien", e);
-						}
-					});
-			tongSoTien = accounting.formatNumber(tongSoTien, thapPhan, ",");
-			tongSoTien = tongSoTien.replace(/,/g, "");
+					tongSoTien += giaTri * 1;
+				} catch (e) {
+					console.log("capNhatTongTien loi soTien", e);
+				}
+			});
+			console.log("capNhatTongTien soTien", tongSoTien);
+			//tongSoTien = accounting.formatNumber(tongSoTien, thapPhan, ",");
+			//tongSoTien = tongSoTien.replace(/,/g, "");
 			$("#taiKhoanCoDs0\\.soTien\\.soTien").val(tongSoTien);
 
 			hienThiTongTien();
@@ -144,20 +139,19 @@
 		function capNhatTongTienVnd() {
 			console.log("capNhatTongTienVnd giaTri");
 			var tongGiaTri = 0;
-			$("input[id^='taiKhoanNoDs'][id$='\\.soTien\\.giaTri']").each(
-					function() {
-						try {
-							var giaTri = $(this).val();
-							console.log("tongGiaTri", tongGiaTri, "giaTri",
-									giaTri);
+			$("[id^='taiKhoanNoDs'][id$='\\.giaTri']").each(function() {
+				try {
+					var giaTri = $(this).val();
+					console.log("tongGiaTri", tongGiaTri, "giaTri", giaTri);
 
-							tongGiaTri += giaTri * 1;
-						} catch (e) {
-							console.log("capNhatTongTienVnd loi giaTri", e);
-						}
-					});
-			tongGiaTri = accounting.formatNumber(tongGiaTri, 0, ",");
-			tongGiaTri = tongGiaTri.replace(/,/g, "");
+					tongGiaTri += giaTri * 1;
+				} catch (e) {
+					console.log("capNhatTongTienVnd loi giaTri", e);
+				}
+			});
+			console.log("capNhatTongTienVnd giaTri", tongGiaTri);
+			//tongGiaTri = accounting.formatNumber(tongGiaTri, 0, ",");
+			//tongGiaTri = tongGiaTri.replace(/,/g, "");
 			$("#taiKhoanCoDs0\\.soTien\\.giaTri").val(tongGiaTri);
 
 			hienThiTongTienVn();
@@ -169,7 +163,7 @@
 			}
 			console.log("hienThiTongTienDongVn");
 
-			var giaTri = $(dong).find("[id$='\\.soTien\\.giaTri']").val();
+			var giaTri = $(dong).find("[id$='\\.giaTri']").val();
 			giaTri = accounting.formatNumber(giaTri, 0, ",");
 			var giaTriTxt = giaTri + " VND";
 			$(dong).find("[id$='\\.soTien\\.giaTriTxt']").html(giaTriTxt);
@@ -182,13 +176,13 @@
 			}
 			console.log("capNhatTongTienTyGiaDong", dong);
 
-			var soTien = $(dong).find("[id$='\\.soTien\\.soTien']").val();
+			var soTien = $(dong).find("[id$='\\.soTien']").val();
 			console.log("soTien", soTien);
 			console.log("tygia", loaiTien.banRa);
 			var giaTri = soTien * loaiTien.banRa;
-			giaTri = accounting.formatNumber(giaTri, 0, ",");
-			giaTri = giaTri.replace(/,/g, "");
-			$(dong).find("[id$='\\.soTien\\.giaTri']").val(giaTri);
+			//giaTri = accounting.formatNumber(giaTri, 0, ",");
+			//giaTri = giaTri.replace(/,/g, "");
+			$(dong).find("[id$='\\.giaTri']").val(giaTri);
 			console.log("giaTri", giaTri);
 
 			hienThiTongTienDongVn(dong);
@@ -226,28 +220,28 @@
 			console.log("khoiTaoDong dong", $(dong).prop("id"));
 
 			// Khoi tao gia tri mac dinh
-			var soTien = $(dong).find("[id$='\\.soTien\\.soTien']").val();
+			var soTien = $(dong).find("[id$='\\.soTien']").val();
 			if (soTien == 0)
-				$(dong).find("[id$='\\.soTien\\.soTien']").val("");
+				$(dong).find("[id$='\\.soTien']").val("");
 
-			var giaTri = $(dong).find("[id$='\\.soTien\\.giaTri']").val();
+			var giaTri = $(dong).find("[id$='\\.giaTri']").val();
 			giaTri = giaTri.replace(/,/g, "");
-			$(dong).find("[id$='\\.soTien\\.giaTri']").val(giaTri);
+			$(dong).find("[id$='\\.giaTri']").val(giaTri);
 			if (giaTri == 0)
-				$(dong).find("[id$='\\.soTien\\.giaTri']").val("");
+				$(dong).find("[id$='\\.giaTri']").val("");
 
 			hienThiTongTienDongVn(dong);
 			khoiTaoDongTien(dong);
 
 			// Dang ky su kien
-			$(dong).find("[id$='\\.soTien\\.soTien']").change(function() {
+			$(dong).find("[id$='\\.soTien']").change(function() {
 				var soTien = $(this).val();
 				console.log("soTien", soTien);
 				console.log("tygia", loaiTien.banRa);
 				var giaTri = soTien * loaiTien.banRa;
-				giaTri = accounting.formatNumber(giaTri, 0, ",");
-				giaTri = giaTri.replace(/,/g, "");
-				$(dong).find("[id$='\\.soTien\\.giaTri']").val(giaTri);
+				//giaTri = accounting.formatNumber(giaTri, 0, ",");
+				//giaTri = giaTri.replace(/,/g, "");
+				$(dong).find("[id$='\\.giaTri']").val(giaTri);
 				console.log("giaTri", giaTri);
 
 				// Cap nhat hien thi dong
@@ -258,7 +252,7 @@
 				capNhatTongTienVnd();
 			});
 
-			$(dong).find("[id$='\\.loaiTaiKhoan\\.maTk']").each(function() {
+			$(dong).find("[id$='\\.maTk']").each(function() {
 				var maTkCo = $(this).val();
 				$(this).find("option[value=0]").remove();
 				if (maTkCo == "0") {
@@ -385,10 +379,10 @@
 					}
 
 					// Cập nhật tỷ giá
-					$("#loaiTien\\.banRa").val(loaiTien.banRa);
 					$("input[id$='\\.banRa']").unbind(
 							'keydown.format keyup.format paste.format');
 					$("#loaiTien\\.banRa").number(true, thapPhan);
+					$("#loaiTien\\.banRa").val(loaiTien.banRa);
 
 					for (var i = 0; i < soDongTk; i++) {
 						khoiTaoDongTien($("tr#" + i));
@@ -636,12 +630,13 @@
 				<td class="text-left"><b>Thành tiền:</b></td>
 				<td></td>
 				<td class="text-right"><span id="soTien.tongSoTienTxt">
-						<fmt:formatNumber value="${mainFinanceForm.soTien.soTien}"></fmt:formatNumber>
+						<fmt:formatNumber value="${mainFinanceForm.soTien.soTien}"
+							maxFractionDigits="2"></fmt:formatNumber>
 						&nbsp;${mainFinanceForm.soTien.loaiTien.maLt}
 				</span></td>
 				<td class="text-right"><span id="soTien.tongGiaTriTxt">
-						<fmt:formatNumber value="${mainFinanceForm.soTien.giaTri}"></fmt:formatNumber>
-						&nbsp;VND
+						<fmt:formatNumber value="${mainFinanceForm.soTien.giaTri}"
+							maxFractionDigits="0"></fmt:formatNumber> &nbsp;VND
 				</span></td>
 			</tr>
 			<tr>

@@ -117,7 +117,8 @@ public class TaiKhoan implements Comparable<TaiKhoan> {
 
 	@Override
 	public String toString() {
-		String out = lyDo + " - " + loaiTaiKhoan + " - " + soDu + " - " + soTien + " - " + nhomDk;
+		String out = lyDo + " - " + loaiTaiKhoan + " - " + soDu + " - " + soTien + " - " + nhomDk + " - " + no + " - "
+				+ co;
 		return out;
 	}
 

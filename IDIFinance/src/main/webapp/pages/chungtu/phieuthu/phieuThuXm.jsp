@@ -170,17 +170,19 @@
 							value="${taiKhoanCo.soTien.soTien}" maxFractionDigits="2"></fmt:formatNumber>
 						${taiKhoanCo.soTien.loaiTien.maLt}</td>
 					<td class="text-right"><fmt:formatNumber
-							value="${taiKhoanCo.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber> VND</td>
+							value="${taiKhoanCo.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber>
+						VND</td>
 				</tr>
 			</c:forEach>
 			<tr>
 				<td class="text-left"><b>Thành tiền:</b></td>
 				<td></td>
 				<td class="text-right"><span id="soTien.giaTriTxt"><fmt:formatNumber
-							value="${chungTu.soTien.soTien}"></fmt:formatNumber>
+							value="${chungTu.soTien.soTien}" maxFractionDigits="2"></fmt:formatNumber>
 						${chungTu.loaiTien.maLt} </span></td>
 				<td class="text-right"><span id="soTien.giaTriQdTxt"> <fmt:formatNumber
-							value="${chungTu.soTien.giaTri}"></fmt:formatNumber> VND
+							value="${chungTu.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber>
+						VND
 				</span></td>
 			</tr>
 		</tbody>

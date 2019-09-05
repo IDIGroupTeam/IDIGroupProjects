@@ -47,7 +47,9 @@
 
 		var soDongTk = '${mainFinanceForm.taiKhoanKtthDs.size()}';
 		var selectedRow = soDongTk - 1;
+		var tongSoTienNo = 0;
 		var tongGiaTriNo = 0;
+		var tongSoTienCo = 0;
 		var tongGiaTriCo = 0;
 		var loaiTien = null;
 		var thapPhan = 0;
@@ -96,55 +98,176 @@
 			});
 		});
 
-		function capNhatTong() {
-			// Tính tổng các tài khoản nợ
-			tongGiaTriNo = 0;
-			tongGiaTriCo = 0;
-			$("input[id^='taiKhoanKtthDs'][id$='\\.no\\.soTien']").each(
-					function() {
-						var giaTriTt = $.trim($(this).val());
-						var giaTriSo = giaTriTt.replace(/,/g, "");
+		function hienThiTongTien() {
+			console.log("hienThiTongTien");
 
-						if (giaTriSo != '' && !isNaN(giaTriSo)) {
-							tongGiaTriNo += parseFloat(giaTriSo);
-						}
-					});
-			console.log("capNhatTong tongGiaTriNo", tongGiaTriNo);
+			var tongSoTienNoTxt = accounting.formatNumber(tongSoTienNo,
+					thapPhan, ",");
+			$("#no\\.tongSoTienTxt")
+					.html(tongSoTienNoTxt + " " + loaiTien.maLt);
 
-			$("input[id^='taiKhoanKtthDs'][id$='\\.co\\.soTien']").each(
-					function() {
-						var giaTriTt = $.trim($(this).val());
-						var giaTriSo = giaTriTt.replace(/,/g, "");
+			var tongSoTienCoTxt = accounting.formatNumber(tongSoTienCo,
+					thapPhan, ",");
+			$("#co\\.tongSoTienTxt")
+					.html(tongSoTienCoTxt + " " + loaiTien.maLt);
 
-						if (giaTriSo != '' && !isNaN(giaTriSo)) {
-							tongGiaTriCo += parseFloat(giaTriSo);
-						}
-					});
-			console.log("capNhatTong", "no", tongGiaTriNo, "co", tongGiaTriCo);
-
-			// Cập nhật các vị trí txt nợ
-			capNhatTongTxt();
+			console.log("hienThiTongTien done");
 		}
 
-		function capNhatTongTxt() {
-			var tongGiaTri = tongGiaTriNo > tongGiaTriCo ? tongGiaTriNo
-					: tongGiaTriCo;
-			console.log("tongGiaTri", tongGiaTri, "No", tongGiaTriNo, "Co",
-					tongGiaTriCo, "tygia", loaiTien.banRa, "vnd", tongGiaTri
-							* loaiTien.banRa);
+		function hienThiTongTienVn() {
+			console.log("hienThiTongTienVn");
 
-			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTri * loaiTien.banRa,
-							thapPhan, ",")
-							+ " VND");
+			var tongGiaTriNoTxt = accounting.formatNumber(tongGiaTriNo, 0, ",");
+			$("#no\\.tongGiaTriTxt").html(tongGiaTriNoTxt + " VND");
 
-			$("#no\\.soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTriNo, thapPhan, ",") + " "
-							+ loaiTien.maLt);
+			var tongGiaTriCoTxt = accounting.formatNumber(tongGiaTriCo, 0, ",");
+			$("#co\\.tongGiaTriTxt").html(tongGiaTriCoTxt + " VND");
 
-			$("#co\\.soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongGiaTriCo, thapPhan, ",") + " "
-							+ loaiTien.maLt);
+			console.log("hienThiTongTienVn done");
+		}
+
+		function capNhatTongTien() {
+			console.log("capNhatTongTien soTien");
+			tongSoTienNo = 0;
+			$("[id$='\\.no\\.soTien']").each(function() {
+				try {
+					var giaTri = $(this).val();
+					giaTri = giaTri.replace(/,/g, "");
+					console.log("tongSoTienNo", tongSoTienNo, " - ", giaTri);
+
+					tongSoTienNo += giaTri * 1;
+				} catch (e) {
+					console.log("capNhatTongTien loi soTien", e);
+				}
+			});
+			console.log("capNhatTongTien soTien tongSoTienNo", tongSoTienNo);
+			//tongSoTienNo = accounting.formatNumber(tongSoTienNo, thapPhan, ",");
+			//tongSoTienNo = tongSoTienNo.replace(/,/g, "");
+
+			tongSoTienCo = 0;
+			$("[id$='\\.co\\.soTien']").each(function() {
+				try {
+					var giaTri = $(this).val();
+					giaTri = giaTri.replace(/,/g, "");
+					console.log("tongSoTienCo", tongSoTienCo, " - ", giaTri);
+
+					tongSoTienCo += giaTri * 1;
+				} catch (e) {
+					console.log("capNhatTongTien loi soTien", e);
+				}
+			});
+			console.log("capNhatTongTien soTien tongSoTienCo", tongSoTienCo);
+			//tongSoTienCo = accounting.formatNumber(tongSoTienCo, thapPhan, ",");
+			//tongSoTienCo = tongSoTienCo.replace(/,/g, "");
+
+			hienThiTongTien();
+		}
+
+		function capNhatTongTienVnd() {
+			console.log("capNhatTongTienVnd giaTri");
+			tongGiaTriNo = 0;
+			$("[id$='\\.no\\.giaTri']").each(function() {
+				try {
+					var giaTri = $(this).val();
+					giaTri = giaTri.replace(/,/g, "");
+					console.log("tongGiaTriNo", tongGiaTriNo, " - ", giaTri);
+
+					tongGiaTriNo += giaTri * 1;
+				} catch (e) {
+					console.log("capNhatTongTienVnd loi giaTri", e);
+				}
+			});
+			console.log("capNhatTongTienVnd giaTri tongGiaTriNo", tongGiaTriNo);
+			//tongGiaTriNo = accounting.formatNumber(tongGiaTriNo, 0, ",");
+			//tongGiaTriNo = tongGiaTriNo.replace(/,/g, "");
+
+			tongGiaTriCo = 0;
+			$("[id$='\\.co\\.giaTri']").each(function() {
+				try {
+					var giaTri = $(this).val();
+					giaTri = giaTri.replace(/,/g, "");
+					console.log("tongGiaTriCo", tongGiaTriCo, " - ", giaTri);
+
+					tongGiaTriCo += giaTri * 1;
+				} catch (e) {
+					console.log("capNhatTongTienVnd loi giaTri", e);
+				}
+			});
+			console.log("capNhatTongTienVnd giaTri tongGiaTriCo", tongGiaTriCo);
+			//tongGiaTriCo = accounting.formatNumber(tongGiaTriCo, 0, ",");
+			//tongGiaTriCo = tongGiaTriCo.replace(/,/g, "");
+
+			hienThiTongTienVn();
+		}
+
+		function hienThiTongTienDongVn(dong) {
+			if (dong == null) {
+				return;
+			}
+			console.log("hienThiTongTienDongVn");
+
+			var giaTriNo = $(dong).find("[id$='\\.no\\.giaTri']").val();
+			giaTriNo = accounting.formatNumber(giaTriNo, 0, ",");
+			var giaTriNoTxt = giaTriNo + " VND";
+			$(dong).find("[id$='\\.no\\.giaTriTxt']").html(giaTriNoTxt);
+
+			var giaTriCo = $(dong).find("[id$='\\.co\\.giaTri']").val();
+			giaTriCo = accounting.formatNumber(giaTriCo, 0, ",");
+			var giaTriCoTxt = giaTriCo + " VND";
+			$(dong).find("[id$='\\.co\\.giaTriTxt']").html(giaTriCoTxt);
+
+			console.log("hienThiTongTienDongVn done");
+		}
+
+		function capNhatTongTienTyGiaDong(dong) {
+			if (dong == null) {
+				return;
+			}
+			console.log("capNhatTongTienTyGiaDong", dong);
+			console.log("tygia", loaiTien.banRa);
+
+			var soTienNo = $(dong).find("[id$='\\.no\\.soTien']").val();
+			var giaTriNo = soTienNo * loaiTien.banRa;
+			//giaTriNo = accounting.formatNumber(giaTriNo, 0, ",");
+			//giaTriNo = giaTriNo.replace(/,/g, "");
+			$(dong).find("[id$='\\.no\\.giaTri']").val(giaTriNo);
+			console.log("soTienNo", soTienNo);
+			console.log("giaTriNo", giaTriNo);
+
+			var soTienCo = $(dong).find("[id$='\\.co\\.soTien']").val();
+			var giaTriCo = soTienCo * loaiTien.banRa;
+			//giaTriCo = accounting.formatNumber(giaTriCo, 0, ",");
+			//giaTriCo = giaTriCo.replace(/,/g, "");
+			$(dong).find("[id$='\\.co\\.giaTri']").val(giaTriCo);
+			console.log("soTienCo", soTienCo);
+			console.log("giaTriCo", giaTriCo);
+
+			hienThiTongTienDongVn(dong);
+		}
+
+		function capNhatTongTienTyGia() {
+			console.log("capNhatTongTienTyGia");
+
+			// Cập nhật từng dòng dữ liệu
+			for (var i = 0; i < soDongTk; i++) {
+				capNhatTongTienTyGiaDong($("tr#" + i));
+			}
+
+			// Cập nhật hiển thị ngoại tệ
+			hienThiTongTien();
+
+			// Cập nhật vnd
+			capNhatTongTienVnd();
+		}
+
+		function khoiTaoDongTien(dong) {
+			if (dong == null) {
+				return;
+			}
+
+			$(dong).find("[id$='\\.soTien']").unbind(
+					'keydown.format keyup.format paste.format');
+			$(dong).find("[id$='\\.soTien']").number(true, thapPhan);
 		}
 
 		function khoiTaoDong(dong) {
@@ -153,33 +276,67 @@
 			}
 			console.log("khoiTaoDong dong", $(dong).prop("id"));
 
-			$(dong).find("[id$='\\.no\\.soTien']").change(function() {
-				var parent = $(this).parents("tr");
-				var giaTri = $.trim($(this).val());
-				var giaTriSo = giaTri.replace(/,/g, "");
-
-				console.log("dangKySuKien", "Nợ", giaTriSo);
-				if (giaTriSo > 0) {
-					parent.find("input[id$='co\\.soTien']").val("");
-					parent.find("[name$='co\\.soTien']").val(0);
-					parent.find("input[id$='\\.soDu']").val("-1");
+			$(dong).find("input[id$='\\.nhomDk']").each(function() {
+				var nhomDk = $(this).val();
+				if (nhomDk == "0") {
+					$(this).val("");
 				}
-
-				capNhatTong();
 			});
-			$(dong).find("[id$='\\.co\\.soTien']").change(function() {
-				var parent = $(this).parents("tr");
-				var giaTri = $.trim($(this).val());
-				var giaTriSo = giaTri.replace(/,/g, "");
 
-				console.log("dangKySuKien", "Có", giaTriSo);
-				if (giaTriSo > 0) {
-					parent.find("input[id$='no\\.soTien']").val("");
-					parent.find("[name$='no\\.soTien']").val(0);
-					parent.find("input[id$='\\.soDu']").val("1");
+			hienThiTongTienDongVn(dong);
+			khoiTaoDongTien(dong);
+
+			$(dong).find("[id$='\\.no\\.soTien']").change(function() {
+				console.log("Thay doi", "no");
+				var soTien = $(this).val();
+				var giaTri = soTien * loaiTien.banRa;
+				//giaTri = accounting.formatNumber(giaTri, 0, ",");
+				//giaTri = giaTri.replace(/,/g, "");
+				$(dong).find("[id$='\\.no\\.giaTri']").val(giaTri);
+
+				console.log("soTien", soTien);
+				console.log("tygia", loaiTien.banRa);
+				console.log("giaTri", giaTri);
+
+				if (soTien > 0) {
+					dong.find("[id$='co\\.soTien']").val("");
+					dong.find("[id$='co\\.giaTri']").val(0);
+					dong.find("[id$='\\.soDu']").val("-1");
 				}
 
-				capNhatTong();
+				// Cap nhat hien thi dong
+				hienThiTongTienDongVn(dong);
+
+				// Cap nhat du lieu
+				capNhatTongTien();
+				capNhatTongTienVnd();
+			});
+
+			$(dong).find("[id$='\\.co\\.soTien']").change(function() {
+				console.log("Thay doi", "co");
+				var soTien = $(this).val();
+				var giaTri = soTien * loaiTien.banRa;
+				//giaTri = accounting.formatNumber(giaTri, 0, ",");
+				//giaTri = giaTri.replace(/,/g, "");
+				$(dong).find("[id$='\\.co\\.giaTri']").val(giaTri);
+
+				console.log("soTien", soTien);
+				console.log("tygia", loaiTien.banRa);
+				console.log("giaTri", giaTri);
+
+				console.log("dangKySuKien", "Có", soTien);
+				if (soTien > 0) {
+					dong.find("[id$='no\\.soTien']").val("");
+					dong.find("[id$='no\\.giaTri']").val(0);
+					dong.find("[id$='\\.soDu']").val("1");
+				}
+
+				// Cap nhat hien thi dong
+				hienThiTongTienDongVn(dong);
+
+				// Cap nhat du lieu
+				capNhatTongTien();
+				capNhatTongTienVnd();
 			});
 
 			$(dong).find("[id$='doiTuong\\.khoaDt']").change(function() {
@@ -194,6 +351,15 @@
 					tr.find("[id$='\\.loaiDt']").val(0);
 					tr.find("[id$='\\.maDt']").val(0);
 				}
+			});
+
+			$(dong).find("select").each(function() {
+				var value = $(this).val();
+				$(this).find("option[value=0]").remove();
+				if (value == "0") {
+					$(this).val("");
+				}
+				$(this).combobox();
 			});
 
 			$(dong).find("td, input").click(function() {
@@ -228,34 +394,27 @@
 
 					// Làm mới nội dung
 					var newLn = $("#" + newId);
-					var taiKhoanObj = newLn.find("[id$='\\.maTk']");
-					var noSoTienObj = newLn.find("[id$='no\\.soTien']");
-					var coSoTienObj = newLn.find("[id$='co\\.soTien']");
-					var doiTuongObj = newLn.find("[id$='doiTuong\\.khoaDt']");
-
 					newLn.find(".combobox-container").remove();
+
+					var taiKhoanObj = newLn.find("[id$='\\.maTk']");
 					taiKhoanObj.prop("name", "taiKhoanKtthDs[" + newId
 							+ "].loaiTaiKhoan.maTk");
 					taiKhoanObj.val("");
-					taiKhoanObj.combobox();
 
+					var doiTuongObj = newLn.find("[id$='doiTuong\\.khoaDt']");
 					doiTuongObj.prop("name", "taiKhoanKtthDs[" + newId
 							+ "].doiTuong.khoaDt");
 					doiTuongObj.val("");
-					doiTuongObj.combobox();
 
 					newLn.find("[id$='\\.nhomDk']").val("");
 					newLn.find("[id$='\\.lyDo']").val("");
+					newLn.find("[id$='\\.soTien']").val("");
+					newLn.find("[id$='\\.giaTri']").val("");
+					newLn.find("[id$='\\.giaTriTxt']").html("");
 
-					noSoTienObj.val("");
-					noSoTienObj.number(true, thapPhan);
-					coSoTienObj.val("");
-					coSoTienObj.number(true, thapPhan);
+					khoiTaoDong(newLn);
 
 					newLn.find(".error").remove();
-
-					// Đăng ký sự kiện thay đổi
-					dangKySuKien();
 
 					$("#xoaTk").removeClass("disabled");
 				});
@@ -294,7 +453,8 @@
 			$("tr#" + selectedRow).addClass("active");
 
 			// Cập nhật giá trị tổng nợ
-			capNhatTong();
+			capNhatTongTien();
+			capNhatTongTienVnd();
 
 			if (soDongTk == 1) {
 				$("#xoaTk").addClass("disabled");
@@ -324,18 +484,21 @@
 					}
 
 					// Cập nhật tỷ giá
-					$("#loaiTien\\.banRa").val(loaiTien.banRa);
-					$("input[id$='\\.soTien']").unbind(
+					$("input[id$='\\.banRa']").unbind(
 							'keydown.format keyup.format paste.format');
-					$("input[id$='\\.soTien']").number(true, thapPhan);
+					$("#loaiTien\\.banRa").number(true, thapPhan);
+					$("#loaiTien\\.banRa").val(loaiTien.banRa);
 
-					capNhatTongTxt();
+					for (var i = 0; i < soDongTk; i++) {
+						khoiTaoDongTien($("tr#" + i));
+					}
+
+					capNhatTongTienTyGia();
 				});
 
 		$("#loaiTien\\.banRa").change(function() {
 			loaiTien.banRa = $(this).val();
-
-			capNhatTongTxt();
+			capNhatTongTienTyGia();
 		});
 
 		function khoiTao() {
@@ -343,42 +506,19 @@
 				$("#xoaTk").removeClass("disabled");
 			}
 
-			$("input[id$='\\.nhomDk']").each(function() {
-				var nhomDk = $(this).val();
-				if (nhomDk == "0") {
-					$(this).val("");
-				}
-			});
-
-			$("select[id$='\\.doiTuong\\.khoaDt']").each(function() {
-				var maTk = $(this).val();
-				$(this).find("option[value=0]").remove();
-				if (maTk == "0") {
-					$(this).val("");
-				}
-				$(this).combobox();
-			});
-
-			$("select[id$='\\.loaiTaiKhoan\\.maTk']").each(function() {
-				var maTk = $(this).val();
-				$(this).find("option[value=0]").remove();
-				if (maTk == "0") {
-					$(this).val("");
-				}
-				$(this).combobox();
-			});
-
-			$("input[id$='\\.soTien']").number(true, thapPhan);
 			$("#loaiTien\\.banRa").number(true, thapPhan);
 			loaiTien.banRa = $("#loaiTien\\.banRa").val();
 
+			// Đăng ký sự kiện thay đổi cho các dòng
+			for (var i = 0; i < soDongTk; i++) {
+				khoiTaoDong($("tr#" + i));
+			}
+
 			$("tr#" + selectedRow).addClass("active");
 
-			// Đăng ký sự kiện thay đổi
-			dangKySuKien();
-
 			// Cập nhật tổng giá trị
-			capNhatTong();
+			capNhatTongTien();
+			capNhatTongTienVnd();
 		}
 		khoiTao();
 
@@ -565,13 +705,21 @@
 				<td class="text-left" style="width: 200px;"><b>Tổng tiền:</b></td>
 				<td></td>
 				<td class="text-right" style="width: 120px;"><span
-					id="no.tongSoTienTxt">${mainFinanceForm.loaiTien.maLt}</span></td>
+					id="no.tongSoTienTxt"><fmt:formatNumber
+							value="${mainFinanceForm.soTien.soTien}"></fmt:formatNumber>
+						&nbsp;${mainFinanceForm.loaiTien.maLt}</span></td>
 				<td class="text-right" style="width: 120px;"><span
-					id="no.tongGiaTriTxt">VND</span></td>
+					id="no.tongGiaTriTxt"><fmt:formatNumber
+							value="${mainFinanceForm.soTien.giaTri}"></fmt:formatNumber>
+						&nbsp;VND</span></td>
 				<td class="text-right" class="text-right" style="width: 120px;"><span
-					id="co.tongSoTienTxt">${mainFinanceForm.loaiTien.maLt}</span></td>
+					id="co.tongSoTienTxt"><fmt:formatNumber
+							value="${mainFinanceForm.soTien.soTien}"></fmt:formatNumber>
+						&nbsp;${mainFinanceForm.loaiTien.maLt}</span></td>
 				<td class="text-right" class="text-right" style="width: 120px;"><span
-					id="co.tongGiaTriTxt">VND</span></td>
+					id="co.tongGiaTriTxt"><fmt:formatNumber
+							value="${mainFinanceForm.soTien.giaTri}"></fmt:formatNumber>
+						&nbsp;VND</span></td>
 				<td style="width: 150px;"></td>
 				<td style="width: 50px;"></td>
 			</tr>
