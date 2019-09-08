@@ -18,6 +18,7 @@ import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
+import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.bean.taikhoan.TaiKhoan;
 import com.idi.finance.dao.ChungTuDAO;
 import com.idi.finance.dao.KyKeToanDAO;
@@ -475,6 +476,12 @@ public class ChungTuValidator implements Validator {
 						taiKhoanTmpl.getNo().setSoTien(taiKhoanTmpl.getNo().getSoTien() + taiKhoan.getNo().getSoTien());
 						taiKhoanTmpl.getCo().setSoTien(taiKhoanTmpl.getCo().getSoTien() + taiKhoan.getCo().getSoTien());
 					}
+
+					if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
+						taiKhoanTmpl.setSoNo(taiKhoanTmpl.getSoNo() + 1);
+					} else {
+						taiKhoanTmpl.setSoCo(taiKhoanTmpl.getSoCo() + 1);
+					}
 				}
 
 				// Kiểm tra tính cân bằng nợ có của các nhóm định khoản
@@ -496,6 +503,11 @@ public class ChungTuValidator implements Validator {
 					if (taiKhoanTmpl != null && !taiKhoanTmpl.isCanBang()) {
 						errors.rejectValue("taiKhoanKtthDs[" + j + "].lyDo",
 								"ThieuDinhKhoan.NhomDinhKhoan.KhongCanBang");
+					}
+
+					if (taiKhoanTmpl != null && taiKhoanTmpl.getSoNo() > 1 && taiKhoanTmpl.getSoCo() > 1) {
+						errors.rejectValue("taiKhoanKtthDs[" + j + "].lyDo",
+								"ThieuDinhKhoan.NhomDinhKhoan.NhieuNoNhieuCo");
 					}
 				}
 

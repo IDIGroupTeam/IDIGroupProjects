@@ -1368,6 +1368,7 @@ public class ChungTuController {
 	public String luuTaoMoiKeToanTongHop(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu,
 			BindingResult result, Model model) {
 		try {
+			logger.info("Has error: " + result.getAllErrors());
 			if (result.hasErrors()) {
 				return chuanBiFormKeToanTongHop(model, chungTu);
 			}

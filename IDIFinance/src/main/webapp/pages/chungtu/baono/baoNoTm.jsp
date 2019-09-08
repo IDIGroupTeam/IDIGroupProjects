@@ -106,13 +106,13 @@
 			console.log("hienThiTongTien done");
 		}
 
-		function hienThiTongTienVn() {
-			console.log("hienThiTongTienVn");
+		function hienThiTongTienVnd() {
+			console.log("hienThiTongTienVnd");
 			var tongGiaTri = $("#taiKhoanCoDs0\\.soTien\\.giaTri").val();
 
 			tongGiaTri = accounting.formatNumber(tongGiaTri, 0, ",");
 			$("#soTien\\.tongGiaTriTxt").html(tongGiaTri + " VND");
-			console.log("hienThiTongTienVn done");
+			console.log("hienThiTongTienVnd done");
 		}
 
 		function capNhatTongTien() {
@@ -154,20 +154,20 @@
 			//tongGiaTri = tongGiaTri.replace(/,/g, "");
 			$("#taiKhoanCoDs0\\.soTien\\.giaTri").val(tongGiaTri);
 
-			hienThiTongTienVn();
+			hienThiTongTienVnd();
 		}
 
-		function hienThiTongTienDongVn(dong) {
+		function hienThiTongTienDongVnd(dong) {
 			if (dong == null) {
 				return;
 			}
-			console.log("hienThiTongTienDongVn");
+			console.log("hienThiTongTienDongVnd");
 
 			var giaTri = $(dong).find("[id$='\\.giaTri']").val();
 			giaTri = accounting.formatNumber(giaTri, 0, ",");
 			var giaTriTxt = giaTri + " VND";
 			$(dong).find("[id$='\\.soTien\\.giaTriTxt']").html(giaTriTxt);
-			console.log("hienThiTongTienDongVn done");
+			console.log("hienThiTongTienDongVnd done");
 		}
 
 		function capNhatTongTienTyGiaDong(dong) {
@@ -185,7 +185,7 @@
 			$(dong).find("[id$='\\.giaTri']").val(giaTri);
 			console.log("giaTri", giaTri);
 
-			hienThiTongTienDongVn(dong);
+			hienThiTongTienDongVnd(dong);
 		}
 
 		function capNhatTongTienTyGia() {
@@ -230,7 +230,7 @@
 			if (giaTri == 0)
 				$(dong).find("[id$='\\.giaTri']").val("");
 
-			hienThiTongTienDongVn(dong);
+			hienThiTongTienDongVnd(dong);
 			khoiTaoDongTien(dong);
 
 			// Dang ky su kien
@@ -245,7 +245,7 @@
 				console.log("giaTri", giaTri);
 
 				// Cap nhat hien thi dong
-				hienThiTongTienDongVn(dong);
+				hienThiTongTienDongVnd(dong);
 
 				// Cap nhat du lieu
 				capNhatTongTien();
@@ -416,7 +416,7 @@
 			$("#taiKhoanCoDs0\\.soTien\\.giaTri").val(giaTri);
 
 			hienThiTongTien();
-			hienThiTongTienVn();
+			hienThiTongTienVnd();
 		}
 		khoiTao();
 

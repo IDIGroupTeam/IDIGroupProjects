@@ -12,6 +12,8 @@ public class TaiKhoan implements Comparable<TaiKhoan> {
 	private Tien no = new Tien();
 	private Tien co = new Tien();
 	private boolean canBang = true;
+	private int soNo = 0;
+	private int soCo = 0;
 	private int soDu = -1;
 	private String lyDo;
 	private BalanceAssetItem bai;
@@ -65,6 +67,22 @@ public class TaiKhoan implements Comparable<TaiKhoan> {
 
 	public void setCanBang(boolean canBang) {
 		this.canBang = canBang;
+	}
+
+	public int getSoNo() {
+		return soNo;
+	}
+
+	public void setSoNo(int soNo) {
+		this.soNo = soNo;
+	}
+
+	public int getSoCo() {
+		return soCo;
+	}
+
+	public void setSoCo(int soCo) {
+		this.soCo = soCo;
 	}
 
 	public int getSoDu() {

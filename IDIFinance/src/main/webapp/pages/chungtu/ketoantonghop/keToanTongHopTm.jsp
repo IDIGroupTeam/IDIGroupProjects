@@ -17,40 +17,44 @@
 		$("#mainFinanceForm").attr("action", "${url}/chungtu/ktth/luu");
 		$("#mainFinanceForm").attr("method", "POST");
 
-		$("#submitBt").click(
-				function() {
-					// Giải pháp tạm thời hack validate
-					$("input[id$='\\.nhomDk']").each(
-							function() {
-								var parent = $(this).parents("tr");
-								var noSoTien = parent
-										.find("[name$='no\\.soTien']");
-								var coSoTien = parent
-										.find("[name$='co\\.soTien']");
+		$("#submitBt").click(function() {
+			// Giải pháp tạm thời hack validate
+			$("input[id$='\\.nhomDk']").each(function() {
+				var parent = $(this).parents("tr");
+				var noSoTien = parent.find("[name$='no\\.soTien']");
+				var noGiaTri = parent.find("[name$='no\\.giaTri']");
+				var coSoTien = parent.find("[name$='co\\.soTien']");
+				var coGiaTri = parent.find("[name$='co\\.giaTri']");
 
-								console.log("truoc", "no", noSoTien.val(),
-										"co", coSoTien.val());
-								if (noSoTien.val() != ''
-										|| coSoTien.val() != '') {
-									if (noSoTien.val() == '') {
-										noSoTien.val(0);
-									} else if (coSoTien.val() == '') {
-										coSoTien.val(0);
-									}
-								}
-								console.log("sau", "no", noSoTien.val(), "co",
-										coSoTien.val());
-							});
+				console.log("truoc no", noSoTien.val(), noGiaTri.val());
+				console.log("truoc co", coSoTien.val(), coGiaTri.val());
 
-					$("#mainFinanceForm").submit();
-				});
+				if (noSoTien.val() == '') {
+					noSoTien.val(0);
+				}
+				if (noGiaTri.val() == '') {
+					noGiaTri.val(0);
+				}
+				if (coSoTien.val() == '') {
+					coSoTien.val(0);
+				}
+				if (coGiaTri.val() == '') {
+					coGiaTri.val(0);
+				}
+
+				console.log("sau no", noSoTien.val(), noGiaTri.val());
+				console.log("sau co", coSoTien.val(), coGiaTri.val());
+			});
+
+			$("#mainFinanceForm").submit();
+		});
 
 		var soDongTk = '${mainFinanceForm.taiKhoanKtthDs.size()}';
 		var selectedRow = soDongTk - 1;
-		var tongSoTienNo = 0;
-		var tongGiaTriNo = 0;
-		var tongSoTienCo = 0;
-		var tongGiaTriCo = 0;
+		var tongSoTienNo = '${mainFinanceForm.soTien.soTien}' * 1;
+		var tongGiaTriNo = '${mainFinanceForm.soTien.giaTri}' * 1;
+		var tongSoTienCo = '${mainFinanceForm.soTien.soTien}' * 1;
+		var tongGiaTriCo = '${mainFinanceForm.soTien.giaTri}' * 1;
 		var loaiTien = null;
 		var thapPhan = 0;
 
@@ -114,8 +118,8 @@
 			console.log("hienThiTongTien done");
 		}
 
-		function hienThiTongTienVn() {
-			console.log("hienThiTongTienVn");
+		function hienThiTongTienVnd() {
+			console.log("hienThiTongTienVnd");
 
 			var tongGiaTriNoTxt = accounting.formatNumber(tongGiaTriNo, 0, ",");
 			$("#no\\.tongGiaTriTxt").html(tongGiaTriNoTxt + " VND");
@@ -123,7 +127,7 @@
 			var tongGiaTriCoTxt = accounting.formatNumber(tongGiaTriCo, 0, ",");
 			$("#co\\.tongGiaTriTxt").html(tongGiaTriCoTxt + " VND");
 
-			console.log("hienThiTongTienVn done");
+			console.log("hienThiTongTienVnd done");
 		}
 
 		function capNhatTongTien() {
@@ -141,8 +145,6 @@
 				}
 			});
 			console.log("capNhatTongTien soTien tongSoTienNo", tongSoTienNo);
-			//tongSoTienNo = accounting.formatNumber(tongSoTienNo, thapPhan, ",");
-			//tongSoTienNo = tongSoTienNo.replace(/,/g, "");
 
 			tongSoTienCo = 0;
 			$("[id$='\\.co\\.soTien']").each(function() {
@@ -157,8 +159,6 @@
 				}
 			});
 			console.log("capNhatTongTien soTien tongSoTienCo", tongSoTienCo);
-			//tongSoTienCo = accounting.formatNumber(tongSoTienCo, thapPhan, ",");
-			//tongSoTienCo = tongSoTienCo.replace(/,/g, "");
 
 			hienThiTongTien();
 		}
@@ -178,8 +178,6 @@
 				}
 			});
 			console.log("capNhatTongTienVnd giaTri tongGiaTriNo", tongGiaTriNo);
-			//tongGiaTriNo = accounting.formatNumber(tongGiaTriNo, 0, ",");
-			//tongGiaTriNo = tongGiaTriNo.replace(/,/g, "");
 
 			tongGiaTriCo = 0;
 			$("[id$='\\.co\\.giaTri']").each(function() {
@@ -194,29 +192,31 @@
 				}
 			});
 			console.log("capNhatTongTienVnd giaTri tongGiaTriCo", tongGiaTriCo);
-			//tongGiaTriCo = accounting.formatNumber(tongGiaTriCo, 0, ",");
-			//tongGiaTriCo = tongGiaTriCo.replace(/,/g, "");
 
-			hienThiTongTienVn();
+			hienThiTongTienVnd();
 		}
 
-		function hienThiTongTienDongVn(dong) {
+		function hienThiTongTienDongVnd(dong) {
 			if (dong == null) {
 				return;
 			}
-			console.log("hienThiTongTienDongVn");
+			console.log("hienThiTongTienDongVnd");
 
 			var giaTriNo = $(dong).find("[id$='\\.no\\.giaTri']").val();
 			giaTriNo = accounting.formatNumber(giaTriNo, 0, ",");
 			var giaTriNoTxt = giaTriNo + " VND";
 			$(dong).find("[id$='\\.no\\.giaTriTxt']").html(giaTriNoTxt);
 
+			console.log("hienThiTongTienDongVnd giaTriNo", giaTriNo);
+
 			var giaTriCo = $(dong).find("[id$='\\.co\\.giaTri']").val();
 			giaTriCo = accounting.formatNumber(giaTriCo, 0, ",");
 			var giaTriCoTxt = giaTriCo + " VND";
 			$(dong).find("[id$='\\.co\\.giaTriTxt']").html(giaTriCoTxt);
 
-			console.log("hienThiTongTienDongVn done");
+			console.log("hienThiTongTienDongVnd giaTriCo", giaTriCo);
+
+			console.log("hienThiTongTienDongVnd done");
 		}
 
 		function capNhatTongTienTyGiaDong(dong) {
@@ -228,21 +228,17 @@
 
 			var soTienNo = $(dong).find("[id$='\\.no\\.soTien']").val();
 			var giaTriNo = soTienNo * loaiTien.banRa;
-			//giaTriNo = accounting.formatNumber(giaTriNo, 0, ",");
-			//giaTriNo = giaTriNo.replace(/,/g, "");
 			$(dong).find("[id$='\\.no\\.giaTri']").val(giaTriNo);
 			console.log("soTienNo", soTienNo);
 			console.log("giaTriNo", giaTriNo);
 
 			var soTienCo = $(dong).find("[id$='\\.co\\.soTien']").val();
 			var giaTriCo = soTienCo * loaiTien.banRa;
-			//giaTriCo = accounting.formatNumber(giaTriCo, 0, ",");
-			//giaTriCo = giaTriCo.replace(/,/g, "");
 			$(dong).find("[id$='\\.co\\.giaTri']").val(giaTriCo);
 			console.log("soTienCo", soTienCo);
 			console.log("giaTriCo", giaTriCo);
 
-			hienThiTongTienDongVn(dong);
+			hienThiTongTienDongVnd(dong);
 		}
 
 		function capNhatTongTienTyGia() {
@@ -276,22 +272,33 @@
 			}
 			console.log("khoiTaoDong dong", $(dong).prop("id"));
 
-			$(dong).find("input[id$='\\.nhomDk']").each(function() {
-				var nhomDk = $(this).val();
-				if (nhomDk == "0") {
-					$(this).val("");
-				}
-			});
+			var soTienNo = $(dong).find("[id$='\\.no\\.soTien']").val();
+			if (soTienNo == 0)
+				$(dong).find("[id$='\\.no\\.soTien']").val("");
 
-			hienThiTongTienDongVn(dong);
+			var soTienCo = $(dong).find("[id$='\\.co\\.soTien']").val();
+			if (soTienCo == 0)
+				$(dong).find("[id$='\\.co\\.soTien']").val("");
+
+			var giaTriNo = $(dong).find("[id$='\\.no\\.giaTri']").val();
+			giaTriNo = giaTriNo.replace(/,/g, "");
+			$(dong).find("[id$='\\.no\\.giaTri']").val(giaTriNo);
+			if (giaTriNo == 0)
+				$(dong).find("[id$='\\.no\\.giaTri']").val("");
+
+			var giaTriCo = $(dong).find("[id$='\\.co\\.giaTri']").val();
+			giaTriCo = giaTriCo.replace(/,/g, "");
+			$(dong).find("[id$='\\.co\\.giaTri']").val(giaTriCo);
+			if (giaTriCo == 0)
+				$(dong).find("[id$='\\.co\\.giaTri']").val("");
+
+			hienThiTongTienDongVnd(dong);
 			khoiTaoDongTien(dong);
 
 			$(dong).find("[id$='\\.no\\.soTien']").change(function() {
 				console.log("Thay doi", "no");
 				var soTien = $(this).val();
 				var giaTri = soTien * loaiTien.banRa;
-				//giaTri = accounting.formatNumber(giaTri, 0, ",");
-				//giaTri = giaTri.replace(/,/g, "");
 				$(dong).find("[id$='\\.no\\.giaTri']").val(giaTri);
 
 				console.log("soTien", soTien);
@@ -305,7 +312,7 @@
 				}
 
 				// Cap nhat hien thi dong
-				hienThiTongTienDongVn(dong);
+				hienThiTongTienDongVnd(dong);
 
 				// Cap nhat du lieu
 				capNhatTongTien();
@@ -316,8 +323,6 @@
 				console.log("Thay doi", "co");
 				var soTien = $(this).val();
 				var giaTri = soTien * loaiTien.banRa;
-				//giaTri = accounting.formatNumber(giaTri, 0, ",");
-				//giaTri = giaTri.replace(/,/g, "");
 				$(dong).find("[id$='\\.co\\.giaTri']").val(giaTri);
 
 				console.log("soTien", soTien);
@@ -332,7 +337,7 @@
 				}
 
 				// Cap nhat hien thi dong
-				hienThiTongTienDongVn(dong);
+				hienThiTongTienDongVnd(dong);
 
 				// Cap nhat du lieu
 				capNhatTongTien();
@@ -406,7 +411,7 @@
 							+ "].doiTuong.khoaDt");
 					doiTuongObj.val("");
 
-					newLn.find("[id$='\\.nhomDk']").val("");
+					newLn.find("[id$='\\.nhomDk']").val(0);
 					newLn.find("[id$='\\.lyDo']").val("");
 					newLn.find("[id$='\\.soTien']").val("");
 					newLn.find("[id$='\\.giaTri']").val("");
@@ -670,18 +675,18 @@
 					<td style="width: 120px;"><form:input
 							cssClass="text-right form-control"
 							path="taiKhoanKtthDs[${status.index}].no.soTien" placeholder="0" />
-						<form:hidden path="taiKhoanKtthDs[${status.index}].no.giaTri" />
 						<form:errors path="taiKhoanKtthDs[${status.index}].no.soTien"
 							cssClass="error" /></td>
-					<td class="text-right" style="width: 120px;"><span
+					<td class="text-right" style="width: 120px;"><form:hidden
+							path="taiKhoanKtthDs[${status.index}].no.giaTri" /><span
 						id="taiKhoanKtthDs[${status.index}].no.giaTriTxt"></span></td>
 					<td style="width: 120px;"><form:input
 							cssClass="text-right form-control"
 							path="taiKhoanKtthDs[${status.index}].co.soTien" placeholder="0" />
-						<form:hidden path="taiKhoanKtthDs[${status.index}].co.giaTri" />
 						<form:errors path="taiKhoanKtthDs[${status.index}].co.soTien"
 							cssClass="error" /></td>
-					<td class="text-right" style="width: 120px;"><span
+					<td class="text-right" style="width: 120px;"><form:hidden
+							path="taiKhoanKtthDs[${status.index}].co.giaTri" /><span
 						id="taiKhoanKtthDs[${status.index}].co.giaTriTxt"></span></td>
 					<td class="text-left" style="width: 150px;"><form:select
 							cssClass="form-control"
