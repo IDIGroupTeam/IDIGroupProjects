@@ -101,19 +101,24 @@ public class EmployeeController {
 			
 			boolean search = false;
 			boolean status = false;
+			String formTitle = "Danh sách nhân viên";
 			if (form.getSearchValue() != null && form.getSearchValue().length() > 0) {
 				log.info("Searching for: " + form.getSearchValue());
 				search = true;
 				list = employeeDAO.getEmployeesBySearch(form.getSearchValue(), form.getStatus());
 			} else {
-				if(form.getStatus() != null && form.getStatus().equalsIgnoreCase("on")) {
-					list = employeeDAO.getEmployees();
-					status = true;
-				}else if(form.getStatus() != null && form.getStatus().equalsIgnoreCase("off")) {
+				if(form.getStatus() != null && form.getStatus().equalsIgnoreCase("off")) {
 					list = employeeDAO.getEmployeesOff();
 					status = true;
-				}else
+					formTitle = "Danh sách nhân viên đã nghỉ việc tại công ty";			
+				}else if(form.getStatus() != null && form.getStatus().equalsIgnoreCase("all")) {
 					list = employeeDAO.getAllEmployees();
+					formTitle = "Danh sách tất cả nhân viên";
+				}else {
+					list = employeeDAO.getEmployees();
+					status = true;
+					formTitle = "Danh sách nhân viên đang làm việc tại công ty";			
+				}
 			}
 			form.setTotalRecords(list.size());
 			
@@ -164,7 +169,7 @@ public class EmployeeController {
 			model.addAttribute("search", search);
 			model.addAttribute("status", status);
 			model.addAttribute("quarter", currentQuarter);
-			model.addAttribute("formTitle", "Danh sách nhân viên");
+			model.addAttribute("formTitle", formTitle);
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();

@@ -88,10 +88,10 @@ tr:nth-child(even) {
 				<form:input path="searchValue" class="form-control animated"/>
 			</td>
 			<td>
-				<form:select path="status" class="form-control animated">
-					<form:option value="all" label="Tất cả NV"></form:option> 		
+				<form:select path="status" class="form-control animated">					 		
 					<form:option value="on" label="NV đang làm việc"></form:option> 	
-					<form:option value="off" label="NV đã nghỉ việc"></form:option> 								
+					<form:option value="off" label="NV đã nghỉ việc"></form:option> 
+					<form:option value="all" label="Tất cả NV"></form:option>								
 				</form:select>
 			</td>
 			<td>
