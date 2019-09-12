@@ -33,7 +33,8 @@
 		var loaiTien = null;
 		var url = "${url}/chungtu/nhacungcap/";
 		var loaiDt = 3;
-		var thapPhan = 2;
+		var selectedRow = soDongTk - 1;
+		var thapPhan = 0;
 
 		// Đăng ký autocomplete
 		var autocomplete = $('#doiTuong\\.tenDt').bootcomplete({
@@ -124,7 +125,7 @@
 			if (tien.maLt == $("#loaiTien\\.maLt").val()) {
 				loaiTien = tien;
 				if (tien.maLt == 'VND' || tien.maLt == 'VANG') {
-					thapPhan = 2;
+					thapPhan = 0;
 				} else {
 					thapPhan = 2;
 				}
@@ -143,8 +144,7 @@
 
 			// CẬP NHẬT HIỂN THỊ
 			var tongTienVn = tongTien * loaiTien.banRa;
-			tongTienVn = accounting.formatNumber(tongTienVn, thapPhan, ",")
-					+ " VND";
+			tongTienVn = accounting.formatNumber(tongTienVn, 0, ",") + " VND";
 			console.log("tongTienHangHoa id", id, "soLuong", soLuong, "gia",
 					gia, "loaiTien.banRa", loaiTien.banRa, "tongTien",
 					tongTien, "tongTienVn", tongTienVn);
@@ -154,7 +154,7 @@
 					+ " " + loaiTien.maLt;
 
 			// Hiển thị tổng tiền ở tab thuế
-			$("#hangHoaDs" + id + "\\.thue\\.tongTien").html(tongTxt);
+			$("#hangHoaDs" + id + "\\.thue\\.tongTien").html(tongTienVn);
 
 			if (loaiTien.maLt != "VND") {
 				tongTxt += "<br/>" + tongTienVn;
@@ -189,7 +189,7 @@
 					tongTien += eval(thueNk);
 				}
 			} catch (e) {
-				// alert("nk " + e);
+				console.log("tongThueHangHoa tkThueNk error", e);
 			}
 
 			// Cập nhật tiền thuế ttdb
@@ -212,7 +212,7 @@
 					tongTien += eval(thueTtdb);
 				}
 			} catch (e) {
-				// alert("ttdb " + e);
+				console.log("tongThueHangHoa tkThueTtdb error", e);
 			}
 
 			// Tính tiền thuế giá trị gia tăng
@@ -255,7 +255,7 @@
 					tongTien += eval(thueGtgt);
 				}
 			} catch (e) {
-				console.log("tongThueHangHoa error", e);
+				console.log("tongThueHangHoa tkThueGtgt error", e);
 			}
 
 			ketQua.thue = tong;
@@ -302,35 +302,32 @@
 					tongGiaKhoTxt = accounting.formatNumber(tongGiaKho,
 							thapPhan, ",")
 							+ " " + loaiTien.maLt;
-					tongGiaKhoTxt = tongGiaKhoTxt
-							+ "<br/>"
-							+ accounting.formatNumber(tongGiaKhoVn, thapPhan,
-									",") + " VND";
+					tongGiaKhoTxt = tongGiaKhoTxt + "<br/>"
+							+ accounting.formatNumber(tongGiaKhoVn, 0, ",")
+							+ " VND";
 
 					giaKhoTxt = accounting.formatNumber(giaKho, thapPhan, ",")
 							+ " " + loaiTien.maLt;
 					giaKhoTxt = giaKhoTxt + "<br/>"
-							+ accounting.formatNumber(giaKhoVn, thapPhan, ",")
+							+ accounting.formatNumber(giaKhoVn, 0, ",")
 							+ " VND";
 
 					tongCongNoTxt = accounting.formatNumber(tongCongNo,
 							thapPhan, ",")
 							+ " " + loaiTien.maLt;
-					tongCongNoTxt = tongCongNoTxt
-							+ "<br/>"
-							+ accounting.formatNumber(tongCongNoVn, thapPhan,
-									",") + " VND";
+					tongCongNoTxt = tongCongNoTxt + "<br/>"
+							+ accounting.formatNumber(tongCongNoVn, 0, ",")
+							+ " VND";
 				} else {
-					tongGiaKhoTxt = accounting.formatNumber(tongGiaKhoVn,
-							thapPhan, ",")
+					tongGiaKhoTxt = accounting.formatNumber(tongGiaKhoVn, 0,
+							",")
 							+ " VND";
 
-					giaKhoTxt = accounting
-							.formatNumber(giaKhoVn, thapPhan, ",")
+					giaKhoTxt = accounting.formatNumber(giaKhoVn, 0, ",")
 							+ " VND";
 
-					tongCongNoTxt = accounting.formatNumber(tongCongNoVn,
-							thapPhan, ",")
+					tongCongNoTxt = accounting.formatNumber(tongCongNoVn, 0,
+							",")
 							+ " VND";
 				}
 
@@ -366,8 +363,7 @@
 
 			// Sau đó cập nhật tổng tiền cả chứng từ
 			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongTienChungTu, thapPhan, ",")
-							+ " VND");
+					accounting.formatNumber(tongTienChungTu, 0, ",") + " VND");
 		}
 
 		$("#themHh").click(
@@ -437,7 +433,7 @@
 							loaiTien = loaiTienDs[i];
 							if (loaiTien.maLt == 'VND'
 									|| loaiTien.maLt == 'VANG') {
-								thapPhan = 2;
+								thapPhan = 0;
 							} else {
 								thapPhan = 2;
 							}
@@ -446,11 +442,10 @@
 					}
 
 					// Cập nhật tỷ giá
+					$("input[id$='\\.banRa']").unbind(
+							'keydown.format keyup.format paste.format');
+					$("#loaiTien\\.banRa").number(true, thapPhan);
 					$("#loaiTien\\.banRa").val(loaiTien.banRa);
-					$("input[id$='\\.soTien']").unbind(
-							'keydown.format keyup.format paste.format');
-					$("input[id$='\\.giaTri']").unbind(
-							'keydown.format keyup.format paste.format');
 
 					for (i = 0; i < soDongTk; i++) {
 						dangKyTien(i);
@@ -469,11 +464,14 @@
 		});
 
 		function dangKyTien(id) {
+			$("input[id^='hangHoaDs" + id + "'][id$='soTien']").unbind(
+					'keydown.format keyup.format paste.format');
+			$("input[id^='hangHoaDs" + id + "'][id$='giaTri']").unbind(
+					'keydown.format keyup.format paste.format');
+
 			$("input[id^='hangHoaDs" + id + "'][id$='soTien']").number(true,
 					thapPhan);
 			$("input[id^='hangHoaDs" + id + "'][id$='giaTri']").number(true,
-					thapPhan);
-			$("input[id^='nvktDs" + id + "'][id$='soTien']").number(true,
 					thapPhan);
 		}
 
@@ -509,13 +507,6 @@
 				capNhatTongTienHangHoa(id);
 				capNhapTongTienChungTu();
 			});
-
-			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk").val("");
-			$("#nvktDs" + id + "\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk")
-					.combobox();
-			$("#nvktDs" + id + "\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk").val("");
-			$("#nvktDs" + id + "\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk")
-					.combobox();
 
 			// Thuế suất nhập khẩu thay đổi
 			$("#hangHoaDs" + id + "\\.thueSuatNk").change(function() {
@@ -603,6 +594,15 @@
 						capNhatTongTienHangHoa(id);
 						capNhapTongTienChungTu();
 					});
+
+			$(
+					"#hangHoaDs" + id
+							+ "\\.nvktDs0\\.taiKhoanNo\\.loaiTaiKhoan\\.maTk")
+					.combobox();
+			$(
+					"#hangHoaDs" + id
+							+ "\\.nvktDs0\\.taiKhoanCo\\.loaiTaiKhoan\\.maTk")
+					.combobox();
 
 			// Đăng ký chọn hàng hóa
 			var kyHieuHh = $("#hangHoaDs" + id + "\\.kyHieuHh").val();
@@ -836,6 +836,7 @@
 			ktthDong = $("#ktth" + (soDongTk - 1)).html();
 			ktthDong = "<tr>" + ktthDong + "</tr>";
 
+			console.log("soDongTk", soDongTk);
 			if (soDongTk > 1) {
 				$("#hangTien" + (soDongTk - 1)).remove();
 				$("#kho" + (soDongTk - 1)).remove();
@@ -902,13 +903,13 @@
 
 <c:choose>
 	<c:when test="${mainFinanceForm.tinhChatCt==2}">
-		<h4>SAO CHÉP CHỨNG TỪ MUA HÀNG NƯỚC NGOÀI</h4>
+		<h4>TẠO MỚI CHỨNG TỪ MUA HÀNG NƯỚC NGOÀI</h4>
 	</c:when>
 	<c:when test="${mainFinanceForm.tinhChatCt==3}">
-		<h4>SAO CHÉP CHỨNG TỪ MUA DỊCH VỤ TRONG NƯỚC</h4>
+		<h4>TẠO MỚI CHỨNG TỪ MUA DỊCH VỤ TRONG NƯỚC</h4>
 	</c:when>
 	<c:otherwise>
-		<h4>SAO CHÉP CHỨNG TỪ MUA HÀNG TRONG NƯỚC</h4>
+		<h4>TẠO MỚI CHỨNG TỪ MUA HÀNG TRONG NƯỚC</h4>
 	</c:otherwise>
 </c:choose>
 <hr />

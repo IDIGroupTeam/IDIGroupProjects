@@ -540,7 +540,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien donGia = new Tien();
 				donGia.setLoaiTien(loaiTien);
 				donGia.setGiaTri(rs.getDouble("DON_GIA"));
-				donGia.setSoTien(Utils.round(donGia.getGiaTri() / loaiTien.getBanRa()));
+				donGia.setSoTien(rs.getDouble("DON_GIA_NT"));
 				hangHoa.setDonGia(donGia);
 
 				Tien giaKho = new Tien();
@@ -573,7 +573,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien tkTien = new Tien();
 				tkTien.setLoaiTien(loaiTien);
 				tkTien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tkTien.setSoTien(Utils.round(tkTien.getGiaTri() / tkTien.getLoaiTien().getBanRa()));
+				tkTien.setSoTien(rs.getDouble("SO_TIEN_NT"));
 				taiKhoan.setSoTien(tkTien);
 
 				int loaiTk = rs.getInt("LOAI_TK");
@@ -1236,7 +1236,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				// Thêm vào hang_hoa_gia trước
 				// Kiểm tra xem có chưa, chưa có thì mới thêm, có rồi thì lấy maGia ra
 				if (hangHoa.getGiaKho() != null && hangHoa.getGiaKho().getMaGia() == 0) {
-					double giaKho = Utils.round(hangHoa.getGiaKho().getSoTien() * chungTu.getLoaiTien().getBanRa());
+					double giaKho = hangHoa.getGiaKho().getSoTien() * chungTu.getLoaiTien().getBanRa();
 					try {
 						maGia = jdbcTmpl.queryForObject(kiemTraDonGia, new Object[] { hangHoa.getMaHh(), giaKho },
 								Integer.class);
@@ -1268,30 +1268,31 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 				// Thêm vào chung_tu_hang_hoa
 				logger.info("Mã đơn giá " + maGia);
-				double donGia = Utils.round(hangHoa.getDonGia().getSoTien() * chungTu.getLoaiTien().getBanRa());
+				double donGia = hangHoa.getDonGia().getSoTien() * chungTu.getLoaiTien().getBanRa();
 				if (hangHoa.getKho() != null) {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
-							donGia, maGia, chungTu.getChieu(), hangHoa.getKho().getMaKho());
+							donGia, hangHoa.getDonGia().getSoTien(), maGia, chungTu.getChieu(),
+							hangHoa.getKho().getMaKho());
 				} else {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
-							donGia, maGia, chungTu.getChieu(), KhoHang.MA_KHO_MAC_DINH);
+							donGia, hangHoa.getDonGia().getSoTien(), maGia, chungTu.getChieu(),
+							KhoHang.MA_KHO_MAC_DINH);
 				}
 
 				logger.info("Thêm vào bảng nghiep_vu_ke_toan: ");
 				if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản kho: " + hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
-					double kho = Utils
-							.round(hangHoa.getTkKho().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, kho);
-							stt.setInt(3, hangHoa.getTkKho().getSoDu());
-							stt.setString(4, hangHoa.getTkKho().getLyDo());
+							stt.setDouble(2, hangHoa.getTkKho().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkKho().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkKho().getSoDu());
+							stt.setString(5, hangHoa.getTkKho().getLyDo());
 
 							return stt;
 						}
@@ -1303,17 +1304,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản giá vốn: " + hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk());
-					double giaVon = Utils
-							.round(hangHoa.getTkGiaVon().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, giaVon);
-							stt.setInt(3, hangHoa.getTkGiaVon().getSoDu());
-							stt.setString(4, hangHoa.getTkGiaVon().getLyDo());
+							stt.setDouble(2, hangHoa.getTkGiaVon().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkGiaVon().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkGiaVon().getSoDu());
+							stt.setString(5, hangHoa.getTkGiaVon().getLyDo());
 
 							return stt;
 						}
@@ -1325,17 +1325,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản doanh thu:" + hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
-					double doanhThu = Utils
-							.round(hangHoa.getTkDoanhThu().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, doanhThu);
-							stt.setInt(3, hangHoa.getTkDoanhThu().getSoDu());
-							stt.setString(4, hangHoa.getTkDoanhThu().getLyDo());
+							stt.setDouble(2, hangHoa.getTkDoanhThu().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkDoanhThu().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkDoanhThu().getSoDu());
+							stt.setString(5, hangHoa.getTkDoanhThu().getLyDo());
 
 							return stt;
 						}
@@ -1348,17 +1347,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkChiPhi() != null && hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản chi phí:" + hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
-					double chiPhi = Utils
-							.round(hangHoa.getTkChiPhi().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, chiPhi);
-							stt.setInt(3, hangHoa.getTkChiPhi().getSoDu());
-							stt.setString(4, hangHoa.getTkChiPhi().getLyDo());
+							stt.setDouble(2, hangHoa.getTkChiPhi().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkChiPhi().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkChiPhi().getSoDu());
+							stt.setString(5, hangHoa.getTkChiPhi().getLyDo());
 
 							return stt;
 						}
@@ -1370,17 +1368,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thanh toán:" + hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
-					double thanhToan = Utils
-							.round(hangHoa.getTkThanhtoan().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, thanhToan);
-							stt.setInt(3, hangHoa.getTkThanhtoan().getSoDu());
-							stt.setString(4, hangHoa.getTkThanhtoan().getLyDo());
+							stt.setDouble(2, hangHoa.getTkThanhtoan().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkThanhtoan().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkThanhtoan().getSoDu());
+							stt.setString(5, hangHoa.getTkThanhtoan().getLyDo());
 
 							return stt;
 						}
@@ -1395,17 +1392,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueNk() != null && hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thuế nhập khẩu:" + hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk());
-					double nhapKhau = Utils
-							.round(hangHoa.getTkThueNk().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, nhapKhau);
-							stt.setInt(3, hangHoa.getTkThueNk().getSoDu());
-							stt.setString(4, hangHoa.getTkThueNk().getLyDo());
+							stt.setDouble(2, hangHoa.getTkThueNk().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkThueNk().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkThueNk().getSoDu());
+							stt.setString(5, hangHoa.getTkThueNk().getLyDo());
 
 							return stt;
 						}
@@ -1418,17 +1414,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueXk() != null && hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thuế xuất khẩu:" + hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk());
-					double xuatKhau = Utils
-							.round(hangHoa.getTkThueXk().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, xuatKhau);
-							stt.setInt(3, hangHoa.getTkThueXk().getSoDu());
-							stt.setString(4, hangHoa.getTkThueXk().getLyDo());
+							stt.setDouble(2, hangHoa.getTkThueXk().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkThueXk().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkThueXk().getSoDu());
+							stt.setString(5, hangHoa.getTkThueXk().getLyDo());
 
 							return stt;
 						}
@@ -1442,17 +1437,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						&& !hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info(
 							"Tài khoản thuế tiêu thụ đặc biệt:" + hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk());
-					double ttdb = Utils
-							.round(hangHoa.getTkThueTtdb().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, ttdb);
-							stt.setInt(3, hangHoa.getTkThueTtdb().getSoDu());
-							stt.setString(4, hangHoa.getTkThueTtdb().getLyDo());
+							stt.setDouble(2, hangHoa.getTkThueTtdb().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkThueTtdb().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkThueTtdb().getSoDu());
+							stt.setString(5, hangHoa.getTkThueTtdb().getLyDo());
 
 							return stt;
 						}
@@ -1465,17 +1459,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueGtgtDu() != null && hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản đối ứng thuế gtgt:" + hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk());
-					double gtgtDu = Utils.round(
-							hangHoa.getTkThueGtgtDu().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, gtgtDu);
-							stt.setInt(3, hangHoa.getTkThueGtgtDu().getSoDu());
-							stt.setString(4, hangHoa.getTkThueGtgtDu().getLyDo());
+							stt.setDouble(2, hangHoa.getTkThueGtgtDu().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkThueGtgtDu().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkThueGtgtDu().getSoDu());
+							stt.setString(5, hangHoa.getTkThueGtgtDu().getLyDo());
 
 							return stt;
 						}
@@ -1488,8 +1481,6 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueGtgt() != null && hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thuế gtgt:" + hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk());
-					double gtgt = Utils
-							.round(hangHoa.getTkThueGtgt().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					int nvKtId = 1;
 					if (!hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("0")) {
 						// Đây là trường hợp tính thuế Gtgt bằng phương pháp khấu trừ
@@ -1501,9 +1492,10 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 								PreparedStatement stt = con.prepareStatement(themTaiKhoan,
 										Statement.RETURN_GENERATED_KEYS);
 								stt.setString(1, hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk());
-								stt.setDouble(2, gtgt);
-								stt.setInt(3, hangHoa.getTkThueGtgt().getSoDu());
-								stt.setString(4, hangHoa.getTkThueGtgt().getLyDo());
+								stt.setDouble(2, hangHoa.getTkThueGtgt().getSoTien().getGiaTri());
+								stt.setDouble(3, hangHoa.getTkThueGtgt().getSoTien().getSoTien());
+								stt.setInt(4, hangHoa.getTkThueGtgt().getSoDu());
+								stt.setString(5, hangHoa.getTkThueGtgt().getLyDo());
 
 								return stt;
 							}
@@ -1622,7 +1614,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				// Thêm vào hang_hoa_gia trước
 				// Kiểm tra xem có chưa, chưa có thì mới thêm, có rồi thì lấy maGia ra
 				if (hangHoa.getGiaKho() != null && hangHoa.getGiaKho().getMaGia() == 0) {
-					double giaKho = Utils.round(hangHoa.getGiaKho().getSoTien() * chungTu.getLoaiTien().getBanRa());
+					double giaKho = hangHoa.getGiaKho().getSoTien() * chungTu.getLoaiTien().getBanRa();
 					try {
 						maGia = jdbcTmpl.queryForObject(kiemTraDonGia, new Object[] { hangHoa.getMaHh(), giaKho },
 								Integer.class);
@@ -1654,30 +1646,31 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 				// Thêm vào chung_tu_hang_hoa
 				logger.info("Mã đơn giá " + maGia);
-				double donGia = Utils.round(hangHoa.getDonGia().getSoTien() * chungTu.getLoaiTien().getBanRa());
+				double donGia = hangHoa.getDonGia().getSoTien() * chungTu.getLoaiTien().getBanRa();
 				if (hangHoa.getKho() != null) {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
-							donGia, maGia, chungTu.getChieu(), hangHoa.getKho().getMaKho());
+							donGia, hangHoa.getDonGia().getSoTien(), maGia, chungTu.getChieu(),
+							hangHoa.getKho().getMaKho());
 				} else {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
-							donGia, maGia, chungTu.getChieu(), KhoHang.MA_KHO_MAC_DINH);
+							donGia, hangHoa.getDonGia().getSoTien(), maGia, chungTu.getChieu(),
+							KhoHang.MA_KHO_MAC_DINH);
 				}
 
 				logger.info("Thêm vào bảng nghiep_vu_ke_toan: ");
 				if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản kho: " + hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
-					double kho = Utils
-							.round(hangHoa.getTkKho().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, kho);
-							stt.setInt(3, hangHoa.getTkKho().getSoDu());
-							stt.setString(4, hangHoa.getTkKho().getLyDo());
+							stt.setDouble(2, hangHoa.getTkKho().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkKho().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkKho().getSoDu());
+							stt.setString(5, hangHoa.getTkKho().getLyDo());
 
 							return stt;
 						}
@@ -1689,17 +1682,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản giá vốn: " + hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk());
-					double giaVon = Utils
-							.round(hangHoa.getTkGiaVon().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, giaVon);
-							stt.setInt(3, hangHoa.getTkGiaVon().getSoDu());
-							stt.setString(4, hangHoa.getTkGiaVon().getLyDo());
+							stt.setDouble(2, hangHoa.getTkGiaVon().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkGiaVon().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkGiaVon().getSoDu());
+							stt.setString(5, hangHoa.getTkGiaVon().getLyDo());
 
 							return stt;
 						}
@@ -1711,17 +1703,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản doanh thu:" + hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
-					double doanhThu = Utils
-							.round(hangHoa.getTkDoanhThu().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, doanhThu);
-							stt.setInt(3, hangHoa.getTkDoanhThu().getSoDu());
-							stt.setString(4, hangHoa.getTkDoanhThu().getLyDo());
+							stt.setDouble(2, hangHoa.getTkDoanhThu().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkDoanhThu().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkDoanhThu().getSoDu());
+							stt.setString(5, hangHoa.getTkDoanhThu().getLyDo());
 
 							return stt;
 						}
@@ -1734,17 +1725,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkChiPhi() != null && hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản chi phí:" + hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
-					double chiPhi = Utils
-							.round(hangHoa.getTkChiPhi().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, chiPhi);
-							stt.setInt(3, hangHoa.getTkChiPhi().getSoDu());
-							stt.setString(4, hangHoa.getTkChiPhi().getLyDo());
+							stt.setDouble(2, hangHoa.getTkChiPhi().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkChiPhi().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkChiPhi().getSoDu());
+							stt.setString(5, hangHoa.getTkChiPhi().getLyDo());
 
 							return stt;
 						}
@@ -1756,17 +1746,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thanh toán:" + hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
-					double thanhToan = Utils
-							.round(hangHoa.getTkThanhtoan().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, thanhToan);
-							stt.setInt(3, hangHoa.getTkThanhtoan().getSoDu());
-							stt.setString(4, hangHoa.getTkThanhtoan().getLyDo());
+							stt.setDouble(2, hangHoa.getTkThanhtoan().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkThanhtoan().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkThanhtoan().getSoDu());
+							stt.setString(5, hangHoa.getTkThanhtoan().getLyDo());
 
 							return stt;
 						}
@@ -1781,17 +1770,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueNk() != null && hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thuế nhập khẩu:" + hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk());
-					double nhapKhau = Utils
-							.round(hangHoa.getTkThueNk().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, nhapKhau);
-							stt.setInt(3, hangHoa.getTkThueNk().getSoDu());
-							stt.setString(4, hangHoa.getTkThueNk().getLyDo());
+							stt.setDouble(2, hangHoa.getTkThueNk().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkThueNk().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkThueNk().getSoDu());
+							stt.setString(5, hangHoa.getTkThueNk().getLyDo());
 
 							return stt;
 						}
@@ -1804,17 +1792,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueXk() != null && hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thuế xuất khẩu:" + hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk());
-					double xuatKhau = Utils
-							.round(hangHoa.getTkThueXk().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, xuatKhau);
-							stt.setInt(3, hangHoa.getTkThueXk().getSoDu());
-							stt.setString(4, hangHoa.getTkThueXk().getLyDo());
+							stt.setDouble(2, hangHoa.getTkThueXk().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkThueXk().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkThueXk().getSoDu());
+							stt.setString(5, hangHoa.getTkThueXk().getLyDo());
 
 							return stt;
 						}
@@ -1828,17 +1815,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 						&& !hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info(
 							"Tài khoản thuế tiêu thụ đặc biệt:" + hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk());
-					double ttdb = Utils
-							.round(hangHoa.getTkThueTtdb().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, ttdb);
-							stt.setInt(3, hangHoa.getTkThueTtdb().getSoDu());
-							stt.setString(4, hangHoa.getTkThueTtdb().getLyDo());
+							stt.setDouble(2, hangHoa.getTkThueTtdb().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkThueTtdb().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkThueTtdb().getSoDu());
+							stt.setString(5, hangHoa.getTkThueTtdb().getLyDo());
 
 							return stt;
 						}
@@ -1851,17 +1837,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueGtgtDu() != null && hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản đối ứng thuế gtgt:" + hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk());
-					double gtgtDu = Utils.round(
-							hangHoa.getTkThueGtgtDu().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
 					jdbcTmpl.update(new PreparedStatementCreator() {
 						@Override
 						public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk());
-							stt.setDouble(2, gtgtDu);
-							stt.setInt(3, hangHoa.getTkThueGtgtDu().getSoDu());
-							stt.setString(4, hangHoa.getTkThueGtgtDu().getLyDo());
+							stt.setDouble(2, hangHoa.getTkThueGtgtDu().getSoTien().getGiaTri());
+							stt.setDouble(3, hangHoa.getTkThueGtgtDu().getSoTien().getSoTien());
+							stt.setInt(4, hangHoa.getTkThueGtgtDu().getSoDu());
+							stt.setString(5, hangHoa.getTkThueGtgtDu().getLyDo());
 
 							return stt;
 						}
@@ -1874,8 +1859,6 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				if (hangHoa.getTkThueGtgt() != null && hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk() != null
 						&& !hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 					logger.info("Tài khoản thuế gtgt:" + hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk());
-					double gtgt = Utils
-							.round(hangHoa.getTkThueGtgt().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 					int nvKtId = 1;
 					if (!hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("0")) {
 						GeneratedKeyHolder nvktHolder = new GeneratedKeyHolder();
@@ -1885,9 +1868,10 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 								PreparedStatement stt = con.prepareStatement(themTaiKhoan,
 										Statement.RETURN_GENERATED_KEYS);
 								stt.setString(1, hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk());
-								stt.setDouble(2, gtgt);
-								stt.setInt(3, hangHoa.getTkThueGtgt().getSoDu());
-								stt.setString(4, hangHoa.getTkThueGtgt().getLyDo());
+								stt.setDouble(2, hangHoa.getTkThueGtgt().getSoTien().getGiaTri());
+								stt.setDouble(3, hangHoa.getTkThueGtgt().getSoTien().getSoTien());
+								stt.setInt(4, hangHoa.getTkThueGtgt().getSoDu());
+								stt.setString(5, hangHoa.getTkThueGtgt().getLyDo());
 
 								return stt;
 							}

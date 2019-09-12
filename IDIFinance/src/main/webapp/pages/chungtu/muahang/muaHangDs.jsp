@@ -88,7 +88,7 @@
 					<td class="text-center" style="width: 50px;">${muaHang.loaiCt}${muaHang.soCt}</td>
 					<td><a href="${url}/chungtu/muahang/xem/${muaHang.maCt}">${muaHang.lyDo}</a></td>
 					<td align="right"><fmt:formatNumber
-							value="${muaHang.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
+							value="${muaHang.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber></td>
 					<td><c:choose>
 							<c:when
 								test="${muaHang.doiTuong.loaiDt == DoiTuong.KHACH_VANG_LAI}">
