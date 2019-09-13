@@ -71,7 +71,7 @@
 					<td class="text-center" style="width: 50px;">${banHang.loaiCt}${banHang.soCt}</td>
 					<td><a href="${url}/chungtu/banhang/xem/${banHang.maCt}">${banHang.lyDo}</a></td>
 					<td align="right"><fmt:formatNumber
-							value="${banHang.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
+							value="${banHang.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber></td>
 					<td><c:choose>
 							<c:when
 								test="${banHang.doiTuong.loaiDt == DoiTuong.KHACH_VANG_LAI}">

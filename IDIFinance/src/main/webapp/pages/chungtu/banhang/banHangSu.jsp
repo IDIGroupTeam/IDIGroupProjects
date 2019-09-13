@@ -25,13 +25,14 @@
 		var hangTienDong = "";
 		var thueDong = "";
 		var chiPhiDong = "";
+		var ktthDong = "";
 		var patt = new RegExp("\\[" + (soDongTk - 1) + "\\]", "g");
 		var patt1 = new RegExp("Ds" + (soDongTk - 1), "g");
 
 		var loaiTien = null;
 		var url = "${url}/chungtu/khachhang/";
 		var loaiDt = 2;
-		var thapPhan = 2;
+		var thapPhan = 0;
 
 		// Đăng ký autocomplete
 		var autocomplete = $('#doiTuong\\.tenDt').bootcomplete({
@@ -122,7 +123,7 @@
 			if (tien.maLt == $("#loaiTien\\.maLt").val()) {
 				loaiTien = tien;
 				if (tien.maLt == 'VND' || tien.maLt == 'VANG') {
-					thapPhan = 2;
+					thapPhan = 0;
 				} else {
 					thapPhan = 2;
 				}
@@ -141,15 +142,14 @@
 
 			// CẬP NHẬT HIỂN THỊ
 			var tongTienVn = tongTien * loaiTien.banRa;
-			tongTienVn = accounting.formatNumber(tongTienVn, thapPhan, ",")
-					+ " VND";
+			tongTienVn = accounting.formatNumber(tongTienVn, 0, ",") + " VND";
 
 			// Hiển thị tổng tiền ở tab hàng tiền
 			var tongTxt = accounting.formatNumber(tongTien, thapPhan, ",")
 					+ " " + loaiTien.maLt;
 
 			// Hiển thị tổng tiền ở tab thuế
-			$("#hangHoaDs" + id + "\\.thue\\.tongTien").html(tongTxt);
+			$("#hangHoaDs" + id + "\\.thue\\.tongTien").html(tongTienVn);
 
 			if (loaiTien.maLt != "VND") {
 				tongTxt += "<br/>" + tongTienVn;
@@ -256,18 +256,18 @@
 				var tongCongNo = tong.tien / loaiTien.banRa;
 				var tongCongNoVn = tong.tien;
 				var tongCongNoTxt = "";
-
+				console.log("capNhatTongTienHangHoa", i, "tongCongNo",
+						tongCongNo, "tongCongNoVn", tongCongNoVn);
 				if (loaiTien.maLt != "VND") {
 					tongCongNoTxt = accounting.formatNumber(tongCongNo,
 							thapPhan, ",")
 							+ " " + loaiTien.maLt;
-					tongCongNoTxt = tongCongNoTxt
-							+ "<br/>"
-							+ accounting.formatNumber(tongCongNoVn, thapPhan,
-									",") + " VND";
+					tongCongNoTxt = tongCongNoTxt + "<br/>"
+							+ accounting.formatNumber(tongCongNoVn, 0, ",")
+							+ " VND";
 				} else {
-					tongCongNoTxt = accounting.formatNumber(tongCongNoVn,
-							thapPhan, ",")
+					tongCongNoTxt = accounting.formatNumber(tongCongNoVn, 0,
+							",")
 							+ " VND";
 				}
 
@@ -289,8 +289,7 @@
 					tongGiaVon = soLuong * giaVon;
 				}
 
-				var tongGiaVonTxt = accounting.formatNumber(tongGiaVon,
-						thapPhan, ",")
+				var tongGiaVonTxt = accounting.formatNumber(tongGiaVon, 0, ",")
 						+ " VND";
 				console.log("capNhatTongTienHangHoa giaKho", giaVon, "soLuong",
 						soLuong, "tongGiaVon", tongGiaVon, "tongGiaVonTxt",
@@ -316,8 +315,7 @@
 
 			// Sau đó cập nhật tổng tiền cả chứng từ
 			$("#soTien\\.giaTriTxt").html(
-					accounting.formatNumber(tongTienChungTu, thapPhan, ",")
-							+ " VND");
+					accounting.formatNumber(tongTienChungTu, 0, ",") + " VND");
 		}
 
 		$("#themHh").click(
@@ -344,6 +342,12 @@
 					$(chiPhiDongMoi).appendTo($("#chiPhiTbl")).prop("id",
 							"chiPhi" + soDongTk);
 
+					// Thêm dòng mới vào tab ktth
+					ktthDongMoi = ktthDong.replace(patt, "[" + soDongTk + "]");
+					ktthDongMoi = ktthDongMoi.replace(patt1, "Ds" + soDongTk);
+					$(ktthDongMoi).appendTo($("#ktthTbl")).prop("id",
+							"ktth" + soDongTk);
+
 					dangKy(soDongTk);
 
 					soDongTk++;
@@ -357,12 +361,13 @@
 			$("#hangTien" + soDongTk).remove();
 			$("#thue" + soDongTk).remove();
 			$("#chiPhi" + soDongTk).remove();
+			$("#ktth" + soDongTk).remove();
 
 			if (soDongTk == 1) {
 				$("#xoaHh").addClass("disabled");
 			}
 
-			capNhapTongTien();
+			capNhapTongTienChungTu();
 		});
 
 		$("#loaiTien\\.maLt").change(
@@ -373,7 +378,7 @@
 							loaiTien = loaiTienDs[i];
 							if (loaiTien.maLt == 'VND'
 									|| loaiTien.maLt == 'VANG') {
-								thapPhan = 2;
+								thapPhan = 0;
 							} else {
 								thapPhan = 2;
 							}
@@ -382,11 +387,10 @@
 					}
 
 					// Cập nhật tỷ giá
+					$("input[id$='\\.banRa']").unbind(
+							'keydown.format keyup.format paste.format');
+					$("#loaiTien\\.banRa").number(true, thapPhan);
 					$("#loaiTien\\.banRa").val(loaiTien.banRa);
-					$("input[id$='\\.soTien']").unbind(
-							'keydown.format keyup.format paste.format');
-					$("input[id$='\\.giaTri']").unbind(
-							'keydown.format keyup.format paste.format');
 
 					for (i = 0; i < soDongTk; i++) {
 						dangKyTien(i);
@@ -419,7 +423,7 @@
 			} else {
 				param += "&maKho=0";
 			}
-
+			console.log("danhSachGiaVon", param);
 			$
 					.ajax({
 						url : "${url}/chungtu/hanghoa/giavonds",
@@ -452,12 +456,14 @@
 		}
 
 		function dangKyTien(id) {
-			console.log("dangKyTien thapPhan", thapPhan);
+			$("input[id^='hangHoaDs" + id + "'][id$='soTien']").unbind(
+					'keydown.format keyup.format paste.format');
+			$("input[id^='hangHoaDs" + id + "'][id$='giaTri']").unbind(
+					'keydown.format keyup.format paste.format');
+
 			$("input[id^='hangHoaDs" + id + "'][id$='soTien']").number(true,
 					thapPhan);
 			$("input[id^='hangHoaDs" + id + "'][id$='giaTri']").number(true,
-					thapPhan);
-			$("input[id^='nvktDs" + id + "'][id$='soTien']").number(true,
 					thapPhan);
 		}
 
@@ -581,7 +587,7 @@
 								}
 
 								var tongGiaVonTxt = accounting.formatNumber(
-										tongGiaVon, thapPhan, ",")
+										tongGiaVon, 0, ",")
 										+ " VND";
 								console.log("giaKho", giaVon, "soLuong",
 										soLuong, "tongGiaVon", tongGiaVon,
@@ -833,6 +839,10 @@
 			chiPhiDong = $("#chiPhi" + (soDongTk - 1)).html();
 			chiPhiDong = "<tr>" + chiPhiDong + "</tr>";
 
+			ktthDong = $("#ktth" + (soDongTk - 1)).html();
+			ktthDong = "<tr>" + ktthDong + "</tr>";
+
+			console.log("soDongTk", soDongTk);
 			if (soDongTk > 1) {
 				$("#hangTien" + (soDongTk - 1)).remove();
 				$("#thue" + (soDongTk - 1)).remove();
@@ -1085,9 +1095,7 @@
 
 <div class="row form-group">
 	<div class="col-sm-12">
-		<a href="${url}/chungtu/banhang/danhsach" class="btn btn-info btn-sm">Danh
-			sách bán hàng</a> <a
-			href="${url}/chungtu/banhang/xem/${mainFinanceForm.maCt}"
+		<a href="${url}/chungtu/banhang/xem/${mainFinanceForm.maCt}"
 			class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Lưu</button>
 	</div>

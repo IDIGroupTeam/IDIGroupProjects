@@ -546,7 +546,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien giaKho = new Tien();
 				giaKho.setLoaiTien(loaiTien);
 				giaKho.setGiaTri(rs.getDouble("GIA_KHO"));
-				giaKho.setSoTien(Utils.round(giaKho.getGiaTri() / loaiTien.getBanRa()));
+				giaKho.setSoTien(giaKho.getGiaTri() / loaiTien.getBanRa());
 				giaKho.setMaGia(rs.getInt("MA_GIA_KHO"));
 				hangHoa.setGiaKho(giaKho);
 
@@ -606,7 +606,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				taiKhoan.setChungTu(chungTu);
 				chungTu.themHangHoa(hangHoa);
 
-				logger.info(chungTu + " ||| " + taiKhoan);
+				logger.info(chungTu + " - " + taiKhoan);
 
 				return chungTu;
 			} catch (Exception e) {

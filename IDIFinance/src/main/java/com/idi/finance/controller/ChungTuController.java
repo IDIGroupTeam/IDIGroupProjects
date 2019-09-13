@@ -2013,6 +2013,10 @@ public class ChungTuController {
 				return "redirect:/chungtu/banhang/xem/" + maCt;
 			}
 
+			// Tạo tạm một hàng hóa mới làm mẫu, sau js sẽ xóa đi
+			HangHoa hangHoa = new HangHoa();
+			chungTu.themHangHoa(hangHoa);
+
 			return chuanBiFormBanHang(model, chungTu);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2044,6 +2048,10 @@ public class ChungTuController {
 			soBanHang++;
 			chungTu.setSoCt(soBanHang);
 			chungTu.setNghiepVu("saoChepBanHang");
+
+			// Tạo tạm một hàng hóa mới làm mẫu, sau js sẽ xóa đi
+			HangHoa hangHoa = new HangHoa();
+			chungTu.themHangHoa(hangHoa);
 
 			return chuanBiFormBanHang(model, chungTu);
 		} catch (Exception e) {
@@ -2129,11 +2137,11 @@ public class ChungTuController {
 							&& !hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk().trim().equals("")
 							&& hangHoa.getTkThueGtgt().getSoTien() != null) {
 						// Có thuế Gtgt, tính theo phương pháp khấu trừ
-						double thue = Utils.round(
-								hangHoa.getTkThueGtgt().getSoTien().getGiaTri() / chungTu.getLoaiTien().getBanRa());
+						double thue = hangHoa.getTkThueGtgt().getSoTien().getGiaTri()
+								/ chungTu.getLoaiTien().getBanRa();
 						hangHoa.getTkThueGtgt().getSoTien().setSoTien(thue);
 						hangHoa.getTkThueGtgt().getSoTien().setLoaiTien(chungTu.getLoaiTien());
-						tongThue = Utils.round(tongThue + thue);
+						tongThue = tongThue + thue;
 
 						if (soHangHoa > 1) {
 							hangHoa.getTkThueGtgt().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -2145,11 +2153,10 @@ public class ChungTuController {
 					if (hangHoa.getTkThueXk() != null && hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk().trim().equals("")
 							&& hangHoa.getTkThueXk().getSoTien() != null) {
-						double thue = Utils.round(
-								hangHoa.getTkThueXk().getSoTien().getGiaTri() / chungTu.getLoaiTien().getBanRa());
+						double thue = hangHoa.getTkThueXk().getSoTien().getGiaTri() / chungTu.getLoaiTien().getBanRa();
 						hangHoa.getTkThueXk().getSoTien().setSoTien(thue);
 						hangHoa.getTkThueXk().getSoTien().setLoaiTien(chungTu.getLoaiTien());
-						tongThue = Utils.round(tongThue + thue);
+						tongThue = tongThue + thue;
 
 						if (soHangHoa > 1) {
 							hangHoa.getTkThueXk().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -2159,11 +2166,12 @@ public class ChungTuController {
 					}
 
 					// Tổng doanh thu
-					double tongDoanhThu = Utils.round(hangHoa.getSoLuong() * hangHoa.getDonGia().getSoTien());
+					double tongDoanhThu = hangHoa.getSoLuong() * hangHoa.getDonGia().getSoTien();
 					if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						hangHoa.getTkDoanhThu().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 						hangHoa.getTkDoanhThu().getSoTien().setSoTien(tongDoanhThu);
+						hangHoa.getTkDoanhThu().getSoTien().setGiaTri(tongDoanhThu * chungTu.getLoaiTien().getBanRa());
 
 						if (soHangHoa > 1) {
 							hangHoa.getTkDoanhThu().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -2173,11 +2181,13 @@ public class ChungTuController {
 					}
 
 					// Tổng thanh toán
-					double tongThanhToan = Utils.round(tongDoanhThu + tongThue);
+					double tongThanhToan = tongDoanhThu + tongThue;
 					if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						hangHoa.getTkThanhtoan().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 						hangHoa.getTkThanhtoan().getSoTien().setSoTien(tongThanhToan);
+						hangHoa.getTkThanhtoan().getSoTien()
+								.setGiaTri(tongThanhToan * chungTu.getLoaiTien().getBanRa());
 
 						if (soHangHoa > 1) {
 							hangHoa.getTkThanhtoan().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -2187,11 +2197,12 @@ public class ChungTuController {
 					}
 
 					// Tổng giá vốn
-					double tongGiaVon = Utils.round(hangHoa.getSoLuong() * hangHoa.getGiaKho().getSoTien());
+					double tongGiaVon = hangHoa.getSoLuong() * hangHoa.getGiaKho().getSoTien();
 					if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk() != null
 							&& !hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						hangHoa.getTkGiaVon().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 						hangHoa.getTkGiaVon().getSoTien().setSoTien(tongGiaVon);
+						hangHoa.getTkGiaVon().getSoTien().setGiaTri(tongGiaVon * chungTu.getLoaiTien().getBanRa());
 						hangHoa.getTkGiaVon().setNhomDk(1);
 
 						if (soHangHoa > 1) {
@@ -2205,6 +2216,7 @@ public class ChungTuController {
 							&& !hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						hangHoa.getTkKho().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 						hangHoa.getTkKho().getSoTien().setSoTien(tongGiaVon);
+						hangHoa.getTkKho().getSoTien().setGiaTri(tongGiaVon * chungTu.getLoaiTien().getBanRa());
 						hangHoa.getTkKho().setNhomDk(1);
 
 						if (soHangHoa > 1) {
@@ -2219,12 +2231,16 @@ public class ChungTuController {
 						NghiepVuKeToan nvkt = hangHoa.getNvktDs().get(0);
 
 						TaiKhoan taiKhoanNo = nvkt.getTaiKhoanNo();
+						taiKhoanNo.getSoTien()
+								.setGiaTri(taiKhoanNo.getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 						taiKhoanNo.setSoDu(LoaiTaiKhoan.NO);
 						taiKhoanNo.setNhomDk(nhomDk);
 						taiKhoanNo.setDoiTuong(doiTuong);
 						taiKhoanNo.setNo(taiKhoanNo.getSoTien());
 
 						TaiKhoan taiKhoanCo = nvkt.getTaiKhoanCo();
+						taiKhoanCo.getSoTien()
+								.setGiaTri(taiKhoanCo.getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 						taiKhoanCo.setLyDo(taiKhoanNo.getLyDo());
 						taiKhoanCo.setSoDu(LoaiTaiKhoan.CO);
 						taiKhoanCo.setCo(taiKhoanNo.getSoTien());

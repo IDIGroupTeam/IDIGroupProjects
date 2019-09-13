@@ -151,7 +151,7 @@
 		tiền:</label>
 	<div class="col-sm-4">
 		<fmt:formatNumber value="${chungTu.soTien.giaTri}"
-			maxFractionDigits="2"></fmt:formatNumber>
+			maxFractionDigits="0"></fmt:formatNumber>
 		VND
 	</div>
 
