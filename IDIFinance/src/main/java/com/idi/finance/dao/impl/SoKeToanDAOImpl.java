@@ -697,14 +697,14 @@ public class SoKeToanDAOImpl implements SoKeToanDAO {
 				Tien donGia = new Tien();
 				donGia.setLoaiTien(loaiTien);
 				donGia.setGiaTri(rs.getDouble("DON_GIA"));
-				donGia.setSoTien(Utils.round(donGia.getGiaTri() / loaiTien.getBanRa()));
+				donGia.setSoTien(donGia.getGiaTri() / loaiTien.getBanRa());
 				hangHoa.setDonGia(donGia);
 
 				Tien giaKho = new Tien();
 				giaKho.setLoaiTien(loaiTien);
 				giaKho.setMaGia(rs.getInt("MA_GIA"));
 				giaKho.setGiaTri(rs.getDouble("GIA_KHO"));
-				giaKho.setSoTien(Utils.round(giaKho.getGiaTri() / loaiTien.getBanRa()));
+				giaKho.setSoTien(giaKho.getGiaTri() / loaiTien.getBanRa());
 				hangHoa.setGiaKho(giaKho);
 
 				TaiKhoan taiKhoanNo = new TaiKhoan();

@@ -106,13 +106,13 @@
 							<c:choose>
 								<c:when test="${taiKhoan.soDu==LoaiTaiKhoan.NO}">
 									<td class="text-right"><fmt:formatNumber
-											value="${taiKhoan.no.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
+											value="${taiKhoan.no.giaTri}" maxFractionDigits="0"></fmt:formatNumber></td>
 									<td class="text-right">0</td>
 								</c:when>
 								<c:otherwise>
 									<td class="text-right">0</td>
 									<td class="text-right"><fmt:formatNumber
-											value="${taiKhoan.co.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
+											value="${taiKhoan.co.giaTri}" maxFractionDigits="0"></fmt:formatNumber></td>
 								</c:otherwise>
 							</c:choose>
 						</c:when>
@@ -120,13 +120,13 @@
 							<c:choose>
 								<c:when test="${taiKhoan.soDu==LoaiTaiKhoan.NO}">
 									<td class="text-right"><fmt:formatNumber
-											value="${taiKhoan.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
+											value="${taiKhoan.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber></td>
 									<td class="text-right">0</td>
 								</c:when>
 								<c:otherwise>
 									<td class="text-right">0</td>
 									<td class="text-right"><fmt:formatNumber
-											value="${taiKhoan.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
+											value="${taiKhoan.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber></td>
 								</c:otherwise>
 							</c:choose>
 						</c:otherwise>

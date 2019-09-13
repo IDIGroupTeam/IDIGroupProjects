@@ -32,7 +32,6 @@ import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.bean.taikhoan.TaiKhoan;
 import com.idi.finance.dao.ChungTuDAO;
 import com.idi.finance.utils.ExpressionEval;
-import com.idi.finance.utils.Utils;
 
 public class ChungTuDAOImpl implements ChungTuDAO {
 	private static final Logger logger = Logger.getLogger(ChungTuDAOImpl.class);
@@ -2318,7 +2317,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien tien = new Tien();
 				tien.setLoaiTien(loaiTien);
 				tien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tien.setSoTien(Utils.round(tien.getGiaTri() / tien.getLoaiTien().getBanRa()));
+				tien.setSoTien(rs.getDouble("SO_TIEN_NT"));
 				taiKhoan.setSoTien(tien);
 
 				KetChuyenButToan ketChuyenButToan = new KetChuyenButToan();
@@ -2430,10 +2429,10 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 					soTien.setLoaiTien(chungTu.getLoaiTien());
 
 					if (ketQua >= 0) {
-						soTien.setSoTien(Utils.round(ketQua / chungTu.getLoaiTien().getBanRa()));
+						soTien.setSoTien(ketQua / chungTu.getLoaiTien().getBanRa());
 						soTien.setGiaTri(ketQua);
 					} else {
-						soTien.setSoTien(Utils.round((ketQua * -1) / chungTu.getLoaiTien().getBanRa()));
+						soTien.setSoTien((ketQua * -1) / chungTu.getLoaiTien().getBanRa());
 						soTien.setGiaTri(ketQua * -1);
 
 						TaiKhoan taiKhoanNo = ketChuyenButToan.getTaiKhoanNo();
@@ -2465,8 +2464,9 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, ketChuyenButToan.getTaiKhoanNo().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, ketChuyenButToan.getTaiKhoanNo().getSoTien().getGiaTri());
-							stt.setInt(3, ketChuyenButToan.getTaiKhoanNo().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setDouble(3, ketChuyenButToan.getTaiKhoanNo().getSoTien().getSoTien());
+							stt.setInt(4, ketChuyenButToan.getTaiKhoanNo().getSoDu());
+							stt.setString(5, chungTu.getLyDo());
 
 							return stt;
 						}
@@ -2489,8 +2489,9 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, ketChuyenButToan.getTaiKhoanCo().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, ketChuyenButToan.getTaiKhoanCo().getSoTien().getGiaTri());
-							stt.setInt(3, ketChuyenButToan.getTaiKhoanCo().getSoDu());
-							stt.setString(4, chungTu.getLyDo());
+							stt.setDouble(3, ketChuyenButToan.getTaiKhoanCo().getSoTien().getSoTien());
+							stt.setInt(4, ketChuyenButToan.getTaiKhoanCo().getSoDu());
+							stt.setString(5, chungTu.getLyDo());
 
 							return stt;
 						}

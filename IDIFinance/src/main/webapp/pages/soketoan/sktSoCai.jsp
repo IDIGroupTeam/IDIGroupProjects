@@ -61,14 +61,14 @@
 						<td><b>Số dư đầu</b></td>
 						<td></td>
 						<c:if test="${soDuDau>=0}">
-							<td class="text-right"><fmt:formatNumber value="${soDuDau}"
-									type="NUMBER"></fmt:formatNumber></td>
-							<td class="text-right">0</td>
+							<td class="text-right"><b><fmt:formatNumber
+										value="${soDuDau}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
+							<td class="text-right"><b>0</b></td>
 						</c:if>
 						<c:if test="${soDuDau<0}">
-							<td class="text-right">0</td>
-							<td class="text-right"><fmt:formatNumber
-									value="${0-soDuDau}" type="NUMBER"></fmt:formatNumber></td>
+							<td class="text-right"><b>0</b></td>
+							<td class="text-right"><b><fmt:formatNumber
+										value="${0-soDuDau}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
 						</c:if>
 						<td></td>
 						<td></td>
@@ -90,13 +90,13 @@
 							<td></td>
 							<c:if test="${duLieuKeToan.soDuDauKy>=0}">
 								<td class="text-right"><fmt:formatNumber
-										value="${duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+										value="${duLieuKeToan.soDuDauKy}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 								<td class="text-right">0</td>
 							</c:if>
 							<c:if test="${duLieuKeToan.soDuDauKy<0}">
 								<td class="text-right">0</td>
 								<td class="text-right"><fmt:formatNumber
-										value="${0-duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+										value="${0-duLieuKeToan.soDuDauKy}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 							</c:if>
 							<td></td>
 							<td></td>
@@ -168,8 +168,8 @@
 										&& nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.trim().substring(0, mainFinanceForm.taiKhoan.trim().length()).equals(mainFinanceForm.taiKhoan.trim())}">
 											<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
 											<td class="text-right"><fmt:formatNumber
-													value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-													type="NUMBER"></fmt:formatNumber></td>
+													value="${nghiepVuKeToan.taiKhoanCo.soTien.giaTri}"
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 											<td class="text-right">0</td>
 										</c:if>
 										<c:if
@@ -178,11 +178,12 @@
 											<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
 											<td class="text-right">0</td>
 											<td class="text-right"><fmt:formatNumber
-													value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-													type="NUMBER"></fmt:formatNumber></td>
+													value="${nghiepVuKeToan.taiKhoanCo.soTien.giaTri}"
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 										</c:if>
 										<td class="text-right"><fmt:formatNumber
-												value="${nghiepVuKeToan.ton}" type="NUMBER"></fmt:formatNumber></td>
+												value="${nghiepVuKeToan.ton}" type="NUMBER"
+												maxFractionDigits="0"></fmt:formatNumber></td>
 										<td></td>
 									</c:when>
 									<c:when
@@ -193,8 +194,8 @@
 										&& nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.trim().substring(0, mainFinanceForm.taiKhoan.trim().length()).equals(mainFinanceForm.taiKhoan.trim())}">
 											<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
 											<td class="text-right"><fmt:formatNumber
-													value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-													type="NUMBER"></fmt:formatNumber></td>
+													value="${nghiepVuKeToan.taiKhoanNo.soTien.giaTri}"
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 											<td class="text-right">0</td>
 										</c:if>
 										<c:if
@@ -203,11 +204,12 @@
 											<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
 											<td class="text-right">0</td>
 											<td class="text-right"><fmt:formatNumber
-													value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-													type="NUMBER"></fmt:formatNumber></td>
+													value="${nghiepVuKeToan.taiKhoanNo.soTien.giaTri}"
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 										</c:if>
 										<td class="text-right"><fmt:formatNumber
-												value="${nghiepVuKeToan.ton}" type="NUMBER"></fmt:formatNumber></td>
+												value="${nghiepVuKeToan.ton}" type="NUMBER"
+												maxFractionDigits="0"></fmt:formatNumber></td>
 										<td></td>
 									</c:when>
 								</c:choose>
@@ -219,9 +221,9 @@
 							<td><i>Tổng phát sinh trong kỳ</i></td>
 							<td></td>
 							<td class="text-right"><fmt:formatNumber
-									value="${duLieuKeToan.tongNoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+									value="${duLieuKeToan.tongNoPhatSinh}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 							<td class="text-right"><fmt:formatNumber
-									value="${duLieuKeToan.tongCoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+									value="${duLieuKeToan.tongCoPhatSinh}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 							<td></td>
 							<td></td>
 						</tr> --%>
@@ -232,13 +234,13 @@
 							<td></td>
 							<c:if test="${duLieuKeToan.soDuCuoiKy>=0}">
 								<td class="text-right"><fmt:formatNumber
-										value="${duLieuKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+										value="${duLieuKeToan.soDuCuoiKy}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 								<td class="text-right">0</td>
 							</c:if>
 							<c:if test="${duLieuKeToan.soDuCuoiKy<0}">
 								<td class="text-right">0</td>
 								<td class="text-right"><fmt:formatNumber
-										value="${0-duLieuKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+										value="${0-duLieuKeToan.soDuCuoiKy}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 							</c:if>
 							<td></td>
 							<td></td>
@@ -249,10 +251,10 @@
 						<td></td>
 						<td><b>Tổng phát sinh</b></td>
 						<td></td>
-						<td class="text-right"><fmt:formatNumber
-								value="${noPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
-						<td class="text-right"><fmt:formatNumber
-								value="${coPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+						<td class="text-right"><b><fmt:formatNumber
+									value="${noPhatSinh}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
+						<td class="text-right"><b><fmt:formatNumber
+									value="${coPhatSinh}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
 						<td></td>
 					</tr>
 					<tr>
@@ -261,14 +263,14 @@
 						<td><b>Số dư cuối</b></td>
 						<td></td>
 						<c:if test="${soDuCuoi>=0}">
-							<td class="text-right"><fmt:formatNumber value="${soDuCuoi}"
-									type="NUMBER"></fmt:formatNumber></td>
-							<td class="text-right">0</td>
+							<td class="text-right"><b><fmt:formatNumber
+										value="${soDuCuoi}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
+							<td class="text-right"><b>0</b></td>
 						</c:if>
 						<c:if test="${soDuCuoi<0}">
-							<td class="text-right">0</td>
-							<td class="text-right"><fmt:formatNumber
-									value="${0-soDuCuoi}" type="NUMBER"></fmt:formatNumber></td>
+							<td class="text-right"><b>0</b></td>
+							<td class="text-right"><b><fmt:formatNumber
+										value="${0-soDuCuoi}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
 						</c:if>
 						<td></td>
 						<td></td>
@@ -304,10 +306,10 @@
 								<td></td>
 								<td><b>Số dư đầu</b></td>
 								<td></td>
-								<td class="text-right"><fmt:formatNumber value="${noDau}"
-										type="NUMBER"></fmt:formatNumber></td>
-								<td class="text-right"><fmt:formatNumber value="${coDau}"
-										type="NUMBER"></fmt:formatNumber></td>
+								<td class="text-right"><b><fmt:formatNumber
+											value="${noDau}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
+								<td class="text-right"><b><fmt:formatNumber
+											value="${coDau}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
 								<td></td>
 							</tr>
 						</c:when>
@@ -318,14 +320,14 @@
 								<td><b>Số dư đầu</b></td>
 								<td></td>
 								<c:if test="${soDuDau>=0}">
-									<td class="text-right"><fmt:formatNumber
-											value="${soDuDau}" type="NUMBER"></fmt:formatNumber></td>
-									<td class="text-right">0</td>
+									<td class="text-right"><b><fmt:formatNumber
+												value="${soDuDau}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
+									<td class="text-right"><b>0</b></td>
 								</c:if>
 								<c:if test="${soDuDau<0}">
-									<td class="text-right">0</td>
-									<td class="text-right"><fmt:formatNumber
-											value="${0-soDuDau}" type="NUMBER"></fmt:formatNumber></td>
+									<td class="text-right"><b>0</b></td>
+									<td class="text-right"><b><fmt:formatNumber
+												value="${0-soDuDau}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
 								</c:if>
 								<td></td>
 							</tr>
@@ -349,9 +351,9 @@
 									<td><i>Số dư đầu kỳ</i></td>
 									<td></td>
 									<td class="text-right"><fmt:formatNumber
-											value="${duLieuKeToan.noDauKy}" type="NUMBER"></fmt:formatNumber></td>
+											value="${duLieuKeToan.noDauKy}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 									<td class="text-right"><fmt:formatNumber
-											value="${duLieuKeToan.coDauKy}" type="NUMBER"></fmt:formatNumber></td>
+											value="${duLieuKeToan.coDauKy}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 									<td></td>
 								</tr> --%>
 							</c:when>
@@ -363,13 +365,13 @@
 									<td></td>
 									<c:if test="${duLieuKeToan.soDuDauKy>=0}">
 										<td class="text-right"><fmt:formatNumber
-												value="${duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+												value="${duLieuKeToan.soDuDauKy}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 										<td class="text-right">0</td>
 									</c:if>
 									<c:if test="${duLieuKeToan.soDuDauKy<0}">
 										<td class="text-right">0</td>
 										<td class="text-right"><fmt:formatNumber
-												value="${0-duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+												value="${0-duLieuKeToan.soDuDauKy}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 									</c:if>
 									<td></td>
 								</tr> --%>
@@ -441,8 +443,8 @@
 										&& nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.trim().substring(0, mainFinanceForm.taiKhoan.trim().length()).equals(mainFinanceForm.taiKhoan.trim())}">
 											<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
 											<td class="text-right"><fmt:formatNumber
-													value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-													type="NUMBER"></fmt:formatNumber></td>
+													value="${nghiepVuKeToan.taiKhoanCo.soTien.giaTri}"
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 											<td class="text-right">0</td>
 										</c:if>
 										<c:if
@@ -451,8 +453,8 @@
 											<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
 											<td class="text-right">0</td>
 											<td class="text-right"><fmt:formatNumber
-													value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-													type="NUMBER"></fmt:formatNumber></td>
+													value="${nghiepVuKeToan.taiKhoanCo.soTien.giaTri}"
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 										</c:if>
 										<td></td>
 									</c:when>
@@ -464,8 +466,8 @@
 										&& nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.trim().substring(0, mainFinanceForm.taiKhoan.trim().length()).equals(mainFinanceForm.taiKhoan.trim())}">
 											<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
 											<td class="text-right"><fmt:formatNumber
-													value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-													type="NUMBER"></fmt:formatNumber></td>
+													value="${nghiepVuKeToan.taiKhoanNo.soTien.giaTri}"
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 											<td class="text-right">0</td>
 										</c:if>
 										<c:if
@@ -474,8 +476,8 @@
 											<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
 											<td class="text-right">0</td>
 											<td class="text-right"><fmt:formatNumber
-													value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-													type="NUMBER"></fmt:formatNumber></td>
+													value="${nghiepVuKeToan.taiKhoanNo.soTien.giaTri}"
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 										</c:if>
 										<td></td>
 									</c:when>
@@ -488,9 +490,9 @@
 							<td><i>Tổng phát sinh trong kỳ</i></td>
 							<td></td>
 							<td class="text-right"><fmt:formatNumber
-									value="${duLieuKeToan.tongNoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+									value="${duLieuKeToan.tongNoPhatSinh}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 							<td class="text-right"><fmt:formatNumber
-									value="${duLieuKeToan.tongCoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+									value="${duLieuKeToan.tongCoPhatSinh}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 							<td></td>
 						</tr> --%>
 						<c:choose>
@@ -501,9 +503,9 @@
 									<td><i>Số dư cuối kỳ</i></td>
 									<td></td>
 									<td class="text-right"><fmt:formatNumber
-											value="${duLieuKeToan.noCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+											value="${duLieuKeToan.noCuoiKy}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 									<td class="text-right"><fmt:formatNumber
-											value="${duLieuKeToan.coCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+											value="${duLieuKeToan.coCuoiKy}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 									<td></td>
 								</tr> --%>
 							</c:when>
@@ -515,13 +517,13 @@
 									<td></td>
 									<c:if test="${duLieuKeToan.soDuCuoiKy>=0}">
 										<td class="text-right"><fmt:formatNumber
-												value="${duLieuKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+												value="${duLieuKeToan.soDuCuoiKy}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 										<td class="text-right">0</td>
 									</c:if>
 									<c:if test="${duLieuKeToan.soDuCuoiKy<0}">
 										<td class="text-right">0</td>
 										<td class="text-right"><fmt:formatNumber
-												value="${0-duLieuKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+												value="${0-duLieuKeToan.soDuCuoiKy}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 									</c:if>
 									<td></td>
 								</tr> --%>
@@ -533,10 +535,10 @@
 						<td></td>
 						<td><b>Tổng phát sinh</b></td>
 						<td></td>
-						<td class="text-right"><fmt:formatNumber
-								value="${noPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
-						<td class="text-right"><fmt:formatNumber
-								value="${coPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+						<td class="text-right"><b><fmt:formatNumber
+									value="${noPhatSinh}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
+						<td class="text-right"><b><fmt:formatNumber
+									value="${coPhatSinh}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
 						<td></td>
 					</tr>
 					<c:choose>
@@ -546,10 +548,10 @@
 								<td></td>
 								<td><b>Số dư cuối</b></td>
 								<td></td>
-								<td class="text-right"><fmt:formatNumber value="${noCuoi}"
-										type="NUMBER"></fmt:formatNumber></td>
-								<td class="text-right"><fmt:formatNumber value="${coCuoi}"
-										type="NUMBER"></fmt:formatNumber></td>
+								<td class="text-right"><b><fmt:formatNumber
+											value="${noCuoi}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
+								<td class="text-right"><b><fmt:formatNumber
+											value="${coCuoi}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
 								<td></td>
 							</tr>
 						</c:when>
@@ -560,14 +562,14 @@
 								<td><b>Số dư cuối</b></td>
 								<td></td>
 								<c:if test="${soDuCuoi>=0}">
-									<td class="text-right"><fmt:formatNumber
-											value="${soDuCuoi}" type="NUMBER"></fmt:formatNumber></td>
-									<td class="text-right">0</td>
+									<td class="text-right"><b><fmt:formatNumber
+												value="${soDuCuoi}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
+									<td class="text-right"><b>0</b></td>
 								</c:if>
 								<c:if test="${soDuCuoi<0}">
-									<td class="text-right">0</td>
-									<td class="text-right"><fmt:formatNumber
-											value="${0-soDuCuoi}" type="NUMBER"></fmt:formatNumber></td>
+									<td class="text-right"><b>0</b></td>
+									<td class="text-right"><b><fmt:formatNumber
+												value="${0-soDuCuoi}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
 								</c:if>
 								<td></td>
 							</tr>
