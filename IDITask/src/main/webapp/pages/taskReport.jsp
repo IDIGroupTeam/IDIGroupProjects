@@ -8,6 +8,18 @@
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 <html>
 <head>
+<!-- Initialize the plugin: -->
+<link rel="bootstrap-autosize"	href="${url}/public/css/bootstrap-autosize.css" />
+<script src="${url}/public/js/bootstrap-autosize.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$('.normal').autosize();
+		$('.animatedArea').autosize({
+			append : "\n"
+		});
+	});
+</script>
 
 <title>Báo cáo công việc</title>
 <style>
@@ -68,15 +80,20 @@ tr:nth-child(even) {
 						<form:options items="${employeeEmailMap}" />
 					</form:select>
 				</td> --%>	
+			</tr>			
+			<tr>
+				<td>&nbsp; Đánh giá thực hiện kế hoạch:</td>
+				<td><form:textarea path="summary" class="form-control animatedArea" rows="2" /></td>
 			</tr>
 			<tr>
 				<td>&nbsp; Ý kiến/ Đề xuất:</td>
-				<td><form:input path="comment" type="text" class="form-control animated" /></td>
+				<td><form:textarea path="comment" class="form-control animatedArea" rows="2" /></td>
 			</tr>
 		</table>
 		<br/>
 	
-	<table class="table table-striped">
+		<table class="table table-striped">
+			<tr><td colspan="11"><b><i>Kết quả thực hiện:</i></b></td></tr>
 			<tr>
 				<th title="Check để loại bỏ trong báo cáo">Bỏ</th>
 				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Mã việc &nbsp;<form:checkbox path="idCheck" class="form-check-input" value="Y" id="idCheck"/></th>
@@ -89,10 +106,10 @@ tr:nth-child(even) {
 				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Cập nhật gần nhất  &nbsp;<form:checkbox path="updateTimeCheck" value="Y" class="form-check-input" id="updateTimeCheck"/></th>
 				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Ngày phải xong  &nbsp;<form:checkbox path="dueDateCheck" value="Y" class="form-check-input" id="dueDateCheck"/></th>
 				<th nowrap="nowrap">Nhận xét đánh giá</th>
-			</tr>
+			</tr>			
 			<c:forEach var="task" items="${tasks}">
 				<tr>
-					<td  title="Check để loại bỏ dòng này trong báo cáo"><form:checkbox path="unSelect" class="form-check-input" value="${task.taskId}" id="unSelect"/></td>
+					<td title="Check để loại bỏ dòng này trong báo cáo"><form:checkbox path="unSelect" class="form-check-input" value="${task.taskId}" id="unSelect"/></td>
 					<td>${task.taskId}</td>
 					<td>${task.taskName}</td>
 					<td>${task.description}</td>
@@ -109,6 +126,44 @@ tr:nth-child(even) {
 					<%-- <td><fmt:formatDate pattern="dd-MM-yyyy" value="${task.dueDate}" /></td> --%>
 					<td>${task.dueDate}</td>
 					<td>${task.reviewComment}</td>
+				</tr>
+			</c:forEach>
+			</table>
+			
+			<table  class="table table-striped">
+			<tr><td colspan="11"><b><i>Kế hoạch:</i></b></td></tr>
+			<tr>
+				<th title="Check để loại bỏ trong báo cáo">Bỏ</th>
+				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Mã việc </th>
+				<th>Tên việc</th>
+				<th title="Check để thêm cột này vào báo cáo">Mô tả </th>
+				<th>Người làm</th>
+				<th nowrap="nowrap">Trạng thái</th>			
+				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Thời gian ước lượng </th>
+				<th nowrap="nowrap">Thời gian đã làm</th>	
+				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Cập nhật gần nhất </th>
+				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Ngày phải xong </th>
+				<th nowrap="nowrap">Nhận xét đánh giá</th>
+			</tr>	
+			<c:forEach var="taskNext" items="${tasksNext}">
+				<tr>
+					<td  title="Check để loại bỏ dòng này trong báo cáo"><form:checkbox path="unSelected" class="form-check-input" value="${taskNext.taskId}" id="unSelect"/></td>
+					<td>${taskNext.taskId}</td>
+					<td>${taskNext.taskName}</td>
+					<td>${taskNext.description}</td>
+					<c:if test="${taskNext.ownedBy == 0}">
+						<td nowrap="nowrap">Chưa giao cho ai</td>
+					</c:if>
+					<c:if test="${taskNext.ownedBy > 0}">
+						<td nowrap="nowrap">${taskNext.ownerName}</td>
+					</c:if>
+					<td>${taskNext.status}</td>
+					<td>${taskNext.estimate} ${taskNext.estimateTimeType}</td>
+					<td>${taskNext.timeSpent} ${taskNext.timeSpentType}</td>
+					<td nowrap="nowrap">${taskNext.updateTS}</td>
+					<%-- <td><fmt:formatDate pattern="dd-MM-yyyy" value="${task.dueDate}" /></td> --%>
+					<td>${taskNext.dueDate}</td>
+					<td>${taskNext.reviewComment}</td>
 				</tr>
 			</c:forEach>
 		</table>

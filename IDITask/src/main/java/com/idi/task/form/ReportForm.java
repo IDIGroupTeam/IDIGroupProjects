@@ -16,6 +16,7 @@ public class ReportForm implements Serializable{
 	private String department;
 	private String sender;
 	private String comment;
+	private String summary;
 	
 	private String idCheck;
 	private String estimateCheck;
@@ -23,6 +24,7 @@ public class ReportForm implements Serializable{
 	private String dueDateCheck;
 	private String desCheck;
 	private String unSelect;
+	private String unSelected;
 	
 	public String getFromDate() {
 		return fromDate;
@@ -66,6 +68,12 @@ public class ReportForm implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+	public String getSummary() {
+		return summary;
+	}
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
 	public String getIdCheck() {
 		return idCheck;
 	}
@@ -101,6 +109,12 @@ public class ReportForm implements Serializable{
 	}
 	public void setUnSelect(String unSelect) {
 		this.unSelect = unSelect;
+	}
+	public String getUnSelected() {
+		return unSelected;
+	}
+	public void setUnSelected(String unSelected) {
+		this.unSelected = unSelected;
 	}		
 	
 }

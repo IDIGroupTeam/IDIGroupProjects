@@ -544,7 +544,7 @@ public class TaskController {
 		try {
 			if (taskForm.getDueDate() != null && taskForm.getDueDate().length() > 10) {
 				model.addAttribute("message", "Vui lòng nhập ngày phải xong đúng định dạng, ví dụ như 06/24/2019");
-				System.err.println("sai dinh dang ngay fai xong");
+				//System.err.println("sai dinh dang ngay fai xong");
 			} else {
 				// Xu ly cho task comment
 				TaskComment taskComment = new TaskComment();
@@ -924,7 +924,7 @@ public class TaskController {
 						"Không có công việc nào khớp với thông tin: '" + taskForm.getSearchValue() + "'");
 			model.addAttribute("tasksFound", list);
 			model.addAttribute("formTitle",
-					"Quản lý danh sách công việc liên quan đến công việc mã " + taskForm.getTaskId());
+					"Thông tin chi tiết của công việc mã " + taskForm.getTaskId());
 
 			if (tab == 1) {
 				model.addAttribute("active1", "active");
@@ -1121,7 +1121,7 @@ public class TaskController {
 				
 				// tinh tong thoi gian da lam va thoi gian estimate
 				List<Task> list = null;
-				list = taskDAO.getTasksForReport(taskReportForm);			
+				list = taskDAO.getTasksForReport(taskReportForm, null);			
 				float timeEstimateTotal = 0;
 				float timeSpentTotal = 0;
 				for (int i = 0; i < list.size(); i++) {
@@ -1174,7 +1174,7 @@ public class TaskController {
 					// tinh tong thoi gian da lam va thoi gian estimate
 					List<Task> list = null;
 					taskReportForm.setEmployeeId(emp.getEmployeeId());
-					list = taskDAO.getTasksForReport(taskReportForm);			
+					list = taskDAO.getTasksForReport(taskReportForm, null);			
 					float timeEstimateTotal = 0;
 					float timeSpentTotal = 0;
 					for (int i = 0; i < list.size(); i++) {
@@ -1228,7 +1228,7 @@ public class TaskController {
 					// tinh tong thoi gian da lam va thoi gian estimate
 					List<Task> list = null;
 					taskReportForm.setEmployeeId(emp.getEmployeeId());
-					list = taskDAO.getTasksForReport(taskReportForm);			
+					list = taskDAO.getTasksForReport(taskReportForm, null);			
 					float timeEstimateTotal = 0;
 					float timeSpentTotal = 0;
 					for (int j = 0; j < list.size(); j++) {
@@ -1285,9 +1285,13 @@ public class TaskController {
 	@RequestMapping(value = "/generateTaskReport", params = "generateTaskReport")
 	public String generateTaskReport(Model model,
 			@ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) throws Exception {
-		List<Task> list = null;
-		list = taskDAO.getTasksForReport(taskReportForm);
+		
+		List<Task> listCurrent = null;
+		listCurrent = taskDAO.getTasksForReport(taskReportForm, "'Đang làm','Tạm dừng','Hủy bỏ','Chờ đánh giá','Đã xong'");
 
+		List<Task> listNext = null;
+		listNext = taskDAO.getTasksForReport(taskReportForm, "'Mới','Mới tạo','Đang làm','Chờ đánh giá'");
+		
 		// inject from Login account
 
 		LoginController lc = new LoginController(); 
@@ -1302,7 +1306,8 @@ public class TaskController {
 		// get list employee email
 		//model.addAttribute("employeeEmailMap", employeesEmail("all"));
 		model.addAttribute("reportForm", taskReportForm);
-		model.addAttribute("tasks", list);
+		model.addAttribute("tasks", listCurrent);
+		model.addAttribute("tasksNext", listNext);
 		model.addAttribute("formTitle", "Thông tin báo cáo công việc");
 		return "taskReport";
 	}
@@ -1331,14 +1336,20 @@ public class TaskController {
 			sendReportForm.setFileName("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban");
 
 		sendReportForm.setSubject(sendReportForm.getFileName() + " --> Gửi từ PM Quản lý công việc");
-		List<Task> list = null;
+		//List<Task> list = null;
 		ReportForm taskReportForm = new ReportForm();
 		taskReportForm.setFromDate(fDate);
 		taskReportForm.setToDate(tDate);
 		taskReportForm.setEmployeeId(eId);
 		taskReportForm.setDepartment(dept);
 		taskReportForm.setUnSelect(unSelected);
-		list = taskDAO.getTasksForReport(taskReportForm);
+		//list = taskDAO.getTasksForReport(taskReportForm);
+		
+		List<Task> listCurrent = null;
+		listCurrent = taskDAO.getTasksForReport(taskReportForm, "'Đang làm','Tạm dừng','Hủy bỏ','Chờ đánh giá','Đã xong'");
+
+		List<Task> listNext = null;
+		listNext = taskDAO.getTasksForReport(taskReportForm, "'Mới','Mới tạo','Đang làm','Chờ đánh giá'");
 		
 		if(isTaskId)
 			model.addAttribute("isTaskId", "Y");
@@ -1354,7 +1365,9 @@ public class TaskController {
 		// get list employee email
 		model.addAttribute("employeeEmailMap", employeesEmail("all"));
 		
-		model.addAttribute("tasks", list);
+		//model.addAttribute("tasks", list);
+		model.addAttribute("tasks", listCurrent);
+		model.addAttribute("tasksNext", listNext);
 		model.addAttribute("formTitle", "Gửi báo cáo công việc");
 		model.addAttribute("sendReportForm", sendReportForm);
 
@@ -1493,16 +1506,23 @@ public class TaskController {
 
 			PdfPTable table = new PdfPTable(5 + columnAdded);
 			addTableHeader(table, font);
-			List<Task> list = null;
+			//List<Task> list = null;
 			//List<Task> listTask = null;
-			list = taskDAO.getTasksForReport(taskReportForm);
+			//list = taskDAO.getTasksForReport(taskReportForm);
+			List<Task> listCurrent = null;
+			listCurrent = taskDAO.getTasksForReport(taskReportForm, "'Đang làm','Tạm dừng','Hủy bỏ','Chờ đánh giá','Đã xong'");
+
+			List<Task> listNext = null;
+			listNext = taskDAO.getTasksForReport(taskReportForm, "'Mới','Mới tạo','Đang làm','Chờ đánh giá'");
+			
+			
 			unSelected = taskReportForm.getUnSelect();
 			// tinh tong thoi gian da lam va tg estimate
 			float timeEstimateTotal = 0;
 			float timeSpentTotal = 0;
-			for (int i = 0; i < list.size(); i++) {
+			for (int i = 0; i < listCurrent.size(); i++) {
 				Task taskDTO = new Task();
-				taskDTO = list.get(i);
+				taskDTO = listCurrent.get(i);
 				if (taskDTO.getTimeSpent() != null && taskDTO.getTimeSpent().length() > 0) {
 					if (taskDTO.getTimeSpentType().equalsIgnoreCase("w"))
 						timeSpentTotal = timeSpentTotal
@@ -1546,22 +1566,34 @@ public class TaskController {
 			// System.err.println("time estimate:= " + estimateTT + "/time spent: " +
 			// spentTT);
 
-			addRows(table, list);
+			addRows(table, listCurrent);
 			// addCustomRows(table);
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = new Date();
 			String currentDate = dateFormat.format(date);
 			document.add(new Paragraph("                     " + fileName.substring(0, fileName.length() - 4), fontB));
 			document.add(new Paragraph("                     ", font));
-			document.add(table);
-			document.add(new Paragraph("                     ", font));
-			document.add(
-					new Paragraph(
-							"                       Tổng thời gian thực tế đã làm / Tổng thời gian ước lượng: "
-									+ spentTT + " giờ / " + estimateTT + " giờ, tương đương " + percentCurrent + "%",
-							font));
-			document.add(new Paragraph("                       Ý kiến/ Đề xuất: " + taskReportForm.getComment(), font));
+			document.add(new Paragraph("I) Kết quả thực hiện                 ", font));
 			document.add(new Paragraph("                       ", font));
+			document.add(table);
+			document.add(
+					new Paragraph("                       Tổng thời gian thực tế đã làm / Tổng thời gian ước lượng: "
+									+ spentTT + " giờ / " + estimateTT + " giờ, tương đương " + percentCurrent + "%",
+							font));	
+			document.add(new Paragraph("                     ", font));
+			document.add(new Paragraph("II) Kế hoạch                         ", font));
+			document.add(new Paragraph("                       ", font));
+			PdfPTable table1 = new PdfPTable(5 + columnAdded);
+			addTableHeader(table1, font);
+			addRows(table1, listNext);
+			document.add(table1);
+			document.add(new Paragraph("                     ", font));
+			document.add(new Paragraph("III) Đánh giá thực hiện kế hoạch: ", font));
+			document.add(new Paragraph(taskReportForm.getSummary(), font));
+			document.add(new Paragraph("                       ", font));
+					
+			document.add(new Paragraph("VI) Ý kiến/ Đề xuất: ", font));
+			document.add(new Paragraph(taskReportForm.getComment(), font));
 			document.add(new Paragraph("                       ", font));
 			document.add(new Paragraph("                       ", font));
 			document.add(new Paragraph(
@@ -1569,11 +1601,7 @@ public class TaskController {
 							+ currentDate,
 					font));
 			document.add(new Paragraph(
-					"                                                                                                                                  Người báo cáo ",
-					font));
-			document.add(new Paragraph("                       ", font));
-			document.add(new Paragraph(
-					"                                                                                                                                  "
+					"                                                                                                                                  Người báo cáo: " 
 							+ taskReportForm.getSender(),
 					font));
 

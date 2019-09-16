@@ -357,19 +357,31 @@ public class TaskDAO extends JdbcDaoSupport {
 	 * @return List of task
 	 * 
 	 */
-	public List<Task> getTasksForReport(ReportForm reportForm) {
+	public List<Task> getTasksForReport(ReportForm reportForm, String status) {
 
 		String sql = properties.getProperty("GET_TASKS_FOR_REPORT").toString();
+		
 		if (reportForm.getFromDate() != null && reportForm.getFromDate().length() > 0)
 			sql = sql.replaceAll("%FROM_DATE%", reportForm.getFromDate());
+		
 		if (reportForm.getToDate() != null && reportForm.getToDate().length() > 0)
 			sql = sql.replaceAll("%TO_DATE%", reportForm.getToDate());
+		
 		if (reportForm.getEmployeeId() > 0)
 			sql = sql + " AND T.OWNED_BY = " + reportForm.getEmployeeId();
 		else if (reportForm.getDepartment() != null && !reportForm.getDepartment().equalsIgnoreCase("all"))
 			sql = sql + " AND T.AREA = '" + reportForm.getDepartment() + "'";
-		if(reportForm.getUnSelect() != null && reportForm.getUnSelect().length() > 0)
-			sql = sql + " AND T.TASK_ID NOT IN (" + reportForm.getUnSelect() + ")";
+		
+		if(status.contains("Đã xong"))
+			if(reportForm.getUnSelect() != null && reportForm.getUnSelect().length() > 0)
+				sql = sql + " AND T.TASK_ID NOT IN (" + reportForm.getUnSelect() + ")";
+		else
+			if(reportForm.getUnSelected() != null && reportForm.getUnSelected().length() > 0)
+				sql = sql + " AND T.TASK_ID NOT IN (" + reportForm.getUnSelected() + ")";
+		
+		if(status != null && status.length() > 0)
+			sql = sql + " AND STATUS IN (" + status + ")";
+		
 		sql = sql + " ORDER BY T.UPDATE_TS DESC";
 
 		log.info("GET_TASKS_FOR_REPORT query: " + sql);
