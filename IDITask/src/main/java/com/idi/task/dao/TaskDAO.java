@@ -372,7 +372,7 @@ public class TaskDAO extends JdbcDaoSupport {
 		else if (reportForm.getDepartment() != null && !reportForm.getDepartment().equalsIgnoreCase("all"))
 			sql = sql + " AND T.AREA = '" + reportForm.getDepartment() + "'";
 		
-		if(status.contains("Đã xong"))
+		if(status != null && status.contains("Đã xong"))
 			if(reportForm.getUnSelect() != null && reportForm.getUnSelect().length() > 0)
 				sql = sql + " AND T.TASK_ID NOT IN (" + reportForm.getUnSelect() + ")";
 		else

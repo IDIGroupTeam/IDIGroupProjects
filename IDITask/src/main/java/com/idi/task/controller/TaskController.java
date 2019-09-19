@@ -1158,8 +1158,8 @@ public class TaskController {
 				BigDecimal e = new BigDecimal(timeEstimateTotal);
 				BigDecimal estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
 				
-				System.err.println("spent: " + timeSpentTotal + ":" + s + ":" + spentTT);
-				System.err.println("estimate:" + timeEstimateTotal +":" + e + ":" + estimateTT);
+				//System.err.println("spent: " + timeSpentTotal + ":" + s + ":" + spentTT);
+				//System.err.println("estimate:" + timeEstimateTotal +":" + e + ":" + estimateTT);
 				taskSummay.setTotalEstimate(estimateTT.toString());
 				taskSummay.setTotalSpent(spentTT.toString());
 				listTaskSummary.add(taskSummay);
@@ -1211,8 +1211,8 @@ public class TaskController {
 					BigDecimal e = new BigDecimal(timeEstimateTotal);
 					BigDecimal estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
 					
-					System.err.println("spent: " + timeSpentTotal + ":" + s + ":" + spentTT);
-					System.err.println("estimate:" + timeEstimateTotal +":" + e + ":" + estimateTT);
+					//System.err.println("spent: " + timeSpentTotal + ":" + s + ":" + spentTT);
+					//System.err.println("estimate:" + timeEstimateTotal +":" + e + ":" + estimateTT);
 					taskSummay.setTotalEstimate(estimateTT.toString());
 					taskSummay.setTotalSpent(spentTT.toString());
 					
@@ -1265,8 +1265,8 @@ public class TaskController {
 					BigDecimal e = new BigDecimal(timeEstimateTotal);
 					BigDecimal estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
 					
-					System.err.println("spent: " + timeSpentTotal + ":" + s + ":" + spentTT);
-					System.err.println("estimate:" + timeEstimateTotal +":" + e + ":" + estimateTT);
+					//System.err.println("spent: " + timeSpentTotal + ":" + s + ":" + spentTT);
+					//System.err.println("estimate:" + timeEstimateTotal +":" + e + ":" + estimateTT);
 					taskSummay.setTotalEstimate(estimateTT.toString());
 					taskSummay.setTotalSpent(spentTT.toString());					
 					
