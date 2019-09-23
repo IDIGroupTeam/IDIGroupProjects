@@ -46,6 +46,7 @@ tr:nth-child(even) {
 			của ${reportForm.employeeName}
        	</c:if>
 		<c:if test="${reportForm.department != 'all'}"> phòng ${reportForm.department}</c:if>
+		<c:if test="${reportForm.department == 'all'}"> tất cả các phòng ban</c:if>
 	</h3>
 	<br />
 	<input type="hidden" name="employeeName" value="${tasks[0].ownerName}">
