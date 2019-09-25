@@ -59,7 +59,7 @@ $(function(){
 			value="Gửi báo cáo" /> &nbsp;
 		<br />	<br />
 		<form:input type="hidden" path="fileName" value="${sendReportForm.fileName}" />
-		<form:input type="hidden" path="subject" value="${sendReportForm.subject}" />
+		<%-- <form:input type="hidden" path="subject" value="${sendReportForm.subject}" /> --%>
 		<table class="table table-bordered table-hover">
 			<tr>
 				<td nowrap="nowrap" title="Nhập chính xác địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com. Các email cách nhau bằng dấu ';' ">Gửi tới:(*)</td>
