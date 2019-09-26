@@ -77,21 +77,29 @@
 									target="_blank">${duLieuKeToanCon.hangHoa.tenHh}</a></td>
 								<td>${duLieuKeToanCon.hangHoa.donVi.tenDv}</td>
 								<td><fmt:formatNumber
-										value="${duLieuKeToanCon.soLuongDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+										value="${duLieuKeToanCon.soLuongDuDauKy}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
 								<td class="text-right"><fmt:formatNumber
-										value="${duLieuKeToanCon.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+										value="${duLieuKeToanCon.soDuDauKy}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
 								<td><fmt:formatNumber
-										value="${duLieuKeToanCon.soLuongNhapPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+										value="${duLieuKeToanCon.soLuongNhapPhatSinh}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
 								<td class="text-right"><fmt:formatNumber
-										value="${duLieuKeToanCon.tongNoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+										value="${duLieuKeToanCon.tongNoPhatSinh}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
 								<td><fmt:formatNumber
-										value="${duLieuKeToanCon.soLuongXuatPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+										value="${duLieuKeToanCon.soLuongXuatPhatSinh}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
 								<td class="text-right"><fmt:formatNumber
-										value="${duLieuKeToanCon.tongCoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+										value="${duLieuKeToanCon.tongCoPhatSinh}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
 								<td><fmt:formatNumber
-										value="${duLieuKeToanCon.soLuongDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+										value="${duLieuKeToanCon.soLuongDuCuoiKy}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
 								<td class="text-right"><fmt:formatNumber
-										value="${duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+										value="${duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
 							</tr>
 						</c:forEach>
 					</c:when>

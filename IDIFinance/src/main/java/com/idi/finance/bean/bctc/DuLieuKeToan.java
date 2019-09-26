@@ -25,15 +25,23 @@ public class DuLieuKeToan {
 	private int chieu = ChungTu.MUA;
 
 	private double soDuDauKy;
+	private double soDuDauKyNt;
 	private double noDauKy;
+	private double noDauKyNt;
 	private double coDauKy;
+	private double coDauKyNt;
 
 	private double soDuCuoiKy;
+	private double soDuCuoiKyNt;
 	private double noCuoiKy;
+	private double noCuoiKyNt;
 	private double coCuoiKy;
+	private double coCuoiKyNt;
 
 	private double tongNoPhatSinh;
+	private double tongNoPhatSinhNt;
 	private double tongCoPhatSinh;
+	private double tongCoPhatSinhNt;
 
 	private double soLuongDuDauKy;
 	private double soLuongNhapDauKy;
@@ -127,6 +135,14 @@ public class DuLieuKeToan {
 		this.soDuDauKy = soDuDauKy;
 	}
 
+	public double getSoDuDauKyNt() {
+		return soDuDauKyNt;
+	}
+
+	public void setSoDuDauKyNt(double soDuDauKyNt) {
+		this.soDuDauKyNt = soDuDauKyNt;
+	}
+
 	public double getNoDauKy() {
 		return noDauKy;
 	}
@@ -134,6 +150,14 @@ public class DuLieuKeToan {
 	public void setNoDauKy(double noDauKy) {
 		this.noDauKy = noDauKy;
 		capNhatNoCoCuoiKy();
+	}
+
+	public double getNoDauKyNt() {
+		return noDauKyNt;
+	}
+
+	public void setNoDauKyNt(double noDauKyNt) {
+		this.noDauKyNt = noDauKyNt;
 	}
 
 	public double getCoDauKy() {
@@ -145,12 +169,28 @@ public class DuLieuKeToan {
 		capNhatNoCoCuoiKy();
 	}
 
+	public double getCoDauKyNt() {
+		return coDauKyNt;
+	}
+
+	public void setCoDauKyNt(double coDauKyNt) {
+		this.coDauKyNt = coDauKyNt;
+	}
+
 	public double getSoDuCuoiKy() {
 		return soDuCuoiKy;
 	}
 
 	public void setSoDuCuoiKy(double soDuCuoiKy) {
 		this.soDuCuoiKy = soDuCuoiKy;
+	}
+
+	public double getSoDuCuoiKyNt() {
+		return soDuCuoiKyNt;
+	}
+
+	public void setSoDuCuoiKyNt(double soDuCuoiKyNt) {
+		this.soDuCuoiKyNt = soDuCuoiKyNt;
 	}
 
 	public double getNoCuoiKy() {
@@ -161,12 +201,28 @@ public class DuLieuKeToan {
 		this.noCuoiKy = noCuoiKy;
 	}
 
+	public double getNoCuoiKyNt() {
+		return noCuoiKyNt;
+	}
+
+	public void setNoCuoiKyNt(double noCuoiKyNt) {
+		this.noCuoiKyNt = noCuoiKyNt;
+	}
+
 	public double getCoCuoiKy() {
 		return coCuoiKy;
 	}
 
 	public void setCoCuoiKy(double coCuoiKy) {
 		this.coCuoiKy = coCuoiKy;
+	}
+
+	public double getCoCuoiKyNt() {
+		return coCuoiKyNt;
+	}
+
+	public void setCoCuoiKyNt(double coCuoiKyNt) {
+		this.coCuoiKyNt = coCuoiKyNt;
 	}
 
 	public double getTongNoPhatSinh() {
@@ -178,6 +234,14 @@ public class DuLieuKeToan {
 		capNhatNoCoCuoiKy();
 	}
 
+	public double getTongNoPhatSinhNt() {
+		return tongNoPhatSinhNt;
+	}
+
+	public void setTongNoPhatSinhNt(double tongNoPhatSinhNt) {
+		this.tongNoPhatSinhNt = tongNoPhatSinhNt;
+	}
+
 	public double getTongCoPhatSinh() {
 		return tongCoPhatSinh;
 	}
@@ -185,6 +249,14 @@ public class DuLieuKeToan {
 	public void setTongCoPhatSinh(double tongCoPhatSinh) {
 		this.tongCoPhatSinh = tongCoPhatSinh;
 		capNhatNoCoCuoiKy();
+	}
+
+	public double getTongCoPhatSinhNt() {
+		return tongCoPhatSinhNt;
+	}
+
+	public void setTongCoPhatSinhNt(double tongCoPhatSinhNt) {
+		this.tongCoPhatSinhNt = tongCoPhatSinhNt;
 	}
 
 	public double getSoLuongDuDauKy() {

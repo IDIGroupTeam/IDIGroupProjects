@@ -52,6 +52,7 @@ import com.idi.finance.dao.ChungTuDAO;
 import com.idi.finance.dao.HangHoaDAO;
 import com.idi.finance.dao.KhachHangDAO;
 import com.idi.finance.dao.KyKeToanDAO;
+import com.idi.finance.dao.LoaiTienDAO;
 import com.idi.finance.dao.NhaCungCapDAO;
 import com.idi.finance.dao.NhanVienDAO;
 import com.idi.finance.dao.SoKeToanDAO;
@@ -75,6 +76,9 @@ public class KyKeToanController {
 
 	@Autowired
 	TaiKhoanDAO taiKhoanDAO;
+
+	@Autowired
+	LoaiTienDAO loaiTienDAO;
 
 	@Autowired
 	SoKeToanDAO soKeToanDAO;
@@ -187,7 +191,7 @@ public class KyKeToanController {
 
 			// LẤY CÁC THÔNG TIN CHUẨN BỊ CHO CÁC MODAL TỌA MỚI
 			// Danh sách loại tiền
-			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
+			List<LoaiTien> loaiTienDs = loaiTienDAO.danhSachLoaiTien();
 
 			// Danh sách khách hàng
 			List<KhachHang> khDs = khachHangDAO.danhSachKhachHang();

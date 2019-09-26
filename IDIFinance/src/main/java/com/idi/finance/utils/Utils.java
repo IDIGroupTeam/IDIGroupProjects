@@ -309,6 +309,17 @@ public class Utils {
 		// System.out.println(Float.valueOf(4.6f) + Float.valueOf(5.8f));
 		System.out.println(Double.valueOf("4.6") + Double.valueOf("5.8"));
 		System.out.println((Double.valueOf(4.6) + Double.valueOf(5.8)));
+
+		double x = 12.7;
+		double y = 3.1;
+		double z = x / y;
+		double t = x + y;
+		System.out.println("x: " + x);
+		System.out.println("y: " + y);
+		System.out.println("z: " + z);
+		System.out.println("y*z: " + (y * z));
+		System.out.println("t: " + t);
+		System.out.println("t-y: " + (t - y));
 	}
 
 	public static double round(double value) {

@@ -697,6 +697,12 @@
 		<put-attribute name="body"
 			value="/pages/doitac/nganhang/nganHangTaiKhoanSu.jsp" />
 	</definition>
+
+	<definition name="danhSachLoaiTien" extends="taichinh">
+		<put-attribute name="title" value="Danh sách loại tiền" />
+		<put-attribute name="body"
+			value="/pages/loaitien/loaiTienDs.jsp" />
+	</definition>
 	<!-- Kết thúc Tab quản trị -->
 
 

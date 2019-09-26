@@ -180,4 +180,9 @@
 		class="com.idi.finance.dao.impl.KhoHangDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
+
+	<bean id="loaiTienDAO"
+		class="com.idi.finance.dao.impl.LoaiTienDAOImpl">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
 </beans>

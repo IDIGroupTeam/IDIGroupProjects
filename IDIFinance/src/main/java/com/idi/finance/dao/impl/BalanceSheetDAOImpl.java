@@ -50,9 +50,6 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	@Value("${LAY_CDKT_CUOI_KY}")
 	private String LAY_CDKT_CUOI_KY;
 
-	@Value("${TINH_CDKT_THEO_MATK}")
-	private String TINH_CDKT_THEO_MATK;
-
 	@Value("${TINH_CDKT_DAU_KY}")
 	private String TINH_CDKT_DAU_KY;
 
@@ -1443,26 +1440,6 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		}
 
 		return bad;
-	}
-
-	@Override
-	public List<BalanceAssetData> calculateBs(Date start, Date end) {
-		if (start == null || end == null) {
-			return null;
-		}
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
-		String batDau = sdf.format(start);
-		String ketThuc = sdf.format(end);
-
-		String query = TINH_CDKT_THEO_MATK;
-		logger.info(query);
-		logger.info("Từ " + batDau + " đến " + ketThuc);
-
-		Object[] params = { batDau, ketThuc, batDau, ketThuc, batDau, ketThuc };
-		List<BalanceAssetData> bads = jdbcTmpl.query(query, params, new BalanceAssetDataMapper());
-
-		return bads;
 	}
 
 	@Override

@@ -80,9 +80,11 @@
 					<td></td>
 					<td></td>
 					<td><b><fmt:formatNumber
-								value="${duLieuKeToan.soLuongDuDauKy}" type="NUMBER"></fmt:formatNumber></b></td>
+								value="${duLieuKeToan.soLuongDuDauKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></b></td>
 					<td class="text-right"><b><fmt:formatNumber
-								value="${duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></b></td>
+								value="${duLieuKeToan.soDuDauKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></b></td>
 					<!-- <td></td> -->
 				</tr>
 				<c:forEach items="${duLieuKeToan.nghiepVuKeToanDs}"
@@ -118,19 +120,20 @@
 												test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">
 												<fmt:formatNumber
 													value="${nghiepVuKeToan.hangHoa.donGia.giaTri}"
-													type="NUMBER"></fmt:formatNumber>
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber>
 											</c:when>
 											<c:otherwise>
 												<fmt:formatNumber
 													value="${nghiepVuKeToan.hangHoa.giaKho.giaTri}"
-													type="NUMBER"></fmt:formatNumber>
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber>
 											</c:otherwise>
 										</c:choose></td>
 									<td><fmt:formatNumber
-											value="${nghiepVuKeToan.hangHoa.soLuong}" type="NUMBER"></fmt:formatNumber></td>
+											value="${nghiepVuKeToan.hangHoa.soLuong}" type="NUMBER"
+											maxFractionDigits="0"></fmt:formatNumber></td>
 									<td class="text-right"><fmt:formatNumber
 											value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-											type="NUMBER"></fmt:formatNumber></td>
+											type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 									<td>0</td>
 									<td class="text-right">0</td>
 								</c:if>
@@ -143,26 +146,28 @@
 												test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">
 												<fmt:formatNumber
 													value="${nghiepVuKeToan.hangHoa.donGia.giaTri}"
-													type="NUMBER"></fmt:formatNumber>
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber>
 											</c:when>
 											<c:otherwise>
 												<fmt:formatNumber
 													value="${nghiepVuKeToan.hangHoa.giaKho.giaTri}"
-													type="NUMBER"></fmt:formatNumber>
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber>
 											</c:otherwise>
 										</c:choose></td>
 									<td>0</td>
 									<td class="text-right">0</td>
 									<td><fmt:formatNumber
-											value="${nghiepVuKeToan.hangHoa.soLuong}" type="NUMBER"></fmt:formatNumber></td>
+											value="${nghiepVuKeToan.hangHoa.soLuong}" type="NUMBER"
+											maxFractionDigits="0"></fmt:formatNumber></td>
 									<td class="text-right"><fmt:formatNumber
 											value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-											type="NUMBER"></fmt:formatNumber></td>
+											type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 								</c:if>
 								<td><fmt:formatNumber value="${nghiepVuKeToan.slTon}"
-										type="NUMBER"></fmt:formatNumber></td>
+										type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 								<td class="text-right"><fmt:formatNumber
-										value="${nghiepVuKeToan.ton}" type="NUMBER"></fmt:formatNumber></td>
+										value="${nghiepVuKeToan.ton}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
 								<!-- <td></td> -->
 							</c:when>
 							<c:when
@@ -177,19 +182,20 @@
 												test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">
 												<fmt:formatNumber
 													value="${nghiepVuKeToan.hangHoa.donGia.giaTri}"
-													type="NUMBER"></fmt:formatNumber>
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber>
 											</c:when>
 											<c:otherwise>
 												<fmt:formatNumber
 													value="${nghiepVuKeToan.hangHoa.giaKho.giaTri}"
-													type="NUMBER"></fmt:formatNumber>
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber>
 											</c:otherwise>
 										</c:choose></td>
 									<td><fmt:formatNumber
-											value="${nghiepVuKeToan.hangHoa.soLuong}" type="NUMBER"></fmt:formatNumber></td>
+											value="${nghiepVuKeToan.hangHoa.soLuong}" type="NUMBER"
+											maxFractionDigits="0"></fmt:formatNumber></td>
 									<td class="text-right"><fmt:formatNumber
 											value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-											type="NUMBER"></fmt:formatNumber></td>
+											type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 									<td>0</td>
 									<td class="text-right">0</td>
 								</c:if>
@@ -202,26 +208,28 @@
 												test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">
 												<fmt:formatNumber
 													value="${nghiepVuKeToan.hangHoa.donGia.giaTri}"
-													type="NUMBER"></fmt:formatNumber>
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber>
 											</c:when>
 											<c:otherwise>
 												<fmt:formatNumber
 													value="${nghiepVuKeToan.hangHoa.giaKho.giaTri}"
-													type="NUMBER"></fmt:formatNumber>
+													type="NUMBER" maxFractionDigits="0"></fmt:formatNumber>
 											</c:otherwise>
 										</c:choose></td>
 									<td>0</td>
 									<td class="text-right">0</td>
 									<td><fmt:formatNumber
-											value="${nghiepVuKeToan.hangHoa.soLuong}" type="NUMBER"></fmt:formatNumber></td>
+											value="${nghiepVuKeToan.hangHoa.soLuong}" type="NUMBER"
+											maxFractionDigits="0"></fmt:formatNumber></td>
 									<td class="text-right"><fmt:formatNumber
 											value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-											type="NUMBER"></fmt:formatNumber></td>
+											type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 								</c:if>
 								<td><fmt:formatNumber value="${nghiepVuKeToan.slTon}"
-										type="NUMBER"></fmt:formatNumber></td>
+										type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 								<td class="text-right"><fmt:formatNumber
-										value="${nghiepVuKeToan.ton}" type="NUMBER"></fmt:formatNumber></td>
+										value="${nghiepVuKeToan.ton}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
 								<!-- <td></td> -->
 							</c:when>
 						</c:choose>
@@ -234,17 +242,23 @@
 					<td></td>
 					<td></td>
 					<td><b><fmt:formatNumber
-								value="${duLieuKeToan.soLuongNhapPhatSinh}" type="NUMBER"></fmt:formatNumber></b></td>
+								value="${duLieuKeToan.soLuongNhapPhatSinh}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></b></td>
 					<td class="text-right"><b><fmt:formatNumber
-								value="${duLieuKeToan.tongNoPhatSinh}" type="NUMBER"></fmt:formatNumber></b></td>
+								value="${duLieuKeToan.tongNoPhatSinh}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></b></td>
 					<td><b><fmt:formatNumber
-								value="${duLieuKeToan.soLuongXuatPhatSinh}" type="NUMBER"></fmt:formatNumber></b></td>
+								value="${duLieuKeToan.soLuongXuatPhatSinh}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></b></td>
 					<td class="text-right"><b><fmt:formatNumber
-								value="${duLieuKeToan.tongCoPhatSinh}" type="NUMBER"></fmt:formatNumber></b></td>
+								value="${duLieuKeToan.tongCoPhatSinh}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></b></td>
 					<td><b><fmt:formatNumber
-								value="${duLieuKeToan.soLuongDuCuoiKy}" type="NUMBER"></fmt:formatNumber></b></td>
+								value="${duLieuKeToan.soLuongDuCuoiKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></b></td>
 					<td class="text-right"><b><fmt:formatNumber
-								value="${duLieuKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></b></td>
+								value="${duLieuKeToan.soDuCuoiKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></b></td>
 					<!-- <td></td> -->
 				</tr>
 				<%-- <tr>
@@ -258,9 +272,9 @@
 					<td></td>
 					<td></td>
 					<td><b><fmt:formatNumber
-								value="${duLieuKeToan.soLuongDuCuoiKy}" type="NUMBER"></fmt:formatNumber></b></td>
+								value="${duLieuKeToan.soLuongDuCuoiKy}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
 					<td class="text-right"><b><fmt:formatNumber
-								value="${duLieuKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></b></td>
+								value="${duLieuKeToan.soDuCuoiKy}" type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></b></td>
 					<td></td>
 				</tr> --%>
 			</c:forEach>

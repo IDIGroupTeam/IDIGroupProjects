@@ -52,6 +52,7 @@ import com.idi.finance.dao.HangHoaDAO;
 import com.idi.finance.dao.KhachHangDAO;
 import com.idi.finance.dao.KhoHangDAO;
 import com.idi.finance.dao.KyKeToanDAO;
+import com.idi.finance.dao.LoaiTienDAO;
 import com.idi.finance.dao.NhaCungCapDAO;
 import com.idi.finance.dao.NhanVienDAO;
 import com.idi.finance.dao.SoKeToanDAO;
@@ -81,6 +82,9 @@ public class ChungTuController {
 
 	@Autowired
 	TaiKhoanDAO taiKhoanDAO;
+
+	@Autowired
+	LoaiTienDAO loaiTienDAO;
 
 	@Autowired
 	ChungTuDAO chungTuDAO;
@@ -353,7 +357,7 @@ public class ChungTuController {
 			model.addAttribute("homNay", homNay);
 
 			// Lấy danh sách các loại tiền
-			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
+			List<LoaiTien> loaiTienDs = loaiTienDAO.danhSachLoaiTien();
 			model.addAttribute("loaiTienDs", loaiTienDs);
 
 			// Lấy danh sách tài khoản tiền mặt, dùng cho bên nợ
@@ -614,7 +618,7 @@ public class ChungTuController {
 			model.addAttribute("homNay", homNay);
 
 			// Lấy danh sách các loại tiền
-			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
+			List<LoaiTien> loaiTienDs = loaiTienDAO.danhSachLoaiTien();
 			model.addAttribute("loaiTienDs", loaiTienDs);
 
 			// Lấy danh sách tài khoản tiền mặt, dùng cho bên có
@@ -874,7 +878,7 @@ public class ChungTuController {
 			model.addAttribute("homNay", homNay);
 
 			// Lấy danh sách các loại tiền
-			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
+			List<LoaiTien> loaiTienDs = loaiTienDAO.danhSachLoaiTien();
 			model.addAttribute("loaiTienDs", loaiTienDs);
 
 			// Lấy danh sách tài khoản tiền gửi ngân hàng, dùng cho bên nợ
@@ -1134,7 +1138,7 @@ public class ChungTuController {
 			model.addAttribute("homNay", homNay);
 
 			// Lấy danh sách các loại tiền
-			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
+			List<LoaiTien> loaiTienDs = loaiTienDAO.danhSachLoaiTien();
 			model.addAttribute("loaiTienDs", loaiTienDs);
 
 			// Lấy danh sách tài khoản tiền gửi ngân hàng, dùng cho bên có
@@ -1395,7 +1399,7 @@ public class ChungTuController {
 			model.addAttribute("mainFinanceForm", chungTu);
 
 			// Lấy danh sách các loại tiền
-			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
+			List<LoaiTien> loaiTienDs = loaiTienDAO.danhSachLoaiTien();
 			model.addAttribute("loaiTienDs", loaiTienDs);
 
 			// Lấy danh sách tài khoản, dùng cho bên nợ & có
@@ -1874,7 +1878,7 @@ public class ChungTuController {
 			model.addAttribute("loaiTaiKhoanNkDs", loaiTaiKhoanNkDs);
 
 			// Lấy danh sách các loại tiền
-			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
+			List<LoaiTien> loaiTienDs = loaiTienDAO.danhSachLoaiTien();
 			model.addAttribute("loaiTienDs", loaiTienDs);
 
 			// Lấy danh sách tài khoản, dùng cho bên nợ & có
@@ -2328,7 +2332,7 @@ public class ChungTuController {
 			model.addAttribute("loaiTaiKhoanXkDs", loaiTaiKhoanXkDs);
 
 			// Lấy danh sách các loại tiền
-			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
+			List<LoaiTien> loaiTienDs = loaiTienDAO.danhSachLoaiTien();
 			model.addAttribute("loaiTienDs", loaiTienDs);
 
 			// Lấy danh sách tài khoản, dùng cho bên nợ & có

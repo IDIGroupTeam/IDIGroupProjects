@@ -66,14 +66,14 @@
 						<c:when test="${taiKhoan.soDu==LoaiTaiKhoan.NO}">
 							<td><fmt:formatNumber
 									value="${taiKhoan.soTien.soTien*taiKhoan.chungTu.loaiTien.banRa}"
-									maxFractionDigits="2"></fmt:formatNumber></td>
+									maxFractionDigits="0"></fmt:formatNumber></td>
 							<td></td>
 						</c:when>
 						<c:when test="${taiKhoan.soDu==LoaiTaiKhoan.CO}">
 							<td></td>
 							<td><fmt:formatNumber
 									value="${taiKhoan.soTien.soTien*taiKhoan.chungTu.loaiTien.banRa}"
-									maxFractionDigits="2"></fmt:formatNumber></td>
+									maxFractionDigits="0"></fmt:formatNumber></td>
 						</c:when>
 						<c:otherwise>
 							<td></td>

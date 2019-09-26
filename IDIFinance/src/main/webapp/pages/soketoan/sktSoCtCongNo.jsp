@@ -80,9 +80,11 @@
 						<td><b>Số dư đầu kỳ</b></td>
 						<td></td>
 						<td class="text-right"><fmt:formatNumber
-								value="${doiTuong.duLieuKeToan.noDauKy}" type="NUMBER"></fmt:formatNumber></td>
+								value="${doiTuong.duLieuKeToan.noDauKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 						<td class="text-right"><fmt:formatNumber
-								value="${doiTuong.duLieuKeToan.coDauKy}" type="NUMBER"></fmt:formatNumber></td>
+								value="${doiTuong.duLieuKeToan.coDauKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 						<td></td>
 						<td></td>
 					</tr>
@@ -152,7 +154,7 @@
 										<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
 										<td class="text-right"><fmt:formatNumber
 												value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-												type="NUMBER"></fmt:formatNumber></td>
+												type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 										<td class="text-right">0</td>
 									</c:if>
 									<c:if
@@ -162,7 +164,7 @@
 										<td class="text-right">0</td>
 										<td class="text-right"><fmt:formatNumber
 												value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-												type="NUMBER"></fmt:formatNumber></td>
+												type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 									</c:if>
 									<td></td>
 									<td></td>
@@ -176,7 +178,7 @@
 										<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
 										<td class="text-right"><fmt:formatNumber
 												value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-												type="NUMBER"></fmt:formatNumber></td>
+												type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 										<td class="text-right">0</td>
 									</c:if>
 									<c:if
@@ -186,7 +188,7 @@
 										<td class="text-right">0</td>
 										<td class="text-right"><fmt:formatNumber
 												value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
-												type="NUMBER"></fmt:formatNumber></td>
+												type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 									</c:if>
 									<td></td>
 									<td></td>
@@ -200,9 +202,11 @@
 						<td><b>Tổng phát sinh trong kỳ</b></td>
 						<td></td>
 						<td class="text-right"><fmt:formatNumber
-								value="${doiTuong.duLieuKeToan.tongNoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+								value="${doiTuong.duLieuKeToan.tongNoPhatSinh}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 						<td class="text-right"><fmt:formatNumber
-								value="${doiTuong.duLieuKeToan.tongCoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+								value="${doiTuong.duLieuKeToan.tongCoPhatSinh}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 						<td></td>
 						<td></td>
 					</tr>
@@ -212,9 +216,11 @@
 						<td><b>Số dư cuối kỳ</b></td>
 						<td></td>
 						<td class="text-right"><fmt:formatNumber
-								value="${doiTuong.duLieuKeToan.noCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+								value="${doiTuong.duLieuKeToan.noCuoiKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 						<td class="text-right"><fmt:formatNumber
-								value="${doiTuong.duLieuKeToan.coCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+								value="${doiTuong.duLieuKeToan.coCuoiKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 						<td></td>
 						<td></td>
 					</tr>

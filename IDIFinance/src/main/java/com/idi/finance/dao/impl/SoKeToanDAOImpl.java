@@ -25,7 +25,6 @@ import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.bean.taikhoan.TaiKhoan;
 import com.idi.finance.dao.SoKeToanDAO;
-import com.idi.finance.utils.Utils;
 
 public class SoKeToanDAOImpl implements SoKeToanDAO {
 	private static final Logger logger = Logger.getLogger(SoKeToanDAOImpl.class);

@@ -173,6 +173,18 @@ public class ChungTuValidator implements Validator {
 					errors.rejectValue("loaiTien.banRa", "NotEmptyOrEqual0.chungTu.loaiTien.banRa");
 				}
 
+				try {
+					if (chungTu.getMaCt() == 0) {
+						int count = chungTuDAO.kiemTraSoChungTu(chungTu.getSoCt(), chungTu.getLoaiCt(),
+								kyKeToan.getBatDau(), kyKeToan.getKetThuc());
+						if (count > 0) {
+							errors.rejectValue("soCt", "Existed.chungTu.soCt");
+						}
+					}
+				} catch (Exception e) {
+					// logger.info(e.getMessage());
+				}
+
 				if (chungTu.getHangHoaDs() != null) {
 					int id = 0;
 					Iterator<HangHoa> iter = chungTu.getHangHoaDs().iterator();
@@ -304,6 +316,18 @@ public class ChungTuValidator implements Validator {
 
 				if (chungTu.getLoaiTien().getBanRa() == 0) {
 					errors.rejectValue("loaiTien.banRa", "NotEmptyOrEqual0.chungTu.loaiTien.banRa");
+				}
+
+				try {
+					if (chungTu.getMaCt() == 0) {
+						int count = chungTuDAO.kiemTraSoChungTu(chungTu.getSoCt(), chungTu.getLoaiCt(),
+								kyKeToan.getBatDau(), kyKeToan.getKetThuc());
+						if (count > 0) {
+							errors.rejectValue("soCt", "Existed.chungTu.soCt");
+						}
+					}
+				} catch (Exception e) {
+					// logger.info(e.getMessage());
 				}
 
 				if (chungTu.getHangHoaDs() != null) {
@@ -448,6 +472,18 @@ public class ChungTuValidator implements Validator {
 
 				if (chungTu.getLoaiTien().getBanRa() == 0) {
 					errors.rejectValue("loaiTien.banRa", "NotEmptyOrEqual0.chungTu.loaiTien.banRa");
+				}
+
+				try {
+					if (chungTu.getMaCt() == 0) {
+						int count = chungTuDAO.kiemTraSoChungTu(chungTu.getSoCt(), chungTu.getLoaiCt(),
+								kyKeToan.getBatDau(), kyKeToan.getKetThuc());
+						if (count > 0) {
+							errors.rejectValue("soCt", "Existed.chungTu.soCt");
+						}
+					}
+				} catch (Exception e) {
+					// logger.info(e.getMessage());
 				}
 
 				// Kiểm tra dữ liệu phần định khoản

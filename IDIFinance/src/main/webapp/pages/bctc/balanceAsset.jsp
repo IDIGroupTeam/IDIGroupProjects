@@ -187,11 +187,11 @@
 					<td>${bad.asset.note}</td>
 					<td><c:if test="${bad.startValue!=0}">
 							<fmt:formatNumber value="${bad.startValue}" type="NUMBER"
-								maxFractionDigits="1"></fmt:formatNumber>
+								maxFractionDigits="0"></fmt:formatNumber>
 						</c:if></td>
 					<td><c:if test="${bad.endValue!=0}">
 							<fmt:formatNumber value="${bad.endValue}" type="NUMBER"
-								maxFractionDigits="1"></fmt:formatNumber>
+								maxFractionDigits="0"></fmt:formatNumber>
 						</c:if></td>
 					<td><c:if test="${bad.changedRatio!=0}">
 							<fmt:formatNumber value="${bad.changedRatio}" type="PERCENT"

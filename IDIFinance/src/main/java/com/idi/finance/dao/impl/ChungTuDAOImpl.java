@@ -743,29 +743,6 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 	}
 
 	@Override
-	public List<LoaiTien> danhSachLoaiTien() {
-		String query = DANH_SACH_LOAI_TIEN;
-
-		logger.info("Danh sách các loại tiền ...");
-		logger.info(query);
-
-		List<LoaiTien> loaiTienDs = jdbcTmpl.query(query, new LoaiTienMapper());
-		return loaiTienDs;
-	}
-
-	public class LoaiTienMapper implements RowMapper<LoaiTien> {
-		public LoaiTien mapRow(ResultSet rs, int rowNum) throws SQLException {
-			LoaiTien loaiTien = new LoaiTien();
-			loaiTien.setMaLt(rs.getString("MA_NT"));
-			loaiTien.setTenLt(rs.getString("TEN_NT"));
-			loaiTien.setMuaTM(rs.getDouble("MUA_TM"));
-			loaiTien.setMuaCk(rs.getDouble("MUA_CK"));
-			loaiTien.setBanRa(rs.getDouble("BAN_RA"));
-			return loaiTien;
-		}
-	}
-
-	@Override
 	public void themChungTu(ChungTu chungTu) {
 		String themChungTu = THEM_CHUNG_TU;
 		String themTaiKhoan = THEM_TAI_KHOAN;

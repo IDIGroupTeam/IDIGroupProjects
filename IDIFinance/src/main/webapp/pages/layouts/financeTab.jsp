@@ -116,7 +116,8 @@
 					sách ngân hàng</a></li>
 			<li id="tabDSNHTK"><a href="${url}/nganhang/taikhoan/danhsach">Danh
 					sách tài khoản ngân hàng</a></li>
-			<li id="tabDSNT"><a href="#">Danh sách ngoại tệ</a></li>
+			<li id="tabDSLT"><a href="${url}/loaitien/danhsach">Danh
+					sách loại tiền</a></li>
 
 			<%-- <li id="tabCNDL"><a href="${url}/bctc/capnhatdulieu">Cập nhật dữ liệu</a></li> --%>
 		</ul></li>

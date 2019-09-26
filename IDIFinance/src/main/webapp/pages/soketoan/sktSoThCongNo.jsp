@@ -71,26 +71,32 @@
 						<td>${duLieuKeToanCon.doiTuong.diaChi}</td>
 						<td>${duLieuKeToanCon.loaiTaiKhoan.maTk}</td>
 						<td class="text-right" style="width: 100px;"><fmt:formatNumber
-								value="${duLieuKeToanCon.noDauKy}" type="NUMBER"></fmt:formatNumber></td>
+								value="${duLieuKeToanCon.noDauKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 						<td class="text-right" style="width: 100px;"><fmt:formatNumber
-								value="${duLieuKeToanCon.coDauKy}" type="NUMBER"></fmt:formatNumber></td>
+								value="${duLieuKeToanCon.coDauKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 						<td class="text-right" style="width: 100px;"><fmt:formatNumber
-								value="${duLieuKeToanCon.tongNoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+								value="${duLieuKeToanCon.tongNoPhatSinh}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 						<td class="text-right" style="width: 100px;"><fmt:formatNumber
-								value="${duLieuKeToanCon.tongCoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+								value="${duLieuKeToanCon.tongCoPhatSinh}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 
 						<c:choose>
 							<c:when test="${loaiTaiKhoan.luongTinh}">
 								<c:choose>
 									<c:when test="${duLieuKeToanCon.soDuCuoiKy > 0}">
 										<td class="text-right" style="width: 100px;"><fmt:formatNumber
-												value="${duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+												value="${duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"
+												maxFractionDigits="0"></fmt:formatNumber></td>
 										<td class="text-right" style="width: 100px;">0</td>
 									</c:when>
 									<c:otherwise>
 										<td class="text-right" style="width: 100px;">0</td>
 										<td class="text-right" style="width: 100px;"><fmt:formatNumber
-												value="${0-duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+												value="${0-duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"
+												maxFractionDigits="0"></fmt:formatNumber></td>
 									</c:otherwise>
 								</c:choose>
 							</c:when>
@@ -98,13 +104,15 @@
 								<c:choose>
 									<c:when test="${loaiTaiKhoan.soDu == LoaiTaiKhoan.NO}">
 										<td class="text-right" style="width: 100px;"><fmt:formatNumber
-												value="${duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+												value="${duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"
+												maxFractionDigits="0"></fmt:formatNumber></td>
 										<td class="text-right" style="width: 100px;">0</td>
 									</c:when>
 									<c:otherwise>
 										<td class="text-right" style="width: 100px;">0</td>
 										<td class="text-right" style="width: 100px;"><fmt:formatNumber
-												value="${duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+												value="${duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"
+												maxFractionDigits="0"></fmt:formatNumber></td>
 									</c:otherwise>
 								</c:choose>
 							</c:otherwise>
