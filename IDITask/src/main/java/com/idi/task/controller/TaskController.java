@@ -1,6 +1,7 @@
 package com.idi.task.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -17,12 +18,19 @@ import java.util.StringTokenizer;
 //import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -1271,6 +1279,7 @@ public class TaskController {
 					taskSummay.setTotalSpent(spentTT.toString());					
 					
 					listTaskSummary.add(taskSummay);
+					
 				}
 			}
 		} catch (Exception e) {
@@ -1282,6 +1291,683 @@ public class TaskController {
 		return "taskSummaryReport";
 	}
 
+	@RequestMapping("/exportSummaryToPDF")
+	public String getSummaryReportToPDF(Model model,
+			@RequestParam(required = false, value = "fDate") String fDate,
+			@RequestParam(required = false, value = "tDate") String tDate, 
+			@RequestParam(required = false, value = "eId") String eId, 			
+			@RequestParam(required = false, value = "dept") String dept	) throws Exception{		
+		
+		String fileName = "Thống kê khối lượng công việc";		
+		String path = properties.getProperty("REPORT_PATH");
+		File dir = new File(path);
+		try {
+			int id = 0;
+			String eName = "";
+			if(eId != null && eId.length() > 0) {
+				id = Integer.parseInt(eId);
+				eName = allEmployeesMap().get(id);
+			}	
+			
+			List<TaskSummay> listTaskSummary = new ArrayList<TaskSummay>();
+			ReportForm taskReportForm = new ReportForm();
+			taskReportForm.setFromDate(fDate);
+			taskReportForm.setToDate(tDate);
+			taskReportForm.setEmployeeId(id);
+			taskReportForm.setDepartment(dept);
+			if (id > 0) {
+				TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, id);				
+				// tinh tong thoi gian da lam va thoi gian estimate
+				List<Task> list = null;
+				list = taskDAO.getTasksForReport(taskReportForm, null);			
+				float timeEstimateTotal = 0;
+				float timeSpentTotal = 0;
+				for (int i = 0; i < list.size(); i++) {
+					Task taskDTO = new Task();
+					taskDTO = list.get(i);
+					if (taskDTO.getTimeSpent() != null && taskDTO.getTimeSpent().length() > 0) {
+						if (taskDTO.getTimeSpentType().equalsIgnoreCase("w"))
+							timeSpentTotal = timeSpentTotal
+									+ Float.valueOf(taskDTO.getTimeSpent()) * Float.valueOf(properties.getProperty("w"));
+						else if (taskDTO.getTimeSpentType().equalsIgnoreCase("d"))
+							timeSpentTotal = timeSpentTotal
+									+ Float.valueOf(taskDTO.getTimeSpent()) * Float.valueOf(properties.getProperty("d"));
+						else if (taskDTO.getTimeSpentType().equalsIgnoreCase("m"))
+							timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent()) / 60;
+						else
+							timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent());
+					}
+					if (taskDTO.getEstimate() != null && taskDTO.getEstimate().length() > 0) {
+						if (taskDTO.getEstimateTimeType().equalsIgnoreCase("w"))
+							timeEstimateTotal = timeEstimateTotal
+									+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("w"));
+						else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("d"))
+							timeEstimateTotal = timeEstimateTotal
+									+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("d"));
+						else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("m"))
+							timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate()) / 60;
+						else
+							timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate());
+					}
+				}
+				BigDecimal s = new BigDecimal(timeSpentTotal);
+				BigDecimal spentTT = s.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+	
+				BigDecimal e = new BigDecimal(timeEstimateTotal);
+				BigDecimal estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+				
+				//System.err.println("spent: " + timeSpentTotal + ":" + s + ":" + spentTT);
+				//System.err.println("estimate:" + timeEstimateTotal +":" + e + ":" + estimateTT);
+				taskSummay.setTotalEstimate(estimateTT.toString());
+				taskSummay.setTotalSpent(spentTT.toString());
+				listTaskSummary.add(taskSummay);
+			} else if (taskReportForm.getDepartment() != null && !taskReportForm.getDepartment().equalsIgnoreCase("all")) {
+				List<EmployeeInfo> employees = employees(taskReportForm.getDepartment());
+				for (int j = 0; j < employees.size(); j++) {
+					EmployeeInfo emp = new EmployeeInfo();
+					emp = employees.get(j);
+					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, emp.getEmployeeId());					
+					// tinh tong thoi gian da lam va thoi gian estimate
+					List<Task> list = null;
+					taskReportForm.setEmployeeId(emp.getEmployeeId());
+					list = taskDAO.getTasksForReport(taskReportForm, null);			
+					float timeEstimateTotal = 0;
+					float timeSpentTotal = 0;
+					for (int i = 0; i < list.size(); i++) {
+						Task taskDTO = new Task();
+						taskDTO = list.get(i);
+						if (taskDTO.getTimeSpent() != null && taskDTO.getTimeSpent().length() > 0) {
+							if (taskDTO.getTimeSpentType().equalsIgnoreCase("w"))
+								timeSpentTotal = timeSpentTotal
+										+ Float.valueOf(taskDTO.getTimeSpent()) * Float.valueOf(properties.getProperty("w"));
+							else if (taskDTO.getTimeSpentType().equalsIgnoreCase("d"))
+								timeSpentTotal = timeSpentTotal
+										+ Float.valueOf(taskDTO.getTimeSpent()) * Float.valueOf(properties.getProperty("d"));
+							else if (taskDTO.getTimeSpentType().equalsIgnoreCase("m"))
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent()) / 60;
+							else
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent());
+						}
+						if (taskDTO.getEstimate() != null && taskDTO.getEstimate().length() > 0) {
+							if (taskDTO.getEstimateTimeType().equalsIgnoreCase("w"))
+								timeEstimateTotal = timeEstimateTotal
+										+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("w"));
+							else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("d"))
+								timeEstimateTotal = timeEstimateTotal
+										+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("d"));
+							else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("m"))
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate()) / 60;
+							else
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate());
+						}
+					}
+					BigDecimal s = new BigDecimal(timeSpentTotal);
+					BigDecimal spentTT = s.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+	
+					BigDecimal e = new BigDecimal(timeEstimateTotal);
+					BigDecimal estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+					
+					//System.err.println("spent: " + timeSpentTotal + ":" + s + ":" + spentTT);
+					//System.err.println("estimate:" + timeEstimateTotal +":" + e + ":" + estimateTT);
+					taskSummay.setTotalEstimate(estimateTT.toString());
+					taskSummay.setTotalSpent(spentTT.toString());
+					
+					listTaskSummary.add(taskSummay);
+				}
+			} else {																						
+				List<EmployeeInfo> employees = employees("all");
+				for (int i = 0; i < employees.size(); i++) {
+					EmployeeInfo emp = new EmployeeInfo();
+					emp = employees.get(i);
+					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, emp.getEmployeeId());
+					
+					// tinh tong thoi gian da lam va thoi gian estimate
+					List<Task> list = null;
+					taskReportForm.setEmployeeId(emp.getEmployeeId());
+					list = taskDAO.getTasksForReport(taskReportForm, null);			
+					float timeEstimateTotal = 0;
+					float timeSpentTotal = 0;
+					for (int j = 0; j < list.size(); j++) {
+						Task taskDTO = new Task();
+						taskDTO = list.get(j);
+						if (taskDTO.getTimeSpent() != null && taskDTO.getTimeSpent().length() > 0) {
+							if (taskDTO.getTimeSpentType().equalsIgnoreCase("w"))
+								timeSpentTotal = timeSpentTotal
+										+ Float.valueOf(taskDTO.getTimeSpent()) * Float.valueOf(properties.getProperty("w"));
+							else if (taskDTO.getTimeSpentType().equalsIgnoreCase("d"))
+								timeSpentTotal = timeSpentTotal
+										+ Float.valueOf(taskDTO.getTimeSpent()) * Float.valueOf(properties.getProperty("d"));
+							else if (taskDTO.getTimeSpentType().equalsIgnoreCase("m"))
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent()) / 60;
+							else
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent());
+						}
+						if (taskDTO.getEstimate() != null && taskDTO.getEstimate().length() > 0) {
+							if (taskDTO.getEstimateTimeType().equalsIgnoreCase("w"))
+								timeEstimateTotal = timeEstimateTotal
+										+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("w"));
+							else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("d"))
+								timeEstimateTotal = timeEstimateTotal
+										+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("d"));
+							else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("m"))
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate()) / 60;
+							else
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate());
+						}
+					}
+					BigDecimal s = new BigDecimal(timeSpentTotal);
+					BigDecimal spentTT = s.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+	
+					BigDecimal e = new BigDecimal(timeEstimateTotal);
+					BigDecimal estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+					
+					//System.err.println("spent: " + timeSpentTotal + ":" + s + ":" + spentTT);
+					//System.err.println("estimate:" + timeEstimateTotal +":" + e + ":" + estimateTT);
+					taskSummay.setTotalEstimate(estimateTT.toString());
+					taskSummay.setTotalSpent(spentTT.toString());					
+					
+					listTaskSummary.add(taskSummay);
+				}
+			}
+			
+			Document document = new Document(PageSize.A4.rotate());			
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}			
+			
+			if (id > 0 && !dept.equalsIgnoreCase("all"))
+				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept + ".pdf";
+			else if (id < 1 && !dept.equalsIgnoreCase("all"))
+				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept + ".pdf";
+			else if (id > 0 && dept.equalsIgnoreCase("all"))
+				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + ".pdf";
+			else
+				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban.pdf";
+	
+			PdfWriter.getInstance(document, new FileOutputStream(dir + "/" + fileName));
+			BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+			Font fontB = new Font(bf, 18);
+			//Font fontT = new Font(bf, 16);
+			Font font = new Font(bf, 14);
+			document.open();
+
+			PdfPTable table = new PdfPTable(10);
+			addTableHeaderSummaryReportToPDF(table, font);			
+	
+			addSummaryReportToPDFRows(table, listTaskSummary);
+			// addCustomRows(table);
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = new Date();
+			String currentDate = dateFormat.format(date);
+			document.add(new Paragraph(fileName.substring(0, fileName.length() - 4), fontB));
+			document.add(new Paragraph("                       ", font));
+			document.add(new Paragraph("                       ", font));
+			document.add(table);
+			document.add(new Paragraph("                       ", font));
+			document.add(new Paragraph("                       Ngày thống kê: "
+							+ currentDate,
+					font));
+	
+			document.close();
+			SendReportForm sendReportForm = new SendReportForm();
+			sendReportForm.setFileName(fileName);
+			sendReportForm.setSubject(fileName.substring(0, fileName.length() - 4));
+			model.addAttribute("sendReportForm", sendReportForm);
+			model.addAttribute("path", path);
+			model.addAttribute("formTitle", "Gửi thống kê khối lượng công việc ");
+			model.addAttribute("fileSave", fileName + "', đã được export tại thư mục " + dir );
+			model.addAttribute("reportForm", taskReportForm);
+			model.addAttribute("message", "Thống kê khối lượng công việc được export thành công ra file " + dir + fileName);
+		} catch (Exception e) {
+			model.addAttribute("isOpen", "Yes");
+			model.addAttribute("warning", "Vui lòng tắt file " + dir + fileName + " nếu đang mở trước khi export");
+			e.printStackTrace();
+		}
+		
+		return "sendSummaryReport";
+	}	
+	
+	private void addTableHeaderSummaryReportToPDF(PdfPTable table, Font font) throws Exception {
+		PdfPCell header = new PdfPCell();		
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Người làm", font));
+		table.addCell(header);			
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Mới", font));
+		table.addCell(header);		
+
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Đang làm", font));
+		table.addCell(header);
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Tạm dừng", font));
+		table.addCell(header);
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Hủy bỏ", font));
+		table.addCell(header);		
+
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Chờ đánh giá", font));
+		table.addCell(header);
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Đã xong", font));
+		table.addCell(header);		
+
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Tổng số", font));
+		table.addCell(header);				
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Tgian đã làm", font));
+		table.addCell(header);
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Tgian ước lượng", font));
+		table.addCell(header);
+
+	}
+
+	private void addSummaryReportToPDFRows(PdfPTable table, List<TaskSummay> taskSummays) throws DocumentException, IOException {
+		BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+		Font font = new Font(bf, 12);
+		for (int i = 0; i < taskSummays.size(); i++) {
+			TaskSummay taskSummay = new TaskSummay();
+			taskSummay = (TaskSummay) taskSummays.get(i);
+
+			table.addCell(new Paragraph(taskSummay.getEmployeeName(), font));
+			table.addCell(String.valueOf(taskSummay.getTaskNew()));
+			table.addCell(String.valueOf(taskSummay.getTaskInprogess()));
+			table.addCell(String.valueOf(taskSummay.getTaskStoped()));
+			table.addCell(String.valueOf(taskSummay.getTaskinvalid()));
+			table.addCell(String.valueOf(taskSummay.getTaskReviewing()));
+			table.addCell(String.valueOf(taskSummay.getTaskCompleted()));
+			table.addCell(String.valueOf(taskSummay.getTaskTotal()));
+			table.addCell(new Paragraph(taskSummay.getTotalSpent()));
+			table.addCell(new Paragraph(taskSummay.getTotalEstimate()));
+		}
+	}	
+	
+	@RequestMapping(value = "/sendSummaryReport")
+	public String sendSummaryReport(Model model, @ModelAttribute("sendReportForm") @Validated SendReportForm sendReportForm,
+			@RequestParam(required = false, value = "formTitle") String formTitle) throws Exception {
+		log.info("sending SummaryReport");
+		try {
+			//System.err.println("formTitle " + formTitle);
+			if (formTitle == null) {
+				MimeMessage mimeMessage = mailSender.createMimeMessage();
+				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+				String path = properties.getProperty("REPORT_PATH");
+
+				File file = new File(path + sendReportForm.getFileName());
+				log.info("sending report: " + path + sendReportForm.getFileName());
+				if (file.exists()) {
+					mimeMessage.setFrom("IDITask-NotReply");
+					helper.setSubject(sendReportForm.getSubject() + " --> Gửi từ PM Quản lý công việc");
+					//System.err.println("Subject: " + sendReportForm.getSubject());
+					mimeMessage.setContent(sendReportForm.getFileName(), "text/html; charset=UTF-8");
+
+					Multipart multipart = new MimeMultipart();
+					BodyPart attach = new MimeBodyPart();
+					DataSource source = new FileDataSource(path + sendReportForm.getFileName());
+					attach.setDataHandler(new DataHandler(source));
+					attach.setFileName(path + sendReportForm.getFileName());
+
+					multipart.addBodyPart(attach);
+					BodyPart content = new MimeBodyPart();
+					content.setContent("Thống kê khối lượng công việc", "text/html; charset=UTF-8");
+					multipart.addBodyPart(content);
+
+					mimeMessage.setContent(multipart, "text/html; charset=UTF-8");
+
+					StringTokenizer st = new StringTokenizer(sendReportForm.getSendTo(), ";");
+					while (st.hasMoreTokens()) {
+
+						String sendTo = st.nextToken(";");
+						if (sendTo != null && sendTo.length() > 0 && sendTo.contains("@") && sendTo.contains(".com")) {
+							log.info("send report to " + sendTo);
+							helper.setTo(sendTo);
+
+							mailSender.send(mimeMessage);
+							//System.err.println("sent");
+						}
+					}
+					// model.addAttribute("isReload","Yes");
+					model.addAttribute("formTitle", "Đã gửi thống kê khối lượng công việc");
+					return "sentSummaryReport";
+				} else {
+					log.info("File ko ton tai hoac chua dc export");
+					model.addAttribute("formTitle", "Vui lòng export file trước khi gửi");
+				}
+			} else {
+				log.info("try to sending report again...");
+				model.addAttribute("formTitle", "Gửi thống kê khối lượng công việc");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "sentSummaryReport";
+	}	
+	
+	@RequestMapping("/exportSummaryToExcel")
+	public String getSummaryReportToExcel(Model model,
+			@RequestParam(required = false, value = "fDate") String fDate,
+			@RequestParam(required = false, value = "tDate") String tDate, 
+			@RequestParam(required = false, value = "eId") String eId, 			
+			@RequestParam(required = false, value = "dept") String dept) throws Exception {
+		try {
+			int id = 0;
+			String eName = "";
+			if (eId != null && eId.length() > 0) {
+				id = Integer.parseInt(eId);
+				eName = allEmployeesMap().get(id);
+			}
+
+			List<TaskSummay> listTaskSummary = new ArrayList<TaskSummay>();
+			ReportForm taskReportForm = new ReportForm();
+			taskReportForm.setFromDate(fDate);
+			taskReportForm.setToDate(tDate);
+			taskReportForm.setEmployeeId(id);
+			taskReportForm.setDepartment(dept);
+			if (id > 0) {
+				TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, id);
+				// tinh tong thoi gian da lam va thoi gian estimate
+				List<Task> list = null;
+				list = taskDAO.getTasksForReport(taskReportForm, null);
+				float timeEstimateTotal = 0;
+				float timeSpentTotal = 0;
+				for (int i = 0; i < list.size(); i++) {
+					Task taskDTO = new Task();
+					taskDTO = list.get(i);
+					if (taskDTO.getTimeSpent() != null && taskDTO.getTimeSpent().length() > 0) {
+						if (taskDTO.getTimeSpentType().equalsIgnoreCase("w"))
+							timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent())
+									* Float.valueOf(properties.getProperty("w"));
+						else if (taskDTO.getTimeSpentType().equalsIgnoreCase("d"))
+							timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent())
+									* Float.valueOf(properties.getProperty("d"));
+						else if (taskDTO.getTimeSpentType().equalsIgnoreCase("m"))
+							timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent()) / 60;
+						else
+							timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent());
+					}
+					if (taskDTO.getEstimate() != null && taskDTO.getEstimate().length() > 0) {
+						if (taskDTO.getEstimateTimeType().equalsIgnoreCase("w"))
+							timeEstimateTotal = timeEstimateTotal
+									+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("w"));
+						else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("d"))
+							timeEstimateTotal = timeEstimateTotal
+									+ Float.valueOf(taskDTO.getEstimate()) * Float.valueOf(properties.getProperty("d"));
+						else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("m"))
+							timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate()) / 60;
+						else
+							timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate());
+					}
+				}
+				BigDecimal s = new BigDecimal(timeSpentTotal);
+				BigDecimal spentTT = s.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+
+				BigDecimal e = new BigDecimal(timeEstimateTotal);
+				BigDecimal estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+
+				// System.err.println("spent: " + timeSpentTotal + ":" + s + ":" + spentTT);
+				// System.err.println("estimate:" + timeEstimateTotal +":" + e + ":" +
+				// estimateTT);
+				taskSummay.setTotalEstimate(estimateTT.toString());
+				taskSummay.setTotalSpent(spentTT.toString());
+				listTaskSummary.add(taskSummay);
+			} else if (taskReportForm.getDepartment() != null
+					&& !taskReportForm.getDepartment().equalsIgnoreCase("all")) {
+				List<EmployeeInfo> employees = employees(taskReportForm.getDepartment());
+				for (int j = 0; j < employees.size(); j++) {
+					EmployeeInfo emp = new EmployeeInfo();
+					emp = employees.get(j);
+					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, emp.getEmployeeId());
+					// tinh tong thoi gian da lam va thoi gian estimate
+					List<Task> list = null;
+					taskReportForm.setEmployeeId(emp.getEmployeeId());
+					list = taskDAO.getTasksForReport(taskReportForm, null);
+					float timeEstimateTotal = 0;
+					float timeSpentTotal = 0;
+					for (int i = 0; i < list.size(); i++) {
+						Task taskDTO = new Task();
+						taskDTO = list.get(i);
+						if (taskDTO.getTimeSpent() != null && taskDTO.getTimeSpent().length() > 0) {
+							if (taskDTO.getTimeSpentType().equalsIgnoreCase("w"))
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent())
+										* Float.valueOf(properties.getProperty("w"));
+							else if (taskDTO.getTimeSpentType().equalsIgnoreCase("d"))
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent())
+										* Float.valueOf(properties.getProperty("d"));
+							else if (taskDTO.getTimeSpentType().equalsIgnoreCase("m"))
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent()) / 60;
+							else
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent());
+						}
+						if (taskDTO.getEstimate() != null && taskDTO.getEstimate().length() > 0) {
+							if (taskDTO.getEstimateTimeType().equalsIgnoreCase("w"))
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate())
+										* Float.valueOf(properties.getProperty("w"));
+							else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("d"))
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate())
+										* Float.valueOf(properties.getProperty("d"));
+							else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("m"))
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate()) / 60;
+							else
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate());
+						}
+					}
+					BigDecimal s = new BigDecimal(timeSpentTotal);
+					BigDecimal spentTT = s.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+
+					BigDecimal e = new BigDecimal(timeEstimateTotal);
+					BigDecimal estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+
+					// System.err.println("spent: " + timeSpentTotal + ":" + s + ":" + spentTT);
+					// System.err.println("estimate:" + timeEstimateTotal +":" + e + ":" +
+					// estimateTT);
+					taskSummay.setTotalEstimate(estimateTT.toString());
+					taskSummay.setTotalSpent(spentTT.toString());
+
+					listTaskSummary.add(taskSummay);
+				}
+			} else {
+				List<EmployeeInfo> employees = employees("all");
+				for (int i = 0; i < employees.size(); i++) {
+					EmployeeInfo emp = new EmployeeInfo();
+					emp = employees.get(i);
+					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, emp.getEmployeeId());
+
+					// tinh tong thoi gian da lam va thoi gian estimate
+					List<Task> list = null;
+					taskReportForm.setEmployeeId(emp.getEmployeeId());
+					list = taskDAO.getTasksForReport(taskReportForm, null);
+					float timeEstimateTotal = 0;
+					float timeSpentTotal = 0;
+					for (int j = 0; j < list.size(); j++) {
+						Task taskDTO = new Task();
+						taskDTO = list.get(j);
+						if (taskDTO.getTimeSpent() != null && taskDTO.getTimeSpent().length() > 0) {
+							if (taskDTO.getTimeSpentType().equalsIgnoreCase("w"))
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent())
+										* Float.valueOf(properties.getProperty("w"));
+							else if (taskDTO.getTimeSpentType().equalsIgnoreCase("d"))
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent())
+										* Float.valueOf(properties.getProperty("d"));
+							else if (taskDTO.getTimeSpentType().equalsIgnoreCase("m"))
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent()) / 60;
+							else
+								timeSpentTotal = timeSpentTotal + Float.valueOf(taskDTO.getTimeSpent());
+						}
+						if (taskDTO.getEstimate() != null && taskDTO.getEstimate().length() > 0) {
+							if (taskDTO.getEstimateTimeType().equalsIgnoreCase("w"))
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate())
+										* Float.valueOf(properties.getProperty("w"));
+							else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("d"))
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate())
+										* Float.valueOf(properties.getProperty("d"));
+							else if (taskDTO.getEstimateTimeType().equalsIgnoreCase("m"))
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate()) / 60;
+							else
+								timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate());
+						}
+					}
+					BigDecimal s = new BigDecimal(timeSpentTotal);
+					BigDecimal spentTT = s.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+
+					BigDecimal e = new BigDecimal(timeEstimateTotal);
+					BigDecimal estimateTT = e.setScale(1, BigDecimal.ROUND_HALF_EVEN);
+
+					// System.err.println("spent: " + timeSpentTotal + ":" + s + ":" + spentTT);
+					// System.err.println("estimate:" + timeEstimateTotal +":" + e + ":" +
+					// estimateTT);
+					taskSummay.setTotalEstimate(estimateTT.toString());
+					taskSummay.setTotalSpent(spentTT.toString());
+
+					listTaskSummary.add(taskSummay);
+				}
+			}
+
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = new Date();
+			String currentDate = dateFormat.format(date);
+			
+			String path = properties.getProperty("REPORT_PATH");
+			File dir = new File(path);
+			XSSFWorkbook workbook = new XSSFWorkbook();
+			XSSFSheet sheet = workbook.createSheet("Thống kê khối lượng công việc");
+
+			CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+			org.apache.poi.ss.usermodel.Font font = sheet.getWorkbook().createFont();
+			font.setBold(true);
+			font.setFontHeightInPoints((short) 14);
+			cellStyle.setFont(font);
+
+			Row row1 = sheet.createRow(0);
+			Cell cell = row1.createCell(1);
+
+			String fileName = "Thống kê khối lượng công việc";
+			if (id > 0 && !dept.equalsIgnoreCase("all"))
+				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept
+						+ ".pdf";
+			else if (id < 1 && !dept.equalsIgnoreCase("all"))
+				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept;
+			else if (id > 0 && dept.equalsIgnoreCase("all"))
+				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName;
+			else
+				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban";
+			cell.setCellStyle(cellStyle);
+			cell.setCellValue(fileName);
+			
+			int rowNum = 1;
+			Row row2 = sheet.createRow(rowNum);
+			Cell cell0 = row2.createCell(2);
+			CellStyle cellStyle1 = sheet.getWorkbook().createCellStyle();
+			org.apache.poi.ss.usermodel.Font font1 = sheet.getWorkbook().createFont();
+			font1.setBold(true);
+			font1.setFontHeightInPoints((short) 11);
+			cellStyle1.setFont(font1);
+			cell0.setCellStyle(cellStyle1);
+			cell0.setCellValue("Ngày thống kê: " + currentDate);
+
+			// Generate column name
+			rowNum = 3;
+			Row row = sheet.createRow(rowNum);
+			Cell cell11 = row.createCell(0);
+			cell11.setCellStyle(cellStyle1);
+			cell11.setCellValue("Người làm");
+			Cell cell21 = row.createCell(1);
+			cell21.setCellStyle(cellStyle1);
+			cell21.setCellValue("Mới");
+			Cell cell31 = row.createCell(2);
+			cell31.setCellStyle(cellStyle1);
+			cell31.setCellValue("Đang làm");
+			Cell cell41 = row.createCell(3);
+			cell41.setCellStyle(cellStyle1);
+			cell41.setCellValue("Tạm dừng");
+			Cell cell51 = row.createCell(4);
+			cell51.setCellStyle(cellStyle1);
+			cell51.setCellValue("Hủy bỏ");
+			Cell cell61 = row.createCell(5);
+			cell61.setCellStyle(cellStyle1);
+			cell61.setCellValue("Chờ đánh giá");
+			Cell cell71 = row.createCell(6);
+			cell71.setCellStyle(cellStyle1);
+			cell71.setCellValue("Đã xong");
+			Cell cell81 = row.createCell(7);
+			cell81.setCellStyle(cellStyle1);
+			cell81.setCellValue("Tổng số");
+			Cell cell91 = row.createCell(8);
+			cell91.setCellStyle(cellStyle1);
+			cell91.setCellValue("Tgian đã làm");
+			Cell cell101 = row.createCell(9);
+			cell101.setCellStyle(cellStyle1);
+			cell101.setCellValue("Tgian ước lượng");
+			
+			// generate values
+			rowNum = 4;
+			for (int i = 0; i < listTaskSummary.size(); i++) {
+				row = sheet.createRow(rowNum++);
+				int colNum = 0;
+				TaskSummay taskSummay = new TaskSummay();
+				taskSummay = listTaskSummary.get(i);
+				Cell cell1 = row.createCell(colNum++);
+				cell1.setCellValue(taskSummay.getEmployeeName());
+				Cell cell2 = row.createCell(colNum++);
+				cell2.setCellValue(taskSummay.getTaskNew());
+				Cell cell3 = row.createCell(colNum++);
+				cell3.setCellValue(taskSummay.getTaskInprogess());
+				Cell cell4 = row.createCell(colNum++);
+				cell4.setCellValue(taskSummay.getTaskStoped());
+				Cell cell5 = row.createCell(colNum++);
+				cell5.setCellValue(taskSummay.getTaskinvalid());
+				Cell cell6 = row.createCell(colNum++);
+				cell6.setCellValue(taskSummay.getTaskReviewing());
+				Cell cell7 = row.createCell(colNum++);
+				cell7.setCellValue(taskSummay.getTaskCompleted());
+				Cell cell8 = row.createCell(colNum++);
+				cell8.setCellValue(taskSummay.getTaskTotal());
+				Cell cell9 = row.createCell(colNum++);
+				cell9.setCellValue((String)taskSummay.getTotalSpent());
+				Cell cell10 = row.createCell(colNum++);
+				cell10.setCellValue((String)taskSummay.getTotalEstimate());
+			}
+
+			try {
+				if (!dir.exists()) {
+					dir.mkdirs();
+				}
+				FileOutputStream outputStream = new FileOutputStream(dir + "/" + fileName + ".xlsx");
+				workbook.write(outputStream);
+				workbook.close();
+				model.addAttribute("message", "Thống kê khối lượng công việc được export thành công ra file " + dir + fileName + ".xlsx");
+			} catch (FileNotFoundException e) {
+				model.addAttribute("warning", "Vui lòng tắt file " + dir + fileName + ".xlsx nếu đang mở trước khi export");
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			SendReportForm sendReportForm = new SendReportForm();
+			sendReportForm.setFileName(fileName + ".xlsx");
+			sendReportForm.setSubject(fileName);
+			model.addAttribute("sendReportForm", sendReportForm);
+			model.addAttribute("path", path);
+			model.addAttribute("formTitle", "Gửi thống kê khối lượng công việc ");
+			model.addAttribute("fileSave", fileName + ".xlsx', đã được export tại thư mục " + dir);
+			model.addAttribute("reportForm", taskReportForm);
+
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return "sendSummaryReport";
+	}
+	
 	@RequestMapping(value = "/generateTaskReport", params = "generateTaskReport")
 	public String generateTaskReport(Model model,
 			@ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) throws Exception {
@@ -1392,6 +2078,7 @@ public class TaskController {
 
 					mimeMessage.setFrom("IDITask-NotReply");
 					helper.setSubject(sendReportForm.getSubject());
+					System.err.println("Subject: " + sendReportForm.getSubject());
 					mimeMessage.setContent(sendReportForm.getFileName(), "text/html; charset=UTF-8");
 
 					Multipart multipart = new MimeMultipart();

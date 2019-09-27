@@ -6,7 +6,7 @@
 <html>
 <head>
 
-<title>Gửi Báo cáo công việc</title>
+<title>Gửi thống kê khối lượng công việc</title>
 <style>
 table {
 	font-family: arial, sans-serif;
@@ -27,11 +27,11 @@ tr:nth-child(even) {
 </head>
 <body>
 	<a href="${url}/"><button class="btn btn-lg btn-primary btn-sm"> Quay lại dach sách công việc</button></a>
-	<a href="${url}/prepareReport"><button class="btn btn-primary btn-sm">Lựa chọn lại thông tin cần	báo cáo</button></a>
+	<a href="${url}/prepareReport"><button class="btn btn-primary btn-sm">Lựa chọn lại thông tin cần thống kê báo cáo</button></a>
 	<br />
 	<br />	
 	<div class="alert alert-success">
-		Báo cáo công việc đã được gửi thành công ... 
+		Gửi thống kê khối lượng công việc thành công ... 
 	</div>	
 </body>
 </html>

@@ -49,6 +49,19 @@ tr:nth-child(even) {
 		<c:if test="${reportForm.department == 'all'}"> tất cả các phòng ban</c:if>
 	</h3>
 	<br />
+	<c:if test="${listTaskSummary.size() > 1}">
+		<a href="${url}/exportSummaryToPDF?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eId=0&dept=${reportForm.department}"><button
+			class="btn btn-primary btn-sm">Export ra file PDF và gửi</button></a>
+		<a href="${url}/exportSummaryToExcel?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eId=0&dept=${reportForm.department}"><button
+			class="btn btn-primary btn-sm">Export ra file Excel và gửi</button></a>
+	</c:if>	
+	<c:if test="${listTaskSummary.size() < 2}">
+		<a href="${url}/exportSummaryToPDF?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eId=${reportForm.employeeId}&dept=${reportForm.department}"><button
+			class="btn btn-primary btn-sm">Export ra file PDF và gửi</button></a>
+		<a href="${url}/exportSummaryToExcel?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eId=${reportForm.employeeId}&dept=${reportForm.department}"><button
+			class="btn btn-primary btn-sm">Export ra file Excel và gửi</button></a>
+	</c:if>
+	<br/><br/>
 	<input type="hidden" name="employeeName" value="${tasks[0].ownerName}">
 	<table class="table table-striped">
 		<tr>
