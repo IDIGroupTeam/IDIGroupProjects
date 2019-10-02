@@ -153,7 +153,7 @@
 										&& nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.trim().substring(0, mainFinanceForm.taiKhoan.trim().length()).equals(mainFinanceForm.taiKhoan.trim())}">
 										<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
 										<td class="text-right"><fmt:formatNumber
-												value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+												value="${nghiepVuKeToan.taiKhoanCo.soTien.giaTri}"
 												type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 										<td class="text-right">0</td>
 									</c:if>
@@ -163,7 +163,7 @@
 										<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
 										<td class="text-right">0</td>
 										<td class="text-right"><fmt:formatNumber
-												value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+												value="${nghiepVuKeToan.taiKhoanCo.soTien.giaTri}"
 												type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 									</c:if>
 									<td></td>
@@ -177,7 +177,7 @@
 										&& nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.trim().substring(0, mainFinanceForm.taiKhoan.trim().length()).equals(mainFinanceForm.taiKhoan.trim())}">
 										<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
 										<td class="text-right"><fmt:formatNumber
-												value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+												value="${nghiepVuKeToan.taiKhoanNo.soTien.giaTri}"
 												type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 										<td class="text-right">0</td>
 									</c:if>
@@ -187,7 +187,7 @@
 										<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
 										<td class="text-right">0</td>
 										<td class="text-right"><fmt:formatNumber
-												value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+												value="${nghiepVuKeToan.taiKhoanNo.soTien.giaTri}"
 												type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 									</c:if>
 									<td></td>

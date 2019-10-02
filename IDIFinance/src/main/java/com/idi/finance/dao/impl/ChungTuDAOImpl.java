@@ -279,7 +279,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien tien = new Tien();
 				tien.setLoaiTien(loaiTien);
 				tien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tien.setSoTien(rs.getDouble("SO_TIEN_NT"));
+				tien.setSoTien(tien.getGiaTri() / loaiTien.getBanRa());
 				taiKhoan.setSoTien(tien);
 
 				chungTu.themTaiKhoan(taiKhoan);
@@ -398,7 +398,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien tien = new Tien();
 				tien.setLoaiTien(loaiTien);
 				tien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tien.setSoTien(rs.getDouble("SO_TIEN_NT"));
+				tien.setSoTien(tien.getGiaTri() / loaiTien.getBanRa());
 
 				if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
 					taiKhoan.setNo(tien);
@@ -539,7 +539,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien donGia = new Tien();
 				donGia.setLoaiTien(loaiTien);
 				donGia.setGiaTri(rs.getDouble("DON_GIA"));
-				donGia.setSoTien(rs.getDouble("DON_GIA_NT"));
+				donGia.setSoTien(donGia.getGiaTri() / loaiTien.getBanRa());
 				hangHoa.setDonGia(donGia);
 
 				Tien giaKho = new Tien();
@@ -572,7 +572,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien tkTien = new Tien();
 				tkTien.setLoaiTien(loaiTien);
 				tkTien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tkTien.setSoTien(rs.getDouble("SO_TIEN_NT"));
+				tkTien.setSoTien(tkTien.getGiaTri() / loaiTien.getBanRa());
 				taiKhoan.setSoTien(tkTien);
 
 				int loaiTk = rs.getInt("LOAI_TK");
@@ -800,9 +800,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 										Statement.RETURN_GENERATED_KEYS);
 								stt.setString(1, taiKhoan.getLoaiTaiKhoan().getMaTk());
 								stt.setDouble(2, taiKhoan.getSoTien().getGiaTri());
-								stt.setDouble(3, taiKhoan.getSoTien().getSoTien());
-								stt.setInt(4, taiKhoan.getSoDu());
-								stt.setString(5, taiKhoan.getLyDo());
+								stt.setInt(3, taiKhoan.getSoDu());
+								stt.setString(4, taiKhoan.getLyDo());
 
 								return stt;
 							}
@@ -877,9 +876,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 												Statement.RETURN_GENERATED_KEYS);
 										stt.setString(1, taiKhoan.getLoaiTaiKhoan().getMaTk());
 										stt.setDouble(2, taiKhoan.getSoTien().getGiaTri());
-										stt.setDouble(3, taiKhoan.getSoTien().getSoTien());
-										stt.setInt(4, taiKhoan.getSoDu());
-										stt.setString(5, taiKhoan.getLyDo());
+										stt.setInt(3, taiKhoan.getSoDu());
+										stt.setString(4, taiKhoan.getLyDo());
 
 										return stt;
 									}
@@ -897,8 +895,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 								// Chỉ cân cập nhật trong bảng NGHIEP_VU_KE_TOAN là đủ
 								// Trong bảng CHUNG_TU_NVKT không có thay đổi gì
 								jdbcTmpl.update(capNhatChungTuNvkt, taiKhoan.getLoaiTaiKhoan().getMaTk(),
-										taiKhoan.getSoTien().getGiaTri(), taiKhoan.getSoTien().getSoTien(),
-										taiKhoan.getSoDu(), taiKhoan.getLyDo(), taiKhoan.getMaNvkt());
+										taiKhoan.getSoTien().getGiaTri(), taiKhoan.getSoDu(), taiKhoan.getLyDo(),
+										taiKhoan.getMaNvkt());
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -995,15 +993,13 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 								stt.setString(1, taiKhoan.getLoaiTaiKhoan().getMaTk());
 								if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
 									stt.setDouble(2, taiKhoan.getNo().getGiaTri());
-									stt.setDouble(3, taiKhoan.getNo().getSoTien());
 								} else {
 									stt.setDouble(2, taiKhoan.getCo().getGiaTri());
-									stt.setDouble(3, taiKhoan.getCo().getSoTien());
 								}
-								stt.setInt(4, taiKhoan.getSoDu());
-								stt.setString(5, taiKhoan.getLyDo());
-								stt.setInt(6, taiKhoan.getDoiTuong().getMaDt());
-								stt.setInt(7, taiKhoan.getDoiTuong().getLoaiDt());
+								stt.setInt(3, taiKhoan.getSoDu());
+								stt.setString(4, taiKhoan.getLyDo());
+								stt.setInt(5, taiKhoan.getDoiTuong().getMaDt());
+								stt.setInt(6, taiKhoan.getDoiTuong().getLoaiDt());
 
 								return stt;
 							}
@@ -1083,15 +1079,13 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 										stt.setString(1, taiKhoan.getLoaiTaiKhoan().getMaTk());
 										if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
 											stt.setDouble(2, taiKhoan.getNo().getGiaTri());
-											stt.setDouble(3, taiKhoan.getNo().getSoTien());
 										} else {
 											stt.setDouble(2, taiKhoan.getCo().getGiaTri());
-											stt.setDouble(3, taiKhoan.getCo().getSoTien());
 										}
-										stt.setInt(4, taiKhoan.getSoDu());
-										stt.setString(5, taiKhoan.getLyDo());
-										stt.setInt(6, taiKhoan.getDoiTuong().getMaDt());
-										stt.setInt(7, taiKhoan.getDoiTuong().getLoaiDt());
+										stt.setInt(3, taiKhoan.getSoDu());
+										stt.setString(4, taiKhoan.getLyDo());
+										stt.setInt(5, taiKhoan.getDoiTuong().getMaDt());
+										stt.setInt(6, taiKhoan.getDoiTuong().getLoaiDt());
 
 										return stt;
 									}
@@ -1110,16 +1104,13 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 								// Chỉ cân cập nhật trong bảng NGHIEP_VU_KE_TOAN là đủ
 								// Trong bảng CHUNG_TU_NVKT không có thay đổi gì
 								double giaTri = 0;
-								double soTien = 0;
 								if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
 									giaTri = taiKhoan.getNo().getGiaTri();
-									soTien = taiKhoan.getNo().getSoTien();
 								} else {
 									giaTri = taiKhoan.getCo().getGiaTri();
-									soTien = taiKhoan.getCo().getSoTien();
 								}
 								jdbcTmpl.update(capNhatChungTuNvkt, taiKhoan.getLoaiTaiKhoan().getMaTk(), giaTri,
-										soTien, taiKhoan.getSoDu(), taiKhoan.getLyDo(), taiKhoan.getMaNvkt());
+										taiKhoan.getSoDu(), taiKhoan.getLyDo(), taiKhoan.getMaNvkt());
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -1208,7 +1199,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				logger.info("Hàng hóa: " + hangHoa);
 
 				logger.info("Thêm vào chung_tu_hang_hoa");
-				int maGia = hangHoa.getGiaKho().getMaGia();
+				int maGia = 0;
 				// Thêm vào hang_hoa_gia trước
 				// Kiểm tra xem có chưa, chưa có thì mới thêm, có rồi thì lấy maGia ra
 				if (hangHoa.getGiaKho() != null && hangHoa.getGiaKho().getMaGia() == 0) {
@@ -1247,12 +1238,10 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				double donGia = hangHoa.getDonGia().getSoTien() * chungTu.getLoaiTien().getBanRa();
 				if (hangHoa.getKho() != null) {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
-							donGia, hangHoa.getDonGia().getSoTien(), maGia, chungTu.getChieu(),
-							hangHoa.getKho().getMaKho());
+							donGia, maGia, chungTu.getChieu(), hangHoa.getKho().getMaKho());
 				} else {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
-							donGia, hangHoa.getDonGia().getSoTien(), maGia, chungTu.getChieu(),
-							KhoHang.MA_KHO_MAC_DINH);
+							donGia, maGia, chungTu.getChieu(), KhoHang.MA_KHO_MAC_DINH);
 				}
 
 				logger.info("Thêm vào bảng nghiep_vu_ke_toan: ");
@@ -1266,9 +1255,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkKho().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkKho().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkKho().getSoDu());
-							stt.setString(5, hangHoa.getTkKho().getLyDo());
+							stt.setInt(3, hangHoa.getTkKho().getSoDu());
+							stt.setString(4, hangHoa.getTkKho().getLyDo());
 
 							return stt;
 						}
@@ -1287,9 +1275,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkGiaVon().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkGiaVon().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkGiaVon().getSoDu());
-							stt.setString(5, hangHoa.getTkGiaVon().getLyDo());
+							stt.setInt(3, hangHoa.getTkGiaVon().getSoDu());
+							stt.setString(4, hangHoa.getTkGiaVon().getLyDo());
 
 							return stt;
 						}
@@ -1308,9 +1295,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkDoanhThu().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkDoanhThu().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkDoanhThu().getSoDu());
-							stt.setString(5, hangHoa.getTkDoanhThu().getLyDo());
+							stt.setInt(3, hangHoa.getTkDoanhThu().getSoDu());
+							stt.setString(4, hangHoa.getTkDoanhThu().getLyDo());
 
 							return stt;
 						}
@@ -1330,9 +1316,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkChiPhi().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkChiPhi().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkChiPhi().getSoDu());
-							stt.setString(5, hangHoa.getTkChiPhi().getLyDo());
+							stt.setInt(3, hangHoa.getTkChiPhi().getSoDu());
+							stt.setString(4, hangHoa.getTkChiPhi().getLyDo());
 
 							return stt;
 						}
@@ -1351,9 +1336,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThanhtoan().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkThanhtoan().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkThanhtoan().getSoDu());
-							stt.setString(5, hangHoa.getTkThanhtoan().getLyDo());
+							stt.setInt(3, hangHoa.getTkThanhtoan().getSoDu());
+							stt.setString(4, hangHoa.getTkThanhtoan().getLyDo());
 
 							return stt;
 						}
@@ -1375,9 +1359,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueNk().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkThueNk().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkThueNk().getSoDu());
-							stt.setString(5, hangHoa.getTkThueNk().getLyDo());
+							stt.setInt(3, hangHoa.getTkThueNk().getSoDu());
+							stt.setString(4, hangHoa.getTkThueNk().getLyDo());
 
 							return stt;
 						}
@@ -1397,9 +1380,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueXk().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkThueXk().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkThueXk().getSoDu());
-							stt.setString(5, hangHoa.getTkThueXk().getLyDo());
+							stt.setInt(3, hangHoa.getTkThueXk().getSoDu());
+							stt.setString(4, hangHoa.getTkThueXk().getLyDo());
 
 							return stt;
 						}
@@ -1420,9 +1402,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueTtdb().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkThueTtdb().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkThueTtdb().getSoDu());
-							stt.setString(5, hangHoa.getTkThueTtdb().getLyDo());
+							stt.setInt(3, hangHoa.getTkThueTtdb().getSoDu());
+							stt.setString(4, hangHoa.getTkThueTtdb().getLyDo());
 
 							return stt;
 						}
@@ -1442,9 +1423,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueGtgtDu().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkThueGtgtDu().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkThueGtgtDu().getSoDu());
-							stt.setString(5, hangHoa.getTkThueGtgtDu().getLyDo());
+							stt.setInt(3, hangHoa.getTkThueGtgtDu().getSoDu());
+							stt.setString(4, hangHoa.getTkThueGtgtDu().getLyDo());
 
 							return stt;
 						}
@@ -1469,9 +1449,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 										Statement.RETURN_GENERATED_KEYS);
 								stt.setString(1, hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk());
 								stt.setDouble(2, hangHoa.getTkThueGtgt().getSoTien().getGiaTri());
-								stt.setDouble(3, hangHoa.getTkThueGtgt().getSoTien().getSoTien());
-								stt.setInt(4, hangHoa.getTkThueGtgt().getSoDu());
-								stt.setString(5, hangHoa.getTkThueGtgt().getLyDo());
+								stt.setInt(3, hangHoa.getTkThueGtgt().getSoDu());
+								stt.setString(4, hangHoa.getTkThueGtgt().getLyDo());
 
 								return stt;
 							}
@@ -1586,7 +1565,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				logger.info("Hàng hóa: " + hangHoa);
 
 				logger.info("Thêm vào chung_tu_hang_hoa");
-				int maGia = hangHoa.getGiaKho().getMaGia();
+				int maGia = 0;
 				// Thêm vào hang_hoa_gia trước
 				// Kiểm tra xem có chưa, chưa có thì mới thêm, có rồi thì lấy maGia ra
 				if (hangHoa.getGiaKho() != null && hangHoa.getGiaKho().getMaGia() == 0) {
@@ -1625,12 +1604,10 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				double donGia = hangHoa.getDonGia().getSoTien() * chungTu.getLoaiTien().getBanRa();
 				if (hangHoa.getKho() != null) {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
-							donGia, hangHoa.getDonGia().getSoTien(), maGia, chungTu.getChieu(),
-							hangHoa.getKho().getMaKho());
+							donGia, maGia, chungTu.getChieu(), hangHoa.getKho().getMaKho());
 				} else {
 					jdbcTmpl.update(themChungTuHangHoa, chungTu.getMaCt(), hangHoa.getMaHh(), hangHoa.getSoLuong(),
-							donGia, hangHoa.getDonGia().getSoTien(), maGia, chungTu.getChieu(),
-							KhoHang.MA_KHO_MAC_DINH);
+							donGia, maGia, chungTu.getChieu(), KhoHang.MA_KHO_MAC_DINH);
 				}
 
 				logger.info("Thêm vào bảng nghiep_vu_ke_toan: ");
@@ -1644,9 +1621,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkKho().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkKho().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkKho().getSoDu());
-							stt.setString(5, hangHoa.getTkKho().getLyDo());
+							stt.setInt(3, hangHoa.getTkKho().getSoDu());
+							stt.setString(4, hangHoa.getTkKho().getLyDo());
 
 							return stt;
 						}
@@ -1665,9 +1641,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkGiaVon().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkGiaVon().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkGiaVon().getSoDu());
-							stt.setString(5, hangHoa.getTkGiaVon().getLyDo());
+							stt.setInt(3, hangHoa.getTkGiaVon().getSoDu());
+							stt.setString(4, hangHoa.getTkGiaVon().getLyDo());
 
 							return stt;
 						}
@@ -1686,9 +1661,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkDoanhThu().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkDoanhThu().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkDoanhThu().getSoDu());
-							stt.setString(5, hangHoa.getTkDoanhThu().getLyDo());
+							stt.setInt(3, hangHoa.getTkDoanhThu().getSoDu());
+							stt.setString(4, hangHoa.getTkDoanhThu().getLyDo());
 
 							return stt;
 						}
@@ -1708,9 +1682,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkChiPhi().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkChiPhi().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkChiPhi().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkChiPhi().getSoDu());
-							stt.setString(5, hangHoa.getTkChiPhi().getLyDo());
+							stt.setInt(3, hangHoa.getTkChiPhi().getSoDu());
+							stt.setString(4, hangHoa.getTkChiPhi().getLyDo());
 
 							return stt;
 						}
@@ -1729,9 +1702,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThanhtoan().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkThanhtoan().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkThanhtoan().getSoDu());
-							stt.setString(5, hangHoa.getTkThanhtoan().getLyDo());
+							stt.setInt(3, hangHoa.getTkThanhtoan().getSoDu());
+							stt.setString(4, hangHoa.getTkThanhtoan().getLyDo());
 
 							return stt;
 						}
@@ -1753,9 +1725,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueNk().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueNk().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkThueNk().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkThueNk().getSoDu());
-							stt.setString(5, hangHoa.getTkThueNk().getLyDo());
+							stt.setInt(3, hangHoa.getTkThueNk().getSoDu());
+							stt.setString(4, hangHoa.getTkThueNk().getLyDo());
 
 							return stt;
 						}
@@ -1775,9 +1746,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueXk().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueXk().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkThueXk().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkThueXk().getSoDu());
-							stt.setString(5, hangHoa.getTkThueXk().getLyDo());
+							stt.setInt(3, hangHoa.getTkThueXk().getSoDu());
+							stt.setString(4, hangHoa.getTkThueXk().getLyDo());
 
 							return stt;
 						}
@@ -1798,9 +1768,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueTtdb().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueTtdb().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkThueTtdb().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkThueTtdb().getSoDu());
-							stt.setString(5, hangHoa.getTkThueTtdb().getLyDo());
+							stt.setInt(3, hangHoa.getTkThueTtdb().getSoDu());
+							stt.setString(4, hangHoa.getTkThueTtdb().getLyDo());
 
 							return stt;
 						}
@@ -1820,9 +1789,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 							PreparedStatement stt = con.prepareStatement(themTaiKhoan, Statement.RETURN_GENERATED_KEYS);
 							stt.setString(1, hangHoa.getTkThueGtgtDu().getLoaiTaiKhoan().getMaTk());
 							stt.setDouble(2, hangHoa.getTkThueGtgtDu().getSoTien().getGiaTri());
-							stt.setDouble(3, hangHoa.getTkThueGtgtDu().getSoTien().getSoTien());
-							stt.setInt(4, hangHoa.getTkThueGtgtDu().getSoDu());
-							stt.setString(5, hangHoa.getTkThueGtgtDu().getLyDo());
+							stt.setInt(3, hangHoa.getTkThueGtgtDu().getSoDu());
+							stt.setString(4, hangHoa.getTkThueGtgtDu().getLyDo());
 
 							return stt;
 						}
@@ -1845,9 +1813,8 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 										Statement.RETURN_GENERATED_KEYS);
 								stt.setString(1, hangHoa.getTkThueGtgt().getLoaiTaiKhoan().getMaTk());
 								stt.setDouble(2, hangHoa.getTkThueGtgt().getSoTien().getGiaTri());
-								stt.setDouble(3, hangHoa.getTkThueGtgt().getSoTien().getSoTien());
-								stt.setInt(4, hangHoa.getTkThueGtgt().getSoDu());
-								stt.setString(5, hangHoa.getTkThueGtgt().getLyDo());
+								stt.setInt(3, hangHoa.getTkThueGtgt().getSoDu());
+								stt.setString(4, hangHoa.getTkThueGtgt().getLyDo());
 
 								return stt;
 							}
@@ -2294,7 +2261,7 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 				Tien tien = new Tien();
 				tien.setLoaiTien(loaiTien);
 				tien.setGiaTri(rs.getDouble("SO_TIEN"));
-				tien.setSoTien(rs.getDouble("SO_TIEN_NT"));
+				tien.setSoTien(tien.getGiaTri() / loaiTien.getBanRa());
 				taiKhoan.setSoTien(tien);
 
 				KetChuyenButToan ketChuyenButToan = new KetChuyenButToan();

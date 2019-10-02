@@ -132,7 +132,7 @@
 											value="${nghiepVuKeToan.hangHoa.soLuong}" type="NUMBER"
 											maxFractionDigits="0"></fmt:formatNumber></td>
 									<td class="text-right"><fmt:formatNumber
-											value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+											value="${nghiepVuKeToan.taiKhoanCo.soTien.giaTri}"
 											type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 									<td>0</td>
 									<td class="text-right">0</td>
@@ -160,7 +160,7 @@
 											value="${nghiepVuKeToan.hangHoa.soLuong}" type="NUMBER"
 											maxFractionDigits="0"></fmt:formatNumber></td>
 									<td class="text-right"><fmt:formatNumber
-											value="${nghiepVuKeToan.taiKhoanCo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+											value="${nghiepVuKeToan.taiKhoanCo.soTien.giaTri}"
 											type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 								</c:if>
 								<td><fmt:formatNumber value="${nghiepVuKeToan.slTon}"
@@ -194,7 +194,7 @@
 											value="${nghiepVuKeToan.hangHoa.soLuong}" type="NUMBER"
 											maxFractionDigits="0"></fmt:formatNumber></td>
 									<td class="text-right"><fmt:formatNumber
-											value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+											value="${nghiepVuKeToan.taiKhoanNo.soTien.giaTri}"
 											type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 									<td>0</td>
 									<td class="text-right">0</td>
@@ -222,7 +222,7 @@
 											value="${nghiepVuKeToan.hangHoa.soLuong}" type="NUMBER"
 											maxFractionDigits="0"></fmt:formatNumber></td>
 									<td class="text-right"><fmt:formatNumber
-											value="${nghiepVuKeToan.taiKhoanNo.soTien.soTien*nghiepVuKeToan.chungTu.loaiTien.banRa}"
+											value="${nghiepVuKeToan.taiKhoanNo.soTien.giaTri}"
 											type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
 								</c:if>
 								<td><fmt:formatNumber value="${nghiepVuKeToan.slTon}"
