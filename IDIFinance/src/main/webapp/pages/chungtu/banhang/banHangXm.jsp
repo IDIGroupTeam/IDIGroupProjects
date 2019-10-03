@@ -53,8 +53,21 @@
 -->
 </style>
 
+
 <div>
-	<span class="pull-left heading4">CHỨNG TỪ BÁN HÀNG</span>
+	<c:choose>
+		<c:when test="${chungTu.tinhChatCt==2}">
+			<span class="pull-left heading4">CHỨNG TỪ XUẤT KHẨU HÀNG HÓA</span>
+		</c:when>
+		<c:when test="${chungTu.tinhChatCt==3}">
+			<span class="pull-left heading4">CHỨNG TỪ CUNG CẤP DỊCH VỤ
+				TRONG NƯỚC</span>
+		</c:when>
+		<c:otherwise>
+			<span class="pull-left heading4">CHỨNG TỪ BÁN HÀNG TRONG NƯỚC</span>
+		</c:otherwise>
+	</c:choose>
+
 	<%-- <div class="btn-group btn-group-sm pull-right">
 		<a href="${url}/banhang/${chungTu.maCt}" class="btn btn-info btn-sm">
 			<span class="glyphicon glyphicon-download"></span> Xuất

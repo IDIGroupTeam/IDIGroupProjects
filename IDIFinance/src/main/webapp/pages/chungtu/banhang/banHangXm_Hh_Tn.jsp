@@ -132,7 +132,7 @@
 			<thead>
 				<tr>
 					<th class="text-center" rowspan="2">Vật tư, hàng hóa</th>
-					<th class="text-center" rowspan="2">Giá tính thuế</th>
+					<th class="text-center" rowspan="2">Tiền tính thuế</th>
 					<th class="text-center" colspan="3">Thuế giá trị gia tăng</th>
 				</tr>
 				<tr>

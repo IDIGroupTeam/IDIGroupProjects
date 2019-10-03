@@ -120,7 +120,7 @@
 									<form:option cssClass="giaVon" value="${donGia.maGia}"
 										label="${giaTri}"></form:option>
 								</c:forEach>
-							</form:select> <form:hidden path="hangHoaDs[${status.index}].giaKho.soTien" />
+							</form:select> <form:hidden path="hangHoaDs[${status.index}].giaKho.giaTri" />
 							<form:errors path="hangHoaDs[${status.index}].giaKho.maGia"
 								cssClass="error" /></td>
 						<td><span id="hangHoaDs${status.index}.giaVon.thanhTienTxt"></span></td>
@@ -165,7 +165,7 @@
 			<thead>
 				<tr>
 					<th class="text-center" rowspan="2">Vật tư, hàng hóa</th>
-					<th class="text-center" rowspan="2">Giá tính thuế</th>
+					<th class="text-center" rowspan="2">Tiền tính thuế</th>
 					<th class="text-center" colspan="3">Thuế giá trị gia tăng</th>
 				</tr>
 				<tr>

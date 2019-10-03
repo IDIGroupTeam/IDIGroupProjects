@@ -121,7 +121,8 @@
 							</form:select> <form:errors
 								path="hangHoaDs[${status.index}].tkThanhtoan.loaiTaiKhoan.maTk"
 								cssClass="error" /></td>
-						<td><span id="hangHoaDs${status.index}.tongCongNoTxt"></span></td>
+						<td class="text-right"><span
+							id="hangHoaDs${status.index}.tongCongNoTxt"></span></td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -133,7 +134,7 @@
 			<thead>
 				<tr>
 					<th class="text-center" rowspan="2">Vật tư, hàng hóa</th>
-					<th class="text-center" rowspan="2">Giá tính thuế</th>
+					<th class="text-center" rowspan="2">Tiền tính thuế</th>
 					<th class="text-center" colspan="3">Thuế giá trị gia tăng</th>
 				</tr>
 				<tr>

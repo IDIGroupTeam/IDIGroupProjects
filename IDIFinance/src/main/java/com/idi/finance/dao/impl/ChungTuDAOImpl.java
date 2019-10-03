@@ -1200,10 +1200,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 				logger.info("Thêm vào chung_tu_hang_hoa");
 				int maGia = 0;
+				if (hangHoa.getGiaKho() != null) {
+					maGia = hangHoa.getGiaKho().getMaGia();
+					logger.info("Giá vốn: " + hangHoa.getGiaKho().getMaGia());
+					logger.info("Giá vốn gt: " + hangHoa.getGiaKho().getGiaTri());
+					logger.info("Giá vốn st: " + hangHoa.getGiaKho().getSoTien());
+				}
 				// Thêm vào hang_hoa_gia trước
 				// Kiểm tra xem có chưa, chưa có thì mới thêm, có rồi thì lấy maGia ra
 				if (hangHoa.getGiaKho() != null && hangHoa.getGiaKho().getMaGia() == 0) {
-					double giaKho = hangHoa.getGiaKho().getSoTien() * chungTu.getLoaiTien().getBanRa();
+					double giaKho = hangHoa.getGiaKho().getGiaTri();
 					try {
 						maGia = jdbcTmpl.queryForObject(kiemTraDonGia, new Object[] { hangHoa.getMaHh(), giaKho },
 								Integer.class);
@@ -1566,10 +1572,16 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 
 				logger.info("Thêm vào chung_tu_hang_hoa");
 				int maGia = 0;
+				if (hangHoa.getGiaKho() != null) {
+					maGia = hangHoa.getGiaKho().getMaGia();
+					logger.info("Giá vốn: " + hangHoa.getGiaKho().getMaGia());
+					logger.info("Giá vốn gt: " + hangHoa.getGiaKho().getGiaTri());
+					logger.info("Giá vốn st: " + hangHoa.getGiaKho().getSoTien());
+				}
 				// Thêm vào hang_hoa_gia trước
 				// Kiểm tra xem có chưa, chưa có thì mới thêm, có rồi thì lấy maGia ra
 				if (hangHoa.getGiaKho() != null && hangHoa.getGiaKho().getMaGia() == 0) {
-					double giaKho = hangHoa.getGiaKho().getSoTien() * chungTu.getLoaiTien().getBanRa();
+					double giaKho = hangHoa.getGiaKho().getGiaTri();
 					try {
 						maGia = jdbcTmpl.queryForObject(kiemTraDonGia, new Object[] { hangHoa.getMaHh(), giaKho },
 								Integer.class);

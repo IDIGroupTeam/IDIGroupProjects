@@ -53,9 +53,18 @@
 -->
 </style>
 
-<div>
-	<span class="pull-left heading4">CHỨNG TỪ MUA HÀNG</span>
-</div>
+<c:choose>
+	<c:when test="${chungTu.tinhChatCt==2}">
+		<span class="pull-left heading4">CHỨNG TỪ MUA HÀNG NƯỚC NGOÀI</span>
+	</c:when>
+	<c:when test="${chungTu.tinhChatCt==3}">
+		<span class="pull-left heading4">CHỨNG TỪ MUA DỊCH VỤ TRONG
+			NƯỚC</span>
+	</c:when>
+	<c:otherwise>
+		<span class="pull-left heading4">CHỨNG TỪ MUA HÀNG TRONG NƯỚC</span>
+	</c:otherwise>
+</c:choose>
 <br />
 <hr />
 

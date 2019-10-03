@@ -366,7 +366,7 @@
 			if (soDongTk == 1) {
 				$("#xoaHh").addClass("disabled");
 			}
-			
+
 			capNhapTongTienChungTu();
 		});
 
@@ -571,9 +571,10 @@
 								var giaVon = $(
 										"option[value='" + maGia
 												+ "'][class='giaVon']").text();
-								$("#hangHoaDs" + id + "\\.giaKho\\.soTien")
-										.val(giaVon);
 								giaVon = giaVon.replace(/,/g, "");
+
+								$("#hangHoaDs" + id + "\\.giaKho\\.giaTri")
+										.val(giaVon);
 
 								var soLuong = $
 										.trim($(

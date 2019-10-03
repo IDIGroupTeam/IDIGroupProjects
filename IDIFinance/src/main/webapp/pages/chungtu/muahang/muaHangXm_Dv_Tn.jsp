@@ -98,7 +98,7 @@
 			<thead>
 				<tr>
 					<th class="text-center" rowspan="2">Dịch vụ</th>
-					<th class="text-center" rowspan="2">Giá tính thuế</th>
+					<th class="text-center" rowspan="2">Tiền tính thuế</th>
 					<th class="text-center" colspan="3">Thuế giá trị gia tăng</th>
 				</tr>
 				<tr>

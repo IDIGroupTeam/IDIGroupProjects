@@ -342,7 +342,9 @@ public class ChungTuValidator implements Validator {
 						}
 
 						if (hangHoa.getGiaKho() != null) {
-							logger.info("gia von " + hangHoa.getGiaKho().getMaGia());
+							logger.info("Giá vốn " + hangHoa.getGiaKho().getMaGia());
+							logger.info("Giá vốn gt: " + hangHoa.getGiaKho().getGiaTri());
+							logger.info("Giá vốn st: " + hangHoa.getGiaKho().getSoTien());
 						}
 
 						if (hangHoa.getGiaKho() == null || hangHoa.getGiaKho().getMaGia() == 0) {

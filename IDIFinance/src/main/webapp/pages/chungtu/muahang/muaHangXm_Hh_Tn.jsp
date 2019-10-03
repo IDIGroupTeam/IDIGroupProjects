@@ -127,9 +127,9 @@
 							&nbsp;VND</c:otherwise>
 							</c:choose></td>
 						<td>${hangHoa.tkThanhtoan.loaiTaiKhoan.maTk}</td>
-						<td><fmt:formatNumber
+						<td class="text-right"><fmt:formatNumber
 								value="${hangHoa.tkThanhtoan.soTien.giaTri}"
-								maxFractionDigits="0"></fmt:formatNumber></td>
+								maxFractionDigits="0"></fmt:formatNumber> VND</td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -141,7 +141,7 @@
 			<thead>
 				<tr>
 					<th class="text-center" rowspan="2">Vật tư, hàng hóa</th>
-					<th class="text-center" rowspan="2">Giá tính thuế</th>
+					<th class="text-center" rowspan="2">Tiền tính thuế</th>
 					<th class="text-center" colspan="3">Thuế giá trị gia tăng</th>
 				</tr>
 				<tr>
