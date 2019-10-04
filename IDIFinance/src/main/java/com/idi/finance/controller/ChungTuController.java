@@ -1742,7 +1742,6 @@ public class ChungTuController {
 				if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk() != null) {
 					hangHoa.getTkKho().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 					hangHoa.getTkKho().getSoTien().setSoTien(tongTien);
-					hangHoa.getTkKho().getSoTien().setGiaTri(tongTien * chungTu.getLoaiTien().getBanRa());
 					if (chungTu.getTinhChatCt() == ChungTu.HANG_HOA_TRONG_NUOC
 							|| chungTu.getTinhChatCt() == ChungTu.DICH_VU_TRONG_NUOC) {
 						if (hangHoa.getTkThueGtgt() != null
@@ -1752,14 +1751,14 @@ public class ChungTuController {
 							// Trường hợp có thuế Gtgt
 							// Thuế Gtgt: Phương pháp khấu trừ
 							hangHoa.getTkKho().getSoTien().setSoTien(tongDonGia);
-							hangHoa.getTkKho().getSoTien().setGiaTri(tongDonGia * chungTu.getLoaiTien().getBanRa());
 						} else {
 							// Trường hợp có thuế Gtgt
 							// Thuế Gtgt: Phương pháp trực tiếp
 							hangHoa.getTkKho().getSoTien().setSoTien(tongTienToanBo);
-							hangHoa.getTkKho().getSoTien().setGiaTri(tongTienToanBo * chungTu.getLoaiTien().getBanRa());
 						}
 					}
+					hangHoa.getTkKho().getSoTien()
+							.setGiaTri(hangHoa.getTkKho().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 
 					if (soHangHoa > 1) {
 						hangHoa.getTkKho().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -1776,9 +1775,9 @@ public class ChungTuController {
 					if (chungTu.getTinhChatCt() == ChungTu.HANG_HOA_TRONG_NUOC
 							|| chungTu.getTinhChatCt() == ChungTu.DICH_VU_TRONG_NUOC) {
 						hangHoa.getTkThanhtoan().getSoTien().setSoTien(tongTienToanBo);
-						hangHoa.getTkThanhtoan().getSoTien()
-								.setGiaTri(tongTienToanBo * chungTu.getLoaiTien().getBanRa());
 					}
+					hangHoa.getTkThanhtoan().getSoTien().setGiaTri(
+							hangHoa.getTkThanhtoan().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 
 					if (soHangHoa > 1) {
 						hangHoa.getTkThanhtoan().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -2135,6 +2134,9 @@ public class ChungTuController {
 				Iterator<HangHoa> hhIter = chungTu.getHangHoaDs().iterator();
 				while (hhIter.hasNext()) {
 					HangHoa hangHoa = hhIter.next();
+					hangHoa.getGiaKho().setLoaiTien(chungTu.getLoaiTien());
+					hangHoa.getGiaKho().setSoTien(hangHoa.getGiaKho().getGiaTri() / chungTu.getLoaiTien().getBanRa());
+					hangHoa.getDonGia().setLoaiTien(chungTu.getLoaiTien());
 
 					// Tổng thuế: thực ra chỉ một trong 2: thuế XNK hoặc thuế GTGT
 					double tongThue = 0;
@@ -2176,7 +2178,8 @@ public class ChungTuController {
 							&& !hangHoa.getTkDoanhThu().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						hangHoa.getTkDoanhThu().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 						hangHoa.getTkDoanhThu().getSoTien().setSoTien(tongDoanhThu);
-						hangHoa.getTkDoanhThu().getSoTien().setGiaTri(tongDoanhThu * chungTu.getLoaiTien().getBanRa());
+						hangHoa.getTkDoanhThu().getSoTien().setGiaTri(
+								hangHoa.getTkDoanhThu().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 
 						if (soHangHoa > 1) {
 							hangHoa.getTkDoanhThu().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -2191,8 +2194,8 @@ public class ChungTuController {
 							&& !hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						hangHoa.getTkThanhtoan().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 						hangHoa.getTkThanhtoan().getSoTien().setSoTien(tongThanhToan);
-						hangHoa.getTkThanhtoan().getSoTien()
-								.setGiaTri(tongThanhToan * chungTu.getLoaiTien().getBanRa());
+						hangHoa.getTkThanhtoan().getSoTien().setGiaTri(
+								hangHoa.getTkThanhtoan().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 
 						if (soHangHoa > 1) {
 							hangHoa.getTkThanhtoan().setLyDo(chungTu.getLyDo() + ": " + hangHoa.getTenHh());
@@ -2207,7 +2210,8 @@ public class ChungTuController {
 							&& !hangHoa.getTkGiaVon().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						hangHoa.getTkGiaVon().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 						hangHoa.getTkGiaVon().getSoTien().setSoTien(tongGiaVon);
-						hangHoa.getTkGiaVon().getSoTien().setGiaTri(tongGiaVon * chungTu.getLoaiTien().getBanRa());
+						hangHoa.getTkGiaVon().getSoTien().setGiaTri(
+								hangHoa.getTkGiaVon().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 						hangHoa.getTkGiaVon().setNhomDk(1);
 
 						if (soHangHoa > 1) {
@@ -2221,7 +2225,8 @@ public class ChungTuController {
 							&& !hangHoa.getTkKho().getLoaiTaiKhoan().getMaTk().trim().equals("")) {
 						hangHoa.getTkKho().getSoTien().setLoaiTien(chungTu.getLoaiTien());
 						hangHoa.getTkKho().getSoTien().setSoTien(tongGiaVon);
-						hangHoa.getTkKho().getSoTien().setGiaTri(tongGiaVon * chungTu.getLoaiTien().getBanRa());
+						hangHoa.getTkKho().getSoTien().setGiaTri(
+								hangHoa.getTkKho().getSoTien().getSoTien() * chungTu.getLoaiTien().getBanRa());
 						hangHoa.getTkKho().setNhomDk(1);
 
 						if (soHangHoa > 1) {

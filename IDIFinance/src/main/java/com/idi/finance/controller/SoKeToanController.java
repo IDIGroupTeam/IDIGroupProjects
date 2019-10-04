@@ -1149,6 +1149,7 @@ public class SoKeToanController {
 						}
 
 						logger.info(doiTuongTmpl + " " + doiTuongTmpl.getDuLieuKeToan());
+						doiTuongTmpl.getDuLieuKeToan().tinhSoTienTonNghiepVuKeToanDs(loaiTaiKhoan);
 					}
 				}
 

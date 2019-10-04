@@ -394,15 +394,17 @@ public class DuLieuKeToan {
 
 				// So tien ton
 				try {
+					double nhoNhat = Math.min(nghiepVuKeToan.getTaiKhoanNo().getSoTien().getGiaTri(),
+							nghiepVuKeToan.getTaiKhoanCo().getSoTien().getGiaTri());
 					if (nghiepVuKeToan.getTaiKhoanNo().getLoaiTaiKhoan().isTrucHe(loaiTaiKhoan)) {
-						ton += nghiepVuKeToan.getTaiKhoanNo().getSoTien().getGiaTri() * loaiTaiKhoan.getSoDu() * -1;
+						ton += nhoNhat * loaiTaiKhoan.getSoDu() * -1;
 					} else if (nghiepVuKeToan.getTaiKhoanCo().getLoaiTaiKhoan().isTrucHe(loaiTaiKhoan)) {
-						ton += nghiepVuKeToan.getTaiKhoanCo().getSoTien().getGiaTri() * loaiTaiKhoan.getSoDu();
+						ton += nhoNhat * loaiTaiKhoan.getSoDu();
 					}
 
 					nghiepVuKeToan.setTon(ton);
 				} catch (Exception e) {
-					// e.printStackTrace();
+					e.printStackTrace();
 				}
 
 				// So luong ton
