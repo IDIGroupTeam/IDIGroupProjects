@@ -533,6 +533,9 @@ public class EmployeeController {
 		// get works status
 		Map<String, String> workStatusMap = employeeDAO.getWorkStatusMap();
 		model.addAttribute("workStatusMap", workStatusMap);
+		
+		Date today = new Date();
+		model.addAttribute("today", today);
 
 		if (employeeInfo.getEmployeeId() > 0) {
 			model.addAttribute("formTitle", "Sửa thông tin nhân viên");
