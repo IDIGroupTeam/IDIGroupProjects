@@ -44,18 +44,50 @@
 				<th>Tên nhân viên</th>
 				<th>Ngày vào</th>
 				<th>Phòng</th>
-				<th>Thâm niên</th>
+				<th>Thâm niên (tháng)</th>
 
 				<!-- dynamic generate begin  -->
-				<c:forEach var="leaveTypeName" items="${leaveForReport}">
-					<th>${leaveTypeName.value}</th>
+				<c:forEach var="leaveTypeName" items="${leaveForReport}">					
+					<c:if test="${leaveTypeName.value.contains('Công việc bên ngoài')}"> 
+						<th>${leaveTypeName.value} (lần/giờ) </th>
+					</c:if>
+					<c:if test="${leaveTypeName.value.contains('SLần')}"> 
+						<th>${leaveTypeName.value}</th>
+					</c:if>
+					<c:if test="${leaveTypeName.value.contains('Công tác')}"> 
+						<th>${leaveTypeName.value} (ngày)</th>
+					</c:if>				
+					<c:if test="${leaveTypeName.value.contains('Xin phép đi muộn')}"> 
+						<th>${leaveTypeName.value} (lần)</th>
+					</c:if>							
+					<c:if test="${leaveTypeName.value.contains('Học tập')}"> 
+						<th>${leaveTypeName.value} (ngày) </th>
+					</c:if>
+					<c:if test="${leaveTypeName.value.contains('Không chấm công')}"> 
+						<th>${leaveTypeName.value} (lần)</th>
+					</c:if>
+					<c:if test="${leaveTypeName.value.contains('Làm thêm ngày')}"> 
+						<th>${leaveTypeName.value} (giờ)</th>
+					</c:if>				
+					<c:if test="${leaveTypeName.value.contains('Nghỉ')}"> 
+						<th>${leaveTypeName.value} (ngày)</th>
+					</c:if>	
+					<c:if test="${leaveTypeName.value.contains('Xin phép về sớm')}"> 
+						<th>${leaveTypeName.value} (lần)</th>
+					</c:if>				
+					<c:if test="${leaveTypeName.value.contains('Ốm điều')}"> 
+						<th>${leaveTypeName.value} (ngày)</th>
+					</c:if>		
+					<c:if test="${leaveTypeName.value.contains('Lương thời gian')}"> 
+						<th>${leaveTypeName.value} (ngày)</th>
+					</c:if>		
 				</c:forEach>
 				<!-- dynamic generate end -->
 
 				<!-- <th>Phép còn năm trước</th> -->
-				<th>Phép năm nay</th>
-				<th>Phép đã sử dụng</th>
-				<th>Phép còn lại</th>
+				<th>Ngày phép năm nay</th>
+				<th>Ngày phép đã sử dụng</th>
+				<th>Ngày phép còn lại</th>
 			</tr>
 			<c:forEach var="leaveReport" items="${leaveReports}">
 				<tr style="font-size: 10">
@@ -63,7 +95,7 @@
 					<td nowrap="nowrap">${leaveReport.name}</td>
 					<td nowrap="nowrap">${leaveReport.joinDate}</td>
 					<td nowrap="nowrap">${leaveReport.department}</td>
-					<td nowrap="nowrap">${leaveReport.seniority} tháng</td>
+					<td nowrap="nowrap">${leaveReport.seniority}</td>
 
 					<!-- dynamic generate begin  -->
 					<c:forEach var="leaveTypes" items="${leaveReport.leaveTypes}">

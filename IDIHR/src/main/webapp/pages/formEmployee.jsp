@@ -3,7 +3,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -16,14 +17,22 @@
 }
 </style>
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
-<script src="${url}/public/js/jquery-ui.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
-<%-- <script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script> --%>
+
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script> 
  
 <script type="text/javascript">
+<!--  src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"> -->
+/* jQuery(document).ready(function ($) {
+    // Your code here
+	alert("xxxxxlllll");
+	jQuery(document).ready(function($){
+	alert("xxxxxlllll");
+	});
+	
+}); */
 $(function() {
-	$(".datetime").datetimepicker({
+/* 	$(".datetime").datetimepicker({
 		language : 'vi',
 		todayBtn : 1,
 		autoclose : 1,
@@ -32,9 +41,9 @@ $(function() {
 		minView : 2,
 		forceParse : 0,
 		pickerPosition : "bottom-left"
-	});
+	}); */
 	
-/* 	alert("xxxxx");
+/*  	alert("xxxxx");
     $('#officalJoinDate').daterangepicker({
         locale: {
                  format: 'DD/MM/YYYY'
@@ -44,14 +53,14 @@ $(function() {
     $('#joinDate').datetimepicker({
       language: 'pt-BR'
     });
-    alert("xxxxxyyyyyyyyzzzzzzzzz"); */
-
+    alert("xxxxxyyyyyyyyzzzzzzzzz"); 
+ */
 }); 
 </script>
 
 </head>
-<fmt:formatDate value="${today}" pattern="dd/M/yyyy" type="Date"
-	dateStyle="SHORT" var="today" />
+<%-- <fmt:formatDate value="${today}" pattern="dd/MM/yyyy" type="Date"
+	dateStyle="SHORT" var="today" /> --%>
 <body>
 	<form:form modelAttribute="employeeForm" method="POST"
 		action="insertOrUpdateEmployee" enctype="multipart/form-data">
@@ -148,19 +157,19 @@ $(function() {
 					</tr>
 					<tr>
 						<td bgcolor="#E6E6E6">Ngày sinh:</td>					
-						<td>
+<%-- 						<td>
 							<div class="input-group date datetime smallform">
 								<form:input path="DOB" class="form-control"
 									placeholder="dd/mm/yyyy" />
 								<span class="input-group-addon"><span
 									class="glyphicon glyphicon-calendar"></span></span>
 							</div>
-						</td>	
-<%-- 						<td>						
+						</td>	 --%>
+						<td>						
 						<div id="datetimepicker">
 						<form:input path="DOB" type="date" id="datetimepicker" data-date-format="DD/MM/YYYY" class="form-control animated"/>
 						</div>
-						</td> --%>
+						</td>
 						<td bgcolor="#E6E6E6">Phòng:</td>
 						<td><form:select path="department" class="form-control animated">
 								<form:options items="${departmentMap}" />

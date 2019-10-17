@@ -45,6 +45,7 @@ import com.idi.hr.bean.LeaveReport;
 import com.idi.hr.bean.LeaveType;
 import com.idi.hr.bean.Timekeeping;
 import com.idi.hr.bean.ValueReport;
+
 import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.LeaveDAO;
@@ -1122,12 +1123,12 @@ public class TimekeepingController {
 							comeLLeaveS = timekeepingDAO.getTimekeepingReport(year, month, employeeId, lT);
 							
 							if (lT.equalsIgnoreCase("VS")) {
-								leaveForReport.put(lT, "SL Về sớm/Số phút");
+								leaveForReport.put(lT, "SLần Về sớm/Số phút");
 								// leaveForReport.put("TGVS", "TG Về sớm");
 								lTV = String.valueOf(comeLLeaveS.getLeaveSoon()) + "/"
 										+ (comeLLeaveS.getLeaveSoonAValue() + comeLLeaveS.getLeaveSoonMValue());
 							} else {
-								leaveForReport.put(lT, "SL Đi muộn/Số phút");
+								leaveForReport.put(lT, "SLần Đi muộn/Số phút");
 								// leaveForReport.put("TGDM", "TG Đi muộn");
 								lTV = String.valueOf(comeLLeaveS.getComeLate()) + "/"
 										+ (comeLLeaveS.getLateAValue() + comeLLeaveS.getLateMValue());
@@ -1141,7 +1142,7 @@ public class TimekeepingController {
 							// model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ
 							// the!");
 							// Tính ngày công cho nhân viên của phòng
-							leaveForReport.put(lT, "Ngày công");
+							leaveForReport.put(lT, "Ngày công/Ngày công chuẩn");
 							// ngay cong thuc te
 							if (month.length() < 2)
 								lTV = (float) leaveDAO.getLeaveReport(year, month, employeeId, "NP','CT','HT") / 8
@@ -1288,12 +1289,12 @@ public class TimekeepingController {
 								comeLLeaveS = timekeepingDAO.getTimekeepingReport(year, month, id, lT);
 								// System.err.println("leave type: " + lT);
 								if (lT.equalsIgnoreCase("VS")) {
-									leaveForReport.put(lT, "SL Về sớm/Số phút");
+									leaveForReport.put(lT, "SLần Về sớm/Số phút");
 									// leaveForReport.put("TGVS", "TG Về sớm");
 									lTV = String.valueOf(comeLLeaveS.getLeaveSoon()) + "/"
 											+ (comeLLeaveS.getLeaveSoonAValue() + comeLLeaveS.getLeaveSoonMValue());
 								} else {
-									leaveForReport.put(lT, "SL Đi muộn/Số phút");
+									leaveForReport.put(lT, "SLần Đi muộn/Số phút");
 									// leaveForReport.put("TGDM", "TG Đi muộn");
 									lTV = String.valueOf(comeLLeaveS.getComeLate()) + "/"
 											+ (comeLLeaveS.getLateAValue() + comeLLeaveS.getLateMValue());
@@ -1307,7 +1308,7 @@ public class TimekeepingController {
 								// model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ
 								// the!");
 								// Tính ngày công cho nhân viên của phòng
-								leaveForReport.put(lT, "Ngày công");
+								leaveForReport.put(lT, "Ngày công/Ngày công chuẩn");
 								// ngay cong thuc te
 								if (month.length() < 2)
 									lTV = (float) leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT") / 8
@@ -1459,14 +1460,14 @@ public class TimekeepingController {
 								comeLLeaveS = timekeepingDAO.getTimekeepingReport(year, month, id, lT);
 								// System.err.println("leave type: " + lT);
 								if (lT.equalsIgnoreCase("VS")) {
-									leaveForReport.put(lT, "SL Về sớm/Số phút");
+									leaveForReport.put(lT, "SLần Về sớm/Số phút");
 									// leaveForReport.put("TGVS", "TG Về sớm");
 									// System.err.println("ve som: " + comeLLeaveS.getLeaveSoonAValue() + "|"
 									// + comeLLeaveS.getLeaveSoonMValue());
 									lTV = String.valueOf(comeLLeaveS.getLeaveSoon()) + "/"
 											+ (comeLLeaveS.getLeaveSoonAValue() + comeLLeaveS.getLeaveSoonMValue());
 								} else {
-									leaveForReport.put(lT, "SL Đi muộn/Số phút");
+									leaveForReport.put(lT, "SLần Đi muộn/Số phút");
 									// leaveForReport.put("TGDM", "TG Đi muộn");
 									// System.err.println("di muon: " + comeLLeaveS.getLateAValue() + "|"
 									// + comeLLeaveS.getLateMValue());
@@ -1482,7 +1483,7 @@ public class TimekeepingController {
 								// model.addAttribute("message", "Với phần tính ngày công yêu cầu chọn tháng cụ
 								// the!");
 								// Tính ngày công cho nhân viên của phòng
-								leaveForReport.put(lT, "Ngày công");
+								leaveForReport.put(lT, "Ngày công/Ngày công chuẩn");
 								// ngay cong thuc te
 								if (month.length() < 2)
 									lTV = (float) leaveDAO.getLeaveReport(year, month, id, "NP','CT','HT") / 8
@@ -1881,7 +1882,7 @@ public class TimekeepingController {
 			for (int i = 0; i < list.size(); i++) {
 				leaveType = (LeaveType) list.get(i);
 				String leaveId = leaveType.getLeaveId();
-				if (!leaveId.endsWith("2") || leaveId.equalsIgnoreCase("NP2"))
+				if (!leaveId.endsWith("2")) //|| leaveId.equalsIgnoreCase("NP2")) --> ko nho sao ngay xua lai can NP2 note:20191008
 					leaveTypeMap.put(leaveId, leaveType.getLeaveName());
 			}
 
