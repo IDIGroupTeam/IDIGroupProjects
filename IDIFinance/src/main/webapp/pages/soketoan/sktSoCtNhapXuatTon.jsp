@@ -115,7 +115,7 @@
 									test="${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.trim().length() >= mainFinanceForm.taiKhoan.trim().length()
 										&& nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.trim().substring(0, mainFinanceForm.taiKhoan.trim().length()).equals(mainFinanceForm.taiKhoan.trim())}">
 									<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
-									<td><c:choose>
+									<td class="text-right"><c:choose>
 											<c:when
 												test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">
 												<fmt:formatNumber
@@ -141,7 +141,7 @@
 									test="${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk.trim().length() >= mainFinanceForm.taiKhoan.trim().length()
 										&& nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk.trim().substring(0, mainFinanceForm.taiKhoan.trim().length()).equals(mainFinanceForm.taiKhoan.trim())}">
 									<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
-									<td><c:choose>
+									<td class="text-right"><c:choose>
 											<c:when
 												test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">
 												<fmt:formatNumber
@@ -177,7 +177,7 @@
 									test="${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.trim().length() >= mainFinanceForm.taiKhoan.trim().length()
 										&& nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk.trim().substring(0, mainFinanceForm.taiKhoan.trim().length()).equals(mainFinanceForm.taiKhoan.trim())}">
 									<td>${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk}</td>
-									<td><c:choose>
+									<td class="text-right"><c:choose>
 											<c:when
 												test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">
 												<fmt:formatNumber
@@ -203,7 +203,7 @@
 									test="${nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk.trim().length() >= mainFinanceForm.taiKhoan.trim().length()
 										&& nghiepVuKeToan.taiKhoanCo.loaiTaiKhoan.maTk.trim().substring(0, mainFinanceForm.taiKhoan.trim().length()).equals(mainFinanceForm.taiKhoan.trim())}">
 									<td>${nghiepVuKeToan.taiKhoanNo.loaiTaiKhoan.maTk}</td>
-									<td><c:choose>
+									<td class="text-right"><c:choose>
 											<c:when
 												test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">
 												<fmt:formatNumber
