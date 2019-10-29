@@ -1,48 +1,65 @@
 <%@page import="com.idi.hr.common.PropertiesManager"%>
-<%@page language="java" contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<c:set var="url" value="${pageContext.request.contextPath}"></c:set>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <html>
-<link rel="stylesheet" href="${url}/public/css/bootstrap.min.css" />
-<link href="${url}/public/css/bootstrap-editable.css" rel="stylesheet">
-<%--<link rel='stylesheet' type='text/css' media='all' href="${url}/public/css/calendar.css" />
-<link rel='stylesheet' type='text/css' href="${url}/public/css/ext.css"/>
- --%>
- 
 <head>
-<!-- Initialize the plugin: -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<%-- <script language="JavaScript1.2" src="<%=request.getContextPath()%>/js/drag.js" type="text/javascript"></script>
-<script type='text/javascript' src='./js/common.js' type="text/javascript"></script> --%>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
-<script src="${url}/public/js/bootstrap-editable.min.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Tập đoàn IDI - Dữ liệu chấm công nhân viên</title>
+
+<style>
+.error-message {
+	color: red;
+	font-size: 90%;
+	font-style: italic;
+}
+</style>
+<c:set var="url" value="${pageContext.request.contextPath}"></c:set>
+
+<script src="${url}/public/js/jquery.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
+
 
 <script type="text/javascript">
-
-// Wait for window load
-$(window).load(function(){
-	// Animate loader off screen
-	//$("button").click(function(){
-		$(".loader").fadeOut("slow");
-	//});	
-});
-
-	$(function() {
-		$('#comment').editable({
-            type:  'text',
-            pk:    1,
-            name:  'comment',
-            url:   '${url}/timekeeping/ghichu',  
-            title: 'thêm ghi chú'
-         });
+	var $j = jQuery.noConflict();
+	$j(function() {
+		//alert($j.fn.jquery);
 		
-		$("#dept")
+		/* 		// Wait for window load
+		 $(window).load(function(){
+		 // Animate loader off screen
+		 //$("button").click(function(){
+		 $(".loader").fadeOut("slow");
+		 //});	
+		 }); */
+
+		/* 		$j('#comment').editable({
+		 type : 'text',
+		 pk : 1,
+		 name : 'comment',
+		 url : '${url}/timekeeping/ghichu',
+		 title : 'thêm ghi chú'
+		 }); */
+
+		$j(".datetime").datetimepicker({
+			//language : 'vi',
+			format : 'dd/mm/yyyy',
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			minView : 2,
+			forceParse : 0,
+			pickerPosition : "bottom-left"
+		});
+		 
+		$j("#dept")
 				.change(
 						function() {
 
@@ -72,121 +89,121 @@ $(window).load(function(){
 									});
 
 						});
+
 	});
-/* 
-	function dragStart(event, id) {
+	/* 
+	 function dragStart(event, id) {
 
-		var el;
-		var x, y;
+	 var el;
+	 var x, y;
 
-		// If an element id was given, find it. Otherwise use the element being
-		// clicked on.
+	 // If an element id was given, find it. Otherwise use the element being
+	 // clicked on.
 
-		if (id)
-			dragObj.elNode = document.getElementById(id);
-		else {
-			if (browser.isIE)
-				dragObj.elNode = window.event.srcElement;
-			if (browser.isNS)
-				dragObj.elNode = event.target;
+	 if (id)
+	 dragObj.elNode = document.getElementById(id);
+	 else {
+	 if (browser.isIE)
+	 dragObj.elNode = window.event.srcElement;
+	 if (browser.isNS)
+	 dragObj.elNode = event.target;
 
-			// If this is a text node, use its parent element.
+	 // If this is a text node, use its parent element.
 
-			if (dragObj.elNode.nodeType == 3)
-				dragObj.elNode = dragObj.elNode.parentNode;
-		}
+	 if (dragObj.elNode.nodeType == 3)
+	 dragObj.elNode = dragObj.elNode.parentNode;
+	 }
 
-		// Get cursor position with respect to the page.
+	 // Get cursor position with respect to the page.
 
-		if (browser.isIE) {
-			x = window.event.clientX + document.documentElement.scrollLeft
-					+ document.body.scrollLeft;
-			y = window.event.clientY + document.documentElement.scrollTop
-					+ document.body.scrollTop;
-		}
-		if (browser.isNS) {
-			x = event.clientX + window.scrollX;
-			y = event.clientY + window.scrollY;
-		}
+	 if (browser.isIE) {
+	 x = window.event.clientX + document.documentElement.scrollLeft
+	 + document.body.scrollLeft;
+	 y = window.event.clientY + document.documentElement.scrollTop
+	 + document.body.scrollTop;
+	 }
+	 if (browser.isNS) {
+	 x = event.clientX + window.scrollX;
+	 y = event.clientY + window.scrollY;
+	 }
 
-		// Save starting positions of cursor and element.
+	 // Save starting positions of cursor and element.
 
-		dragObj.cursorStartX = x;
-		dragObj.cursorStartY = y;
-		dragObj.elStartLeft = dragObj.elNode.offsetLeft; //parseInt(dragObj.elNode.style.left, 10);
-		dragObj.elStartTop = dragObj.elNode.offsetTop; //parseInt(dragObj.elNode.style.top,  10);
+	 dragObj.cursorStartX = x;
+	 dragObj.cursorStartY = y;
+	 dragObj.elStartLeft = dragObj.elNode.offsetLeft; //parseInt(dragObj.elNode.style.left, 10);
+	 dragObj.elStartTop = dragObj.elNode.offsetTop; //parseInt(dragObj.elNode.style.top,  10);
 
-		if (isNaN(dragObj.elStartLeft))
-			dragObj.elStartLeft = x;
-		if (isNaN(dragObj.elStartTop))
-			dragObj.elStartTop = y;
+	 if (isNaN(dragObj.elStartLeft))
+	 dragObj.elStartLeft = x;
+	 if (isNaN(dragObj.elStartTop))
+	 dragObj.elStartTop = y;
 
-		// Update element's z-index.
+	 // Update element's z-index.
 
-		dragObj.elNode.style.zIndex = ++dragObj.zIndex;
+	 dragObj.elNode.style.zIndex = ++dragObj.zIndex;
 
-		// Capture mousemove and mouseup events on the page.
+	 // Capture mousemove and mouseup events on the page.
 
-		if (browser.isIE) {
-			document.attachEvent("onmousemove", dragGo);
-			document.attachEvent("onmouseup", dragStop);
-			window.event.cancelBubble = true;
-			window.event.returnValue = false;
-		}
-		if (browser.isNS) {
-			document.addEventListener("mousemove", dragGo, true);
-			document.addEventListener("mouseup", dragStop, true);
-			event.preventDefault();
-		}
-	}
+	 if (browser.isIE) {
+	 document.attachEvent("onmousemove", dragGo);
+	 document.attachEvent("onmouseup", dragStop);
+	 window.event.cancelBubble = true;
+	 window.event.returnValue = false;
+	 }
+	 if (browser.isNS) {
+	 document.addEventListener("mousemove", dragGo, true);
+	 document.addEventListener("mouseup", dragStop, true);
+	 event.preventDefault();
+	 }
+	 }
 
-	function dragGo(event) {
+	 function dragGo(event) {
 
-		var x, y;
+	 var x, y;
 
-		// Get cursor position with respect to the page.
+	 // Get cursor position with respect to the page.
 
-		if (browser.isIE) {
-			x = window.event.clientX + document.documentElement.scrollLeft
-					+ document.body.scrollLeft;
-			y = window.event.clientY + document.documentElement.scrollTop
-					+ document.body.scrollTop;
-		}
-		if (browser.isNS) {
-			x = event.clientX + window.scrollX;
-			y = event.clientY + window.scrollY;
-		}
+	 if (browser.isIE) {
+	 x = window.event.clientX + document.documentElement.scrollLeft
+	 + document.body.scrollLeft;
+	 y = window.event.clientY + document.documentElement.scrollTop
+	 + document.body.scrollTop;
+	 }
+	 if (browser.isNS) {
+	 x = event.clientX + window.scrollX;
+	 y = event.clientY + window.scrollY;
+	 }
 
-		// Move drag element by the same amount the cursor has moved.
+	 // Move drag element by the same amount the cursor has moved.
 
-		dragObj.elNode.style.left = (dragObj.elStartLeft + x - dragObj.cursorStartX)
-				+ "px";
-		dragObj.elNode.style.top = (dragObj.elStartTop + y - dragObj.cursorStartY)
-				+ "px";
+	 dragObj.elNode.style.left = (dragObj.elStartLeft + x - dragObj.cursorStartX)
+	 + "px";
+	 dragObj.elNode.style.top = (dragObj.elStartTop + y - dragObj.cursorStartY)
+	 + "px";
 
-		if (browser.isIE) {
-			window.event.cancelBubble = true;
-			window.event.returnValue = false;
-		}
-		if (browser.isNS)
-			event.preventDefault();
-	}
+	 if (browser.isIE) {
+	 window.event.cancelBubble = true;
+	 window.event.returnValue = false;
+	 }
+	 if (browser.isNS)
+	 event.preventDefault();
+	 }
 
-	function dragStop(event) {
+	 function dragStop(event) {
 
-		// Stop capturing mousemove and mouseup events.
+	 // Stop capturing mousemove and mouseup events.
 
-		if (browser.isIE) {
-			document.detachEvent("onmousemove", dragGo);
-			document.detachEvent("onmouseup", dragStop);
-		}
-		if (browser.isNS) {
-			document.removeEventListener("mousemove", dragGo, true);
-			document.removeEventListener("mouseup", dragStop, true);
-		}
-	} */
+	 if (browser.isIE) {
+	 document.detachEvent("onmousemove", dragGo);
+	 document.detachEvent("onmouseup", dragStop);
+	 }
+	 if (browser.isNS) {
+	 document.removeEventListener("mousemove", dragGo, true);
+	 document.removeEventListener("mouseup", dragStop, true);
+	 }
+	 } */
 </script>
-<title>Dữ liệu chấm công nhân viên</title>
 
 </head>
 <body>
@@ -214,10 +231,25 @@ $(window).load(function(){
 		method="POST">
 		<table class="table">
 			<tr>
-				<td>Chọn xem từ ngày:(*) &nbsp;<form:input path="date"
-						type="date" required="required" class="form-control animated" /></td>
-				<td>Đến ngày:(*) &nbsp;<form:input path="toDate" type="date"
-						required="required" class="form-control animated" /></td>
+				<td>Chọn xem từ ngày:(*) &nbsp;
+					<div class="input-group date datetime">
+						<form:input path="date" class="form-control"
+							placeholder="dd/mm/yyyy" autocomplete="off" />
+						<span class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span></span>
+					</div> <%-- <form:input path="date"
+						type="date" required="required" class="form-control animated" /> --%>
+				</td>
+				<td>Đến ngày:(*) &nbsp;
+					<div class="input-group date datetime">
+						<form:input path="toDate" class="form-control"
+							placeholder="dd/mm/yyyy" autocomplete="off" />
+						<span class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span></span>
+					</div>		
+				<%-- <form:input path="toDate" type="date"
+						required="required" class="form-control animated" /> --%>
+				</td>
 				<td>Phòng: &nbsp; <form:select path="dept"
 						class="form-control animated">
 						<form:option value="all" label="Tất cả phòng ban"></form:option>
@@ -231,25 +263,28 @@ $(window).load(function(){
 					</form:select>
 				</td>
 				<td>&nbsp;&nbsp;<input class="btn btn-lg btn-primary btn-sm"
-					type="submit" value="Xem danh sách"  /></td>
+					type="submit" value="Xem danh sách" /></td>
 			</tr>
 		</table>
 		<c:if test="${not empty message}">
 			<div class="alert alert-success">${message}</div>
-		</c:if>		
+		</c:if>
 	</form:form>
-	
+
 	<c:if test="${empty message}">
-		<a href="${url}/timekeeping/exportToExcel?date=${leaveInfoForm.date}&toDate=${leaveInfoForm.toDate}&dept=${leaveInfoForm.dept}&eId=${leaveInfoForm.eId}">
-		<button class="btn btn-lg btn-primary btn-sm">Export dữ liệu ra file excel</button>
+		<a
+			href="${url}/timekeeping/exportToExcel?date=${leaveInfoForm.date}&toDate=${leaveInfoForm.toDate}&dept=${leaveInfoForm.dept}&eId=${leaveInfoForm.eId}">
+			<button class="btn btn-lg btn-primary btn-sm">Export dữ liệu ra file excel</button>
 		</a>
-		<br/><br/>
+		<br />
+		<br />
 	</c:if>
-		
+	<%-- 
 	<div class="loader">
-		<img src="${url}/public/images/loading1.gif" align="middle" vspace="5" alt="Import dữ liệu" />
-	</div>
-<%-- 	<div id="waitingBox" class="msgBox"
+		<img src="${url}/public/images/loading1.gif" align="middle" vspace="5"
+			alt="Import dữ liệu" />
+	</div> --%>
+	<%-- 	<div id="waitingBox" class="msgBox"
 		onmousedown="dragStart(event, 'waitingBox')" style="cursor: move">
 		<div class="shadow"></div>
 		<div class="pane"></div>
@@ -272,9 +307,12 @@ $(window).load(function(){
 			<tr>
 				<td><b><i>Cập nhật dữ liệu chấm công từ file excel:</i></b></td>
 				<td align="left"><input class="btn btn-lg btn-primary btn-sm"
-					name="timeKeepingFile" type="file"/>
-				</td><td align="right"> <button class="btn btn-lg btn-primary btn-sm">Cập nhật</button> &nbsp; &nbsp;</td>
-				
+					name="timeKeepingFile" type="file" /></td>
+				<td align="right">
+					<button class="btn btn-lg btn-primary btn-sm">Cập nhật</button>
+					&nbsp; &nbsp;
+				</td>
+
 			</tr>
 		</table>
 		<c:if test="${not empty comment}">
@@ -300,9 +338,9 @@ $(window).load(function(){
 						<td>${leaveInfo.employeeName}</td>
 						<td>${leaveInfo.department}</td>
 						<td>${leaveInfo.title}</td>
-						<td>${leaveInfo.date}</td>
+						<td><fmt:formatDate pattern="dd/MM/yyyy" value="${leaveInfo.date}" /></td>
 						<c:if test="${leaveInfo.timeValue == 4}">
-							<td>${leaveInfo.leaveName}nửa ngày</td>
+							<td>${leaveInfo.leaveName}nửangày</td>
 						</c:if>
 						<c:if test="${leaveInfo.timeValue != '4'}">
 							<td>${leaveInfo.leaveName}</td>
@@ -323,7 +361,7 @@ $(window).load(function(){
 				<th>Ngày</th>
 				<th>Giờ vào</th>
 				<th>Giờ ra</th>
-				<th>Tổng tgian</th> 
+				<th>Tổng tgian</th>
 				<th>ĐM sáng</th>
 				<th>ĐM chiều</th>
 				<th>VS sáng</th>
@@ -336,7 +374,9 @@ $(window).load(function(){
 					<td nowrap="nowrap">${timekeeping.employeeName}</td>
 					<td>${timekeeping.department}</td>
 					<td>${timekeeping.title}</td>
-					<td nowrap="nowrap">${timekeeping.date}</td>
+					<td nowrap="nowrap">
+						<fmt:formatDate pattern="dd/MM/yyyy" value="${timekeeping.date}" />
+					</td>
 					<c:if test="${not empty timekeeping.timeIn}">
 						<td>${timekeeping.timeIn}</td>
 					</c:if>
@@ -345,7 +385,7 @@ $(window).load(function(){
 					</c:if>
 					<c:if test="${not empty timekeeping.timeOut}">
 						<td>${timekeeping.timeOut}</td>
-					</c:if>																				
+					</c:if>
 					<c:if test="${empty timekeeping.timeOut}">
 						<td bgcolor="EDC7D0">${timekeeping.timeOut}</td>
 					</c:if>
@@ -399,12 +439,16 @@ $(window).load(function(){
 						<td>${timekeeping.leaveSoonA}</td>
 					</c:if>
 					<c:if test="${not empty timekeeping.comment}">
-						<td title="Nhấn vào để thêm ghi chú"><a href="#"> ${timekeeping.comment}</a></td>
+						<td title="Nhấn vào để thêm ghi chú">
+						<!-- <a href="#"> -->
+								${timekeeping.comment}</td>
 					</c:if>
-					<c:if test="${empty timekeeping.comment}">
-						<td nowrap="nowrap" title="Nhấn vào để thêm ghi chú"><a href="#"> Thêm ghi chú</a></td>
-					</c:if>
-					
+ 					<c:if test="${empty timekeeping.comment}">
+						<td nowrap="nowrap" title="Nhấn vào để thêm ghi chú">
+						<!-- <a href="#">  Thêm ghi chú-->
+						</td>
+					</c:if> 
+
 				</tr>
 			</c:forEach>
 		</table>

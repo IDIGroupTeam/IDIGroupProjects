@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,6 +37,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.idi.hr.bean.Department;
@@ -89,6 +92,8 @@ public class TimekeepingController {
 
 	@InitBinder
 	protected void initBinder(WebDataBinder dataBinder) {
+		dataBinder.registerCustomEditor(java.sql.Date.class,     
+                 new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), true, 10)); 
 
 		// Form mục tiêu
 		Object target = dataBinder.getTarget();
@@ -528,7 +533,7 @@ public class TimekeepingController {
 			//System.out.println();
 			// Print dates of the current week starting on Monday
 			//DateFormat df = new SimpleDateFormat("EEE dd/MM/yyyy");
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 			//System.out.println(df.format(c.getTime()));
 			fromDate = df.format(c.getTime());
 			leaveInfoForm.setDate(fromDate);
@@ -539,9 +544,9 @@ public class TimekeepingController {
 			toDate = df.format(c.getTime());
 			leaveInfoForm.setToDate(toDate);
 			
-			list = timekeepingDAO.getTimekeepings(fromDate, toDate, null, null);
+			list = timekeepingDAO.getTimekeepings(Utils.convertDateToStore(fromDate), Utils.convertDateToStore(toDate), null, null);
 			List<LeaveInfo> listL = null;
-			listL = leaveDAO.getLeaves(fromDate, toDate, null, null);
+			listL = leaveDAO.getLeaves(Utils.convertDateToStore(fromDate), Utils.convertDateToStore(toDate), null, null);
 			if (list.size() == 0 && listL.size() == 0)
 				model.addAttribute("message", "Không có dữ liệu chấm công cho tuần này. Từ ngày " + fromDate + " đến ngày " + toDate);
 
@@ -565,7 +570,7 @@ public class TimekeepingController {
 	}
 
 	@RequestMapping(value = { "/timekeeping/listByDate" })
-	public String listTimekeeping(Model model, @ModelAttribute("leaveInfoForm") LeaveInfoForm leaveInfoForm) {
+	public String listTimekeeping(Model model, @ModelAttribute("leaveInfoForm") LeaveInfoForm leaveInfoForm) throws Exception {
 		try {
 			Timekeeping timekeeping = new Timekeeping();
 			//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -595,8 +600,8 @@ public class TimekeepingController {
 					toDate = fromDate.substring(0, 4) + "-" + fromDate.substring(5, 7) + "-" + lastDate;
 					// System.out.println("to date " + toDate);
 				}
-				list = timekeepingDAO.getTimekeepings(fromDate, toDate, dept, eId);
-				listL = leaveDAO.getLeaves(fromDate, toDate, dept, eId);
+				list = timekeepingDAO.getTimekeepings(Utils.convertDateToStore(fromDate), Utils.convertDateToStore(toDate), dept, eId);
+				listL = leaveDAO.getLeaves(Utils.convertDateToStore(fromDate), Utils.convertDateToStore(toDate), dept, eId);
 				if (list.size() == 0 && listL.size() == 0)
 					model.addAttribute("message",
 							"Không có dữ liệu chấm công từ ngày " + fromDate + " đến ngày " + toDate);
@@ -908,7 +913,7 @@ public class TimekeepingController {
 	}
 
 	@RequestMapping(value = { "/timekeeping/leaveInfo" })
-	public String listLeaveInfo(@ModelAttribute("leaveInfoForm") LeaveInfoForm leaveInfoForm, Model model) {
+	public String listLeaveInfo(@ModelAttribute("leaveInfoForm") LeaveInfoForm leaveInfoForm, Model model) throws Exception{
 		try {
 			//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			//Date date = new Date();// your date
@@ -922,13 +927,20 @@ public class TimekeepingController {
 			String eId = leaveInfoForm.geteId();
 						
 			if (fromDate != null && toDate != null) {
-				//System.err.println("co chon ngay");
-				list = leaveDAO.getLeaves(fromDate, toDate, dept, eId);
-				if (list.size() == 0)
+				list = leaveDAO.getLeaves(Utils.convertDateToStore(fromDate), Utils.convertDateToStore(toDate), dept, eId);
+				//System.err.println("co ngay");
+				if(Utils.convertDateToStore(fromDate).compareTo(Utils.convertDateToStore(toDate)) >= 0) {
+					//System.err.println("ko hop le");
 					model.addAttribute("message",
-							"Không có dữ liệu chấm công phát sinh từ ngày " + fromDate + " đến ngày " + toDate);
-				model.addAttribute("formTitle",
-						"Dữ liệu chấm công phát sinh từ ngày " + fromDate + " đến ngày " + toDate);
+							"Vui lòng nhập ngày bắt đầu nhỏ hơn ngày kết thúc");
+				}else {
+					//System.err.println("co chon ngay");					
+					if (list.size() == 0)
+						model.addAttribute("message",
+								"Không có dữ liệu chấm công phát sinh từ ngày " + fromDate + " đến ngày " + toDate);
+					model.addAttribute("formTitle",
+							"Dữ liệu chấm công phát sinh từ ngày " + fromDate + " đến ngày " + toDate);
+				}
 			} else {				
 				Calendar c = Calendar.getInstance();
 
@@ -938,7 +950,7 @@ public class TimekeepingController {
 				//System.out.println();
 				// Print dates of the current week starting on Monday
 				//DateFormat df = new SimpleDateFormat("EEE dd/MM/yyyy");
-				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 				//System.out.println(df.format(c.getTime()));
 				fromDate = df.format(c.getTime());
 				leaveInfoForm.setDate(fromDate);
@@ -958,7 +970,7 @@ public class TimekeepingController {
 				//toDate = Utils.lastDayOfWeek(cal).toInstant().toString().substring(0, 10);
 				//System.err.println(Utils.firstDayOfWeek(cal).toInstant().toString().substring(0, 10));
 				//System.err.println(Utils.lastDayOfWeek(cal).toInstant().toString().substring(0, 10));
-				list = leaveDAO.getLeaves(fromDate,toDate, dept, eId);
+				list = leaveDAO.getLeaves(Utils.convertDateToStore(fromDate), Utils.convertDateToStore(toDate), dept, eId);
 				if (list.size() == 0)
 					model.addAttribute("message", "Không có dữ liệu chấm công phát sinh cho tuần này. Từ ngày " + fromDate + " đến ngày "+ toDate);
 				model.addAttribute("formTitle", "Dữ liệu chấm công phát sinh cho tuần này. Từ ngày " + fromDate + " đến ngày "+ toDate);
@@ -1734,37 +1746,46 @@ public class TimekeepingController {
 	}
 
 	@RequestMapping(value = "/timekeeping/insertLeaveInfo", method = RequestMethod.POST)
+	//@DateTimeFormat(pattern = "dd/MM/yyyy")
 	public String insertLeaveInfo(Model model, @ModelAttribute("leaveInfoForm") @Validated LeaveInfo leaveInfo,
 			BindingResult result, final RedirectAttributes redirectAttributes) {
 		try {
 
+			SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy"); 
+			Date dateTemp = dt.parse(leaveInfo.getfDate()); 
+			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+			String fromDate = dt1.format(dateTemp);
+			SimpleDateFormat dt2 = new SimpleDateFormat("yyyy-MM-dd"); 
+			Date d = dt2.parse(fromDate);
+			leaveInfo.setDate(d);
+			
 			// validation
 			if (result.hasErrors()) {
-				System.err.println("validate data is fail");
+				//System.err.println("validate data is fail");
 				return this.addLeaveInfo(model, leaveInfo);
 			}
-
+			
 			List<Date> datesInRange = new ArrayList<>();
 			if (leaveInfo.getToDate() != null && leaveInfo.getToDate().length() > 0) {
 				String leaveType = leaveInfo.getLeaveType();
 				if (leaveType.equalsIgnoreCase("HT") || leaveType.equalsIgnoreCase("NKL")
 						|| leaveType.equalsIgnoreCase("NKP") || leaveType.equalsIgnoreCase("NP")
 						|| leaveType.equalsIgnoreCase("O") || leaveType.equalsIgnoreCase("CT")) {
-					// System.err.println("to date: " + leaveInfo.getToDate());
-					// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
+					
+					Date dateTemp1 = dt.parse(leaveInfo.getToDate()); 
+					String toDate1 = dt1.format(dateTemp1);
+					
 					Calendar calendar = Calendar.getInstance();
-					calendar.setTime(leaveInfo.getDate());
+					calendar.setTime(d);
 					Calendar endCalendar = Calendar.getInstance();
-					endCalendar.setTime(new SimpleDateFormat("yyyy-MM-dd").parse(leaveInfo.getToDate()));
+					endCalendar.setTime(dt2.parse(toDate1));
 					endCalendar.add(Calendar.DAY_OF_YEAR, 1); // Add 1 day to endDate to make sure endDate is included
 																// into the final list
 					while (calendar.before(endCalendar)) {
 						Date resultDate = calendar.getTime();
-						// System.err.println("date each:" + resultDate);
 						datesInRange.add(resultDate);
 						calendar.add(Calendar.DATE, 1);
-						// System.err.println("date each:" + resultDate);
+						//System.err.println("date each:" + resultDate);
 					}
 				}
 			}
@@ -1798,7 +1819,7 @@ public class TimekeepingController {
 			 */
 
 			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Thêm thông tin ngày nghỉ thành công!");
+			redirectAttributes.addFlashAttribute("message", "Thêm thông tin chấm công phát sinh thành công!");
 
 		} catch (Exception e) {
 			log.error(e, e);
@@ -1827,7 +1848,7 @@ public class TimekeepingController {
 			@RequestParam("date") String date, @RequestParam("leaveType") String leaveType,
 			final RedirectAttributes redirectAttributes) {
 		try {
-			System.err.println("delete leave info ");
+			//System.err.println("delete leave info ");
 			leaveDAO.deleteLeaveInfo(employeeId, date, leaveType);
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Xóa thông tin phát sinh thành công!");

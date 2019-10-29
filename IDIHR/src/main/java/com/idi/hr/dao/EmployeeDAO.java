@@ -19,6 +19,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.idi.hr.bean.EmployeeInfo;
 import com.idi.hr.common.PropertiesManager;
+import com.idi.hr.common.Utils;
 import com.idi.hr.mapper.EmployeeMapper;
 
 public class EmployeeDAO extends JdbcDaoSupport {
@@ -49,7 +50,7 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	 * @param employeeId
 	 * @return employee object
 	 */
-	public EmployeeInfo getEmployee(String employeeId) {
+	public EmployeeInfo getEmployee(String employeeId) throws Exception{
 
 		String sql = hr.get("GET_EMPLOYEE_INFO").toString();
 		log.info("GET_EMPLOYEE_INFO query: " + sql);
@@ -58,6 +59,11 @@ public class EmployeeDAO extends JdbcDaoSupport {
 		EmployeeMapper mapper = new EmployeeMapper();
 		EmployeeInfo employee = jdbcTmpl.queryForObject(sql, params, mapper);
 
+		employee.setDOB(Utils.convertDateToDisplay(employee.getDOB()));
+		employee.setJoinDate(Utils.convertDateToDisplay(employee.getJoinDate()));
+		employee.setOfficalJoinDate(Utils.convertDateToDisplay(employee.getOfficalJoinDate()));
+		employee.setIssueDate(Utils.convertDateToDisplay(employee.getIssueDate()));
+		
 		return employee;
 	}
 	
@@ -112,9 +118,9 @@ public class EmployeeDAO extends JdbcDaoSupport {
 				log.info("UPDATE_EMPLOYEE_INFO query: " + sql);
 				Object[] params = new Object[] { employeeInfo.getFullName(),
 						employeeInfo.getGender(), employeeInfo.getJobTitle(), employeeInfo.getWorkStatus(),
-						employeeInfo.getDOB(), employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(),
-						employeeInfo.getPersonalId(), employeeInfo.getIssueDate(), employeeInfo.getIssuePlace(), employeeInfo.getDepartment(),
-						employeeInfo.getPhoneNo(), employeeInfo.getJoinDate(), employeeInfo.getOfficalJoinDate(),
+						Utils.convertDateToStore(employeeInfo.getDOB()), employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(),
+						employeeInfo.getPersonalId(), Utils.convertDateToStore(employeeInfo.getIssueDate()), employeeInfo.getIssuePlace(), employeeInfo.getDepartment(),
+						employeeInfo.getPhoneNo(), Utils.convertDateToStore(employeeInfo.getJoinDate()), Utils.convertDateToStore(employeeInfo.getOfficalJoinDate()),
 						employeeInfo.getEmail(), employeeInfo.getTerminationDate(), employeeInfo.getReasonforLeave(),
 						employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
 						employeeInfo.getNation(),// employeeInfo.getImage(), 
@@ -130,9 +136,9 @@ public class EmployeeDAO extends JdbcDaoSupport {
 				log.info("INSERT_EMPLOYEE_INFO query: " + sql);
 				Object[] params = new Object[] { employeeInfo.getFullName(),
 						employeeInfo.getGender(), employeeInfo.getJobTitle(), employeeInfo.getWorkStatus(),
-						employeeInfo.getDOB(), employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(),
-						employeeInfo.getPersonalId(), employeeInfo.getIssueDate(), employeeInfo.getIssuePlace(), employeeInfo.getDepartment(),
-						employeeInfo.getPhoneNo(), employeeInfo.getJoinDate(), employeeInfo.getOfficalJoinDate(),
+						Utils.convertDateToStore(employeeInfo.getDOB()), employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(),
+						employeeInfo.getPersonalId(), Utils.convertDateToStore(employeeInfo.getIssueDate()), employeeInfo.getIssuePlace(), employeeInfo.getDepartment(),
+						employeeInfo.getPhoneNo(), Utils.convertDateToStore(employeeInfo.getJoinDate()), Utils.convertDateToStore(employeeInfo.getOfficalJoinDate()),
 						employeeInfo.getEmail(), employeeInfo.getTerminationDate(), employeeInfo.getReasonforLeave(),
 						employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
 						employeeInfo.getNation(),// employeeInfo.getImage(), 

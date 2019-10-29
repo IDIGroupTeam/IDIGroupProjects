@@ -333,7 +333,7 @@ public class EmployeeController {
 	public String listEmployeeBirth(Model model, @RequestParam("quarter") int quarter,
 			@ModelAttribute("bithForm") EmployeeForm bith, final RedirectAttributes redirectAttributes) throws Exception{
 		try {
-			System.err.println(bith.getQuarter());
+			//System.err.println(bith.getQuarter());
 			List<EmployeeInfo> list = employeeDAO.getEmployeesBirth(quarter);
 			if (list.size() < 1)
 				redirectAttributes.addFlashAttribute("message", "Không có nhân viên nào SN quý " + bith.getQuarter());
@@ -348,6 +348,8 @@ public class EmployeeController {
 				String joinDate = employee.getJoinDate();
 				int seniority = Utils.monthsBetween(dateFormat.parse(joinDate), dateFormat.parse(currentDate));
 				employee.setSeniority(seniority);
+				employee.setDOB(Utils.convertDateToDisplay(employee.getDOB()));
+				employee.setJoinDate(Utils.convertDateToDisplay(employee.getJoinDate()));
 				/* System.err.println("tham nien " + seniority); */
 				listEmployee.add(employee);
 			}
@@ -534,8 +536,8 @@ public class EmployeeController {
 		Map<String, String> workStatusMap = employeeDAO.getWorkStatusMap();
 		model.addAttribute("workStatusMap", workStatusMap);
 		
-		Date today = new Date();
-		model.addAttribute("today", today);
+		//Date today = new Date();
+		//model.addAttribute("today", today);
 
 		if (employeeInfo.getEmployeeId() > 0) {
 			model.addAttribute("formTitle", "Sửa thông tin nhân viên");

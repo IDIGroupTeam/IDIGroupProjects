@@ -1,15 +1,40 @@
 <%@page language="java" contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 <html>
 <head>
-<!-- Initialize the plugin: -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+.error-message {
+	color: red;
+	font-size: 90%;
+	font-style: italic;
+}
+</style>
+
+<script src="${url}/public/js/jquery.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
+
 <script type="text/javascript">
-	$(function() {
-		$("#dept")
+	var $j = jQuery.noConflict();
+	$j(function() {
+		$j(".datetime").datetimepicker({
+			//language : 'vi',
+			format : 'dd/mm/yyyy',
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			minView : 2,
+			forceParse : 0,
+			pickerPosition : "bottom-left"
+		});
+		 
+		$j("#dept")
 			.change(
 				function() {
 					
@@ -43,44 +68,44 @@
 	  return confirm("Bạn có chắc chắn muốn xóa không?");
 	}
 	
-	$(function() {
+	$j(function() {
 		// Khởi tạo action/method cho leaveInfoForm form
-		$("#leaveInfoForm").attr("action", "${url}/timekeeping/leaveInfo");
-		$("#leaveInfoForm").attr("method", "POST");		
-		$("button[id^=page]").each(function(i, el) {
+		$j("#leaveInfoForm").attr("action", "${url}/timekeeping/leaveInfo");
+		$j("#leaveInfoForm").attr("method", "POST");		
+		$j("button[id^=page]").each(function(i, el) {
 			$(this).click(function() {
 				if($(this).text()!=${leaveInfoForm.pageIndex}){
-					$("#pageIndex").val($(this).text());
-					$("#leaveInfoForm").submit();
+					$j("#pageIndex").val($(this).text());
+					$j("#leaveInfoForm").submit();
 				}
 			});
 		});
 		
-		$("#firstPage").click(function(){
-			$("#pageIndex").val(1);
-			$("#leaveInfoForm").submit();
+		$j("#firstPage").click(function(){
+			$j("#pageIndex").val(1);
+			$j("#leaveInfoForm").submit();
 		});
 		
-		$("#previousPage").click(function(){
-			$("#pageIndex").val(${leaveInfoForm.pageIndex-1});
-			$("#leaveInfoForm").submit();
+		$j("#previousPage").click(function(){
+			$j("#pageIndex").val(${leaveInfoForm.pageIndex-1});
+			$j("#leaveInfoForm").submit();
 		});
 		
-		$("#nextPage").click(function(){
-			$("#pageIndex").val(${leaveInfoForm.pageIndex+1});
-			$("#leaveInfoForm").submit();	
+		$j("#nextPage").click(function(){
+			$j("#pageIndex").val(${leaveInfoForm.pageIndex+1});
+			$j("#leaveInfoForm").submit();	
 		});
 		
-		$("#lastPage").click(function(){
-			$("#pageIndex").val(${leaveInfoForm.totalPages});
-			$("#leaveInfoForm").submit();	
+		$j("#lastPage").click(function(){
+			$j("#pageIndex").val(${leaveInfoForm.totalPages});
+			$j("#leaveInfoForm").submit();	
 		});
 		
-		$("#numberRecordsOfPage").change(function(){
-			$("#pageIndex").val(1);
-			$("#totalPages").val(0);
-			$("#totalRecords").val(0);
-			$("#leaveInfoForm").submit();
+		$j("#numberRecordsOfPage").change(function(){
+			$j("#pageIndex").val(1);
+			$j("#totalPages").val(0);
+			$j("#totalRecords").val(0);
+			$j("#leaveInfoForm").submit();
 		});	
 
 	});
@@ -115,10 +140,26 @@ tr:nth-child(even) {
 	<form:form modelAttribute="leaveInfoForm" method="POST">
 		<table class="table">
 			<tr>
-				<td>Chọn xem từ ngày:(*) &nbsp;<form:input path="date" type="date"
-						required="required" class="form-control animated"/></td>
-				<td>Đến ngày:(*) &nbsp;<form:input path="toDate" type="date"
-						required="required" class="form-control animated"/></td>
+				<td>Chọn xem từ ngày:(*) &nbsp;
+					<div class="input-group date datetime">
+						<form:input path="date" class="form-control"
+							placeholder="dd/mm/yyyy" autocomplete="off" />
+						<span class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span></span>
+					</div>		
+				<%-- <form:input path="date" type="date"
+						required="required" class="form-control animated"/> --%>
+				</td>
+				<td>Đến ngày:(*) &nbsp;
+					<div class="input-group date datetime">
+						<form:input path="toDate" class="form-control"
+							placeholder="dd/mm/yyyy" autocomplete="off" />
+						<span class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span></span>
+					</div>		
+				<%-- <form:input path="toDate" type="date"
+						required="required" class="form-control animated"/> --%>
+				</td>
 				<td>Phòng: &nbsp;
 					<form:select path="dept" class="form-control animated">
 						<form:option value="all" label="Tất cả phòng ban"></form:option>
@@ -218,7 +259,7 @@ tr:nth-child(even) {
 						</c:choose>
 						<c:choose>
 							<c:when
-								test="${leaveInfoForm.pageIndex==leaveInfoForm.totalPages}">
+								test="${leaveInfoForm.pageIndex==leaveInfoForm.totalPages || leaveInfoForm.totalPages==0}">
 								<button id="nextPage" type="button"
 									class="btn btn-default disabled">Sau</button>
 								<button id="lastPage" type="button"
@@ -262,7 +303,7 @@ tr:nth-child(even) {
 					<td nowrap="nowrap">${leaveInfo.employeeName}</td>
 					<td>${leaveInfo.department}</td>
 					<td>${leaveInfo.title}</td>
-					<td nowrap="nowrap">${leaveInfo.date}</td>
+					<td><fmt:formatDate pattern="dd/MM/yyyy" value="${leaveInfo.date}" /></td>
 					<c:if test="${leaveInfo.timeValue == 4}">
 						<td nowrap="nowrap">${leaveInfo.leaveName} nửa ngày</td>
 					</c:if>

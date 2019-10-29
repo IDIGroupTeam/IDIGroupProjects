@@ -18,14 +18,31 @@
 </style>
 </head>
 <body>
-<script src="${url}/public/js/jquery-3.3.1.js"></script>
+<script src="${url}/public/js/jquery.min.js"></script>
 <script src="${url}/public/js/bootstrap-combobox.js"></script>
-<script>
-    // var $x = jQuery.noConflict(true);
-    //alert($x.fn.jquery);
-	$(function() {		
-		$('#leaveType').combobox();		
-		$('#employeeId').combobox();
+<script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
+
+
+<script type="text/javascript">
+	var $j = jQuery.noConflict();
+     var $j = jQuery.noConflict();
+    //alert($j.fn.jquery);
+	$j(function() {		
+		$j('#leaveType').combobox();		
+		$j('#employeeId').combobox();
+		
+		$j(".datetime").datetimepicker({
+			//language : 'vi',
+			format : 'dd/mm/yyyy',
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			minView : 2,
+			forceParse : 0,
+			pickerPosition : "bottom-left"
+		});
 	}); 	
  
 </script> 
@@ -44,6 +61,7 @@
 					<form:errors path="comment" class="error-message" />
 					<form:errors path="toDateInvalid" class="error-message" />
 					<form:errors path="overLeave" class="error-message" />
+					<form:errors path="overLate" class="error-message" />					
 					<form:errors path="duplicate" class="error-message" />
 				</td>			
 			</tr>
@@ -72,19 +90,27 @@
 				<tr>
 					<td bgcolor="#FBEFF2">Chọn ngày/Từ ngày(*):						
 					</td>
-					<td><%-- <div class="form-group">
-							<div class="input-group date datetime smallform">
-								<form:input path="date" class="form-control" readonly="true" />
-								<span class="input-group-addon"><span
-									class="glyphicon glyphicon-calendar"></span></span>
-							</div>
-						</div> --%>
-						<form:input path="date" type="date" required="required" class="form-control animated"/>
-					</td>
+					<td>
+						<div class="input-group date datetime smallform">
+							<form:input path="fDate" class="form-control"
+							 placeholder="dd/mm/yyyy" autocomplete="off" />
+							<span class="input-group-addon"><span
+								class="glyphicon glyphicon-calendar"></span></span>
+						</div>						
+						<%-- <form:input path="date" type="date" required="required" class="form-control animated"/>--%>
+					</td> 
 				</tr>	
 				<tr>
 					<td bgcolor="#FBEFF2">Đến ngày(chỉ chọn khi nghỉ/công tác/học tập nhiều ngày):</td>
-					<td><form:input path="toDate" type="date" class="form-control animated"/></td>
+					<td>
+						<div class="input-group date datetime smallform">
+							<form:input path="toDate" class="form-control"
+							 placeholder="dd/mm/yyyy" autocomplete="off" />
+							<span class="input-group-addon"><span
+								class="glyphicon glyphicon-calendar"></span></span>
+						</div>	
+					<%-- <form:input path="toDate" type="date" class="form-control animated"/> --%>
+					</td>
 				</tr>			
 				<tr>	
 					<td bgcolor="#FBEFF2">Điền số giờ với những t/h tính thời gian như cv bên ngoài/ làm ngoài giờ (*):</td>					

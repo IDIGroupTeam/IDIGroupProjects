@@ -56,6 +56,7 @@ public class TimekeepingDAO extends JdbcDaoSupport {
 	 * @throws Exception
 	 */
 	public List<Timekeeping> getTimekeepings(String fromDate, String toDate, String dept, String eId) throws Exception {
+		System.err.println(fromDate + "|"+ toDate);
 		String sql = "";
 		Object[] params = null;
 		List<Timekeeping> list = null;

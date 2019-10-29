@@ -1,5 +1,7 @@
 package com.idi.hr.common;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -113,6 +115,22 @@ public class Utils {
 	    int diff = (d2.get(Calendar.YEAR) - d1.get(Calendar.YEAR)) * 12 + d2.get(Calendar.MONTH) - d1.get(Calendar.MONTH);
 	    return diff;
 	}
+	
+	public static String convertDateToDisplay(String dateString) throws ParseException {
+		System. out. println("Given date is " + dateString);
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = sdf. parse(dateString);
+		System.out.println(date);
+		return String.valueOf(new SimpleDateFormat("dd/MM/yyyy").format(date));
+	}	
+	
+	public static String convertDateToStore(String dateString) throws ParseException {
+		System. out. println("Given date is " + dateString);
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = sdf. parse(dateString);
+		System.out.println(date);
+		return String.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(date));
+	}	
 	
 /*	public static Map<String, String> workStatusMap() {
 		Map<String, String> workStatusMap = new LinkedHashMap<String, String>();

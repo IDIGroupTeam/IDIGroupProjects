@@ -1,7 +1,7 @@
 package com.idi.hr.bean;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 public class LeaveInfo implements Serializable {
 
@@ -12,6 +12,7 @@ public class LeaveInfo implements Serializable {
 
 	private int employeeId;
 	private Date date;
+	private String fDate;
 	private String toDate;
 	private String leaveType;
 	private float timeValue;
@@ -152,6 +153,14 @@ public class LeaveInfo implements Serializable {
 
 	public void setToDateInvalid(String toDateInvalid) {
 		this.toDateInvalid = toDateInvalid;
+	}
+
+	public String getfDate() {
+		return fDate;
+	}
+
+	public void setfDate(String fDate) {
+		this.fDate = fDate;
 	}	
 	
 }
