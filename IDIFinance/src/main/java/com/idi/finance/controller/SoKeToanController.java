@@ -35,6 +35,7 @@ import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.kyketoan.SoDuKy;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
+import com.idi.finance.bean.soketoan.NghiepVuKeToanNhom;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.bean.taikhoan.TaiKhoan;
 import com.idi.finance.dao.ChungTuDAO;
@@ -1681,8 +1682,39 @@ public class SoKeToanController {
 				logger.info(noCoDauKy);
 
 				logger.info("Lấy nghiệp vụ kế toán được ghi từ chứng từ mua hàng, bán hàng");
-				duLieuKeToan.themNghiepVuKeToan(soKeToanDAO.danhSachNghiepVuKeToanKhoTheoLoaiTaiKhoan(
-						form.getTaiKhoan(), form.getHangHoa().getMaHh(), maKhoDs, kyKt.getDau(), kyKt.getCuoi()));
+				List<NghiepVuKeToan> nghiepVuKeToanDs = soKeToanDAO.danhSachNghiepVuKeToanKhoTheoLoaiTaiKhoan(
+						form.getTaiKhoan(), form.getHangHoa().getMaHh(), maKhoDs, kyKt.getDau(), kyKt.getCuoi());
+				logger.info("nghiepVuKeToanDs: " + nghiepVuKeToanDs.size());
+				// duLieuKeToan.themNghiepVuKeToan(nghiepVuKeToanDs);
+
+				if (nghiepVuKeToanDs != null) {
+					logger.info("Gộp danh sách nghiệp vụ kế toán vào nhóm nghiệp vụ kế toán");
+					List<NghiepVuKeToanNhom> nghiepVuKeToanNhomDs = new ArrayList<>();
+					for (NghiepVuKeToan nghiepVuKeToan : nghiepVuKeToanDs) {
+						NghiepVuKeToanNhom nghiepVuKeToanNhom = null;
+						for (NghiepVuKeToanNhom nghiepVuKeToanNhomTmpl : nghiepVuKeToanNhomDs) {
+							if (nghiepVuKeToanNhomTmpl.getChungTu().equals(nghiepVuKeToan.getChungTu())
+									&& nghiepVuKeToanNhomTmpl.getHangHoa().equals(nghiepVuKeToan.getHangHoa())) {
+								nghiepVuKeToanNhom = nghiepVuKeToanNhomTmpl;
+								break;
+							}
+						}
+
+						// loaiTaiKhoan
+						if (nghiepVuKeToanNhom == null) {
+							nghiepVuKeToanNhom = new NghiepVuKeToanNhom();
+							nghiepVuKeToanNhom.setChungTu(nghiepVuKeToan.getChungTu());
+							nghiepVuKeToanNhom.setHangHoa(nghiepVuKeToan.getHangHoa());
+							nghiepVuKeToanNhomDs.add(nghiepVuKeToanNhom);
+						}
+
+						nghiepVuKeToanNhom.themTaiKhoanNo(nghiepVuKeToan.getTaiKhoanNo());
+						nghiepVuKeToanNhom.themTaiKhoanCo(nghiepVuKeToan.getTaiKhoanCo());
+					}
+
+					logger.info("nghiepVuKeToanNhomDs: " + nghiepVuKeToanNhomDs.size());
+					duLieuKeToan.themNghiepVuKeToanNhom(nghiepVuKeToanNhomDs);
+				}
 
 				logger.info("Lấy tổng phát sinh dữ liệu kế toán kho trong kỳ");
 				DuLieuKeToan tongNoCoPs = soKeToanDAO.tongPhatSinhNxt(form.getTaiKhoan(), form.getHangHoa().getMaHh(),

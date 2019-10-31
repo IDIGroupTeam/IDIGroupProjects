@@ -87,7 +87,7 @@
 								maxFractionDigits="0"></fmt:formatNumber></b></td>
 					<!-- <td></td> -->
 				</tr>
-				<c:forEach items="${duLieuKeToan.nghiepVuKeToanNhomDs}"
+				<c:forEach items="${duLieuKeToan.nghiepVuKeToanDs}"
 					var="nghiepVuKeToan">
 					<tr>
 						<td><fmt:formatDate value="${nghiepVuKeToan.chungTu.ngayHt}"
@@ -108,79 +108,6 @@
 								<c:otherwise>${nghiepVuKeToan.chungTu.loaiCt}${chungTu.soCt}</c:otherwise>
 							</c:choose></td>
 						<c:choose>
-							<c:when
-								test="${nghiepVuKeToan.taiKhoanNoDs.size()==1 && nghiepVuKeToan.taiKhoanNoDs.get(0).loaiTaiKhoan.isTrucHe(duLieuKeToan.loaiTaiKhoan)}">
-								<td>${nghiepVuKeToan.taiKhoanNoDs.get(0).lyDo}</td>
-								<td><c:if test="${nghiepVuKeToan.taiKhoanCoDs.size()>1}">
-										<c:forEach items="${nghiepVuKeToan.taiKhoanCoDs}" begin="0"
-											end="${nghiepVuKeToan.taiKhoanCoDs.size()-2}"
-											var="taiKhoanCo">
-										${taiKhoanCo.loaiTaiKhoan.maTk},
-									</c:forEach>
-									</c:if>
-									${nghiepVuKeToan.taiKhoanCoDs.get(nghiepVuKeToan.taiKhoanCoDs.size()-1).loaiTaiKhoan.maTk}</td>
-								<td class="text-right"><c:choose>
-										<c:when
-											test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">
-											<fmt:formatNumber
-												value="${nghiepVuKeToan.hangHoa.donGia.giaTri}"
-												type="NUMBER" maxFractionDigits="0"></fmt:formatNumber>
-										</c:when>
-										<c:otherwise>
-											<fmt:formatNumber
-												value="${nghiepVuKeToan.hangHoa.giaKho.giaTri}"
-												type="NUMBER" maxFractionDigits="0"></fmt:formatNumber>
-										</c:otherwise>
-									</c:choose></td>
-								<td><fmt:formatNumber
-										value="${nghiepVuKeToan.hangHoa.soLuong}" type="NUMBER"
-										maxFractionDigits="0"></fmt:formatNumber></td>
-								<td class="text-right"><fmt:formatNumber
-										value="${nghiepVuKeToan.taiKhoanNoDs.get(0).soTien.giaTri}"
-										type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
-								<td>0</td>
-								<td class="text-right">0</td>
-							</c:when>
-							<c:when
-								test="${nghiepVuKeToan.taiKhoanCoDs.size()==1 && nghiepVuKeToan.taiKhoanCoDs.get(0).loaiTaiKhoan.isTrucHe(duLieuKeToan.loaiTaiKhoan)}">
-								<td>${nghiepVuKeToan.taiKhoanCoDs.get(0).lyDo}</td>
-								<td><c:if test="${nghiepVuKeToan.taiKhoanNoDs.size()>1}">
-										<c:forEach items="${nghiepVuKeToan.taiKhoanNoDs}" begin="0"
-											end="${nghiepVuKeToan.taiKhoanNoDs.size()-2}"
-											var="taiKhoanNo">
-										${taiKhoanNo.loaiTaiKhoan.maTk},
-									</c:forEach>
-									</c:if>
-									${nghiepVuKeToan.taiKhoanNoDs.get(nghiepVuKeToan.taiKhoanNoDs.size()-1).loaiTaiKhoan.maTk}</td>
-								<td class="text-right"><c:choose>
-										<c:when
-											test="${nghiepVuKeToan.chungTu.loaiCt==ChungTu.CHUNG_TU_MUA_HANG}">
-											<fmt:formatNumber
-												value="${nghiepVuKeToan.hangHoa.donGia.giaTri}"
-												type="NUMBER" maxFractionDigits="0"></fmt:formatNumber>
-										</c:when>
-										<c:otherwise>
-											<fmt:formatNumber
-												value="${nghiepVuKeToan.hangHoa.giaKho.giaTri}"
-												type="NUMBER" maxFractionDigits="0"></fmt:formatNumber>
-										</c:otherwise>
-									</c:choose></td>
-								<td>0</td>
-								<td class="text-right">0</td>
-								<td><fmt:formatNumber
-										value="${nghiepVuKeToan.hangHoa.soLuong}" type="NUMBER"
-										maxFractionDigits="0"></fmt:formatNumber></td>
-								<td class="text-right"><fmt:formatNumber
-										value="${nghiepVuKeToan.taiKhoanCoDs.get(0).soTien.giaTri}"
-										type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
-							</c:when>
-						</c:choose>
-						<td><fmt:formatNumber value="${nghiepVuKeToan.slTon}"
-								type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
-						<td class="text-right"><fmt:formatNumber
-								value="${nghiepVuKeToan.ton}" type="NUMBER"
-								maxFractionDigits="0"></fmt:formatNumber></td>
-						<%-- <c:choose>
 							<c:when
 								test="${nghiepVuKeToan.taiKhoanNo.soTien.soTien >= nghiepVuKeToan.taiKhoanCo.soTien.soTien}">
 								<td>${nghiepVuKeToan.taiKhoanCo.lyDo}</td>
@@ -305,7 +232,7 @@
 										maxFractionDigits="0"></fmt:formatNumber></td>
 								<!-- <td></td> -->
 							</c:when>
-						</c:choose> --%>
+						</c:choose>
 					</tr>
 				</c:forEach>
 				<tr>

@@ -12,6 +12,7 @@ import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
+import com.idi.finance.bean.soketoan.NghiepVuKeToanNhom;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class DuLieuKeToan {
@@ -57,6 +58,7 @@ public class DuLieuKeToan {
 	private DuLieuKeToan duLieuKeToan;
 	private List<DuLieuKeToan> duLieuKeToanDs;
 	private List<NghiepVuKeToan> nghiepVuKeToanDs;
+	private List<NghiepVuKeToanNhom> nghiepVuKeToanNhomDs;
 
 	public DuLieuKeToan() {
 
@@ -335,6 +337,14 @@ public class DuLieuKeToan {
 		this.nghiepVuKeToanDs = nghiepVuKeToanDs;
 	}
 
+	public List<NghiepVuKeToanNhom> getNghiepVuKeToanNhomDs() {
+		return nghiepVuKeToanNhomDs;
+	}
+
+	public void setNghiepVuKeToanNhomDs(List<NghiepVuKeToanNhom> nghiepVuKeToanNhomDs) {
+		this.nghiepVuKeToanNhomDs = nghiepVuKeToanNhomDs;
+	}
+
 	private void capNhatNoCoCuoiKy() {
 		// Số tiền
 		noCuoiKy = noDauKy + tongNoPhatSinh;
@@ -377,6 +387,32 @@ public class DuLieuKeToan {
 		}
 	}
 
+	public void themNghiepVuKeToanNhom(NghiepVuKeToanNhom nghiepVuKeToanNhom) {
+		if (nghiepVuKeToanNhom == null) {
+			return;
+		}
+
+		if (nghiepVuKeToanNhomDs == null) {
+			nghiepVuKeToanNhomDs = new ArrayList<>();
+		}
+
+		if (!nghiepVuKeToanNhomDs.contains(nghiepVuKeToanNhom)) {
+			nghiepVuKeToanNhomDs.add(nghiepVuKeToanNhom);
+			Collections.sort(nghiepVuKeToanNhomDs);
+		}
+	}
+
+	public void themNghiepVuKeToanNhom(List<NghiepVuKeToanNhom> nghiepVuKeToanNhomDs) {
+		if (nghiepVuKeToanNhomDs == null) {
+			return;
+		}
+
+		Iterator<NghiepVuKeToanNhom> iter = nghiepVuKeToanNhomDs.iterator();
+		while (iter.hasNext()) {
+			themNghiepVuKeToanNhom(iter.next());
+		}
+	}
+
 	public void tinhSoTienTonNghiepVuKeToanDs(LoaiTaiKhoan loaiTaiKhoan) {
 		if (loaiTaiKhoan == null) {
 			return;
@@ -411,6 +447,40 @@ public class DuLieuKeToan {
 				try {
 					slTon += nghiepVuKeToan.getHangHoa().getSoLuong() * nghiepVuKeToan.getChungTu().getChieu();
 					nghiepVuKeToan.setSlTon(slTon);
+				} catch (Exception e) {
+					// e.printStackTrace();
+				}
+			}
+		}
+
+		if (nghiepVuKeToanNhomDs != null && nghiepVuKeToanNhomDs.size() > 0) {
+			Collections.sort(nghiepVuKeToanNhomDs);
+
+			double ton = soDuDauKy * loaiTaiKhoan.getSoDu() * -1;
+			double slTon = soLuongDuDauKy;
+
+			for (NghiepVuKeToanNhom nghiepVuKeToanNhom : nghiepVuKeToanNhomDs) {
+				// So tien ton
+				try {
+					if (nghiepVuKeToanNhom.getTaiKhoanNoDs().size() == 1
+							&& nghiepVuKeToanNhom.getTaiKhoanNoDs().get(0).getLoaiTaiKhoan().isTrucHe(loaiTaiKhoan)) {
+						ton += nghiepVuKeToanNhom.getTaiKhoanNoDs().get(0).getSoTien().getGiaTri()
+								* loaiTaiKhoan.getSoDu() * -1;
+					} else if (nghiepVuKeToanNhom.getTaiKhoanCoDs().size() == 1
+							&& nghiepVuKeToanNhom.getTaiKhoanCoDs().get(0).getLoaiTaiKhoan().isTrucHe(loaiTaiKhoan)) {
+						ton += nghiepVuKeToanNhom.getTaiKhoanCoDs().get(0).getSoTien().getGiaTri()
+								* loaiTaiKhoan.getSoDu();
+					}
+
+					nghiepVuKeToanNhom.setTon(ton);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				// So luong ton
+				try {
+					slTon += nghiepVuKeToanNhom.getHangHoa().getSoLuong() * nghiepVuKeToanNhom.getChungTu().getChieu();
+					nghiepVuKeToanNhom.setSlTon(slTon);
 				} catch (Exception e) {
 					// e.printStackTrace();
 				}
