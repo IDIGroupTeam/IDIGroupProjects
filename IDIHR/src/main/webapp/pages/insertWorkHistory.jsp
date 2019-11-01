@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -16,6 +17,36 @@
 </style>
 </head>
 <body>
+<script src="${url}/public/js/jquery.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
+<script src="${url}/public/js/common.js"></script>
+<script src="${url}/public/js/bootstrap-combobox.js"></script>
+<script type="text/javascript">
+	var $j = jQuery.noConflict();
+    //alert($j.fn.jquery);
+	$j(function() {		
+		$j(".datetime").datetimepicker({
+			//language : 'vi',
+			format : 'dd/mm/yyyy',
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			minView : 2,
+			forceParse : 0,
+			pickerPosition : "bottom-left"
+		});
+
+		moneyConvert("salary");
+		
+		$j('#employeeId').combobox();
+	});
+	
+		
+	
+</script> 
+
 <a href="${pageContext.request.contextPath}/workHistory/"><button class="btn btn-primary btn-sm">Quay lại danh sách</button></a>
 <br/><br/>
 	<form:form modelAttribute="workHistoryForm" method="POST"
@@ -36,10 +67,26 @@
 				</tr>
 				<tr>
 					<td bgcolor="#FAFAFA">Từ ngày:(*)</td>
-					<td><form:input path="fromDate" type="date"
-							required="required" class="form-control animated"/></td>
+					<td> 
+						<div class="input-group date datetime smallform">
+							<form:input path="fromDate" class="form-control"
+							 placeholder="dd/mm/yyyy" autocomplete="off" />
+							<span class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
+							</span>
+						</div>
+					<%-- <form:input path="fromDate" required="required" disabled="true" class="form-control animated"/> --%>
+					</td>
 					<td bgcolor="#FAFAFA">Đến ngày:(*)</td>
-					<td><form:input path="toDate" type="date" required="required" class="form-control animated"/></td>
+					<td>
+						<div class="input-group date datetime smallform">
+							<form:input path="toDate" class="form-control"
+							 placeholder="dd/mm/yyyy" autocomplete="off" />
+							<span class="input-group-addon"><span
+								class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+						<%-- <form:input path="toDate" type="date" required="required" class="form-control animated"/> --%>
+					</td>
 				</tr>
 				<tr>
 					<td bgcolor="#FAFAFA">Chức vụ:</td>
@@ -50,7 +97,6 @@
 					<td><form:select path="department" class="form-control animated">
 							<form:options items="${departmentMap}" />
 						</form:select></td>
-
 				</tr>
 				<tr>
 					<td bgcolor="#FAFAFA">Thuộc cty:(*)</td>

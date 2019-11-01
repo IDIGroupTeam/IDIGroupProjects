@@ -58,11 +58,14 @@ public class EmployeeDAO extends JdbcDaoSupport {
 
 		EmployeeMapper mapper = new EmployeeMapper();
 		EmployeeInfo employee = jdbcTmpl.queryForObject(sql, params, mapper);
-
-		employee.setDOB(Utils.convertDateToDisplay(employee.getDOB()));
-		employee.setJoinDate(Utils.convertDateToDisplay(employee.getJoinDate()));
-		employee.setOfficalJoinDate(Utils.convertDateToDisplay(employee.getOfficalJoinDate()));
-		employee.setIssueDate(Utils.convertDateToDisplay(employee.getIssueDate()));
+		if(employee.getDOB() != null && employee.getDOB().length() > 0)
+			employee.setDOB(Utils.convertDateToDisplay(employee.getDOB()));
+		if(employee.getJoinDate() != null && employee.getJoinDate().length() > 0)
+			employee.setJoinDate(Utils.convertDateToDisplay(employee.getJoinDate()));
+		if(employee.getOfficalJoinDate() != null && employee.getOfficalJoinDate().length() > 0)
+			employee.setOfficalJoinDate(Utils.convertDateToDisplay(employee.getOfficalJoinDate()));
+		if(employee.getIssueDate() != null && employee.getIssueDate().length() > 0)
+			employee.setIssueDate(Utils.convertDateToDisplay(employee.getIssueDate()));
 		
 		return employee;
 	}
@@ -112,15 +115,25 @@ public class EmployeeDAO extends JdbcDaoSupport {
 	 */
 	public void insertOrUpdateEmployee(EmployeeInfo employeeInfo) throws Exception {
 		try {
+			
+			if(employeeInfo.getDOB() != null && employeeInfo.getDOB().length() > 0)
+				employeeInfo.setDOB(Utils.convertDateToStore(employeeInfo.getDOB()));
+			if(employeeInfo.getJoinDate() != null && employeeInfo.getJoinDate().length() > 0)
+				employeeInfo.setJoinDate(Utils.convertDateToStore(employeeInfo.getJoinDate()));
+			if(employeeInfo.getOfficalJoinDate() != null && employeeInfo.getOfficalJoinDate().length() > 0)
+				employeeInfo.setOfficalJoinDate(Utils.convertDateToStore(employeeInfo.getOfficalJoinDate()));
+			if(employeeInfo.getIssueDate() != null && employeeInfo.getIssueDate().length() > 0)
+				employeeInfo.setIssueDate(Utils.convertDateToStore(employeeInfo.getIssueDate()));
+			
 			if (employeeInfo.getEmployeeId() > 0) {
 				// update
 				String sql = hr.getProperty("UPDATE_EMPLOYEE_INFO").toString();
 				log.info("UPDATE_EMPLOYEE_INFO query: " + sql);
 				Object[] params = new Object[] { employeeInfo.getFullName(),
 						employeeInfo.getGender(), employeeInfo.getJobTitle(), employeeInfo.getWorkStatus(),
-						Utils.convertDateToStore(employeeInfo.getDOB()), employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(),
-						employeeInfo.getPersonalId(), Utils.convertDateToStore(employeeInfo.getIssueDate()), employeeInfo.getIssuePlace(), employeeInfo.getDepartment(),
-						employeeInfo.getPhoneNo(), Utils.convertDateToStore(employeeInfo.getJoinDate()), Utils.convertDateToStore(employeeInfo.getOfficalJoinDate()),
+						employeeInfo.getDOB(), employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(),
+						employeeInfo.getPersonalId(), employeeInfo.getIssueDate(), employeeInfo.getIssuePlace(), employeeInfo.getDepartment(),
+						employeeInfo.getPhoneNo(), employeeInfo.getJoinDate(), employeeInfo.getOfficalJoinDate(),
 						employeeInfo.getEmail(), employeeInfo.getTerminationDate(), employeeInfo.getReasonforLeave(),
 						employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
 						employeeInfo.getNation(),// employeeInfo.getImage(), 
@@ -136,9 +149,9 @@ public class EmployeeDAO extends JdbcDaoSupport {
 				log.info("INSERT_EMPLOYEE_INFO query: " + sql);
 				Object[] params = new Object[] { employeeInfo.getFullName(),
 						employeeInfo.getGender(), employeeInfo.getJobTitle(), employeeInfo.getWorkStatus(),
-						Utils.convertDateToStore(employeeInfo.getDOB()), employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(),
-						employeeInfo.getPersonalId(), Utils.convertDateToStore(employeeInfo.getIssueDate()), employeeInfo.getIssuePlace(), employeeInfo.getDepartment(),
-						employeeInfo.getPhoneNo(), Utils.convertDateToStore(employeeInfo.getJoinDate()), Utils.convertDateToStore(employeeInfo.getOfficalJoinDate()),
+						employeeInfo.getDOB(), employeeInfo.getMaritalStatus(), employeeInfo.getLoginAccount(),
+						employeeInfo.getPersonalId(), employeeInfo.getIssueDate(), employeeInfo.getIssuePlace(), employeeInfo.getDepartment(),
+						employeeInfo.getPhoneNo(), employeeInfo.getJoinDate(), employeeInfo.getOfficalJoinDate(),
 						employeeInfo.getEmail(), employeeInfo.getTerminationDate(), employeeInfo.getReasonforLeave(),
 						employeeInfo.getCurrentAdress(), employeeInfo.getPermanentAdress(), employeeInfo.getNote(),
 						employeeInfo.getNation(),// employeeInfo.getImage(), 

@@ -26,7 +26,6 @@
 
 <script type="text/javascript">
 	var $j = jQuery.noConflict();
-     var $j = jQuery.noConflict();
     //alert($j.fn.jquery);
 	$j(function() {		
 		$j('#leaveType').combobox();		

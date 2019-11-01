@@ -146,7 +146,7 @@ public class LeaveDAO extends JdbcDaoSupport {
 		int numberDayLeaveTaken = 0;
 		if(jdbcTmpl.queryForObject(sql, Integer.class, params) != null)
 			numberDayLeaveTaken = jdbcTmpl.queryForObject(sql, Integer.class, params);
-		System.err.println(year + "|" + id + "|" + month + ": "+ numberDayLeaveTaken);
+		//System.err.println(year + "|" + id + "|" + month + ": "+ numberDayLeaveTaken);
 		
 		return numberDayLeaveTaken;
 	}

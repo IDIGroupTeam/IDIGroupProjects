@@ -17,7 +17,7 @@ public class Utils {
 	     while(cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY){
 	          cal.set(Calendar.DAY_OF_YEAR, --day);
 	     }
-	     System.err.println("util " + cal.getTime());
+	    // System.err.println("util " + cal.getTime());
 	     return cal;
 	}
 
@@ -117,18 +117,18 @@ public class Utils {
 	}
 	
 	public static String convertDateToDisplay(String dateString) throws ParseException {
-		System. out. println("Given date is " + dateString);
+		//System. out. println("Given date is " + dateString);
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = sdf. parse(dateString);
-		System.out.println(date);
+		//System.out.println(date);
 		return String.valueOf(new SimpleDateFormat("dd/MM/yyyy").format(date));
 	}	
 	
 	public static String convertDateToStore(String dateString) throws ParseException {
-		System. out. println("Given date is " + dateString);
+		//System. out. println("Given date is " + dateString);
 		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = sdf. parse(dateString);
-		System.out.println(date);
+		//System.out.println(date);
 		return String.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(date));
 	}	
 	

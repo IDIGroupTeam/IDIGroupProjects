@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.idi.hr.bean.WorkHistory;
 import com.idi.hr.common.PropertiesManager;
+import com.idi.hr.common.Utils;
 import com.idi.hr.mapper.WorkHistoryMapper;
 
 public class WorkHistoryDAO extends JdbcDaoSupport {
@@ -79,7 +80,7 @@ public class WorkHistoryDAO extends JdbcDaoSupport {
 	 *            id, fromDate
 	 * @return WorkHistory object
 	 */
-	public WorkHistory getWorkHistory(int employeeId, String fromDate) {
+	public WorkHistory getWorkHistory(int employeeId, String fromDate) throws Exception {
 
 		String sql = hr.get("GET_WORK_HISTORY").toString();
 		log.info("GET_WORK_HISTORY query: " + sql);
@@ -88,7 +89,8 @@ public class WorkHistoryDAO extends JdbcDaoSupport {
 		WorkHistoryMapper mapper = new WorkHistoryMapper();
 
 		WorkHistory workHistory = jdbcTmpl.queryForObject(sql, params, mapper);
-
+		workHistory.setFromDate(Utils.convertDateToDisplay(workHistory.getFromDate()));
+		workHistory.setToDate(Utils.convertDateToDisplay(workHistory.getToDate()));
 		return workHistory;
 
 	}
@@ -104,8 +106,8 @@ public class WorkHistoryDAO extends JdbcDaoSupport {
 			log.info("Thêm mới thông tin lịch sử làm việc ....");
 			String sql = hr.getProperty("INSERT_WORK_HISTORY").toString();
 			log.info("INSERT_WORK_HISTORY query: " + sql);
-			Object[] params = new Object[] { workHistory.getEmployeeId(), workHistory.getFromDate(),
-					workHistory.getToDate(), workHistory.getTitle(), workHistory.getDepartment(),
+			Object[] params = new Object[] { workHistory.getEmployeeId(), Utils.convertDateToStore(workHistory.getFromDate()),
+					Utils.convertDateToStore(workHistory.getToDate()), workHistory.getTitle(), workHistory.getDepartment(),
 					workHistory.getCompany(), workHistory.getSalary(), workHistory.getAchievement(),
 					workHistory.getAppraise() };
 			jdbcTmpl.update(sql, params);
@@ -129,14 +131,13 @@ public class WorkHistoryDAO extends JdbcDaoSupport {
 			// update
 			String sql = hr.getProperty("UPDATE_WORK_HISTORY").toString();
 			log.info("UPDATE_WORK_HISTORY query: " + sql);
-			System.err.println(workHistory.getAchievement());
-			System.err.println(workHistory.getAppraise());
-			Object[] params = new Object[] { workHistory.getToDate(), workHistory.getTitle(),
+			//System.err.println(workHistory.getFromDate());
+			//System.err.println(workHistory.getAppraise());
+			Object[] params = new Object[] {Utils.convertDateToStore(workHistory.getToDate()), workHistory.getTitle(),
 					workHistory.getDepartment(), workHistory.getCompany(), workHistory.getSalary(),
 					workHistory.getAchievement(), workHistory.getAppraise(), workHistory.getEmployeeId(),
-					workHistory.getFromDate() };
-			jdbcTmpl.update(sql, params);
-
+					Utils.convertDateToStore(workHistory.getFromDate())};
+			jdbcTmpl.update(sql, params);			
 		} catch (Exception e) {
 			log.error(e, e);
 			throw e;

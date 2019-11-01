@@ -57,15 +57,10 @@
 </head>
 <body>
 	<a href="${url}/salary/"><button
-			class="btn btn-lg btn-primary btn-sm">Quay lại thông tin
-			lương nhân viên</button></a>
-	<br />
+			class="btn btn-lg btn-primary btn-sm">Thông tin	lương nhân viên</button></a>
 	<br />
 	<form:form action="generateSalaryReport"
-		modelAttribute="salaryReportForm" method="POST">
-		<input class="btn btn-lg btn-primary btn-sm" type="submit"
-			value="Thống kê" name="Thống kê" /> &nbsp;		
-		<br />
+		modelAttribute="salaryReportForm" method="POST">				
 		<br />
 		<table class="table table-bordered">
 			<jsp:useBean id="now" class="java.util.Date" />
@@ -115,8 +110,8 @@
 					</form:select></td>
 			</tr>
 		</table>
-		<!-- <input class="btn btn-lg btn-primary btn-sm" type="submit"
-			value="Thống kê" name="Thống kê" /> -->
+		<input class="btn btn-lg btn-primary btn-sm" type="submit"
+			value="Thống kê" name="Thống kê" /> 
 	</form:form>
 	<%--<br />
 	<a href="${url}/salary/"><button

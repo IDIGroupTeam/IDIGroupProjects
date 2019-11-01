@@ -12,7 +12,9 @@ public class WorkHistory implements Serializable {
 	private int employeeId;
 	private String employeeName;
 	private String fromDate;
+	private String fDate;
 	private String toDate;
+	private String tDate;
 	private String title;
 	private String department;
 	private String company;
@@ -117,6 +119,22 @@ public class WorkHistory implements Serializable {
 
 	public void setAppraise(String appraise) {
 		this.appraise = appraise;
+	}
+
+	public String getfDate() {
+		return fDate;
+	}
+
+	public void setfDate(String fDate) {
+		this.fDate = fDate;
+	}
+
+	public String gettDate() {
+		return tDate;
+	}
+
+	public void settDate(String tDate) {
+		this.tDate = tDate;
 	}
 
 }

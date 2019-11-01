@@ -20,6 +20,7 @@ import com.idi.hr.bean.Department;
 import com.idi.hr.bean.EmployeeInfo;
 import com.idi.hr.bean.JobTitle;
 import com.idi.hr.bean.WorkHistory;
+import com.idi.hr.common.Utils;
 import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.JobTitleDAO;
@@ -75,6 +76,8 @@ public class WorkHistoryController {
 					for (int i = 0; i < form.getNumberRecordsOfPage(); i++) {
 						WorkHistory workHistory = new WorkHistory();
 						workHistory = list.get(i);
+						workHistory.setfDate(Utils.convertDateToDisplay(workHistory.getFromDate()));
+						workHistory.settDate(Utils.convertDateToDisplay(workHistory.getToDate()));
 						listWorkHistoryForPage.add(workHistory);
 					}
 				} else if (form.getPageIndex() > 1) {
@@ -82,6 +85,8 @@ public class WorkHistoryController {
 							* form.getNumberRecordsOfPage(); i++) {
 						WorkHistory workHistory = new WorkHistory();
 						workHistory = list.get(i);
+						workHistory.setfDate(Utils.convertDateToDisplay(workHistory.getFromDate()));
+						workHistory.settDate(Utils.convertDateToDisplay(workHistory.getToDate()));
 						listWorkHistoryForPage.add(workHistory);
 					}
 				}
@@ -90,6 +95,8 @@ public class WorkHistoryController {
 						.getTotalRecords(); i++) {
 					WorkHistory workHistory = new WorkHistory();
 					workHistory = list.get(i);
+					workHistory.setfDate(Utils.convertDateToDisplay(workHistory.getFromDate()));
+					workHistory.settDate(Utils.convertDateToDisplay(workHistory.getToDate()));
 					listWorkHistoryForPage.add(workHistory);
 				}
 			}
@@ -188,8 +195,8 @@ public class WorkHistoryController {
 	public String updateWorkHistory(Model model, @ModelAttribute("workHistoryForm") @Validated WorkHistory workHistory,
 			final RedirectAttributes redirectAttributes) {
 		try {
-			System.err.println(workHistory.getAchievement());
-			System.err.println(workHistory.getAppraise());
+			//System.err.println(workHistory.getFromDate() + workHistory.getAchievement());
+			//System.err.println(workHistory.getToDate() + workHistory.getAppraise());
 			workHistoryDAO.updateWorkHistory(workHistory);
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin lịch sử công tác thành công!");
@@ -230,7 +237,7 @@ public class WorkHistoryController {
 	}
 
 	@RequestMapping("/workHistory/viewWorkHistory")
-	public String viewWorkHistory(Model model, @RequestParam("employeeId") int employeeId,  @RequestParam("fromDate") String fromDate) {
+	public String viewWorkHistory(Model model, @RequestParam("employeeId") int employeeId,  @RequestParam("fromDate") String fromDate) throws Exception {
 		WorkHistory workHistory = null;
 		if (employeeId > 0 && fromDate != null) {
 			workHistory = this.workHistoryDAO.getWorkHistory(employeeId, fromDate);
@@ -245,7 +252,7 @@ public class WorkHistoryController {
 	}
 
 	@RequestMapping("/workHistory/editWorkHistory")
-	public String editWorkHistory(Model model, @RequestParam("employeeId") int employeeId,  @RequestParam("fromDate") String fromDate) {
+	public String editWorkHistory(Model model, @RequestParam("employeeId") int employeeId,  @RequestParam("fromDate") String fromDate) throws Exception{
 		WorkHistory workHistory = null;
 		if (employeeId > 0 && fromDate != null) {
 			workHistory = this.workHistoryDAO.getWorkHistory(employeeId, fromDate);

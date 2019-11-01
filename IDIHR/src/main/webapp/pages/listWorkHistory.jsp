@@ -1,6 +1,7 @@
 <%@page language="java" contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 <html>
@@ -154,7 +155,7 @@ tr:nth-child(even) {
 						</c:choose>
 						<c:choose>
 							<c:when
-								test="${workHistoryForm.pageIndex==workHistoryForm.totalPages}">
+								test="${workHistoryForm.pageIndex==workHistoryForm.totalPages  || workHistoryForm.totalPages==0}">
 								<button id="nextPage" type="button"
 									class="btn btn-default disabled">Sau</button>
 								<button id="lastPage" type="button"
@@ -199,8 +200,8 @@ tr:nth-child(even) {
 				<tr>
 					<td>${workHistory.employeeId}</td>
 					<td>${workHistory.employeeName}</td>
-					<td>${workHistory.fromDate}</td>
-					<td>${workHistory.toDate}</td>					
+					<td>${workHistory.fDate}</td>					
+					<td>${workHistory.tDate}</td>					
 					<td>${workHistory.title}</td>
 					<td>${workHistory.department}</td>
 					<td>${workHistory.company}</td>
