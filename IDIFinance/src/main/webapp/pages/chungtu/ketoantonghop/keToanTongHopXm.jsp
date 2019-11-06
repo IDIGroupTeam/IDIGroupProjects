@@ -52,6 +52,13 @@
 <hr />
 
 <div class="row form-group">
+	<c:if test="${not empty message}">
+		<div class="col-sm-12 text-danger">
+			<i>${message}</i>
+		</div>
+	</c:if>
+</div>
+<div class="row form-group">
 	<label class="control-label col-sm-2" for="soCt">Số phiếu:</label>
 	<div class="col-sm-4">${chungTu.loaiCt}${chungTu.soCt}</div>
 

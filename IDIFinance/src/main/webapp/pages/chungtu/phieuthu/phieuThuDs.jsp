@@ -34,6 +34,11 @@
 		</div>
 	</c:when>
 	<c:otherwise>
+		<div class="pull-left">
+			<c:if test="${not empty message}">
+				<span class="text-danger"><i>${message}</i></span>
+			</c:if>
+		</div>
 		<div class="pull-right">
 			<i>(*): Mặc định là tiền VND</i>&nbsp;&nbsp;&nbsp;&nbsp;
 			<c:choose>
@@ -75,7 +80,7 @@
 							dateStyle="SHORT" /></td>
 					<td class="text-center" style="width: 50px;">${phieuThu.loaiCt}${phieuThu.soCt}</td>
 					<td><a href="${url}/chungtu/phieuthu/xem/${phieuThu.maCt}">${phieuThu.lyDo}</a></td>
-					<td align="right"><fmt:formatNumber
+					<td class="text-right"><fmt:formatNumber
 							value="${phieuThu.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber></td>
 					<td><c:choose>
 							<c:when

@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.FlashMap;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.idi.finance.bean.CauHinh;
 import com.idi.finance.bean.DungChung;
@@ -70,6 +74,9 @@ import net.sf.jasperreports.engine.util.JRLoader;
 @Controller
 public class ChungTuController {
 	private static final Logger logger = Logger.getLogger(ChungTuController.class);
+
+	@Autowired
+	MessageSource messageSource;
 
 	@Autowired
 	DungChung dungChung;
@@ -326,7 +333,15 @@ public class ChungTuController {
 
 	@RequestMapping(value = "/chungtu/phieuthu/luu", method = RequestMethod.POST)
 	public String luuTaoMoiPhieuThu(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu, BindingResult result,
-			Model model) {
+			Model model, HttpServletRequest req) {
+		FlashMap flash = RequestContextUtils.getOutputFlashMap(req);
+		String message = messageSource.getMessage("Fail.TaoMoi.ChungTu", null, LocaleContextHolder.getLocale());
+		String ketQua = "/chungtu/phieuthu/danhsach";
+		if (chungTu.getMaCt() > 0) {
+			ketQua = "/chungtu/phieuthu/xem/" + chungTu.getMaCt();
+			message = messageSource.getMessage("Fail.CapNhat.ChungTu", null, LocaleContextHolder.getLocale());
+		}
+
 		try {
 			if (result.hasErrors()) {
 				return chuanBiFormPhieuThu(model, chungTu);
@@ -337,16 +352,16 @@ public class ChungTuController {
 
 			if (chungTu.getMaCt() > 0) {
 				chungTuDAO.capNhatChungTu(chungTu);
-				return "redirect:/chungtu/phieuthu/xem/" + chungTu.getMaCt();
 			} else {
 				chungTuDAO.themChungTu(chungTu);
 			}
-
-			return "redirect:/chungtu/phieuthu/danhsach";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "error";
+			logger.info(message);
+			flash.put("message", message);
 		}
+
+		return "redirect:" + ketQua;
 	}
 
 	private String chuanBiFormPhieuThu(Model model, ChungTu chungTu) {
@@ -587,7 +602,15 @@ public class ChungTuController {
 
 	@RequestMapping(value = "/chungtu/phieuchi/luu", method = RequestMethod.POST)
 	public String luuTaoMoiPhieuChi(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu, BindingResult result,
-			Model model) {
+			Model model, HttpServletRequest req) {
+		FlashMap flash = RequestContextUtils.getOutputFlashMap(req);
+		String message = messageSource.getMessage("Fail.TaoMoi.ChungTu", null, LocaleContextHolder.getLocale());
+		String ketQua = "/chungtu/phieuchi/danhsach";
+		if (chungTu.getMaCt() > 0) {
+			ketQua = "/chungtu/phieuchi/xem/" + chungTu.getMaCt();
+			message = messageSource.getMessage("Fail.CapNhat.ChungTu", null, LocaleContextHolder.getLocale());
+		}
+
 		try {
 			if (result.hasErrors()) {
 				return chuanBiFormPhieuChi(model, chungTu);
@@ -598,16 +621,16 @@ public class ChungTuController {
 
 			if (chungTu.getMaCt() > 0) {
 				chungTuDAO.capNhatChungTu(chungTu);
-				return "redirect:/chungtu/phieuchi/xem/" + chungTu.getMaCt();
 			} else {
 				chungTuDAO.themChungTu(chungTu);
 			}
-
-			return "redirect:/chungtu/phieuchi/danhsach";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "error";
+			logger.info(message);
+			flash.put("message", message);
 		}
+
+		return "redirect:" + ketQua;
 	}
 
 	private String chuanBiFormPhieuChi(Model model, ChungTu chungTu) {
@@ -847,7 +870,15 @@ public class ChungTuController {
 
 	@RequestMapping(value = "/chungtu/baoco/luu", method = RequestMethod.POST)
 	public String luuTaoMoiBaoCo(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu, BindingResult result,
-			Model model) {
+			Model model, HttpServletRequest req) {
+		FlashMap flash = RequestContextUtils.getOutputFlashMap(req);
+		String message = messageSource.getMessage("Fail.TaoMoi.ChungTu", null, LocaleContextHolder.getLocale());
+		String ketQua = "/chungtu/baoco/danhsach";
+		if (chungTu.getMaCt() > 0) {
+			ketQua = "/chungtu/baoco/xem/" + chungTu.getMaCt();
+			message = messageSource.getMessage("Fail.CapNhat.ChungTu", null, LocaleContextHolder.getLocale());
+		}
+
 		try {
 			if (result.hasErrors()) {
 				return chuanBiFormBaoCo(model, chungTu);
@@ -858,16 +889,16 @@ public class ChungTuController {
 
 			if (chungTu.getMaCt() > 0) {
 				chungTuDAO.capNhatChungTu(chungTu);
-				return "redirect:/chungtu/baoco/xem/" + chungTu.getMaCt();
 			} else {
 				chungTuDAO.themChungTu(chungTu);
 			}
-
-			return "redirect:/chungtu/baoco/danhsach";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "error";
+			logger.info(message);
+			flash.put("message", message);
 		}
+
+		return "redirect:" + ketQua;
 	}
 
 	private String chuanBiFormBaoCo(Model model, ChungTu chungTu) {
@@ -1107,7 +1138,15 @@ public class ChungTuController {
 
 	@RequestMapping(value = "/chungtu/baono/luu", method = RequestMethod.POST)
 	public String luuTaoMoiBaoNo(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu, BindingResult result,
-			Model model) {
+			Model model, HttpServletRequest req) {
+		FlashMap flash = RequestContextUtils.getOutputFlashMap(req);
+		String message = messageSource.getMessage("Fail.TaoMoi.ChungTu", null, LocaleContextHolder.getLocale());
+		String ketQua = "/chungtu/baono/danhsach";
+		if (chungTu.getMaCt() > 0) {
+			ketQua = "/chungtu/baono/xem/" + chungTu.getMaCt();
+			message = messageSource.getMessage("Fail.CapNhat.ChungTu", null, LocaleContextHolder.getLocale());
+		}
+
 		try {
 			if (result.hasErrors()) {
 				return chuanBiFormBaoNo(model, chungTu);
@@ -1118,16 +1157,16 @@ public class ChungTuController {
 
 			if (chungTu.getMaCt() > 0) {
 				chungTuDAO.capNhatChungTu(chungTu);
-				return "redirect:/chungtu/baono/xem/" + chungTu.getMaCt();
 			} else {
 				chungTuDAO.themChungTu(chungTu);
 			}
-
-			return "redirect:/chungtu/baono/danhsach";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "error";
+			logger.info(message);
+			flash.put("message", message);
 		}
+
+		return "redirect:" + ketQua;
 	}
 
 	private String chuanBiFormBaoNo(Model model, ChungTu chungTu) {
@@ -1370,7 +1409,15 @@ public class ChungTuController {
 
 	@RequestMapping(value = "/chungtu/ktth/luu", method = RequestMethod.POST)
 	public String luuTaoMoiKeToanTongHop(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu,
-			BindingResult result, Model model) {
+			BindingResult result, Model model, HttpServletRequest req) {
+		FlashMap flash = RequestContextUtils.getOutputFlashMap(req);
+		String message = messageSource.getMessage("Fail.TaoMoi.ChungTu", null, LocaleContextHolder.getLocale());
+		String ketQua = "/chungtu/ktth/danhsach";
+		if (chungTu.getMaCt() > 0) {
+			ketQua = "/chungtu/ktth/xem/" + chungTu.getMaCt();
+			message = messageSource.getMessage("Fail.CapNhat.ChungTu", null, LocaleContextHolder.getLocale());
+		}
+
 		try {
 			logger.info("Has error: " + result.getAllErrors());
 			if (result.hasErrors()) {
@@ -1382,16 +1429,16 @@ public class ChungTuController {
 
 			if (chungTu.getMaCt() > 0) {
 				chungTuDAO.capNhatChungTuKtth(chungTu);
-				return "redirect:/chungtu/ktth/xem/" + chungTu.getMaCt();
 			} else {
 				chungTuDAO.themChungTuKtth(chungTu);
 			}
-
-			return "redirect:/chungtu/ktth/danhsach";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "error";
+			logger.info(message);
+			flash.put("message", message);
 		}
+
+		return "redirect:" + ketQua;
 	}
 
 	private String chuanBiFormKeToanTongHop(Model model, ChungTu chungTu) {
@@ -1632,7 +1679,15 @@ public class ChungTuController {
 
 	@RequestMapping(value = "/chungtu/muahang/luu", method = RequestMethod.POST)
 	public String luuTaoMoiMuaHang(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu, BindingResult result,
-			Model model) {
+			Model model, HttpServletRequest req) {
+		FlashMap flash = RequestContextUtils.getOutputFlashMap(req);
+		String message = messageSource.getMessage("Fail.TaoMoi.ChungTu", null, LocaleContextHolder.getLocale());
+		String ketQua = "/chungtu/muahang/danhsach";
+		if (chungTu.getMaCt() > 0) {
+			ketQua = "/chungtu/muahang/xem/" + chungTu.getMaCt();
+			message = messageSource.getMessage("Fail.CapNhat.ChungTu", null, LocaleContextHolder.getLocale());
+		}
+
 		try {
 			if (result.hasErrors()) {
 				// Tạo tạm một hàng hóa mới làm mẫu, sau js sẽ xóa đi
@@ -1823,7 +1878,6 @@ public class ChungTuController {
 
 			if (chungTu.getMaCt() > 0) {
 				chungTuDAO.capNhatChungTuKho(chungTu);
-				return "redirect:/chungtu/muahang/xem/" + chungTu.getMaCt();
 			} else {
 				chungTuDAO.themChungTuKho(chungTu);
 			}
@@ -1840,12 +1894,13 @@ public class ChungTuController {
 				chungTu.setTaiKhoanKtthDs(taiKhoanKtthDs);
 				chungTuDAO.themChungTuKtth(chungTu);
 			}
-
-			return "redirect:/chungtu/muahang/danhsach";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "error";
+			logger.info(message);
+			flash.put("message", message);
 		}
+
+		return "redirect:" + ketQua;
 	}
 
 	private String chuanBiFormMuaHang(Model model, ChungTu chungTu) {
@@ -2107,7 +2162,15 @@ public class ChungTuController {
 
 	@RequestMapping(value = "/chungtu/banhang/luu", method = RequestMethod.POST)
 	public String luuTaoMoiBanHang(@ModelAttribute("mainFinanceForm") @Validated ChungTu chungTu, BindingResult result,
-			Model model) {
+			Model model, HttpServletRequest req) {
+		FlashMap flash = RequestContextUtils.getOutputFlashMap(req);
+		String message = messageSource.getMessage("Fail.TaoMoi.ChungTu", null, LocaleContextHolder.getLocale());
+		String ketQua = "/chungtu/banhang/danhsach";
+		if (chungTu.getMaCt() > 0) {
+			ketQua = "/chungtu/banhang/xem/" + chungTu.getMaCt();
+			message = messageSource.getMessage("Fail.CapNhat.ChungTu", null, LocaleContextHolder.getLocale());
+		}
+
 		try {
 			if (result.hasErrors()) {
 				HangHoa hangHoa = new HangHoa();
@@ -2277,7 +2340,6 @@ public class ChungTuController {
 
 				if (chungTu.getMaCt() > 0) {
 					chungTuDAO.capNhatChungTuKho(chungTu);
-					return "redirect:/chungtu/banhang/xem/" + chungTu.getMaCt();
 				} else {
 					chungTuDAO.themChungTuKho(chungTu);
 				}
@@ -2295,12 +2357,13 @@ public class ChungTuController {
 					chungTuDAO.themChungTuKtth(chungTu);
 				}
 			}
-
-			return "redirect:/chungtu/banhang/danhsach";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "error";
+			logger.info(message);
+			flash.put("message", message);
 		}
+
+		return "redirect:" + ketQua;
 	}
 
 	private String chuanBiFormBanHang(Model model, ChungTu chungTu) {

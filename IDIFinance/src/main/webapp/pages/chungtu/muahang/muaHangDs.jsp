@@ -30,11 +30,14 @@
 			<i>Kỳ kế toán hiện tại bị đóng, bạn chỉ xem, không thể thêm mới
 				hoặc sửa dữ liệu.</i>
 		</div>
-		<div class="pull-right">
-			<i>(*): Mặc định là tiền VND</i>&nbsp;&nbsp;&nbsp;&nbsp;
-		</div>
+		<div class="pull-right"></div>
 	</c:when>
 	<c:otherwise>
+		<div class="pull-left">
+			<c:if test="${not empty message}">
+				<span class="text-danger"><i>${message}</i></span>
+			</c:if>
+		</div>
 		<div class="pull-right">
 			<c:choose>
 				<c:when test="${kyKeToan.trangThai!= KyKeToan.DONG}">
@@ -67,7 +70,7 @@
 			<tr>
 				<th class="text-center" colspan="2">Phiếu nhập kho</th>
 				<th class="text-center" rowspan="2">Lý do</th>
-				<th class="text-center" rowspan="2">Tổng số tiền <br />(VND)
+				<th class="text-center" rowspan="2">Tổng số tiền<br> (VND)
 				</th>
 				<th class="text-center" rowspan="2">Đối tượng</th>
 				<th class="text-center" rowspan="2">Địa chỉ</th>
