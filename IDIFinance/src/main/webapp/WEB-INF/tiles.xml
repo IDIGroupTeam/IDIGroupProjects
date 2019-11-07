@@ -50,6 +50,8 @@
 		<put-attribute name="title" value="Danh sách phiếu thu" />
 		<put-attribute name="body"
 			value="/pages/chungtu/phieuthu/phieuThuDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/phieuthu/phieuThuTk.jsp" />
 	</definition>
 
 	<definition name="xemPhieuThu" extends="taichinh">
@@ -81,6 +83,8 @@
 		<put-attribute name="title" value="Danh sách phiếu chi" />
 		<put-attribute name="body"
 			value="/pages/chungtu/phieuchi/phieuChiDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/phieuchi/phieuChiTk.jsp" />
 	</definition>
 
 	<definition name="xemPhieuChi" extends="taichinh">
@@ -112,6 +116,8 @@
 		<put-attribute name="title" value="Danh sách báo có" />
 		<put-attribute name="body"
 			value="/pages/chungtu/baoco/baoCoDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/baoco/baoCoTk.jsp" />
 	</definition>
 
 	<definition name="xemBaoCo" extends="taichinh">
@@ -143,6 +149,8 @@
 		<put-attribute name="title" value="Danh sách báo nợ" />
 		<put-attribute name="body"
 			value="/pages/chungtu/baono/baoNoDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/baono/baoNoTk.jsp" />
 	</definition>
 
 	<definition name="xemBaoNo" extends="taichinh">
@@ -175,6 +183,8 @@
 			value="Danh sách kế toán tổng hợp" />
 		<put-attribute name="body"
 			value="/pages/chungtu/ketoantonghop/keToanTongHopDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/ketoantonghop/keToanTongHopTk.jsp" />
 	</definition>
 
 	<definition name="xemKeToanTongHop" extends="taichinh">
@@ -210,6 +220,8 @@
 			value="Danh sách chứng từ mua hàng" />
 		<put-attribute name="body"
 			value="/pages/chungtu/muahang/muaHangDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/muahang/muaHangTk.jsp" />
 	</definition>
 
 	<definition name="xemMuaHang" extends="taichinh">
@@ -245,6 +257,8 @@
 		<put-attribute name="title" value="Danh sách bán hàng" />
 		<put-attribute name="body"
 			value="/pages/chungtu/banhang/banHangDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/banhang/banHangTk.jsp" />
 	</definition>
 
 	<definition name="xemBanHang" extends="taichinh">
@@ -276,6 +290,8 @@
 		<put-attribute name="title" value="Danh sách kết chuyển" />
 		<put-attribute name="body"
 			value="/pages/chungtu/ketchuyen/ketChuyenDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/ketchuyen/ketChuyenTk.jsp" />
 	</definition>
 
 	<definition name="xemKetChuyen" extends="taichinh">

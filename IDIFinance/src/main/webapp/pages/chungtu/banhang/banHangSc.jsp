@@ -875,7 +875,9 @@
 			startView : 2,
 			minView : 2,
 			forceParse : 0,
-			pickerPosition : "bottom-left"
+			pickerPosition : "bottom-left",
+			startDate : '${mainFinanceForm.kyKeToan.batDau}',
+			endDate : '${mainFinanceForm.kyKeToan.ketThuc}'
 		});
 
 		$("#goiYBt").click(function() {
