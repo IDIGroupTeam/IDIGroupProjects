@@ -193,7 +193,7 @@ tr:nth-child(even) {
 			<c:forEach var="insurance" items="${insurances}">
 				<tr>
 					<td>${insurance.employeeId}</td>
-					<td>${insurance.employeeName}</td>
+					<td nowrap="nowrap">${insurance.employeeName}</td>
 					<td>${insurance.socicalInsuNo}</td>
 					<td><fmt:formatNumber value="${insurance.salarySocicalInsu.replaceAll(',', '')}" type="number"/></td>
 					<td>${insurance.place}</td>

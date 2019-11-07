@@ -1,6 +1,9 @@
 package com.idi.hr.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.idi.hr.bean.EmployeeInfo;
 import com.idi.hr.bean.Insurance;
 import com.idi.hr.bean.ProcessInsurance;
+import com.idi.hr.common.Utils;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.InsuranceDAO;
 import com.idi.hr.form.InsuranceForm;
@@ -103,7 +107,7 @@ public class InsuranceController {
 				employee = (EmployeeInfo) list.get(i);
 				Integer id = employee.getEmployeeId();
 				employeeMap.put(id.toString(),
-						employee.getFullName() + ", phòng " + employee.getDepartment());
+						employee.getFullName() + ", phòng " + employee.getDepartment() + ", mã NV " + id);
 			}
 
 		} catch (Exception e) {
@@ -113,25 +117,18 @@ public class InsuranceController {
 		return employeeMap;
 	}
 	
-	private Map<String, String> employees() {
-		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
-		try {
-			//note: nhung 
-			List<EmployeeInfo> list = employeeDAO.getEmployees();
-			EmployeeInfo employee = new EmployeeInfo();
-			for (int i = 0; i < list.size(); i++) {
-				employee = (EmployeeInfo) list.get(i);
-				Integer id = employee.getEmployeeId();
-				employeeMap.put(id.toString(),
-						employee.getFullName() + ", phòng " + employee.getDepartment());
-			}
-
-		} catch (Exception e) {
-			log.error(e, e);
-			e.printStackTrace();
-		}
-		return employeeMap;
-	}
+	/*
+	 * private Map<String, String> employees() { Map<String, String> employeeMap =
+	 * new LinkedHashMap<String, String>(); try { //note: nhung List<EmployeeInfo>
+	 * list = employeeDAO.getEmployees(); EmployeeInfo employee = new
+	 * EmployeeInfo(); for (int i = 0; i < list.size(); i++) { employee =
+	 * (EmployeeInfo) list.get(i); Integer id = employee.getEmployeeId();
+	 * employeeMap.put(id.toString(), employee.getFullName() + ", phòng " +
+	 * employee.getDepartment() + ", mã NV " + id); }
+	 * 
+	 * } catch (Exception e) { log.error(e, e); e.printStackTrace(); } return
+	 * employeeMap; }
+	 */
 	
 	private Map<String, String> allEmployees() {
 		Map<String, String> employeeMap = new LinkedHashMap<String, String>();
@@ -143,7 +140,7 @@ public class InsuranceController {
 				employee = (EmployeeInfo) list.get(i);
 				Integer id = employee.getEmployeeId();
 				employeeMap.put(id.toString(),
-						"Mã NV " + id + ", " + employee.getFullName() + ", phòng " + employee.getDepartment());
+						employee.getFullName() + ", phòng " + employee.getDepartment() + ", mã NV " + id);
 			}
 
 		} catch (Exception e) {
@@ -256,7 +253,7 @@ public class InsuranceController {
 			model.addAttribute("name", name);
 			List<ProcessInsurance> list = insuranceDAO.getProcessInsurances(socicalInsuNo);
 			model.addAttribute("pInsurances", list);
-			model.addAttribute("formTitle", "Quá trình đóng bảo hiểm của NV ");
+			model.addAttribute("formTitle", "Quá trình đóng bảo hiểm ");
 		} catch (Exception e) {
 			log.error(e, e);
 			e.printStackTrace();
@@ -267,38 +264,61 @@ public class InsuranceController {
 	@RequestMapping("/processInsurance/insertProcessInsuranceForm")
 	public String insertProcessInsuranceForm(Model model, @RequestParam("socicalInsuNo") String socicalInsuNo,
 			@RequestParam("employeeId") String employeeId, ProcessInsurance processInsurance) {
-		return this.processInsuranceForm(model, processInsurance, socicalInsuNo, employeeId);
+		return this.processInsuranceForm(model, processInsurance, socicalInsuNo, employeeId, null);
 	}
 
 	private String processInsuranceForm(Model model, ProcessInsurance processInsurance, String socicalInsuNo,
-			String employeeId) {
+			String employeeId, String validate) {
 		model.addAttribute("pInsuranceForm", processInsurance);
 		model.addAttribute("socicalInsuNo", socicalInsuNo);
 		// Get employee info for insurance
-		Map<String, String> employeeMap = this.employees();
+		//Map<String, String> employeeMap = this.employees();
 		String name = "";
-		name = employeeMap.get(employeeId);
+		name = allEmployees().get(employeeId);
 		model.addAttribute("name", name);
 		model.addAttribute("employeeId", employeeId);
 		String actionform = "";
 		if (processInsurance.getFromDate() != null) {
-			model.addAttribute("formTitle", "Sửa thông tin quá trình đóng BHXH của NV");
+			model.addAttribute("formTitle", "Sửa thông tin quá trình đóng BHXH");
 			actionform = "editProcessInsurance";
 		} else {
-			model.addAttribute("formTitle", "Thêm thông tin quá trình đóng BHXH của NV");
+			model.addAttribute("formTitle", "Thêm thông tin quá trình đóng BHXH");
 			actionform = "insertProcessInsurance";
 		}
-		System.out.println(actionform);
+		
+		if(validate != null)
+			model.addAttribute("validate", validate);
+		//System.out.println(name);
 		return actionform;
 	}
 
 	@RequestMapping(value = "/processInsurance/insertProcessInsurance", method = RequestMethod.POST)
-	public String insertProcessInsurance(Model model,
+	public String insertProcessInsurance(Model model, 
 			@ModelAttribute("pInsuranceForm") @Validated ProcessInsurance pInsurance,
 			@RequestParam("employeeId") String employeeId, final RedirectAttributes redirectAttributes) {
-		// can check from date >= ngay vao cty < ngay hien tai
-		// to date < ngay hien tai
 		try {
+			//check from date >= ngay vao cty < ngay hien tai			
+			// to date < ngay hien tai
+			// to date > from date
+			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date fDate = null;
+			Date tDate = null;
+			if(pInsurance.getFromDate() != null && pInsurance.getFromDate().length() > 0) {
+				if(pInsurance.getFromDate() != null && pInsurance.getFromDate().contains("/")) {
+					fDate = sdf. parse(Utils.convertDateToStore(pInsurance.getFromDate()));
+				}else
+					fDate = sdf. parse(pInsurance.getFromDate());
+			}
+			
+			if(pInsurance.getToDate() != null && pInsurance.getToDate().contains("/")) {
+				tDate = sdf. parse(Utils.convertDateToStore(pInsurance.getToDate()));
+			}else if(pInsurance.getToDate() != null && pInsurance.getToDate().length() > 0)
+				tDate = sdf. parse(pInsurance.getToDate());
+						
+			if(pInsurance.getToDate() != null && pInsurance.getToDate().length() > 0 && fDate.compareTo(tDate) >= 0) {				
+				return processInsuranceForm(model, pInsurance, pInsurance.getSocicalInsuNo(), employeeId, "Vui lòng nhập ngày kết thức phải lớn hơn ngày bắt đầu");
+			}
+			
 			insuranceDAO.insertProcessInsurance(pInsurance);
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Thêm thông tin quá trình đóng BHXH thành công!");
@@ -313,24 +333,46 @@ public class InsuranceController {
 
 	@RequestMapping("/processInsurance/editProcessInsuranceForm")
 	public String editProcessInsuranceForm(Model model, @RequestParam("socicalInsuNo") String socicalInsuNo,
-			@RequestParam("employeeId") String employeeId, ProcessInsurance processInsurance) {
+			@RequestParam("employeeId") String employeeId, ProcessInsurance processInsurance) throws Exception {
 		// System.out.println(processInsurance.getFromDate());
 		if (processInsurance.getFromDate() != null) {
 			processInsurance = insuranceDAO.getProcessInsurance(socicalInsuNo, processInsurance.getFromDate());
+			if(processInsurance.getToDate() != null && processInsurance.getToDate().length() > 0)
+				processInsurance.setToDate(Utils.convertDateToDisplay(processInsurance.getToDate()));
 		} else {
 			return "redirect:/insurance/listProcessInsurance?socicalInsuNo=" + socicalInsuNo + "&employeeId="
 					+ employeeId;
 		}
-		return this.processInsuranceForm(model, processInsurance, socicalInsuNo, employeeId);
+		return this.processInsuranceForm(model, processInsurance, socicalInsuNo, employeeId, null);
 	}
 
 	@RequestMapping(value = "/processInsurance/updateProcessInsurance", method = RequestMethod.POST)
 	public String updateProcessInsurance(Model model,
 			@ModelAttribute("pInsuranceForm") @Validated ProcessInsurance pInsurance,
 			@RequestParam("employeeId") String employeeId, final RedirectAttributes redirectAttributes) {
-		// can check from date >= ngay vao cty < ngay hien tai
-		// to date < ngay hien tai
+
 		try {
+			// can check from date >= ngay vao cty < ngay hien tai
+			// to date < ngay hien tai
+			// to date > from date
+			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date fDate;
+			Date tDate;
+			if(pInsurance.getFromDate() != null && pInsurance.getFromDate().contains("/")) {
+				fDate = sdf. parse(Utils.convertDateToStore(pInsurance.getFromDate()));
+			}else
+				fDate = sdf. parse(pInsurance.getFromDate());
+			
+			if(pInsurance.getToDate() != null && pInsurance.getToDate().contains("/")) {
+				tDate = sdf. parse(Utils.convertDateToStore(pInsurance.getToDate()));
+			}else
+				tDate = sdf. parse(pInsurance.getToDate());
+			
+			if(fDate.compareTo(tDate) >= 0) {		
+				//System.err.println("Ngày kết thức phải lớn hơn ngày bắt đầu");
+				return processInsuranceForm(model, pInsurance, pInsurance.getSocicalInsuNo(), employeeId, "Vui lòng nhập ngày kết thức phải lớn hơn ngày bắt đầu");
+			}
+			
 			insuranceDAO.updateProcessInsurance(pInsurance);
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Sửa thông tin quá trình đóng BHXH thành công!");

@@ -18,9 +18,44 @@
 <!-- Initialize the plugin: -->
 <script src="${url}/public/js/jquery.min.js"></script>
 <script src="${url}/public/js/common.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
+
 <script type="text/javascript">
-	$(function() {
+	var $j = jQuery.noConflict();
+	$j(function() {
+		//alert($j.fn.jquery);
 		moneyConvert("salarySocicalInsu");
+		/* 		// Wait for window load
+		 $(window).load(function(){
+		 // Animate loader off screen
+		 //$("button").click(function(){
+		 $(".loader").fadeOut("slow");
+		 //});	
+		 }); */
+
+		/* 		$j('#comment').editable({
+		 type : 'text',
+		 pk : 1,
+		 name : 'comment',
+		 url : '${url}/timekeeping/ghichu',
+		 title : 'thêm ghi chú'
+		 }); */
+
+		$j(".datetime").datetimepicker({
+			//language : 'vi',
+			format : 'dd/mm/yyyy',
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			minView : 2,
+			forceParse : 0,
+			pickerPosition : "bottom-left"
+		});
+
+	//$j(function() {
+		
 	});
 </script>
 </head>
@@ -33,35 +68,50 @@
 			<form:hidden path="socicalInsuNo"/>
 			<tbody>
 				<tr>
-					<td colspan="4" nowrap="nowrap" bgcolor="#F6CED8">Thông tin	bảo hiểm xã hội</td>
+					<td colspan="4" nowrap="nowrap" bgcolor="#C4C4C4">Thông tin	bảo hiểm xã hội</td>
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Nhân viên:</td>
-					<td colspan="3"><c:out value="${name}"/></td>
+					<td bgcolor="#EEEEEE">Nhân viên:</td>
+					<td><c:out value="${name}"/></td>
+				
+					<td bgcolor="#EEEEEE">Số sổ BHXH:</td>
+					<td>${pInsuranceForm.socicalInsuNo}</td>
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Số sổ BHXH:</td>
-					<td><form:input path="socicalInsuNo" class="form-control animated" disabled="true"/></td>
-				</tr>
-				<tr>
-					<td bgcolor="#E6E6E6">Lương BH(*):</td>
+					<td bgcolor="#EEEEEE">Lương BH(*):</td>
 					<td><form:input path="salarySocicalInsu" size="12"
 							maxlength="12" required="required" class="form-control animated"/></td>
-					<td bgcolor="#E6E6E6">Cty đóng(*):</td>
+					<td bgcolor="#EEEEEE">Cty đóng(*):</td>
 					<td><form:input path="companyPay" required="required" class="form-control animated"/></td>							
 				</tr>
 				<tr>
-					<td colspan="4" nowrap="nowrap" bgcolor="#F6CED8">Thời gian	đóng</td>
+					<td colspan="4" nowrap="nowrap" bgcolor="#C4C4C4">Thời gian	đóng</td>
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Từ ngày(*):</td>
-					<td><form:input path="fromDate" required="required"
-							type="date" class="form-control animated"/></td>
-					<td bgcolor="#E6E6E6">Đến ngày:</td>
-					<td><form:input path="toDate" type="date" class="form-control animated"/></td>
+					<td bgcolor="#EEEEEE">Từ ngày(*):</td>
+					<td>
+						<div class="input-group date datetime">
+							<form:input path="fromDate" class="form-control" required="required" 
+								placeholder="dd/mm/yyyy" autocomplete="off" />
+							<span class="input-group-addon"><span
+								class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+					<%-- <form:input path="fromDate" required="required"
+							type="date" class="form-control animated"/> --%>
+					</td>
+					<td bgcolor="#EEEEEE">Đến ngày:</td>
+					<td>
+						<div class="input-group date datetime">
+							<form:input path="toDate" class="form-control"
+								placeholder="dd/mm/yyyy" autocomplete="off" />
+							<span class="input-group-addon"><span
+								class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+				<%-- 	<form:input path="toDate" type="date" class="form-control animated"/> --%>
+					</td>
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Ghi chú:</td>
+					<td bgcolor="#EEEEEE">Ghi chú:</td>
 					<td colspan="3"><form:textarea path="comment" cols="64" class="form-control animated"/></td>
 				</tr>
 			</tbody>

@@ -25,7 +25,6 @@
 <script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
 <script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
 
-
 <script type="text/javascript">
 	var $j = jQuery.noConflict();
 	$j(function() {

@@ -8,14 +8,14 @@
 <html>
 <head>
 <!-- Include Twitter Bootstrap and jQuery: -->
-<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!-- <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+<script type="text/javascript" src="${url}/public/js/jquery.min.js"></script>
+<script type="text/javascript" src="${url}/public/js/bootstrap.min.js"></script>
 
-<!-- Include the plugin's CSS and JS: -->
-<script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
-<link rel="stylesheet" href="css/bootstrap-multiselect.css"
-	type="text/css" />
+Include the plugin's CSS and JS:
+<script type="text/javascript" src="${url}/public/js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="${url}/public/css/bootstrap-multiselect.css"
+	type="text/css" /> -->
 
 <!-- Initialize the plugin: -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>

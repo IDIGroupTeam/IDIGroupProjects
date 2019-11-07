@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import com.idi.hr.bean.Insurance;
 import com.idi.hr.bean.ProcessInsurance;
 import com.idi.hr.common.PropertiesManager;
+import com.idi.hr.common.Utils;
 import com.idi.hr.mapper.InsuranceMapper;
 import com.idi.hr.mapper.ProcessInsuranceMapper;
 
@@ -192,12 +193,17 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			log.info("Thêm thông tin qúa trình đóng BHXH....");
 			String sql = hr.getProperty("INSERT_PROCESS_INSURANCE").toString();
 			log.info("INSERT_PROCESS_INSURANCE query: " + sql);
+			if(processInsurance.getFromDate() != null && processInsurance.getFromDate().length() > 0 && processInsurance.getFromDate().contains("/"))
+				processInsurance.setFromDate(Utils.convertDateToStore(processInsurance.getFromDate()));
+			if(processInsurance.getToDate() != null && processInsurance.getToDate().length() > 0 && processInsurance.getToDate().contains("/"))
+				processInsurance.setToDate(Utils.convertDateToStore(processInsurance.getToDate()));
 			Object[] params = new Object[] { processInsurance.getSocicalInsuNo(),
 					processInsurance.getSalarySocicalInsu().replaceAll(",", ""), processInsurance.getCompanyPay(),
 					processInsurance.getFromDate(), processInsurance.getToDate(), processInsurance.getComment() };
 			jdbcTmpl.update(sql, params);
 			
 			//update Insurance
+
 			Insurance insurance= new Insurance();
 			insurance.setSocicalInsuNo(processInsurance.getSocicalInsuNo());
 			insurance.setSalarySocicalInsu(processInsurance.getSalarySocicalInsu().replaceAll(",", ""));
@@ -220,6 +226,12 @@ public class InsuranceDAO extends JdbcDaoSupport {
 			// update
 			String sql = hr.getProperty("UPDATE_PROCESS_INSURANCE").toString();
 			log.info("UPDATE_PROCESS_INSURANCE query: " + sql);
+			
+			if(processInsurance.getFromDate() != null && processInsurance.getFromDate().length() > 0 && processInsurance.getFromDate().contains("/"))
+				processInsurance.setFromDate(Utils.convertDateToStore(processInsurance.getFromDate()));
+			if(processInsurance.getToDate() != null && processInsurance.getToDate().length() > 0 && processInsurance.getToDate().contains("/"))
+				processInsurance.setToDate(Utils.convertDateToStore(processInsurance.getToDate()));
+			
 			Object[] params = new Object[] { processInsurance.getSalarySocicalInsu().replaceAll(",", ""), processInsurance.getCompanyPay(),
 					processInsurance.getToDate(), processInsurance.getComment(), processInsurance.getSocicalInsuNo(),
 					processInsurance.getFromDate() };

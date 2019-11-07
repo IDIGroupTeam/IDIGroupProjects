@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -171,7 +173,13 @@ public class DepartmentController {
 
 	@RequestMapping(value = { "/department/listEmployeeOfDepartment" }, method = RequestMethod.GET)
 	public String listEmployeeOfDepartment(Model model, @RequestParam("departmentId") String departmentId) {
-		try {
+		try {			
+			Date date = new Date();// your date
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);		
+			int currentQuarter = cal.get(Calendar.MONTH)/3 + 1;
+			model.addAttribute("quarter", currentQuarter);
+			
 			List<EmployeeInfo> list = employeeDAO.getEmployeesByDepartment(departmentId);
 			model.addAttribute("employees", list);
 			EmployeeForm employeeForm = new EmployeeForm();

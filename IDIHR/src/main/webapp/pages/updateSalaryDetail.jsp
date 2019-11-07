@@ -37,12 +37,12 @@
 	<form:form modelAttribute="salaryDetail" method="POST"
 		action="updateSalaryDetail" enctype="multipart/form-data">
 		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Sửa và Lưu" name="Sửa và Lưu" /><br/><br/>
-		<div class="table table-bordered">
-			<c:if test="${not empty workDayDefine}">
-				<div class="alert alert-warning">
-		     		${workDayDefine}
-		    	</div>
-		    </c:if>						
+		<c:if test="${not empty workDayDefine}">
+			<div class="alert alert-warning">
+	     		${workDayDefine}
+	    	</div>
+	    </c:if>	
+		<div class="table table-bordered">					
 			<table class="table">
 				<form:hidden path="employeeId"/>
 				<form:hidden path="salary"/>
@@ -56,6 +56,7 @@
 				<form:hidden path="bankName"/>
 				<form:hidden path="bankBranch"/>
 				<form:hidden path="salaryInsurance"/>
+				<form:hidden path="percentEmployeePay"/>
 				<tbody>
 					<tr>
 						<td colspan="6" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin nhân viên</td>
@@ -177,9 +178,9 @@
 						<td nowrap="nowrap"> x <fmt:formatNumber value="${salaryPerHour}" /> x 1.5</td>
 						<td>= <fmt:formatNumber value="${salaryDetail.overTimeN*salaryPerHour*1.5}" /> </td>
 						
-						<td bgcolor="#FAFAFA" nowrap="nowrap" title="10.5% trong đó gồm: 8% cho hưu trí, 1% cho thất nghiệp và 1.5% y tế">Đóng BHXH(10.5%):</td>						
+						<td bgcolor="#FAFAFA" nowrap="nowrap" title="10.5% trong đó gồm: 8% cho hưu trí, 1% cho thất nghiệp và 1.5% y tế">Đóng BHXH(${salaryDetail.percentEmployeePay}%):</td>						
 						<c:if test="${not empty salaryDetail.salaryInsurance}">
-							<td><fmt:formatNumber value="${salaryDetail.salaryInsurance*10.5/100}" /> </td> 
+							<td><fmt:formatNumber value="${salaryDetail.salaryInsurance*salaryDetail.percentEmployeePay/100}" /> </td> 
 						</c:if>
 						<c:if test="${empty salaryDetail.salaryInsurance}">
 							<td><i>Không tham gia BHXH</i></td> 
@@ -234,7 +235,7 @@
 						<td nowrap="nowrap" bgcolor="#E6E6E6">Tổng giảm trừ</td>
 						<td nowrap="nowrap" bgcolor="#E6E6E6" colspan="2">
 							<c:if test="${not empty salaryDetail.salaryInsurance}">
-								<i><fmt:formatNumber value="${salaryDetail.salaryInsurance*10.5/100 + salaryDetail.taxPersonal.replaceAll(',', '') + salaryDetail.advancePayed.replaceAll(',', '') + salaryDetail.arrears.replaceAll(',', '')}" />  </i>
+								<i><fmt:formatNumber value="${salaryDetail.salaryInsurance*salaryDetail.percentEmployeePay/100 + salaryDetail.taxPersonal.replaceAll(',', '') + salaryDetail.advancePayed.replaceAll(',', '') + salaryDetail.arrears.replaceAll(',', '')}" />  </i>
 							</c:if>
 							<c:if test="${empty salaryDetail.salaryInsurance}">
 								<i><fmt:formatNumber value="${salaryDetail.taxPersonal.replaceAll(',', '') + salaryDetail.advancePayed.replaceAll(',', '') + salaryDetail.arrears.replaceAll(',', '')}" /> </i>

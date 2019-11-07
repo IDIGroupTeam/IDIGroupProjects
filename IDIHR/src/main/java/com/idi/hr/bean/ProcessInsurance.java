@@ -1,6 +1,9 @@
 package com.idi.hr.bean;
 
 import java.io.Serializable;
+import java.text.ParseException;
+
+import com.idi.hr.common.Utils;
 
 public class ProcessInsurance implements Serializable {
 
@@ -14,6 +17,8 @@ public class ProcessInsurance implements Serializable {
 	private String companyPay;
 	private String fromDate;
 	private String toDate;
+	private String fDate;
+	private String tDate;
 	private String comment;
 
 	public ProcessInsurance() {
@@ -76,6 +81,34 @@ public class ProcessInsurance implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getfDate() throws ParseException {
+		if(fromDate != null && fromDate.length() > 0 && fromDate.contains("-"))
+			return Utils.convertDateToDisplay(fromDate);
+		else
+			return fDate;
+	}
+
+	public void setfDate(String fDate) throws ParseException {
+		if(fromDate != null && fromDate.length() > 0 && fromDate.contains("/"))
+			this.fDate = Utils.convertDateToStore(fromDate);
+		else
+			this.fDate = fDate;
+	}
+
+	public String gettDate() throws ParseException {
+		if(toDate != null && toDate.length() > 0  && fromDate.contains("-"))
+			return Utils.convertDateToDisplay(toDate);
+		else
+			return tDate;
+	}
+
+	public void settDate(String tDate) throws ParseException{
+		if(toDate != null && toDate.length() > 0  && fromDate.contains("/"))
+			this.tDate = Utils.convertDateToStore(toDate);
+		else
+			this.tDate = tDate;
 	}
 
 }

@@ -273,7 +273,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 			if (salaryDetail.getAdvancePayed() != null && salaryDetail.getAdvancePayed().length() > 0)
 				finalSalary = finalSalary - Float.valueOf(salaryDetail.getAdvancePayed().replaceAll(",", ""));
 			if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0)
-				finalSalary = finalSalary - Float.valueOf(salaryDetail.getSalaryInsurance()) * (float) 10.5 / 100;
+				finalSalary = finalSalary - Float.valueOf(salaryDetail.getPayedInsurance());
 
 			salaryDetail.setFinalSalary(String.valueOf(finalSalary));
 
@@ -365,7 +365,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 				finalSalary = finalSalary - Float.valueOf(salaryDetail.getAdvancePayed().replaceAll(",", ""));
 			if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0) {
 				//System.err.println(salaryDetail.getSalaryInsurance());
-				finalSalary = finalSalary - Float.valueOf(salaryDetail.getSalaryInsurance()) * (float) 10.5 / 100;
+				finalSalary = finalSalary - Float.valueOf(salaryDetail.getPayedInsurance());
 			}
 
 			salaryDetail.setFinalSalary(String.valueOf(finalSalary));

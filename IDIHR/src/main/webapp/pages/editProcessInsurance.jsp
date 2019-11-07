@@ -18,11 +18,47 @@
 <!-- Initialize the plugin: -->
 <script src="${url}/public/js/jquery.min.js"></script>
 <script src="${url}/public/js/common.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
+
 <script type="text/javascript">
-	$(function() {
+	var $j = jQuery.noConflict();
+	$j(function() {
+		//alert($j.fn.jquery);
 		moneyConvert("salarySocicalInsu");
+		/* 		// Wait for window load
+		 $(window).load(function(){
+		 // Animate loader off screen
+		 //$("button").click(function(){
+		 $(".loader").fadeOut("slow");
+		 //});	
+		 }); */
+
+		/* 		$j('#comment').editable({
+		 type : 'text',
+		 pk : 1,
+		 name : 'comment',
+		 url : '${url}/timekeeping/ghichu',
+		 title : 'thêm ghi chú'
+		 }); */
+
+		$j(".datetime").datetimepicker({
+			//language : 'vi',
+			format : 'dd/mm/yyyy',
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			minView : 2,
+			forceParse : 0,
+			pickerPosition : "bottom-left"
+		});
+
+	//$j(function() {
+		
 	});
 </script>
+
 </head>
 <body>
 <a href="${pageContext.request.contextPath}/insurance/listProcessInsurance?socicalInsuNo=${socicalInsuNo}&employeeId=${employeeId}"><button class="btn btn-primary btn-sm">Quay	lại danh sách</button></a>
@@ -30,37 +66,48 @@
 	<form:form modelAttribute="pInsuranceForm" method="POST"
 		action="updateProcessInsurance?employeeId=${employeeId}">
 			<table class="table">
+			<form:hidden path="socicalInsuNo"/>
+			<form:hidden path="fromDate"/>
+			<c:if test="${not empty validate}">
+				<div class="alert alert-warning">${validate}</div>
+			</c:if>
 				<tbody>
 					<tr>
-						<td colspan="4" nowrap="nowrap" bgcolor="#F6CED8">Thông tin	bảo hiểm xã hội</td>
+						<td colspan="4" nowrap="nowrap" bgcolor="#C4C4C4">Thông tin	bảo hiểm xã hội</td>
 					</tr>
 					<tr>
-						<td bgcolor="#E6E6E6">Nhân viên:</td>
-						<td colspan="3"><c:out value="${name}" /></td>
+						<td bgcolor="#EEEEEE">Nhân viên:</td>
+						<td ><c:out value="${name}" /></td>
+
+						<td bgcolor="#EEEEEE">Số sổ BHXH:</td>
+						<td>${pInsuranceForm.socicalInsuNo}</td>
 					</tr>
 					<tr>
-						<td bgcolor="#E6E6E6">Số sổ BHXH:</td>
-						<td><form:input path="socicalInsuNo" readonly="true" class="form-control animated"/></td>
-					</tr>
-					<tr>
-						<td bgcolor="#E6E6E6">Mức lương đóng BH(*):</td>
+						<td bgcolor="#EEEEEE">Mức lương đóng BH(*):</td>
 						<td><form:input path="salarySocicalInsu" size="12"
 								maxlength="12" required="required" class="form-control animated"/></td>
-					<td bgcolor="#E6E6E6">Công ty đóng(*):</td>
+					<td bgcolor="#EEEEEE">Công ty đóng(*):</td>
 						<td><form:input path="companyPay" required="required" class="form-control animated"/></td>							
 					</tr>
 					<tr>
-						<td colspan="4" nowrap="nowrap" bgcolor="#F6CED8">Thời gian	đóng</td>
+						<td colspan="4" nowrap="nowrap" bgcolor="#C4C4C4">Thời gian	đóng</td>
 					</tr>
 					<tr>
-						<td bgcolor="#E6E6E6">Từ ngày(*):</td>
-						<td><form:input path="fromDate" required="required"
-								type="date" readonly="true" class="form-control animated"/></td>
-						<td bgcolor="#E6E6E6">Đến ngày:</td>
-						<td><form:input path="toDate" type="date" class="form-control animated"/></td>
+						<td bgcolor="#EEEEEE">Từ ngày(*):</td>
+						<td>${pInsuranceForm.fDate}</td>
+						<td bgcolor="#EEEEEE">Đến ngày:</td>
+						<td>
+							<div class="input-group date datetime">
+								<form:input path="toDate" class="form-control"
+									placeholder="dd/mm/yyyy" autocomplete="off" />
+								<span class="input-group-addon"><span
+									class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						<%-- <form:input path="tDate" type="date" class="form-control animated"/> --%>
+						</td>
 					</tr>
 					<tr>
-						<td bgcolor="#E6E6E6">Ghi chú:</td>
+						<td bgcolor="#EEEEEE">Ghi chú:</td>
 						<td colspan="3"><form:textarea path="comment" cols="64" class="form-control animated"/></td>					
 					</tr>
 				</tbody>

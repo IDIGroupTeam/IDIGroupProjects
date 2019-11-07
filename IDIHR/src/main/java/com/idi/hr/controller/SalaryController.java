@@ -417,7 +417,7 @@ public class SalaryController {
 					salaryDetail.setSalaryForWorkedDay(String.valueOf(currentSalary));
 				}
 			}else {
-				model.addAttribute("workDayDefine", "Vui lòng định nghĩa ngày công chuẩn cho tháng trước để việc tính lương được chính sác!");
+				model.addAttribute("workDayDefine", "Vui lòng định nghĩa ngày công chuẩn cho tháng tại phần chấm công để việc tính lương được chính sác!");
 			}			
 			salaryDetail.setSalaryPerHour(salaryPerHour);			
 			
@@ -448,9 +448,9 @@ public class SalaryController {
 			//System.err.println("salaryPerHour: " + salaryPerHour + " overTimeSalary: " + overTimeSalary);
 			overTimeSalary = Math.round(overTimeSalary);
 			salaryDetail.setOverTimeSalary(String.valueOf(overTimeSalary));
-			
+
 			if(salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0)
-				salaryDetail.setPayedInsurance(String.valueOf(Float.parseFloat(salaryDetail.getSalaryInsurance())*10.5/100));
+				salaryDetail.setPayedInsurance(String.valueOf(Float.parseFloat(salaryDetail.getSalaryInsurance())*Float.parseFloat(salaryDetail.getPercentEmployeePay())/100));
 			
 			salaryDAO.insertSalaryDetail(salaryDetail);
 			model.addAttribute("salaryDetail", salaryDetail);
@@ -496,7 +496,8 @@ public class SalaryController {
 					salaryPerHour = Float.valueOf(salaryDetail.getSalary())/workingDayOfMonth/8;
 					salaryPerHour = Math.round((salaryPerHour*10)/10);
 				}
-			}	
+			}				
+		
 			String moneyType = salaryDAO.getSalary(employeeId).getMoneyType();
 			model.addAttribute("moneyType", moneyType);
 			
@@ -565,7 +566,7 @@ public class SalaryController {
 					salaryDetail.setSalaryForWorkedDay(String.valueOf(currentSalary));
 				}
 			}else {
-				model.addAttribute("workDayDefine", "Vui lòng định nghĩa ngày công chuẩn cho tháng trước để việc tính lương được chính sác!");
+				model.addAttribute("workDayDefine", "Vui lòng định nghĩa ngày công chuẩn cho tháng tại phần chấm công để việc tính lương được chính sác!");
 			}
 			salaryDetail.setSalaryPerHour(salaryPerHour);
 			
@@ -583,8 +584,9 @@ public class SalaryController {
 			
 			overTimeSalary = Math.round(overTimeSalary);
 			salaryDetail.setOverTimeSalary(String.valueOf(overTimeSalary));
+		
 			if(salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0)
-				salaryDetail.setPayedInsurance(String.valueOf(Float.parseFloat(salaryDetail.getSalaryInsurance())*10.5/100));
+				salaryDetail.setPayedInsurance(String.valueOf(Float.parseFloat(salaryDetail.getSalaryInsurance())*Float.parseFloat(salaryDetail.getPercentEmployeePay())/100));
 			
 			//update ... lay salary o bang salary info sang bang salary detail lam basic salary
 			if(salaryDetail.getBasicSalary() == null) {

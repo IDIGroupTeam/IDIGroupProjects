@@ -17,66 +17,64 @@
 </style>
 </head>
 <body>
+	<a href="${pageContext.request.contextPath}/insurance/"><button class="btn btn-primary btn-sm">Quay	lại danh sách</button></a>
+	<br/><br/>
 	<div class="table table-bordered">
 		<table class="table">
 			<tbody>
 				<tr>
-					<td colspan="4" nowrap="nowrap" bgcolor="#F6CED8">Thông tin
+					<td colspan="4" nowrap="nowrap" bgcolor="#C4C4C4">Thông tin
 						Bảo hiểm xã hội</td>
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Mã NV:</td>
+					<td bgcolor="#EEEEEE">Mã NV:</td>
 					<td><c:out value="${name}" /></td>
-					<td bgcolor="#E6E6E6">Tỷ lệ đóng của công ty:</td>
+					<td bgcolor="#EEEEEE">Tỷ lệ đóng của công ty:</td>
 					<td><c:out value="${insuranceForm.percentSInsuC}" /></td>
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Số sổ BHXH:</td>
+					<td bgcolor="#EEEEEE">Số sổ BHXH:</td>
 					<td><c:out value="${insuranceForm.socicalInsuNo}" /></td>
-					<td bgcolor="#E6E6E6">Tỷ lệ đóng của người LĐ:</td>
+					<td bgcolor="#EEEEEE">Tỷ lệ đóng của người LĐ:</td>
 					<td><c:out value="${insuranceForm.percentSInsuE}" /></td>
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Lương BH:</td>
+					<td bgcolor="#EEEEEE">Lương BH:</td>
 					<td><fmt:formatNumber value="${insuranceForm.salarySocicalInsu.replaceAll(',', '')}"/> đ</td>
-					<td bgcolor="#E6E6E6">Vùng lương:</td>
+					<td bgcolor="#EEEEEE">Vùng lương:</td>
 					<td><c:out value="${insuranceForm.salaryZone}" /></td>
 				</tr>
 				<tr>
-					<%-- 						<td bgcolor="#E6E6E6">Cty đóng:</td>
+					<%--<td bgcolor="#E6E6E6">Cty đóng:</td>
 						<td><c:out value="${insuranceForm.companyPay}" /></td> --%>
 
-					<td bgcolor="#E6E6E6">Nơi đóng:</td>
+					<td bgcolor="#EEEEEE">Nơi đóng:</td>
 					<td><c:out value="${insuranceForm.place}" /></td>
-					<td bgcolor="#E6E6E6">Phương thức đóng:</td>
+					<td bgcolor="#EEEEEE">Phương thức đóng:</td>
 					<td><c:out value="${insuranceForm.payType}" /></td>
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Tình trạng đóng:</td>
+					<td bgcolor="#EEEEEE">Tình trạng đóng:</td>
 					<td><c:out value="${insuranceForm.status}" /></td>
 
 				</tr>
 				<tr>
-					<td colspan="4" nowrap="nowrap" bgcolor="#F6CED8">Thông tin
+					<td colspan="4" nowrap="nowrap" bgcolor="#C4C4C4">Thông tin
 						Bảo hiểm y tế</td>
 				</tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Số thẻ BHYT:</td>
+					<td bgcolor="#EEEEEE">Số thẻ BHYT:</td>
 					<td><c:out value="${insuranceForm.hInsuNo}" /></td>
-					<td bgcolor="#E6E6E6">Nơi ĐK khám chữa bệnh:</td>
+					<td bgcolor="#EEEEEE">Nơi ĐK khám chữa bệnh:</td>
 					<td><c:out value="${insuranceForm.hInsuPlace}" /></td>
 				<tr>
 				<tr>
-					<td bgcolor="#E6E6E6">Ghi chú:</td>
+					<td bgcolor="#EEEEEE">Ghi chú:</td>
 					<td colspan="3"><c:out value="${insuranceForm.comment}" /></td>
-				<tr>
-					<td></td>
-					<td align="right"><a
-						href="editInsurance?socicalInsuNo=${insuranceForm.socicalInsuNo}"><button class="btn btn-primary btn-sm">Sửa</button></a>
-						<a href="${pageContext.request.contextPath}/insurance/"><button class="btn btn-primary btn-sm">Quay	lại danh sách</button></a></td>
 				</tr>
 			</tbody>
-		</table>
+		</table>		
 	</div>
+	<a	href="editInsurance?socicalInsuNo=${insuranceForm.socicalInsuNo}"><button class="btn btn-primary btn-sm">Sửa</button></a>
 </body>
 </html>
