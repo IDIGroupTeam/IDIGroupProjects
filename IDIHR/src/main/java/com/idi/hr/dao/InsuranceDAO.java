@@ -69,7 +69,11 @@ public class InsuranceDAO extends JdbcDaoSupport {
 		InsuranceMapper mapper = new InsuranceMapper();
 
 		Insurance socialInsurance = jdbcTmpl.queryForObject(sql, params, mapper);
-
+		if(socialInsurance.getPercentSInsuC() != null && socialInsurance.getPercentSInsuC().length()> 0 && socialInsurance.getPercentSInsuC().contains(","))
+			socialInsurance.setPercentSInsuC(socialInsurance.getPercentSInsuC().replaceAll(",", "."));
+		if(socialInsurance.getPercentSInsuE() != null && socialInsurance.getPercentSInsuE().length()> 0 && socialInsurance.getPercentSInsuE().contains(","))
+			socialInsurance.setPercentSInsuE(socialInsurance.getPercentSInsuE().replaceAll(",", "."));
+		
 		return socialInsurance;
 
 	}

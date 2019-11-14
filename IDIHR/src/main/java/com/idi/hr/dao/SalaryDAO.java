@@ -157,7 +157,11 @@ public class SalaryDAO extends JdbcDaoSupport {
 			Object[] params = new Object[] { employeeId };
 			SalaryDetailMapper mapper = new SalaryDetailMapper();
 			salaryDetail = jdbcTmpl.queryForObject(sql, params, mapper);
-		}
+		}		
+
+		if(salaryDetail.getPercentEmployeePay() != null && salaryDetail.getPercentEmployeePay().length() > 0 && salaryDetail.getPercentEmployeePay().contains(","))
+			salaryDetail.setPercentEmployeePay(salaryDetail.getPercentEmployeePay().replaceAll(",", "."));
+		
 		return salaryDetail;
 	}
 
