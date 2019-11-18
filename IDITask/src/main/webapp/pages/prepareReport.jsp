@@ -8,17 +8,33 @@
 <html>
 <head>
 <!-- Include Twitter Bootstrap and jQuery: -->
-<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+<script src="${url}/public/js/jquery.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
+
+<link rel="stylesheet" href="${url}/public/css/bootstrap.min.css" type="text/css" />
+<script type="text/javascript" src="${url}/public/js/bootstrap.min.js"></script>
 
 <!-- Include the plugin's CSS and JS: -->
-<script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" src="${url}/public/js/bootstrap-multiselect.js"></script>
 
-<!-- Initialize the plugin: -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript">
-$(function() {
-	$("#department")
+var $j = jQuery.noConflict();
+$j(function() {
+	$j(".datetime").datetimepicker({
+		//language : 'vi',
+		format : 'dd/mm/yyyy',
+		todayBtn : 1,
+		autoclose : 1,
+		todayHighlight : 1,
+		startView : 2,
+		minView : 2,
+		forceParse : 0,
+		pickerPosition : "bottom-left"
+	});
+	
+	$j("#department")
 		.change(
 			function() {
 				// Lấy dữ liệu của phòng
@@ -38,7 +54,7 @@ $(function() {
 										+ obj[i].jobTitle
 										+ "</option>";
 							}
-							$("#employeeId").html(employeeIdSel);
+							$j("#employeeId").html(employeeIdSel);
 						}
 					});
 				
@@ -59,12 +75,26 @@ $(function() {
 		<table class="table table-bordered table-hover">
 			<tr>
 				<td>Từ ngày:(*)</td>
-				<td><form:input path="fromDate" type="date"
-					required="required" class="form-control animated"/>
+				<td>
+					<div class="input-group date datetime smallform">
+						<form:input path="fromDate" class="form-control"
+						 placeholder="dd/mm/yyyy" autocomplete="off" required="required"/>
+						<span class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span></span>
+					</div>	
+<%-- 				<form:input path="fromDate" type="date"
+					required="required" class="form-control animated"/> --%>
 				</td>
 				<td>Đến ngày:(*) </td>
-				<td><form:input path="toDate" type="date" value="${taskReportForm.toDate}"
-					required="required" class="form-control animated"/>
+				<td>
+					<div class="input-group date datetime smallform">
+						<form:input path="toDate" class="form-control"
+						 placeholder="dd/mm/yyyy" autocomplete="off" required="required"/>
+						<span class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span></span>
+					</div>	
+<%-- 				<form:input path="toDate" type="date" value="${taskReportForm.toDate}"
+					required="required" class="form-control animated"/> --%>
 				</td>
 			</tr>
 			<tr>			

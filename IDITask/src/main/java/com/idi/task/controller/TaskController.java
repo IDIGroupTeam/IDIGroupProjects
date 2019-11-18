@@ -167,6 +167,8 @@ public class TaskController {
 					for (int i = 0; i < form.getNumberRecordsOfPage(); i++) {
 						Task task = new Task();
 						task = list.get(i);
+						if(task.getPlannedFor() != null && task.getPlannedFor().length() > 0)
+							task.setPlanned(task.getPlannedFor().substring(5,7) + "-" + task.getPlannedFor().substring(0,4));
 						listTaskForPage.add(task);
 					}
 				} else if (form.getPageIndex() > 1) {
@@ -174,6 +176,8 @@ public class TaskController {
 							* form.getNumberRecordsOfPage(); i++) {
 						Task task = new Task();
 						task = list.get(i);
+						if(task.getPlannedFor() != null && task.getPlannedFor().length() > 0)
+							task.setPlanned(task.getPlannedFor().substring(5,7) + "-" + task.getPlannedFor().substring(0,4));
 						listTaskForPage.add(task);
 					}
 				}
@@ -182,6 +186,8 @@ public class TaskController {
 						.getTotalRecords(); i++) {
 					Task task = new Task();
 					task = list.get(i);
+					if(task.getPlannedFor() != null && task.getPlannedFor().length() > 0)
+						task.setPlanned(task.getPlannedFor().substring(5,7) + "-" + task.getPlannedFor().substring(0,4));
 					listTaskForPage.add(task);
 				}
 			}
@@ -266,6 +272,8 @@ public class TaskController {
 					for (int i = 0; i < form.getNumberRecordsOfPage(); i++) {
 						Task task = new Task();
 						task = list.get(i);
+						if(task.getPlannedFor() != null && task.getPlannedFor().length() > 0)
+							task.setPlanned(task.getPlannedFor().substring(5,7) + "-" + task.getPlannedFor().substring(0,4));
 						listTaskForPage.add(task);
 					}
 				} else if (form.getPageIndex() > 1) {
@@ -273,6 +281,8 @@ public class TaskController {
 							* form.getNumberRecordsOfPage(); i++) {
 						Task task = new Task();
 						task = list.get(i);
+						if(task.getPlannedFor() != null && task.getPlannedFor().length() > 0)
+							task.setPlanned(task.getPlannedFor().substring(5,7) + "-" + task.getPlannedFor().substring(0,4));
 						listTaskForPage.add(task);
 					}
 				}
@@ -281,6 +291,8 @@ public class TaskController {
 						.getTotalRecords(); i++) {
 					Task task = new Task();
 					task = list.get(i);
+					if(task.getPlannedFor() != null && task.getPlannedFor().length() > 0)
+						task.setPlanned(task.getPlannedFor().substring(5,7) + "-" + task.getPlannedFor().substring(0,4));
 					listTaskForPage.add(task);
 				}
 			}
@@ -503,6 +515,8 @@ public class TaskController {
 					task.setPlannedFor(task.getYear() + "-" + task.getMonth());
 				task.setCreationDate(ts);
 				task.setUpdateTS(ts);
+				if(task.getDueDate() != null && task.getDueDate().length() > 0 && task.getDueDate().contains("/"))
+					task.setDueDate(Utils.convertDateToStore(task.getDueDate()));
 				taskDAO.insertTask(task);
 
 				// Add message to flash scope
@@ -615,6 +629,9 @@ public class TaskController {
 				Task currentTask = new Task();
 				currentTask = taskDAO.getTask(taskForm.getTaskId());
 
+				if(task.getDueDate() != null && task.getDueDate().length() > 0 && task.getDueDate().contains("/"))
+					task.setDueDate(Utils.convertDateToStore(task.getDueDate()));
+				
 				taskDAO.updateTask(task);
 
 				// Gui mail notification
@@ -841,7 +858,12 @@ public class TaskController {
 			// get info from task bean put to task form
 			taskForm.setTaskId(task.getTaskId());
 			taskForm.setTaskName(task.getTaskName());
-
+			
+			if(task.getDueDate() != null && task.getDueDate().length() > 0 && task.getDueDate().contains("-")) {
+				taskForm.setDueDate(Utils.convertDateToDisplay(task.getDueDate()));
+				task.setDueDate(Utils.convertDateToDisplay(task.getDueDate()));
+			}
+			
 			int createBy = task.getCreatedBy();
 			taskForm.setCreatedBy(createBy);
 			Map<Integer, String> employeeMap = this.allEmployeesMap();
@@ -965,17 +987,23 @@ public class TaskController {
 		//, @RequestParam(required = false, value = "eId") String eId
 		//fDate=2019-05-26&tDate=2019-08-22&eName=&dept=CNTT&eId=69
 		if(fDate != null && fDate.length() > 0)
-			taskReportForm.setFromDate(fDate);
+			if(fDate.contains("/")) {
+				taskReportForm.setFromDate(fDate);
+			}else
+				taskReportForm.setFromDate(Utils.convertDateToDisplay(fDate));
 		else {
 			Date dNow = new Date();
 			SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
 			String today = ft.format(dNow);
 			// System.err.println(today);
-			taskReportForm.setToDate(today);
+			taskReportForm.setToDate(Utils.convertDateToDisplay(today));
 			// model.addAttribute("today", today);
 		}
 		if(tDate != null && tDate.length() > 0)
-			taskReportForm.setToDate(tDate);
+			if(tDate.contains("/")) {
+				taskReportForm.setToDate(tDate);
+			}else
+				taskReportForm.setToDate(Utils.convertDateToDisplay(tDate));
 		if(dept != null && dept.length() > 0)
 			taskReportForm.setDepartment(dept);
 		/*
@@ -1003,8 +1031,10 @@ public class TaskController {
 
 		TaskSummay taskSummay = new TaskSummay();
 		try {
-			String fDate = taskReportForm.getFromDate();
-			String tDate = taskReportForm.getToDate();
+			//System.err.println(taskReportForm.getFromDate() + "|" + taskReportForm.getToDate());
+			String fDate = Utils.convertDateToStore(taskReportForm.getFromDate());
+			String tDate = Utils.convertDateToStore(taskReportForm.getToDate());
+			
 			/*
 			 * int totalT = 0; int newT = 0; int inprogressT= 0; int stopedT = 0; int
 			 * invalidT = 0; int reviewingT = 0; int completedT = 0;
@@ -1078,7 +1108,7 @@ public class TaskController {
 
 			// Create chart
 			JFreeChart chart = ChartFactory.createBarChart(title, // Chart Title
-					"Từ ngày " + fDate + " đến ngày " + tDate, // Category axis
+					"Từ ngày " + Utils.convertDateToDisplay(fDate) + " đến ngày " + Utils.convertDateToDisplay(tDate), // Category axis
 					"Số lượng công việc (Tổng số: " + taskSummay.getTaskTotal() + ")", // Value axis
 					dataset, PlotOrientation.VERTICAL, true, true, false);
 
@@ -1122,8 +1152,16 @@ public class TaskController {
 		try {
 			String eName = allEmployeesMap().get(taskReportForm.getEmployeeId());
 			taskReportForm.setEmployeeName(eName);
-			String fDate = taskReportForm.getFromDate();
-			String tDate = taskReportForm.getToDate();
+			System.err.println(taskReportForm.getFromDate() + "|" + taskReportForm.getToDate());
+			String fDate = Utils.convertDateToStore(taskReportForm.getFromDate());
+			String tDate = Utils.convertDateToStore(taskReportForm.getToDate());
+			
+			if(taskReportForm.getFromDate() != null && taskReportForm.getFromDate().length() > 0 && taskReportForm.getFromDate().contains("/"))
+				taskReportForm.setFromDate(Utils.convertDateToStore(taskReportForm.getFromDate()));
+			
+			if(taskReportForm.getToDate() != null && taskReportForm.getToDate().length() > 0 && taskReportForm.getToDate().contains("/"))
+				taskReportForm.setToDate(Utils.convertDateToStore(taskReportForm.getToDate()));
+			
 			if (taskReportForm.getEmployeeId() > 0) {
 				TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, taskReportForm.getEmployeeId());
 				
@@ -1282,6 +1320,13 @@ public class TaskController {
 					
 				}
 			}
+			
+			if(taskReportForm.getFromDate() != null && taskReportForm.getFromDate().length() > 0 && taskReportForm.getFromDate().contains("-"))
+				taskReportForm.setFromDate(Utils.convertDateToDisplay(taskReportForm.getFromDate()));
+			
+			if(taskReportForm.getToDate() != null && taskReportForm.getToDate().length() > 0 && taskReportForm.getToDate().contains("-"))
+				taskReportForm.setToDate(Utils.convertDateToDisplay(taskReportForm.getToDate()));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1298,7 +1343,8 @@ public class TaskController {
 			@RequestParam(required = false, value = "eId") String eId, 			
 			@RequestParam(required = false, value = "dept") String dept	) throws Exception{		
 		
-		String fileName = "Thống kê khối lượng công việc";		
+		String fileName = "Thong ke khoi luong cong viec";		
+		String title = "Thống kê khối lượng công việc";		
 		String path = properties.getProperty("REPORT_PATH");
 		File dir = new File(path);
 		try {
@@ -1475,15 +1521,23 @@ public class TaskController {
 				dir.mkdirs();
 			}			
 			
-			if (id > 0 && !dept.equalsIgnoreCase("all"))
-				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept + ".pdf";
-			else if (id < 1 && !dept.equalsIgnoreCase("all"))
-				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept + ".pdf";
-			else if (id > 0 && dept.equalsIgnoreCase("all"))
-				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + ".pdf";
-			else
-				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban.pdf";
-	
+			String fDateStore = Utils.convertDateToStore(fDate);
+			String tDateStore = Utils.convertDateToStore(tDate);
+			
+			if (id > 0 && !dept.equalsIgnoreCase("all")) {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + eName + " phong " + dept + ".pdf";
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept;
+			}else if (id < 1 && !dept.equalsIgnoreCase("all")) {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua phong " + dept + ".pdf";
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept;
+			}else if (id > 0 && dept.equalsIgnoreCase("all")) {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + eName + ".pdf";
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName;
+			}else {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua tat ca cac phong ban.pdf";
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban";
+			}
+			
 			PdfWriter.getInstance(document, new FileOutputStream(dir + "/" + fileName));
 			BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 			Font fontB = new Font(bf, 18);
@@ -1499,19 +1553,19 @@ public class TaskController {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = new Date();
 			String currentDate = dateFormat.format(date);
-			document.add(new Paragraph(fileName.substring(0, fileName.length() - 4), fontB));
+			document.add(new Paragraph(title, fontB));
 			document.add(new Paragraph("                       ", font));
 			document.add(new Paragraph("                       ", font));
 			document.add(table);
 			document.add(new Paragraph("                       ", font));
 			document.add(new Paragraph("                       Ngày thống kê: "
-							+ currentDate,
+							+ Utils.convertDateToDisplay(currentDate),
 					font));
 	
 			document.close();
 			SendReportForm sendReportForm = new SendReportForm();
 			sendReportForm.setFileName(fileName);
-			sendReportForm.setSubject(fileName.substring(0, fileName.length() - 4));
+			sendReportForm.setSubject(title);
 			model.addAttribute("sendReportForm", sendReportForm);
 			model.addAttribute("path", path);
 			model.addAttribute("formTitle", "Gửi thống kê khối lượng công việc ");
@@ -1850,19 +1904,29 @@ public class TaskController {
 			Row row1 = sheet.createRow(0);
 			Cell cell = row1.createCell(1);
 
-			String fileName = "Thống kê khối lượng công việc";
-			if (id > 0 && !dept.equalsIgnoreCase("all"))
-				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept
-						+ ".pdf";
-			else if (id < 1 && !dept.equalsIgnoreCase("all"))
-				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept;
-			else if (id > 0 && dept.equalsIgnoreCase("all"))
-				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName;
-			else
-				fileName = fileName + " từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban";
-			cell.setCellStyle(cellStyle);
-			cell.setCellValue(fileName);
+			String fDateStore = Utils.convertDateToStore(fDate);
+			String tDateStore = Utils.convertDateToStore(tDate);
+
+			String fileName = "Thong ke khoi luong cong viec";	
+			String title = "Thống kê khối lượng công việc";	
 			
+			if (id > 0 && !dept.equalsIgnoreCase("all")) {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + eName + " phong " + dept;
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept;
+			}else if (id < 1 && !dept.equalsIgnoreCase("all")) {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua phong " + dept;
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept;
+			}else if (id > 0 && dept.equalsIgnoreCase("all")) {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + eName;
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName;
+			}else {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua tat ca cac phong ban";
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban";
+			}			
+
+			cell.setCellStyle(cellStyle);
+			cell.setCellValue(title);
+
 			int rowNum = 1;
 			Row row2 = sheet.createRow(rowNum);
 			Cell cell0 = row2.createCell(2);
@@ -1872,7 +1936,7 @@ public class TaskController {
 			font1.setFontHeightInPoints((short) 11);
 			cellStyle1.setFont(font1);
 			cell0.setCellStyle(cellStyle1);
-			cell0.setCellValue("Ngày thống kê: " + currentDate);
+			cell0.setCellValue("Ngày thống kê: " + Utils.convertDateToDisplay(currentDate));
 
 			// Generate column name
 			rowNum = 3;
@@ -1954,7 +2018,7 @@ public class TaskController {
 
 			SendReportForm sendReportForm = new SendReportForm();
 			sendReportForm.setFileName(fileName + ".xlsx");
-			sendReportForm.setSubject(fileName);
+			sendReportForm.setSubject(title);
 			model.addAttribute("sendReportForm", sendReportForm);
 			model.addAttribute("path", path);
 			model.addAttribute("formTitle", "Gửi thống kê khối lượng công việc ");
@@ -1973,6 +2037,13 @@ public class TaskController {
 			@ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) throws Exception {
 		
 		List<Task> listCurrent = null;
+		
+		if(taskReportForm.getFromDate() != null && taskReportForm.getFromDate().length() > 0 && taskReportForm.getFromDate().contains("/"))
+			taskReportForm.setFromDate(Utils.convertDateToStore(taskReportForm.getFromDate()));
+		
+		if(taskReportForm.getToDate() != null && taskReportForm.getToDate().length() > 0 && taskReportForm.getToDate().contains("/"))
+			taskReportForm.setToDate(Utils.convertDateToStore(taskReportForm.getToDate()));
+		
 		listCurrent = taskDAO.getTasksForReport(taskReportForm, "'Đang làm','Tạm dừng','Hủy bỏ','Chờ đánh giá','Đã xong'");
 
 		List<Task> listNext = null;
@@ -1989,6 +2060,12 @@ public class TaskController {
 			}
 		}		 
 
+		if(taskReportForm.getFromDate() != null && taskReportForm.getFromDate().length() > 0 && taskReportForm.getFromDate().contains("-"))
+			taskReportForm.setFromDate(Utils.convertDateToDisplay(taskReportForm.getFromDate()));
+		
+		if(taskReportForm.getToDate() != null && taskReportForm.getToDate().length() > 0 && taskReportForm.getToDate().contains("-"))
+			taskReportForm.setToDate(Utils.convertDateToDisplay(taskReportForm.getToDate()));
+		
 		// get list employee email
 		//model.addAttribute("employeeEmailMap", employeesEmail("all"));
 		model.addAttribute("reportForm", taskReportForm);
@@ -2047,6 +2124,12 @@ public class TaskController {
 			model.addAttribute("isUpdatedTime", "Y");
 		if(isdueDate)
 			model.addAttribute("isdueDate", "Y");
+		
+		if(taskReportForm.getFromDate() != null && taskReportForm.getFromDate().length() > 0 && taskReportForm.getFromDate().contains("-"))
+			taskReportForm.setFromDate(Utils.convertDateToDisplay(taskReportForm.getFromDate()));
+		
+		if(taskReportForm.getToDate() != null && taskReportForm.getToDate().length() > 0 && taskReportForm.getToDate().contains("-"))
+			taskReportForm.setToDate(Utils.convertDateToDisplay(taskReportForm.getToDate()));
 		
 		// get list employee email
 		model.addAttribute("employeeEmailMap", employeesEmail("all"));
@@ -2169,15 +2252,28 @@ public class TaskController {
 			String tDate = taskReportForm.getToDate();
 			String eName = allEmployeesMap().get(taskReportForm.getEmployeeId());
 			taskReportForm.setEmployeeName(eName);
-			String fileName = "";
-			if (eId > 0 && !dept.equalsIgnoreCase("all"))
-				fileName = "BCCV từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept + ".pdf";
-			else if (eId < 1 && !dept.equalsIgnoreCase("all"))
-				fileName = "BCCV từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept + ".pdf";
-			else if (eId > 0 && dept.equalsIgnoreCase("all"))
-				fileName = "BCCV từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + ".pdf";
-			else
-				fileName = "BCCV từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban.pdf";
+
+			String fDateStore = Utils.convertDateToStore(fDate);
+			taskReportForm.setFromDate(fDateStore);
+			String tDateStore = Utils.convertDateToStore(tDate);
+			taskReportForm.setToDate(tDateStore);
+			
+			String fileName = "BCCV";	
+			String title = "BCCV";	
+			
+			if (eId > 0 && !dept.equalsIgnoreCase("all")) {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + eName + " phong " + dept + ".pdf";
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept;
+			}else if (eId < 1 && !dept.equalsIgnoreCase("all")) {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua phong " + dept + ".pdf";
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept;
+			}else if (eId > 0 && dept.equalsIgnoreCase("all")) {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + eName + ".pdf";
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName;
+			}else {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua tat ca cac phong ban" + ".pdf";
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban";
+			}
 
 			PdfWriter.getInstance(document, new FileOutputStream(dir + "/" + fileName));
 			BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
@@ -2258,7 +2354,7 @@ public class TaskController {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = new Date();
 			String currentDate = dateFormat.format(date);
-			document.add(new Paragraph("                     " + fileName.substring(0, fileName.length() - 4), fontB));
+			document.add(new Paragraph("                     " + title, fontB));
 			document.add(new Paragraph("                     ", font));
 			document.add(new Paragraph("I) Kết quả thực hiện                 ", font));
 			document.add(new Paragraph("                       ", font));
@@ -2285,7 +2381,7 @@ public class TaskController {
 			document.add(new Paragraph("                       ", font));
 			document.add(new Paragraph(
 					"                                                                                                                                  Ngày tạo báo cáo: "
-							+ currentDate,
+							+ Utils.convertDateToDisplay(currentDate),
 					font));
 			document.add(new Paragraph(
 					"                                                                                                                                  Người báo cáo: " 
@@ -2293,6 +2389,10 @@ public class TaskController {
 					font));
 
 			document.close();
+			
+			taskReportForm.setFromDate(fDate);
+			taskReportForm.setToDate(tDate);
+			
 			model.addAttribute("reportForm", taskReportForm);
 			model.addAttribute("path", path);
 			model.addAttribute("formTitle", "Export báo cáo công việc");

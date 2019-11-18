@@ -124,7 +124,7 @@ tr:nth-child(even) {
 					<td>${task.timeSpent} ${task.timeSpentType}</td>
 					<td nowrap="nowrap">${task.updateTS}</td>
 					<%-- <td><fmt:formatDate pattern="dd-MM-yyyy" value="${task.dueDate}" /></td> --%>
-					<td>${task.dueDate}</td>
+					<td>${task.dueDateConverted}</td>
 					<td>${task.reviewComment}</td>
 				</tr>
 			</c:forEach>
@@ -162,7 +162,7 @@ tr:nth-child(even) {
 					<td>${taskNext.timeSpent} ${taskNext.timeSpentType}</td>
 					<td nowrap="nowrap">${taskNext.updateTS}</td>
 					<%-- <td><fmt:formatDate pattern="dd-MM-yyyy" value="${task.dueDate}" /></td> --%>
-					<td>${taskNext.dueDate}</td>
+					<td>${taskNext.dueDateConverted}</td>
 					<td>${taskNext.reviewComment}</td>
 				</tr>
 			</c:forEach>

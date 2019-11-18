@@ -251,10 +251,11 @@ tr:nth-child(even) {
 				<th>Tên công việc</th>
 				<th>Người làm</th>
 				<th>Phòng</th>				
+				<th>Ngày tạo</th>
 				<th>Trạng thái</th>
 				<th nowrap="nowrap">Độ ưu tiên</th>
 				<th nowrap="nowrap">Kế hoạch tháng</th>
-				<th>Ngày cập nhật</th>
+				<th>Update gần nhất</th>
 			</tr>
 			<c:forEach var="task" items="${tasks}">
 			<c:set var="dueDate" value="${task.dueDate}"/>
@@ -294,9 +295,10 @@ tr:nth-child(even) {
 								<td nowrap="nowrap">${task.ownerName}</td>
 							</c:if>
 							<td nowrap="nowrap">${task.area}</td>
+							<td nowrap="nowrap">${task.creationDate}</td>
 							<td nowrap="nowrap" title="Quá thời hạn phải hoàn thành việc này">${task.status} <b style="background-color: red">  Đã quá hạn</b></td>
 							<td nowrap="nowrap">${task.priority}</td>
-							<td>${task.plannedFor}</td>
+							<td>${task.planned}</td>
 							<td nowrap="nowrap">${task.updateTS}</td>
 						</tr>
 				    </c:when>    
@@ -311,9 +313,10 @@ tr:nth-child(even) {
 								<td nowrap="nowrap">${task.ownerName}</td>
 							</c:if>
 							<td nowrap="nowrap">${task.area}</td>
+							<td nowrap="nowrap">${task.creationDate}</td>
 							<td nowrap="nowrap">${task.status}</td>
 							<td nowrap="nowrap">${task.priority}</td>
-							<td>${task.plannedFor}</td>
+							<td>${task.planned}</td>
 							<td nowrap="nowrap">${task.updateTS}</td>
 						</tr>
 				    </c:otherwise>

@@ -10,10 +10,26 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <!-- Initialize the plugin: -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="${url}/public/js/jquery.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.min.js"></script>
+<script src="${url}/public/js/bootstrap-datetimepicker.vi.js"></script>
+<script src="${url}/public/js/bootstrap-autosize.js"></script>
 <script type="text/javascript">
-	$(function() {
-		$("#area")
+	var $j = jQuery.noConflict();
+	$j(function() {		
+		$j(".datetime").datetimepicker({
+			//language : 'vi',
+			format : 'dd/mm/yyyy',
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			minView : 2,
+			forceParse : 0,
+			pickerPosition : "bottom-left"
+		});
+		
+		$j("#area")
 				.change(
 						function() {
 							// Lấy dữ liệu của phòng
@@ -34,7 +50,7 @@
 														+ obj[i].jobTitle
 														+ "</option>";
 											}
-											$("#ownedBy").html(ownedBySel);
+											$j("#ownedBy").html(ownedBySel);
 											
 											secondOwnedSel = "<option value='0'>Chưa ai backup</option>";
 											for (i = 0; i < obj.length; i++) {
@@ -44,7 +60,7 @@
 														+ obj[i].jobTitle
 														+ "</option>";
 											}
-											$("#secondOwned").html(secondOwnedSel);
+											$j("#secondOwned").html(secondOwnedSel);
 											
 											verifyBySel = "<option value='0'>Chưa ai giám sát</option>";
 											for (i = 0; i < obj.length; i++) {
@@ -54,20 +70,20 @@
 														+ obj[i].jobTitle
 														+ "</option>";
 											}
-											$("#verifyBy").html(verifyBySel);
+											$j("#verifyBy").html(verifyBySel);
 										}
 									});
 
 						});
 	});
 
-  	$(function(){
-		$('.normal').autosize();		
-		$('.animatedArea').autosize({append: "\n"});
+  	$j(function(){
+		$j('.normal').autosize();		
+		$j('.animatedArea').autosize({append: "\n"});
 	});
   	
-  	$(function () {
-           $('#plannedFor').datetimepicker({
+  	$j(function () {
+           $j('#plannedFor').datetimepicker({
                viewMode: 'years'
            });
        });
@@ -226,9 +242,17 @@
 									<form:option value="${employee.employeeId}">${employee.fullName},&nbsp;${employee.jobTitle}</form:option>
 								</c:forEach>
 							</form:select></td>
-						<td bgcolor="#FAFAFA">Ngày phải xong:(vd:12/24/2018)</td>
-						<td><form:input path="dueDate" type="date"
-								class="form-control animated" />
+						<td bgcolor="#FAFAFA">Ngày phải xong:</td>
+						<td>
+							<div class="input-group date datetime smallform">
+								<form:input path="dueDate" class="form-control"
+								 placeholder="dd/mm/yyyy" autocomplete="off" />
+								<span class="input-group-addon"><span
+									class="glyphicon glyphicon-calendar"></span></span>
+							</div>	
+						
+<%-- 						<form:input path="dueDate" type="date"
+								class="form-control animated" /> --%>
 						</td>		
 					</tr>
 					<tr>

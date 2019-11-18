@@ -1,6 +1,7 @@
 package com.idi.task.common;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -109,4 +110,20 @@ public class Utils {
 			input = input.replaceAll(",0,", ",");
 		return input;
 	}
+	
+	public static String convertDateToDisplay(String dateString) throws ParseException {
+		//System. out. println("Given date is " + dateString);
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = sdf. parse(dateString);
+		//System.out.println(date);
+		return String.valueOf(new SimpleDateFormat("dd/MM/yyyy").format(date));
+	}	
+	
+	public static String convertDateToStore(String dateString) throws ParseException {
+		//System. out. println("Given date is " + dateString);
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = sdf. parse(dateString);
+		//System.out.println(date);
+		return String.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(date));
+	}	
 }

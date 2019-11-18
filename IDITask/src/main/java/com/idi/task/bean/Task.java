@@ -3,6 +3,8 @@ package com.idi.task.bean;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import com.idi.task.common.Utils;
+
 public class Task implements Serializable {
 
 	/**
@@ -24,6 +26,7 @@ public class Task implements Serializable {
 	private int resolvedBy; // auto not edit show only when completed
 	private Timestamp creationDate;
 	private String dueDate;
+	private String dueDateConverted;
 	private Timestamp resolutionDate; // auto not edit show only when completed
 	private String type;
 	private String area; // viec cua phong kt , cntt, ns, ...
@@ -38,6 +41,9 @@ public class Task implements Serializable {
 	private String estimateTimeType;
 	private String description;
 	private String reviewComment;
+	
+	//for display
+	private String planned;
 
 	public Task() {
 
@@ -299,4 +305,25 @@ public class Task implements Serializable {
 		this.reviewComment = reviewComment;
 	}
 
+	public String getPlanned() {
+		return planned;
+	}
+
+	public void setPlanned(String planned) {
+		this.planned = planned;
+	}
+
+	public String getDueDateConverted() throws Exception{
+		if(dueDate != null && dueDate.length() > 0 && dueDate.contains("-"))
+			return Utils.convertDateToDisplay(dueDate);
+		else
+			return dueDateConverted;
+	}
+
+	public void setDueDateConverted(String dueDateConverted) throws Exception {
+		if(dueDate != null && dueDate.length() > 0 && dueDate.contains("/"))
+			this.dueDateConverted = Utils.convertDateToStore(dueDate);
+		else	
+			this.dueDateConverted = dueDateConverted;
+	}
 }
