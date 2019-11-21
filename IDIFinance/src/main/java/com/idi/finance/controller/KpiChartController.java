@@ -31,7 +31,7 @@ import com.idi.finance.charts.KpiMeasureLineChart;
 import com.idi.finance.dao.BalanceSheetDAO;
 import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.form.TkKpiChartForm;
-import com.idi.finance.utils.Contants;
+import com.idi.finance.hangso.Contants;
 import com.idi.finance.utils.ExpressionEval;
 import com.idi.finance.utils.Utils;
 

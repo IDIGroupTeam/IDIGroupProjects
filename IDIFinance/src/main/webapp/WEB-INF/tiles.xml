@@ -475,6 +475,25 @@
 		<put-attribute name="body"
 			value="/pages/bctc/cashFlowCodeTm.jsp" />
 	</definition>
+
+	<definition name="danhSachBctc" extends="taichinh">
+		<put-attribute name="title" value="Báo cáo tài chính" />
+		<put-attribute name="search"
+			value="/pages/bctc/baoCaoTaiChinhTk.jsp" />
+		<put-attribute name="body"
+			value="/pages/bctc/baoCaoTaiChinhDs.jsp" />
+	</definition>
+	<definition name="taoMoiBctc" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới báo cáo tài chính" />
+		<put-attribute name="body"
+			value="/pages/bctc/baoCaoTaiChinhTm.jsp" />
+	</definition>
+	<definition name="xemBctc" extends="taichinh">
+		<put-attribute name="title" value="Báo cáo tài chính" />
+		<put-attribute name="body"
+			value="/pages/bctc/baoCaoTaiChinhXm.jsp" />
+	</definition>
 	<!-- Kết thúc Tab báo cáo tài chính -->
 
 	<!-- Bắt đầu Tab công việc -->

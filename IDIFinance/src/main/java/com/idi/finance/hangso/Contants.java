@@ -1,7 +1,6 @@
-package com.idi.finance.utils;
+package com.idi.finance.hangso;
 
 public class Contants {
-
 	// Hằng số cho phần biểu đồ KPI
 	public static final String BS = "CĐKT";
 	public static final String SR = "HĐKD";

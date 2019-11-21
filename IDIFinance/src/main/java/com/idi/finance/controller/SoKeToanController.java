@@ -48,7 +48,7 @@ import com.idi.finance.dao.NhanVienDAO;
 import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.form.TkSoKeToanForm;
-import com.idi.finance.utils.PropCont;
+import com.idi.finance.hangso.PropCont;
 import com.idi.finance.utils.Utils;
 
 @Controller

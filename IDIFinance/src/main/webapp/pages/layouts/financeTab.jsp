@@ -60,15 +60,15 @@
 			class="caret"></span>
 	</a>
 		<ul class="dropdown-menu">
-			<li id="tabBCDKT"><a href="${url}/bctc/cdkt/danhsach">Bảng
-					cân đối kế toán</a></li>
+			<li id="tabBCTCDS"><a href="${url}/bctc/danhsach">Báo cáo tài chính</a></li>
+			<%-- <li id="tabBCDKT"><a href="${url}/bctc/cdkt/danhsach">Bảng
+					cân đối kế toán</a></li> --%>
 			<li id="tabBCDPS"><a href="${url}/bctc/candoiphatsinh">Bảng
 					cân đối phát sinh</a></li>
-			<li id="tabBKQHDKD"><a href="${url}/bctc/kqhdkd/danhsach">Bảng
+			<%-- <li id="tabBKQHDKD"><a href="${url}/bctc/kqhdkd/danhsach">Bảng
 					kết quả HDKD</a></li>
 			<li id="tabBLCTT"><a href="${url}/bctc/luuchuyentt/danhsach">Bảng
-					lưu chuyển tiền tệ</a></li>
-
+					lưu chuyển tiền tệ</a></li> --%>
 		</ul></li>
 	<%-- <li class="dropdown"><a class="dropdown-toggle"
 		data-toggle="dropdown" href="#">Nghiệp vụ<span class="caret"></span>

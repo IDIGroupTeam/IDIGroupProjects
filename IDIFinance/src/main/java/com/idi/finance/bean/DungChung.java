@@ -35,7 +35,10 @@ public class DungChung {
 	}
 
 	public List<KpiGroup> getKpiGroups() {
-		kpiGroups = kpiChartDAO.listKpiGroups();
+		if (kpiGroups == null) {
+			kpiGroups = kpiChartDAO.listKpiGroups();
+		}
+
 		return kpiGroups;
 	}
 

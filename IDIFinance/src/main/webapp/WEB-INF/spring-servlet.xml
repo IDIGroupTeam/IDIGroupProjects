@@ -74,6 +74,8 @@
 		class="com.idi.finance.validator.KetChuyenButToanValidator" />
 	<bean id="balanceSheetValidator"
 		class="com.idi.finance.validator.BalanceSheetValidator" />
+	<bean id="bctcValidator"
+		class="com.idi.finance.validator.BaoCaoTaiChinhValidator" />
 
 	<!-- Config for upload file feature -->
 	<bean id="multipartResolver"
@@ -84,7 +86,7 @@
 
 	<bean id="dungChung" class="com.idi.finance.bean.DungChung"
 		init-method="init"></bean>
-	<bean id="props" class="com.idi.finance.utils.PropCont"
+	<bean id="props" class="com.idi.finance.hangso.PropCont"
 		init-method="init"></bean>
 
 	<!-- Config database connection -->
@@ -196,6 +198,11 @@
 
 	<bean id="loaiTienDAO"
 		class="com.idi.finance.dao.impl.LoaiTienDAOImpl">
+		<property name="jdbcTmpl" ref="jdbcTmpl" />
+	</bean>
+
+	<bean id="bctcDAO"
+		class="com.idi.finance.dao.impl.BaoCaoTaiChinhDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 </beans>

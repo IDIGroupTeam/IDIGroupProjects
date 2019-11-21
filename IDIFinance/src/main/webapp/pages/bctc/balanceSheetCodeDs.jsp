@@ -1,5 +1,5 @@
 <%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
-<%@page import="com.idi.finance.utils.PropCont"%>
+<%@page import="com.idi.finance.hangso.PropCont"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -77,8 +77,8 @@
 <h4>Danh sách các chỉ tiêu của bảng cân đối kế toán</h4>
 
 <div>
-	<span><i>${props.getCauHinh(PropCont.CHE_DO_KE_TOAN).giaTri}</i></span> <a
-		href="${url}/bctc/cdkt/chitieu/taomoi"
+	<span><i>${props.getCauHinh(PropCont.CHE_DO_KE_TOAN).giaTri}</i></span>
+	<a href="${url}/bctc/cdkt/chitieu/taomoi"
 		class="btn btn-info btn-sm pull-right"> <span
 		class="glyphicon glyphicon-plus"></span> Tạo mới
 	</a>

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.kyketoan.KyKeToan;
-import com.idi.finance.utils.PropCont;
+import com.idi.finance.hangso.PropCont;
 
 @Controller
 public class LoaiTienController {
