@@ -2108,6 +2108,13 @@ public class TaskController {
 		taskReportForm.setUnSelect(unSelected);
 		//list = taskDAO.getTasksForReport(taskReportForm);
 		
+
+		if(taskReportForm.getFromDate() != null && taskReportForm.getFromDate().length() > 0 && taskReportForm.getFromDate().contains("/"))
+			taskReportForm.setFromDate(Utils.convertDateToStore(taskReportForm.getFromDate()));
+		
+		if(taskReportForm.getToDate() != null && taskReportForm.getToDate().length() > 0 && taskReportForm.getToDate().contains("/"))
+			taskReportForm.setToDate(Utils.convertDateToStore(taskReportForm.getToDate()));
+		
 		List<Task> listCurrent = null;
 		listCurrent = taskDAO.getTasksForReport(taskReportForm, "'Đang làm','Tạm dừng','Hủy bỏ','Chờ đánh giá','Đã xong'");
 
