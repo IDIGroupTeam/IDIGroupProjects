@@ -2,6 +2,7 @@ package com.idi.finance.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +40,7 @@ import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.hangso.PropCont;
 import com.idi.finance.utils.ExpressionEval;
+import com.idi.finance.utils.Utils;
 import com.idi.finance.validator.BaoCaoTaiChinhValidator;
 
 @Controller
@@ -130,6 +132,12 @@ public class BaoCaoTaiChinhController {
 			BaoCaoTaiChinh bctc = new BaoCaoTaiChinh();
 			bctc.setKyKeToan(kyKeToan);
 
+			bctc.setBatDau(new Date("01/01/2019"));
+			bctc.setKetThuc(new Date("12/31/2019"));
+			bctc.setTieuDe("Nam 2019");
+			bctc.setNguoiLap("Tran Dong Hai");
+			bctc.setGiamDoc("Tran Dong Hai");
+
 			return chuanBiFormBctc(model, bctc);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -168,31 +176,36 @@ public class BaoCaoTaiChinhController {
 			}
 
 			logger.info("Tạo báo cáo tài chính");
+			KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(bctc.getKyKeToan().getMaKyKt());
+			bctc.setKyKeToan(kyKeToan);
 
 			List<BaoCaoTaiChinhCon> bctcConDs = new ArrayList<>();
 			for (BaoCaoTaiChinhCon bctcCon : bctc.getBctcDs()) {
 				if (bctcCon.getLoaiBctc() != 0) {
+					bctcCon.setBctc(bctc);
 					bctcConDs.add(bctcCon);
 				}
 			}
+
 			bctc.setBctcDs(bctcConDs);
 
 			for (BaoCaoTaiChinhCon bctcCon : bctc.getBctcDs()) {
+				logger.info("Báo cáo tài chính con: " + bctcCon);
 				switch (bctcCon.getLoaiBctc()) {
 				case BaoCaoTaiChinhCon.LOAI_CDKT:
-					logger.info("Sinh bảng cân đối kế toán");
+					// Sinh bảng cân đối kế toán
 					bctcCon = sinhBangCdkt(bctcCon);
 					break;
 				case BaoCaoTaiChinhCon.LOAI_KQHDKD:
-					logger.info("Sinh bảng kết quả HDKD");
+					// Sinh bảng kết quả HDKD
 					bctcCon = sinhBangKqhdkd(bctcCon);
 					break;
 				case BaoCaoTaiChinhCon.LOAI_LCTT:
-					logger.info("Sinh bảng lưu chuyển tiền tệ");
+					// Sinh bảng lưu chuyển tiền tệ
 					bctcCon = sinhBangLctt(bctcCon);
 					break;
 				case BaoCaoTaiChinhCon.LOAI_CDPS:
-					logger.info("Sinh bảng cân đối phát sinh");
+					// Sinh bảng cân đối phát sinh
 					bctcCon = sinhBangCdps(bctcCon);
 					break;
 				default:
@@ -224,7 +237,9 @@ public class BaoCaoTaiChinhController {
 		BaoCaoTaiChinh bctc = bctcCon.getBctc();
 
 		logger.info("Lấy toàn bộ giá trị kỳ trước của các chỉ tiêu cấp thấp nhất.");
-		List<BaoCaoTaiChinhChiTiet> bctcChiTietDauKyDs = bctcDAO.calculateEndBs(kyKeToan.getBatDau(), bctc.getBatDau(),
+
+		Date ngayTruoc = Utils.moveDate(bctc.getBatDau(), Calendar.DATE, -1);
+		List<BaoCaoTaiChinhChiTiet> bctcChiTietDauKyDs = bctcDAO.calculateEndBs(kyKeToan.getBatDau(), ngayTruoc,
 				kyKeToan.getMaKyKt());
 		for (BaoCaoTaiChinhChiTiet bctcChiTiet : bctcChiTietDauKyDs) {
 			bctcChiTiet.setBctc(bctcCon);
@@ -262,6 +277,8 @@ public class BaoCaoTaiChinhController {
 				|| bctcCon.getBctc().getBatDau() == null && bctcCon.getBctc().getKetThuc() == null) {
 			return null;
 		}
+
+		logger.info("Chỉ tiêu: " + bai);
 
 		BaoCaoTaiChinhChiTiet bctcChiTiet = new BaoCaoTaiChinhChiTiet();
 		bctcChiTiet.setBctc(bctcCon);
@@ -311,6 +328,8 @@ public class BaoCaoTaiChinhController {
 			}
 		}
 
+		logger.info("Báo cáo chi tiết: " + bctcChiTiet);
+
 		return bctcChiTiet;
 	}
 
@@ -326,7 +345,8 @@ public class BaoCaoTaiChinhController {
 		BaoCaoTaiChinh bctc = bctcCon.getBctc();
 
 		logger.info("Lấy toàn bộ giá trị kỳ trước của các chỉ tiêu cấp thấp nhất.");
-		List<BaoCaoTaiChinhChiTiet> bctcChiTietDauKyDs = bctcDAO.calculateEndSR(kyKeToan.getBatDau(), bctc.getBatDau());
+		Date ngayTruoc = Utils.moveDate(bctc.getBatDau(), Calendar.DATE, -1);
+		List<BaoCaoTaiChinhChiTiet> bctcChiTietDauKyDs = bctcDAO.calculateEndSR(kyKeToan.getBatDau(), ngayTruoc);
 		for (BaoCaoTaiChinhChiTiet bctcChiTiet : bctcChiTietDauKyDs) {
 			bctcChiTiet.setBctc(bctcCon);
 		}
@@ -415,6 +435,8 @@ public class BaoCaoTaiChinhController {
 			}
 		}
 
+		logger.info("Báo cáo chi tiết: " + bctcChiTiet);
+
 		return bctcChiTiet;
 	}
 
@@ -430,8 +452,8 @@ public class BaoCaoTaiChinhController {
 		BaoCaoTaiChinh bctc = bctcCon.getBctc();
 
 		logger.info("Lấy toàn bộ giá trị kỳ trước của các chỉ tiêu cấp thấp nhất.");
-		List<BaoCaoTaiChinhChiTiet> bctcChiTietDauKyDs = bctcDAO.calculateEndCFBs(kyKeToan.getBatDau(),
-				bctc.getBatDau());
+		Date ngayTruoc = Utils.moveDate(bctc.getBatDau(), Calendar.DATE, -1);
+		List<BaoCaoTaiChinhChiTiet> bctcChiTietDauKyDs = bctcDAO.calculateEndCFBs(kyKeToan.getBatDau(), ngayTruoc);
 		for (BaoCaoTaiChinhChiTiet bctcChiTiet : bctcChiTietDauKyDs) {
 			bctcChiTiet.setBctc(bctcCon);
 		}
@@ -535,10 +557,13 @@ public class BaoCaoTaiChinhController {
 			}
 		}
 
+		logger.info("Báo cáo chi tiết: " + bctcChiTiet);
+
 		return bctcChiTiet;
 	}
 
 	private BaoCaoTaiChinhCon sinhBangCdps(BaoCaoTaiChinhCon bctcCon) {
+		logger.info("Sinh bảng cân đối phát sinh");
 		// Lấy danh sách các chỉ tiêu vào BalanceAssetItem
 
 		// Tổ chức lại danh sách chỉ tiêu vào BaoCaoTaiChinhCon

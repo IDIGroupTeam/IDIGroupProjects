@@ -78,6 +78,13 @@ public class Utils {
 		return results;
 	}
 
+	public static Date moveDate(Date date, int dateType, int num) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(dateType, num);
+		return cal.getTime();
+	}
+
 	public static Date getStartDateOfMonth(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);

@@ -92,8 +92,14 @@
 								<td>${bctcChiTiet.asset.assetName}</td>
 								<td>${bctcChiTiet.asset.assetCode}</td>
 								<td></td>
-								<td>${bctcChiTiet.giaTriKyTruoc.giaTri}</td>
-								<td>${bctcChiTiet.giaTri.giaTri}</td>
+								<td class="text-right"><fmt:formatNumber
+										value="${bctcChiTiet.giaTriKyTruoc.giaTri}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
+								<td class="text-right"><fmt:formatNumber
+										value="${bctcChiTiet.giaTri.giaTri}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
+								<td></td>
+								<td></td>
 							</tr>
 						</c:forEach>
 					</tbody>
@@ -121,8 +127,14 @@
 								<td>${bctcChiTiet.asset.assetName}</td>
 								<td>${bctcChiTiet.asset.assetCode}</td>
 								<td></td>
-								<td>${bctcChiTiet.giaTriKyTruoc.giaTri}</td>
-								<td>${bctcChiTiet.giaTri.giaTri}</td>
+								<td class="text-right"><fmt:formatNumber
+										value="${bctcChiTiet.giaTriKyTruoc.giaTri}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
+								<td class="text-right"><fmt:formatNumber
+										value="${bctcChiTiet.giaTri.giaTri}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
+								<td></td>
+								<td></td>
 							</tr>
 						</c:forEach>
 					</tbody>
@@ -150,8 +162,14 @@
 								<td>${bctcChiTiet.asset.assetName}</td>
 								<td>${bctcChiTiet.asset.assetCode}</td>
 								<td></td>
-								<td>${bctcChiTiet.giaTriKyTruoc.giaTri}</td>
-								<td>${bctcChiTiet.giaTri.giaTri}</td>
+								<td class="text-right"><fmt:formatNumber
+										value="${bctcChiTiet.giaTriKyTruoc.giaTri}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
+								<td class="text-right"><fmt:formatNumber
+										value="${bctcChiTiet.giaTri.giaTri}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
+								<td></td>
+								<td></td>
 							</tr>
 						</c:forEach>
 					</tbody>

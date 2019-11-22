@@ -46,8 +46,14 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 	@Value("${LAY_BCTC}")
 	private String LAY_BCTC;
 
-	@Value("${LAY_BCTC_CHI_TIET}")
-	private String LAY_BCTC_CHI_TIET;
+	@Value("${LAY_BCTC_CDKT_CHI_TIET}")
+	private String LAY_BCTC_CDKT_CHI_TIET;
+
+	@Value("${LAY_BCTC_KQHDKD_CHI_TIET}")
+	private String LAY_BCTC_KQHDKD_CHI_TIET;
+
+	@Value("${LAY_BCTC_LCTT_CHI_TIET}")
+	private String LAY_BCTC_LCTT_CHI_TIET;
 
 	@Value("${XOA_BCTC}")
 	private String XOA_BCTC;
@@ -119,7 +125,7 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 
 	public BaoCaoTaiChinh layBctc(int maBctc) {
 		String layBctc = LAY_BCTC;
-		String layBctcChiTiet = LAY_BCTC_CHI_TIET;
+		String layBctcChiTiet = LAY_BCTC_CDKT_CHI_TIET;
 
 		logger.info("Lấy báo cáo tài chính có MA_BCTC: " + maBctc);
 		logger.info(layBctc);
@@ -131,7 +137,6 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 
 		if (bctcDs != null) {
 			logger.info("Trộn kết quả thành một báo cáo tài chính");
-
 			for (BaoCaoTaiChinh bctc : bctcDs) {
 				if (ketQua == null) {
 					ketQua = bctc;
@@ -144,6 +149,22 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 		logger.info("Lấy báo cáo tài chính chi tiết");
 		if (ketQua != null && ketQua.getBctcDs() != null) {
 			for (BaoCaoTaiChinhCon bctcCon : ketQua.getBctcDs()) {
+				switch (bctcCon.getLoaiBctc()) {
+				case BaoCaoTaiChinhCon.LOAI_CDKT:
+					layBctcChiTiet = LAY_BCTC_CDKT_CHI_TIET;
+					break;
+				case BaoCaoTaiChinhCon.LOAI_KQHDKD:
+					layBctcChiTiet = LAY_BCTC_KQHDKD_CHI_TIET;
+					break;
+				case BaoCaoTaiChinhCon.LOAI_LCTT:
+					layBctcChiTiet = LAY_BCTC_LCTT_CHI_TIET;
+					break;
+				case BaoCaoTaiChinhCon.LOAI_CDPS:
+					break;
+				default:
+					break;
+				}
+
 				logger.info(layBctcChiTiet);
 				Object[] objTmpl = { bctcCon.getMaBctcCon() };
 				List<BaoCaoTaiChinhChiTiet> bctcChiTietDs = jdbcTmpl.query(layBctcChiTiet, objTmpl,
@@ -151,6 +172,8 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 				for (BaoCaoTaiChinhChiTiet bctcChiTiet : bctcChiTietDs) {
 					bctcChiTiet.setBctc(bctcCon);
 				}
+
+				bctcCon.setChiTietDs(bctcChiTietDs);
 			}
 		}
 
@@ -198,6 +221,7 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 
 				bctcChiTiet.getBctc().setMaBctcCon(rs.getInt("MA_BCTC_CON"));
 				bctcChiTiet.getAsset().setAssetCode(rs.getString("ASSET_CODE"));
+				bctcChiTiet.getAsset().setAssetName(rs.getString("ASSET_NAME"));
 				bctcChiTiet.getGiaTri().setGiaTri(rs.getDouble("GIA_TRI"));
 				bctcChiTiet.getGiaTriKyTruoc().setGiaTri(rs.getDouble("GIA_TRI_KY_TRUOC"));
 
@@ -290,6 +314,8 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 		}
 
 		for (BaoCaoTaiChinhChiTiet bctcChiTiet : bctcChiTietDs) {
+			themCapNhapBctcChiTiet(bctcChiTiet.getChiTietDs());
+
 			themCapNhapBctcChiTiet(bctcChiTiet);
 		}
 	}
@@ -355,6 +381,7 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 		String query = TINH_CDKT_CUOI_KY;
 		logger.info(query);
 		logger.info("Từ " + batDau + " đến " + ketThuc);
+		logger.info("maKkt: " + maKkt);
 
 		Object[] params = { batDau, ketThuc, batDau, ketThuc, batDau, ketThuc, maKkt, maKkt, maKkt, maKkt };
 		List<BaoCaoTaiChinhChiTiet> bctcChiTiet = jdbcTmpl.query(query, params, new BaoCaoTaiChinhChiTietMapper());

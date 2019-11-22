@@ -8,8 +8,8 @@ import com.idi.finance.bean.Tien;
 public class BaoCaoTaiChinhChiTiet {
 	private BaoCaoTaiChinhCon bctc;
 	private BalanceAssetItem asset;
-	private Tien giaTri;
-	private Tien giaTriKyTruoc;
+	private Tien giaTri = new Tien();
+	private Tien giaTriKyTruoc = new Tien();
 
 	private BaoCaoTaiChinhChiTiet chiTiet;
 	private List<BaoCaoTaiChinhChiTiet> chiTietDs;
@@ -100,7 +100,7 @@ public class BaoCaoTaiChinhChiTiet {
 
 	@Override
 	public String toString() {
-		String out = bctc + "  " + asset + " " + giaTri;
+		String out = bctc + "  " + asset + " " + giaTri + " " + giaTriKyTruoc;
 		return out;
 	}
 
@@ -110,7 +110,7 @@ public class BaoCaoTaiChinhChiTiet {
 			return false;
 		}
 
-		if (!(obj instanceof BalanceAssetItem)) {
+		if (!(obj instanceof BaoCaoTaiChinhChiTiet)) {
 			return false;
 		}
 

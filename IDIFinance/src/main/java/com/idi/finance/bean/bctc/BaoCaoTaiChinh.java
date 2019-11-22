@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.ibm.icu.text.SimpleDateFormat;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 
 public class BaoCaoTaiChinh {
@@ -162,7 +163,8 @@ public class BaoCaoTaiChinh {
 
 	@Override
 	public String toString() {
-		String out = maBctc + "  " + tieuDe + "  " + batDau + " " + ketThuc;
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		String out = maBctc + "  " + tieuDe + "  " + sdf.format(batDau) + " " + sdf.format(ketThuc);
 		return out;
 	}
 
@@ -177,14 +179,6 @@ public class BaoCaoTaiChinh {
 		}
 
 		BaoCaoTaiChinh item = (BaoCaoTaiChinh) obj;
-		try {
-			if (maBctc != item.getMaBctc()) {
-				return false;
-			}
-		} catch (Exception e) {
-			return false;
-		}
-
-		return true;
+		return maBctc == item.getMaBctc();
 	}
 }

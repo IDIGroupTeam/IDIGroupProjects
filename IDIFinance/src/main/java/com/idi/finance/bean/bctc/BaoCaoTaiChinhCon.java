@@ -82,19 +82,11 @@ public class BaoCaoTaiChinhCon {
 			return false;
 		}
 
-		if (!(obj instanceof BaoCaoTaiChinh)) {
+		if (!(obj instanceof BaoCaoTaiChinhCon)) {
 			return false;
 		}
 
 		BaoCaoTaiChinhCon item = (BaoCaoTaiChinhCon) obj;
-		try {
-			if (maBctcCon != item.getMaBctcCon()) {
-				return false;
-			}
-		} catch (Exception e) {
-			return false;
-		}
-
-		return true;
+		return maBctcCon == item.getMaBctcCon();
 	}
 }

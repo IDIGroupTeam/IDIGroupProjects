@@ -60,7 +60,8 @@
 			class="caret"></span>
 	</a>
 		<ul class="dropdown-menu">
-			<li id="tabBCTCDS"><a href="${url}/bctc/danhsach">Báo cáo tài chính</a></li>
+			<li id="tabBCTCDS"><a href="${url}/bctc/danhsach">Báo cáo
+					tài chính</a></li>
 			<%-- <li id="tabBCDKT"><a href="${url}/bctc/cdkt/danhsach">Bảng
 					cân đối kế toán</a></li> --%>
 			<li id="tabBCDPS"><a href="${url}/bctc/candoiphatsinh">Bảng
@@ -94,6 +95,9 @@
 					sách tài khoản</a></li>
 			<li id="tabDSBCDKT"><a href="${url}/bctc/cdkt/chitieu/danhsach">Danh
 					sách chỉ tiêu CDKT</a></li>
+			<li id="tabDSBKQHDKD"><a
+				href="${url}/bctc/cdkt/chitieu/danhsach">Danh sách chỉ tiêu
+					KQHDKD</a></li>
 			<li id="tabDSBLCTT"><a
 				href="${url}/bctc/luuchuyentt/chitieu/danhsach">Danh sách chỉ
 					tiêu LCTT</a></li>
