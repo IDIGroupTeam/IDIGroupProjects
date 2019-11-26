@@ -8,9 +8,12 @@
 <html>
 <head>
 <!-- Include Twitter Bootstrap and jQuery: -->
-<script type="text/javascript" src="${url}/public/js/bootstrap-multiselect.js"></script>
-<script type="text/javascript" src="${url}/public/js/jquery.min.js"></script>
+<script src="${url}/public/js/jquery.min.js"></script>
+<script src="${url}/public/js/bootstrap-combobox.js"></script>
+<script src="${url}/public/js/bootstrap-multiselect.js"></script> 
+
 <!-- Include the plugin's CSS and JS: -->
+<link rel="bootstrap-combobox" href="${url}/public/css/bootstrap-combobox.css" />
 
 <style type="text/css">
 table {
@@ -26,56 +29,42 @@ td, th {
 }
 </style>
 
-<!-- Initialize the plugin: -->
 <script type="text/javascript">
-//alert("send report ...xxx");
-$(function(){
-	//alert("send report ...");
-/* 	$("#sendTo").multiselect({
-		enableFiltering : true,
-		filterPlaceholder : 'Tìm kiếm',
-		maxHeight : 200,
-		buttonWidth : '170px',
-		nonSelectedText : 'Chọn email',
-		nSelectedText : 'Được chọn',
-		includeSelectAllOption : true,
-		allSelectedText : 'Chọn tất cả',
-		selectAllText : 'Tất cả',
-		selectAllValue : 'ALL'
-	});	 */	
-	//alert("send report ...yyy");	
-}); 
-
+	var $j = jQuery.noConflict();
+	$j(function() {
+		$j("#sendTo").multiselect({
+			enableFiltering : true,
+			filterPlaceholder : 'Tìm kiếm bằng địa chỉ email',
+			maxHeight : 200,
+			buttonWidth : '270px',
+			nonSelectedText : 'Chọn email người cần gửi báo cáo',
+			nSelectedText : ' email được chọn',
+			includeSelectAllOption : true,
+			allSelectedText : 'Chọn tất cả',
+			selectAllText : 'Tất cả',
+			selectAllValue : 'ALL'
+		});	
+	});
 </script>
 <title>Gửi báo cáo công việc</title>
 </head>
 <body>
-	<a href="${url}/"><button class="btn btn-lg btn-primary btn-sm">
-			Quay lại dach sách công việc</button></a>
-	<form:form action="sendReport" modelAttribute="sendReportForm"
-		enctype="multipart/form-data" method="POST" >
+	<a href="${url}/"><button class="btn btn-lg btn-primary btn-sm"> Quay lại dach sách công việc</button></a>
+	<form:form action="sendReport" modelAttribute="sendReportForm"	enctype="multipart/form-data" method="POST">
 		<br />
-		<input class="btn btn-lg btn-primary btn-sm" type="submit"
-			value="Gửi báo cáo" /> &nbsp;
-		<br />	<br />
+		<input class="btn btn-lg btn-primary btn-sm" type="submit"	value="Gửi báo cáo" /> &nbsp;
+		<br />
+		<br />
 		<form:input type="hidden" path="fileName" value="${sendReportForm.fileName}" />
 		<%-- <form:input type="hidden" path="subject" value="${sendReportForm.subject}" /> --%>
 		<table class="table table-bordered table-hover">
 			<tr>
-				<td nowrap="nowrap" title="Nhập chính xác địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com. Các email cách nhau bằng dấu ';' ">Gửi tới:(*)</td>
-	<%-- 			<td>
-					<form:select path="sendTo" multiple="multiple" class="form-control animated"> 
-						<form:options items="${employeeEmailMap}" />
-					</form:select> --%>
-					
-				<td><form:input path="sendTo" required="required"
-						class="form-control animated" /></td>
-			</tr>
-<%-- 			<tr>
-				<td nowrap="nowrap" title="Phần này khi hoàn thiên chức năng phân quyền sẽ không cần nữa hệ thống sẽ tự động sác định được người gửi ...">Người gửi:</td>
-				<td><form:input path="sendFrom" 
-						class="form-control animated" /></td>
-			</tr> --%>
+				<td nowrap="nowrap"	title="Nhập địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com. Các email cách nhau bằng dấu ';' ">Gửi tới:(*)</td>
+				<td><form:select id="sendTo" path="sendTo" multiple="multiple"	class="form-control animated" required="required">
+						<form:options items="${employeeEmailMap}" /> 
+					</form:select> 
+				</td>	
+			</tr>			
 			<tr>
 				<td>Tiêu đề:</td>
 				<td><form:input path="subject" class="form-control animated" /></td>
@@ -91,7 +80,7 @@ $(function(){
 							<th>Tên việc</th>
 							<c:if test="${ not empty isDes}">
 								<th>Mô tả</th>
-							</c:if>	
+							</c:if>
 							<th>Người làm</th>
 							<th nowrap="nowrap">Trạng thái</th>
 							<c:if test="${ not empty isEstimateTime}">
@@ -123,10 +112,10 @@ $(function(){
 								</c:if>
 								<td>${task.status}</td>
 								<c:if test="${ not empty isEstimateTime}">
-									<td>${task.estimate} ${task.estimateTimeType}</td>
+									<td>${task.estimate}${task.estimateTimeType}</td>
 								</c:if>
-								<td>${task.timeSpent} ${task.timeSpentType}</td>		
-								<c:if test="${ not empty isUpdatedTime}">						
+								<td>${task.timeSpent}${task.timeSpentType}</td>
+								<c:if test="${ not empty isUpdatedTime}">
 									<td>${task.updateTS}</td>
 								</c:if>
 								<c:if test="${ not empty isdueDate}">
@@ -139,8 +128,7 @@ $(function(){
 				</td>
 			</tr>
 		</table>
-		<input class="btn btn-lg btn-primary btn-sm" type="submit"
-			value="Gửi báo cáo" /> &nbsp;
+		<input class="btn btn-lg btn-primary btn-sm" type="submit"	value="Gửi báo cáo" /> &nbsp;
 	</form:form>
 </body>
 </html>
