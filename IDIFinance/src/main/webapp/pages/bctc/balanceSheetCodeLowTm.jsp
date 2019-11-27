@@ -13,7 +13,7 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-		$("#mainFinanceForm").attr("action", "${url}/bctc/cdkt/chitieu/them");
+		$("#mainFinanceForm").attr("action", "${url}/bctc/cdkt/chitieu/capthap/them");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		function updateMaTk(maTk) {

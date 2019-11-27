@@ -13,9 +13,28 @@
 	<c:when test="${not empty bais and bais.size()>0}">
 		<c:forEach items="${bais}" var="bai">
 			<tr id="${parentIdRes}_${bai.assetCode}">
-				<td>${bai.assetCode}&nbsp;-&nbsp;<span
-					class="cell-editable dis-editable dis-removable">${bai.assetName}</span></td>
-				<td></td>
+				<c:choose>
+					<c:when test="${not empty bai.childs and bai.childs.size()>0}">
+						<td>${bai.assetCode}&nbsp;-&nbsp;<span
+							class="cell-editable dis-removable">${bai.assetName}</span></td>
+					</c:when>
+					<c:when
+						test="${not empty bai.taiKhoanDs and bai.taiKhoanDs.size()>0}">
+						<td>${bai.assetCode}&nbsp;-&nbsp;<span
+							class="cell-editable dis-removable">${bai.assetName}</span></td>
+					</c:when>
+					<c:otherwise>
+						<td>${bai.assetCode}&nbsp;-&nbsp;<span class="cell-editable">${bai.assetName}</span></td>
+					</c:otherwise>
+				</c:choose>
+				<c:choose>
+					<c:when test="${bai.soDu==LoaiTaiKhoan.NO}">
+						<td>Nợ</td>
+					</c:when>
+					<c:otherwise>
+						<td>Có</td>
+					</c:otherwise>
+				</c:choose>
 				<td></td>
 			</tr>
 
@@ -34,7 +53,7 @@
 				<td><span class="cell-editable" data-type="combobox"
 					data-field="matk" data-matkgoc="${taiKhoan.maTkGoc}">${taiKhoan.maTenTk}</span></td>
 				<c:choose>
-					<c:when test="${taiKhoan.soDu==LoaiTaiKhoan.NO}">
+					<c:when test="${taiKhoan.soDuGiaTri==LoaiTaiKhoan.NO}">
 						<td>Nợ</td>
 					</c:when>
 					<c:otherwise>

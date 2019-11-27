@@ -75,14 +75,19 @@
 </script>
 
 <h4>Danh sách các chỉ tiêu của bảng cân đối kế toán</h4>
+<span><i>${props.getCauHinh(PropCont.CHE_DO_KE_TOAN).giaTri}</i></span>
 
-<div>
-	<span><i>${props.getCauHinh(PropCont.CHE_DO_KE_TOAN).giaTri}</i></span>
-	<a href="${url}/bctc/cdkt/chitieu/taomoi"
-		class="btn btn-info btn-sm pull-right"> <span
-		class="glyphicon glyphicon-plus"></span> Tạo mới
+<div class="pull-right">
+
+	<a href="${url}/bctc/cdkt/chitieu/capcao/taomoi"
+		class="btn btn-info btn-sm"> <span
+		class="glyphicon glyphicon-plus"></span> Tạo mới chỉ tiêu cấp cao
+	</a> <a href="${url}/bctc/cdkt/chitieu/capthap/taomoi"
+		class="btn btn-info btn-sm"> <span
+		class="glyphicon glyphicon-plus"></span> Tạo mới chỉ tiêu cấp thấp
 	</a>
 </div>
+<br />
 <br />
 
 <div class="table-responsive">
@@ -100,9 +105,29 @@
 		<tbody class="form-inline">
 			<c:forEach items="${bais}" var="bai">
 				<tr id="${bai.assetCode}">
-					<td>${bai.assetCode}&nbsp;-&nbsp;<span
-						class="cell-editable dis-editable dis-removable">${bai.assetName}</span></td>
-					<td></td>
+					<c:choose>
+						<c:when test="${not empty bai.childs and bai.childs.size()>0}">
+							<td>${bai.assetCode}&nbsp;-&nbsp;<span
+								class="cell-editable dis-removable">${bai.assetName}</span></td>
+						</c:when>
+						<c:when
+							test="${not empty bai.taiKhoanDs and bai.taiKhoanDs.size()>0}">
+							<td>${bai.assetCode}&nbsp;-&nbsp;<span
+								class="cell-editable dis-removable">${bai.assetName}</span></td>
+						</c:when>
+						<c:otherwise>
+							<td>${bai.assetCode}&nbsp;-&nbsp;<span
+								class="cell-editable">${bai.assetName}</span></td>
+						</c:otherwise>
+					</c:choose>
+					<c:choose>
+						<c:when test="${bai.soDu==LoaiTaiKhoan.NO}">
+							<td>Nợ</td>
+						</c:when>
+						<c:otherwise>
+							<td>Có</td>
+						</c:otherwise>
+					</c:choose>
 					<td></td>
 				</tr>
 

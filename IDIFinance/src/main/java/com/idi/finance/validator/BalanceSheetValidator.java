@@ -20,15 +20,19 @@ public class BalanceSheetValidator implements Validator {
 		BalanceAssetItem bai = (BalanceAssetItem) target;
 
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "assetCode", "NotEmpty.Bai.assetCode");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "taiKhoanDs[0].maTk", "NotEmpty.Bai.LoaiTaiKhoan.maTk");
 
-		if (bai.getType().equals(BalanceAssetItem.BCTC_CDKT)) {
+		if (bai.getType().equals(BalanceAssetItem.BCTC_CDKT_THAP)) {
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "taiKhoanDs[0].maTk", "NotEmpty.Bai.LoaiTaiKhoan.maTk");
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "taiKhoanDs[0].maTkGoc",
 					"NotEmpty.Bai.LoaiTaiKhoan.maTkGoc");
+		} else if (bai.getType().equals(BalanceAssetItem.BCTC_CDKT_CAO)) {
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "assetCode", "NotEmpty.Bai.assetName");
 		} else if (bai.getType().equals(BalanceAssetItem.BCTC_KQHDKD)) {
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "taiKhoanDs[0].maTk", "NotEmpty.Bai.LoaiTaiKhoan.maTk");
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "taiKhoanDs[0].maTkGoc",
 					"NotEmpty.Bai.LoaiTaiKhoan.maTkGoc");
 		} else if (bai.getType().equals(BalanceAssetItem.BCTC_LCTT)) {
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "taiKhoanDs[0].maTk", "NotEmpty.Bai.LoaiTaiKhoan.maTk");
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "taiKhoanDs[0].doiUng.maTk",
 					"NotEmpty.Bai.LoaiTaiKhoan.doiUng.maTk");
 		}

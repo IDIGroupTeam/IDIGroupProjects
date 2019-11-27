@@ -414,11 +414,20 @@
 			value="/pages/bctc/balanceSheetCodeDs.jsp" />
 	</definition>
 
-	<definition name="taoMoiBalanceSheetCode" extends="taichinh">
+	<definition name="taoMoiHighBalanceSheetCode"
+		extends="taichinh">
 		<put-attribute name="title"
-			value="Tạo mới chỉ tiêu cân đối kế toán" />
+			value="Tạo mới chỉ tiêu cân đối kế toán - cấp cao" />
 		<put-attribute name="body"
-			value="/pages/bctc/balanceSheetCodeTm.jsp" />
+			value="/pages/bctc/balanceSheetCodeHighTm.jsp" />
+	</definition>
+
+	<definition name="taoMoiLowBalanceSheetCode"
+		extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới chỉ tiêu cân đối kế toán - cấp thấp" />
+		<put-attribute name="body"
+			value="/pages/bctc/balanceSheetCodeLowTm.jsp" />
 	</definition>
 
 	<definition name="bangCanDoiPhatSinh" extends="taichinh">

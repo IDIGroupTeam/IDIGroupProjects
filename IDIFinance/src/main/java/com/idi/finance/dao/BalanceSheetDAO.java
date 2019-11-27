@@ -11,9 +11,13 @@ public interface BalanceSheetDAO {
 	// BS
 	public BalanceAssetItem findBSBai(String assetCode, String maTk);
 
-	public int updateBSBai(BalanceAssetItem oldBai, BalanceAssetItem newBai);
+	public int insertBSHighBai(BalanceAssetItem bai);
 
-	public int insertBSBai(BalanceAssetItem bai);
+	public int updateBSHighBai(BalanceAssetItem oldBai, BalanceAssetItem newBai);
+
+	public int insertBSLowBai(BalanceAssetItem bai);
+
+	public int updateBSLowBai(BalanceAssetItem oldBai, BalanceAssetItem newBai);
 
 	public void deleteBSBai(BalanceAssetItem bai);
 
