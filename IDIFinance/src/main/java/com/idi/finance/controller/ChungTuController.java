@@ -2,6 +2,7 @@ package com.idi.finance.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -202,6 +203,42 @@ public class ChungTuController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/chungtu/phieuthu/danhsach/pdf/{dau}/{cuoi}", method = RequestMethod.GET)
+	public void pdfDanhSachPhieuThu(HttpServletRequest req, HttpServletResponse res, @PathVariable("dau") String dau,
+			@PathVariable("cuoi") String cuoi, Model model) {
+		try {
+			Date batDau = null;
+			Date ketThuc = null;
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+			batDau = sdf.parse(dau);
+			ketThuc = sdf.parse(cuoi);
+
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+			hmParams.put("batDau", batDau);
+			hmParams.put("ketThuc", ketThuc);
+
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_THU);
+			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
+
+			JasperReport jasperReport = getCompiledFile("PhieuThuDs", req);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, phieuThuDs);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=PhieuThuDs.pdf");
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException | ParseException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -508,6 +545,42 @@ public class ChungTuController {
 		}
 	}
 
+	@RequestMapping(value = "/chungtu/phieuchi/danhsach/pdf/{dau}/{cuoi}", method = RequestMethod.GET)
+	public void pdfDanhSachPhieuChi(HttpServletRequest req, HttpServletResponse res, @PathVariable("dau") String dau,
+			@PathVariable("cuoi") String cuoi, Model model) {
+		try {
+			Date batDau = null;
+			Date ketThuc = null;
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+			batDau = sdf.parse(dau);
+			ketThuc = sdf.parse(cuoi);
+
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+			hmParams.put("batDau", batDau);
+			hmParams.put("ketThuc", ketThuc);
+
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_CHI);
+			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
+
+			JasperReport jasperReport = getCompiledFile("PhieuChiDs", req);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, phieuThuDs);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=PhieuChiDs.pdf");
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException | ParseException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@RequestMapping("/chungtu/phieuchi/xem/{id}")
 	public String xemPhieuChi(@PathVariable("id") int maCt, Model model) {
 		try {
@@ -811,6 +884,42 @@ public class ChungTuController {
 		}
 	}
 
+	@RequestMapping(value = "/chungtu/baoco/danhsach/pdf/{dau}/{cuoi}", method = RequestMethod.GET)
+	public void pdfDanhSachBaoCo(HttpServletRequest req, HttpServletResponse res, @PathVariable("dau") String dau,
+			@PathVariable("cuoi") String cuoi, Model model) {
+		try {
+			Date batDau = null;
+			Date ketThuc = null;
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+			batDau = sdf.parse(dau);
+			ketThuc = sdf.parse(cuoi);
+
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+			hmParams.put("batDau", batDau);
+			hmParams.put("ketThuc", ketThuc);
+
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_BAO_CO);
+			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
+
+			JasperReport jasperReport = getCompiledFile("BaoCoDs", req);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, phieuThuDs);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=BaoCoDs.pdf");
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException | ParseException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@RequestMapping("/chungtu/baoco/xem/{id}")
 	public String xemBaoCo(@PathVariable("id") int maCt, Model model) {
 		try {
@@ -1110,6 +1219,42 @@ public class ChungTuController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/chungtu/baono/danhsach/pdf/{dau}/{cuoi}", method = RequestMethod.GET)
+	public void pdfDanhSachBaoNo(HttpServletRequest req, HttpServletResponse res, @PathVariable("dau") String dau,
+			@PathVariable("cuoi") String cuoi, Model model) {
+		try {
+			Date batDau = null;
+			Date ketThuc = null;
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+			batDau = sdf.parse(dau);
+			ketThuc = sdf.parse(cuoi);
+
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+			hmParams.put("batDau", batDau);
+			hmParams.put("ketThuc", ketThuc);
+
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_BAO_NO);
+			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
+
+			JasperReport jasperReport = getCompiledFile("BaoNoDs", req);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, phieuThuDs);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=BaoNoDs.pdf");
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException | ParseException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -3126,10 +3271,10 @@ public class ChungTuController {
 
 		File reportFile = new File(jasper);
 		// If compiled file is not found, then compile XML template
-		if (!reportFile.exists()) {
-			logger.info("Compile Jasper report ...");
-			JasperCompileManager.compileReportToFile(jrxml, jasper);
-		}
+		// if (!reportFile.exists()) {
+		logger.info("Compile Jasper report ...");
+		JasperCompileManager.compileReportToFile(jrxml, jasper);
+		// }
 		JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(reportFile.getPath());
 		return jasperReport;
 	}
