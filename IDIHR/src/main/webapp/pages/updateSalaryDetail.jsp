@@ -33,6 +33,10 @@
 <body>
 	<a href="${pageContext.request.contextPath}/salary/listSalaryDetail?employeeId=${employeeId}">
 	<button	class="btn btn-lg btn-primary btn-sm">Quay lại danh sách lương các tháng</button></a>
+	<c:if test="${not empty salaryDetail.finalSalary}">
+		<a href="${pageContext.request.contextPath}/salary/exportToPDF?employeeId=${salaryDetail.employeeId}&month=${salaryDetail.month}&year=${salaryDetail.year}">
+		<button	class="btn btn-lg btn-primary btn-sm">Export ra file PDF</button></a>
+    </c:if>	
 	<br/><br/>
 	<form:form modelAttribute="salaryDetail" method="POST"
 		action="updateSalaryDetail" enctype="multipart/form-data">

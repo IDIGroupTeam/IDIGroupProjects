@@ -1,4 +1,4 @@
-package com.idi.task.form;
+package com.idi.hr.form;
 
 import java.io.Serializable;
 
@@ -7,13 +7,14 @@ public class SendReportForm implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 9180916579447198829L;
+	private static final long serialVersionUID = 9180916579447198833L;
 
 	private String sendTo;
 	private String subject;
 	private String content;
 	private String sendFrom;
 	private String fileName;
+	private int employeeId;
 	
 	public String getSendTo() {
 		return sendTo;
@@ -45,4 +46,11 @@ public class SendReportForm implements Serializable{
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
+	public int getEmployeeId() {
+		return employeeId;
+	}
+	public void setEmployeeId(int employeeId) {
+		this.employeeId = employeeId;
+	}	
+	
 }

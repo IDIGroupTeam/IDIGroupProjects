@@ -43,6 +43,7 @@ public class SalaryDetail implements Serializable {
 	private String other;
 	private String arrears;
 	private String payStatus;
+	private Float workingDayOfMonth;
 	
 	public SalaryDetail() {
 		
@@ -363,6 +364,14 @@ public class SalaryDetail implements Serializable {
 
 	public void setPayStatus(String payStatus) {
 		this.payStatus = payStatus;
+	}
+
+	public Float getWorkingDayOfMonth() {
+		return workingDayOfMonth;
+	}
+
+	public void setWorkingDayOfMonth(Float workingDayOfMonth) {
+		this.workingDayOfMonth = workingDayOfMonth;
 	}
 		
 }
