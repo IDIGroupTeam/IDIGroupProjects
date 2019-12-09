@@ -41,6 +41,17 @@
 		<put-attribute name="body"
 			value="/pages/bieudo/chartManagement.jsp" />
 	</definition>
+	<definition name="chartManagementView" extends="taichinh">
+		<put-attribute name="title" value="Biểu đồ KPI" />
+		<put-attribute name="body"
+			value="/pages/bieudo/chartManagementView.jsp" />
+	</definition>
+	<definition name="chartManagementBctc" extends="taichinh">
+		<put-attribute name="title"
+			value="Quản lý biểu đồ - báo cáo tài chính" />
+		<put-attribute name="body"
+			value="/pages/bieudo/chartManagementBctc.jsp" />
+	</definition>
 	<!-- Kết thúc Tab biểu đồ KPI -->
 
 

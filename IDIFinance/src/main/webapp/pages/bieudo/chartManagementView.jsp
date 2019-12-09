@@ -8,7 +8,7 @@
 	prefix="cewolf"%>
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 
-<h4>Quản lý biểu đồ KPI</h4>
+<h4>Biểu đồ KPI</h4>
 
 <div class="table-responsive">
 	<table id="dataTable" class="table table-bordered table-hover">
@@ -25,8 +25,7 @@
 			<c:forEach items="${kpiCharts}" var="kpiChart" varStatus="status">
 				<tr>
 					<td>${status.index+1}</td>
-					<td><a href="${url}/quanly/bieudo/xem/${kpiChart.chartId}"
-						class="text-primary"> ${kpiChart.chartTitle}</a></td>
+					<td>${kpiChart.chartTitle}</td>
 					<td>${kpiChart.kpiGroup.groupName}</td>
 					<td><c:choose>
 							<c:when test="${kpiChart.homeFlag}">

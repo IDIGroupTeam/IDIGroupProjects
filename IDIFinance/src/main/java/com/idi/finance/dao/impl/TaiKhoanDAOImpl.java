@@ -259,6 +259,8 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 			nganHangTaiKhoan.setMaTk(rs.getInt("MA_TK_NH"));
 			loaiTaiKhoan.setNganHangTaiKhoan(nganHangTaiKhoan);
 
+			logger.info(loaiTaiKhoan);
+
 			return loaiTaiKhoan;
 		}
 	}
@@ -293,6 +295,9 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
 	public List<LoaiTaiKhoan> danhSachTaiKhoanTheoCap1(String maTkCap1) {
 		String query = DANH_SACH_TAI_KHOAN_THEO_CAP1;
 		query = query.replaceAll("\\?", maTkCap1);
+
+		logger.info(query);
+		logger.info("maTkCap1: " + maTkCap1);
 
 		List<LoaiTaiKhoan> taiKhoanDs = jdbcTmpl.query(query, new LoaiTaiKhoanMapper());
 

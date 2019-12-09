@@ -13,14 +13,12 @@ $.fn.cellEditable = function(options) {
 		disEditableClass : "dis-editable",
 		disRemovableClass : "dis-removable",
 		beforeLoad : null,
-		urlLoad : "",
 		afterLoad : null,
+		beforeSave : null,
+		afterSave : null,
 		beforeRemove : null,
 		urlRemove : "",
 		afterRemove : null,
-		beforeSave : null,
-		urlSave : "",
-		afterSave : null,
 		removable : true,
 		editable : true
 	};
@@ -157,6 +155,7 @@ $.fn.cellEditable = function(options) {
 		var keyRow = $(tr).data();
 		var inputData = "";
 		var cells = new Array();
+		var name = $(tr).data("name");
 
 		$(tr).find("." + params.cellClass).each(function() {
 			var cell = $(this);
@@ -176,18 +175,19 @@ $.fn.cellEditable = function(options) {
 		});
 
 		if (params.beforeRemove != null) {
-			inputData = params.beforeRemove(keyRow, cells);
+			inputData = params.beforeRemove[name].call(tr, keyRow, cells);
 		}
 
 		$.ajax({
+			type : "POST",
 			url : params.urlRemove,
 			data : inputData,
+			contentType : "application/json",
 			dataType : "json",
-			type : "POST",
 			success : function(data) {
 				var obj = null;
 				if (params.afterRemove != null) {
-					obj = params.afterRemove(data);
+					obj = params.afterRemove[name].call(tr, data);
 				}
 			},
 			error : function(data) {
@@ -199,68 +199,90 @@ $.fn.cellEditable = function(options) {
 	function rowSave() {
 		var tr = $(this).parents("tr");
 		var keyRow = $(tr).data();
-		var inputData = "";
-		var cells = new Array();
+		var url = keyRow.saveUrl;
+		var name = keyRow.name;
+
+		var inputData = $.extend(true, {}, keyRow, null);
+		delete inputData.saveUrl;
+		delete inputData.name;
 
 		$(tr).find("." + params.cellClass).each(function() {
 			var cell = $(this);
-			var data = $(this).data();
+			var cellData = $.extend(true, {}, $(this).data(), null);
+			var field = cellData.field;
+			var type = cellData.type;
 
-			var value = "";
-			var label = null;
-			if (data.type == "combobox") {
-				value = $(cell).find('select').val();
-				label = $(cell).find('select option:selected').text();
-			} else if (data.type == "textarea") {
-				value = $(cell).find('textarea').val();
+			delete cellData.type;
+			delete cellData.loadUrl;
+			delete cellData.field;
+
+			if (type == "combobox") {
+				cellData.value = $(cell).find('select').val();
+				cellData.label = $(cell).find('select option:selected').text();
+			} else if (type == "textarea") {
+				cellData.value = $(cell).find('textarea').val();
 			} else {
-				value = $(cell).find('input').val();
+				cellData.value = $(cell).find('input').val();
 			}
 
-			data.value = value;
-			data.label = label;
-			cells.push(data);
+			var cellDataObj = new Object();
+			if (inputData[field] != null) {
+				cellData[field] = inputData[field];
+			}
+			cellDataObj[field] = cellData;
+			inputData = $.extend(true, {}, inputData, cellDataObj);
 		});
 
-		if (params.beforeSave != null) {
-			inputData = params.beforeSave(keyRow, cells);
+		var sendingData = null;
+		try {
+			console.log("beforeSave for row ", name);
+			sendingData = params.beforeSave[name].call(tr, inputData);
+		} catch (e) {
+			console.log("beforeSave is not defined exactly");
 		}
-		console.log("rowSave", "inputData", inputData);
+
+		sendingData = JSON.stringify(sendingData);
+		console.log("rowSave data (row & cell)", inputData);
+		console.log("rowSave sending data", sendingData);
+		console.log("rowSave", "url", url);
 
 		$.ajax({
-			url : params.urlSave,
-			data : inputData,
-			dataType : "json",
 			type : "POST",
+			url : url,
+			data : sendingData,
+			contentType : "application/json",
+			dataType : "json",
 			success : function(data) {
-				// Update row's key
+				console.log("return data", data);
+
+				var sendingData = null;
+				try {
+					console.log("afterSave for row ", name);
+					inputData = params.afterSave[name]
+							.call(tr, inputData, data);
+				} catch (e) {
+					console.log("afterSave is not defined exactly");
+				}
+
+				console.log("Update row's key ...");
 				$.each(keyRow, function(key, value) {
-					for (var i = 0; i < cells.length; i++) {
-						if (cells[i].field == key) {
-							$(tr).data(key, cells[i].value);
-						}
+					if (!$.isEmptyObject(inputData[key])
+							&& !$.isEmptyObject(inputData[key].value)) {
+						$(tr).data(key, inputData[key].value);
 					}
 				})
 
-				// Update each cell's value
+				console.log("Update each cell's value ...");
 				$(tr).find("." + params.cellClass).each(function() {
 					var cell = $(this);
 					var cellData = $(cell).data();
 
-					for (var i = 0; i < cells.length; i++) {
-						if (cells[i].field == cellData.field) {
-							if (cellData.type == "combobox") {
-								$(cell).html(cells[i].label);
-							} else {
-								$(cell).html(cells[i].value);
-							}
-						}
+					if (cellData.type == "combobox") {
+						$(cell).html(inputData[cellData.field].label);
+					} else {
+						$(cell).html(inputData[cellData.field].value);
 					}
 				});
-
-				if (params.afterSave != null) {
-					obj = params.afterSave(tr, cells);
-				}
 
 				// Back to normal
 				disableConfimButtons($(tr));
@@ -274,6 +296,7 @@ $.fn.cellEditable = function(options) {
 
 	function rowCancel() {
 		var tr = $(this).parents("tr");
+
 		$(tr).find("." + params.cellClass).each(function() {
 			try {
 				var content = $(this).find('div').html();
@@ -292,23 +315,36 @@ $.fn.cellEditable = function(options) {
 		var result = '<select class="form-control input-sm"></select>';
 
 		// Lấy dữ liệu cho combobox vừa tạo
-		var inputData = "";
+		var cellDatas = $(cell).data();
+		var inputData = $.extend(true, {}, key, cellDatas);
+		var field = cellDatas.field;
+
 		try {
-			var cellDatas = $(cell).data();
-			inputData = params.beforeLoad(key, cellDatas);
+			delete inputData.loadUrl;
+			delete inputData.saveUrl;
+			delete inputData.type;
+			delete inputData.field;
+			delete inputData.name;
+			console.log("createCombobox data (row & cell)", inputData);
+
+			inputData = params.beforeLoad[field].call(cell, inputData);
+			inputData = JSON.stringify(inputData);
+			console.log("createCombobox sending data", inputData);
 		} catch (e) {
-			console.log("createCombobox", e);
+			console.log("createCombobox error", e);
 		}
 
 		$.ajax({
-			url : params.urlLoad,
-			data : inputData,
-			dataType : "json",
 			type : "POST",
+			url : cellDatas.loadUrl,
+			data : inputData,
+			contentType : "application/json",
+			dataType : "json",
 			success : function(data) {
+				console.log("createCombobox result", data);
 				var result = "";
 				try {
-					var list = params.afterLoad(data);
+					var list = params.afterLoad[field].call(cell, data);
 
 					// append data to combobox
 					for (var i = 0; i < list.length; i++) {
@@ -321,6 +357,7 @@ $.fn.cellEditable = function(options) {
 						}
 					}
 				} catch (e) {
+					console.log("Error " + e);
 				}
 
 				$(cell).find("select").html(result);
@@ -342,7 +379,6 @@ $.fn.cellEditable = function(options) {
 		} catch (e) {
 			return "";
 		}
-
 	}
 
 	function createTextField(key, content) {

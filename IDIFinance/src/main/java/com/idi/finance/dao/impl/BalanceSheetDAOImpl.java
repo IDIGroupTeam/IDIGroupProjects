@@ -68,6 +68,9 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	@Value("${THEM_CHI_TIEU_CDKT}")
 	private String THEM_CHI_TIEU_CDKT;
 
+	@Value("${CAP_NHAT_CHI_TIEU_CDKT_TEN}")
+	private String CAP_NHAT_CHI_TIEU_CDKT_TEN;
+
 	@Value("${CAP_NHAT_CHI_TIEU_CDKT}")
 	private String CAP_NHAT_CHI_TIEU_CDKT;
 
@@ -245,6 +248,27 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 			count = -1;
 		} catch (Exception e) {
 			// e.printStackTrace();
+		}
+
+		return count;
+	}
+
+	public int updateBSBai(BalanceAssetItem bai) {
+		if (bai == null) {
+			return 0;
+		}
+
+		String updateQuery = CAP_NHAT_CHI_TIEU_CDKT_TEN;
+		logger.info(updateQuery);
+
+		int count = 0;
+		try {
+			count = jdbcTmpl.update(updateQuery, bai.getAssetName(), bai.getAssetCode());
+		} catch (DuplicateKeyException e) {
+			count = -1;
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return count;

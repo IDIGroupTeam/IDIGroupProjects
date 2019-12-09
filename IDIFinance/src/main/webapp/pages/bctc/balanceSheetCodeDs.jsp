@@ -19,58 +19,100 @@
 
 		$('#treeTable').treeTable();
 
-		$('#treeTable').cellEditable({
-			beforeLoad : function(key, cellDatas) {
-				try {
-					return "maTk=" + cellDatas.matkgoc;
-				} catch (e) {
-					console.log("beforeLoad", e)
-				}
-				return "";
-			},
-			urlLoad : "${url}/taikhoan/danhsach/capduoi",
-			afterLoad : function(data) {
-				if (data == null)
-					return null;
+		$('#treeTable')
+				.cellEditable(
+						{
+							beforeLoad : {
+								maTk : function(data) {
+									if (data == null)
+										return null;
 
-				var list = new Array();
-				for (var i = 0; i < data.length; i++) {
-					var obj = new Object();
-					obj.value = data[i].maTk;
-					obj.label = data[i].maTenTk;
-					list[i] = obj;
-				}
-				return list;
-			},
-			beforeSave : function(key, cells) {
-				try {
-					var res = "assetCode=" + key.assetcode;
-					res += "&maTkCu=" + key.matk;
-					res += "&maTk=" + cells[0].value;
+									var sendingData = new Object();
+									sendingData.maTkGoc = data.maTkGoc;
 
-					return res;
-				} catch (e) {
-				}
-				return "";
-			},
-			urlSave : "${url}/bctc/cdkt/chitieu/capnhat",
-			beforeRemove : function(key, cells) {
-				try {
-					return "assetCode=" + key.assetcode + "&maTk=" + key.matk;
-				} catch (e) {
-				}
+									return sendingData;
+								}
+							},
+							afterLoad : {
+								maTk : function(data) {
+									if (data == null)
+										return null;
 
-				return "";
-			},
-			urlRemove : "${url}/bctc/cdkt/chitieu/xoa",
-			afterRemove : function(data) {
-				try {
-					window.location.href = "${url}/bctc/cdkt/chitieu/danhsach";
-				} catch (e) {
-					// alert(e);
-				}
-			}
-		});
+									var list = new Array();
+									for (var i = 0; i < data.length; i++) {
+										var obj = new Object();
+										obj.value = data[i].maTk;
+										obj.label = data[i].maTenTk;
+										list[i] = obj;
+									}
+									return list;
+								}
+							},
+							beforeSave : {
+								chiTieuCao : function(data) {
+									console.log("beforeSave chiTieuCao", data);
+									var sendingData = new Object();
+									sendingData.assetCode = data.assetCode;
+									sendingData.assetName = data.assetName.value;
+
+									return sendingData;
+								},
+								chiTieuThap : function(data) {
+									console.log("beforeSave chiTieuThap", data);
+									var sendingData = new Object();
+									sendingData.assetCode = data.assetCode;
+
+									var taiKhoanDs = new Array();
+									var loaiTaiKhoan = new Object();
+									loaiTaiKhoan.maTk = data.maTk.value;
+									loaiTaiKhoan.maTkGoc = data.maTk.maTk;
+									taiKhoanDs.push(loaiTaiKhoan);
+
+									sendingData.taiKhoanDs = taiKhoanDs;
+									return sendingData;
+								}
+							},
+							beforeRemove : {
+								chiTieuCao : function(key, cells) {
+									try {
+										return "assetCode=" + key.assetcode
+												+ "&maTk=" + key.matk;
+									} catch (e) {
+									}
+
+									return "";
+								},
+								chiTieuThap : function(key, cells) {
+									try {
+										return "assetCode=" + key.assetcode
+												+ "&maTk=" + key.matk;
+									} catch (e) {
+									}
+
+									return "";
+								}
+							},
+							urlRemove : {
+								chiTieuCao : "${url}/bctc/cdkt/chitieu/xoa",
+								chiTieuThap : "${url}/bctc/cdkt/chitieu/xoa"
+							},
+							afterRemove : {
+								chiTieuCao : function(data) {
+									try {
+										window.location.href = "${url}/bctc/cdkt/chitieu/danhsach";
+									} catch (e) {
+										// alert(e);
+									}
+								},
+								chiTieuThap : function(data) {
+									try {
+										window.location.href = "${url}/bctc/cdkt/chitieu/danhsach";
+									} catch (e) {
+										// alert(e);
+									}
+								}
+							}
+						});
 	});
 </script>
 
@@ -104,20 +146,22 @@
 		</thead>
 		<tbody class="form-inline">
 			<c:forEach items="${bais}" var="bai">
-				<tr id="${bai.assetCode}">
+				<tr id="${bai.assetCode}" data-asset-code="${bai.assetCode}"
+					data-name="chiTieuCao"
+					data-save-url="${url}/bctc/cdkt/chitieu/capnhat/cao">
 					<c:choose>
 						<c:when test="${not empty bai.childs and bai.childs.size()>0}">
 							<td>${bai.assetCode}&nbsp;-&nbsp;<span
-								class="cell-editable dis-removable">${bai.assetName}</span></td>
+								class="cell-editable dis-removable" data-field="assetName">${bai.assetName}</span></td>
 						</c:when>
 						<c:when
 							test="${not empty bai.taiKhoanDs and bai.taiKhoanDs.size()>0}">
 							<td>${bai.assetCode}&nbsp;-&nbsp;<span
-								class="cell-editable dis-removable">${bai.assetName}</span></td>
+								class="cell-editable dis-removable" data-field="assetName">${bai.assetName}</span></td>
 						</c:when>
 						<c:otherwise>
-							<td>${bai.assetCode}&nbsp;-&nbsp;<span
-								class="cell-editable">${bai.assetName}</span></td>
+							<td>${bai.assetCode}&nbsp;-&nbsp;<span class="cell-editable"
+								data-field="assetName">${bai.assetName}</span></td>
 						</c:otherwise>
 					</c:choose>
 					<c:choose>

@@ -562,10 +562,10 @@ public class ChungTuController {
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_CHI);
-			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
+			List<ChungTu> phieuChiDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
 			JasperReport jasperReport = getCompiledFile("PhieuChiDs", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, phieuThuDs);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, phieuChiDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -901,10 +901,10 @@ public class ChungTuController {
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_CO);
-			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
+			List<ChungTu> baoCoDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
 			JasperReport jasperReport = getCompiledFile("BaoCoDs", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, phieuThuDs);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, baoCoDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -1239,10 +1239,10 @@ public class ChungTuController {
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_NO);
-			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
+			List<ChungTu> baoNoDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
 			JasperReport jasperReport = getCompiledFile("BaoNoDs", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, phieuThuDs);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, baoNoDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -1561,6 +1561,42 @@ public class ChungTuController {
 		}
 	}
 
+	@RequestMapping(value = "/chungtu/ktth/danhsach/pdf/{dau}/{cuoi}", method = RequestMethod.GET)
+	public void pdfDanhSachKtth(HttpServletRequest req, HttpServletResponse res, @PathVariable("dau") String dau,
+			@PathVariable("cuoi") String cuoi, Model model) {
+		try {
+			Date batDau = null;
+			Date ketThuc = null;
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+			batDau = sdf.parse(dau);
+			ketThuc = sdf.parse(cuoi);
+
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+			hmParams.put("batDau", batDau);
+			hmParams.put("ketThuc", ketThuc);
+
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_KT_TH);
+			List<ChungTu> ktthDs = chungTuDAO.danhSachChungTuKtth(loaiCts, batDau, ketThuc);
+
+			JasperReport jasperReport = getCompiledFile("KeToanTongHopDs", req);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, ktthDs);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=KeToanTongHopDs.pdf");
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException | ParseException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@RequestMapping("/chungtu/ktth/xem/{id}")
 	public String xemKeToanTongHop(@PathVariable("id") int maCt, Model model) {
 		try {
@@ -1864,6 +1900,42 @@ public class ChungTuController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/chungtu/muahang/danhsach/pdf/{dau}/{cuoi}", method = RequestMethod.GET)
+	public void pdfDanhSachMuaHang(HttpServletRequest req, HttpServletResponse res, @PathVariable("dau") String dau,
+			@PathVariable("cuoi") String cuoi, Model model) {
+		try {
+			Date batDau = null;
+			Date ketThuc = null;
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+			batDau = sdf.parse(dau);
+			ketThuc = sdf.parse(cuoi);
+
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+			hmParams.put("batDau", batDau);
+			hmParams.put("ketThuc", ketThuc);
+
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_MUA_HANG);
+			List<ChungTu> muaHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
+
+			JasperReport jasperReport = getCompiledFile("muaHangDs", req);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, muaHangDs);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=muaHangDs.pdf");
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException | ParseException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -2381,6 +2453,42 @@ public class ChungTuController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/chungtu/banhang/danhsach/pdf/{dau}/{cuoi}", method = RequestMethod.GET)
+	public void pdfDanhSachBanHang(HttpServletRequest req, HttpServletResponse res, @PathVariable("dau") String dau,
+			@PathVariable("cuoi") String cuoi, Model model) {
+		try {
+			Date batDau = null;
+			Date ketThuc = null;
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+			batDau = sdf.parse(dau);
+			ketThuc = sdf.parse(cuoi);
+
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+			hmParams.put("batDau", batDau);
+			hmParams.put("ketThuc", ketThuc);
+
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_BAN_HANG);
+			List<ChungTu> banHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
+
+			JasperReport jasperReport = getCompiledFile("banHangDs", req);
+			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, banHangDs);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=banHangDs.pdf");
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException | ParseException e) {
+			e.printStackTrace();
 		}
 	}
 

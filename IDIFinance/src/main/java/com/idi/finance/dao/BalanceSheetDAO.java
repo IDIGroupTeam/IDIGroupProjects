@@ -17,6 +17,8 @@ public interface BalanceSheetDAO {
 
 	public int insertBSLowBai(BalanceAssetItem bai);
 
+	public int updateBSBai(BalanceAssetItem bai);
+
 	public int updateBSLowBai(BalanceAssetItem oldBai, BalanceAssetItem newBai);
 
 	public void deleteBSBai(BalanceAssetItem bai);

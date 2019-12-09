@@ -15,10 +15,13 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 
+import com.idi.finance.bean.bctc.BaoCaoTaiChinh;
 import com.idi.finance.bean.bieudo.KpiChart;
 import com.idi.finance.bean.bieudo.KpiGroup;
+import com.idi.finance.bean.bieudo.KpiKyBctc;
 import com.idi.finance.bean.bieudo.KpiMeasure;
 import com.idi.finance.dao.KpiChartDAO;
+import com.idi.finance.hangso.KpiMonthCont;
 
 public class KpiChartDAOImpl implements KpiChartDAO {
 	private static final Logger logger = Logger.getLogger(KpiChartDAOImpl.class);
@@ -222,6 +225,55 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 	}
 
 	@Override
+	public List<KpiChart> listKpiCharts() {
+		String query = "SELECT * FROM KPI_CHART AS CHA, KPI_GROUP AS GRO WHERE CHA.GROUP_ID=GRO.GROUP_ID ORDER BY CHA.CHART_ID";
+
+		logger.info("Get list of kpi charts ... ");
+		logger.info(query);
+
+		List<KpiChart> kpiCharts = jdbcTmpl.query(query, new KpiChartWithGroupMapper());
+
+		return kpiCharts;
+	}
+
+	public class KpiChartWithGroupMapper implements RowMapper<KpiChart> {
+		public KpiChart mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+			KpiChart kpiChart = new KpiChart();
+			kpiChart.setChartId(rs.getInt("CHART_ID"));
+			kpiChart.setHomeFlag(rs.getBoolean("HOME_FLAG"));
+			kpiChart.setChartTitle(rs.getString("CHART_TITLE"));
+			kpiChart.setThreshold(rs.getDouble("THRESHOLD"));
+
+			KpiGroup kpiGroup = new KpiGroup();
+			kpiGroup.setGroupId(rs.getInt("GROUP_ID"));
+			kpiGroup.setGroupName(rs.getString("GROUP_NAME"));
+
+			kpiChart.setKpiGroup(kpiGroup);
+
+			logger.info(kpiChart);
+
+			return kpiChart;
+		}
+	}
+
+	@Override
+	public KpiChart listKpiCharts(int chartId) {
+		String query = "SELECT * FROM KPI_CHART AS CHA, KPI_GROUP AS GRO WHERE CHA.GROUP_ID=GRO.GROUP_ID AND CHA.CHART_ID=?";
+
+		logger.info("Get kpi chart by chartId " + chartId);
+		logger.info(query);
+
+		Object[] obj = { chartId };
+		List<KpiChart> kpiCharts = jdbcTmpl.query(query, obj, new KpiChartWithGroupMapper());
+
+		if (kpiCharts != null && kpiCharts.size() > 0)
+			return kpiCharts.get(0);
+
+		return null;
+	}
+
+	@Override
 	public List<KpiChart> listKpiChartByKpiGroup(KpiGroup kpiGroup) {
 		String query = "SELECT * FROM KPI_CHART WHERE GROUP_ID=? ORDER BY CHART_ID";
 
@@ -315,5 +367,40 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 			return bads.get(0);
 
 		return null;
+	}
+
+	@Override
+	public List<KpiKyBctc> listKpiKyBctcs() {
+		String query = "SELECT * FROM BAO_CAO_TAI_CHINH_KY_KPI AS BCTCKPI, BAO_CAO_TAI_CHINH AS BCTC WHERE BCTCKPI.MA_BCTC=BCTC.MA_BCTC ORDER BY BCTCKPI.MA_KY_KPI";
+
+		logger.info("Get kpi - bctc ...");
+		logger.info(query);
+
+		List<KpiKyBctc> kpiKyBctcs = jdbcTmpl.query(query, new KpiKyBctcMapper());
+
+		return kpiKyBctcs;
+	}
+
+	public class KpiKyBctcMapper implements RowMapper<KpiKyBctc> {
+		public KpiKyBctc mapRow(ResultSet rs, int rowNum) throws SQLException {
+			KpiKyBctc kpiKyBctc = new KpiKyBctc();
+
+			int maKyKpi = rs.getInt("MA_KY_KPI");
+			for (KpiMonthCont cont : KpiMonthCont.values()) {
+				if (cont.getKey() == maKyKpi) {
+					kpiKyBctc.setKpiKy(cont);
+					break;
+				}
+			}
+
+			BaoCaoTaiChinh bctc = new BaoCaoTaiChinh();
+			bctc.setMaBctc(rs.getInt("MA_BCTC"));
+			bctc.setTieuDe(rs.getString("TIEU_DE"));
+			kpiKyBctc.setBctc(bctc);
+
+			logger.info(kpiKyBctc);
+
+			return kpiKyBctc;
+		}
 	}
 }

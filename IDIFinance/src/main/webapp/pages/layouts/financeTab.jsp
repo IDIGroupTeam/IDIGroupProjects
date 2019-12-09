@@ -12,8 +12,11 @@
 				<li id="tab${kpiGroup.groupId}"><a
 					href="${url}/bieudo/${kpiGroup.groupId}">${kpiGroup.groupName}</a></li>
 			</c:forEach>
-			<li id="tabQLBD"><a href="${url}/quanlybieudo">Quản lý biểu
+			<li class="divider"></li>
+			<li id="tabQLBD"><a href="${url}/quanly/bieudo">Quản lý biểu
 					đồ</a></li>
+			<li id="tabQLBDBCTC"><a href="${url}/quanly/bieudo/bctc">Cấu
+					hình bctc</a></li>
 		</ul></li>
 	<li class="dropdown"><a class="dropdown-toggle"
 		data-toggle="dropdown" href="#">Chứng từ kế toán<span

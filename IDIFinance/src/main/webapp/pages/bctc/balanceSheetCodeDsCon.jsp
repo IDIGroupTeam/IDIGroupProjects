@@ -12,19 +12,22 @@
 <c:choose>
 	<c:when test="${not empty bais and bais.size()>0}">
 		<c:forEach items="${bais}" var="bai">
-			<tr id="${parentIdRes}_${bai.assetCode}">
+			<tr id="${parentIdRes}_${bai.assetCode}" data-name="chiTieuCao"
+				data-asset-code="${bai.assetCode}"
+				data-save-url="${url}/bctc/cdkt/chitieu/capnhat/cao">
 				<c:choose>
 					<c:when test="${not empty bai.childs and bai.childs.size()>0}">
 						<td>${bai.assetCode}&nbsp;-&nbsp;<span
-							class="cell-editable dis-removable">${bai.assetName}</span></td>
+							class="cell-editable dis-removable" data-field="assetName">${bai.assetName}</span></td>
 					</c:when>
 					<c:when
 						test="${not empty bai.taiKhoanDs and bai.taiKhoanDs.size()>0}">
 						<td>${bai.assetCode}&nbsp;-&nbsp;<span
-							class="cell-editable dis-removable">${bai.assetName}</span></td>
+							class="cell-editable dis-removable" data-field="assetName">${bai.assetName}</span></td>
 					</c:when>
 					<c:otherwise>
-						<td>${bai.assetCode}&nbsp;-&nbsp;<span class="cell-editable">${bai.assetName}</span></td>
+						<td>${bai.assetCode}&nbsp;-&nbsp;<span class="cell-editable"
+							data-field="assetName">${bai.assetName}</span></td>
 					</c:otherwise>
 				</c:choose>
 				<c:choose>
@@ -48,10 +51,12 @@
 	</c:when>
 	<c:when test="${not empty taiKhoanDs and taiKhoanDs.size()>0}">
 		<c:forEach items="${taiKhoanDs}" var="taiKhoan">
-			<tr id="${parentIdRes}_${taiKhoan.maTk}"
-				data-assetcode="${assetCode}" data-matk="${taiKhoan.maTk}">
+			<tr id="${parentIdRes}_${taiKhoan.maTk}" data-name="chiTieuThap"
+				data-save-url="${url}/bctc/cdkt/chitieu/capnhat/thap"
+				data-asset-code="${assetCode}" data-ma-tk="${taiKhoan.maTk}">
 				<td><span class="cell-editable" data-type="combobox"
-					data-field="matk" data-matkgoc="${taiKhoan.maTkGoc}">${taiKhoan.maTenTk}</span></td>
+					data-load-url="${url}/taikhoan/danhsach/capduoi" data-field="maTk"
+					data-ma-tk-goc="${taiKhoan.maTkGoc}">${taiKhoan.maTenTk}</span></td>
 				<c:choose>
 					<c:when test="${taiKhoan.soDuGiaTri==LoaiTaiKhoan.NO}">
 						<td>Nợ</td>

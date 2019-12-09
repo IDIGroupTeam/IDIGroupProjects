@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PhieuThuDs" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8724701d-aa0a-43ac-8cf0-eaff3eb740bf">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<import value="org.apache.commons.lang.WordUtils"/>
+	<style name="Base" isDefault="true" fontName="VU Times" fontSize="14" isBold="false" isItalic="false" isPdfEmbedded="true"/>
+	<parameter name="TEN_CONG_TY" class="com.idi.finance.bean.CauHinh" isForPrompting="false"/>
+	<parameter name="DIA_CHI" class="com.idi.finance.bean.CauHinh" isForPrompting="false"/>
+	<parameter name="CHU_TICH" class="com.idi.finance.bean.CauHinh" isForPrompting="false"/>
+	<parameter name="GIAM_DOC" class="com.idi.finance.bean.CauHinh" isForPrompting="false"/>
+	<parameter name="KE_TOAN_TRUONG" class="com.idi.finance.bean.CauHinh" isForPrompting="false"/>
+	<parameter name="THU_QUY" class="com.idi.finance.bean.CauHinh" isForPrompting="false"/>
+	<parameter name="THU_KHO" class="com.idi.finance.bean.CauHinh" isForPrompting="false"/>
+	<parameter name="batDau" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="ketThuc" class="java.util.Date" isForPrompting="false"/>
+	<queryString language="SQL">
+		<![CDATA[]]>
+	</queryString>
+	<field name="maCt" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="maCt"/>
+	</field>
+	<field name="soCt" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="soCt"/>
+	</field>
+	<field name="loaiCt" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="loaiCt"/>
+	</field>
+	<field name="ngayLap" class="java.util.Date">
+		<property name="com.jaspersoft.studio.field.label" value="ngayLap"/>
+	</field>
+	<field name="ngayHt" class="java.util.Date">
+		<property name="com.jaspersoft.studio.field.label" value="ngayHt"/>
+	</field>
+	<field name="ngayTt" class="java.util.Date">
+		<property name="com.jaspersoft.studio.field.label" value="ngayTt"/>
+	</field>
+	<field name="lyDo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="lyDo"/>
+	</field>
+	<field name="loaiTien.maLt" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="loaiTien.maLt"/>
+	</field>
+	<field name="loaiTien.banRa" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="loaiTien.banRa"/>
+	</field>
+	<field name="kemTheo" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="kemTheo"/>
+	</field>
+	<field name="doiTuong.maDt" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="doiTuong.maDt"/>
+	</field>
+	<field name="doiTuong.loaiDt" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="doiTuong.loaiDt"/>
+	</field>
+	<field name="doiTuong.nguoiNop" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="doiTuong.nguoiNop"/>
+	</field>
+	<field name="doiTuong.tenDt" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="doiTuong.tenDt"/>
+	</field>
+	<field name="doiTuong.maThue" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="doiTuong.maThue"/>
+	</field>
+	<field name="doiTuong.diaChi" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="doiTuong.diaChi"/>
+	</field>
+	<field name="soTien.giaTri" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="soTien.giaTri"/>
+	</field>
+	<field name="loaiTien.tenLt" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="loaiTien.tenLt"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="110" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="555" height="20" uuid="c2f3b8d3-3349-4c0f-8867-5cd92a3f8a80">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TEN_CONG_TY}.getGiaTri().toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="20" width="555" height="20" uuid="33179850-f560-4eed-91ec-f01788612df7">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="16" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[WordUtils.capitalize($P{DIA_CHI}.getGiaTri())]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="250" y="50" width="300" height="25" uuid="576678c5-d178-41b9-b738-961fd2a10378">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DANH SÁCH PHIẾU KẾ TOÁN TỔNG HỢP]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="250" y="75" width="300" height="20" uuid="695536f6-d684-4293-b401-3dc222193e4d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="false" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" Từ ngày " + (new SimpleDateFormat("dd/MM/yyyy").format($P{batDau})) + " đến ngày " + (new SimpleDateFormat("dd/MM/yyyy").format($P{ketThuc}))]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="40" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="20" width="90" height="20" uuid="0f307a73-b285-44fd-9f73-72ae2fc7e3a2">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ngày ghi sổ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="90" y="20" width="90" height="20" uuid="2790dd3e-9e8f-40b6-b22a-0528a1acfa7e">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Số]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="0" width="450" height="40" uuid="5ce6eeff-d143-4afb-b80a-03785e11c25d">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lý do]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="630" y="0" width="170" height="40" uuid="36bac01f-e429-4c05-8e94-8ebaf223883a">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Số tiền (VND)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="180" height="20" uuid="c633de65-4f58-4360-b58c-ae26afd33c5e">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Phiếu thu]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="ContainerHeight" x="0" y="0" width="90" height="20" uuid="f904ece0-053b-4d48-8787-9e14420d7f6c">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5" rightIndent="5" spacingBefore="5" spacingAfter="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{ngayHt})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="ContainerHeight" x="90" y="0" width="90" height="20" uuid="fde9fc34-eabe-49a4-b10d-1ed70616e165">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<paragraph leftIndent="5" rightIndent="5" spacingBefore="5" spacingAfter="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{loaiCt}+$F{soCt}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="ContainerHeight" x="180" y="0" width="450" height="20" uuid="557fd5d2-d202-4c84-b0d6-87cf6859b7d9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5" rightIndent="5" spacingBefore="5" spacingAfter="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lyDo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="ContainerHeight" x="630" y="0" width="170" height="20" uuid="75b93485-0dac-4a99-94de-caf3b7a71de1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right">
+					<paragraph leftIndent="5" rightIndent="5" spacingBefore="5" spacingAfter="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,###").format(Double.valueOf($F{soTien.giaTri}))]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

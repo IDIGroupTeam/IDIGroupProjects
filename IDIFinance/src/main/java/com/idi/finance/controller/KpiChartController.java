@@ -13,6 +13,7 @@ import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,10 +21,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.bctc.BalanceAssetData;
 import com.idi.finance.bean.bctc.BalanceAssetItem;
 import com.idi.finance.bean.bieudo.KpiChart;
 import com.idi.finance.bean.bieudo.KpiGroup;
+import com.idi.finance.bean.bieudo.KpiKyBctc;
 import com.idi.finance.bean.bieudo.KpiMeasure;
 import com.idi.finance.charts.KpiMeasureBarChart;
 import com.idi.finance.charts.KpiMeasureChartProcessor;
@@ -32,12 +35,23 @@ import com.idi.finance.dao.BalanceSheetDAO;
 import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.form.TkKpiChartForm;
 import com.idi.finance.hangso.Contants;
+import com.idi.finance.hangso.KpiMonthCont;
+import com.idi.finance.hangso.PropCont;
 import com.idi.finance.utils.ExpressionEval;
 import com.idi.finance.utils.Utils;
 
 @Controller
 public class KpiChartController {
 	private static final Logger logger = Logger.getLogger(KpiChartController.class);
+
+	@Autowired
+	MessageSource messageSource;
+
+	@Autowired
+	DungChung dungChung;
+
+	@Autowired
+	PropCont props;
 
 	@Autowired
 	BalanceSheetDAO balanceSheetDAO;
@@ -462,15 +476,69 @@ public class KpiChartController {
 		return exps;
 	}
 
-	@RequestMapping("/quanlybieudo")
+	@RequestMapping("/quanly/bieudo")
 	public String chartManagement(Model model) {
-		// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
-		List<KpiGroup> kpiGroups = kpiChartDAO.listKpiGroups();
+		model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
-		model.addAttribute("kpiGroups", kpiGroups);
-		model.addAttribute("heading", "Quản lý biểu đồ KPI");
+		List<KpiChart> kpiCharts = kpiChartDAO.listKpiCharts();
+
+		model.addAttribute("kpiCharts", kpiCharts);
 		model.addAttribute("tab", "tabQLBD");
 
 		return "chartManagement";
+	}
+
+	@RequestMapping("/quanly/bieudo/xem/{id}")
+	public String chartManagementView(@PathVariable("id") int chartId, Model model) {
+		model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+		KpiChart kpiChart = kpiChartDAO.listKpiCharts(chartId);
+
+		model.addAttribute("kpiChart", kpiChart);
+		model.addAttribute("tab", "tabQLBD");
+
+		return "chartManagementView";
+	}
+
+	@RequestMapping("/quanly/bieudo/bctc")
+	public String chartManagementBctc(Model model) {
+		model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+		List<KpiKyBctc> kpiKyBctcs = kpiChartDAO.listKpiKyBctcs();
+
+		List<KpiKyBctc> kpiKyBctcFulls = initiateKpiKyBctc();
+
+		List<KpiKyBctc> kpiKyBctcRs = new ArrayList<>();
+
+		for (KpiKyBctc kpiKyBctc : kpiKyBctcFulls) {
+			boolean hasValue = false;
+			for (KpiKyBctc kpiKyBctcDetail : kpiKyBctcs) {
+				if (kpiKyBctcDetail.getKpiKy().getKey() == kpiKyBctc.getKpiKy().getKey()) {
+					kpiKyBctcRs.add(kpiKyBctcDetail);
+					hasValue = true;
+					break;
+				}
+			}
+
+			if (!hasValue) {
+				kpiKyBctcRs.add(kpiKyBctc);
+			}
+		}
+
+		model.addAttribute("kpiKyBctcs", kpiKyBctcRs);
+		model.addAttribute("tab", "tabQLBDBCTC");
+
+		return "chartManagementBctc";
+	}
+
+	private List<KpiKyBctc> initiateKpiKyBctc() {
+		List<KpiKyBctc> kpiKyBctcs = new ArrayList<>();
+		for (KpiMonthCont cont : KpiMonthCont.values()) {
+			KpiKyBctc kpiKyBctc = new KpiKyBctc();
+			kpiKyBctc.setKpiKy(cont);
+			kpiKyBctcs.add(kpiKyBctc);
+		}
+
+		return kpiKyBctcs;
 	}
 }

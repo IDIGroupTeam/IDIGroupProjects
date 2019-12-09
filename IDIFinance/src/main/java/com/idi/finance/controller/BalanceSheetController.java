@@ -24,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -1120,9 +1121,23 @@ public class BalanceSheetController {
 		return bai;
 	}
 
-	@RequestMapping("/bctc/cdkt/chitieu/capnhat")
-	public @ResponseBody BalanceAssetItem luuBalanceAssetItem(@RequestParam("assetCode") String assetCode,
-			@RequestParam("maTkCu") String maTkCu, @RequestParam("maTk") String maTk) {
+	@RequestMapping("/bctc/cdkt/chitieu/capnhat/cao")
+	public @ResponseBody BalanceAssetItem luuBalanceAssetItemHigh(@RequestBody BalanceAssetItem bai) {
+		logger.info("assetCode: " + bai.getAssetCode() + ". assetName: " + bai.getAssetName());
+
+		int count = balanceSheetDAO.updateBSBai(bai);
+		logger.info("count " + count);
+
+		return bai;
+	}
+
+	@RequestMapping(value = "/bctc/cdkt/chitieu/capnhat/thap", method = RequestMethod.POST)
+	public @ResponseBody BalanceAssetItem luuBalanceAssetItemLow(@RequestBody BalanceAssetItem bai) {
+		logger.info("Come here");
+		String assetCode = bai.getAssetCode();
+		String maTk = bai.getTaiKhoanDs().get(0).getMaTk();
+		String maTkCu = bai.getTaiKhoanDs().get(0).getMaTkGoc();
+
 		logger.info("assetCode: " + assetCode + ". maTkCu: " + maTkCu + ". maTk: " + maTk);
 		BalanceAssetItem oldBai = new BalanceAssetItem();
 		oldBai.setAssetCode(assetCode);
@@ -1139,19 +1154,12 @@ public class BalanceSheetController {
 		int count = balanceSheetDAO.updateBSLowBai(oldBai, newBai);
 		logger.info("count " + count);
 
-		BalanceAssetItem rsBai = null;
+		BalanceAssetItem rsBai = new BalanceAssetItem();
 		if (count > 0) {
 			rsBai = balanceSheetDAO.findBSBai(assetCode, maTk);
 		}
 
 		return rsBai;
-	}
-
-	@RequestMapping("/bctc/cdkt/chitieu/danhsach/capduoi")
-	public @ResponseBody List<BalanceAssetItem> layDanhSachBalanceAssetItem(
-			@RequestParam("assetCode") String assetCode) {
-		logger.info("assetCode " + assetCode);
-		return balanceSheetDAO.listBais(assetCode);
 	}
 
 	@RequestMapping("/bctc/luuchuyentt/danhsach")
