@@ -21,7 +21,9 @@ public interface BalanceSheetDAO {
 
 	public int updateBSLowBai(BalanceAssetItem oldBai, BalanceAssetItem newBai);
 
-	public void deleteBSBai(BalanceAssetItem bai);
+	public void deleteBSBaiHigh(BalanceAssetItem bai);
+
+	public void deleteBSBaiLow(BalanceAssetItem bai);
 
 	public void insertOrUpdateBA(BalanceAssetData bad);
 

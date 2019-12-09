@@ -73,42 +73,36 @@
 								}
 							},
 							beforeRemove : {
-								chiTieuCao : function(key, cells) {
-									try {
-										return "assetCode=" + key.assetcode
-												+ "&maTk=" + key.matk;
-									} catch (e) {
-									}
+								chiTieuCao : function(data) {
+									var sendingData = new Object();
+									sendingData.assetCode = data.assetCode;
 
-									return "";
+									return sendingData;
 								},
-								chiTieuThap : function(key, cells) {
-									try {
-										return "assetCode=" + key.assetcode
-												+ "&maTk=" + key.matk;
-									} catch (e) {
-									}
+								chiTieuThap : function(data) {
+									var sendingData = new Object();
+									sendingData.assetCode = data.assetCode;
 
-									return "";
+									var taiKhoanDs = new Array();
+									var loaiTaiKhoan = new Object();
+									loaiTaiKhoan.maTk = data.maTk;
+									taiKhoanDs.push(loaiTaiKhoan);
+
+									sendingData.taiKhoanDs = taiKhoanDs;
+									return sendingData;
 								}
-							},
-							urlRemove : {
-								chiTieuCao : "${url}/bctc/cdkt/chitieu/xoa",
-								chiTieuThap : "${url}/bctc/cdkt/chitieu/xoa"
 							},
 							afterRemove : {
 								chiTieuCao : function(data) {
 									try {
 										window.location.href = "${url}/bctc/cdkt/chitieu/danhsach";
 									} catch (e) {
-										// alert(e);
 									}
 								},
 								chiTieuThap : function(data) {
 									try {
 										window.location.href = "${url}/bctc/cdkt/chitieu/danhsach";
 									} catch (e) {
-										// alert(e);
 									}
 								}
 							}
@@ -148,6 +142,7 @@
 			<c:forEach items="${bais}" var="bai">
 				<tr id="${bai.assetCode}" data-asset-code="${bai.assetCode}"
 					data-name="chiTieuCao"
+					data-remove-url="${url}/bctc/cdkt/chitieu/xoa/cao"
 					data-save-url="${url}/bctc/cdkt/chitieu/capnhat/cao">
 					<c:choose>
 						<c:when test="${not empty bai.childs and bai.childs.size()>0}">

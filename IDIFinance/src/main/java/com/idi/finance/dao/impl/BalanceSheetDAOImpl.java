@@ -74,6 +74,9 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	@Value("${CAP_NHAT_CHI_TIEU_CDKT}")
 	private String CAP_NHAT_CHI_TIEU_CDKT;
 
+	@Value("${XOA_CHI_TIEU_CDKT}")
+	private String XOA_CHI_TIEU_CDKT;
+
 	@Value("${THEM_CHI_TIEU_CDKT_TAI_KHOAN}")
 	private String THEM_CHI_TIEU_CDKT_TAI_KHOAN;
 
@@ -300,11 +303,21 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		return count;
 	}
 
-	public void deleteBSBai(BalanceAssetItem bai) {
+	public void deleteBSBaiHigh(BalanceAssetItem bai) {
+		if (bai != null && bai.getAssetCode() != null) {
+			String query = XOA_CHI_TIEU_CDKT;
+			logger.info(query);
+			logger.info("assetCode: " + bai.getAssetCode());
+			jdbcTmpl.update(query, bai.getAssetCode());
+		}
+	}
+
+	public void deleteBSBaiLow(BalanceAssetItem bai) {
 		if (bai != null && bai.getAssetCode() != null && bai.getTaiKhoanDs() != null && bai.getTaiKhoanDs().size() > 0
 				&& bai.getTaiKhoanDs().get(0).getMaTk() != null) {
 			String query = XOA_CHI_TIEU_CDKT_TAI_KHOAN;
 			logger.info(query);
+			logger.info("assetCode: " + bai.getAssetCode() + ". maTK: " + bai.getTaiKhoanDs().get(0).getMaTk());
 			jdbcTmpl.update(query, bai.getAssetCode(), bai.getTaiKhoanDs().get(0).getMaTk());
 		}
 	}

@@ -14,6 +14,7 @@
 		<c:forEach items="${bais}" var="bai">
 			<tr id="${parentIdRes}_${bai.assetCode}" data-name="chiTieuCao"
 				data-asset-code="${bai.assetCode}"
+				data-remove-url="${url}/bctc/cdkt/chitieu/xoa/cao"
 				data-save-url="${url}/bctc/cdkt/chitieu/capnhat/cao">
 				<c:choose>
 					<c:when test="${not empty bai.childs and bai.childs.size()>0}">
@@ -53,6 +54,7 @@
 		<c:forEach items="${taiKhoanDs}" var="taiKhoan">
 			<tr id="${parentIdRes}_${taiKhoan.maTk}" data-name="chiTieuThap"
 				data-save-url="${url}/bctc/cdkt/chitieu/capnhat/thap"
+				data-remove-url="${url}/bctc/cdkt/chitieu/xoa/thap"
 				data-asset-code="${assetCode}" data-ma-tk="${taiKhoan.maTk}">
 				<td><span class="cell-editable" data-type="combobox"
 					data-load-url="${url}/taikhoan/danhsach/capduoi" data-field="maTk"

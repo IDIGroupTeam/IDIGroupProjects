@@ -1106,22 +1106,26 @@ public class BalanceSheetController {
 		return baiDsRs;
 	}
 
-	@RequestMapping("/bctc/cdkt/chitieu/xoa")
-	public @ResponseBody BalanceAssetItem xoaBalanceAssetItem(@RequestParam("assetCode") String assetCode,
-			@RequestParam("maTk") String maTk) {
-		logger.info("Xoá BalanceAssetItem từ CDKT_TAIKHOAN: assetCode: " + assetCode + ". maTk: " + maTk);
-		BalanceAssetItem bai = new BalanceAssetItem();
-		bai.setAssetCode(assetCode);
-		LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
-		loaiTaiKhoan.setMaTk(maTk);
-		bai.themTaiKhoan(loaiTaiKhoan);
+	@RequestMapping(value = "/bctc/cdkt/chitieu/xoa/cao", method = RequestMethod.POST)
+	public @ResponseBody BalanceAssetItem xoaBalanceAssetItemHigh(@RequestBody BalanceAssetItem bai) {
+		logger.info("Xoá BalanceAssetItem từ BALANCE_ASSET_ITEM: assetCode: " + bai.getAssetCode());
 
-		balanceSheetDAO.deleteBSBai(bai);
+		balanceSheetDAO.deleteBSBaiHigh(bai);
 
 		return bai;
 	}
 
-	@RequestMapping("/bctc/cdkt/chitieu/capnhat/cao")
+	@RequestMapping(value = "/bctc/cdkt/chitieu/xoa/thap", method = RequestMethod.POST)
+	public @ResponseBody BalanceAssetItem xoaBalanceAssetItemLow(@RequestBody BalanceAssetItem bai) {
+		logger.info("Xoá BalanceAssetItem từ CDKT_TAIKHOAN: assetCode: " + bai.getAssetCode() + ". maTk: "
+				+ bai.getTaiKhoanDs().get(0).getMaTk());
+
+		balanceSheetDAO.deleteBSBaiLow(bai);
+
+		return bai;
+	}
+
+	@RequestMapping(value = "/bctc/cdkt/chitieu/capnhat/cao", method = RequestMethod.POST)
 	public @ResponseBody BalanceAssetItem luuBalanceAssetItemHigh(@RequestBody BalanceAssetItem bai) {
 		logger.info("assetCode: " + bai.getAssetCode() + ". assetName: " + bai.getAssetName());
 

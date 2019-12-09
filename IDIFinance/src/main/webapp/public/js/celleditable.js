@@ -153,45 +153,38 @@ $.fn.cellEditable = function(options) {
 
 		var tr = $(this).parents("tr");
 		var keyRow = $(tr).data();
-		var inputData = "";
-		var cells = new Array();
-		var name = $(tr).data("name");
+		var url = keyRow.removeUrl;
+		var name = keyRow.name;
 
-		$(tr).find("." + params.cellClass).each(function() {
-			var cell = $(this);
-			var data = $(this).data();
+		var inputData = $.extend(true, {}, keyRow, null);
+		delete inputData.saveUrl;
+		delete inputData.removeUrl;
+		delete inputData.name;
 
-			var value = "";
-			if (data.type == "combobox") {
-				value = $(cell).find('select').val();
-			} else if (data.type == "textarea") {
-				value = $(cell).find('textarea').val();
-			} else {
-				value = $(cell).find('input').val();
-			}
-
-			data.value = value;
-			cells.push(data);
-		});
-
-		if (params.beforeRemove != null) {
-			inputData = params.beforeRemove[name].call(tr, keyRow, cells);
+		try {
+			inputData = params.beforeRemove[name].call(tr, inputData);
+			inputData = JSON.stringify(inputData);
+		} catch (e) {
+			console.log("beforeRemove is not defined correctly");
 		}
+		console.log("rowRemove inputData", inputData);
+		console.log("rowRemove url", url);
 
 		$.ajax({
 			type : "POST",
-			url : params.urlRemove,
+			url : url,
 			data : inputData,
 			contentType : "application/json",
 			dataType : "json",
 			success : function(data) {
-				var obj = null;
-				if (params.afterRemove != null) {
-					obj = params.afterRemove[name].call(tr, data);
+				try {
+					params.afterRemove[name].call(tr, data);
+				} catch (e) {
+					console.log("afterRemove is not defined correctly");
 				}
 			},
 			error : function(data) {
-				console.log("Error while remove row " + data);
+				console.log("Error while remove row ", data);
 			}
 		});
 	}
@@ -204,6 +197,7 @@ $.fn.cellEditable = function(options) {
 
 		var inputData = $.extend(true, {}, keyRow, null);
 		delete inputData.saveUrl;
+		delete inputData.removeUrl;
 		delete inputData.name;
 
 		$(tr).find("." + params.cellClass).each(function() {
@@ -322,6 +316,7 @@ $.fn.cellEditable = function(options) {
 		try {
 			delete inputData.loadUrl;
 			delete inputData.saveUrl;
+			delete inputData.removeUrl;
 			delete inputData.type;
 			delete inputData.field;
 			delete inputData.name;
