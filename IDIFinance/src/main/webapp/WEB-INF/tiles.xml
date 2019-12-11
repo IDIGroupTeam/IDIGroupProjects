@@ -489,11 +489,18 @@
 			value="/pages/bctc/cashFlowCodeDs.jsp" />
 	</definition>
 
-	<definition name="taoMoiChiTieuLctt" extends="taichinh">
+	<definition name="taoMoiHighChiTieuLctt" extends="taichinh">
 		<put-attribute name="title"
-			value="Tạo mới chỉ tiêu lưu chuyển tiền tệ" />
+			value="Tạo mới chỉ tiêu lưu chuyển tiền tệ - cấp cao" />
 		<put-attribute name="body"
-			value="/pages/bctc/cashFlowCodeTm.jsp" />
+			value="/pages/bctc/cashFlowCodeHighTm.jsp" />
+	</definition>
+
+	<definition name="taoMoiLowChiTieuLctt" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới chỉ tiêu lưu chuyển tiền tệ - cấp thấp" />
+		<put-attribute name="body"
+			value="/pages/bctc/cashFlowCodeLowTm.jsp" />
 	</definition>
 
 	<definition name="danhSachBctc" extends="taichinh">

@@ -125,6 +125,9 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	@Value("${TINH_LCTT_THEO_MATK}")
 	private String TINH_LCTT_THEO_MATK;
 
+	@Value("${THEM_CHI_TIEU_LCTT}")
+	private String THEM_CHI_TIEU_LCTT;
+
 	@Value("${THEM_CHI_TIEU_LCTT_TAI_KHOAN}")
 	private String THEM_CHI_TIEU_LCTT_TAI_KHOAN;
 
@@ -194,6 +197,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		}
 
 		String insertQuery = THEM_CHI_TIEU_CDKT;
+		logger.info(insertQuery);
 
 		// Insert to BALANCE_ASSET_ITEM
 		int count = 0;
@@ -225,9 +229,8 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 					newBai.getSoDu(), oblBai.getAssetCode());
 		} catch (DuplicateKeyException e) {
 			count = -1;
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 
 		return count;
@@ -240,6 +243,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		}
 
 		String insertQuery = THEM_CHI_TIEU_CDKT_TAI_KHOAN;
+		logger.info(insertQuery);
 
 		// Insert to CDKT_TAIKHOAN
 		int count = 0;
@@ -269,9 +273,8 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 			count = jdbcTmpl.update(updateQuery, bai.getAssetName(), bai.getAssetCode());
 		} catch (DuplicateKeyException e) {
 			count = -1;
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 
 		return count;
@@ -295,9 +298,8 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 					loaiTaiKhoan.getMaTk());
 		} catch (DuplicateKeyException e) {
 			count = -1;
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 
 		return count;
@@ -724,12 +726,36 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	}
 
 	@Override
-	public int insertCFBai(BalanceAssetItem bai) {
+	public int insertCFHighBai(BalanceAssetItem bai) {
+		if (bai == null) {
+			return 0;
+		}
+
+		String insertQuery = THEM_CHI_TIEU_LCTT;
+		logger.info(insertQuery);
+
+		// Insert to CASH_FLOW_TAIKHOAN
+		int count = 0;
+		try {
+			count = jdbcTmpl.update(insertQuery, bai.getAssetCode(), bai.getAssetName(), bai.getParent().getAssetCode(),
+					bai.getSoDu(), bai.getRule());
+		} catch (DuplicateKeyException e) {
+			count = -1;
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+
+		return count;
+	}
+
+	@Override
+	public int insertCFLowBai(BalanceAssetItem bai) {
 		if (bai == null) {
 			return 0;
 		}
 
 		String insertQuery = THEM_CHI_TIEU_LCTT_TAI_KHOAN;
+		logger.info(insertQuery);
 
 		// Insert to CASH_FLOW_TAIKHOAN
 		int count = 0;

@@ -34,7 +34,7 @@
 
 								return "";
 							},
-							urlRemove : "${url}/bctc/luuchuyentt/chitieu/xoa",
+							urlRemove : "${url}/bctc/luuchuyentt/chitieu/capthap/xoa",
 							afterRemove : function(data) {
 								try {
 									window.location.href = "${url}/bctc/luuchuyentt/chitieu/danhsach";
@@ -47,14 +47,18 @@
 </script>
 
 <h4>Danh sách các chỉ tiêu của bảng lưu chuyển tiền tệ</h4>
+<span><i>${props.getCauHinh(PropCont.CHE_DO_KE_TOAN).giaTri}</i></span>
 
-<div>
-	<span><i>${props.getCauHinh(PropCont.CHE_DO_KE_TOAN).giaTri}</i></span>
-	<a href="${url}/bctc/luuchuyentt/chitieu/taomoi"
-		class="btn btn-info btn-sm pull-right"> <span
-		class="glyphicon glyphicon-plus"></span> Tạo mới
+<div class="pull-right">
+	<a href="${url}/bctc/luuchuyentt/chitieu/capcao/taomoi"
+		class="btn btn-info btn-sm"> <span
+		class="glyphicon glyphicon-plus"></span> Tạo mới chỉ tiêu cấp cao
+	</a> <a href="${url}/bctc/luuchuyentt/chitieu/capthap/taomoi"
+		class="btn btn-info btn-sm"> <span
+		class="glyphicon glyphicon-plus"></span> Tạo mới chỉ tiêu cấp thấp
 	</a>
 </div>
+<br />
 <br />
 
 <div class="table-responsive">

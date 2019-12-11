@@ -13,7 +13,7 @@
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
 		$("#mainFinanceForm").attr("action",
-				"${url}/bctc/luuchuyentt/chitieu/them");
+				"${url}/bctc/luuchuyentt/chitieu/capcao/them");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		function init() {
@@ -21,9 +21,7 @@
 				$("#mainFinanceForm").submit();
 			});
 
-			$("#assetCode").combobox();
-			$("#taiKhoanDs0\\.maTk").combobox();
-			$("#taiKhoanDs0\\.doiUng\\.maTk").combobox();
+			$("#parent\\.assetCode").combobox();
 		}
 		init();
 	});
@@ -32,16 +30,27 @@
 <h4>TẠO MỚI MỐI QUAN HỆ CHỈ TIÊU LƯU CHUYỂN TIỀN TỆ - TÀI KHOẢN</h4>
 <hr />
 
-<form:hidden path="type"/>
+<form:hidden path="type" />
 <div class="row form-group">
-	<label class="control-label col-sm-3" for="assetCode">Mã chỉ
-		tiêu LCTT (*)</label>
+	<label class="control-label col-sm-3" for="parent.assetCode">Mã
+		chỉ tiêu LCTT cấp trên</label>
 	<div class="col-sm-4">
-		<form:select cssClass="form-control" path="assetCode">
+		<form:select cssClass="form-control" path="parent.assetCode">
 			<form:option value="" label=""></form:option>
 			<form:options items="${baiDs}" itemLabel="assetCodeName"
 				itemValue="assetCode" />
 		</form:select>
+		<br />
+		<form:errors path="parent.assetCode" cssClass="error" />
+	</div>
+	<i class="col-sm-5">Mã chỉ tiêu LCTT cấp trên</i>
+</div>
+
+<div class="row form-group">
+	<label class="control-label col-sm-3" for="assetCode">Mã chỉ
+		tiêu CDKT (*)</label>
+	<div class="col-sm-4">
+		<form:input cssClass="form-control" path="assetCode" />
 		<br />
 		<form:errors path="assetCode" cssClass="error" />
 	</div>
@@ -49,26 +58,20 @@
 </div>
 
 <div class="row form-group">
-	<label class="control-label col-sm-3" for="taiKhoanDs[0].maTk">Mã
-		tài khoản kế toán (*)</label>
+	<label class="control-label col-sm-3" for="assetName">Tên chỉ
+		tiêu CDKT (*)</label>
 	<div class="col-sm-4">
-		<form:select cssClass="form-control" path="taiKhoanDs[0].maTk">
-			<form:option value="" label=""></form:option>
-			<form:options items="${loaiTaiKhoanDs}" itemLabel="maTenTk"
-				itemValue="maTk" />
-		</form:select>
+		<form:input cssClass="form-control" path="assetName" />
 		<br />
-		<form:errors path="taiKhoanDs[0].maTk" cssClass="error" />
+		<form:errors path="assetName" cssClass="error" />
 	</div>
-	<i class="col-sm-5">Mã tài khoản kế toán thực dùng</i>
+	<i class="col-sm-5">Tên chỉ tiêu LCTT</i>
 </div>
 
 <div class="row form-group">
-	<label class="control-label col-sm-3" for="taiKhoanDs[0].soDuGiaTri">Số
-		dư</label>
+	<label class="control-label col-sm-3" for="soDu">Số dư</label>
 	<div class="col-sm-4">
-		<form:select path="taiKhoanDs[0].soDuGiaTri" cssClass="form-control"
-			placeholder="Số dư">
+		<form:select path="soDu" cssClass="form-control" placeholder="Số dư">
 			<form:option value="${LoaiTaiKhoan.NO}" label="Nợ" />
 			<form:option value="${LoaiTaiKhoan.CO}" label="Có" />
 		</form:select>
@@ -77,18 +80,11 @@
 </div>
 
 <div class="row form-group">
-	<label class="control-label col-sm-3" for="taiKhoanDs[0].doiUng.maTk">Mã
-		tài khoản kế toán đối ứng (*)</label>
+	<label class="control-label col-sm-3" for="rule">Công thức</label>
 	<div class="col-sm-4">
-		<form:select cssClass="form-control" path="taiKhoanDs[0].doiUng.maTk">
-			<form:option value="" label=""></form:option>
-			<form:options items="${loaiTaiKhoanDs}" itemLabel="maTenTk"
-				itemValue="maTk" />
-		</form:select>
-		<br />
-		<form:errors path="taiKhoanDs[0].doiUng.maTk" cssClass="error" />
+		<form:input cssClass="form-control" path="rule" />
 	</div>
-	<i class="col-sm-5">Mã tài khoản kế toán đối ứng</i>
+	<i class="col-sm-5">Công thức tính chỉ tiêu từ các chỉ tiêu con</i>
 </div>
 
 <div class="row form-group">

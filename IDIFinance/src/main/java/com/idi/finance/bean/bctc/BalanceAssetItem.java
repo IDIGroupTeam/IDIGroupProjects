@@ -17,7 +17,8 @@ public class BalanceAssetItem {
 	public static final String BCTC_CDKT_CAO = "BCTC_CDKT_CAO";
 	public static final String BCTC_CDKT_THAP = "BCTC_CDKT_THAP";
 	public static final String BCTC_KQHDKD = "BCTC_KQHDKD";
-	public static final String BCTC_LCTT = "BCTC_LCTT";
+	public static final String BCTC_LCTT_CAO = "BCTC_LCTT_CAO";
+	public static final String BCTC_LCTT_THAP = "BCTC_LCTT_THAP";
 
 	private String type;
 

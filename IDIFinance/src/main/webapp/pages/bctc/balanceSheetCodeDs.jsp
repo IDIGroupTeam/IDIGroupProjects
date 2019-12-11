@@ -114,7 +114,6 @@
 <span><i>${props.getCauHinh(PropCont.CHE_DO_KE_TOAN).giaTri}</i></span>
 
 <div class="pull-right">
-
 	<a href="${url}/bctc/cdkt/chitieu/capcao/taomoi"
 		class="btn btn-info btn-sm"> <span
 		class="glyphicon glyphicon-plus"></span> Tạo mới chỉ tiêu cấp cao
@@ -142,8 +141,8 @@
 			<c:forEach items="${bais}" var="bai">
 				<tr id="${bai.assetCode}" data-asset-code="${bai.assetCode}"
 					data-name="chiTieuCao"
-					data-remove-url="${url}/bctc/cdkt/chitieu/xoa/cao"
-					data-save-url="${url}/bctc/cdkt/chitieu/capnhat/cao">
+					data-remove-url="${url}/bctc/cdkt/chitieu/capcao/xoa"
+					data-save-url="${url}/bctc/cdkt/chitieu/capcao/capnhat">
 					<c:choose>
 						<c:when test="${not empty bai.childs and bai.childs.size()>0}">
 							<td>${bai.assetCode}&nbsp;-&nbsp;<span

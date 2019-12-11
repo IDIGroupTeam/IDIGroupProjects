@@ -81,7 +81,9 @@ public interface BalanceSheetDAO {
 	public List<BalanceAssetData> calculateSRBs(Date start, Date end);
 
 	// CF
-	public int insertCFBai(BalanceAssetItem bai);
+	public int insertCFHighBai(BalanceAssetItem bai);
+	
+	public int insertCFLowBai(BalanceAssetItem bai);
 
 	public void deleteCFBai(BalanceAssetItem bai);
 

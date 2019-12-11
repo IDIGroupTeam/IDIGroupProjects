@@ -31,10 +31,12 @@ public class BalanceSheetValidator implements Validator {
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "taiKhoanDs[0].maTk", "NotEmpty.Bai.LoaiTaiKhoan.maTk");
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "taiKhoanDs[0].maTkGoc",
 					"NotEmpty.Bai.LoaiTaiKhoan.maTkGoc");
-		} else if (bai.getType().equals(BalanceAssetItem.BCTC_LCTT)) {
+		} else if (bai.getType().equals(BalanceAssetItem.BCTC_LCTT_THAP)) {
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "taiKhoanDs[0].maTk", "NotEmpty.Bai.LoaiTaiKhoan.maTk");
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "taiKhoanDs[0].doiUng.maTk",
 					"NotEmpty.Bai.LoaiTaiKhoan.doiUng.maTk");
+		} else if (bai.getType().equals(BalanceAssetItem.BCTC_LCTT_CAO)) {
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "assetCode", "NotEmpty.Bai.assetName");
 		}
 	}
 }
