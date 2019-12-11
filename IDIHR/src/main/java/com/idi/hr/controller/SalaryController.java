@@ -3,9 +3,11 @@ package com.idi.hr.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -565,7 +567,11 @@ public class SalaryController {
 		//String moneyType = null;
 		float salaryPerHour = 0;
 		SendReportForm sendForm = new SendReportForm();
-		try {
+		try {			
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = new Date();
+			String currentDate = dateFormat.format(date);
+			
 			WorkingDay workingDay = null;
 
 			salaryDetail = salaryDAO.getSalaryDetail(employeeId, month, year);
@@ -617,11 +623,14 @@ public class SalaryController {
 			PdfPTable table = new PdfPTable(4);
 			
 			addSummarySalaryToPDFRows(table, salaryDetail);
-			document.add(new Paragraph("                    " + title, fontB));
-			document.add(new Paragraph("                       ", font));
+			document.add(new Paragraph("                  " + title, fontB));
+			document.add(new Paragraph("                  ", font));
 			document.add(table);
-			document.add(new Paragraph("                       ", font));
-
+			document.add(new Paragraph("                  ", font));
+			document.add(new Paragraph("                                                                                                                                                          Ngày: "	+ Utils.convertDateToDisplay(currentDate), font));
+			document.add(new Paragraph("                  ", font));
+			document.add(new Paragraph("                                                                                                                                                            " + hr.getProperty("KTT"), font));			
+			
 			document.close();
 		} catch (Exception e) {
 			model.addAttribute("isOpen", "Yes");
