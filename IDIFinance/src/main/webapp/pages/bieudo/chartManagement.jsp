@@ -8,7 +8,25 @@
 	prefix="cewolf"%>
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 
+<script type="text/javascript">
+	//Shorthand for $( document ).ready()
+	$(function() {
+		$('#dataTable').DataTable({
+			ordering : false,
+			language : vi
+		});
+	});
+</script>
+
 <h4>Quản lý biểu đồ KPI</h4>
+<div class="pull-right">
+	<a href="${url}/bctc/cdkt/chitieu/capthap/taomoi"
+		class="btn btn-info btn-sm"> <span
+		class="glyphicon glyphicon-plus"></span> Tạo mới biểu đồ
+	</a>
+</div>
+<br />
+<br />
 
 <div class="table-responsive">
 	<table id="dataTable" class="table table-bordered table-hover">

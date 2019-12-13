@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -25,6 +26,9 @@ import com.idi.finance.hangso.KpiMonthCont;
 
 public class KpiChartDAOImpl implements KpiChartDAO {
 	private static final Logger logger = Logger.getLogger(KpiChartDAOImpl.class);
+
+	@Value("${LAY_KPI_CHART_THEO_ID}")
+	private String LAY_KPI_CHART_THEO_ID;
 
 	private JdbcTemplate jdbcTmpl;
 
@@ -258,19 +262,51 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 	}
 
 	@Override
-	public KpiChart listKpiCharts(int chartId) {
-		String query = "SELECT * FROM KPI_CHART AS CHA, KPI_GROUP AS GRO WHERE CHA.GROUP_ID=GRO.GROUP_ID AND CHA.CHART_ID=?";
+	public KpiChart getKpiChart(int chartId) {
+		String query = LAY_KPI_CHART_THEO_ID;
 
 		logger.info("Get kpi chart by chartId " + chartId);
 		logger.info(query);
 
 		Object[] obj = { chartId };
-		List<KpiChart> kpiCharts = jdbcTmpl.query(query, obj, new KpiChartWithGroupMapper());
+		List<KpiChart> kpiCharts = jdbcTmpl.query(query, obj, new KpiChartDetailMapper());
 
 		if (kpiCharts != null && kpiCharts.size() > 0)
 			return kpiCharts.get(0);
 
 		return null;
+	}
+
+	public class KpiChartDetailMapper implements RowMapper<KpiChart> {
+		public KpiChart mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+			KpiChart kpiChart = new KpiChart();
+			kpiChart.setChartId(rs.getInt("CHART_ID"));
+			kpiChart.setHomeFlag(rs.getBoolean("HOME_FLAG"));
+			kpiChart.setChartTitle(rs.getString("CHART_TITLE"));
+			kpiChart.setThreshold(rs.getDouble("THRESHOLD"));
+
+			KpiGroup kpiGroup = new KpiGroup();
+			kpiGroup.setGroupId(rs.getInt("GROUP_ID"));
+			kpiGroup.setGroupName(rs.getString("GROUP_NAME"));
+
+			kpiChart.setKpiGroup(kpiGroup);
+
+			try {
+				KpiMeasure kpiMeasure = new KpiMeasure();
+				kpiMeasure.setChart(kpiChart);
+				kpiMeasure.setMeasureId(rs.getInt("MEASURE_ID"));
+				kpiMeasure.setMeasureName(rs.getString("MEASURE_NAME"));
+				kpiMeasure.setExpression(rs.getString("EXPRESSION"));
+				kpiMeasure.setTypeChart(rs.getInt("TYPE_CHART"));
+				kpiChart.addKpiMeasure(kpiMeasure);
+			} catch (Exception e) {
+			}
+
+			logger.info(kpiChart);
+
+			return kpiChart;
+		}
 	}
 
 	@Override

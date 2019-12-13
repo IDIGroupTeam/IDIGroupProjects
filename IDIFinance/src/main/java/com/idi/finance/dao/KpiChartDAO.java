@@ -20,7 +20,7 @@ public interface KpiChartDAO {
 
 	public List<KpiChart> listKpiCharts();
 
-	public KpiChart listKpiCharts(int chartId);
+	public KpiChart getKpiChart(int chartId);
 
 	public List<KpiChart> listKpiChartByKpiGroup(KpiGroup kpiGroup);
 

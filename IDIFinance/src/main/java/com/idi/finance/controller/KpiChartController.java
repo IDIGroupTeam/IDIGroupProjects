@@ -35,6 +35,7 @@ import com.idi.finance.dao.BalanceSheetDAO;
 import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.form.TkKpiChartForm;
 import com.idi.finance.hangso.Contants;
+import com.idi.finance.hangso.KpiChartType;
 import com.idi.finance.hangso.KpiMonthCont;
 import com.idi.finance.hangso.PropCont;
 import com.idi.finance.utils.ExpressionEval;
@@ -492,7 +493,7 @@ public class KpiChartController {
 	public String chartManagementView(@PathVariable("id") int chartId, Model model) {
 		model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
-		KpiChart kpiChart = kpiChartDAO.listKpiCharts(chartId);
+		KpiChart kpiChart = kpiChartDAO.getKpiChart(chartId);
 
 		model.addAttribute("kpiChart", kpiChart);
 		model.addAttribute("tab", "tabQLBD");
