@@ -1739,52 +1739,22 @@ public class BalanceSheetController {
 		}
 	}
 
-	@RequestMapping("/bctc/luuchuyentt/chitieu/capcao/xoa")
-	public @ResponseBody BalanceAssetItem xoaHighChiTieuLctt(@RequestParam("assetCode") String assetCode,
-			@RequestParam("maTk") String maTk, @RequestParam("soDu") int soDu,
-			@RequestParam("doiUngMaTk") String doiUngMaTk) {
-		logger.info("Xoá BalanceAssetItem từ CASH_FLOW_TAIKHOAN: assetCode: " + assetCode + ". maTk: " + maTk
-				+ ". soDu: " + soDu + ". doiUngMaTk: " + doiUngMaTk);
-		BalanceAssetItem bai = new BalanceAssetItem();
-		bai.setAssetCode(assetCode);
+	@RequestMapping(value = "/bctc/luuchuyentt/chitieu/capcao/xoa", method = RequestMethod.POST)
+	public @ResponseBody BalanceAssetItem xoaHighChiTieuLctt(@RequestBody BalanceAssetItem bai) {
+		logger.info("Xoá BalanceAssetItem từ CASH_FLOW_TAIKHOAN: assetCode: " + bai.getAssetCode());
 
-		LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
-		loaiTaiKhoan.setMaTk(maTk);
-		loaiTaiKhoan.setSoDuGiaTri(soDu);
-
-		LoaiTaiKhoan loaiTaiKhoanDu = new LoaiTaiKhoan();
-		loaiTaiKhoanDu.setMaTk(doiUngMaTk);
-
-		loaiTaiKhoan.setDoiUng(loaiTaiKhoanDu);
-
-		bai.themTaiKhoan(loaiTaiKhoan);
-
-		balanceSheetDAO.deleteCFBai(bai);
+		balanceSheetDAO.deleteCFBaiHigh(bai);
 
 		return bai;
 	}
 
-	@RequestMapping("/bctc/luuchuyentt/chitieu/capthap/xoa")
-	public @ResponseBody BalanceAssetItem xoaLowChiTieuLctt(@RequestParam("assetCode") String assetCode,
-			@RequestParam("maTk") String maTk, @RequestParam("soDu") int soDu,
-			@RequestParam("doiUngMaTk") String doiUngMaTk) {
-		logger.info("Xoá BalanceAssetItem từ CASH_FLOW_TAIKHOAN: assetCode: " + assetCode + ". maTk: " + maTk
-				+ ". soDu: " + soDu + ". doiUngMaTk: " + doiUngMaTk);
-		BalanceAssetItem bai = new BalanceAssetItem();
-		bai.setAssetCode(assetCode);
+	@RequestMapping(value = "/bctc/luuchuyentt/chitieu/capthap/xoa", method = RequestMethod.POST)
+	public @ResponseBody BalanceAssetItem xoaLowChiTieuLctt(@RequestBody BalanceAssetItem bai) {
+		logger.info("Xoá BalanceAssetItem từ CASH_FLOW_TAIKHOAN: assetCode: " + bai.getAssetCode() + ". maTk: "
+				+ bai.getTaiKhoanDs().get(0).getMaTk() + ". soDu: " + bai.getTaiKhoanDs().get(0).getSoDuGiaTri()
+				+ ". doiUngMaTk: " + bai.getTaiKhoanDs().get(0).getDoiUng().getMaTk());
 
-		LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
-		loaiTaiKhoan.setMaTk(maTk);
-		loaiTaiKhoan.setSoDuGiaTri(soDu);
-
-		LoaiTaiKhoan loaiTaiKhoanDu = new LoaiTaiKhoan();
-		loaiTaiKhoanDu.setMaTk(doiUngMaTk);
-
-		loaiTaiKhoan.setDoiUng(loaiTaiKhoanDu);
-
-		bai.themTaiKhoan(loaiTaiKhoan);
-
-		balanceSheetDAO.deleteCFBai(bai);
+		balanceSheetDAO.deleteCFBaiLow(bai);
 
 		return bai;
 	}

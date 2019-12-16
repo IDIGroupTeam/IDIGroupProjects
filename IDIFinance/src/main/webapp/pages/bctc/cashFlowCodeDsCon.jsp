@@ -12,9 +12,24 @@
 <c:choose>
 	<c:when test="${not empty bais and bais.size()>0}">
 		<c:forEach items="${bais}" var="bai">
-			<tr id="${parentIdRes}_${bai.assetCode}">
-				<td>${bai.assetCode}&nbsp;-&nbsp;<span
-					class="cell-editable dis-editable dis-removable">${bai.assetName}</span></td>
+			<tr id="${parentIdRes}_${bai.assetCode}" data-name="chiTieuCao"
+				data-remove-url="${url}/bctc/luuchuyentt/chitieu/capcao/xoa"
+				data-asset-code="${bai.assetCode}">
+				<c:choose>
+					<c:when test="${not empty bai.childs and bai.childs.size()>0}">
+						<td>${bai.assetCode}&nbsp;-&nbsp;<span
+							class="cell-editable dis-removable" data-field="assetName">${bai.assetName}</span></td>
+					</c:when>
+					<c:when
+						test="${not empty bai.taiKhoanDs and bai.taiKhoanDs.size()>0}">
+						<td>${bai.assetCode}&nbsp;-&nbsp;<span
+							class="cell-editable dis-removable" data-field="assetName">${bai.assetName}</span></td>
+					</c:when>
+					<c:otherwise>
+						<td>${bai.assetCode}&nbsp;-&nbsp;<span class="cell-editable"
+							data-field="assetName">${bai.assetName}</span></td>
+					</c:otherwise>
+				</c:choose>
 				<td></td>
 				<td></td>
 			</tr>
@@ -30,10 +45,12 @@
 	<c:when test="${not empty taiKhoanDs and taiKhoanDs.size()>0}">
 		<c:forEach items="${taiKhoanDs}" var="taiKhoan">
 			<tr id="${parentIdRes}_${taiKhoan.maTk}-${taiKhoan.doiUng.maTk}"
-				data-assetcode="${assetCode}" data-matk="${taiKhoan.maTk}"
-				data-sodu="${taiKhoan.soDu}"
-				data-doiungmatk="${taiKhoan.doiUng.maTk}">
-				<td><span class="cell-editable dis-editable">${taiKhoan.maTenTk}</span></td>
+				data-name="chiTieuThap"
+				data-remove-url="${url}/bctc/luuchuyentt/chitieu/capthap/xoa"
+				data-asset-code="${assetCode}" data-ma-tk="${taiKhoan.maTk}"
+				data-so-du="${taiKhoan.soDu}"
+				data-ma-tk-du="${taiKhoan.doiUng.maTk}">
+				<td><span class="cell-editable dis-editable" data-field="maTk">${taiKhoan.maTenTk}</span></td>
 				<c:choose>
 					<c:when test="${taiKhoan.soDu==LoaiTaiKhoan.NO}">
 						<td>Nợ</td>

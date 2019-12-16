@@ -137,6 +137,9 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	@Value("${LAY_CHI_TIEU_LCTT_TAI_KHOAN}")
 	private String LAY_CHI_TIEU_LCTT_TAI_KHOAN;
 
+	@Value("${XOA_CHI_TIEU_LCTT}")
+	private String XOA_CHI_TIEU_LCTT;
+
 	@Value("${XOA_CHI_TIEU_LCTT_TAI_KHOAN}")
 	private String XOA_CHI_TIEU_LCTT_TAI_KHOAN;
 
@@ -772,7 +775,16 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		return count;
 	}
 
-	public void deleteCFBai(BalanceAssetItem bai) {
+	public void deleteCFBaiHigh(BalanceAssetItem bai) {
+		if (bai != null && bai.getAssetCode() != null) {
+			String query = XOA_CHI_TIEU_LCTT;
+			logger.info(query);
+
+			jdbcTmpl.update(query, bai.getAssetCode());
+		}
+	}
+
+	public void deleteCFBaiLow(BalanceAssetItem bai) {
 		if (bai != null && bai.getAssetCode() != null && bai.getTaiKhoanDs() != null && bai.getTaiKhoanDs().size() > 0
 				&& bai.getTaiKhoanDs().get(0).getMaTk() != null && bai.getTaiKhoanDs().get(0).getDoiUng() != null) {
 			String query = XOA_CHI_TIEU_LCTT_TAI_KHOAN;

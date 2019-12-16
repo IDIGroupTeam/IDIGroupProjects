@@ -82,10 +82,12 @@ public interface BalanceSheetDAO {
 
 	// CF
 	public int insertCFHighBai(BalanceAssetItem bai);
-	
+
 	public int insertCFLowBai(BalanceAssetItem bai);
 
-	public void deleteCFBai(BalanceAssetItem bai);
+	public void deleteCFBaiHigh(BalanceAssetItem bai);
+
+	public void deleteCFBaiLow(BalanceAssetItem bai);
 
 	public void insertOrUpdateCF(BalanceAssetData sr);
 

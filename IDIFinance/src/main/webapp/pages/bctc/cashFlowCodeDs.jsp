@@ -22,24 +22,68 @@
 		$('#treeTable')
 				.cellEditable(
 						{
-							beforeRemove : function(key, cells) {
-								try {
-									return "assetCode=" + key.assetcode
-											+ "&maTk=" + key.matk + "&soDu="
-											+ key.sodu + "&doiUngMaTk="
-											+ key.doiungmatk;
-								} catch (e) {
-									console.log("beforeRemove", e);
-								}
+							beforeSave : {
+								chiTieuCao : function(data) {
+									console.log("beforeSave chiTieuCao", data);
+									var sendingData = new Object();
+									sendingData.assetCode = data.assetCode;
+									sendingData.assetName = data.assetName.value;
 
-								return "";
+									return sendingData;
+								},
+								chiTieuThap : function(data) {
+									console.log("beforeSave chiTieuThap", data);
+									var sendingData = new Object();
+									sendingData.assetCode = data.assetCode;
+
+									var taiKhoanDs = new Array();
+									var loaiTaiKhoan = new Object();
+									loaiTaiKhoan.maTk = data.maTk.value;
+									loaiTaiKhoan.maTkGoc = data.maTk.maTk;
+									taiKhoanDs.push(loaiTaiKhoan);
+
+									sendingData.taiKhoanDs = taiKhoanDs;
+									return sendingData;
+								}
 							},
-							urlRemove : "${url}/bctc/luuchuyentt/chitieu/capthap/xoa",
-							afterRemove : function(data) {
-								try {
-									window.location.href = "${url}/bctc/luuchuyentt/chitieu/danhsach";
-								} catch (e) {
-									// alert(e);
+							beforeRemove : {
+								chiTieuCao : function(data) {
+									var sendingData = new Object();
+									sendingData.assetCode = data.assetCode;
+
+									return sendingData;
+								},
+								chiTieuThap : function(data) {
+									var loaiTaiKhoanDu = new Object();
+									loaiTaiKhoanDu.maTk = data.maTkDu;
+
+									var loaiTaiKhoan = new Object();
+									loaiTaiKhoan.maTk = data.maTk;
+									loaiTaiKhoan.soDuGiaTri = data.soDu;
+									loaiTaiKhoan.doiUng = loaiTaiKhoanDu;
+
+									var taiKhoanDs = new Array();
+									taiKhoanDs.push(loaiTaiKhoan);
+
+									var sendingData = new Object();
+									sendingData.assetCode = data.assetCode;
+									sendingData.taiKhoanDs = taiKhoanDs;
+
+									return sendingData;
+								}
+							},
+							afterRemove : {
+								chiTieuCao : function(data) {
+									try {
+										window.location.href = "${url}/bctc/luuchuyentt/chitieu/danhsach";
+									} catch (e) {
+									}
+								},
+								chiTieuThap : function(data) {
+									try {
+										window.location.href = "${url}/bctc/luuchuyentt/chitieu/danhsach";
+									} catch (e) {
+									}
 								}
 							}
 						});
@@ -75,9 +119,24 @@
 		</thead>
 		<tbody class="form-inline">
 			<c:forEach items="${bais}" var="bai">
-				<tr id="${bai.assetCode}">
-					<td>${bai.assetCode}&nbsp;-&nbsp;<span
-						class="cell-editable dis-editable dis-removable">${bai.assetName}</span></td>
+				<tr id="${bai.assetCode}" data-name="chiTieuCao"
+					data-remove-url="${url}/bctc/luuchuyentt/chitieu/capcao/xoa"
+					data-asset-code="${bai.assetCode}">
+					<c:choose>
+						<c:when test="${not empty bai.childs and bai.childs.size()>0}">
+							<td>${bai.assetCode}&nbsp;-&nbsp;<span
+								class="cell-editable dis-removable" data-field="assetName">${bai.assetName}</span></td>
+						</c:when>
+						<c:when
+							test="${not empty bai.taiKhoanDs and bai.taiKhoanDs.size()>0}">
+							<td>${bai.assetCode}&nbsp;-&nbsp;<span
+								class="cell-editable dis-removable" data-field="assetName">${bai.assetName}</span></td>
+						</c:when>
+						<c:otherwise>
+							<td>${bai.assetCode}&nbsp;-&nbsp;<span class="cell-editable"
+								data-field="assetName">${bai.assetName}</span></td>
+						</c:otherwise>
+					</c:choose>
 					<td></td>
 					<td></td>
 				</tr>
