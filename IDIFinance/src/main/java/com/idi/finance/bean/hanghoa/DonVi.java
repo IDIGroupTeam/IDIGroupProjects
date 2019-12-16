@@ -5,6 +5,8 @@ public class DonVi {
 	private String tenDv;
 	private String moTa;
 
+	private boolean xoa = true;
+
 	public int getMaDv() {
 		return maDv;
 	}
@@ -27,6 +29,14 @@ public class DonVi {
 
 	public void setMoTa(String moTa) {
 		this.moTa = moTa;
+	}
+
+	public boolean isXoa() {
+		return xoa;
+	}
+
+	public void setXoa(boolean xoa) {
+		this.xoa = xoa;
 	}
 
 	@Override

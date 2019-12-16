@@ -227,7 +227,7 @@ public class LoaiTaiKhoan implements Comparable<LoaiTaiKhoan> {
 
 	@Override
 	public String toString() {
-		String out = maTk + " " + tenTk;
+		String out = maTk + " - " + tenTk + " - " + soDu;
 		return out;
 	}
 

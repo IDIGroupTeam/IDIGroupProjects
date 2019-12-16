@@ -52,6 +52,13 @@
 <hr />
 
 <div class="row form-group">
+	<c:if test="${not empty message}">
+		<div class="col-sm-12 text-danger">
+			<i>${message}</i>
+		</div>
+	</c:if>
+</div>
+<div class="row form-group">
 	<label class="control-label col-sm-2" for="soCt">Số phiếu thu:</label>
 	<div class="col-sm-4">${chungTu.loaiCt}${chungTu.soCt}</div>
 
@@ -154,30 +161,35 @@
 		class="table table-bordered table-hover text-center dinhkhoan">
 		<thead>
 			<tr>
+				<th class="text-center">Lý do</th>
 				<th class="text-center">Tài khoản có</th>
 				<th class="text-center">Giá trị</th>
-				<th class="text-center">Lý do</th>
+				<th class="text-center">Quy đổi</th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:forEach items="${chungTu.taiKhoanCoDs}" var="taiKhoanCo"
 				varStatus="status">
 				<tr id="${status.index}">
+					<td class="text-left">${taiKhoanCo.lyDo}</td>
 					<td class="text-left">${taiKhoanCo.loaiTaiKhoan.maTk}-${taiKhoanCo.loaiTaiKhoan.tenTk}</td>
 					<td class="text-right"><fmt:formatNumber
 							value="${taiKhoanCo.soTien.soTien}" maxFractionDigits="2"></fmt:formatNumber>
 						${taiKhoanCo.soTien.loaiTien.maLt}</td>
-					<td class="text-left">${taiKhoanCo.lyDo}</td>
+					<td class="text-right"><fmt:formatNumber
+							value="${taiKhoanCo.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber>
+						VND</td>
 				</tr>
 			</c:forEach>
 			<tr>
 				<td class="text-left"><b>Thành tiền:</b></td>
-				<td class="text-right"><span id="soTien.giaTriTxt"> <fmt:formatNumber
-							value="${chungTu.soTien.soTien}"></fmt:formatNumber>
-						&nbsp;${chungTu.loaiTien.maLt}
-				</span></td>
+				<td></td>
+				<td class="text-right"><span id="soTien.giaTriTxt"><fmt:formatNumber
+							value="${chungTu.soTien.soTien}" maxFractionDigits="2"></fmt:formatNumber>
+						${chungTu.loaiTien.maLt} </span></td>
 				<td class="text-right"><span id="soTien.giaTriQdTxt"> <fmt:formatNumber
-							value="${chungTu.soTien.giaTri}"></fmt:formatNumber> &nbsp;VND
+							value="${chungTu.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber>
+						VND
 				</span></td>
 			</tr>
 		</tbody>
@@ -196,8 +208,8 @@
 					class="btn btn-info btn-sm">Sửa</a>
 				<a href="${url}/chungtu/phieuthu/pdf/${chungTu.maCt}"
 					target="_blank" class="btn btn-info btn-sm">In</a>
-				<a id="xoaNut" href="${url}/chungtu/phieuthu/xoa/${chungTu.maCt}"
-					class="btn btn-info btn-sm">Xóa</a>
+				<%-- <a id="xoaNut" href="${url}/chungtu/phieuthu/xoa/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Xóa</a> --%>
 				<a href="${url}/chungtu/phieuthu/saochep/${chungTu.maCt}"
 					class="btn btn-info btn-sm">Sao chép</a>
 				<a href="${url}/chungtu/phieuthu/taomoi" class="btn btn-info btn-sm">Tạo

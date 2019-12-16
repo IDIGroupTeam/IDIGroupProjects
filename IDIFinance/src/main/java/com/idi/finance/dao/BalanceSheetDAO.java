@@ -11,11 +11,19 @@ public interface BalanceSheetDAO {
 	// BS
 	public BalanceAssetItem findBSBai(String assetCode, String maTk);
 
-	public int updateBSBai(BalanceAssetItem oldBai, BalanceAssetItem newBai);
+	public int insertBSHighBai(BalanceAssetItem bai);
 
-	public int insertBSBai(BalanceAssetItem bai);
+	public int updateBSHighBai(BalanceAssetItem oldBai, BalanceAssetItem newBai);
 
-	public void deleteBSBai(BalanceAssetItem bai);
+	public int insertBSLowBai(BalanceAssetItem bai);
+
+	public int updateBSBai(BalanceAssetItem bai);
+
+	public int updateBSLowBai(BalanceAssetItem oldBai, BalanceAssetItem newBai);
+
+	public void deleteBSBaiHigh(BalanceAssetItem bai);
+
+	public void deleteBSBaiLow(BalanceAssetItem bai);
 
 	public void insertOrUpdateBA(BalanceAssetData bad);
 
@@ -39,8 +47,6 @@ public interface BalanceSheetDAO {
 	public BalanceAssetData getPeriodStartValue(BalanceAssetData bad);
 
 	public BalanceAssetData getPeriodEndValue(BalanceAssetData bad);
-
-	public List<BalanceAssetData> calculateBs(Date start, Date end);
 
 	public List<BalanceAssetData> calculateStartBs(Date start, Date end);
 
@@ -75,7 +81,9 @@ public interface BalanceSheetDAO {
 	public List<BalanceAssetData> calculateSRBs(Date start, Date end);
 
 	// CF
-	public int insertCFBai(BalanceAssetItem bai);
+	public int insertCFHighBai(BalanceAssetItem bai);
+	
+	public int insertCFLowBai(BalanceAssetItem bai);
 
 	public void deleteCFBai(BalanceAssetItem bai);
 

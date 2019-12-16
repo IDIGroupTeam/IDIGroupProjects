@@ -13,6 +13,8 @@ public class NhomHang {
 	private NhomHang nhomHh;
 	private List<NhomHang> nhomHhDs;
 
+	private boolean xoa = true;
+
 	public int getMaNhomHh() {
 		return maNhomHh;
 	}
@@ -94,6 +96,14 @@ public class NhomHang {
 		}
 	}
 
+	public boolean isXoa() {
+		return xoa;
+	}
+
+	public void setXoa(boolean xoa) {
+		this.xoa = xoa;
+	}
+
 	@Override
 	public String toString() {
 		String out = maNhomHh + "  " + tenNhomHh + " " + doSau + " " + muc;
@@ -115,15 +125,6 @@ public class NhomHang {
 			if (maNhomHh != item.getMaNhomHh()) {
 				return false;
 			}
-
-			/*if (tenNhomHh == null) {
-				if (item.getTenNhomHh() != null)
-					return false;
-			} else if (item.getTenNhomHh() == null) {
-				return false;
-			} else if (!tenNhomHh.trim().equals(item.getTenNhomHh().trim())) {
-				return false;
-			}*/
 		} catch (Exception e) {
 			return false;
 		}

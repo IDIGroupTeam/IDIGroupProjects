@@ -7,17 +7,17 @@ import org.springframework.format.annotation.NumberFormat;
 public class LoaiTien {
 	public static final String VND = "VND";
 	public static final String VND_TEN = "Việt Nam Đồng";
-	
+
 	public static final String VANG = "VANG";
 	public static final String VANG_TEN = "Vàng bạc, đá quý";
 
 	private String maLt = VND;
 	private String tenLt = VND_TEN;
-	@NumberFormat(pattern = "#")
+	@NumberFormat(pattern = "###,###,###,###,###,###.##")
 	private double muaTM = 1;
-	@NumberFormat(pattern = "#")
+	@NumberFormat(pattern = "###,###,###,###,###,###.##")
 	private double muaCk = 1;
-	@NumberFormat(pattern = "#")
+	@NumberFormat(pattern = "###,###,###,###,###,###.##")
 	private double banRa = 1;
 
 	public String getMaLt() {

@@ -1,5 +1,8 @@
 package com.idi.finance.utils;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,6 +14,9 @@ import java.util.Locale;
 import com.idi.finance.bean.bctc.KyKeToanCon;
 
 public class Utils {
+	private static int precision = 2;
+	private static MathContext mc = new MathContext(precision, RoundingMode.HALF_UP);
+
 	public static List<String> parseString(String str) {
 		if (str == null) {
 			return null;
@@ -70,6 +76,13 @@ public class Utils {
 			i++;
 		}
 		return results;
+	}
+
+	public static Date moveDate(Date date, int dateType, int num) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(dateType, num);
+		return cal.getTime();
 	}
 
 	public static Date getStartDateOfMonth(Date date) {
@@ -249,5 +262,87 @@ public class Utils {
 		}
 
 		return rs;
+	}
+
+	public static double multiply(double a, double b) {
+		if (mc == null) {
+			mc = new MathContext(precision, RoundingMode.HALF_UP);
+		}
+
+		BigDecimal aObj = new BigDecimal(a + "");
+		BigDecimal bObj = new BigDecimal(b + "");
+		return aObj.multiply(bObj, mc).doubleValue();
+	}
+
+	public static double divide(double a, double b) {
+		if (mc == null) {
+			mc = new MathContext(precision, RoundingMode.HALF_UP);
+		}
+
+		BigDecimal aObj = new BigDecimal(a + "");
+		BigDecimal bObj = new BigDecimal(b + "");
+		return aObj.divide(bObj, mc).doubleValue();
+	}
+
+	public static double add(double a, double b) {
+		if (mc == null) {
+			mc = new MathContext(precision, RoundingMode.HALF_UP);
+		}
+
+		BigDecimal aObj = new BigDecimal(a + "");
+		BigDecimal bObj = new BigDecimal(b + "");
+		return aObj.add(bObj, mc).doubleValue();
+	}
+
+	public static double subtract(double a, double b) {
+		if (mc == null) {
+			mc = new MathContext(precision, RoundingMode.HALF_UP);
+		}
+
+		BigDecimal aObj = new BigDecimal(a + "");
+		BigDecimal bObj = new BigDecimal(b + "");
+		return aObj.subtract(bObj, mc).doubleValue();
+	}
+
+	public static void main(String[] args) {
+		Double a = Double.valueOf("4.6");
+		Double b = Double.valueOf("5.8");
+		Double mul = a * b;
+		Double div = a / b;
+		Double add = a + b;
+		Double sub = a - b;
+
+		// System.out.println(Float.valueOf("4.6") + Float.valueOf("5.8"));
+		// System.out.println(Float.valueOf(4.6f) + Float.valueOf(5.8f));
+		System.out.println(Double.valueOf("4.6") + Double.valueOf("5.8"));
+		System.out.println((Double.valueOf(4.6) + Double.valueOf(5.8)));
+
+		double x = 12.7;
+		double y = 3.1;
+		double z = x / y;
+		double t = x + y;
+		System.out.println("x: " + x);
+		System.out.println("y: " + y);
+		System.out.println("z: " + z);
+		System.out.println("y*z: " + (y * z));
+		System.out.println("t: " + t);
+		System.out.println("t-y: " + (t - y));
+	}
+
+	public static double round(double value) {
+		long factor = (long) Math.pow(10, precision);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
+	}
+
+	public static double round(double value, int precision) {
+		if (precision < 0)
+			throw new IllegalArgumentException();
+
+		long factor = (long) Math.pow(10, precision);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
 	}
 }

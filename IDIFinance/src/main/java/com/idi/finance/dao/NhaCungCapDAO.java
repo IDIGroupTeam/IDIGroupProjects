@@ -11,6 +11,8 @@ public interface NhaCungCapDAO {
 	public List<DoiTuong> danhSachDoiTuong(String maHoacTen);
 
 	public List<NhaCungCap> danhSachNhaCungCap();
+	
+	public List<NhaCungCap> danhSachNhaCungCapPhatSinh();
 
 	public NhaCungCap layNhaCungCap(Integer maNcc);
 

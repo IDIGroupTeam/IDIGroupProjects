@@ -1,5 +1,6 @@
 package com.idi.finance.controller;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -30,7 +31,6 @@ public class KhachHangController {
 
 	@InitBinder
 	protected void initBinder(WebDataBinder dataBinder) {
-
 		// Form mục tiêu
 		Object target = dataBinder.getTarget();
 		if (target == null) {
@@ -47,8 +47,8 @@ public class KhachHangController {
 		try {
 			// Lấy danh sách khách hàng
 			List<KhachHang> khachhangDs = khachHangDAO.danhSachKhachHang();
-			model.addAttribute("khachhangDs", khachhangDs);
 
+			model.addAttribute("khachhangDs", khachhangDs);
 			model.addAttribute("tab", "tabDSKH");
 			return "danhSachKhachHang";
 		} catch (Exception e) {
@@ -61,8 +61,13 @@ public class KhachHangController {
 	public String xemKhachHang(@PathVariable("id") int maKh, Model model) {
 		try {
 			KhachHang khachHang = khachHangDAO.layKhachHang(maKh);
-			model.addAttribute("khachHang", khachHang);
 
+			List<KhachHang> khachhangPhatSinhDs = khachHangDAO.danhSachKhachHangPhatSinh();
+			if (khachhangPhatSinhDs != null && khachhangPhatSinhDs.contains(khachHang)) {
+				khachHang.setXoa(false);
+			}
+
+			model.addAttribute("khachHang", khachHang);
 			model.addAttribute("tab", "tabDSKH");
 			return "xemKhachHang";
 		} catch (Exception e) {

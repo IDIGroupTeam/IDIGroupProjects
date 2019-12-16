@@ -65,10 +65,14 @@
 					<td><div class="btn-group btn-group-sm">
 							<a href="${url}/hanghoa/donvi/sua/${donVi.maDv}" class="btn"
 								title="Sửa"> <span class="glyphicon glyphicon-edit"></span>
-							</a><a href="${url}/hanghoa/donvi/xoa/${donVi.maDv}" class="btn"
-								title="Xóa" onclick="return xacNhanXoaDonViTinh(${donVi.maDv});">
-								<span class="glyphicon glyphicon-remove"></span>
 							</a>
+							<c:if test="${donVi.xoa}">
+								<a href="${url}/hanghoa/donvi/xoa/${donVi.maDv}" class="btn"
+									title="Xóa"
+									onclick="return xacNhanXoaDonViTinh(${donVi.maDv});"> <span
+									class="glyphicon glyphicon-remove"></span>
+								</a>
+							</c:if>
 						</div></td>
 				</tr>
 			</c:forEach>

@@ -95,7 +95,7 @@
 								${chungTu.kcbtDs[status.index].taiKhoanCo.loaiTaiKhoan.maTk}</td>
 							<td style="width: 100px;" class="text-right"><fmt:formatNumber
 									value="${chungTu.kcbtDs[status.index].taiKhoanNo.soTien.giaTri}"
-									maxFractionDigits="2"></fmt:formatNumber></td>
+									maxFractionDigits="0"></fmt:formatNumber> VND</td>
 						</tr>
 					</c:forEach>
 				</c:when>

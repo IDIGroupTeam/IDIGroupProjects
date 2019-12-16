@@ -2,6 +2,7 @@ package com.idi.finance.bean.hanghoa;
 
 import java.util.List;
 
+import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class KhoHang {
@@ -14,6 +15,10 @@ public class KhoHang {
 	private LoaiTaiKhoan taiKhoan;
 	private String moTa;
 	private List<HangHoa> hangHoaDs;
+
+	private int chieu = ChungTu.MUA;
+
+	private boolean xoa = true;
 
 	public int getMaKho() {
 		return maKho;
@@ -71,9 +76,25 @@ public class KhoHang {
 		this.hangHoaDs = hangHoaDs;
 	}
 
+	public int getChieu() {
+		return chieu;
+	}
+
+	public void setChieu(int chieu) {
+		this.chieu = chieu;
+	}
+
+	public boolean isXoa() {
+		return xoa;
+	}
+
+	public void setXoa(boolean xoa) {
+		this.xoa = xoa;
+	}
+
 	@Override
 	public String toString() {
-		String out = maKho + "  " + tenKho;
+		String out = maKho + "  " + kyHieuKho + " " + tenKho + " " + chieu;
 		return out;
 	}
 
@@ -83,7 +104,7 @@ public class KhoHang {
 			return false;
 		}
 
-		if (!(obj instanceof HangHoa)) {
+		if (!(obj instanceof KhoHang)) {
 			return false;
 		}
 

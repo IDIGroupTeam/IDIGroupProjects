@@ -77,10 +77,12 @@
 <div class="row form-group">
 	<div class="col-sm-12">
 		<a href="${url}/nhacungcap/danhsach" class="btn btn-info btn-sm">Danh
-			sách nhà cung cấp</a> <a id="xoaNut"
-			href="${url}/nhacungcap/xoa/${nhaCungCap.maNcc}"
-			class="btn btn-info btn-sm">Xóa</a> <a
-			href="${url}/nhacungcap/sua/${nhaCungCap.maNcc}"
+			sách nhà cung cấp</a>
+		<c:if test="${nhaCungCap.xoa}">
+			<a id="xoaNut" href="${url}/nhacungcap/xoa/${nhaCungCap.maNcc}"
+				class="btn btn-info btn-sm">Xóa</a>
+		</c:if>
+		<a href="${url}/nhacungcap/sua/${nhaCungCap.maNcc}"
 			class="btn btn-info btn-sm">Sửa</a>
 	</div>
 </div>

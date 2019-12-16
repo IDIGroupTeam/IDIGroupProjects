@@ -206,6 +206,7 @@ public class ChungTu implements Comparable<ChungTu> {
 	}
 
 	public void themTaiKhoan(TaiKhoan taiKhoan) {
+		logger.info("themTaiKhoan: " + taiKhoan);
 		if (taiKhoan == null) {
 			return;
 		}
@@ -216,9 +217,8 @@ public class ChungTu implements Comparable<ChungTu> {
 
 			if (!taiKhoanNoDs.contains(taiKhoan)) {
 				taiKhoanNoDs.add(taiKhoan);
-				soTien.setGiaTri(soTien.getGiaTri()
-						+ taiKhoan.getSoTien().getSoTien() * taiKhoan.getSoTien().getLoaiTien().getBanRa());
-				soTien.setSoTien(soTien.getGiaTri() / taiKhoan.getSoTien().getLoaiTien().getBanRa());
+				soTien.setGiaTri(soTien.getGiaTri() + taiKhoan.getSoTien().getGiaTri());
+				soTien.setSoTien(soTien.getSoTien() + taiKhoan.getSoTien().getSoTien());
 			}
 		} else if (taiKhoan.getSoDu() == LoaiTaiKhoan.CO) {
 			if (taiKhoanCoDs == null)
@@ -253,7 +253,7 @@ public class ChungTu implements Comparable<ChungTu> {
 		if (!taiKhoanKtthDs.contains(taiKhoan)) {
 			taiKhoanKtthDs.add(taiKhoan);
 			if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
-				soTien.setGiaTri(soTien.getGiaTri() + taiKhoan.getNo().getSoTien() * loaiTien.getBanRa());
+				soTien.setGiaTri(soTien.getGiaTri() + taiKhoan.getNo().getGiaTri());
 				soTien.setSoTien(soTien.getSoTien() + taiKhoan.getNo().getSoTien());
 			}
 		}
@@ -490,6 +490,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				tkThanhtoan.setChungTu(this);
 				tkThanhtoan.setLoaiTaiKhoan(hangHoa.getTkThanhtoan().getLoaiTaiKhoan());
 				tkThanhtoan.setSoDu(hangHoa.getTkThanhtoan().getSoDu());
+				tkThanhtoan.setNhomDk(hangHoa.getTkThanhtoan().getNhomDk());
 			}
 
 			int pos = hangHoaDs.indexOf(hangHoa);
@@ -516,6 +517,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				tkKho.setChungTu(this);
 				tkKho.setLoaiTaiKhoan(hangHoa.getTkKho().getLoaiTaiKhoan());
 				tkKho.setSoDu(hangHoa.getTkKho().getSoDu());
+				tkKho.setNhomDk(hangHoa.getTkKho().getNhomDk());
 			}
 
 			int pos = hangHoaDs.indexOf(hangHoa);
@@ -539,6 +541,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				tkDoanhThu.setChungTu(this);
 				tkDoanhThu.setLoaiTaiKhoan(hangHoa.getTkDoanhThu().getLoaiTaiKhoan());
 				tkDoanhThu.setSoDu(hangHoa.getTkDoanhThu().getSoDu());
+				tkDoanhThu.setNhomDk(hangHoa.getTkDoanhThu().getNhomDk());
 			}
 
 			int pos = hangHoaDs.indexOf(hangHoa);
@@ -565,6 +568,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				tkChiPhi.setChungTu(this);
 				tkChiPhi.setLoaiTaiKhoan(hangHoa.getTkChiPhi().getLoaiTaiKhoan());
 				tkChiPhi.setSoDu(hangHoa.getTkChiPhi().getSoDu());
+				tkChiPhi.setNhomDk(hangHoa.getTkChiPhi().getNhomDk());
 			}
 
 			int pos = hangHoaDs.indexOf(hangHoa);
@@ -590,6 +594,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				tkGiaVon.setChungTu(this);
 				tkGiaVon.setLoaiTaiKhoan(hangHoa.getTkGiaVon().getLoaiTaiKhoan());
 				tkGiaVon.setSoDu(hangHoa.getTkGiaVon().getSoDu());
+				tkGiaVon.setNhomDk(hangHoa.getTkGiaVon().getNhomDk());
 			}
 
 			int pos = hangHoaDs.indexOf(hangHoa);
@@ -615,6 +620,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				tkChietKhau.setChungTu(this);
 				tkChietKhau.setLoaiTaiKhoan(hangHoa.getTkChietKhau().getLoaiTaiKhoan());
 				tkChietKhau.setSoDu(hangHoa.getTkChietKhau().getSoDu());
+				tkChietKhau.setNhomDk(hangHoa.getTkChietKhau().getNhomDk());
 			}
 
 			int pos = hangHoaDs.indexOf(hangHoa);
@@ -641,6 +647,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				tkGiamGia.setChungTu(this);
 				tkGiamGia.setLoaiTaiKhoan(hangHoa.getTkGiamGia().getLoaiTaiKhoan());
 				tkGiamGia.setSoDu(hangHoa.getTkGiamGia().getSoDu());
+				tkGiamGia.setNhomDk(hangHoa.getTkGiamGia().getNhomDk());
 			}
 
 			int pos = hangHoaDs.indexOf(hangHoa);
@@ -666,6 +673,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				tkTraLai.setChungTu(this);
 				tkTraLai.setLoaiTaiKhoan(hangHoa.getTkTraLai().getLoaiTaiKhoan());
 				tkTraLai.setSoDu(hangHoa.getTkTraLai().getSoDu());
+				tkTraLai.setNhomDk(hangHoa.getTkTraLai().getNhomDk());
 			}
 
 			int pos = hangHoaDs.indexOf(hangHoa);
@@ -692,6 +700,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				tkThueGtgt.setChungTu(this);
 				tkThueGtgt.setLoaiTaiKhoan(hangHoa.getTkThueGtgt().getLoaiTaiKhoan());
 				tkThueGtgt.setSoDu(hangHoa.getTkThueGtgt().getSoDu());
+				tkThueGtgt.setNhomDk(hangHoa.getTkThueGtgt().getNhomDk());
 			}
 
 			int pos = hangHoaDs.indexOf(hangHoa);
@@ -718,6 +727,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				tkThueTtdb.setChungTu(this);
 				tkThueTtdb.setLoaiTaiKhoan(hangHoa.getTkThueTtdb().getLoaiTaiKhoan());
 				tkThueTtdb.setSoDu(hangHoa.getTkThueTtdb().getSoDu());
+				tkThueTtdb.setNhomDk(hangHoa.getTkThueTtdb().getNhomDk());
 			}
 
 			int pos = hangHoaDs.indexOf(hangHoa);
@@ -744,6 +754,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				tkThueXk.setChungTu(this);
 				tkThueXk.setLoaiTaiKhoan(hangHoa.getTkThueXk().getLoaiTaiKhoan());
 				tkThueXk.setSoDu(hangHoa.getTkThueXk().getSoDu());
+				tkThueXk.setNhomDk(hangHoa.getTkThueXk().getNhomDk());
 			}
 
 			int pos = hangHoaDs.indexOf(hangHoa);
@@ -769,6 +780,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				tkThueNk.setChungTu(this);
 				tkThueNk.setLoaiTaiKhoan(hangHoa.getTkThueNk().getLoaiTaiKhoan());
 				tkThueNk.setSoDu(hangHoa.getTkThueNk().getSoDu());
+				tkThueNk.setNhomDk(hangHoa.getTkThueNk().getNhomDk());
 			}
 
 			int pos = hangHoaDs.indexOf(hangHoa);
@@ -794,6 +806,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				tkThue.setChungTu(this);
 				tkThue.setLoaiTaiKhoan(hangHoa.getTkThue().getLoaiTaiKhoan());
 				tkThue.setSoDu(hangHoa.getTkThue().getSoDu());
+				tkThue.setNhomDk(hangHoa.getTkThue().getNhomDk());
 			}
 
 			int pos = hangHoaDs.indexOf(hangHoa);

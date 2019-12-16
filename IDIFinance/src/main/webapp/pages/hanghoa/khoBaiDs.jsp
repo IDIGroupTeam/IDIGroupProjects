@@ -52,7 +52,6 @@
 				<th style="width: 80px;">Mã kho</th>
 				<th>Tên kho</th>
 				<th>Địa chỉ</th>
-				<!-- <th>Tài khoản kho</th> -->
 				<th>Mô tả</th>
 				<th></th>
 			</tr>
@@ -63,15 +62,17 @@
 					<td>${khoBai.kyHieuKho}</td>
 					<td>${khoBai.tenKho}</td>
 					<td>${khoBai.diaChi}</td>
-					<!-- <td></td> -->
 					<td>${khoBai.moTa}</td>
 					<td><div class="btn-group btn-group-sm">
 							<a href="${url}/hanghoa/kho/sua/${khoBai.maKho}" class="btn"
 								title="Sửa"> <span class="glyphicon glyphicon-edit"></span>
-							</a><a href="${url}/hanghoa/kho/xoa/${khoBai.maKho}" class="btn"
-								title="Sửa" onclick="return xacNhanXoa(${khoBai.maKho});"> <span
-								class="glyphicon glyphicon-remove"></span>
 							</a>
+							<c:if test="${khoBai.xoa}">
+								<a href="${url}/hanghoa/kho/xoa/${khoBai.maKho}" class="btn"
+									title="Sửa" onclick="return xacNhanXoa(${khoBai.maKho});">
+									<span class="glyphicon glyphicon-remove"></span>
+								</a>
+							</c:if>
 						</div></td>
 				</tr>
 			</c:forEach>

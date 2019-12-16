@@ -41,6 +41,17 @@
 		<put-attribute name="body"
 			value="/pages/bieudo/chartManagement.jsp" />
 	</definition>
+	<definition name="chartManagementView" extends="taichinh">
+		<put-attribute name="title" value="Biểu đồ KPI" />
+		<put-attribute name="body"
+			value="/pages/bieudo/chartManagementView.jsp" />
+	</definition>
+	<definition name="chartManagementBctc" extends="taichinh">
+		<put-attribute name="title"
+			value="Quản lý biểu đồ - báo cáo tài chính" />
+		<put-attribute name="body"
+			value="/pages/bieudo/chartManagementBctc.jsp" />
+	</definition>
 	<!-- Kết thúc Tab biểu đồ KPI -->
 
 
@@ -50,6 +61,8 @@
 		<put-attribute name="title" value="Danh sách phiếu thu" />
 		<put-attribute name="body"
 			value="/pages/chungtu/phieuthu/phieuThuDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/phieuthu/phieuThuTk.jsp" />
 	</definition>
 
 	<definition name="xemPhieuThu" extends="taichinh">
@@ -81,6 +94,8 @@
 		<put-attribute name="title" value="Danh sách phiếu chi" />
 		<put-attribute name="body"
 			value="/pages/chungtu/phieuchi/phieuChiDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/phieuchi/phieuChiTk.jsp" />
 	</definition>
 
 	<definition name="xemPhieuChi" extends="taichinh">
@@ -112,6 +127,8 @@
 		<put-attribute name="title" value="Danh sách báo có" />
 		<put-attribute name="body"
 			value="/pages/chungtu/baoco/baoCoDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/baoco/baoCoTk.jsp" />
 	</definition>
 
 	<definition name="xemBaoCo" extends="taichinh">
@@ -143,6 +160,8 @@
 		<put-attribute name="title" value="Danh sách báo nợ" />
 		<put-attribute name="body"
 			value="/pages/chungtu/baono/baoNoDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/baono/baoNoTk.jsp" />
 	</definition>
 
 	<definition name="xemBaoNo" extends="taichinh">
@@ -175,6 +194,8 @@
 			value="Danh sách kế toán tổng hợp" />
 		<put-attribute name="body"
 			value="/pages/chungtu/ketoantonghop/keToanTongHopDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/ketoantonghop/keToanTongHopTk.jsp" />
 	</definition>
 
 	<definition name="xemKeToanTongHop" extends="taichinh">
@@ -210,6 +231,8 @@
 			value="Danh sách chứng từ mua hàng" />
 		<put-attribute name="body"
 			value="/pages/chungtu/muahang/muaHangDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/muahang/muaHangTk.jsp" />
 	</definition>
 
 	<definition name="xemMuaHang" extends="taichinh">
@@ -226,6 +249,12 @@
 			value="/pages/chungtu/muahang/muaHangSu.jsp" />
 	</definition>
 
+	<definition name="saoChepMuaHang" extends="taichinh">
+		<put-attribute name="title" value="Sao chép mua hàng" />
+		<put-attribute name="body"
+			value="/pages/chungtu/muahang/muaHangSc.jsp" />
+	</definition>
+
 	<definition name="taoMoiMuaHang" extends="taichinh">
 		<put-attribute name="title"
 			value="Tạo mới chứng từ mua hàng" />
@@ -239,6 +268,8 @@
 		<put-attribute name="title" value="Danh sách bán hàng" />
 		<put-attribute name="body"
 			value="/pages/chungtu/banhang/banHangDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/banhang/banHangTk.jsp" />
 	</definition>
 
 	<definition name="xemBanHang" extends="taichinh">
@@ -253,6 +284,12 @@
 			value="/pages/chungtu/banhang/banHangSu.jsp" />
 	</definition>
 
+	<definition name="saoChepBanHang" extends="taichinh">
+		<put-attribute name="title" value="Sao chép bán hàng" />
+		<put-attribute name="body"
+			value="/pages/chungtu/banhang/banHangSc.jsp" />
+	</definition>
+
 	<definition name="taoMoiBanHang" extends="taichinh">
 		<put-attribute name="title" value="Tạo mới bán hàng" />
 		<put-attribute name="body"
@@ -264,6 +301,8 @@
 		<put-attribute name="title" value="Danh sách kết chuyển" />
 		<put-attribute name="body"
 			value="/pages/chungtu/ketchuyen/ketChuyenDs.jsp" />
+		<put-attribute name="search"
+			value="/pages/chungtu/ketchuyen/ketChuyenTk.jsp" />
 	</definition>
 
 	<definition name="xemKetChuyen" extends="taichinh">
@@ -386,11 +425,20 @@
 			value="/pages/bctc/balanceSheetCodeDs.jsp" />
 	</definition>
 
-	<definition name="taoMoiBalanceSheetCode" extends="taichinh">
+	<definition name="taoMoiHighBalanceSheetCode"
+		extends="taichinh">
 		<put-attribute name="title"
-			value="Tạo mới chỉ tiêu cân đối kế toán" />
+			value="Tạo mới chỉ tiêu cân đối kế toán - cấp cao" />
 		<put-attribute name="body"
-			value="/pages/bctc/balanceSheetCodeTm.jsp" />
+			value="/pages/bctc/balanceSheetCodeHighTm.jsp" />
+	</definition>
+
+	<definition name="taoMoiLowBalanceSheetCode"
+		extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới chỉ tiêu cân đối kế toán - cấp thấp" />
+		<put-attribute name="body"
+			value="/pages/bctc/balanceSheetCodeLowTm.jsp" />
 	</definition>
 
 	<definition name="bangCanDoiPhatSinh" extends="taichinh">
@@ -441,11 +489,37 @@
 			value="/pages/bctc/cashFlowCodeDs.jsp" />
 	</definition>
 
-	<definition name="taoMoiChiTieuLctt" extends="taichinh">
+	<definition name="taoMoiHighChiTieuLctt" extends="taichinh">
 		<put-attribute name="title"
-			value="Tạo mới chỉ tiêu lưu chuyển tiền tệ" />
+			value="Tạo mới chỉ tiêu lưu chuyển tiền tệ - cấp cao" />
 		<put-attribute name="body"
-			value="/pages/bctc/cashFlowCodeTm.jsp" />
+			value="/pages/bctc/cashFlowCodeHighTm.jsp" />
+	</definition>
+
+	<definition name="taoMoiLowChiTieuLctt" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới chỉ tiêu lưu chuyển tiền tệ - cấp thấp" />
+		<put-attribute name="body"
+			value="/pages/bctc/cashFlowCodeLowTm.jsp" />
+	</definition>
+
+	<definition name="danhSachBctc" extends="taichinh">
+		<put-attribute name="title" value="Báo cáo tài chính" />
+		<put-attribute name="search"
+			value="/pages/bctc/baoCaoTaiChinhTk.jsp" />
+		<put-attribute name="body"
+			value="/pages/bctc/baoCaoTaiChinhDs.jsp" />
+	</definition>
+	<definition name="taoMoiBctc" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới báo cáo tài chính" />
+		<put-attribute name="body"
+			value="/pages/bctc/baoCaoTaiChinhTm.jsp" />
+	</definition>
+	<definition name="xemBctc" extends="taichinh">
+		<put-attribute name="title" value="Báo cáo tài chính" />
+		<put-attribute name="body"
+			value="/pages/bctc/baoCaoTaiChinhXm.jsp" />
 	</definition>
 	<!-- Kết thúc Tab báo cáo tài chính -->
 
@@ -684,6 +758,12 @@
 			value="Sửa tài khoản ngân hàng" />
 		<put-attribute name="body"
 			value="/pages/doitac/nganhang/nganHangTaiKhoanSu.jsp" />
+	</definition>
+
+	<definition name="danhSachLoaiTien" extends="taichinh">
+		<put-attribute name="title" value="Danh sách loại tiền" />
+		<put-attribute name="body"
+			value="/pages/loaitien/loaiTienDs.jsp" />
 	</definition>
 	<!-- Kết thúc Tab quản trị -->
 

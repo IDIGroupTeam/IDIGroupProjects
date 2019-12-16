@@ -12,8 +12,11 @@
 				<li id="tab${kpiGroup.groupId}"><a
 					href="${url}/bieudo/${kpiGroup.groupId}">${kpiGroup.groupName}</a></li>
 			</c:forEach>
-			<li id="tabQLBD"><a href="${url}/quanlybieudo">Quản lý biểu
+			<li class="divider"></li>
+			<li id="tabQLBD"><a href="${url}/quanly/bieudo">Quản lý biểu
 					đồ</a></li>
+			<li id="tabQLBDBCTC"><a href="${url}/quanly/bieudo/bctc">Cấu
+					hình bctc</a></li>
 		</ul></li>
 	<li class="dropdown"><a class="dropdown-toggle"
 		data-toggle="dropdown" href="#">Chứng từ kế toán<span
@@ -60,15 +63,16 @@
 			class="caret"></span>
 	</a>
 		<ul class="dropdown-menu">
-			<li id="tabBCDKT"><a href="${url}/bctc/cdkt/danhsach">Bảng
-					cân đối kế toán</a></li>
+			<li id="tabBCTCDS"><a href="${url}/bctc/danhsach">Báo cáo
+					tài chính</a></li>
+			<%-- <li id="tabBCDKT"><a href="${url}/bctc/cdkt/danhsach">Bảng
+					cân đối kế toán</a></li> --%>
 			<li id="tabBCDPS"><a href="${url}/bctc/candoiphatsinh">Bảng
 					cân đối phát sinh</a></li>
-			<li id="tabBKQHDKD"><a href="${url}/bctc/kqhdkd/danhsach">Bảng
+			<%-- <li id="tabBKQHDKD"><a href="${url}/bctc/kqhdkd/danhsach">Bảng
 					kết quả HDKD</a></li>
 			<li id="tabBLCTT"><a href="${url}/bctc/luuchuyentt/danhsach">Bảng
-					lưu chuyển tiền tệ</a></li>
-
+					lưu chuyển tiền tệ</a></li> --%>
 		</ul></li>
 	<%-- <li class="dropdown"><a class="dropdown-toggle"
 		data-toggle="dropdown" href="#">Nghiệp vụ<span class="caret"></span>
@@ -94,6 +98,9 @@
 					sách tài khoản</a></li>
 			<li id="tabDSBCDKT"><a href="${url}/bctc/cdkt/chitieu/danhsach">Danh
 					sách chỉ tiêu CDKT</a></li>
+			<li id="tabDSBKQHDKD"><a
+				href="${url}/bctc/cdkt/chitieu/danhsach">Danh sách chỉ tiêu
+					KQHDKD</a></li>
 			<li id="tabDSBLCTT"><a
 				href="${url}/bctc/luuchuyentt/chitieu/danhsach">Danh sách chỉ
 					tiêu LCTT</a></li>
@@ -116,7 +123,8 @@
 					sách ngân hàng</a></li>
 			<li id="tabDSNHTK"><a href="${url}/nganhang/taikhoan/danhsach">Danh
 					sách tài khoản ngân hàng</a></li>
-			<li id="tabDSNT"><a href="#">Danh sách ngoại tệ</a></li>
+			<li id="tabDSLT"><a href="${url}/loaitien/danhsach">Danh
+					sách loại tiền</a></li>
 
 			<%-- <li id="tabCNDL"><a href="${url}/bctc/capnhatdulieu">Cập nhật dữ liệu</a></li> --%>
 		</ul></li>

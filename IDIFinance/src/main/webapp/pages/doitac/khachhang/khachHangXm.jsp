@@ -78,10 +78,12 @@
 <div class="row form-group">
 	<div class="col-sm-12">
 		<a href="${url}/khachhang/danhsach" class="btn btn-info btn-sm">Danh
-			sách khách hàng</a> <a id="xoaNut"
-			href="${url}/khachhang/xoa/${khachHang.maKh}"
-			class="btn btn-info btn-sm">Xóa</a> <a
-			href="${url}/khachhang/sua/${khachHang.maKh}"
+			sách khách hàng</a>
+		<c:if test="${khachHang.xoa}">
+			<a id="xoaNut" href="${url}/khachhang/xoa/${khachHang.maKh}"
+				class="btn btn-info btn-sm">Xóa</a>
+		</c:if>
+		<a href="${url}/khachhang/sua/${khachHang.maKh}"
 			class="btn btn-info btn-sm">Sửa</a>
 	</div>
 </div>

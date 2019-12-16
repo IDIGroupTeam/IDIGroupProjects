@@ -2,6 +2,7 @@ package com.idi.finance.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -87,8 +88,22 @@ public class HangHoaController {
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			List<DonVi> donViDs = hangHoaDAO.danhSachDonViHangHoa();
-			model.addAttribute("donViDs", donViDs);
+			List<DonVi> donViPhatSinhDs = hangHoaDAO.danhSachDonViHangHoaPhatSinh();
+			List<DonVi> donViSoDuKyDs = hangHoaDAO.danhSachDonViHangHoaSoDuKy();
+			if (donViDs != null) {
+				for (Iterator<DonVi> iter = donViDs.iterator(); iter.hasNext();) {
+					DonVi donVi = iter.next();
 
+					if (donViPhatSinhDs != null && donViPhatSinhDs.contains(donVi)) {
+						donVi.setXoa(false);
+					}
+					if (donViSoDuKyDs != null && donViSoDuKyDs.contains(donVi)) {
+						donVi.setXoa(false);
+					}
+				}
+			}
+
+			model.addAttribute("donViDs", donViDs);
 			model.addAttribute("tab", "tabDSDVHH");
 			return "danhSachDonViHangHoa";
 		} catch (Exception e) {
@@ -194,14 +209,42 @@ public class HangHoaController {
 
 			NhomHang nhomHangHoa = new NhomHang();
 			nhomHangHoa = hangHoaDAO.danhSachNhomHangHoa(nhomHangHoa);
+			List<NhomHang> nhomHangHoaPhatSinhDs = hangHoaDAO.danhSachNhomHangHoaPhatSinh();
+			List<NhomHang> nhomHangHoaChaDs = hangHoaDAO.danhSachNhomHangHoaCha();
+			kiemTraXoaNhomHangHoa(nhomHangHoa, nhomHangHoaPhatSinhDs, nhomHangHoaChaDs);
 
 			model.addAttribute("nhomHangHoa", nhomHangHoa);
-
 			model.addAttribute("tab", "tabDSNHH");
 			return "danhSachNhomHangHoa";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
+		}
+	}
+
+	private void kiemTraXoaNhomHangHoa(NhomHang nhomHangHoa, List<NhomHang> nhomHangHoaPhatSinhDs,
+			List<NhomHang> nhomHangHoaChaDs) {
+		logger.info("Kiểm tra nhóm hàng hóa có xóa được không: ");
+		logger.info("Nhóm hàng hóa: " + nhomHangHoa);
+		logger.info("Danh sách phát sinh: " + nhomHangHoaPhatSinhDs);
+		logger.info("Danh sách cha: " + nhomHangHoaChaDs);
+		if (nhomHangHoa != null) {
+			if (nhomHangHoaPhatSinhDs != null && nhomHangHoaPhatSinhDs.contains(nhomHangHoa)) {
+				nhomHangHoa.setXoa(false);
+			}
+			if (nhomHangHoaChaDs != null && nhomHangHoaChaDs.contains(nhomHangHoa)) {
+				nhomHangHoa.setXoa(false);
+			}
+
+			logger.info("Kết quả: " + nhomHangHoa.isXoa());
+			logger.info("Tiếp tục kiểm tra cấp con ... ");
+			if (nhomHangHoa.getNhomHhDs() != null) {
+				logger.info("Có số nhóm hàng hóa con: " + nhomHangHoa.getNhomHhDs().size());
+				for (Iterator<NhomHang> iter = nhomHangHoa.getNhomHhDs().iterator(); iter.hasNext();) {
+					NhomHang nhomHangHoaCon = iter.next();
+					kiemTraXoaNhomHangHoa(nhomHangHoaCon, nhomHangHoaPhatSinhDs, nhomHangHoaChaDs);
+				}
+			}
 		}
 	}
 
@@ -286,7 +329,7 @@ public class HangHoaController {
 	@RequestMapping("/hanghoa/nhom/xoa/{id}")
 	public String xoaNhomHangHoa(@PathVariable("id") int maNhomHh, Model model) {
 		try {
-			// Xóa đơn vị tính có MA_DV=maDv
+			// Xóa đơn vị tính có MA_NHOM_HH=maNhomHh
 			hangHoaDAO.xoaNhomHangHoa(maNhomHh);
 
 			return "redirect:/hanghoa/nhom/danhsach";
@@ -303,8 +346,8 @@ public class HangHoaController {
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			List<HangHoa> hangHoaDs = hangHoaDAO.danhSachHangHoa();
-			model.addAttribute("hangHoaDs", hangHoaDs);
 
+			model.addAttribute("hangHoaDs", hangHoaDs);
 			model.addAttribute("tab", "tabDSHH");
 			return "danhSachHangHoa";
 		} catch (Exception e) {
@@ -323,8 +366,13 @@ public class HangHoaController {
 			if (hangHoa == null) {
 				return "redirect:/hanghoa/danhsach";
 			}
-			model.addAttribute("hangHoa", hangHoa);
 
+			List<HangHoa> hangHoaPhatSinhDs = hangHoaDAO.danhSachHangHoaPhatSinh();
+			if (hangHoaPhatSinhDs != null && hangHoaPhatSinhDs.contains(hangHoa)) {
+				hangHoa.setXoa(false);
+			}
+
+			model.addAttribute("hangHoa", hangHoa);
 			model.addAttribute("tab", "tabDSHH");
 			return "xemHangHoa";
 		} catch (Exception e) {
@@ -440,6 +488,16 @@ public class HangHoaController {
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
 			List<KhoHang> khoBaiDs = hangHoaDAO.danhSachKhoBai();
+
+			List<KhoHang> khoBaiPsDs = hangHoaDAO.danhSachKhoBaiPhatSinh();
+			List<KhoHang> khoBaiMdDs = hangHoaDAO.danhSachKhoBaiMacDinh();
+			for (Iterator<KhoHang> iter = khoBaiDs.iterator(); iter.hasNext();) {
+				KhoHang khoHang = iter.next();
+				if (khoBaiPsDs.contains(khoHang) || khoBaiMdDs.contains(khoHang)) {
+					khoHang.setXoa(false);
+				}
+			}
+
 			model.addAttribute("khoBaiDs", khoBaiDs);
 			logger.info(khoBaiDs);
 			model.addAttribute("tab", "tabDSK");

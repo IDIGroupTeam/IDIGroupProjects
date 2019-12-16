@@ -97,6 +97,8 @@ public class HangHoa {
 
 	private List<DonGia> donGiaDs;
 
+	private boolean xoa = true;
+
 	public int getMaHh() {
 		return maHh;
 	}
@@ -489,10 +491,12 @@ public class HangHoa {
 		this.donGiaDs = donGiaDs;
 	}
 
-	@Override
-	public String toString() {
-		String out = maHh + "  " + kyHieuHh + "  " + tenHh;
-		return out;
+	public boolean isXoa() {
+		return xoa;
+	}
+
+	public void setXoa(boolean xoa) {
+		this.xoa = xoa;
 	}
 
 	public void tronTk(HangHoa hangHoa) {
@@ -541,6 +545,12 @@ public class HangHoa {
 		if (this.getTkThueGtgtDu() == null && hangHoa.getTkThueGtgtDu() != null) {
 			this.setTkThueGtgtDu(hangHoa.getTkThueGtgtDu());
 		}
+	}
+
+	@Override
+	public String toString() {
+		String out = maHh + "  " + kyHieuHh + "  " + tenHh;
+		return out;
 	}
 
 	@Override

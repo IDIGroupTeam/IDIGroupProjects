@@ -52,12 +52,13 @@ import com.idi.finance.dao.ChungTuDAO;
 import com.idi.finance.dao.HangHoaDAO;
 import com.idi.finance.dao.KhachHangDAO;
 import com.idi.finance.dao.KyKeToanDAO;
+import com.idi.finance.dao.LoaiTienDAO;
 import com.idi.finance.dao.NhaCungCapDAO;
 import com.idi.finance.dao.NhanVienDAO;
 import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.form.KyKeToanForm;
-import com.idi.finance.utils.PropCont;
+import com.idi.finance.hangso.PropCont;
 import com.idi.finance.validator.KyKeToanValidator;
 
 @Controller
@@ -75,6 +76,9 @@ public class KyKeToanController {
 
 	@Autowired
 	TaiKhoanDAO taiKhoanDAO;
+
+	@Autowired
+	LoaiTienDAO loaiTienDAO;
 
 	@Autowired
 	SoKeToanDAO soKeToanDAO;
@@ -187,10 +191,7 @@ public class KyKeToanController {
 
 			// LẤY CÁC THÔNG TIN CHUẨN BỊ CHO CÁC MODAL TỌA MỚI
 			// Danh sách loại tiền
-			List<LoaiTien> loaiTienDs = chungTuDAO.danhSachLoaiTien();
-
-			// Danh sách tài khoản
-			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+			List<LoaiTien> loaiTienDs = loaiTienDAO.danhSachLoaiTien();
 
 			// Danh sách khách hàng
 			List<KhachHang> khDs = khachHangDAO.danhSachKhachHang();
@@ -205,7 +206,7 @@ public class KyKeToanController {
 			List<LoaiTaiKhoan> tienMatTkDs = new ArrayList<>();
 			try {
 				String[] tienMats = props.getCauHinh(PropCont.TAI_KHOAN_TIEN_MAT).getGiaTri().split(";");
-				tienMatTkDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(tienMats));
+				tienMatTkDs = taiKhoanDAO.danhSachTaiKhoanCon(Arrays.asList(tienMats));
 			} catch (Exception e) {
 			}
 			logger.info("tienMatTkDs: " + tienMatTkDs);
@@ -214,7 +215,7 @@ public class KyKeToanController {
 			List<LoaiTaiKhoan> tienGuiTkDs = new ArrayList<>();
 			try {
 				String[] tienGuis = props.getCauHinh(PropCont.TAI_KHOAN_TIEN_GUI).getGiaTri().split(";");
-				tienGuiTkDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(tienGuis));
+				tienGuiTkDs = taiKhoanDAO.danhSachTaiKhoanCon(Arrays.asList(tienGuis));
 			} catch (Exception e) {
 			}
 			tienMatTkDs.addAll(tienGuiTkDs);
@@ -223,7 +224,7 @@ public class KyKeToanController {
 			List<LoaiTaiKhoan> congNoTkDs = new ArrayList<>();
 			try {
 				String[] congNos = props.getCauHinh(PropCont.TAI_KHOAN_CONG_NO).getGiaTri().split(";");
-				congNoTkDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(congNos));
+				congNoTkDs = taiKhoanDAO.danhSachTaiKhoanCon(Arrays.asList(congNos));
 			} catch (Exception e) {
 			}
 
@@ -231,7 +232,7 @@ public class KyKeToanController {
 			List<LoaiTaiKhoan> khoTkDs = new ArrayList<>();
 			try {
 				String[] khos = props.getCauHinh(PropCont.TAI_KHOAN_KHO_VTHH).getGiaTri().split(";");
-				khoTkDs = taiKhoanDAO.danhSachTaiKhoan(Arrays.asList(khos));
+				khoTkDs = taiKhoanDAO.danhSachTaiKhoanCon(Arrays.asList(khos));
 			} catch (Exception e) {
 			}
 
@@ -245,7 +246,6 @@ public class KyKeToanController {
 			List<DonVi> donViDs = hangHoaDAO.danhSachDonViHangHoa();
 
 			model.addAttribute("loaiTienDs", loaiTienDs);
-			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 			model.addAttribute("khDs", khDs);
 			model.addAttribute("nccDs", nccDs);
 			model.addAttribute("nvDs", nvDs);
@@ -1711,6 +1711,9 @@ public class KyKeToanController {
 
 				// CẬP NHẬT CHO PHẦN SỐ DƯ TÀI KHOẢN
 				SoDuKy soDuKyTk = new SoDuKy();
+				soDuKyTk.setKyKeToan(kyKeToan);
+				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
+
 				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
 				if (soDuKyTkDs != null) {
 					Iterator<SoDuKy> soDuKyIter = soDuKyTkDs.iterator();
@@ -1723,8 +1726,6 @@ public class KyKeToanController {
 						}
 					}
 				}
-				soDuKyTk.setKyKeToan(kyKeToan);
-				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
 
 				logger.info("soDuKyTk hiện tại: " + soDuKyTk);
 				// Cập nhật dữ liệu mới
@@ -1785,6 +1786,9 @@ public class KyKeToanController {
 
 				// CẬP NHẬT CHO PHẦN SỐ DƯ TÀI KHOẢN
 				SoDuKy soDuKyTk = new SoDuKy();
+				soDuKyTk.setKyKeToan(kyKeToan);
+				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
+
 				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
 				if (soDuKyTkDs != null) {
 					Iterator<SoDuKy> soDuKyIter = soDuKyTkDs.iterator();
@@ -1797,8 +1801,6 @@ public class KyKeToanController {
 						}
 					}
 				}
-				soDuKyTk.setKyKeToan(kyKeToan);
-				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
 
 				logger.info("soDuKyTk hiện tại: " + soDuKyTk);
 				// Cập nhật dữ liệu mới
@@ -1820,6 +1822,10 @@ public class KyKeToanController {
 
 				// CẬP NHẬT CHO PHẦN CÔNG NỢ
 				SoDuKy soDuKyDt = new SoDuKy();
+				soDuKyDt.setKyKeToan(kyKeToan);
+				soDuKyDt.setLoaiTaiKhoan(loaiTaiKhoan);
+				soDuKyDt.setDoiTuong(soDuKy.getDoiTuong());
+
 				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
 				if (soDuKyDtDs != null) {
 					Iterator<SoDuKy> soDuKyDtIter = soDuKyDtDs.iterator();
@@ -1832,9 +1838,6 @@ public class KyKeToanController {
 						}
 					}
 				}
-				soDuKyDt.setKyKeToan(kyKeToan);
-				soDuKyDt.setLoaiTaiKhoan(loaiTaiKhoan);
-				soDuKyDt.setDoiTuong(soDuKy.getDoiTuong());
 
 				logger.info("soDuKyDt hiện tại: " + soDuKyDt);
 				// Cập nhật dữ liệu mới
@@ -1897,6 +1900,9 @@ public class KyKeToanController {
 				// CẬP NHẬT CHO PHẦN SỐ DƯ TÀI KHOẢN
 				logger.info("CẬP NHẬT CHO PHẦN SỐ DƯ TÀI KHOẢN");
 				SoDuKy soDuKyTk = new SoDuKy();
+				soDuKyTk.setKyKeToan(kyKeToan);
+				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
+
 				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
 				if (soDuKyTkDs != null) {
 					Iterator<SoDuKy> soDuKyIter = soDuKyTkDs.iterator();
@@ -1909,8 +1915,6 @@ public class KyKeToanController {
 						}
 					}
 				}
-				soDuKyTk.setKyKeToan(kyKeToan);
-				soDuKyTk.setLoaiTaiKhoan(loaiTaiKhoan);
 
 				logger.info("soDuKyTk hiện tại: " + soDuKyTk);
 				// Cập nhật dữ liệu mới
@@ -1933,6 +1937,11 @@ public class KyKeToanController {
 				logger.info("CẬP NHẬT CHO PHẦN CÔNG NỢ");
 				// CẬP NHẬT CHO PHẦN CÔNG NỢ
 				SoDuKy soDuKyHh = new SoDuKy();
+				soDuKyHh.setKyKeToan(kyKeToan);
+				soDuKyHh.setLoaiTaiKhoan(loaiTaiKhoan);
+				soDuKyHh.setHangHoa(soDuKy.getHangHoa());
+				soDuKyHh.setKhoHang(soDuKy.getKhoHang());
+
 				// Tìm xem trước đó đã có số dư kỳ của tk hiện tại chưa
 				if (soDuKyHhDs != null) {
 					Iterator<SoDuKy> soDuKyHhIter = soDuKyHhDs.iterator();
@@ -1945,10 +1954,6 @@ public class KyKeToanController {
 						}
 					}
 				}
-				soDuKyHh.setKyKeToan(kyKeToan);
-				soDuKyHh.setLoaiTaiKhoan(loaiTaiKhoan);
-				soDuKyHh.setHangHoa(soDuKy.getHangHoa());
-				soDuKyHh.setKhoHang(soDuKy.getKhoHang());
 
 				logger.info("soDuKyHh hiện tại: " + soDuKyHh);
 				// Cập nhật dữ liệu mới
@@ -1956,12 +1961,7 @@ public class KyKeToanController {
 				soDuKyHh.setCoDauKy(soDuKyHh.getCoDauKy() + soDuKy.getCoDauKy() - soDuKyTruoc.getCoDauKy());
 				soDuKyHh.setNoCuoiKy(soDuKyHh.getNoCuoiKy() + soDuKy.getNoCuoiKy() - soDuKyTruoc.getNoCuoiKy());
 				soDuKyHh.setCoCuoiKy(soDuKyHh.getCoCuoiKy() + soDuKy.getCoCuoiKy() - soDuKyTruoc.getCoCuoiKy());
-				logger.info("soDuKyHh: " + soDuKyHh.getHangHoa().getSoLuong());
-				logger.info("soDuKy: " + soDuKy.getHangHoa().getSoLuong());
-				logger.info("soDuKyTruoc: " + soDuKyTruoc.getHangHoa().getSoLuong());
-				double soLuong = soDuKyHh.getHangHoa().getSoLuong() + soDuKy.getHangHoa().getSoLuong()
-						- soDuKyTruoc.getHangHoa().getSoLuong();
-				soDuKyHh.getHangHoa().setSoLuong(soLuong);
+				soDuKyHh.setSoLuong(soDuKyHh.getSoLuong() + soDuKy.getSoLuong() - soDuKyTruoc.getSoLuong());
 				if (soDuKyHh.getLoaiTaiKhoan().equals(soDuKy.getLoaiTaiKhoan())) {
 					soDuKyHh.setLoaiTien(soDuKy.getLoaiTien());
 				}

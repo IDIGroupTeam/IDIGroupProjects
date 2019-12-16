@@ -20,45 +20,55 @@
 				<c:choose>
 					<c:when test="${duLieuKeToan.loaiTaiKhoan.luongTinh}">
 						<td class="text-right"><fmt:formatNumber
-								value="${duLieuKeToan.noDauKy}" type="NUMBER"></fmt:formatNumber></td>
+								value="${duLieuKeToan.noDauKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 						<td class="text-right"><fmt:formatNumber
-								value="${duLieuKeToan.coDauKy}" type="NUMBER"></fmt:formatNumber></td>
+								value="${duLieuKeToan.coDauKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 					</c:when>
 					<c:when
 						test="${!duLieuKeToan.loaiTaiKhoan.luongTinh && duLieuKeToan.soDuDauKy>=0}">
 						<td class="text-right"><fmt:formatNumber
-								value="${duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+								value="${duLieuKeToan.soDuDauKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 						<td class="text-right">0</td>
 					</c:when>
 					<c:when
 						test="${!duLieuKeToan.loaiTaiKhoan.luongTinh && duLieuKeToan.soDuDauKy<0}">
 						<td class="text-right">0</td>
 						<td class="text-right"><fmt:formatNumber
-								value="${0-duLieuKeToan.soDuDauKy}" type="NUMBER"></fmt:formatNumber></td>
+								value="${0-duLieuKeToan.soDuDauKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 					</c:when>
 				</c:choose>
 				<td class="text-right"><fmt:formatNumber
-						value="${duLieuKeToan.tongNoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+						value="${duLieuKeToan.tongNoPhatSinh}" type="NUMBER"
+						maxFractionDigits="0"></fmt:formatNumber></td>
 				<td class="text-right"><fmt:formatNumber
-						value="${duLieuKeToan.tongCoPhatSinh}" type="NUMBER"></fmt:formatNumber></td>
+						value="${duLieuKeToan.tongCoPhatSinh}" type="NUMBER"
+						maxFractionDigits="0"></fmt:formatNumber></td>
 				<c:choose>
 					<c:when test="${duLieuKeToan.loaiTaiKhoan.luongTinh}">
 						<td class="text-right"><fmt:formatNumber
-								value="${duLieuKeToan.noCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+								value="${duLieuKeToan.noCuoiKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 						<td class="text-right"><fmt:formatNumber
-								value="${duLieuKeToan.coCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+								value="${duLieuKeToan.coCuoiKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 					</c:when>
 					<c:when
 						test="${!duLieuKeToan.loaiTaiKhoan.luongTinh && duLieuKeToan.soDuCuoiKy>=0}">
 						<td class="text-right"><fmt:formatNumber
-								value="${duLieuKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+								value="${duLieuKeToan.soDuCuoiKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 						<td class="text-right">0</td>
 					</c:when>
 					<c:when
 						test="${!duLieuKeToan.loaiTaiKhoan.luongTinh && duLieuKeToan.soDuCuoiKy<0}">
 						<td class="text-right">0</td>
 						<td class="text-right"><fmt:formatNumber
-								value="${0-duLieuKeToan.soDuCuoiKy}" type="NUMBER"></fmt:formatNumber></td>
+								value="${0-duLieuKeToan.soDuCuoiKy}" type="NUMBER"
+								maxFractionDigits="0"></fmt:formatNumber></td>
 					</c:when>
 				</c:choose>
 			</tr>

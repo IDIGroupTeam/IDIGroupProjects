@@ -27,6 +27,8 @@ public class SoDuKy {
 	private double coCuoiKyNt;
 	private LoaiTien loaiTien = new LoaiTien();
 
+	private double soLuong;
+
 	public KyKeToan getKyKeToan() {
 		return kyKeToan;
 	}
@@ -139,6 +141,14 @@ public class SoDuKy {
 		this.loaiTien = loaiTien;
 	}
 
+	public double getSoLuong() {
+		return soLuong;
+	}
+
+	public void setSoLuong(double soLuong) {
+		this.soLuong = soLuong;
+	}
+
 	public void tron(SoDuKy soDuKy) {
 		if (soDuKy != null) {
 			if (this.kyKeToan == null) {
@@ -153,6 +163,14 @@ public class SoDuKy {
 				this.doiTuong = soDuKy.getDoiTuong();
 			}
 
+			if (this.hangHoa == null) {
+				this.hangHoa = soDuKy.getHangHoa();
+			}
+
+			if (this.khoHang == null) {
+				this.khoHang = soDuKy.getKhoHang();
+			}
+
 			this.noDauKy += soDuKy.getNoDauKy();
 			this.noDauKyNt += soDuKy.getNoDauKyNt();
 			this.coDauKy += soDuKy.getCoDauKy();
@@ -161,6 +179,7 @@ public class SoDuKy {
 			this.noCuoiKyNt += soDuKy.getNoCuoiKyNt();
 			this.coCuoiKy += soDuKy.getCoCuoiKy();
 			this.coCuoiKyNt += soDuKy.getCoCuoiKyNt();
+			this.soLuong += soDuKy.getSoLuong();
 		}
 	}
 
@@ -202,6 +221,24 @@ public class SoDuKy {
 			} else if (!doiTuong.equals(item.getDoiTuong())) {
 				return false;
 			}
+
+			if (hangHoa == null) {
+				if (item.getHangHoa() != null)
+					return false;
+			} else if (item.getHangHoa() == null) {
+				return false;
+			} else if (!hangHoa.equals(item.getHangHoa())) {
+				return false;
+			}
+
+			if (khoHang == null) {
+				if (item.getKhoHang() != null)
+					return false;
+			} else if (item.getKhoHang() == null) {
+				return false;
+			} else if (!khoHang.equals(item.getKhoHang())) {
+				return false;
+			}
 		} catch (Exception e) {
 			return false;
 		}
@@ -212,7 +249,7 @@ public class SoDuKy {
 	@Override
 	public String toString() {
 		String out = kyKeToan + " " + doiTuong + " " + loaiTaiKhoan + " " + hangHoa + " " + khoHang + " " + noDauKy
-				+ " " + noDauKyNt + " " + coDauKy + " " + coDauKyNt + " - " + loaiTien;
+				+ " " + noDauKyNt + " " + coDauKy + " " + coDauKyNt + " - " + loaiTien + " - " + soLuong;
 		return out;
 	}
 }

@@ -11,10 +11,9 @@
 <script type="text/javascript">
 	//Shorthand for $( document ).ready()
 	$(function() {
-		// Khởi tạo action/method cho mainFinanceForm form
-		// Khởi tạo action/method cho mainFinanceForm form
-		$(document).ready(function() {
-			
+		$('#dataTable').DataTable({
+			ordering : false,
+			language : vi
 		});
 	});
 </script>
@@ -35,6 +34,11 @@
 		</div>
 	</c:when>
 	<c:otherwise>
+		<div class="pull-left">
+			<c:if test="${not empty message}">
+				<span class="text-danger"><i>${message}</i></span>
+			</c:if>
+		</div>
 		<div class="pull-right">
 			<i>(*): Mặc định là tiền VND</i>&nbsp;&nbsp;&nbsp;&nbsp;
 			<c:choose>
@@ -45,14 +49,21 @@
 					</a>
 				</c:when>
 			</c:choose>
+			<a
+				href="${url}/chungtu/phieuthu/danhsach/pdf/<fmt:formatDate
+							value='${mainFinanceForm.dau}' pattern='dd_MM_yyyy' />/<fmt:formatDate
+							value='${mainFinanceForm.cuoi}' pattern='dd_MM_yyyy' />"
+				class="btn btn-info btn-sm"> <span
+				class="glyphicon glyphicon-download"></span> Pdf
+			</a>
 		</div>
 	</c:otherwise>
 </c:choose>
 <br />
 <br />
 
-<div id="dataTable" class="table-responsive">
-	<table class="table table-bordered table-hover">
+<div class="table-responsive">
+	<table id="dataTable" class="table table-bordered table-hover">
 		<thead>
 			<tr>
 				<th class="text-center" colspan="2">Phiếu thu</th>
@@ -76,8 +87,8 @@
 							dateStyle="SHORT" /></td>
 					<td class="text-center" style="width: 50px;">${phieuThu.loaiCt}${phieuThu.soCt}</td>
 					<td><a href="${url}/chungtu/phieuthu/xem/${phieuThu.maCt}">${phieuThu.lyDo}</a></td>
-					<td align="right"><fmt:formatNumber
-							value="${phieuThu.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
+					<td class="text-right"><fmt:formatNumber
+							value="${phieuThu.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber></td>
 					<td><c:choose>
 							<c:when
 								test="${phieuThu.doiTuong.loaiDt == DoiTuong.KHACH_VANG_LAI}">

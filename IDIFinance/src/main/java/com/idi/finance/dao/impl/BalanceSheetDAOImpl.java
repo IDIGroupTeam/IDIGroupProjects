@@ -50,9 +50,6 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	@Value("${LAY_CDKT_CUOI_KY}")
 	private String LAY_CDKT_CUOI_KY;
 
-	@Value("${TINH_CDKT_THEO_MATK}")
-	private String TINH_CDKT_THEO_MATK;
-
 	@Value("${TINH_CDKT_DAU_KY}")
 	private String TINH_CDKT_DAU_KY;
 
@@ -67,6 +64,18 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 
 	@Value("${KIEM_TRA_SINH_BS_2}")
 	private String KIEM_TRA_SINH_BS_2;
+
+	@Value("${THEM_CHI_TIEU_CDKT}")
+	private String THEM_CHI_TIEU_CDKT;
+
+	@Value("${CAP_NHAT_CHI_TIEU_CDKT_TEN}")
+	private String CAP_NHAT_CHI_TIEU_CDKT_TEN;
+
+	@Value("${CAP_NHAT_CHI_TIEU_CDKT}")
+	private String CAP_NHAT_CHI_TIEU_CDKT;
+
+	@Value("${XOA_CHI_TIEU_CDKT}")
+	private String XOA_CHI_TIEU_CDKT;
 
 	@Value("${THEM_CHI_TIEU_CDKT_TAI_KHOAN}")
 	private String THEM_CHI_TIEU_CDKT_TAI_KHOAN;
@@ -115,6 +124,9 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 
 	@Value("${TINH_LCTT_THEO_MATK}")
 	private String TINH_LCTT_THEO_MATK;
+
+	@Value("${THEM_CHI_TIEU_LCTT}")
+	private String THEM_CHI_TIEU_LCTT;
 
 	@Value("${THEM_CHI_TIEU_LCTT_TAI_KHOAN}")
 	private String THEM_CHI_TIEU_LCTT_TAI_KHOAN;
@@ -179,38 +191,59 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	}
 
 	@Override
-	public int updateBSBai(BalanceAssetItem oblBai, BalanceAssetItem newBai) {
-		if (oblBai == null || newBai == null) {
+	public int insertBSHighBai(BalanceAssetItem bai) {
+		if (bai == null) {
 			return 0;
 		}
 
-		String updateQuery = CAP_NHAT_CHI_TIEU_CDKT_TAI_KHOAN;
-		logger.info(updateQuery);
+		String insertQuery = THEM_CHI_TIEU_CDKT;
+		logger.info(insertQuery);
 
-		// Update to CDKT_TAIKHOAN
+		// Insert to BALANCE_ASSET_ITEM
 		int count = 0;
 		try {
-			LoaiTaiKhoan loaiTaiKhoan = oblBai.getTaiKhoanDs().get(0);
-			LoaiTaiKhoan loaiTaiKhoanTmpl = newBai.getTaiKhoanDs().get(0);
-			count = jdbcTmpl.update(updateQuery, loaiTaiKhoanTmpl.getMaTk(), oblBai.getAssetCode(),
-					loaiTaiKhoan.getMaTk());
+			count = jdbcTmpl.update(insertQuery, bai.getAssetCode(), bai.getAssetName(), bai.getParent().getAssetCode(),
+					bai.getSoDu());
 		} catch (DuplicateKeyException e) {
 			count = -1;
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 
 		return count;
 	}
 
 	@Override
-	public int insertBSBai(BalanceAssetItem bai) {
+	public int updateBSHighBai(BalanceAssetItem oblBai, BalanceAssetItem newBai) {
+		if (oblBai == null || newBai == null) {
+			return 0;
+		}
+
+		String updateQuery = CAP_NHAT_CHI_TIEU_CDKT;
+		logger.info(updateQuery);
+
+		// Update to BALANCE_ASSET_ITEM
+		int count = 0;
+		try {
+			count = jdbcTmpl.update(updateQuery, newBai.getAssetName(), newBai.getParent().getAssetCode(),
+					newBai.getSoDu(), oblBai.getAssetCode());
+		} catch (DuplicateKeyException e) {
+			count = -1;
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+
+		return count;
+	}
+
+	@Override
+	public int insertBSLowBai(BalanceAssetItem bai) {
 		if (bai == null) {
 			return 0;
 		}
 
 		String insertQuery = THEM_CHI_TIEU_CDKT_TAI_KHOAN;
+		logger.info(insertQuery);
 
 		// Insert to CDKT_TAIKHOAN
 		int count = 0;
@@ -227,11 +260,66 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		return count;
 	}
 
-	public void deleteBSBai(BalanceAssetItem bai) {
+	public int updateBSBai(BalanceAssetItem bai) {
+		if (bai == null) {
+			return 0;
+		}
+
+		String updateQuery = CAP_NHAT_CHI_TIEU_CDKT_TEN;
+		logger.info(updateQuery);
+
+		int count = 0;
+		try {
+			count = jdbcTmpl.update(updateQuery, bai.getAssetName(), bai.getAssetCode());
+		} catch (DuplicateKeyException e) {
+			count = -1;
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+
+		return count;
+	}
+
+	@Override
+	public int updateBSLowBai(BalanceAssetItem oblBai, BalanceAssetItem newBai) {
+		if (oblBai == null || newBai == null) {
+			return 0;
+		}
+
+		String updateQuery = CAP_NHAT_CHI_TIEU_CDKT_TAI_KHOAN;
+		logger.info(updateQuery);
+
+		// Update to CDKT_TAIKHOAN
+		int count = 0;
+		try {
+			LoaiTaiKhoan loaiTaiKhoan = oblBai.getTaiKhoanDs().get(0);
+			LoaiTaiKhoan loaiTaiKhoanTmpl = newBai.getTaiKhoanDs().get(0);
+			count = jdbcTmpl.update(updateQuery, loaiTaiKhoanTmpl.getMaTk(), oblBai.getAssetCode(),
+					loaiTaiKhoan.getMaTk());
+		} catch (DuplicateKeyException e) {
+			count = -1;
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+
+		return count;
+	}
+
+	public void deleteBSBaiHigh(BalanceAssetItem bai) {
+		if (bai != null && bai.getAssetCode() != null) {
+			String query = XOA_CHI_TIEU_CDKT;
+			logger.info(query);
+			logger.info("assetCode: " + bai.getAssetCode());
+			jdbcTmpl.update(query, bai.getAssetCode());
+		}
+	}
+
+	public void deleteBSBaiLow(BalanceAssetItem bai) {
 		if (bai != null && bai.getAssetCode() != null && bai.getTaiKhoanDs() != null && bai.getTaiKhoanDs().size() > 0
 				&& bai.getTaiKhoanDs().get(0).getMaTk() != null) {
 			String query = XOA_CHI_TIEU_CDKT_TAI_KHOAN;
 			logger.info(query);
+			logger.info("assetCode: " + bai.getAssetCode() + ". maTK: " + bai.getTaiKhoanDs().get(0).getMaTk());
 			jdbcTmpl.update(query, bai.getAssetCode(), bai.getTaiKhoanDs().get(0).getMaTk());
 		}
 	}
@@ -638,12 +726,36 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	}
 
 	@Override
-	public int insertCFBai(BalanceAssetItem bai) {
+	public int insertCFHighBai(BalanceAssetItem bai) {
+		if (bai == null) {
+			return 0;
+		}
+
+		String insertQuery = THEM_CHI_TIEU_LCTT;
+		logger.info(insertQuery);
+
+		// Insert to CASH_FLOW_TAIKHOAN
+		int count = 0;
+		try {
+			count = jdbcTmpl.update(insertQuery, bai.getAssetCode(), bai.getAssetName(), bai.getParent().getAssetCode(),
+					bai.getSoDu(), bai.getRule());
+		} catch (DuplicateKeyException e) {
+			count = -1;
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+
+		return count;
+	}
+
+	@Override
+	public int insertCFLowBai(BalanceAssetItem bai) {
 		if (bai == null) {
 			return 0;
 		}
 
 		String insertQuery = THEM_CHI_TIEU_LCTT_TAI_KHOAN;
+		logger.info(insertQuery);
 
 		// Insert to CASH_FLOW_TAIKHOAN
 		int count = 0;
@@ -1200,7 +1312,7 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		// Đoạn này nếu sau này xử lý tốt phần hiển thị trang jsp thì có thể bỏ đi
 		if ((parent.getChilds() == null || parent.getChilds().size() == 0)
 				&& (parent.getTaiKhoanDs() == null || parent.getTaiKhoanDs().size() == 0)) {
-			parent = null;
+			// parent = null;
 		}
 
 		return parent;
@@ -1443,26 +1555,6 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		}
 
 		return bad;
-	}
-
-	@Override
-	public List<BalanceAssetData> calculateBs(Date start, Date end) {
-		if (start == null || end == null) {
-			return null;
-		}
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd");
-		String batDau = sdf.format(start);
-		String ketThuc = sdf.format(end);
-
-		String query = TINH_CDKT_THEO_MATK;
-		logger.info(query);
-		logger.info("Từ " + batDau + " đến " + ketThuc);
-
-		Object[] params = { batDau, ketThuc, batDau, ketThuc, batDau, ketThuc };
-		List<BalanceAssetData> bads = jdbcTmpl.query(query, params, new BalanceAssetDataMapper());
-
-		return bads;
 	}
 
 	@Override

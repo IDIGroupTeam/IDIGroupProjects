@@ -456,7 +456,7 @@
 									<td>${tonKho.khoHang.tenKho}</td>
 									<td>${tonKho.loaiTaiKhoan.maTk}</td>
 									<td>${tonKho.loaiTaiKhoan.tenTk}</td>
-									<td>${tonKho.hangHoa.soLuong}</td>
+									<td>${tonKho.soLuong}</td>
 									<td>${tonKho.hangHoa.donVi.tenDv}</td>
 									<td class="text-right" style="width: 100px;"><fmt:formatNumber
 											value="${tonKho.noDauKy}" maxFractionDigits="2"></fmt:formatNumber></td>

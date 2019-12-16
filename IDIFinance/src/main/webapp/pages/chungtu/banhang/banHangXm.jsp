@@ -54,7 +54,19 @@
 </style>
 
 <div>
-	<span class="pull-left heading4">CHỨNG TỪ BÁN HÀNG</span>
+	<c:choose>
+		<c:when test="${chungTu.tinhChatCt==2}">
+			<span class="pull-left heading4">CHỨNG TỪ XUẤT KHẨU HÀNG HÓA</span>
+		</c:when>
+		<c:when test="${chungTu.tinhChatCt==3}">
+			<span class="pull-left heading4">CHỨNG TỪ CUNG CẤP DỊCH VỤ
+				TRONG NƯỚC</span>
+		</c:when>
+		<c:otherwise>
+			<span class="pull-left heading4">CHỨNG TỪ BÁN HÀNG TRONG NƯỚC</span>
+		</c:otherwise>
+	</c:choose>
+
 	<%-- <div class="btn-group btn-group-sm pull-right">
 		<a href="${url}/banhang/${chungTu.maCt}" class="btn btn-info btn-sm">
 			<span class="glyphicon glyphicon-download"></span> Xuất
@@ -64,6 +76,13 @@
 <br />
 <hr />
 
+<div class="row form-group">
+	<c:if test="${not empty message}">
+		<div class="col-sm-12 text-danger">
+			<i>${message}</i>
+		</div>
+	</c:if>
+</div>
 <div class="row form-group">
 	<label class="control-label col-sm-2" for="soCt">Số phiếu:</label>
 	<div class="col-sm-4">${chungTu.loaiCt}${chungTu.soCt}</div>
@@ -151,7 +170,7 @@
 		tiền:</label>
 	<div class="col-sm-4">
 		<fmt:formatNumber value="${chungTu.soTien.giaTri}"
-			maxFractionDigits="2"></fmt:formatNumber>
+			maxFractionDigits="0"></fmt:formatNumber>
 		VND
 	</div>
 
@@ -188,10 +207,10 @@
 					class="btn btn-info btn-sm">Sửa</a>
 				<a href="${url}/chungtu/banhang/pdf/${chungTu.maCt}"
 					class="btn btn-info btn-sm">In</a>
-				<a href="${url}/chungtu/banhang/pdf/${chungTu.maCt}"
-					class="btn btn-info btn-sm"> Phiếu xuất kho </a>
-				<a id="xoaNut" href="${url}/chungtu/banhang/xoa/${chungTu.maCt}"
-					class="btn btn-info btn-sm">Xóa</a>
+				<%-- <a id="xoaNut" href="${url}/chungtu/banhang/xoa/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Xóa</a> --%>
+				<a href="${url}/chungtu/banhang/saochep/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Sao chép</a>
 				<a href="${url}/chungtu/banhang/taomoi/${chungTu.tinhChatCt}"
 					class="btn btn-info btn-sm">Tạo mới</a>
 			</c:when>

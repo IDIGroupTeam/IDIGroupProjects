@@ -5,9 +5,9 @@ import org.springframework.format.annotation.NumberFormat;
 public class Tien {
 	private int maGia;
 	private LoaiTien loaiTien = new LoaiTien();
-	@NumberFormat(pattern = "#")
+	@NumberFormat(pattern = "###,###,###,###,###,###.##")
 	private double soTien;
-	@NumberFormat(pattern = "#")
+	@NumberFormat(pattern = "###,###,###,###,###,###.##")
 	private double giaTri;
 
 	public int getMaGia() {
@@ -44,8 +44,7 @@ public class Tien {
 
 	@Override
 	public String toString() {
-		// return soTien * loaiTien.getBanRa() + " " + loaiTien.getMaLt();
-		return soTien + " " + giaTri;
+		return maGia + " - " + loaiTien + " - " + soTien + " - " + giaTri;
 	}
 
 	@Override

@@ -10,6 +10,10 @@ import com.idi.finance.bean.hanghoa.NhomHang;
 public interface HangHoaDAO {
 	public List<DonVi> danhSachDonViHangHoa();
 
+	public List<DonVi> danhSachDonViHangHoaPhatSinh();
+
+	public List<DonVi> danhSachDonViHangHoaSoDuKy();
+
 	public DonVi layDonVi(int maDv);
 
 	public void capNhatDonVi(DonVi donVi);
@@ -22,6 +26,10 @@ public interface HangHoaDAO {
 
 	public List<NhomHang> danhSachNhomHangHoa();
 
+	public List<NhomHang> danhSachNhomHangHoaPhatSinh();
+
+	public List<NhomHang> danhSachNhomHangHoaCha();
+
 	public NhomHang layNhomHangHoa(int maNhomHn);
 
 	public void capNhatNhomHangHoa(NhomHang nhomHangHoa);
@@ -32,12 +40,14 @@ public interface HangHoaDAO {
 
 	public List<HangHoa> danhSachHangHoa();
 	
+	public List<HangHoa> danhSachHangHoaPhatSinh();
+
 	public List<HangHoa> danhSachKhHangHoa();
-	
+
 	public List<HangHoa> danhSachHangHoa(String tuKhoa);
 
 	public HangHoa layHangHoa(int maHh);
-	
+
 	public boolean kiemTraDuyNhat(int maHh, String kyHieuHh);
 
 	public void capNhatHangHoa(HangHoa hangHoa);
@@ -47,6 +57,10 @@ public interface HangHoaDAO {
 	public void xoaHangHoa(int maHh);
 
 	public List<KhoHang> danhSachKhoBai();
+
+	public List<KhoHang> danhSachKhoBaiPhatSinh();
+
+	public List<KhoHang> danhSachKhoBaiMacDinh();
 
 	public KhoHang layKhoBai(int maKho);
 

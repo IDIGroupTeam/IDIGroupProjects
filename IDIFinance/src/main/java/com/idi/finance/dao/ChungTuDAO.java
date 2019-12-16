@@ -3,7 +3,6 @@ package com.idi.finance.dao;
 import java.util.Date;
 import java.util.List;
 
-import com.idi.finance.bean.LoaiTien;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.chungtu.KetChuyenButToan;
 
@@ -19,8 +18,6 @@ public interface ChungTuDAO {
 	public ChungTu layChungTuKtth(int maCt, String loaiCt);
 
 	public ChungTu layChungTuKho(int maCt, String loaiCt);
-
-	public List<LoaiTien> danhSachLoaiTien();
 
 	public void themChungTu(ChungTu chungTu);
 

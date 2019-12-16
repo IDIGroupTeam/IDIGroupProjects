@@ -52,6 +52,13 @@
 <hr />
 
 <div class="row form-group">
+	<c:if test="${not empty message}">
+		<div class="col-sm-12 text-danger">
+			<i>${message}</i>
+		</div>
+	</c:if>
+</div>
+<div class="row form-group">
 	<label class="control-label col-sm-2" for="soCt">Số phiếu:</label>
 	<div class="col-sm-4">${chungTu.loaiCt}${chungTu.soCt}</div>
 
@@ -107,14 +114,18 @@
 		class="table table-bordered table-hover text-center dinhkhoan">
 		<thead>
 			<tr>
-				<th class="text-center" rowspan="2">Tài khoản</th>
-				<th class="text-center" rowspan="2" style="width: 100px;">Nợ</th>
-				<th class="text-center" rowspan="2" style="width: 100px;">Có</th>
 				<th class="text-center" rowspan="2">Lý do</th>
+				<th class="text-center" rowspan="2">Tài khoản</th>
+				<th class="text-center" colspan="2" style="width: 100px;">Nợ</th>
+				<th class="text-center" colspan="2" style="width: 100px;">Có</th>
 				<th class="text-center" colspan="2">Đối tượng</th>
 				<th class="text-center" rowspan="2" style="width: 50px;">Nhóm</th>
 			</tr>
 			<tr>
+				<th class="text-center" style="width: 120px;">Số tiền</th>
+				<th class="text-center" style="width: 120px;">Quy đổi</th>
+				<th class="text-center" style="width: 120px;">Số tiền</th>
+				<th class="text-center" style="width: 120px;">Quy đổi</th>
 				<th class="text-center" style="width: 100px;">Tên</th>
 				<th class="text-center" style="width: 100px;">Loại</th>
 			</tr>
@@ -123,20 +134,19 @@
 			<c:forEach items="${chungTu.taiKhoanKtthDs}" var="taiKhoanKtth"
 				varStatus="status">
 				<tr>
-					<td class="text-left">${taiKhoanKtth.loaiTaiKhoan.maTenTk}</td>
-					<c:choose>
-						<c:when test="${taiKhoanKtth.soDu == LoaiTaiKhoan.NO}">
-							<td class="text-right" style="width: 100px;"><fmt:formatNumber
-									value="${taiKhoanKtth.no.soTien}" maxFractionDigits="2"></fmt:formatNumber></td>
-							<td class="text-right" style="width: 100px;">0</td>
-						</c:when>
-						<c:otherwise>
-							<td class="text-right" style="width: 100px;">0</td>
-							<td class="text-right" style="width: 100px;"><fmt:formatNumber
-									value="${taiKhoanKtth.co.soTien}" maxFractionDigits="2"></fmt:formatNumber></td>
-						</c:otherwise>
-					</c:choose>
 					<td class="text-left">${taiKhoanKtth.lyDo}</td>
+					<td class="text-left">${taiKhoanKtth.loaiTaiKhoan.maTenTk}</td>
+					<td class="text-right" style="width: 100px;"><fmt:formatNumber
+							value="${taiKhoanKtth.no.soTien}" maxFractionDigits="2"></fmt:formatNumber>
+						${chungTu.loaiTien.maLt}</td>
+					<td class="text-right" style="width: 100px;"><fmt:formatNumber
+							value="${taiKhoanKtth.no.giaTri}" maxFractionDigits="0"></fmt:formatNumber>
+						VND</td>
+					<td class="text-right" style="width: 100px;"><fmt:formatNumber
+							value="${taiKhoanKtth.co.soTien}" maxFractionDigits="2"></fmt:formatNumber>
+						${chungTu.loaiTien.maLt}</td>
+					<td><fmt:formatNumber value="${taiKhoanKtth.co.giaTri}"
+							maxFractionDigits="0"></fmt:formatNumber> VND</td>
 					<td class="text-left" style="width: 100px;">${taiKhoanKtth.doiTuong.tenDt}</td>
 					<td class="text-left" style="width: 100px;"><c:choose>
 							<c:when
@@ -161,13 +171,21 @@
 			</c:forEach>
 			<tr>
 				<td class="text-left"><b>Thành tiền:</b></td>
-				<td class="text-right" colspan="2" style="width: 200px;"><fmt:formatNumber
+				<td></td>
+				<td class="text-right" style="width: 200px;"><fmt:formatNumber
 						value="${chungTu.soTien.soTien}" maxFractionDigits="2"></fmt:formatNumber>
 					${chungTu.loaiTien.maLt}</td>
-				<td class="text-left"><b>Quy đổi:</b></td>
-				<td class="text-right" colspan="2" style="width: 200px;"><fmt:formatNumber
-						value="${chungTu.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber>
+				<td class="text-right" style="width: 200px;"><fmt:formatNumber
+						value="${chungTu.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber>
 					VND</td>
+				<td class="text-right" style="width: 200px;"><fmt:formatNumber
+						value="${chungTu.soTien.soTien}" maxFractionDigits="2"></fmt:formatNumber>
+					${chungTu.loaiTien.maLt}</td>
+				<td class="text-right" style="width: 200px;"><fmt:formatNumber
+						value="${chungTu.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber>
+					VND</td>
+				<td></td>
+				<td></td>
 				<td style="width: 50px;"></td>
 			</tr>
 		</tbody>
@@ -186,8 +204,8 @@
 					class="btn btn-info btn-sm">Sửa</a>
 				<a href="${url}/chungtu/ktth/pdf/${chungTu.maCt}" target="_blank"
 					class="btn btn-info btn-sm">In</a>
-				<a id="xoaNut" href="${url}/chungtu/ktth/xoa/${chungTu.maCt}"
-					class="btn btn-info btn-sm">Xóa</a>
+				<%-- <a id="xoaNut" href="${url}/chungtu/ktth/xoa/${chungTu.maCt}"
+					class="btn btn-info btn-sm">Xóa</a> --%>
 				<a href="${url}/chungtu/ktth/saochep/${chungTu.maCt}"
 					class="btn btn-info btn-sm">Sao chép</a>
 				<a href="${url}/chungtu/ktth/taomoi" class="btn btn-info btn-sm">Tạo

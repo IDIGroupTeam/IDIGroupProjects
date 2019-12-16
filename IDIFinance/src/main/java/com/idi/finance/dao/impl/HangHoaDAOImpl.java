@@ -24,6 +24,18 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 	@Value("${DANH_SACH_DON_VI}")
 	private String DANH_SACH_DON_VI;
 
+	@Value("${DANH_SACH_DON_VI_PHAT_SINH}")
+	private String DANH_SACH_DON_VI_PHAT_SINH;
+
+	@Value("${DANH_SACH_DON_VI_SO_DU_KY}")
+	private String DANH_SACH_DON_VI_SO_DU_KY;
+
+	@Value("${KIEM_TRA_DON_VI_PHAT_SINH}")
+	private String KIEM_TRA_DON_VI_PHAT_SINH;
+
+	@Value("${KIEM_TRA_DON_VI_SO_DU_KY}")
+	private String KIEM_TRA_DON_VI_SO_DU_KY;
+
 	@Value("${LAY_DON_VI}")
 	private String LAY_DON_VI;
 
@@ -33,11 +45,23 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 	@Value("${THEM_DON_VI}")
 	private String THEM_DON_VI;
 
+	@Value("${DANH_SACH_NHOM_HANG_HOA_THEO_CHA}")
+	private String DANH_SACH_NHOM_HANG_HOA_THEO_CHA;
+
 	@Value("${DANH_SACH_NHOM_HANG_HOA}")
 	private String DANH_SACH_NHOM_HANG_HOA;
 
-	@Value("${DANH_SACH_NHOM_HANG_HOA_THEO_CHA}")
-	private String DANH_SACH_NHOM_HANG_HOA_THEO_CHA;
+	@Value("${DANH_SACH_NHOM_HANG_HOA_PHAT_SINH}")
+	private String DANH_SACH_NHOM_HANG_HOA_PHAT_SINH;
+
+	@Value("${DANH_SACH_NHOM_HANG_HOA_CHA}")
+	private String DANH_SACH_NHOM_HANG_HOA_CHA;
+
+	@Value("${KIEM_TRA_NHOM_HANG_HOA_PHAT_SINH}")
+	private String KIEM_TRA_NHOM_HANG_HOA_PHAT_SINH;
+
+	@Value("${KIEM_TRA_NHOM_HANG_HOA_CHA}")
+	private String KIEM_TRA_NHOM_HANG_HOA_CHA;
 
 	@Value("${LAY_NHOM_HANG_HOA}")
 	private String LAY_NHOM_HANG_HOA;
@@ -50,6 +74,12 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 
 	@Value("${DANH_SACH_HANG_HOA}")
 	private String DANH_SACH_HANG_HOA;
+
+	@Value("${DANH_SACH_HANG_HOA_PHAT_SINH}")
+	private String DANH_SACH_HANG_HOA_PHAT_SINH;
+
+	@Value("${KIEM_TRA_HANG_HOA_PHAT_SINH}")
+	private String KIEM_TRA_HANG_HOA_PHAT_SINH;
 
 	@Value("${DANH_SACH_HANG_HOA_THEO_TEN}")
 	private String DANH_SACH_HANG_HOA_THEO_TEN;
@@ -71,6 +101,18 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 
 	@Value("${DANH_SACH_KHO}")
 	private String DANH_SACH_KHO;
+
+	@Value("${DANH_SACH_KHO_PHAT_SINH}")
+	private String DANH_SACH_KHO_PHAT_SINH;
+
+	@Value("${DANH_SACH_KHO_MAC_DINH}")
+	private String DANH_SACH_KHO_MAC_DINH;
+
+	@Value("${KIEM_TRA_KHO_PHAT_SINH}")
+	private String KIEM_TRA_KHO_PHAT_SINH;
+
+	@Value("${KIEM_TRA_KHO_MAC_DINH}")
+	private String KIEM_TRA_KHO_MAC_DINH;
 
 	@Value("${LAY_KHO}")
 	private String LAY_KHO;
@@ -94,6 +136,28 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 	@Override
 	public List<DonVi> danhSachDonViHangHoa() {
 		String query = DANH_SACH_DON_VI;
+
+		logger.info("Danh sách đơn vị tính của hàng hóa ...");
+		logger.info(query);
+
+		List<DonVi> donViDs = jdbcTmpl.query(query, new DonViMapper());
+		return donViDs;
+	}
+
+	@Override
+	public List<DonVi> danhSachDonViHangHoaPhatSinh() {
+		String query = DANH_SACH_DON_VI_PHAT_SINH;
+
+		logger.info("Danh sách đơn vị tính của hàng hóa ...");
+		logger.info(query);
+
+		List<DonVi> donViDs = jdbcTmpl.query(query, new DonViMapper());
+		return donViDs;
+	}
+
+	@Override
+	public List<DonVi> danhSachDonViHangHoaSoDuKy() {
+		String query = DANH_SACH_DON_VI_SO_DU_KY;
 
 		logger.info("Danh sách đơn vị tính của hàng hóa ...");
 		logger.info(query);
@@ -160,14 +224,38 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 
 	@Override
 	public void xoaDonVi(int maDv) {
-		logger.info("Xóa đơn vị tính có MA_DV = " + maDv);
-		String xoa = "DELETE FROM HANG_HOA_DON_VI WHERE MA_DV=?";
-		jdbcTmpl.update(xoa, maDv);
+		logger.info("Kiểm tra việc xóa đơn vị MA_DV = " + maDv);
+		String phatSinh = KIEM_TRA_DON_VI_PHAT_SINH;
+		String soDuKy = KIEM_TRA_DON_VI_SO_DU_KY;
+		Integer phatSinhCount = 0;
+		Integer soDuKyCount = 0;
+
+		Object[] objs = { maDv };
+		try {
+			phatSinhCount = jdbcTmpl.queryForObject(phatSinh, objs, Integer.class);
+		} catch (Exception e) {
+		}
+
+		try {
+			soDuKyCount = jdbcTmpl.queryForObject(soDuKy, objs, Integer.class);
+		} catch (Exception e) {
+		}
+
+		if (phatSinhCount == 0 && soDuKyCount == 0) {
+			logger.info("Xóa đơn vị tính có MA_DV = " + maDv);
+			String xoa = "DELETE FROM HANG_HOA_DON_VI WHERE MA_DV=?";
+			jdbcTmpl.update(xoa, maDv);
+		} else {
+			logger.info("Không thể xóa đơn vị MA_DV=" + maDv + " vì nó vẫn đang được sử dụng");
+			logger.info("Phát sinh " + phatSinhCount);
+			logger.info("Số dư kỳ " + soDuKyCount);
+		}
 	}
 
 	@Override
 	public NhomHang danhSachNhomHangHoa(NhomHang nhomHangHoa) {
 		String query = DANH_SACH_NHOM_HANG_HOA_THEO_CHA;
+		logger.info("Danh sách nhóm hàng hóa theo cấp cha/con");
 		logger.info(query);
 		logger.info("nhomHangHoa: " + nhomHangHoa);
 
@@ -198,7 +286,46 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 	public List<NhomHang> danhSachNhomHangHoa() {
 		String query = DANH_SACH_NHOM_HANG_HOA;
 
+		logger.info("Danh sách nhóm hàng hóa");
+		logger.info(query);
 		List<NhomHang> nhomHangHoaDs = jdbcTmpl.query(query, new NhomHangHoaMapper());
+		if (nhomHangHoaDs != null) {
+			logger.info("Kết quả: " + nhomHangHoaDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
+
+		return nhomHangHoaDs;
+	}
+
+	@Override
+	public List<NhomHang> danhSachNhomHangHoaPhatSinh() {
+		String query = DANH_SACH_NHOM_HANG_HOA_PHAT_SINH;
+
+		logger.info("Danh sách nhóm hàng hóa phát sinh");
+		logger.info(query);
+		List<NhomHang> nhomHangHoaDs = jdbcTmpl.query(query, new NhomHangHoaMapper());
+		if (nhomHangHoaDs != null) {
+			logger.info("Kết quả: " + nhomHangHoaDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
+
+		return nhomHangHoaDs;
+	}
+
+	@Override
+	public List<NhomHang> danhSachNhomHangHoaCha() {
+		String query = DANH_SACH_NHOM_HANG_HOA_CHA;
+
+		logger.info("Danh sách nhóm hàng hóa cha");
+		logger.info(query);
+		List<NhomHang> nhomHangHoaDs = jdbcTmpl.query(query, new NhomHangHoaMapper());
+		if (nhomHangHoaDs != null) {
+			logger.info("Kết quả: " + nhomHangHoaDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
 
 		return nhomHangHoaDs;
 	}
@@ -215,6 +342,8 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 				NhomHang nhomHangHoaCha = new NhomHang();
 				nhomHangHoaCha.setMaNhomHh(rs.getInt("MA_NHOM_HH_CHA"));
 				nhomHangHoa.setNhomHh(nhomHangHoaCha);
+
+				logger.info(nhomHangHoa);
 
 				return nhomHangHoa;
 			} catch (Exception e) {
@@ -267,9 +396,33 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 
 	@Override
 	public void xoaNhomHangHoa(int maNhomHh) {
-		logger.info("Xóa nhóm hàng hóa MA_NHOM_HH = " + maNhomHh);
-		String xoa = "DELETE FROM HANG_HOA_NHOM WHERE MA_NHOM_HH=?";
-		jdbcTmpl.update(xoa, maNhomHh);
+		logger.info("Kiểm tra việc xóa nhóm hàng hóa MA_NHOM_HH = " + maNhomHh);
+		String phatSinh = KIEM_TRA_NHOM_HANG_HOA_PHAT_SINH;
+		String cha = KIEM_TRA_NHOM_HANG_HOA_CHA;
+		Integer phatSinhCount = 0;
+		Integer chaCount = 0;
+
+		Object[] objs = { maNhomHh };
+		try {
+			phatSinhCount = jdbcTmpl.queryForObject(phatSinh, objs, Integer.class);
+		} catch (Exception e) {
+		}
+
+		try {
+			chaCount = jdbcTmpl.queryForObject(cha, objs, Integer.class);
+		} catch (Exception e) {
+		}
+
+		if (phatSinhCount == 0 && chaCount == 0) {
+			logger.info("Xóa nhóm hàng hóa MA_NHOM_HH = " + maNhomHh);
+			String xoa = "DELETE FROM HANG_HOA_NHOM WHERE MA_NHOM_HH=?";
+			jdbcTmpl.update(xoa, maNhomHh);
+		} else {
+			logger.info("Không thể xóa nhóm hàng hóa MA_NHOM_HH=" + maNhomHh + " vì nó vẫn đang được sử dụng");
+			logger.info("Phát sinh " + phatSinhCount);
+			logger.info("Nhóm hàng hóa cha " + chaCount);
+		}
+
 	}
 
 	@Override
@@ -281,6 +434,31 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 
 		List<HangHoa> hangHoaDs = jdbcTmpl.query(query, new HangHoaMapper());
 		return hangHoaDs;
+	}
+
+	@Override
+	public List<HangHoa> danhSachHangHoaPhatSinh() {
+		String query = DANH_SACH_HANG_HOA_PHAT_SINH;
+
+		logger.info("Danh sách hàng hóa phát sinh ...");
+		logger.info(query);
+
+		List<HangHoa> hangHoaDs = jdbcTmpl.query(query, new HangHoapPhatSinhMapper());
+		return hangHoaDs;
+	}
+
+	public class HangHoapPhatSinhMapper implements RowMapper<HangHoa> {
+		public HangHoa mapRow(ResultSet rs, int rowNum) throws SQLException {
+			try {
+				HangHoa hangHoa = new HangHoa();
+				hangHoa.setMaHh(rs.getInt("MA_HH"));
+
+				return hangHoa;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 	}
 
 	@Override
@@ -474,9 +652,24 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 
 	@Override
 	public void xoaHangHoa(int maHh) {
-		logger.info("Xóa hàng hóa MA_HH = " + maHh);
-		String xoa = "DELETE FROM HANG_HOA_DANH_MUC WHERE MA_HH=?";
-		jdbcTmpl.update(xoa, maHh);
+		logger.info("Kiểm tra việc xóa hàng hóa MA_HH=" + maHh);
+		String phatSinh = KIEM_TRA_HANG_HOA_PHAT_SINH;
+		Integer phatSinhCount = 0;
+
+		Object[] objs = { maHh };
+		try {
+			phatSinhCount = jdbcTmpl.queryForObject(phatSinh, objs, Integer.class);
+		} catch (Exception e) {
+		}
+
+		if (phatSinhCount == 0) {
+			logger.info("Xóa hàng hóa MA_HH = " + maHh);
+			String xoa = "DELETE FROM HANG_HOA_DANH_MUC WHERE MA_HH=?";
+			jdbcTmpl.update(xoa, maHh);
+		} else {
+			logger.info("Không thể xóa hàng hóa MA_HH=" + maHh + " vì nó vẫn đang được sử dụng");
+			logger.info("Phát sinh " + phatSinhCount);
+		}
 	}
 
 	@Override
@@ -487,6 +680,43 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 		logger.info(query);
 
 		List<KhoHang> hangHoaDs = jdbcTmpl.query(query, new KhoBaiMapper());
+		if (hangHoaDs != null) {
+			logger.info("Kết quả: " + hangHoaDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
+		return hangHoaDs;
+	}
+
+	@Override
+	public List<KhoHang> danhSachKhoBaiPhatSinh() {
+		String query = DANH_SACH_KHO_PHAT_SINH;
+
+		logger.info("Danh sách kho bãi phát sinh ...");
+		logger.info(query);
+
+		List<KhoHang> hangHoaDs = jdbcTmpl.query(query, new KhoBaiMapper());
+		if (hangHoaDs != null) {
+			logger.info("Kết quả: " + hangHoaDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
+		return hangHoaDs;
+	}
+
+	@Override
+	public List<KhoHang> danhSachKhoBaiMacDinh() {
+		String query = DANH_SACH_KHO_MAC_DINH;
+
+		logger.info("Danh sách kho bãi mặc định ...");
+		logger.info(query);
+
+		List<KhoHang> hangHoaDs = jdbcTmpl.query(query, new KhoBaiMapper());
+		if (hangHoaDs != null) {
+			logger.info("Kết quả: " + hangHoaDs.size());
+		} else {
+			logger.info("Kết quả: " + 0);
+		}
 		return hangHoaDs;
 	}
 
@@ -551,8 +781,31 @@ public class HangHoaDAOImpl implements HangHoaDAO {
 
 	@Override
 	public void xoaKhoBai(int maKho) {
-		logger.info("Xóa kho MA_HH = " + maKho);
-		String xoa = "DELETE FROM HANG_HOA_KHO WHERE MA_KHO=?";
-		jdbcTmpl.update(xoa, maKho);
+		logger.info("Kiểm tra việc xóa kho MA_HH = " + maKho);
+		String phatSinh = KIEM_TRA_KHO_PHAT_SINH;
+		String macDinh = KIEM_TRA_KHO_MAC_DINH;
+		Integer phatSinhCount = 0;
+		Integer macDinhCount = 0;
+
+		Object[] objs = { maKho };
+		try {
+			phatSinhCount = jdbcTmpl.queryForObject(phatSinh, objs, Integer.class);
+		} catch (Exception e) {
+		}
+
+		try {
+			macDinhCount = jdbcTmpl.queryForObject(macDinh, objs, Integer.class);
+		} catch (Exception e) {
+		}
+
+		if (phatSinhCount == 0 && macDinhCount == 0) {
+			logger.info("Xóa kho MA_HH = " + maKho);
+			String xoa = "DELETE FROM HANG_HOA_KHO WHERE MA_KHO=?";
+			jdbcTmpl.update(xoa, maKho);
+		} else {
+			logger.info("Không thể xóa kho MA_HH=" + maKho + " vì nó vẫn đang được sử dụng");
+			logger.info("Phát sinh " + phatSinhCount);
+			logger.info("Mặc định " + macDinhCount);
+		}
 	}
 }

@@ -12,7 +12,10 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-
+		$('#dataTable').DataTable({
+			ordering : false,
+			language : vi
+		});
 	});
 </script>
 
@@ -32,6 +35,11 @@
 		</div>
 	</c:when>
 	<c:otherwise>
+		<div class="pull-left">
+			<c:if test="${not empty message}">
+				<span class="text-danger"><i>${message}</i></span>
+			</c:if>
+		</div>
 		<div class="pull-right">
 			<i>(*): Mặc định là tiền VND</i>&nbsp;&nbsp;&nbsp;&nbsp;
 			<c:choose>
@@ -41,6 +49,13 @@
 					</a>
 				</c:when>
 			</c:choose>
+			<a
+				href="${url}/chungtu/ktth/danhsach/pdf/<fmt:formatDate
+							value='${mainFinanceForm.dau}' pattern='dd_MM_yyyy' />/<fmt:formatDate
+							value='${mainFinanceForm.cuoi}' pattern='dd_MM_yyyy' />"
+				class="btn btn-info btn-sm"> <span
+				class="glyphicon glyphicon-download"></span> Pdf
+			</a>
 		</div>
 	</c:otherwise>
 </c:choose>
@@ -48,7 +63,7 @@
 <br />
 
 <div class="table-responsive">
-	<table class="table table-bordered table-hover">
+	<table id="dataTable" class="table table-bordered table-hover">
 		<thead>
 			<tr>
 				<th class="text-center" colspan="2">Phiếu KTTH</th>
@@ -70,7 +85,7 @@
 					<td class="text-center" style="width: 50px;">${keToanTongHop.loaiCt}${keToanTongHop.soCt}</td>
 					<td><a href="${url}/chungtu/ktth/xem/${keToanTongHop.maCt}">${keToanTongHop.lyDo}</a></td>
 					<td align="right"><fmt:formatNumber
-							value="${keToanTongHop.soTien.giaTri}" maxFractionDigits="2"></fmt:formatNumber></td>
+							value="${keToanTongHop.soTien.giaTri}" maxFractionDigits="0"></fmt:formatNumber></td>
 				</tr>
 			</c:forEach>
 		</tbody>

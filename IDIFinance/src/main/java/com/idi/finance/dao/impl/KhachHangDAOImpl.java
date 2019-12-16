@@ -2,6 +2,7 @@ package com.idi.finance.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -18,6 +19,18 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 
 	@Value("${DANH_SACH_KHACH_HANG_THEO_MA_HOAC_TEN}")
 	private String DANH_SACH_KHACH_HANG_THEO_MA_HOAC_TEN;
+
+	@Value("${DANH_SACH_KHACH_HANG_PHAT_SINH_CHUNG_TU}")
+	private String DANH_SACH_KHACH_HANG_PHAT_SINH_CHUNG_TU;
+
+	@Value("${DANH_SACH_KHACH_HANG_PHAT_SINH_NVKT}")
+	private String DANH_SACH_KHACH_HANG_PHAT_SINH_NVKT;
+
+	@Value("${KIEM_TRA_KHACH_HANG_PHAT_SINH_CHUNG_TU}")
+	private String KIEM_TRA_KHACH_HANG_PHAT_SINH_CHUNG_TU;
+
+	@Value("${KIEM_TRA_KHACH_HANG_PHAT_SINH_NVKT}")
+	private String KIEM_TRA_KHACH_HANG_PHAT_SINH_NVKT;
 
 	private JdbcTemplate jdbcTmpl;
 
@@ -39,7 +52,7 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 		List<DoiTuong> doiTuongDs = jdbcTmpl.query(query, new DoiTuongMapper());
 		return doiTuongDs;
 	}
-	
+
 	@Override
 	public List<DoiTuong> danhSachDoiTuong(String maHoacTen) {
 		if (maHoacTen == null || maHoacTen.trim().equals("")) {
@@ -103,7 +116,46 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 				khachHang.setEmail(rs.getString("EMAIL"));
 				khachHang.setWebSite(rs.getString("WEBSITE"));
 
-				// logger.info(khachHang);
+				logger.info(khachHang);
+				return khachHang;
+			} catch (Exception e) {
+				return null;
+			}
+		}
+	}
+
+	@Override
+	public List<KhachHang> danhSachKhachHangPhatSinh() {
+		String queryCt = DANH_SACH_KHACH_HANG_PHAT_SINH_CHUNG_TU;
+		String queryNvkt = DANH_SACH_KHACH_HANG_PHAT_SINH_NVKT;
+
+		logger.info("Danh sách khách hàng phát sinh ...");
+		logger.info(queryCt);
+		logger.info(queryNvkt);
+
+		List<KhachHang> khachHangDs = new ArrayList<KhachHang>();
+		try {
+			khachHangDs = jdbcTmpl.query(queryCt, new KhachHangPhatSinhMapper());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		try {
+			khachHangDs.addAll(jdbcTmpl.query(queryNvkt, new KhachHangPhatSinhMapper()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return khachHangDs;
+	}
+
+	public class KhachHangPhatSinhMapper implements RowMapper<KhachHang> {
+		public KhachHang mapRow(ResultSet rs, int rowNum) throws SQLException {
+			try {
+				KhachHang khachHang = new KhachHang();
+				khachHang.setMaKh(rs.getInt("MA_DT"));
+
+				logger.info(khachHang);
 				return khachHang;
 			} catch (Exception e) {
 				return null;
@@ -124,9 +176,32 @@ public class KhachHangDAOImpl implements KhachHangDAO {
 
 	@Override
 	public void xoaKhachHang(Integer maKh) {
-		String xoa = "DELETE FROM KHACH_HANG WHERE MA_KH=?";
-		jdbcTmpl.update(xoa, maKh);
-		logger.info("Xóa khách hàng có MA_KH = " + maKh);
+		logger.info("Kiểm tra việc xóa khách hàng có MA_KH = " + maKh);
+		String phatSinhcT = KIEM_TRA_KHACH_HANG_PHAT_SINH_CHUNG_TU;
+		String phatSinhnVKT = KIEM_TRA_KHACH_HANG_PHAT_SINH_NVKT;
+		Integer phatSinhCtCount = 0;
+		Integer phatSinhNvktCount = 0;
+
+		Object[] objs = { maKh };
+		try {
+			phatSinhCtCount = jdbcTmpl.queryForObject(phatSinhcT, objs, Integer.class);
+		} catch (Exception e) {
+		}
+
+		try {
+			phatSinhNvktCount = jdbcTmpl.queryForObject(phatSinhnVKT, objs, Integer.class);
+		} catch (Exception e) {
+		}
+
+		if (phatSinhCtCount == 0 && phatSinhNvktCount == 0) {
+			logger.info("Xóa khách hàng có MA_KH = " + maKh);
+			String xoa = "DELETE FROM KHACH_HANG WHERE MA_KH=?";
+			jdbcTmpl.update(xoa, maKh);
+		} else {
+			logger.info("Không thể xóa khách hàng có MA_KH = " + maKh + " vì nó vẫn đang được sử dụng");
+			logger.info("Phát sinh chứng từ " + phatSinhCtCount);
+			logger.info("Phát sinh nghiệp vụ kế toán" + phatSinhNvktCount);
+		}
 	}
 
 	@Override

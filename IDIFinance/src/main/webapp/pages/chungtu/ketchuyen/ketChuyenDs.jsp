@@ -12,7 +12,10 @@
 	//Shorthand for $( document ).ready()
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
-
+		$('#dataTable').DataTable({
+			ordering : false,
+			language : vi
+		});
 	});
 </script>
 
@@ -35,7 +38,8 @@
 				href="${url}/chungtu/ketchuyen/taomoi/${KetChuyenButToan.KCBT_DAU_KY}"
 				class="btn btn-info btn-sm"> <span
 				class="glyphicon glyphicon-plus"></span> Tạo kết chuyển đầu kỳ
-			</a> --%> <a
+			</a> --%>
+			<a
 				href="${url}/chungtu/ketchuyen/taomoi/${KetChuyenButToan.KCBT_CUOI_KY}"
 				class="btn btn-info btn-sm"> <span
 				class="glyphicon glyphicon-plus"></span> Tạo kết chuyển cuối kỳ
@@ -48,7 +52,7 @@
 <br />
 
 <div class="table-responsive">
-	<table class="table table-bordered table-hover">
+	<table id="dataTable" class="table table-bordered table-hover">
 		<thead>
 			<tr>
 				<th class="text-center" style="width: 100px;">Số kết chuyển</th>

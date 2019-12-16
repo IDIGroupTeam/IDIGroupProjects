@@ -7,9 +7,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.bean.doituong.DoiTuong;
 import com.idi.finance.bean.hanghoa.HangHoa;
+import com.idi.finance.bean.hanghoa.KhoHang;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
+import com.idi.finance.bean.soketoan.NghiepVuKeToanNhom;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class DuLieuKeToan {
@@ -19,26 +22,43 @@ public class DuLieuKeToan {
 	private DoiTuong doiTuong;
 	private List<DoiTuong> doiTuongDs;
 	private HangHoa hangHoa;
+	private KhoHang khoHang;
+	private int chieu = ChungTu.MUA;
 
 	private double soDuDauKy;
+	private double soDuDauKyNt;
 	private double noDauKy;
+	private double noDauKyNt;
 	private double coDauKy;
+	private double coDauKyNt;
 
 	private double soDuCuoiKy;
+	private double soDuCuoiKyNt;
 	private double noCuoiKy;
+	private double noCuoiKyNt;
 	private double coCuoiKy;
+	private double coCuoiKyNt;
 
 	private double tongNoPhatSinh;
+	private double tongNoPhatSinhNt;
 	private double tongCoPhatSinh;
+	private double tongCoPhatSinhNt;
 
-	private int soLuongDauKy;
-	private int soLuongNhap;
-	private int soLuongXuat;
-	private int soLuongCuoiKy;
+	private double soLuongDuDauKy;
+	private double soLuongNhapDauKy;
+	private double soLuongXuatDauKy;
+
+	private double soLuongDuCuoiKy;
+	private double soLuongNhapCuoiKy;
+	private double soLuongXuatCuoiKy;
+
+	private double soLuongNhapPhatSinh;
+	private double soLuongXuatPhatSinh;
 
 	private DuLieuKeToan duLieuKeToan;
 	private List<DuLieuKeToan> duLieuKeToanDs;
 	private List<NghiepVuKeToan> nghiepVuKeToanDs;
+	private List<NghiepVuKeToanNhom> nghiepVuKeToanNhomDs;
 
 	public DuLieuKeToan() {
 
@@ -93,12 +113,36 @@ public class DuLieuKeToan {
 		this.hangHoa = hangHoa;
 	}
 
+	public KhoHang getKhoHang() {
+		return khoHang;
+	}
+
+	public void setKhoHang(KhoHang khoHang) {
+		this.khoHang = khoHang;
+	}
+
+	public int getChieu() {
+		return chieu;
+	}
+
+	public void setChieu(int chieu) {
+		this.chieu = chieu;
+	}
+
 	public double getSoDuDauKy() {
 		return soDuDauKy;
 	}
 
 	public void setSoDuDauKy(double soDuDauKy) {
 		this.soDuDauKy = soDuDauKy;
+	}
+
+	public double getSoDuDauKyNt() {
+		return soDuDauKyNt;
+	}
+
+	public void setSoDuDauKyNt(double soDuDauKyNt) {
+		this.soDuDauKyNt = soDuDauKyNt;
 	}
 
 	public double getNoDauKy() {
@@ -110,6 +154,14 @@ public class DuLieuKeToan {
 		capNhatNoCoCuoiKy();
 	}
 
+	public double getNoDauKyNt() {
+		return noDauKyNt;
+	}
+
+	public void setNoDauKyNt(double noDauKyNt) {
+		this.noDauKyNt = noDauKyNt;
+	}
+
 	public double getCoDauKy() {
 		return coDauKy;
 	}
@@ -117,6 +169,14 @@ public class DuLieuKeToan {
 	public void setCoDauKy(double coDauKy) {
 		this.coDauKy = coDauKy;
 		capNhatNoCoCuoiKy();
+	}
+
+	public double getCoDauKyNt() {
+		return coDauKyNt;
+	}
+
+	public void setCoDauKyNt(double coDauKyNt) {
+		this.coDauKyNt = coDauKyNt;
 	}
 
 	public double getSoDuCuoiKy() {
@@ -127,6 +187,14 @@ public class DuLieuKeToan {
 		this.soDuCuoiKy = soDuCuoiKy;
 	}
 
+	public double getSoDuCuoiKyNt() {
+		return soDuCuoiKyNt;
+	}
+
+	public void setSoDuCuoiKyNt(double soDuCuoiKyNt) {
+		this.soDuCuoiKyNt = soDuCuoiKyNt;
+	}
+
 	public double getNoCuoiKy() {
 		return noCuoiKy;
 	}
@@ -135,12 +203,28 @@ public class DuLieuKeToan {
 		this.noCuoiKy = noCuoiKy;
 	}
 
+	public double getNoCuoiKyNt() {
+		return noCuoiKyNt;
+	}
+
+	public void setNoCuoiKyNt(double noCuoiKyNt) {
+		this.noCuoiKyNt = noCuoiKyNt;
+	}
+
 	public double getCoCuoiKy() {
 		return coCuoiKy;
 	}
 
 	public void setCoCuoiKy(double coCuoiKy) {
 		this.coCuoiKy = coCuoiKy;
+	}
+
+	public double getCoCuoiKyNt() {
+		return coCuoiKyNt;
+	}
+
+	public void setCoCuoiKyNt(double coCuoiKyNt) {
+		this.coCuoiKyNt = coCuoiKyNt;
 	}
 
 	public double getTongNoPhatSinh() {
@@ -152,6 +236,14 @@ public class DuLieuKeToan {
 		capNhatNoCoCuoiKy();
 	}
 
+	public double getTongNoPhatSinhNt() {
+		return tongNoPhatSinhNt;
+	}
+
+	public void setTongNoPhatSinhNt(double tongNoPhatSinhNt) {
+		this.tongNoPhatSinhNt = tongNoPhatSinhNt;
+	}
+
 	public double getTongCoPhatSinh() {
 		return tongCoPhatSinh;
 	}
@@ -161,39 +253,80 @@ public class DuLieuKeToan {
 		capNhatNoCoCuoiKy();
 	}
 
-	public int getSoLuongDauKy() {
+	public double getTongCoPhatSinhNt() {
+		return tongCoPhatSinhNt;
+	}
+
+	public void setTongCoPhatSinhNt(double tongCoPhatSinhNt) {
+		this.tongCoPhatSinhNt = tongCoPhatSinhNt;
+	}
+
+	public double getSoLuongDuDauKy() {
+		return soLuongDuDauKy;
+	}
+
+	public void setSoLuongDuDauKy(double soLuongDuDauKy) {
+		this.soLuongDuDauKy = soLuongDuDauKy;
+	}
+
+	public double getSoLuongNhapDauKy() {
+		return soLuongNhapDauKy;
+	}
+
+	public void setSoLuongNhapDauKy(double soLuongNhapDauKy) {
+		this.soLuongNhapDauKy = soLuongNhapDauKy;
 		capNhatNoCoCuoiKy();
-		return soLuongDauKy;
 	}
 
-	public void setSoLuongDauKy(int soLuongDauKy) {
-		this.soLuongDauKy = soLuongDauKy;
+	public double getSoLuongXuatDauKy() {
+		return soLuongXuatDauKy;
 	}
 
-	public int getSoLuongNhap() {
-		return soLuongNhap;
-	}
-
-	public void setSoLuongNhap(int soLuongNhap) {
+	public void setSoLuongXuatDauKy(double soLuongXuatDauKy) {
+		this.soLuongXuatDauKy = soLuongXuatDauKy;
 		capNhatNoCoCuoiKy();
-		this.soLuongNhap = soLuongNhap;
 	}
 
-	public int getSoLuongXuat() {
-		return soLuongXuat;
+	public double getSoLuongDuCuoiKy() {
+		return soLuongDuCuoiKy;
 	}
 
-	public void setSoLuongXuat(int soLuongXuat) {
+	public void setSoLuongDuCuoiKy(double soLuongDuCuoiKy) {
+		this.soLuongDuCuoiKy = soLuongDuCuoiKy;
+	}
+
+	public double getSoLuongNhapCuoiKy() {
+		return soLuongNhapCuoiKy;
+	}
+
+	public void setSoLuongNhapCuoiKy(double soLuongNhapCuoiKy) {
+		this.soLuongNhapCuoiKy = soLuongNhapCuoiKy;
+	}
+
+	public double getSoLuongXuatCuoiKy() {
+		return soLuongXuatCuoiKy;
+	}
+
+	public void setSoLuongXuatCuoiKy(double soLuongXuatCuoiKy) {
+		this.soLuongXuatCuoiKy = soLuongXuatCuoiKy;
+	}
+
+	public double getSoLuongNhapPhatSinh() {
+		return soLuongNhapPhatSinh;
+	}
+
+	public void setSoLuongNhapPhatSinh(double soLuongNhapPhatSinh) {
+		this.soLuongNhapPhatSinh = soLuongNhapPhatSinh;
 		capNhatNoCoCuoiKy();
-		this.soLuongXuat = soLuongXuat;
 	}
 
-	public int getSoLuongCuoiKy() {
-		return soLuongCuoiKy;
+	public double getSoLuongXuatPhatSinh() {
+		return soLuongXuatPhatSinh;
 	}
 
-	public void setSoLuongCuoiKy(int soLuongCuoiKy) {
-		this.soLuongCuoiKy = soLuongCuoiKy;
+	public void setSoLuongXuatPhatSinh(double soLuongXuatPhatSinh) {
+		this.soLuongXuatPhatSinh = soLuongXuatPhatSinh;
+		capNhatNoCoCuoiKy();
 	}
 
 	public List<NghiepVuKeToan> getNghiepVuKeToanDs() {
@@ -204,14 +337,28 @@ public class DuLieuKeToan {
 		this.nghiepVuKeToanDs = nghiepVuKeToanDs;
 	}
 
+	public List<NghiepVuKeToanNhom> getNghiepVuKeToanNhomDs() {
+		return nghiepVuKeToanNhomDs;
+	}
+
+	public void setNghiepVuKeToanNhomDs(List<NghiepVuKeToanNhom> nghiepVuKeToanNhomDs) {
+		this.nghiepVuKeToanNhomDs = nghiepVuKeToanNhomDs;
+	}
+
 	private void capNhatNoCoCuoiKy() {
+		// Số tiền
 		noCuoiKy = noDauKy + tongNoPhatSinh;
 		coCuoiKy = coDauKy + tongCoPhatSinh;
 
 		soDuDauKy = noDauKy - coDauKy;
 		soDuCuoiKy = noCuoiKy - coCuoiKy;
 
-		soLuongCuoiKy = soLuongDauKy + soLuongNhap - soLuongXuat;
+		// Số lượng
+		soLuongNhapCuoiKy = soLuongNhapDauKy + soLuongNhapPhatSinh;
+		soLuongXuatCuoiKy = soLuongXuatDauKy + soLuongXuatPhatSinh;
+
+		soLuongDuDauKy = soLuongNhapDauKy - soLuongXuatDauKy;
+		soLuongDuCuoiKy = soLuongNhapCuoiKy - soLuongXuatCuoiKy;
 	}
 
 	public void themNghiepVuKeToan(NghiepVuKeToan nghiepVuKeToan) {
@@ -240,6 +387,32 @@ public class DuLieuKeToan {
 		}
 	}
 
+	public void themNghiepVuKeToanNhom(NghiepVuKeToanNhom nghiepVuKeToanNhom) {
+		if (nghiepVuKeToanNhom == null) {
+			return;
+		}
+
+		if (nghiepVuKeToanNhomDs == null) {
+			nghiepVuKeToanNhomDs = new ArrayList<>();
+		}
+
+		if (!nghiepVuKeToanNhomDs.contains(nghiepVuKeToanNhom)) {
+			nghiepVuKeToanNhomDs.add(nghiepVuKeToanNhom);
+			Collections.sort(nghiepVuKeToanNhomDs);
+		}
+	}
+
+	public void themNghiepVuKeToanNhom(List<NghiepVuKeToanNhom> nghiepVuKeToanNhomDs) {
+		if (nghiepVuKeToanNhomDs == null) {
+			return;
+		}
+
+		Iterator<NghiepVuKeToanNhom> iter = nghiepVuKeToanNhomDs.iterator();
+		while (iter.hasNext()) {
+			themNghiepVuKeToanNhom(iter.next());
+		}
+	}
+
 	public void tinhSoTienTonNghiepVuKeToanDs(LoaiTaiKhoan loaiTaiKhoan) {
 		if (loaiTaiKhoan == null) {
 			return;
@@ -249,19 +422,65 @@ public class DuLieuKeToan {
 			Collections.sort(nghiepVuKeToanDs);
 
 			double ton = soDuDauKy * loaiTaiKhoan.getSoDu() * -1;
+			double slTon = soLuongDuDauKy;
 
 			Iterator<NghiepVuKeToan> iter = nghiepVuKeToanDs.iterator();
 			while (iter.hasNext()) {
-				try {
-					NghiepVuKeToan nghiepVuKeToan = iter.next();
+				NghiepVuKeToan nghiepVuKeToan = iter.next();
 
+				// So tien ton
+				try {
+					double nhoNhat = Math.min(nghiepVuKeToan.getTaiKhoanNo().getSoTien().getGiaTri(),
+							nghiepVuKeToan.getTaiKhoanCo().getSoTien().getGiaTri());
 					if (nghiepVuKeToan.getTaiKhoanNo().getLoaiTaiKhoan().isTrucHe(loaiTaiKhoan)) {
-						ton += nghiepVuKeToan.getTaiKhoanNo().getSoTien().getGiaTri() * loaiTaiKhoan.getSoDu() * -1;
+						ton += nhoNhat * loaiTaiKhoan.getSoDu() * -1;
 					} else if (nghiepVuKeToan.getTaiKhoanCo().getLoaiTaiKhoan().isTrucHe(loaiTaiKhoan)) {
-						ton += nghiepVuKeToan.getTaiKhoanCo().getSoTien().getGiaTri() * loaiTaiKhoan.getSoDu();
+						ton += nhoNhat * loaiTaiKhoan.getSoDu();
 					}
 
 					nghiepVuKeToan.setTon(ton);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				// So luong ton
+				try {
+					slTon += nghiepVuKeToan.getHangHoa().getSoLuong() * nghiepVuKeToan.getChungTu().getChieu();
+					nghiepVuKeToan.setSlTon(slTon);
+				} catch (Exception e) {
+					// e.printStackTrace();
+				}
+			}
+		}
+
+		if (nghiepVuKeToanNhomDs != null && nghiepVuKeToanNhomDs.size() > 0) {
+			Collections.sort(nghiepVuKeToanNhomDs);
+
+			double ton = soDuDauKy * loaiTaiKhoan.getSoDu() * -1;
+			double slTon = soLuongDuDauKy;
+
+			for (NghiepVuKeToanNhom nghiepVuKeToanNhom : nghiepVuKeToanNhomDs) {
+				// So tien ton
+				try {
+					if (nghiepVuKeToanNhom.getTaiKhoanNoDs().size() == 1
+							&& nghiepVuKeToanNhom.getTaiKhoanNoDs().get(0).getLoaiTaiKhoan().isTrucHe(loaiTaiKhoan)) {
+						ton += nghiepVuKeToanNhom.getTaiKhoanNoDs().get(0).getSoTien().getGiaTri()
+								* loaiTaiKhoan.getSoDu() * -1;
+					} else if (nghiepVuKeToanNhom.getTaiKhoanCoDs().size() == 1
+							&& nghiepVuKeToanNhom.getTaiKhoanCoDs().get(0).getLoaiTaiKhoan().isTrucHe(loaiTaiKhoan)) {
+						ton += nghiepVuKeToanNhom.getTaiKhoanCoDs().get(0).getSoTien().getGiaTri()
+								* loaiTaiKhoan.getSoDu();
+					}
+
+					nghiepVuKeToanNhom.setTon(ton);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				// So luong ton
+				try {
+					slTon += nghiepVuKeToanNhom.getHangHoa().getSoLuong() * nghiepVuKeToanNhom.getChungTu().getChieu();
+					nghiepVuKeToanNhom.setSlTon(slTon);
 				} catch (Exception e) {
 					// e.printStackTrace();
 				}
@@ -285,6 +504,14 @@ public class DuLieuKeToan {
 		this.duLieuKeToanDs = duLieuKeToanDs;
 	}
 
+	public void capNhatDuLieuKeToan(DuLieuKeToan duLieuKeToan) {
+		if (duLieuKeToan != null) {
+			List<DuLieuKeToan> ketQuaDs = new ArrayList<>();
+			ketQuaDs.add(duLieuKeToan);
+			capNhatDuLieuKeToan(ketQuaDs);
+		}
+	}
+
 	public void capNhatDuLieuKeToan(List<DuLieuKeToan> duLieuKeToanDs) {
 		noDauKy = 0;
 		coDauKy = 0;
@@ -296,24 +523,35 @@ public class DuLieuKeToan {
 			Iterator<DuLieuKeToan> iter = this.duLieuKeToanDs.iterator();
 			while (iter.hasNext()) {
 				DuLieuKeToan duLieuKeToan = iter.next();
+
+				// Số tiền
 				noDauKy += duLieuKeToan.getNoDauKy();
 				coDauKy += duLieuKeToan.getCoDauKy();
 
 				tongNoPhatSinh += duLieuKeToan.getTongNoPhatSinh();
 				tongCoPhatSinh += duLieuKeToan.getTongCoPhatSinh();
 
-				soLuongDauKy += duLieuKeToan.getSoLuongDauKy();
-				soLuongNhap += duLieuKeToan.getSoLuongNhap();
-				soLuongXuat += duLieuKeToan.getSoLuongXuat();
+				// Số lượng
+				soLuongNhapDauKy += duLieuKeToan.getSoLuongNhapDauKy();
+				soLuongXuatDauKy += duLieuKeToan.getSoLuongXuatDauKy();
+
+				soLuongNhapPhatSinh += duLieuKeToan.getSoLuongNhapPhatSinh();
+				soLuongXuatPhatSinh += duLieuKeToan.getSoLuongXuatPhatSinh();
 			}
 
+			// Số tiền
 			noCuoiKy = noDauKy + tongNoPhatSinh;
 			coCuoiKy = coDauKy + tongCoPhatSinh;
 
 			soDuDauKy = noDauKy - coDauKy;
 			soDuCuoiKy = noCuoiKy - coCuoiKy;
 
-			soLuongCuoiKy = soLuongDauKy + soLuongNhap - soLuongXuat;
+			// Số lượng
+			soLuongNhapCuoiKy = soLuongNhapDauKy + soLuongNhapPhatSinh;
+			soLuongXuatCuoiKy = soLuongXuatDauKy + soLuongXuatPhatSinh;
+
+			soLuongDuDauKy = soLuongNhapDauKy - soLuongXuatDauKy;
+			soLuongDuCuoiKy = soLuongNhapCuoiKy - soLuongXuatCuoiKy;
 		}
 	}
 
@@ -363,10 +601,23 @@ public class DuLieuKeToan {
 			doiTuong = duLieuKeToan.getDoiTuong();
 		}
 
+		if (hangHoa == null) {
+			hangHoa = duLieuKeToan.getHangHoa();
+		}
+
+		if (khoHang == null) {
+			khoHang = duLieuKeToan.getKhoHang();
+		}
+
 		if (this.duLieuKeToan == null) {
 			this.duLieuKeToan = duLieuKeToan.getDuLieuKeToan();
 		}
 
+		if (chieu != ChungTu.MUA && chieu != ChungTu.BAN) {
+			chieu = duLieuKeToan.getChieu();
+		}
+
+		// Số tiền
 		noDauKy += duLieuKeToan.getNoDauKy();
 		coDauKy += duLieuKeToan.getCoDauKy();
 
@@ -379,14 +630,29 @@ public class DuLieuKeToan {
 		soDuDauKy = noDauKy - coDauKy;
 		soDuCuoiKy = noCuoiKy - coCuoiKy;
 
+		// Số lượng
+		soLuongNhapDauKy += duLieuKeToan.getSoLuongNhapDauKy();
+		soLuongXuatDauKy += duLieuKeToan.getSoLuongXuatDauKy();
+
+		soLuongNhapPhatSinh += duLieuKeToan.getSoLuongNhapPhatSinh();
+		soLuongXuatPhatSinh += duLieuKeToan.getSoLuongXuatPhatSinh();
+
+		soLuongNhapCuoiKy = soLuongNhapDauKy + soLuongNhapPhatSinh;
+		soLuongXuatCuoiKy = soLuongXuatDauKy + soLuongXuatPhatSinh;
+
+		soLuongDuDauKy = soLuongNhapDauKy - soLuongXuatDauKy;
+		soLuongDuCuoiKy = soLuongNhapCuoiKy - soLuongXuatCuoiKy;
+
 		themDuLieuKeToan(duLieuKeToan.getDuLieuKeToanDs());
 		themNghiepVuKeToan(duLieuKeToan.getNghiepVuKeToanDs());
 	}
 
 	@Override
 	public String toString() {
-		String out = kyKeToan + ":  " + loaiTaiKhoan + ": " + doiTuong + ": " + noDauKy + " " + coDauKy + " "
-				+ tongNoPhatSinh + " " + tongCoPhatSinh + " " + noCuoiKy + " " + coCuoiKy;
+		String out = kyKeToan + ":  " + loaiTaiKhoan + ": " + doiTuong + ": " + hangHoa + ": " + khoHang + ": "
+				+ noDauKy + " " + coDauKy + " " + tongNoPhatSinh + " " + tongCoPhatSinh + " " + noCuoiKy + " "
+				+ coCuoiKy + " " + soLuongNhapDauKy + " " + soLuongXuatDauKy + " " + soLuongNhapPhatSinh + " "
+				+ soLuongXuatPhatSinh;
 		return out;
 	}
 
@@ -435,6 +701,15 @@ public class DuLieuKeToan {
 		} else if (item.getHangHoa() == null) {
 			return false;
 		} else if (!hangHoa.equals(item.getHangHoa())) {
+			return false;
+		}
+
+		if (khoHang == null) {
+			if (item.getKhoHang() != null)
+				return false;
+		} else if (item.getKhoHang() == null) {
+			return false;
+		} else if (!khoHang.equals(item.getKhoHang())) {
 			return false;
 		}
 

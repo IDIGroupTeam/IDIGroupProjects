@@ -1,5 +1,6 @@
 <%@page import="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"%>
 <%@page import="com.idi.finance.bean.doituong.DoiTuong"%>
+<%@page import="com.idi.finance.bean.LoaiTien"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
@@ -43,40 +44,38 @@
 						<td><fmt:formatNumber value="${hangHoa.soLuong}"
 								maxFractionDigits="2"></fmt:formatNumber></td>
 						<td class="text-right"><c:choose>
-								<c:when test="${chungTu.loaiTien.maLt=='VND'}">
-									<fmt:formatNumber value="${hangHoa.donGia.soTien}"
-										maxFractionDigits="2"></fmt:formatNumber>
+								<c:when test="${chungTu.loaiTien.maLt eq LoaiTien.VND}">
+									<fmt:formatNumber value="${hangHoa.donGia.giaTri}"
+										maxFractionDigits="0"></fmt:formatNumber>
 							&nbsp;${chungTu.loaiTien.maLt}</c:when>
 								<c:otherwise>
 									<fmt:formatNumber value="${hangHoa.donGia.soTien}"
 										maxFractionDigits="2"></fmt:formatNumber>
 							&nbsp;${chungTu.loaiTien.maLt} <br />
-									<fmt:formatNumber
-										value="${hangHoa.donGia.soTien * chungTu.loaiTien.banRa}"
-										maxFractionDigits="2"></fmt:formatNumber>
+									<fmt:formatNumber value="${hangHoa.donGia.giaTri}"
+										maxFractionDigits="0"></fmt:formatNumber>
 							&nbsp;VND</c:otherwise>
 							</c:choose></td>
 						<td>${hangHoa.tkKho.loaiTaiKhoan.maTk}</td>
 						<td>${hangHoa.tkThanhtoan.loaiTaiKhoan.maTk}</td>
 						<td class="text-right"><c:choose>
-								<c:when test="${chungTu.loaiTien.maLt=='VND'}">
-									<fmt:formatNumber value="${hangHoa.giaKho.soTien}"
-										maxFractionDigits="2"></fmt:formatNumber>
+								<c:when test="${chungTu.loaiTien.maLt eq LoaiTien.VND}">
+									<fmt:formatNumber value="${hangHoa.giaKho.giaTri}"
+										maxFractionDigits="0"></fmt:formatNumber>
 							&nbsp;${chungTu.loaiTien.maLt}</c:when>
 								<c:otherwise>
 									<fmt:formatNumber value="${hangHoa.giaKho.soTien}"
 										maxFractionDigits="2"></fmt:formatNumber>
 							&nbsp;${chungTu.loaiTien.maLt} <br />
-									<fmt:formatNumber
-										value="${hangHoa.giaKho.soTien * chungTu.loaiTien.banRa}"
-										maxFractionDigits="2"></fmt:formatNumber>
+									<fmt:formatNumber value="${hangHoa.giaKho.giaTri}"
+										maxFractionDigits="0"></fmt:formatNumber>
 							&nbsp;VND</c:otherwise>
 							</c:choose></td>
 						<td class="text-right"><c:choose>
-								<c:when test="${chungTu.loaiTien.maLt=='VND'}">
+								<c:when test="${chungTu.loaiTien.maLt eq LoaiTien.VND}">
 									<fmt:formatNumber
-										value="${hangHoa.soLuong*hangHoa.giaKho.soTien}"
-										maxFractionDigits="2"></fmt:formatNumber>
+										value="${hangHoa.soLuong*hangHoa.giaKho.giaTri}"
+										maxFractionDigits="0"></fmt:formatNumber>
 							&nbsp;${chungTu.loaiTien.maLt}</c:when>
 								<c:otherwise>
 									<fmt:formatNumber
@@ -84,8 +83,8 @@
 										maxFractionDigits="2"></fmt:formatNumber>
 							&nbsp;${chungTu.loaiTien.maLt} <br />
 									<fmt:formatNumber
-										value="${hangHoa.soLuong*hangHoa.giaKho.soTien * chungTu.loaiTien.banRa}"
-										maxFractionDigits="2"></fmt:formatNumber>
+										value="${hangHoa.soLuong*hangHoa.giaKho.giaTri}"
+										maxFractionDigits="0"></fmt:formatNumber>
 							&nbsp;VND</c:otherwise>
 							</c:choose></td>
 					</tr>
@@ -99,7 +98,7 @@
 			<thead>
 				<tr>
 					<th class="text-center" rowspan="2">Dịch vụ</th>
-					<th class="text-center" rowspan="2">Giá tính thuế</th>
+					<th class="text-center" rowspan="2">Tiền tính thuế</th>
 					<th class="text-center" colspan="3">Thuế giá trị gia tăng</th>
 				</tr>
 				<tr>
@@ -114,12 +113,12 @@
 					<tr id="thue${status.index}">
 						<td>${hangHoa.tenHh}</td>
 						<td class="text-right"><fmt:formatNumber
-								value="${hangHoa.soLuong*hangHoa.donGia.soTien*chungTu.loaiTien.banRa}"
-								maxFractionDigits="2"></fmt:formatNumber> &nbsp;VND</td>
+								value="${hangHoa.soLuong*hangHoa.donGia.giaTri}"
+								maxFractionDigits="0"></fmt:formatNumber> &nbsp;VND</td>
 						<td>${hangHoa.thueSuatGtgt}&nbsp;%</td>
 						<td><fmt:formatNumber
-								value="${hangHoa.tkThueGtgt.soTien.soTien*chungTu.loaiTien.banRa}"
-								maxFractionDigits="2"></fmt:formatNumber>&nbsp;VND</td>
+								value="${hangHoa.tkThueGtgt.soTien.giaTri}"
+								maxFractionDigits="0"></fmt:formatNumber>&nbsp;VND</td>
 						<td>${hangHoa.tkThueGtgt.loaiTaiKhoan.maTk}</td>
 					</tr>
 				</c:forEach>

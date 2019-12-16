@@ -36,7 +36,7 @@ public class BaoCaoDAOImpl implements BaoCaoDAO {
 	@Override
 	public byte[] taoBaoCaoChungTu(JasperReport jasperReport, HashMap<String, Object> hmParams,
 			List<ChungTu> chungTuDs) {
-		if (jasperReport == null || chungTuDs == null || chungTuDs.size() == 0) {
+		if (jasperReport == null || chungTuDs == null) {
 			return null;
 		}
 

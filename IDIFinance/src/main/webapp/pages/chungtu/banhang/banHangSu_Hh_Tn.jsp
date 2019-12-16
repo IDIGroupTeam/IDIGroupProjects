@@ -28,8 +28,9 @@
 					<th class="text-center">Số lượng</th>
 					<th class="text-center">Giá bán</th>
 					<th class="text-center">Thành tiền</th>
-					<th class="text-center">TK công nợ (Nợ)</th>
 					<th class="text-center">TK Doanh thu (Có)</th>
+					<th class="text-center">TK công nợ (Nợ)</th>
+					<th class="text-center">Tiền công nợ</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -38,7 +39,7 @@
 					<tr id="hangTien${status.index}">
 						<td class="text-left" style="width: 200px;"><form:select
 								path="hangHoaDs[${status.index}].maHh" cssClass="form-control">
-								<form:option value="0" label=""></form:option>
+								<%-- <form:option value="0" label=" "></form:option> --%>
 								<form:options items="${khHangHoaDs}" itemValue="maHh"
 									itemLabel="kyHieuHh" />
 							</form:select> <form:errors path="hangHoaDs[${status.index}].maHh"
@@ -60,17 +61,6 @@
 						<td class="text-right" style="width: 180px;"><span
 							id="hangHoaDs${status.index}.hangTien.tongTien"></span></td>
 						<td><input type="hidden"
-							name="hangHoaDs[${status.index}].tkThanhtoan.soDu" value="-1" />
-							<form:hidden path="hangHoaDs[${status.index}].tkThanhtoan.maNvkt" />
-							<form:select cssClass="form-control"
-								path="hangHoaDs[${status.index}].tkThanhtoan.loaiTaiKhoan.maTk">
-								<form:option value="" label=""></form:option>
-								<form:options items="${loaiTaiKhoanThanhToanDs}"
-									itemValue="maTk" itemLabel="maTenTk" />
-							</form:select> <form:errors
-								path="hangHoaDs[${status.index}].tkThanhtoan.loaiTaiKhoan.maTk"
-								cssClass="error" /></td>
-						<td><input type="hidden"
 							name="hangHoaDs[${status.index}].tkDoanhThu.soDu" value="1" /> <form:hidden
 								path="hangHoaDs[${status.index}].tkDoanhThu.maNvkt" /> <form:select
 								cssClass="form-control"
@@ -81,6 +71,19 @@
 							</form:select> <form:errors
 								path="hangHoaDs[${status.index}].tkDoanhThu.loaiTaiKhoan.maTk"
 								cssClass="error" /></td>
+						<td><input type="hidden"
+							name="hangHoaDs[${status.index}].tkThanhtoan.soDu" value="-1" />
+							<form:hidden path="hangHoaDs[${status.index}].tkThanhtoan.maNvkt" />
+							<form:select cssClass="form-control"
+								path="hangHoaDs[${status.index}].tkThanhtoan.loaiTaiKhoan.maTk">
+								<form:option value="" label=""></form:option>
+								<form:options items="${loaiTaiKhoanThanhToanDs}"
+									itemValue="maTk" itemLabel="maTenTk" />
+							</form:select> <form:errors
+								path="hangHoaDs[${status.index}].tkThanhtoan.loaiTaiKhoan.maTk"
+								cssClass="error" /></td>
+						<td><span
+							id="hangHoaDs${status.index}.hangTien.tongTienCongNo"></span></td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -112,11 +115,14 @@
 						<td><form:select cssClass="form-control"
 								path="hangHoaDs[${status.index}].giaKho.maGia">
 								<form:option value="0" label=""></form:option>
-								<form:options items="${hangHoa.donGiaDs}" itemValue="maGia"
-									itemLabel="donGia.soTien" cssClass="giaVon" />
-							</form:select> <form:errors path="hangHoaDs[${status.index}].giaKho.maGia"
-								cssClass="error" /> <form:hidden
-								path="hangHoaDs[${status.index}].giaKho.soTien" /></td>
+								<c:forEach items="${hangHoa.donGiaDs}" var="donGia">
+									<fmt:formatNumber value="${donGia.donGia.giaTri}" var="giaTri"></fmt:formatNumber>
+									<form:option cssClass="giaVon" value="${donGia.maGia}"
+										label="${giaTri}"></form:option>
+								</c:forEach>
+							</form:select> <form:hidden path="hangHoaDs[${status.index}].giaKho.giaTri" />
+							<form:errors path="hangHoaDs[${status.index}].giaKho.maGia"
+								cssClass="error" /></td>
 						<td><span id="hangHoaDs${status.index}.giaVon.thanhTienTxt"></span></td>
 						<td><input type="hidden"
 							name="hangHoaDs[${status.index}].tkGiaVon.soDu" value="-1" /> <form:hidden
@@ -159,7 +165,7 @@
 			<thead>
 				<tr>
 					<th class="text-center" rowspan="2">Vật tư, hàng hóa</th>
-					<th class="text-center" rowspan="2">Giá tính thuế</th>
+					<th class="text-center" rowspan="2">Tiền tính thuế</th>
 					<th class="text-center" colspan="3">Thuế giá trị gia tăng</th>
 				</tr>
 				<tr>
@@ -179,9 +185,10 @@
 						<td><form:input cssClass="form-control"
 								path="hangHoaDs[${status.index}].thueSuatGtgt" /></td>
 						<td><form:input cssClass="form-control"
-								path="hangHoaDs[${status.index}].tkThueGtgt.soTien.soTien" /> <input
+								path="hangHoaDs[${status.index}].tkThueGtgt.soTien.giaTri" /> <input
 							type="hidden" name="hangHoaDs[${status.index}].tkThueGtgt.soDu"
-							value="1" /></td>
+							value="1" /> <form:hidden
+								path="hangHoaDs[${status.index}].tkThueGtgt.maNvkt" /></td>
 						<td><form:select cssClass="form-control"
 								path="hangHoaDs[${status.index}].tkThueGtgt.loaiTaiKhoan.maTk">
 								<form:option value="" label=""></form:option>
@@ -215,34 +222,35 @@
 					<tr id="ktth${status.index}">
 						<td class="text-left" style="width: 220px;"><form:input
 								cssClass="form-control"
-								path="nvktDs[${status.index}].taiKhoanNo.lyDo"
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanNo.lyDo"
 								placeholder="Lý do" /> <form:errors
-								path="nvktDs[${status.index}].taiKhoanNo.lyDo" cssClass="error" /></td>
-						<td class="text-left" style="width: 180px;"><form:select
-								cssClass="form-control"
-								path="nvktDs[${status.index}].taiKhoanNo.loaiTaiKhoan.maTk"
-								multiple="false">
-								<%-- <form:option value="0"></form:option> --%>
-								<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
-									itemLabel="maTenTk" />
-							</form:select> <form:errors
-								path="nvktDs[${status.index}].taiKhoanNo.loaiTaiKhoan.maTk"
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanNo.lyDo"
 								cssClass="error" /></td>
 						<td class="text-left" style="width: 180px;"><form:select
 								cssClass="form-control"
-								path="nvktDs[${status.index}].taiKhoanCo.loaiTaiKhoan.maTk"
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanNo.loaiTaiKhoan.maTk"
 								multiple="false">
-								<%-- <form:option value="0"></form:option> --%>
+								<form:option value="" label=" "></form:option>
 								<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
 									itemLabel="maTenTk" />
 							</form:select> <form:errors
-								path="nvktDs[${status.index}].taiKhoanCo.loaiTaiKhoan.maTk"
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanNo.loaiTaiKhoan.maTk"
+								cssClass="error" /></td>
+						<td class="text-left" style="width: 180px;"><form:select
+								cssClass="form-control"
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanCo.loaiTaiKhoan.maTk"
+								multiple="false">
+								<form:option value="" label=" "></form:option>
+								<form:options items="${loaiTaiKhoanDs}" itemValue="maTk"
+									itemLabel="maTenTk" />
+							</form:select> <form:errors
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanCo.loaiTaiKhoan.maTk"
 								cssClass="error" /></td>
 						<td class="text-right" style="width: 180px;"><form:input
 								cssClass="form-control"
-								path="nvktDs[${status.index}].taiKhoanNo.soTien.soTien"
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanNo.soTien.soTien"
 								placeholder="" /> <form:errors
-								path="nvktDs[${status.index}].taiKhoanNo.soTien.soTien"
+								path="hangHoaDs[${status.index}].nvktDs[0].taiKhoanNo.soTien.soTien"
 								cssClass="error" /></td>
 					</tr>
 				</c:forEach>

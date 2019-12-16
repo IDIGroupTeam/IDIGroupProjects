@@ -23,11 +23,14 @@
 						<a href="${url}/hanghoa/nhom/sua/${nhomHangHoaCon.maNhomHh}"
 							class="btn" title="Sửa"> <span
 							class="glyphicon glyphicon-edit"></span>
-						</a><a href="${url}/hanghoa/nhom/xoa/${nhomHangHoaCon.maNhomHh}"
-							class="btn" title="Sửa"
-							onclick="return xacNhanXoa(${nhomHangHoaCon.maNhomHh});"> <span
-							class="glyphicon glyphicon-remove"></span>
 						</a>
+						<c:if test="${nhomHangHoaCon.xoa}">
+							<a href="${url}/hanghoa/nhom/xoa/${nhomHangHoaCon.maNhomHh}"
+								class="btn" title="Sửa"
+								onclick="return xacNhanXoa(${nhomHangHoaCon.maNhomHh});"> <span
+								class="glyphicon glyphicon-remove"></span>
+							</a>
+						</c:if>
 					</div></td>
 			</tr>
 
