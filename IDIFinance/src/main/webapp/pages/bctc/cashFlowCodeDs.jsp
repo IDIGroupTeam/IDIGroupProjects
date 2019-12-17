@@ -24,25 +24,10 @@
 						{
 							beforeSave : {
 								chiTieuCao : function(data) {
-									console.log("beforeSave chiTieuCao", data);
 									var sendingData = new Object();
 									sendingData.assetCode = data.assetCode;
 									sendingData.assetName = data.assetName.value;
 
-									return sendingData;
-								},
-								chiTieuThap : function(data) {
-									console.log("beforeSave chiTieuThap", data);
-									var sendingData = new Object();
-									sendingData.assetCode = data.assetCode;
-
-									var taiKhoanDs = new Array();
-									var loaiTaiKhoan = new Object();
-									loaiTaiKhoan.maTk = data.maTk.value;
-									loaiTaiKhoan.maTkGoc = data.maTk.maTk;
-									taiKhoanDs.push(loaiTaiKhoan);
-
-									sendingData.taiKhoanDs = taiKhoanDs;
 									return sendingData;
 								}
 							},
@@ -120,8 +105,9 @@
 		<tbody class="form-inline">
 			<c:forEach items="${bais}" var="bai">
 				<tr id="${bai.assetCode}" data-name="chiTieuCao"
+					data-asset-code="${bai.assetCode}"
 					data-remove-url="${url}/bctc/luuchuyentt/chitieu/capcao/xoa"
-					data-asset-code="${bai.assetCode}">
+					data-save-url="${url}/bctc/luuchuyentt/chitieu/capcao/capnhat">
 					<c:choose>
 						<c:when test="${not empty bai.childs and bai.childs.size()>0}">
 							<td>${bai.assetCode}&nbsp;-&nbsp;<span

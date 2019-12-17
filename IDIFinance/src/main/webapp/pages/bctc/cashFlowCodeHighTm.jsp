@@ -68,7 +68,7 @@
 	<i class="col-sm-5">Tên chỉ tiêu LCTT</i>
 </div>
 
-<div class="row form-group">
+<%-- <div class="row form-group">
 	<label class="control-label col-sm-3" for="soDu">Số dư</label>
 	<div class="col-sm-4">
 		<form:select path="soDu" cssClass="form-control" placeholder="Số dư">
@@ -77,7 +77,7 @@
 		</form:select>
 	</div>
 	<i class="col-sm-5">Chọn nợ hoặc có</i>
-</div>
+</div> --%>
 
 <div class="row form-group">
 	<label class="control-label col-sm-3" for="rule">Công thức</label>

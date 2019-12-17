@@ -13,11 +13,9 @@ public interface BalanceSheetDAO {
 
 	public int insertBSHighBai(BalanceAssetItem bai);
 
-	public int updateBSHighBai(BalanceAssetItem oldBai, BalanceAssetItem newBai);
+	public int updateBSHighBai(BalanceAssetItem bai);
 
 	public int insertBSLowBai(BalanceAssetItem bai);
-
-	public int updateBSBai(BalanceAssetItem bai);
 
 	public int updateBSLowBai(BalanceAssetItem oldBai, BalanceAssetItem newBai);
 
@@ -82,6 +80,8 @@ public interface BalanceSheetDAO {
 
 	// CF
 	public int insertCFHighBai(BalanceAssetItem bai);
+	
+	public int updateCFHighBai(BalanceAssetItem bai);
 
 	public int insertCFLowBai(BalanceAssetItem bai);
 

@@ -71,9 +71,6 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	@Value("${CAP_NHAT_CHI_TIEU_CDKT_TEN}")
 	private String CAP_NHAT_CHI_TIEU_CDKT_TEN;
 
-	@Value("${CAP_NHAT_CHI_TIEU_CDKT}")
-	private String CAP_NHAT_CHI_TIEU_CDKT;
-
 	@Value("${XOA_CHI_TIEU_CDKT}")
 	private String XOA_CHI_TIEU_CDKT;
 
@@ -127,6 +124,9 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 
 	@Value("${THEM_CHI_TIEU_LCTT}")
 	private String THEM_CHI_TIEU_LCTT;
+
+	@Value("${CAP_NHAT_CHI_TIEU_LCTT_TEN}")
+	private String CAP_NHAT_CHI_TIEU_LCTT_TEN;
 
 	@Value("${THEM_CHI_TIEU_LCTT_TAI_KHOAN}")
 	private String THEM_CHI_TIEU_LCTT_TAI_KHOAN;
@@ -217,19 +217,17 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	}
 
 	@Override
-	public int updateBSHighBai(BalanceAssetItem oblBai, BalanceAssetItem newBai) {
-		if (oblBai == null || newBai == null) {
+	public int updateBSHighBai(BalanceAssetItem bai) {
+		if (bai == null) {
 			return 0;
 		}
 
-		String updateQuery = CAP_NHAT_CHI_TIEU_CDKT;
+		String updateQuery = CAP_NHAT_CHI_TIEU_CDKT_TEN;
 		logger.info(updateQuery);
 
-		// Update to BALANCE_ASSET_ITEM
 		int count = 0;
 		try {
-			count = jdbcTmpl.update(updateQuery, newBai.getAssetName(), newBai.getParent().getAssetCode(),
-					newBai.getSoDu(), oblBai.getAssetCode());
+			count = jdbcTmpl.update(updateQuery, bai.getAssetName(), bai.getAssetCode());
 		} catch (DuplicateKeyException e) {
 			count = -1;
 		} catch (Exception e) {
@@ -254,26 +252,6 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 			LoaiTaiKhoan loaiTaiKhoan = bai.getTaiKhoanDs().get(0);
 			count = jdbcTmpl.update(insertQuery, bai.getAssetCode(), loaiTaiKhoan.getMaTk(), loaiTaiKhoan.getMaTkGoc(),
 					loaiTaiKhoan.getSoDuGiaTri());
-		} catch (DuplicateKeyException e) {
-			count = -1;
-		} catch (Exception e) {
-			// e.printStackTrace();
-		}
-
-		return count;
-	}
-
-	public int updateBSBai(BalanceAssetItem bai) {
-		if (bai == null) {
-			return 0;
-		}
-
-		String updateQuery = CAP_NHAT_CHI_TIEU_CDKT_TEN;
-		logger.info(updateQuery);
-
-		int count = 0;
-		try {
-			count = jdbcTmpl.update(updateQuery, bai.getAssetName(), bai.getAssetCode());
 		} catch (DuplicateKeyException e) {
 			count = -1;
 		} catch (Exception e) {
@@ -742,6 +720,27 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 		try {
 			count = jdbcTmpl.update(insertQuery, bai.getAssetCode(), bai.getAssetName(), bai.getParent().getAssetCode(),
 					bai.getSoDu(), bai.getRule());
+		} catch (DuplicateKeyException e) {
+			count = -1;
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+
+		return count;
+	}
+
+	@Override
+	public int updateCFHighBai(BalanceAssetItem bai) {
+		if (bai == null) {
+			return 0;
+		}
+
+		String updateQuery = CAP_NHAT_CHI_TIEU_LCTT_TEN;
+		logger.info(updateQuery);
+
+		int count = 0;
+		try {
+			count = jdbcTmpl.update(updateQuery, bai.getAssetName(), bai.getAssetCode());
 		} catch (DuplicateKeyException e) {
 			count = -1;
 		} catch (Exception e) {

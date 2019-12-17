@@ -13,8 +13,9 @@
 	<c:when test="${not empty bais and bais.size()>0}">
 		<c:forEach items="${bais}" var="bai">
 			<tr id="${parentIdRes}_${bai.assetCode}" data-name="chiTieuCao"
+				data-asset-code="${bai.assetCode}"
 				data-remove-url="${url}/bctc/luuchuyentt/chitieu/capcao/xoa"
-				data-asset-code="${bai.assetCode}">
+				data-save-url="${url}/bctc/luuchuyentt/chitieu/capcao/capnhat">
 				<c:choose>
 					<c:when test="${not empty bai.childs and bai.childs.size()>0}">
 						<td>${bai.assetCode}&nbsp;-&nbsp;<span
@@ -48,11 +49,11 @@
 				data-name="chiTieuThap"
 				data-remove-url="${url}/bctc/luuchuyentt/chitieu/capthap/xoa"
 				data-asset-code="${assetCode}" data-ma-tk="${taiKhoan.maTk}"
-				data-so-du="${taiKhoan.soDu}"
+				data-so-du="${taiKhoan.soDuGiaTri}"
 				data-ma-tk-du="${taiKhoan.doiUng.maTk}">
 				<td><span class="cell-editable dis-editable" data-field="maTk">${taiKhoan.maTenTk}</span></td>
 				<c:choose>
-					<c:when test="${taiKhoan.soDu==LoaiTaiKhoan.NO}">
+					<c:when test="${taiKhoan.soDuGiaTri==LoaiTaiKhoan.NO}">
 						<td>Nợ</td>
 					</c:when>
 					<c:otherwise>

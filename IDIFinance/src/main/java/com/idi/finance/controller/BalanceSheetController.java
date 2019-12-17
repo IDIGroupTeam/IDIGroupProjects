@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -1125,11 +1124,11 @@ public class BalanceSheetController {
 		return bai;
 	}
 
-	@RequestMapping(value = "/bctc/cdkt/chitieu/capcap/capnhat", method = RequestMethod.POST)
+	@RequestMapping(value = "/bctc/cdkt/chitieu/capcao/capnhat", method = RequestMethod.POST)
 	public @ResponseBody BalanceAssetItem luuHighBalanceAssetItem(@RequestBody BalanceAssetItem bai) {
 		logger.info("assetCode: " + bai.getAssetCode() + ". assetName: " + bai.getAssetName());
 
-		int count = balanceSheetDAO.updateBSBai(bai);
+		int count = balanceSheetDAO.updateBSHighBai(bai);
 		logger.info("count " + count);
 
 		return bai;
@@ -1755,6 +1754,16 @@ public class BalanceSheetController {
 				+ ". doiUngMaTk: " + bai.getTaiKhoanDs().get(0).getDoiUng().getMaTk());
 
 		balanceSheetDAO.deleteCFBaiLow(bai);
+
+		return bai;
+	}
+
+	@RequestMapping(value = "/bctc/luuchuyentt/chitieu/capcao/capnhat", method = RequestMethod.POST)
+	public @ResponseBody BalanceAssetItem luuHighChiTieuLctt(@RequestBody BalanceAssetItem bai) {
+		logger.info("assetCode: " + bai.getAssetCode() + ". assetName: " + bai.getAssetName());
+
+		int count = balanceSheetDAO.updateCFHighBai(bai);
+		logger.info("count " + count);
 
 		return bai;
 	}
