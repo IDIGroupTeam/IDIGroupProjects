@@ -1638,7 +1638,7 @@ public class BalanceSheetController {
 			bai.setType(BalanceAssetItem.BCTC_KQHDKD_CAO);
 
 			// Lấy danh sách chỉ tiêu KQHDKD
-			List<BalanceAssetItem> baiDs = balanceSheetDAO.listCFBais();
+			List<BalanceAssetItem> baiDs = balanceSheetDAO.listSRBais();
 			List<BalanceAssetItem> baiDsRs = new ArrayList<>();
 
 			if (baiDs != null) {
@@ -1712,7 +1712,7 @@ public class BalanceSheetController {
 			bai.setType(BalanceAssetItem.BCTC_KQHDKD_THAP);
 
 			// Lấy danh sách chỉ tiêu KQHDKD
-			List<BalanceAssetItem> baiDs = balanceSheetDAO.listCFBais();
+			List<BalanceAssetItem> baiDs = balanceSheetDAO.listSRBais();
 			List<BalanceAssetItem> baiDsRs = new ArrayList<>();
 
 			if (baiDs != null) {
@@ -1750,8 +1750,7 @@ public class BalanceSheetController {
 	@RequestMapping(value = "/bctc/kqhdkd/chitieu/capthap/xoa", method = RequestMethod.POST)
 	public @ResponseBody BalanceAssetItem xoaLowChiTieuKqhdkd(@RequestBody BalanceAssetItem bai) {
 		logger.info("Xoá BalanceAssetItem từ KQHDKD_TAIKHOAN: assetCode: " + bai.getAssetCode() + ". maTk: "
-				+ bai.getTaiKhoanDs().get(0).getMaTk() + ". soDu: " + bai.getTaiKhoanDs().get(0).getSoDuGiaTri()
-				+ ". doiUngMaTk: " + bai.getTaiKhoanDs().get(0).getDoiUng().getMaTk());
+				+ bai.getTaiKhoanDs().get(0).getMaTk() + ". soDu: " + bai.getTaiKhoanDs().get(0).getSoDuGiaTri());
 
 		balanceSheetDAO.deleteSRBaiLow(bai);
 
