@@ -1567,6 +1567,208 @@ public class BalanceSheetController {
 		return bad;
 	}
 
+	@RequestMapping("/bctc/kqhdkd/chitieu/danhsach")
+	public String danhSachChiTieuKqhdkd(Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			List<BalanceAssetItem> bais = balanceSheetDAO.listSRBais();
+
+			model.addAttribute("bais", bais);
+			model.addAttribute("props", props);
+			model.addAttribute("tab", "tabDSBKQHDKD");
+
+			return "danhSachChiTieuKqhdkd";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/bctc/kqhdkd/chitieu/capcao/taomoi")
+	public String taoMoiHighChiTieuKqhdkd(Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
+			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+				return "redirect:/bctc/kqhdkd/chitieu/danhsach";
+			}
+
+			BalanceAssetItem bai = new BalanceAssetItem();
+
+			return chuanBiFormHighChiTieuKqhdkd(model, bai);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/bctc/kqhdkd/chitieu/capcao/them", method = RequestMethod.POST)
+	public String themHighChiTieuKqhdkd(@ModelAttribute("mainFinanceForm") @Validated BalanceAssetItem bai,
+			BindingResult result, Model model) {
+		try {
+			if (result.hasErrors()) {
+				return chuanBiFormHighChiTieuKqhdkd(model, bai);
+			}
+
+			logger.info("Thêm chỉ tiêu kết quả hoạt động kinh doanh: " + bai);
+
+			int count = balanceSheetDAO.insertSRHighBai(bai);
+			if (count == -1) {
+				result.rejectValue("assetCode", "NotEmpty.Bai.Duplicate");
+				return chuanBiFormHighChiTieuKqhdkd(model, bai);
+			}
+
+			return "redirect:/bctc/kqhdkd/chitieu/danhsach";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	private String chuanBiFormHighChiTieuKqhdkd(Model model, BalanceAssetItem bai) {
+		try {
+			model.addAttribute("props", props);
+			model.addAttribute("mainFinanceForm", bai);
+			bai.setType(BalanceAssetItem.BCTC_KQHDKD_CAO);
+
+			// Lấy danh sách chỉ tiêu KQHDKD
+			List<BalanceAssetItem> baiDs = balanceSheetDAO.listCFBais();
+			List<BalanceAssetItem> baiDsRs = new ArrayList<>();
+
+			if (baiDs != null) {
+				// Lấy danh sách chỉ tiêu KQHDKD cấp cao
+				Iterator<BalanceAssetItem> baiIter = baiDs.iterator();
+				while (baiIter.hasNext()) {
+					baiDsRs.addAll(lineUpHighestBai(baiIter.next()));
+				}
+			}
+
+			model.addAttribute("baiDs", baiDsRs);
+			model.addAttribute("tab", "tabDSBKQHDKD");
+
+			// Đây là trường hợp tạo mới CT KQHDKD & TK
+			return "taoMoiHighChiTieuKqhdkd";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping("/bctc/kqhdkd/chitieu/capthap/taomoi")
+	public String taoMoiLowChiTieuKqhdkd(Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			KyKeToan kyKeToan = dungChung.getKyKeToan();
+			if (kyKeToan == null) {
+				return "koKyKeToanMacDinh";
+			}
+			if (kyKeToan.getTrangThai() == KyKeToan.DONG) {
+				return "redirect:/bctc/kqhdkd/chitieu/danhsach";
+			}
+
+			BalanceAssetItem bai = new BalanceAssetItem();
+
+			return chuanBiFormLowChiTieuKqhdkd(model, bai);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/bctc/kqhdkd/chitieu/capthap/them", method = RequestMethod.POST)
+	public String themLowChiTieuKqhdkd(@ModelAttribute("mainFinanceForm") @Validated BalanceAssetItem bai,
+			BindingResult result, Model model) {
+		try {
+			if (result.hasErrors()) {
+				return chuanBiFormLowChiTieuKqhdkd(model, bai);
+			}
+
+			logger.info("Thêm chỉ tiêu kết quả hoạt động kinh doanh: " + bai);
+
+			int count = balanceSheetDAO.insertSRLowBai(bai);
+			if (count == -1) {
+				result.rejectValue("assetCode", "NotEmpty.Bai.Duplicate");
+				return chuanBiFormLowChiTieuKqhdkd(model, bai);
+			}
+
+			return "redirect:/bctc/kqhdkd/chitieu/danhsach";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	private String chuanBiFormLowChiTieuKqhdkd(Model model, BalanceAssetItem bai) {
+		try {
+			model.addAttribute("props", props);
+			model.addAttribute("mainFinanceForm", bai);
+			bai.setType(BalanceAssetItem.BCTC_KQHDKD_THAP);
+
+			// Lấy danh sách chỉ tiêu KQHDKD
+			List<BalanceAssetItem> baiDs = balanceSheetDAO.listCFBais();
+			List<BalanceAssetItem> baiDsRs = new ArrayList<>();
+
+			if (baiDs != null) {
+				// Lấy danh sách chỉ tiêu KQHDKD cấp thấp nhất
+				Iterator<BalanceAssetItem> baiIter = baiDs.iterator();
+				while (baiIter.hasNext()) {
+					baiDsRs.addAll(lineUpLowestBai(baiIter.next()));
+				}
+			}
+
+			// Lấy danh sách tài khoản kế toán
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.danhSachTaiKhoan();
+
+			model.addAttribute("baiDs", baiDsRs);
+			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
+			model.addAttribute("tab", "tabDSBKQHDKD");
+
+			// Đây là trường hợp tạo mới CT KQHDKD & TK
+			return "taoMoiLowChiTieuKqhdkd";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/bctc/kqhdkd/chitieu/capcao/xoa", method = RequestMethod.POST)
+	public @ResponseBody BalanceAssetItem xoaHighChiTieuKqhdkd(@RequestBody BalanceAssetItem bai) {
+		logger.info("Xoá BalanceAssetItem từ SALE_RESULT_ITEM: assetCode: " + bai.getAssetCode());
+
+		balanceSheetDAO.deleteSRBaiHigh(bai);
+
+		return bai;
+	}
+
+	@RequestMapping(value = "/bctc/kqhdkd/chitieu/capthap/xoa", method = RequestMethod.POST)
+	public @ResponseBody BalanceAssetItem xoaLowChiTieuKqhdkd(@RequestBody BalanceAssetItem bai) {
+		logger.info("Xoá BalanceAssetItem từ KQHDKD_TAIKHOAN: assetCode: " + bai.getAssetCode() + ". maTk: "
+				+ bai.getTaiKhoanDs().get(0).getMaTk() + ". soDu: " + bai.getTaiKhoanDs().get(0).getSoDuGiaTri()
+				+ ". doiUngMaTk: " + bai.getTaiKhoanDs().get(0).getDoiUng().getMaTk());
+
+		balanceSheetDAO.deleteSRBaiLow(bai);
+
+		return bai;
+	}
+
+	@RequestMapping(value = "/bctc/kqhdkd/chitieu/capcao/capnhat", method = RequestMethod.POST)
+	public @ResponseBody BalanceAssetItem luuHighChiTieuKqhdkd(@RequestBody BalanceAssetItem bai) {
+		logger.info(
+				"assetCode: " + bai.getAssetCode() + ". assetName: " + bai.getAssetName() + ". rule: " + bai.getRule());
+
+		int count = balanceSheetDAO.updateSRHighBai(bai);
+		logger.info("count " + count);
+
+		return bai;
+	}
+
 	@RequestMapping("/bctc/luuchuyentt/chitieu/danhsach")
 	public String danhSachChiTieuLctt(Model model) {
 		try {
@@ -1637,12 +1839,12 @@ public class BalanceSheetController {
 			model.addAttribute("mainFinanceForm", bai);
 			bai.setType(BalanceAssetItem.BCTC_LCTT_CAO);
 
-			// Lấy danh sách chỉ tiêu CDKT
+			// Lấy danh sách chỉ tiêu LCTT
 			List<BalanceAssetItem> baiDs = balanceSheetDAO.listCFBais();
 			List<BalanceAssetItem> baiDsRs = new ArrayList<>();
 
 			if (baiDs != null) {
-				// Lấy danh sách chỉ tiêu CDKT cấp cao
+				// Lấy danh sách chỉ tiêu LCTT cấp cao
 				Iterator<BalanceAssetItem> baiIter = baiDs.iterator();
 				while (baiIter.hasNext()) {
 					baiDsRs.addAll(lineUpHighestBai(baiIter.next()));
@@ -1652,7 +1854,7 @@ public class BalanceSheetController {
 			model.addAttribute("baiDs", baiDsRs);
 			model.addAttribute("tab", "tabDSBLCTT");
 
-			// Đây là trường hợp tạo mới CT CĐKT & TK
+			// Đây là trường hợp tạo mới CT LCTT & TK
 			return "taoMoiHighChiTieuLctt";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1730,7 +1932,7 @@ public class BalanceSheetController {
 			model.addAttribute("loaiTaiKhoanDs", loaiTaiKhoanDs);
 			model.addAttribute("tab", "tabDSBLCTT");
 
-			// Đây là trường hợp tạo mới CT CĐKT & TK
+			// Đây là trường hợp tạo mới CT LCTT & TK
 			return "taoMoiLowChiTieuLctt";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1740,7 +1942,7 @@ public class BalanceSheetController {
 
 	@RequestMapping(value = "/bctc/luuchuyentt/chitieu/capcao/xoa", method = RequestMethod.POST)
 	public @ResponseBody BalanceAssetItem xoaHighChiTieuLctt(@RequestBody BalanceAssetItem bai) {
-		logger.info("Xoá BalanceAssetItem từ CASH_FLOW_TAIKHOAN: assetCode: " + bai.getAssetCode());
+		logger.info("Xoá BalanceAssetItem từ CASH_FLOW_ITEM: assetCode: " + bai.getAssetCode());
 
 		balanceSheetDAO.deleteCFBaiHigh(bai);
 
@@ -1760,7 +1962,8 @@ public class BalanceSheetController {
 
 	@RequestMapping(value = "/bctc/luuchuyentt/chitieu/capcao/capnhat", method = RequestMethod.POST)
 	public @ResponseBody BalanceAssetItem luuHighChiTieuLctt(@RequestBody BalanceAssetItem bai) {
-		logger.info("assetCode: " + bai.getAssetCode() + ". assetName: " + bai.getAssetName());
+		logger.info(
+				"assetCode: " + bai.getAssetCode() + ". assetName: " + bai.getAssetName() + ". rule: " + bai.getRule());
 
 		int count = balanceSheetDAO.updateCFHighBai(bai);
 		logger.info("count " + count);

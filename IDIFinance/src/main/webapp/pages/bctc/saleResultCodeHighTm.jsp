@@ -13,7 +13,7 @@
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
 		$("#mainFinanceForm").attr("action",
-				"${url}/bctc/luuchuyentt/chitieu/capcao/them");
+				"${url}/bctc/kqhdkd/chitieu/capcao/them");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		function init() {
@@ -27,13 +27,14 @@
 	});
 </script>
 
-<h4>TẠO MỚI MỐI QUAN HỆ CHỈ TIÊU LƯU CHUYỂN TIỀN TỆ - TÀI KHOẢN</h4>
+<h4>TẠO MỚI MỐI QUAN HỆ CHỈ TIÊU KẾT QUẢ SẢN XUẤT KINH DOANH - TÀI
+	KHOẢN</h4>
 <hr />
 
 <form:hidden path="type" />
 <div class="row form-group">
 	<label class="control-label col-sm-3" for="parent.assetCode">Mã
-		chỉ tiêu LCTT cấp trên</label>
+		chỉ tiêu KQHDKD cấp trên</label>
 	<div class="col-sm-4">
 		<form:select cssClass="form-control" path="parent.assetCode">
 			<form:option value="" label=""></form:option>
@@ -43,29 +44,29 @@
 		<br />
 		<form:errors path="parent.assetCode" cssClass="error" />
 	</div>
-	<i class="col-sm-5">Mã chỉ tiêu LCTT cấp trên</i>
+	<i class="col-sm-5">Mã chỉ tiêu KQHDKD cấp trên</i>
 </div>
 
 <div class="row form-group">
 	<label class="control-label col-sm-3" for="assetCode">Mã chỉ
-		tiêu LCTT (*)</label>
+		tiêu KQHDKD (*)</label>
 	<div class="col-sm-4">
 		<form:input cssClass="form-control" path="assetCode" />
 		<br />
 		<form:errors path="assetCode" cssClass="error" />
 	</div>
-	<i class="col-sm-5">Mã chỉ tiêu LCTT</i>
+	<i class="col-sm-5">Mã chỉ tiêu KQHDKD</i>
 </div>
 
 <div class="row form-group">
 	<label class="control-label col-sm-3" for="assetName">Tên chỉ
-		tiêu LCTT (*)</label>
+		tiêu KQHDKD (*)</label>
 	<div class="col-sm-4">
 		<form:input cssClass="form-control" path="assetName" />
 		<br />
 		<form:errors path="assetName" cssClass="error" />
 	</div>
-	<i class="col-sm-5">Tên chỉ tiêu LCTT</i>
+	<i class="col-sm-5">Tên chỉ tiêu KQHDKD</i>
 </div>
 
 <%-- <div class="row form-group">
@@ -89,7 +90,7 @@
 
 <div class="row form-group">
 	<div class="col-sm-12">
-		<a href="${url}/bctc/luuchuyentt/chitieu/danhsach"
+		<a href="${url}/bctc/kqhdkd/chitieu/danhsach"
 			class="btn btn-info btn-sm">Hủy</a>
 		<button id="submitBt" type="submit" class="btn btn-info btn-sm">Tạo
 			mới</button>

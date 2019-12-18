@@ -55,6 +55,16 @@ public interface BalanceSheetDAO {
 	public boolean kiemTraBs(Date period, int periodType);
 
 	// SR
+	public int insertSRHighBai(BalanceAssetItem bai);
+
+	public int updateSRHighBai(BalanceAssetItem bai);
+
+	public int insertSRLowBai(BalanceAssetItem bai);
+
+	public void deleteSRBaiHigh(BalanceAssetItem bai);
+
+	public void deleteSRBaiLow(BalanceAssetItem bai);
+
 	public void insertOrUpdateSR(BalanceAssetData sr);
 
 	public void insertOrUpdateSRs(BalanceAssetData sr);
@@ -80,7 +90,7 @@ public interface BalanceSheetDAO {
 
 	// CF
 	public int insertCFHighBai(BalanceAssetItem bai);
-	
+
 	public int updateCFHighBai(BalanceAssetItem bai);
 
 	public int insertCFLowBai(BalanceAssetItem bai);

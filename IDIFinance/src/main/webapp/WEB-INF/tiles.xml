@@ -482,6 +482,28 @@
 			value="/pages/bctc/cashFlowUpdate.jsp" />
 	</definition>
 
+	<definition name="danhSachChiTieuKqhdkd" extends="taichinh">
+		<put-attribute name="title"
+			value="Danh sách chỉ tiêu kết quả hoạt động kinh doanh" />
+		<put-attribute name="body"
+			value="/pages/bctc/saleResultCodeDs.jsp" />
+	</definition>
+
+	<definition name="taoMoiHighChiTieuKqhdkd"
+		extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới chỉ tiêu kết quả hoạt động kinh doanh - cấp cao" />
+		<put-attribute name="body"
+			value="/pages/bctc/saleResultCodeHighTm.jsp" />
+	</definition>
+
+	<definition name="taoMoiLowChiTieuKqhdkd" extends="taichinh">
+		<put-attribute name="title"
+			value="Tạo mới chỉ tiêu kết quả hoạt động kinh doanh - cấp thấp" />
+		<put-attribute name="body"
+			value="/pages/bctc/saleResultCodeLowTm.jsp" />
+	</definition>
+
 	<definition name="danhSachChiTieuLctt" extends="taichinh">
 		<put-attribute name="title"
 			value="Danh sách chỉ tiêu lưu chuyển tiền tệ" />

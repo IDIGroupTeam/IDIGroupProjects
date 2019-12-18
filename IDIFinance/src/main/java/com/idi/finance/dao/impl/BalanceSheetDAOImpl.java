@@ -143,6 +143,21 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	@Value("${XOA_CHI_TIEU_LCTT_TAI_KHOAN}")
 	private String XOA_CHI_TIEU_LCTT_TAI_KHOAN;
 
+	@Value("${THEM_CHI_TIEU_KQHDKD}")
+	private String THEM_CHI_TIEU_KQHDKD;
+
+	@Value("${CAP_NHAT_CHI_TIEU_KQHDKD_TEN}")
+	private String CAP_NHAT_CHI_TIEU_KQHDKD_TEN;
+
+	@Value("${XOA_CHI_TIEU_KQHDKD}")
+	private String XOA_CHI_TIEU_KQHDKD;
+
+	@Value("${THEM_CHI_TIEU_KQHDKD_TAI_KHOAN}")
+	private String THEM_CHI_TIEU_KQHDKD_TAI_KHOAN;
+
+	@Value("${XOA_CHI_TIEU_KQHDKD_TAI_KHOAN}")
+	private String XOA_CHI_TIEU_KQHDKD_TAI_KHOAN;
+
 	private JdbcTemplate jdbcTmpl;
 
 	public JdbcTemplate getJdbcTmpl() {
@@ -518,6 +533,97 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 	}
 
 	@Override
+	public int insertSRHighBai(BalanceAssetItem bai) {
+		if (bai == null) {
+			return 0;
+		}
+
+		String insertQuery = THEM_CHI_TIEU_KQHDKD;
+		logger.info(insertQuery);
+
+		// Insert to SALE_RESULT_ITEM
+		int count = 0;
+		try {
+			count = jdbcTmpl.update(insertQuery, bai.getAssetCode(), bai.getAssetName(), bai.getParent().getAssetCode(),
+					bai.getSoDu(), bai.getRule());
+		} catch (DuplicateKeyException e) {
+			count = -1;
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+
+		return count;
+	}
+
+	@Override
+	public int updateSRHighBai(BalanceAssetItem bai) {
+		if (bai == null) {
+			return 0;
+		}
+
+		String updateQuery = CAP_NHAT_CHI_TIEU_KQHDKD_TEN;
+		logger.info(updateQuery);
+
+		int count = 0;
+		try {
+			count = jdbcTmpl.update(updateQuery, bai.getAssetName(), bai.getRule(), bai.getAssetCode());
+		} catch (DuplicateKeyException e) {
+			count = -1;
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return count;
+	}
+
+	@Override
+	public int insertSRLowBai(BalanceAssetItem bai) {
+		if (bai == null) {
+			return 0;
+		}
+
+		String insertQuery = THEM_CHI_TIEU_KQHDKD_TAI_KHOAN;
+		logger.info(insertQuery);
+
+		// Insert to KQHDKD_TAIKHOAN
+		int count = 0;
+		try {
+			LoaiTaiKhoan loaiTaiKhoan = bai.getTaiKhoanDs().get(0);
+			count = jdbcTmpl.update(insertQuery, bai.getAssetCode(), loaiTaiKhoan.getMaTk(),
+					loaiTaiKhoan.getSoDuGiaTri());
+		} catch (DuplicateKeyException e) {
+			count = -1;
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+
+		return count;
+	}
+
+	@Override
+	public void deleteSRBaiHigh(BalanceAssetItem bai) {
+		if (bai != null && bai.getAssetCode() != null) {
+			String query = XOA_CHI_TIEU_KQHDKD;
+			logger.info(query);
+
+			jdbcTmpl.update(query, bai.getAssetCode());
+		}
+	}
+
+	@Override
+	public void deleteSRBaiLow(BalanceAssetItem bai) {
+		if (bai != null && bai.getAssetCode() != null && bai.getTaiKhoanDs() != null && bai.getTaiKhoanDs().size() > 0
+				&& bai.getTaiKhoanDs().get(0).getMaTk() != null) {
+			String query = XOA_CHI_TIEU_KQHDKD_TAI_KHOAN;
+			logger.info(query);
+
+			LoaiTaiKhoan loaiTaiKhoan = bai.getTaiKhoanDs().get(0);
+			jdbcTmpl.update(query, bai.getAssetCode(), loaiTaiKhoan.getMaTk(), loaiTaiKhoan.getSoDuGiaTri());
+		}
+	}
+
+	@Override
 	public void insertOrUpdateSR(BalanceAssetData bad) {
 		if (bad == null)
 			return;
@@ -740,11 +846,12 @@ public class BalanceSheetDAOImpl implements BalanceSheetDAO {
 
 		int count = 0;
 		try {
-			count = jdbcTmpl.update(updateQuery, bai.getAssetName(), bai.getAssetCode());
+			count = jdbcTmpl.update(updateQuery, bai.getAssetName(), bai.getRule(), bai.getAssetCode());
 		} catch (DuplicateKeyException e) {
 			count = -1;
+			e.printStackTrace();
 		} catch (Exception e) {
-			// e.printStackTrace();
+			e.printStackTrace();
 		}
 
 		return count;

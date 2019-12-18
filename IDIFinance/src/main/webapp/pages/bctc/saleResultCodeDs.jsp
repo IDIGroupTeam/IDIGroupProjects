@@ -14,7 +14,7 @@
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
 		$("#mainFinanceForm").attr("action",
-				"${url}/bctc/luuchuyentt/chitieu/danhsach");
+				"${url}/bctc/kqhdkd/chitieu/danhsach");
 		$("#mainFinanceForm").attr("method", "POST");
 
 		$('#treeTable').treeTable();
@@ -46,7 +46,6 @@
 									var loaiTaiKhoan = new Object();
 									loaiTaiKhoan.maTk = data.maTk;
 									loaiTaiKhoan.soDuGiaTri = data.soDu;
-									loaiTaiKhoan.doiUng = loaiTaiKhoanDu;
 
 									var taiKhoanDs = new Array();
 									taiKhoanDs.push(loaiTaiKhoan);
@@ -61,13 +60,13 @@
 							afterRemove : {
 								chiTieuCao : function(data) {
 									try {
-										window.location.href = "${url}/bctc/luuchuyentt/chitieu/danhsach";
+										window.location.href = "${url}/bctc/kqhdkd/chitieu/danhsach";
 									} catch (e) {
 									}
 								},
 								chiTieuThap : function(data) {
 									try {
-										window.location.href = "${url}/bctc/luuchuyentt/chitieu/danhsach";
+										window.location.href = "${url}/bctc/kqhdkd/chitieu/danhsach";
 									} catch (e) {
 									}
 								}
@@ -76,14 +75,14 @@
 	});
 </script>
 
-<h4>Danh sách các chỉ tiêu của bảng lưu chuyển tiền tệ</h4>
+<h4>Danh sách các chỉ tiêu của bảng kết quả hoạt động kinh doanh</h4>
 <span><i>${props.getCauHinh(PropCont.CHE_DO_KE_TOAN).giaTri}</i></span>
 
 <div class="pull-right">
-	<a href="${url}/bctc/luuchuyentt/chitieu/capcao/taomoi"
+	<a href="${url}/bctc/kqhdkd/chitieu/capcao/taomoi"
 		class="btn btn-info btn-sm"> <span
 		class="glyphicon glyphicon-plus"></span> Tạo mới chỉ tiêu cấp cao
-	</a> <a href="${url}/bctc/luuchuyentt/chitieu/capthap/taomoi"
+	</a> <a href="${url}/bctc/kqhdkd/chitieu/capthap/taomoi"
 		class="btn btn-info btn-sm"> <span
 		class="glyphicon glyphicon-plus"></span> Tạo mới chỉ tiêu cấp thấp
 	</a>
@@ -95,21 +94,17 @@
 	<table id="treeTable" class="table table-bordered table-hover">
 		<thead>
 			<tr>
-				<th class="text-center" rowspan="2">Chỉ tiêu</th>
-				<th class="text-center" rowspan="2">Công thức</th>
-				<th class="text-center" colspan="2">Tài khoản</th>
-			</tr>
-			<tr>
+				<th class="text-center">Chỉ tiêu</th>
+				<th class="text-center">Công thức</th>
 				<th class="text-center">Số dư</th>
-				<th class="text-center">Tài khoản đối ứng</th>
 			</tr>
 		</thead>
 		<tbody class="form-inline">
 			<c:forEach items="${bais}" var="bai">
 				<tr id="${bai.assetCode}" data-name="chiTieuCao"
 					data-asset-code="${bai.assetCode}"
-					data-remove-url="${url}/bctc/luuchuyentt/chitieu/capcao/xoa"
-					data-save-url="${url}/bctc/luuchuyentt/chitieu/capcao/capnhat">
+					data-remove-url="${url}/bctc/kqhdkd/chitieu/capcao/xoa"
+					data-save-url="${url}/bctc/kqhdkd/chitieu/capcao/capnhat">
 					<c:choose>
 						<c:when test="${not empty bai.childs and bai.childs.size()>0}">
 							<td>${bai.assetCode}&nbsp;-&nbsp;<span
@@ -127,14 +122,13 @@
 					</c:choose>
 					<td><span class="cell-editable" data-field="rule">${bai.rule}</span></td>
 					<td></td>
-					<td></td>
 				</tr>
 
 				<c:set var="parentId" value="${bai.assetCode}" scope="request" />
 				<c:set var="assetCode" value="${bai.assetCode}" scope="request" />
 				<c:set var="taiKhoanDs" value="${bai.taiKhoanDs}" scope="request" />
 				<c:set var="bais" value="${bai.childs}" scope="request" />
-				<jsp:include page="cashFlowCodeDsCon.jsp" />
+				<jsp:include page="saleResultCodeDsCon.jsp" />
 			</c:forEach>
 		</tbody>
 	</table>
