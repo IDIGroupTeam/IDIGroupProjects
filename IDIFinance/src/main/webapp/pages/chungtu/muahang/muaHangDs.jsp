@@ -64,9 +64,8 @@
 							value='${mainFinanceForm.cuoi}' pattern='dd_MM_yyyy' />"
 				class="btn btn-info btn-sm"> <span
 				class="glyphicon glyphicon-download"></span> Pdf
-			</a>
-			<a
-				href="${url}/chungtu/muahang/danhsach/pdf/<fmt:formatDate
+			</a> <a
+				href="${url}/chungtu/muahang/danhsach/excel/<fmt:formatDate
 							value='${mainFinanceForm.dau}' pattern='dd_MM_yyyy' />/<fmt:formatDate
 							value='${mainFinanceForm.cuoi}' pattern='dd_MM_yyyy' />"
 				class="btn btn-info btn-sm"> <span

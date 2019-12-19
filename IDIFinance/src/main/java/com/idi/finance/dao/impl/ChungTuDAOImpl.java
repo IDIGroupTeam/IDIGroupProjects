@@ -217,17 +217,12 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 			Iterator<ChungTu> iter = chungTuDs.iterator();
 			while (iter.hasNext()) {
 				ChungTu chungTu = iter.next();
-				logger.info("chungTu: " + chungTu);
 
 				int pos = ketQua.indexOf(chungTu);
-				logger.info("pos: " + pos);
 				if (pos > -1) {
-					logger.info("capnhat: " + pos);
 					ChungTu chungTuTmpl = ketQua.get(pos);
-					logger.info("chungTuTmpl: " + chungTuTmpl);
 					chungTuTmpl.themTaiKhoan(chungTu.getTaiKhoanDs());
 				} else {
-					logger.info("themmoi: " + chungTu);
 					ketQua.add(chungTu);
 				}
 			}
