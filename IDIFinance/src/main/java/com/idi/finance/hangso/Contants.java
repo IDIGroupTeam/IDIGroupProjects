@@ -21,5 +21,10 @@ public class Contants {
 	// Hằng số nghiệp vụ kế toán
 
 	// Hằng số cho phần chứng từ: Phiếu thu, chi, báo có, báo nợ
-
+	public static final String COMPANY = "COMPANY";
+	public static final String DIA_CHI = "DIA_CHI";
+	public static final String PAGE_TITLE = "PAGE_TITLE";
+	public static final String LOAI_CT = "LOAI_CT";
+	public static final String BAT_DAU = "batDau";
+	public static final String KET_THUC = "ketThuc";
 }

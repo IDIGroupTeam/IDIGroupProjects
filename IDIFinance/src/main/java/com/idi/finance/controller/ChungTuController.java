@@ -15,15 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -73,6 +64,7 @@ import com.idi.finance.dao.NhanVienDAO;
 import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.form.ChungTuForm;
+import com.idi.finance.hangso.Contants;
 import com.idi.finance.hangso.PropCont;
 import com.idi.finance.utils.Utils;
 import com.idi.finance.validator.ChungTuValidator;
@@ -228,15 +220,15 @@ public class ChungTuController {
 			ketThuc = sdf.parse(cuoi);
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			hmParams.put("batDau", batDau);
-			hmParams.put("ketThuc", ketThuc);
+			hmParams.put(Contants.BAT_DAU, batDau);
+			hmParams.put(Contants.KET_THUC, batDau);
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
 			JasperReport jasperReport = getCompiledFile("PhieuThuDs", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, phieuThuDs);
+			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, phieuThuDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -264,17 +256,18 @@ public class ChungTuController {
 			ketThuc = sdf.parse(cuoi);
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			hmParams.put("batDau", batDau);
-			hmParams.put("ketThuc", ketThuc);
+			hmParams.put(Contants.BAT_DAU, batDau);
+			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.COMPANY, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri());
+			hmParams.put(Contants.DIA_CHI, props.getCauHinh(PropCont.DIA_CHI).getGiaTri());
+			hmParams.put(Contants.PAGE_TITLE, "DANH SÁCH PHIẾU THU");
+			hmParams.put(Contants.LOAI_CT, "Phiếu thu");
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			SimpleDateFormat standardSdf = new SimpleDateFormat("dd/MM/yyyy");
-			XSSFWorkbook wb = sinhExcelChungTu(phieuThuDs, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri(),
-					"DANH SÁCH PHIẾU THU", "Từ " + standardSdf.format(batDau) + " đến " + standardSdf.format(batDau),
-					"Phiếu thu");
+			XSSFWorkbook wb = baoCaoDAO.taoChungTuDs(phieuThuDs, hmParams);
 
 			res.reset();
 			res.resetBuffer();
@@ -288,172 +281,6 @@ public class ChungTuController {
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private XSSFWorkbook sinhExcelChungTu(List<ChungTu> chungTuDs, String company, String pageTitle,
-			String pageSubTitle, String loaiCt) {
-		// Writing to excel
-		XSSFWorkbook wb = new XSSFWorkbook();
-
-		// Tạo font & cellstyle mặc định
-		XSSFFont font = wb.createFont();
-		font.setFontHeightInPoints((short) 10);
-		font.setFontName("Arial");
-		font.setItalic(false);
-		font.setBold(false);
-
-		CellStyle style = wb.createCellStyle();
-		style.setBorderTop(BorderStyle.THIN);
-		style.setBorderRight(BorderStyle.THIN);
-		style.setBorderBottom(BorderStyle.THIN);
-		style.setBorderLeft(BorderStyle.THIN);
-		style.setFont(font);
-
-		CellStyle wrapStyle = wb.createCellStyle();
-		wrapStyle.setBorderTop(BorderStyle.THIN);
-		wrapStyle.setBorderRight(BorderStyle.THIN);
-		wrapStyle.setBorderBottom(BorderStyle.THIN);
-		wrapStyle.setBorderLeft(BorderStyle.THIN);
-		wrapStyle.setFont(font);
-		wrapStyle.setWrapText(true);
-
-		// Tạo bold font & cellstyle cho page header
-		XSSFFont boldPageFont = wb.createFont();
-		boldPageFont.setFontHeightInPoints((short) 12);
-		boldPageFont.setFontName("Arial");
-		boldPageFont.setItalic(false);
-		boldPageFont.setBold(true);
-
-		CellStyle boldPageStyle = wb.createCellStyle();
-		boldPageStyle.setFont(boldPageFont);
-		boldPageStyle.setAlignment(HorizontalAlignment.CENTER);
-
-		// Tạo italic font & cellstyle cho page header
-		XSSFFont italicPageFont = wb.createFont();
-		italicPageFont.setFontHeightInPoints((short) 10);
-		italicPageFont.setFontName("Arial");
-		italicPageFont.setItalic(true);
-		italicPageFont.setBold(false);
-
-		CellStyle italicPageStyle = wb.createCellStyle();
-		italicPageStyle.setFont(italicPageFont);
-		italicPageStyle.setAlignment(HorizontalAlignment.CENTER);
-
-		// Tạo font & cellstyle cho header column
-		XSSFFont boldHeaderFont = wb.createFont();
-		boldHeaderFont.setFontHeightInPoints((short) 10);
-		boldHeaderFont.setFontName("Arial");
-		boldHeaderFont.setItalic(false);
-		boldHeaderFont.setBold(true);
-
-		CellStyle boldHeaderStyle = wb.createCellStyle();
-		boldHeaderStyle.setFont(boldHeaderFont);
-		boldHeaderStyle.setAlignment(HorizontalAlignment.CENTER);
-		boldHeaderStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-		boldHeaderStyle.setBorderTop(BorderStyle.THIN);
-		boldHeaderStyle.setBorderRight(BorderStyle.THIN);
-		boldHeaderStyle.setBorderBottom(BorderStyle.THIN);
-		boldHeaderStyle.setBorderLeft(BorderStyle.THIN);
-
-		logger.info("Tạo sheet " + pageTitle + " ...");
-		XSSFSheet chungTuDsSt = wb.createSheet(pageTitle);
-		int titleRow = 0;
-
-		chungTuDsSt.addMergedRegion(new CellRangeAddress(titleRow, titleRow, 0, 5));
-		chungTuDsSt.addMergedRegion(new CellRangeAddress(titleRow + 1, titleRow + 1, 0, 5));
-		chungTuDsSt.addMergedRegion(new CellRangeAddress(titleRow + 3, titleRow + 3, 0, 1));
-		chungTuDsSt.addMergedRegion(new CellRangeAddress(titleRow + 3, titleRow + 4, 2, 2));
-		chungTuDsSt.addMergedRegion(new CellRangeAddress(titleRow + 3, titleRow + 4, 3, 3));
-		chungTuDsSt.addMergedRegion(new CellRangeAddress(titleRow + 3, titleRow + 4, 4, 4));
-		chungTuDsSt.addMergedRegion(new CellRangeAddress(titleRow + 3, titleRow + 4, 5, 5));
-
-		XSSFRow row0 = chungTuDsSt.createRow(titleRow);
-		XSSFCell cell00 = row0.createCell(0);
-		cell00.setCellStyle(boldPageStyle);
-		cell00.setCellValue(pageTitle);
-
-		XSSFRow row1 = chungTuDsSt.createRow(titleRow + 1);
-		XSSFCell cell10 = row1.createCell(0);
-		cell10.setCellStyle(italicPageStyle);
-		cell10.setCellValue(pageSubTitle);
-
-		// Tạo dòng header
-		XSSFRow row3 = chungTuDsSt.createRow(titleRow + 3);
-
-		// Tạo các cột cho dòng đầu tiên
-		XSSFCell cell20 = row3.createCell(0);
-		cell20.setCellStyle(boldHeaderStyle);
-		cell20.setCellValue(loaiCt);
-		XSSFCell cell21 = row3.createCell(1);
-		cell21.setCellStyle(boldHeaderStyle);
-		XSSFCell cell22 = row3.createCell(2);
-		cell22.setCellStyle(boldHeaderStyle);
-		cell22.setCellValue("Lý do");
-		XSSFCell cell23 = row3.createCell(3);
-		cell23.setCellStyle(boldHeaderStyle);
-		cell23.setCellValue("Số tiền (VND)");
-		XSSFCell cell24 = row3.createCell(4);
-		cell24.setCellStyle(boldHeaderStyle);
-		cell24.setCellValue("Đối tượng");
-		XSSFCell cell25 = row3.createCell(5);
-		cell25.setCellStyle(boldHeaderStyle);
-		cell25.setCellValue("Địa chỉ");
-
-		XSSFRow row4 = chungTuDsSt.createRow(titleRow + 4);
-		XSSFCell cell30 = row4.createCell(0);
-		cell30.setCellStyle(boldHeaderStyle);
-		cell30.setCellValue("Ngày ghi sổ");
-		XSSFCell cell31 = row4.createCell(1);
-		cell31.setCellStyle(boldHeaderStyle);
-		cell31.setCellValue("Số");
-		XSSFCell cell32 = row4.createCell(2);
-		cell32.setCellStyle(boldHeaderStyle);
-		XSSFCell cell33 = row4.createCell(3);
-		cell33.setCellStyle(boldHeaderStyle);
-		XSSFCell cell34 = row4.createCell(4);
-		cell34.setCellStyle(boldHeaderStyle);
-		XSSFCell cell35 = row4.createCell(5);
-		cell35.setCellStyle(boldHeaderStyle);
-
-		if (chungTuDs != null) {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			for (int i = 0; i < chungTuDs.size(); i++) {
-				ChungTu chungTu = chungTuDs.get(i);
-				XSSFRow rowCt = chungTuDsSt.createRow(titleRow + 5 + i);
-
-				XSSFCell cellCt0 = rowCt.createCell(0);
-				cellCt0.setCellStyle(style);
-				cellCt0.setCellValue(sdf.format(chungTu.getNgayHt()));
-				XSSFCell cellCt1 = rowCt.createCell(1);
-				cellCt1.setCellStyle(style);
-				cellCt1.setCellValue(chungTu.getLoaiCt() + chungTu.getSoCt());
-				XSSFCell cellCt2 = rowCt.createCell(2);
-				cellCt2.setCellStyle(wrapStyle);
-				cellCt2.setCellValue(chungTu.getLyDo());
-				XSSFCell cellCt3 = rowCt.createCell(3);
-				cellCt3.setCellStyle(style);
-				cellCt3.setCellValue(chungTu.getSoTien().getGiaTri());
-				XSSFCell cellCt4 = rowCt.createCell(4);
-				cellCt4.setCellStyle(style);
-				cellCt4.setCellValue(chungTu.getDoiTuong().getTenDt());
-				XSSFCell cellCt5 = rowCt.createCell(5);
-				cellCt5.setCellStyle(style);
-				cellCt5.setCellValue(chungTu.getDoiTuong().getDiaChi());
-			}
-		}
-
-		// Resize column's width
-		chungTuDsSt.setColumnWidth(2, 20000);
-		chungTuDsSt.setColumnWidth(3, 4000);
-		chungTuDsSt.setColumnWidth(5, 14000);
-
-		chungTuDsSt.autoSizeColumn(0);
-		chungTuDsSt.autoSizeColumn(1);
-		chungTuDsSt.autoSizeColumn(4);
-
-		// chungTuDsSt.setDefaultColumnWidth(5);
-
-		return wb;
 	}
 
 	@RequestMapping("/chungtu/phieuthu/xem/{id}")
@@ -490,7 +317,7 @@ public class ChungTuController {
 			chungTuDs.add(chungTu);
 
 			JasperReport jasperReport = getCompiledFile("PhieuThu", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, chungTuDs);
+			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -771,15 +598,15 @@ public class ChungTuController {
 			ketThuc = sdf.parse(cuoi);
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			hmParams.put("batDau", batDau);
-			hmParams.put("ketThuc", ketThuc);
+			hmParams.put(Contants.BAT_DAU, batDau);
+			hmParams.put(Contants.KET_THUC, batDau);
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_CHI);
 			List<ChungTu> phieuChiDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
 			JasperReport jasperReport = getCompiledFile("PhieuChiDs", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, phieuChiDs);
+			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, phieuChiDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -807,17 +634,18 @@ public class ChungTuController {
 			ketThuc = sdf.parse(cuoi);
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			hmParams.put("batDau", batDau);
-			hmParams.put("ketThuc", ketThuc);
+			hmParams.put(Contants.BAT_DAU, batDau);
+			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.COMPANY, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri());
+			hmParams.put(Contants.DIA_CHI, props.getCauHinh(PropCont.DIA_CHI).getGiaTri());
+			hmParams.put(Contants.PAGE_TITLE, "DANH SÁCH PHIẾU CHI");
+			hmParams.put(Contants.LOAI_CT, "Phiếu chi");
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_CHI);
 			List<ChungTu> phieuChiDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			SimpleDateFormat standardSdf = new SimpleDateFormat("dd/MM/yyyy");
-			XSSFWorkbook wb = sinhExcelChungTu(phieuChiDs, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri(),
-					"DANH SÁCH PHIẾU CHI", "Từ " + standardSdf.format(batDau) + " đến " + standardSdf.format(batDau),
-					"Phiếu chi");
+			XSSFWorkbook wb = baoCaoDAO.taoChungTuDs(phieuChiDs, hmParams);
 
 			res.reset();
 			res.resetBuffer();
@@ -867,7 +695,7 @@ public class ChungTuController {
 			chungTuDs.add(chungTu);
 
 			JasperReport jasperReport = getCompiledFile("PhieuChi", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, chungTuDs);
+			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -1148,15 +976,15 @@ public class ChungTuController {
 			ketThuc = sdf.parse(cuoi);
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			hmParams.put("batDau", batDau);
-			hmParams.put("ketThuc", ketThuc);
+			hmParams.put(Contants.BAT_DAU, batDau);
+			hmParams.put(Contants.KET_THUC, batDau);
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_CO);
 			List<ChungTu> baoCoDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
 			JasperReport jasperReport = getCompiledFile("BaoCoDs", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, baoCoDs);
+			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, baoCoDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -1184,17 +1012,18 @@ public class ChungTuController {
 			ketThuc = sdf.parse(cuoi);
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			hmParams.put("batDau", batDau);
-			hmParams.put("ketThuc", ketThuc);
+			hmParams.put(Contants.BAT_DAU, batDau);
+			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.COMPANY, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri());
+			hmParams.put(Contants.DIA_CHI, props.getCauHinh(PropCont.DIA_CHI).getGiaTri());
+			hmParams.put(Contants.PAGE_TITLE, "DANH SÁCH BÁO CÓ");
+			hmParams.put(Contants.LOAI_CT, "Báo có");
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_CO);
 			List<ChungTu> baoCoDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			SimpleDateFormat standardSdf = new SimpleDateFormat("dd/MM/yyyy");
-			XSSFWorkbook wb = sinhExcelChungTu(baoCoDs, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri(),
-					"DANH SÁCH BÁO CÓ", "Từ " + standardSdf.format(batDau) + " đến " + standardSdf.format(batDau),
-					"Báo có");
+			XSSFWorkbook wb = baoCaoDAO.taoChungTuDs(baoCoDs, hmParams);
 
 			res.reset();
 			res.resetBuffer();
@@ -1243,7 +1072,7 @@ public class ChungTuController {
 			chungTuDs.add(chungTu);
 
 			JasperReport jasperReport = getCompiledFile("BaoCo", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, chungTuDs);
+			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -1524,15 +1353,15 @@ public class ChungTuController {
 			ketThuc = sdf.parse(cuoi);
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			hmParams.put("batDau", batDau);
-			hmParams.put("ketThuc", ketThuc);
+			hmParams.put(Contants.BAT_DAU, batDau);
+			hmParams.put(Contants.KET_THUC, batDau);
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_NO);
 			List<ChungTu> baoNoDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
 			JasperReport jasperReport = getCompiledFile("BaoNoDs", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, baoNoDs);
+			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, baoNoDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -1560,17 +1389,18 @@ public class ChungTuController {
 			ketThuc = sdf.parse(cuoi);
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			hmParams.put("batDau", batDau);
-			hmParams.put("ketThuc", ketThuc);
+			hmParams.put(Contants.BAT_DAU, batDau);
+			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.COMPANY, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri());
+			hmParams.put(Contants.DIA_CHI, props.getCauHinh(PropCont.DIA_CHI).getGiaTri());
+			hmParams.put(Contants.PAGE_TITLE, "DANH SÁCH BÁO NỢ");
+			hmParams.put(Contants.LOAI_CT, "Báo nợ");
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_NO);
 			List<ChungTu> baoNoDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			SimpleDateFormat standardSdf = new SimpleDateFormat("dd/MM/yyyy");
-			XSSFWorkbook wb = sinhExcelChungTu(baoNoDs, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri(),
-					"DANH SÁCH BÁO NỢ", "Từ " + standardSdf.format(batDau) + " đến " + standardSdf.format(batDau),
-					"Báo nợ");
+			XSSFWorkbook wb = baoCaoDAO.taoChungTuDs(baoNoDs, hmParams);
 
 			res.reset();
 			res.resetBuffer();
@@ -1619,7 +1449,7 @@ public class ChungTuController {
 			chungTuDs.add(chungTu);
 
 			JasperReport jasperReport = getCompiledFile("BaoNo", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, chungTuDs);
+			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -1901,15 +1731,15 @@ public class ChungTuController {
 			ketThuc = sdf.parse(cuoi);
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			hmParams.put("batDau", batDau);
-			hmParams.put("ketThuc", ketThuc);
+			hmParams.put(Contants.BAT_DAU, batDau);
+			hmParams.put(Contants.KET_THUC, batDau);
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_KT_TH);
 			List<ChungTu> ktthDs = chungTuDAO.danhSachChungTuKtth(loaiCts, batDau, ketThuc);
 
 			JasperReport jasperReport = getCompiledFile("KeToanTongHopDs", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, ktthDs);
+			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, ktthDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -1937,18 +1767,18 @@ public class ChungTuController {
 			ketThuc = sdf.parse(cuoi);
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			hmParams.put("batDau", batDau);
-			hmParams.put("ketThuc", ketThuc);
+			hmParams.put(Contants.BAT_DAU, batDau);
+			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.COMPANY, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri());
+			hmParams.put(Contants.DIA_CHI, props.getCauHinh(PropCont.DIA_CHI).getGiaTri());
+			hmParams.put(Contants.PAGE_TITLE, "DANH SÁCH PHIẾU KẾ TOÁN TỔNG HỢP");
+			hmParams.put(Contants.LOAI_CT, "Phiếu kế toán tổng hợp");
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_KT_TH);
 			List<ChungTu> ktthDs = chungTuDAO.danhSachChungTuKtth(loaiCts, batDau, ketThuc);
 
-			SimpleDateFormat standardSdf = new SimpleDateFormat("dd/MM/yyyy");
-			XSSFWorkbook wb = sinhExcelChungTu(ktthDs, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri(),
-					"DANH SÁCH PHIẾU KẾ TOÁN TỔNG HỢP",
-					"Từ " + standardSdf.format(batDau) + " đến " + standardSdf.format(batDau),
-					"Phiếu kế toán tổng hợp");
+			XSSFWorkbook wb = baoCaoDAO.taoChungTuKtthDs(ktthDs, hmParams);
 
 			res.reset();
 			res.resetBuffer();
@@ -1998,7 +1828,7 @@ public class ChungTuController {
 			chungTuDs.add(chungTu);
 
 			JasperReport jasperReport = getCompiledFile("KeToanTongHop", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, chungTuDs);
+			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -2282,15 +2112,15 @@ public class ChungTuController {
 			ketThuc = sdf.parse(cuoi);
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			hmParams.put("batDau", batDau);
-			hmParams.put("ketThuc", ketThuc);
+			hmParams.put(Contants.BAT_DAU, batDau);
+			hmParams.put(Contants.KET_THUC, batDau);
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_MUA_HANG);
 			List<ChungTu> muaHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
 
 			JasperReport jasperReport = getCompiledFile("muaHangDs", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, muaHangDs);
+			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, muaHangDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -2339,7 +2169,7 @@ public class ChungTuController {
 			chungTuDs.add(chungTu);
 
 			JasperReport jasperReport = getCompiledFile("MuaHang", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, chungTuDs);
+			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -2835,15 +2665,15 @@ public class ChungTuController {
 			ketThuc = sdf.parse(cuoi);
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			hmParams.put("batDau", batDau);
-			hmParams.put("ketThuc", ketThuc);
+			hmParams.put(Contants.BAT_DAU, batDau);
+			hmParams.put(Contants.KET_THUC, batDau);
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_BAN_HANG);
 			List<ChungTu> banHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
 
 			JasperReport jasperReport = getCompiledFile("banHangDs", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, banHangDs);
+			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, banHangDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -2892,7 +2722,7 @@ public class ChungTuController {
 			chungTuDs.add(chungTu);
 
 			JasperReport jasperReport = getCompiledFile("BanHang", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, chungTuDs);
+			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
 			res.resetBuffer();
@@ -3551,7 +3381,7 @@ public class ChungTuController {
 			chungTuDs.add(chungTu);
 
 			JasperReport jasperReport = getCompiledFile("KetChuyenButToan", req);
-			byte[] bytes = baoCaoDAO.taoBaoCaoChungTu(jasperReport, hmParams, chungTuDs);
+			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
 			res.resetBuffer();
