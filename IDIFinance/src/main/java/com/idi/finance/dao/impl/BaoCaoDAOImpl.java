@@ -247,10 +247,10 @@ public class BaoCaoDAOImpl implements BaoCaoDAO {
 				cellCt3.setCellStyle(currencyStyle);
 				cellCt3.setCellValue(chungTu.getSoTien().getGiaTri());
 				XSSFCell cellCt4 = rowCt.createCell(4);
-				cellCt4.setCellStyle(style);
+				cellCt4.setCellStyle(wrapStyle);
 				cellCt4.setCellValue(chungTu.getDoiTuong().getTenDt());
 				XSSFCell cellCt5 = rowCt.createCell(5);
-				cellCt5.setCellStyle(style);
+				cellCt5.setCellStyle(wrapStyle);
 				cellCt5.setCellValue(chungTu.getDoiTuong().getDiaChi());
 			}
 		}
@@ -261,7 +261,7 @@ public class BaoCaoDAOImpl implements BaoCaoDAO {
 		cell60.setCellValue(DateUtils.format(new Date()));
 
 		// Resize column's width
-		chungTuDsSt.setColumnWidth(2, 20000);
+		chungTuDsSt.setColumnWidth(2, 16000);
 		chungTuDsSt.setColumnWidth(3, 4000);
 		chungTuDsSt.setColumnWidth(5, 14000);
 

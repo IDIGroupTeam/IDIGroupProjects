@@ -2136,6 +2136,45 @@ public class ChungTuController {
 		}
 	}
 
+	@RequestMapping(value = "/chungtu/muahang/danhsach/excel/{dau}/{cuoi}", method = RequestMethod.GET)
+	public void excelDanhSachMuaHang(HttpServletRequest req, HttpServletResponse res, @PathVariable("dau") String dau,
+			@PathVariable("cuoi") String cuoi, Model model) {
+		try {
+			Date batDau = null;
+			Date ketThuc = null;
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+			batDau = sdf.parse(dau);
+			ketThuc = sdf.parse(cuoi);
+
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+			hmParams.put(Contants.BAT_DAU, batDau);
+			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.COMPANY, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri());
+			hmParams.put(Contants.DIA_CHI, props.getCauHinh(PropCont.DIA_CHI).getGiaTri());
+			hmParams.put(Contants.PAGE_TITLE, "DANH SÁCH CHỨNG TỪ MUA HÀNG");
+			hmParams.put(Contants.LOAI_CT, "Chứng từ mua hàng");
+
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_MUA_HANG);
+			List<ChungTu> muaHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
+
+			XSSFWorkbook wb = baoCaoDAO.taoChungTuDs(muaHangDs, hmParams);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
+			res.setHeader("Content-disposition", "attachment; filename=MuaHangDs.xlsx");
+			ServletOutputStream out = res.getOutputStream();
+			wb.write(out);
+			out.flush();
+			out.close();
+			wb.close();
+		} catch (IOException | ParseException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@RequestMapping("/chungtu/muahang/xem/{id}")
 	public String xemMuaHang(@PathVariable("id") int maCt, Model model) {
 		try {
@@ -2685,6 +2724,45 @@ public class ChungTuController {
 			out.flush();
 			out.close();
 		} catch (JRException | IOException | ParseException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@RequestMapping(value = "/chungtu/banhang/danhsach/excel/{dau}/{cuoi}", method = RequestMethod.GET)
+	public void excelDanhSachBanHang(HttpServletRequest req, HttpServletResponse res, @PathVariable("dau") String dau,
+			@PathVariable("cuoi") String cuoi, Model model) {
+		try {
+			Date batDau = null;
+			Date ketThuc = null;
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+			batDau = sdf.parse(dau);
+			ketThuc = sdf.parse(cuoi);
+
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+			hmParams.put(Contants.BAT_DAU, batDau);
+			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.COMPANY, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri());
+			hmParams.put(Contants.DIA_CHI, props.getCauHinh(PropCont.DIA_CHI).getGiaTri());
+			hmParams.put(Contants.PAGE_TITLE, "DANH SÁCH CHỨNG TỪ BÁN HÀNG");
+			hmParams.put(Contants.LOAI_CT, "Chứng từ bán hàng");
+
+			List<String> loaiCts = new ArrayList<>();
+			loaiCts.add(ChungTu.CHUNG_TU_BAN_HANG);
+			List<ChungTu> banHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
+
+			XSSFWorkbook wb = baoCaoDAO.taoChungTuDs(banHangDs, hmParams);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
+			res.setHeader("Content-disposition", "attachment; filename=BanHangDs.xlsx");
+			ServletOutputStream out = res.getOutputStream();
+			wb.write(out);
+			out.flush();
+			out.close();
+			wb.close();
+		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}
 	}
