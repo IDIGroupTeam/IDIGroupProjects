@@ -1,6 +1,5 @@
 package com.idi.finance.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,13 +51,12 @@ import com.idi.finance.form.TkSoKeToanForm;
 import com.idi.finance.hangso.PropCont;
 import com.idi.finance.utils.ExcelProcessor;
 import com.idi.finance.utils.ExpressionEval;
+import com.idi.finance.utils.ReportUtils;
 import com.idi.finance.utils.Utils;
 import com.idi.finance.validator.BalanceSheetValidator;
 
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.util.JRLoader;
 
 @Controller
 public class BalanceSheetController {
@@ -422,7 +420,7 @@ public class BalanceSheetController {
 
 			// Sinh bảng cân đối kế toán ra pdf
 			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			JasperReport jasperReport = getCompiledFile("CDKT", req);
+			JasperReport jasperReport = ReportUtils.compileReport("CDKT", req);
 			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bads);
 
 			res.reset();
@@ -668,7 +666,7 @@ public class BalanceSheetController {
 
 			// Sinh bảng cân đối kế toán ra pdf
 			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			JasperReport jasperReport = getCompiledFile("KQHDKD", req);
+			JasperReport jasperReport = ReportUtils.compileReport("KQHDKD", req);
 			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bads);
 
 			res.reset();
@@ -1325,7 +1323,7 @@ public class BalanceSheetController {
 
 			// Sinh bảng cân đối kế toán ra pdf
 			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			JasperReport jasperReport = getCompiledFile("LCTT", req);
+			JasperReport jasperReport = ReportUtils.compileReport("LCTT", req);
 			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bads);
 
 			res.reset();
@@ -2169,7 +2167,7 @@ public class BalanceSheetController {
 			duLieuKeToan = tongPhatSinh(duLieuKeToan, tongPsDs, dauKyDs);
 
 			// Sinh bảng cân đối phát sinh ra pdf
-			JasperReport jasperReport = getCompiledFile("CDPS", req);
+			JasperReport jasperReport = ReportUtils.compileReport("CDPS", req);
 
 			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			params.put("KY_KE_TOAN", kyKt);
@@ -2360,19 +2358,5 @@ public class BalanceSheetController {
 		}
 
 		return duLieuKeToan;
-	}
-
-	private JasperReport getCompiledFile(String fileName, HttpServletRequest req) throws JRException {
-		String jrxml = req.getSession().getServletContext().getRealPath("/baocao/bctc/" + fileName + ".jrxml");
-		String jasper = req.getSession().getServletContext().getRealPath("/baocao/bctc/" + fileName + ".jasper");
-
-		File reportFile = new File(jasper);
-		// If compiled file is not found, then compile XML template
-		// if (!reportFile.exists()) {
-		logger.info("Compile Jasper report ... " + fileName);
-		JasperCompileManager.compileReportToFile(jrxml, jasper);
-		// }
-		JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(reportFile.getPath());
-		return jasperReport;
 	}
 }

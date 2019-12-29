@@ -1,12 +1,16 @@
 package com.idi.finance.controller;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
+import com.idi.finance.bean.CauHinh;
 import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.bctc.BalanceAssetItem;
 import com.idi.finance.bean.bctc.BaoCaoTaiChinh;
@@ -40,8 +45,12 @@ import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.hangso.PropCont;
 import com.idi.finance.utils.ExpressionEval;
+import com.idi.finance.utils.ReportUtils;
 import com.idi.finance.utils.Utils;
 import com.idi.finance.validator.BaoCaoTaiChinhValidator;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperReport;
 
 @Controller
 public class BaoCaoTaiChinhController {
@@ -613,6 +622,33 @@ public class BaoCaoTaiChinhController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "redirect:/bctc/danhsach";
+		}
+	}
+
+	@RequestMapping(value = "/bctc/cdkt/pdf/{id}", method = RequestMethod.POST)
+	public void exportBalanceAsset(HttpServletRequest req, HttpServletResponse res, Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			// Sinh bảng cân đối kế toán ra pdf
+			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+			JasperReport jasperReport = ReportUtils.compileReport("CDKT", req);
+			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, null);
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=BangCdkt.pdf");
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

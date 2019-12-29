@@ -1,6 +1,5 @@
 package com.idi.finance.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -66,14 +65,13 @@ import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.form.ChungTuForm;
 import com.idi.finance.hangso.Contants;
 import com.idi.finance.hangso.PropCont;
+import com.idi.finance.utils.ReportUtils;
 import com.idi.finance.utils.Utils;
 import com.idi.finance.validator.ChungTuValidator;
 import com.idi.finance.validator.KetChuyenButToanValidator;
 
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.util.JRLoader;
 
 @Controller
 public class ChungTuController {
@@ -227,7 +225,7 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = getCompiledFile("PhieuThuDs", req);
+			JasperReport jasperReport = ReportUtils.compileReport("PhieuThuDs", null, req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, phieuThuDs);
 
 			res.reset();
@@ -316,7 +314,7 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = getCompiledFile("PhieuThu", req);
+			JasperReport jasperReport = ReportUtils.compileReport("PhieuThu", null, req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
@@ -605,7 +603,7 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_CHI);
 			List<ChungTu> phieuChiDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = getCompiledFile("PhieuChiDs", req);
+			JasperReport jasperReport = ReportUtils.compileReport("PhieuChiDs", null, req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, phieuChiDs);
 
 			res.reset();
@@ -694,7 +692,7 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = getCompiledFile("PhieuChi", req);
+			JasperReport jasperReport = ReportUtils.compileReport("PhieuChi", null, req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
@@ -983,7 +981,7 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_CO);
 			List<ChungTu> baoCoDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = getCompiledFile("BaoCoDs", req);
+			JasperReport jasperReport = ReportUtils.compileReport("BaoCoDs", null, req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, baoCoDs);
 
 			res.reset();
@@ -1071,7 +1069,7 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = getCompiledFile("BaoCo", req);
+			JasperReport jasperReport = ReportUtils.compileReport("BaoCo", null, req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
@@ -1360,7 +1358,7 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_NO);
 			List<ChungTu> baoNoDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = getCompiledFile("BaoNoDs", req);
+			JasperReport jasperReport = ReportUtils.compileReport("BaoNoDs", null, req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, baoNoDs);
 
 			res.reset();
@@ -1448,7 +1446,7 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = getCompiledFile("BaoNo", req);
+			JasperReport jasperReport = ReportUtils.compileReport("BaoNo", null, req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
@@ -1738,7 +1736,7 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_KT_TH);
 			List<ChungTu> ktthDs = chungTuDAO.danhSachChungTuKtth(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = getCompiledFile("KeToanTongHopDs", req);
+			JasperReport jasperReport = ReportUtils.compileReport("KeToanTongHopDs", null, req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, ktthDs);
 
 			res.reset();
@@ -1827,7 +1825,9 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = getCompiledFile("KeToanTongHop", req);
+			List<String> baoCaoConDs = new ArrayList<>();
+			baoCaoConDs.add("NghiepVuKeToan");
+			JasperReport jasperReport = ReportUtils.compileReport("KeToanTongHop", baoCaoConDs, req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
@@ -2119,7 +2119,7 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_MUA_HANG);
 			List<ChungTu> muaHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = getCompiledFile("muaHangDs", req);
+			JasperReport jasperReport = ReportUtils.compileReport("muaHangDs", null, req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, muaHangDs);
 
 			res.reset();
@@ -2207,7 +2207,7 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = getCompiledFile("MuaHang", req);
+			JasperReport jasperReport = ReportUtils.compileReport("MuaHang", null, req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
@@ -2711,7 +2711,7 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_BAN_HANG);
 			List<ChungTu> banHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = getCompiledFile("banHangDs", req);
+			JasperReport jasperReport = ReportUtils.compileReport("banHangDs", null, req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, banHangDs);
 
 			res.reset();
@@ -2799,7 +2799,7 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = getCompiledFile("BanHang", req);
+			JasperReport jasperReport = ReportUtils.compileReport("BanHang", null, req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
@@ -3458,7 +3458,7 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = getCompiledFile("KetChuyenButToan", req);
+			JasperReport jasperReport = ReportUtils.compileReport("KetChuyenButToan", null, req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
@@ -3646,19 +3646,5 @@ public class ChungTuController {
 	public @ResponseBody KetChuyenButToan layKetChuyenButToan(@RequestParam("maKc") int maKc) {
 		logger.info("maKc " + maKc);
 		return chungTuDAO.layKetChuyenButToan(maKc);
-	}
-
-	private JasperReport getCompiledFile(String fileName, HttpServletRequest req) throws JRException {
-		String jrxml = req.getSession().getServletContext().getRealPath("/baocao/chungtu/" + fileName + ".jrxml");
-		String jasper = req.getSession().getServletContext().getRealPath("/baocao/chungtu/" + fileName + ".jasper");
-
-		File reportFile = new File(jasper);
-		// If compiled file is not found, then compile XML template
-		// if (!reportFile.exists()) {
-		logger.info("Compile Jasper report ...");
-		JasperCompileManager.compileReportToFile(jrxml, jasper);
-		// }
-		JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(reportFile.getPath());
-		return jasperReport;
 	}
 }

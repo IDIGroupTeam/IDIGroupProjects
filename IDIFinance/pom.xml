@@ -13,7 +13,6 @@
 	</properties>
 
 	<dependencies>
-		<!-- Apache POI -->
 		<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>

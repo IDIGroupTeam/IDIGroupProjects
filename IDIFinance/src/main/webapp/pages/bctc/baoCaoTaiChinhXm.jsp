@@ -58,15 +58,35 @@
 <hr />
 <div class="row form-group">
 	<div class="col-sm-12">
-		<ul class="nav nav-tabs">
+		<ul class="nav nav-tabs nav-justified">
 			<li class="active"><a data-toggle="tab" href="#bangCdkt"
-				data-target="#bangCdkt">Bảng cân đối kế toán</a></li>
+				data-target="#bangCdkt, #cdktPdf">Bảng cân đối kế toán</a></li>
 			<li><a data-toggle="tab" href="#bangKqhdkd"
-				data-target="#bangKqhdkd">Bảng kết quả HĐKD</a></li>
+				data-target="#bangKqhdkd, #kqhdkdPdf">Bảng kết quả HĐKD</a></li>
 			<li><a data-toggle="tab" href="#bangLctt"
-				data-target="#bangLctt">Bảng lưu chuyển tiền tệ</a></li>
+				data-target="#bangLctt, #lcttPdf">Bảng lưu chuyển tiền tệ</a></li>
 			<li><a data-toggle="tab" href="#bangCdps"
-				data-target="#bangCdps">Bảng cân đối phát sinh</a></li>
+				data-target="#bangCdps, #cdpsPdf">Bảng cân đối phát sinh</a></li>
+			<li><div class="tab-content sub-content pull-right">
+					<span id="cdpsPdf" class="fade tab-pane"><a
+						href="${url}/bctc/cdps/pdf/{id}" class="btn btn-info btn-sm"
+						data-toggle="tooltip" title="Cân đối phát sinh"> <span
+							class="glyphicon glyphicon-download"></span> Pdf
+					</a></span><span id="lcttPdf" class="fade tab-pane"><a
+						href="${url}/bctc/luuchuyentt/pdf/{id}"
+						class="btn btn-info btn-sm" data-toggle="tooltip"
+						title="Lưu chuyển tiền tệ"> <span
+							class="glyphicon glyphicon-download"></span> Pdf
+					</a></span><span id="kqhdkdPdf" class="fade tab-pane"><a
+						href="${url}/bctc/kqhdkd/pdf/{id}" class="btn btn-info btn-sm"
+						data-toggle="tooltip" title="Kết quả hoạt động kinh doanh"> <span
+							class="glyphicon glyphicon-download"></span> Pdf
+					</a></span><span id="cdktPdf" class="fade in active tab-pane"><a
+						href="${url}/bctc/cdkt/pdf/{id}" class="btn btn-info btn-sm"
+						data-toggle="tooltip" title="Cân đối kế toán"> <span
+							class="glyphicon glyphicon-download"></span> Pdf
+					</a></span>
+				</div></li>
 		</ul>
 
 		<div class="tab-content sub-content">
