@@ -20,7 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.idi.finance.bean.bctc.BalanceAssetData;
+import com.idi.finance.bean.bctc.BaoCaoTaiChinhChiTiet;
 import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.chungtu.ChungTu;
 import com.idi.finance.dao.BaoCaoDAO;
@@ -496,8 +496,8 @@ public class BaoCaoDAOImpl implements BaoCaoDAO {
 
 	@Override
 	public byte[] taoBangCdkt(JasperReport jasperReport, HashMap<String, Object> hmParams,
-			List<BalanceAssetData> baiDs) {
-		if (jasperReport == null || baiDs == null) {
+			List<BaoCaoTaiChinhChiTiet> chiTietDs) {
+		if (jasperReport == null || chiTietDs == null) {
 			return null;
 		}
 
@@ -506,11 +506,12 @@ public class BaoCaoDAOImpl implements BaoCaoDAO {
 		}
 
 		try {
-			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(baiDs);
+			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(chiTietDs);
 			return JasperRunManager.runReportToPdf(jasperReport, hmParams, dataSource);
 		} catch (JRException e) {
 			e.printStackTrace();
 		}
+
 		return null;
 	}
 

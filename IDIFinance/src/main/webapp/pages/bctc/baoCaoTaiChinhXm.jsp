@@ -69,21 +69,24 @@
 				data-target="#bangCdps, #cdpsPdf">Bảng cân đối phát sinh</a></li>
 			<li><div class="tab-content sub-content pull-right">
 					<span id="cdpsPdf" class="fade tab-pane"><a
-						href="${url}/bctc/cdps/pdf/{id}" class="btn btn-info btn-sm"
-						data-toggle="tooltip" title="Cân đối phát sinh"> <span
+						href="${url}/bctc/cdps/pdf/${bctc.bangCdps.maBctcCon}"
+						class="btn btn-info btn-sm" data-toggle="tooltip"
+						title="Cân đối phát sinh"> <span
 							class="glyphicon glyphicon-download"></span> Pdf
 					</a></span><span id="lcttPdf" class="fade tab-pane"><a
-						href="${url}/bctc/luuchuyentt/pdf/{id}"
+						href="${url}/bctc/luuchuyentt/pdf/${bctc.bangLctt.maBctcCon}"
 						class="btn btn-info btn-sm" data-toggle="tooltip"
 						title="Lưu chuyển tiền tệ"> <span
 							class="glyphicon glyphicon-download"></span> Pdf
 					</a></span><span id="kqhdkdPdf" class="fade tab-pane"><a
-						href="${url}/bctc/kqhdkd/pdf/{id}" class="btn btn-info btn-sm"
-						data-toggle="tooltip" title="Kết quả hoạt động kinh doanh"> <span
+						href="${url}/bctc/kqhdkd/pdf/${bctc.bangKqhdkd.maBctcCon}"
+						class="btn btn-info btn-sm" data-toggle="tooltip"
+						title="Kết quả hoạt động kinh doanh"> <span
 							class="glyphicon glyphicon-download"></span> Pdf
 					</a></span><span id="cdktPdf" class="fade in active tab-pane"><a
-						href="${url}/bctc/cdkt/pdf/{id}" class="btn btn-info btn-sm"
-						data-toggle="tooltip" title="Cân đối kế toán"> <span
+						href="${url}/bctc/cdkt/pdf/${bctc.bangCdkt.maBctcCon}"
+						class="btn btn-info btn-sm" data-toggle="tooltip"
+						title="Cân đối kế toán"> <span
 							class="glyphicon glyphicon-download"></span> Pdf
 					</a></span>
 				</div></li>

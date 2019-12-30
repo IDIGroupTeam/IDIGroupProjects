@@ -7,7 +7,8 @@ INSERT INTO `CAU_HINH` (`MA`, `TEN`, `GIA_TRI`, `NHOM`) VALUES
 ('TEN_CONG_TY', 'Tên công ty', 'Tập đoàn IDI', 1),
 ('THU_KHO', 'Thủ kho', 'ĐỖ HẢI', 1),
 ('THU_QUY', 'Thủ quỹ', 'ĐỖ VINH', 1),
-('CHE_DO_KE_TOAN', 'Chế độ kế toán', 'Thông tư 133', 1);
+('CHE_DO_KE_TOAN', 'Chế độ kế toán', 'Thông tư 133', 1),
+('MST', 'Mã số thuế', '1234567890', 1);
 
 INSERT INTO `CAU_HINH` (`MA`, `TEN`, `GIA_TRI`, `NHOM`) VALUES 
 ('PHIEU_THU_DS_TK_NO', 'Phiếu thu: tài khoản tiền mặt, nợ', '111;1111;1112;1113', 2), 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CDKT" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="56b9c578-5b4e-4e4d-b52d-05ef64e11b6c">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BCDKT" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="56b9c578-5b4e-4e4d-b52d-05ef64e11b6c">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -25,27 +25,10 @@
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="period" class="java.util.Date">
-		<fieldDescription><![CDATA[period]]></fieldDescription>
-	</field>
-	<field name="periodType" class="java.lang.Integer">
-		<fieldDescription><![CDATA[periodType]]></fieldDescription>
-	</field>
-	<field name="endValue" class="java.lang.Double">
-		<fieldDescription><![CDATA[endValue]]></fieldDescription>
-	</field>
-	<field name="startValue" class="java.lang.Double">
-		<fieldDescription><![CDATA[startValue]]></fieldDescription>
-	</field>
-	<field name="asset" class="com.idi.finance.bean.bctc.BalanceAssetItem">
-		<fieldDescription><![CDATA[asset]]></fieldDescription>
-	</field>
-	<field name="asset.assetCode" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="asset.assetCode"/>
-	</field>
-	<field name="asset.assetName" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="asset.assetName"/>
-	</field>
+	<field name="giaTri" class="com.idi.finance.bean.Tien"/>
+	<field name="giaTriKyTruoc" class="com.idi.finance.bean.Tien"/>
+	<field name="asset.assetName" class="java.lang.String"/>
+	<field name="asset.assetCode" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -196,10 +179,17 @@
 				</textElement>
 				<text><![CDATA[Số cuối kỳ]]></text>
 			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="278" y="0" width="75" height="18" uuid="e7633dd9-b856-476b-b38f-810a47f46109"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.25"/>
+				</box>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="18" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
 				<reportElement x="0" y="0" width="228" height="18" uuid="92996640-7a36-4855-b299-80db88b7c49b"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
@@ -215,19 +205,13 @@
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{asset.assetCode}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="278" y="0" width="75" height="18" uuid="e7633dd9-b856-476b-b38f-810a47f46109"/>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
-					<pen lineWidth="0.25"/>
-				</box>
-			</textField>
 			<textField>
 				<reportElement x="353" y="0" width="100" height="18" uuid="c409e125-5ea7-4332-9ba3-cca531579ea2"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[new java.text.DecimalFormat("###,###").format($F{startValue})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,###").format($F{giaTri}.getGiaTri())]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="453" y="0" width="100" height="18" uuid="c165fa5d-92c0-4122-b7fb-fe96bd83519e"/>
@@ -235,8 +219,20 @@
 					<pen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[new java.text.DecimalFormat("###,###").format($F{endValue})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,###").format($F{giaTriKyTruoc}.getGiaTri())]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="278" y="0" width="75" height="18" uuid="87dfbf48-6953-4f05-b94c-7568a6651249">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.25"/>
+				</box>
+				<text><![CDATA[]]></text>
+			</staticText>
 		</band>
 	</detail>
 	<columnFooter>

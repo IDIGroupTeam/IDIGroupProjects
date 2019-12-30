@@ -625,22 +625,97 @@ public class BaoCaoTaiChinhController {
 		}
 	}
 
-	@RequestMapping(value = "/bctc/cdkt/pdf/{id}", method = RequestMethod.POST)
-	public void exportBalanceAsset(HttpServletRequest req, HttpServletResponse res, Model model) {
+	@RequestMapping(value = "/bctc/cdkt/pdf/{id}", method = RequestMethod.GET)
+	public void pdfCdkt(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maBctcCon,
+			Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
 
+			BaoCaoTaiChinhCon bctcCon = bctcDAO.layBctcConCdkt(maBctcCon);
+			if (bctcCon == null) {
+				return;
+			}
+
 			// Sinh bảng cân đối kế toán ra pdf
 			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-			JasperReport jasperReport = ReportUtils.compileReport("CDKT", req);
-			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, null);
+			params.put("bctcCon", bctcCon);
+			JasperReport jasperReport = ReportUtils.compileReport("BCDKT", req);
+			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bctcCon.getChiTietDs());
 
 			res.reset();
 			res.resetBuffer();
 			res.setContentType("application/pdf");
 			res.setContentLength(bytes.length);
 			res.setHeader("Content-disposition", "inline; filename=BangCdkt.pdf");
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@RequestMapping(value = "/bctc/kqhdkd/pdf/{id}", method = RequestMethod.GET)
+	public void pdfKqhdkd(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maBctcCon,
+			Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			BaoCaoTaiChinhCon bctcCon = bctcDAO.layBctcConKqhdkd(maBctcCon);
+			if (bctcCon == null) {
+				return;
+			}
+
+			// Sinh bảng cân đối kế toán ra pdf
+			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+			params.put("bctcCon", bctcCon);
+			JasperReport jasperReport = ReportUtils.compileReport("BKQHDKD", req);
+			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bctcCon.getChiTietDs());
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=BangKqhdkd.pdf");
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (JRException | IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@RequestMapping(value = "/bctc/luuchuyentt/pdf/{id}", method = RequestMethod.GET)
+	public void pdfLuuchuyentt(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maBctcCon,
+			Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			BaoCaoTaiChinhCon bctcCon = bctcDAO.layBctcConLctt(maBctcCon);
+			if (bctcCon == null) {
+				return;
+			}
+
+			// Sinh bảng cân đối kế toán ra pdf
+			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+			params.put("bctcCon", bctcCon);
+			JasperReport jasperReport = ReportUtils.compileReport("BLCTT", req);
+			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bctcCon.getChiTietDs());
+
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=BangLctt.pdf");
 			ServletOutputStream out = res.getOutputStream();
 			out.write(bytes, 0, bytes.length);
 			out.flush();

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.idi.finance.bean.bctc.BalanceAssetData;
+import com.idi.finance.bean.bctc.BaoCaoTaiChinhChiTiet;
 import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.chungtu.ChungTu;
 
@@ -19,7 +19,7 @@ public interface BaoCaoDAO {
 	public byte[] taoChungTu(JasperReport jasperReport, HashMap<String, Object> hmParams, List<ChungTu> chungTuDs);
 
 	public byte[] taoBangCdkt(JasperReport jasperReport, HashMap<String, Object> hmParams,
-			List<BalanceAssetData> baiDs);
+			List<BaoCaoTaiChinhChiTiet> chiTietDs);
 
 	public byte[] taoBangCdps(JasperReport jasperReport, HashMap<String, Object> hmParams, DuLieuKeToan duLieuKeToan);
 }

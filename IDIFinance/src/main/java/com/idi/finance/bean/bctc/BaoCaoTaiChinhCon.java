@@ -12,7 +12,7 @@ public class BaoCaoTaiChinhCon {
 	private int maBctcCon;
 	private int loaiBctc;
 	private BaoCaoTaiChinh bctc;
-	List<BaoCaoTaiChinhChiTiet> chiTietDs;
+	private List<BaoCaoTaiChinhChiTiet> chiTietDs;
 
 	public int getMaBctcCon() {
 		return maBctcCon;

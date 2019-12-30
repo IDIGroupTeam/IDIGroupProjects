@@ -46,6 +46,15 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 	@Value("${LAY_BCTC}")
 	private String LAY_BCTC;
 
+	@Value("${LAY_BCTC_CON_CDKT}")
+	private String LAY_BCTC_CON_CDKT;
+
+	@Value("${LAY_BCTC_CON_KQHDKD}")
+	private String LAY_BCTC_CON_KQHDKD;
+
+	@Value("${LAY_BCTC_CON_LCTT}")
+	private String LAY_BCTC_CON_LCTT;
+
 	@Value("${LAY_BCTC_CDKT_CHI_TIET}")
 	private String LAY_BCTC_CDKT_CHI_TIET;
 
@@ -131,7 +140,7 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 		logger.info(layBctc);
 
 		Object[] objs = { maBctc };
-		List<BaoCaoTaiChinh> bctcDs = jdbcTmpl.query(layBctc, objs, new BaoCaoTaiChinhConMapper());
+		List<BaoCaoTaiChinh> bctcDs = jdbcTmpl.query(layBctc, objs, new BaoCaoTaiChinhDayDuMapper());
 
 		BaoCaoTaiChinh ketQua = null;
 
@@ -180,7 +189,7 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 		return ketQua;
 	};
 
-	public class BaoCaoTaiChinhConMapper implements RowMapper<BaoCaoTaiChinh> {
+	public class BaoCaoTaiChinhDayDuMapper implements RowMapper<BaoCaoTaiChinh> {
 		public BaoCaoTaiChinh mapRow(ResultSet rs, int rowNum) throws SQLException {
 			try {
 				BaoCaoTaiChinh bctc = new BaoCaoTaiChinh();
@@ -207,6 +216,123 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 
 				logger.info(bctc);
 				return bctc;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+	}
+
+	@Override
+	public BaoCaoTaiChinhCon layBctcConCdkt(int maBctcCon) {
+		String layBctcCon = LAY_BCTC_CON_CDKT;
+
+		logger.info("Lấy báo cáo tài chính con CDKT có MA_BCTC_CON: " + maBctcCon);
+		logger.info(layBctcCon);
+
+		Object[] objs = { maBctcCon };
+		List<BaoCaoTaiChinhCon> bctcConDs = jdbcTmpl.query(layBctcCon, objs, new BaoCaoTaiChinhConMapper());
+
+		BaoCaoTaiChinhCon ketQua = null;
+		if (bctcConDs != null) {
+			logger.info("Trộn kết quả thành một báo cáo tài chính con");
+			for (BaoCaoTaiChinhCon bctcCon : bctcConDs) {
+				if (ketQua == null) {
+					ketQua = bctcCon;
+				} else {
+					ketQua.themBctcChiTiet(bctcCon.getChiTietDs());
+				}
+			}
+		}
+
+		return ketQua;
+	}
+
+	@Override
+	public BaoCaoTaiChinhCon layBctcConKqhdkd(int maBctcCon) {
+		String layBctcCon = LAY_BCTC_CON_KQHDKD;
+
+		logger.info("Lấy báo cáo tài chính con KQHDKD có MA_BCTC_CON: " + maBctcCon);
+		logger.info(layBctcCon);
+
+		Object[] objs = { maBctcCon };
+		List<BaoCaoTaiChinhCon> bctcConDs = jdbcTmpl.query(layBctcCon, objs, new BaoCaoTaiChinhConMapper());
+
+		BaoCaoTaiChinhCon ketQua = null;
+		if (bctcConDs != null) {
+			logger.info("Trộn kết quả thành một báo cáo tài chính con");
+			for (BaoCaoTaiChinhCon bctcCon : bctcConDs) {
+				if (ketQua == null) {
+					ketQua = bctcCon;
+				} else {
+					ketQua.themBctcChiTiet(bctcCon.getChiTietDs());
+				}
+			}
+		}
+
+		return ketQua;
+	}
+
+	@Override
+	public BaoCaoTaiChinhCon layBctcConLctt(int maBctcCon) {
+		String layBctcCon = LAY_BCTC_CON_LCTT;
+
+		logger.info("Lấy báo cáo tài chính con LCTT có MA_BCTC_CON: " + maBctcCon);
+		logger.info(layBctcCon);
+
+		Object[] objs = { maBctcCon };
+		List<BaoCaoTaiChinhCon> bctcConDs = jdbcTmpl.query(layBctcCon, objs, new BaoCaoTaiChinhConMapper());
+
+		BaoCaoTaiChinhCon ketQua = null;
+		if (bctcConDs != null) {
+			logger.info("Trộn kết quả thành một báo cáo tài chính con");
+			for (BaoCaoTaiChinhCon bctcCon : bctcConDs) {
+				if (ketQua == null) {
+					ketQua = bctcCon;
+				} else {
+					ketQua.themBctcChiTiet(bctcCon.getChiTietDs());
+				}
+			}
+		}
+
+		return ketQua;
+	}
+
+	public class BaoCaoTaiChinhConMapper implements RowMapper<BaoCaoTaiChinhCon> {
+		public BaoCaoTaiChinhCon mapRow(ResultSet rs, int rowNum) throws SQLException {
+			try {
+				BaoCaoTaiChinh bctc = new BaoCaoTaiChinh();
+				bctc.setMaBctc(rs.getInt("MA_BCTC"));
+				bctc.setTieuDe(rs.getString("TIEU_DE"));
+				bctc.setLoaiTg(rs.getInt("LOAI_TG"));
+				bctc.setBatDau(rs.getDate("BAT_DAU"));
+				bctc.setKetThuc(rs.getDate("KET_THUC"));
+				bctc.setNguoiLap(rs.getString("NGUOI_LAP"));
+				bctc.setGiamDoc(rs.getString("GIAM_DOC"));
+				bctc.setNgayLap(rs.getDate("NGAY_LAP"));
+
+				KyKeToan kyKeToan = new KyKeToan();
+				kyKeToan.setMaKyKt(rs.getInt("MA_KKT"));
+				bctc.setKyKeToan(kyKeToan);
+
+				BaoCaoTaiChinhCon bctcCon = new BaoCaoTaiChinhCon();
+				bctcCon.setMaBctcCon(rs.getInt("MA_BCTC_CON"));
+				bctcCon.setLoaiBctc(rs.getInt("LOAI_BCTC"));
+				bctcCon.setBctc(bctc);
+
+				bctc.themBctcCon(bctcCon);
+
+				BaoCaoTaiChinhChiTiet bctcChiTiet = new BaoCaoTaiChinhChiTiet();
+				bctcChiTiet.getAsset().setAssetCode(rs.getString("ASSET_CODE"));
+				bctcChiTiet.getAsset().setAssetName(rs.getString("ASSET_NAME"));
+				bctcChiTiet.getGiaTri().setGiaTri(rs.getDouble("GIA_TRI"));
+				bctcChiTiet.getGiaTriKyTruoc().setGiaTri(rs.getDouble("GIA_TRI_KY_TRUOC"));
+				bctcChiTiet.setBctc(bctcCon);
+
+				bctcCon.themBctcChiTiet(bctcChiTiet);
+
+				logger.info(bctcCon);
+				return bctcCon;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;
@@ -444,4 +570,5 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 			return bctcChiTiet;
 		}
 	}
+
 }
