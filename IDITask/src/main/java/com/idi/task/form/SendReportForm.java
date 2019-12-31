@@ -10,6 +10,7 @@ public class SendReportForm implements Serializable{
 	private static final long serialVersionUID = 9180916579447198829L;
 
 	private String sendTo;
+	private String sendToOut;
 	private String subject;
 	private String content;
 	private String sendFrom;
@@ -45,4 +46,11 @@ public class SendReportForm implements Serializable{
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
+	public String getSendToOut() {
+		return sendToOut;
+	}
+	public void setSendToOut(String sendToOut) {
+		this.sendToOut = sendToOut;
+	}
+	
 }

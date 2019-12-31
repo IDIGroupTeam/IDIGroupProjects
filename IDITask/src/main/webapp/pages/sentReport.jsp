@@ -27,11 +27,17 @@ tr:nth-child(even) {
 </head>
 <body>
 	<a href="${url}/"><button class="btn btn-lg btn-primary btn-sm"> Quay lại dach sách công việc</button></a>
-	<a href="${url}/prepareReport"><button class="btn btn-primary btn-sm">Lựa chọn lại thông tin cần	báo cáo</button></a>
+	<a href="${url}/prepareReport"><button class="btn btn-primary btn-sm">Lựa chọn lại thông tin cần báo cáo</button></a>
 	<br />
 	<br />	
-	<div class="alert alert-success">
-		Báo cáo công việc đã được gửi thành công ... 
-	</div>	
+	<c:if test="${not empty message}">
+		<div class="alert alert-success">${message}</div>
+	</c:if>		
+	<c:if test="${not empty warning}">
+		<div class="alert alert-warning">${warning}</div>
+	</c:if>
+	<c:if test="${not empty error}">
+		<div class="alert alert-danger">${error}</div>
+	</c:if>	
 </body>
 </html>

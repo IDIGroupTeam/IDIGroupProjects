@@ -1651,7 +1651,6 @@ public class TaskController {
 			@RequestParam(required = false, value = "formTitle") String formTitle) throws Exception {
 		log.info("sending SummaryReport");
 		try {
-			//System.err.println("formTitle " + formTitle);
 			if (formTitle == null) {
 				MimeMessage mimeMessage = mailSender.createMimeMessage();
 				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -1692,10 +1691,12 @@ public class TaskController {
 					}
 					// model.addAttribute("isReload","Yes");
 					model.addAttribute("formTitle", "Đã gửi thống kê khối lượng công việc");
+					model.addAttribute("message", "Đã gửi thống kê khối lượng công việc thành công");
 					return "sentSummaryReport";
 				} else {
 					log.info("File ko ton tai hoac chua dc export");
-					model.addAttribute("formTitle", "Vui lòng export file trước khi gửi");
+					model.addAttribute("warning", "Vui lòng export file trước khi gửi");
+					model.addAttribute("formTitle", "Gửi thống kê khối lượng công việc");
 				}
 			} else {
 				log.info("try to sending report again...");
@@ -1703,6 +1704,9 @@ public class TaskController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			model.addAttribute("formTitle", "Gửi thống kê khối lượng công việc");
+			model.addAttribute("error", "Có lỗi trong quá trình gửi mail, vui lòng thử lại");
+			
 		}
 		return "sentSummaryReport";
 	}	
@@ -2087,27 +2091,36 @@ public class TaskController {
 			@ModelAttribute("tDate") String tDate, @ModelAttribute("eName") String eName,
 			@ModelAttribute("dept") String dept, @ModelAttribute("eId") int eId) throws Exception {
 		SendReportForm sendReportForm = new SendReportForm();
-		if (eId > 0)
-			if (dept != null && !dept.equalsIgnoreCase("all"))
-				sendReportForm.setFileName(
-						"BCCV từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept);
-			else
-				sendReportForm.setFileName("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của " + eName);
-		else if (dept != null && !dept.equalsIgnoreCase("all"))
-			sendReportForm.setFileName("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept);
-		else
-			sendReportForm.setFileName("BCCV từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban");
+		
+		String fDateStore = Utils.convertDateToStore(fDate);
+		String tDateStore = Utils.convertDateToStore(tDate);
+		
+		String fileName = "BCCV";	
+		String title = "BCCV";	
+		
+		if (eId > 0 && !dept.equalsIgnoreCase("all")) {
+			fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + eName + " phong " + dept + ".pdf";
+			title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName + " phòng " + dept;
+		}else if (eId < 1 && !dept.equalsIgnoreCase("all")) {
+			fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua phong " + dept + ".pdf";
+			title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của phòng " + dept;
+		}else if (eId > 0 && dept.equalsIgnoreCase("all")) {
+			fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + eName + ".pdf";
+			title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của " + eName;
+		}else {
+			fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua tat ca cac phong ban" + ".pdf";
+			title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban";
+		}
+		
+		sendReportForm.setFileName(fileName);
+		sendReportForm.setSubject(title + " --> Gửi từ PM Quản lý công việc");
 
-		sendReportForm.setSubject(sendReportForm.getFileName() + " --> Gửi từ PM Quản lý công việc");
-		//List<Task> list = null;
 		ReportForm taskReportForm = new ReportForm();
 		taskReportForm.setFromDate(fDate);
 		taskReportForm.setToDate(tDate);
 		taskReportForm.setEmployeeId(eId);
 		taskReportForm.setDepartment(dept);
 		taskReportForm.setUnSelect(unSelected);
-		//list = taskDAO.getTasksForReport(taskReportForm);
-		
 
 		if(taskReportForm.getFromDate() != null && taskReportForm.getFromDate().length() > 0 && taskReportForm.getFromDate().contains("/"))
 			taskReportForm.setFromDate(Utils.convertDateToStore(taskReportForm.getFromDate()));
@@ -2155,60 +2168,78 @@ public class TaskController {
 			@RequestParam(required = false, value = "formTitle") String formTitle) throws Exception {
 		log.info("sending report");
 		try {
-			if (formTitle == null) {
-
-				MimeMessage mimeMessage = mailSender.createMimeMessage();
-				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-				String path = properties.getProperty("REPORT_PATH");
-
-				File file = new File(path + sendReportForm.getFileName() + ".pdf");
-				// log.info("sending report: " + path +"|" +
-				// sendReportForm.getSubject()+"|"+sendReportForm.getFileName());
-				if (file.exists()) {
-
-					mimeMessage.setFrom("IDITask-NotReply");
-					helper.setSubject(sendReportForm.getSubject());
-					System.err.println("Subject: " + sendReportForm.getSubject());
-					mimeMessage.setContent(sendReportForm.getFileName(), "text/html; charset=UTF-8");
-
-					Multipart multipart = new MimeMultipart();
-					BodyPart attach = new MimeBodyPart();
-					DataSource source = new FileDataSource(path + sendReportForm.getFileName() + ".pdf");
-					attach.setDataHandler(new DataHandler(source));
-					attach.setFileName(path + sendReportForm.getFileName() + ".pdf");
-
-					multipart.addBodyPart(attach);
-					BodyPart content = new MimeBodyPart();
-					content.setContent("Báo cáo công việc", "text/html; charset=UTF-8");
-					multipart.addBodyPart(content);
-
-					mimeMessage.setContent(multipart, "text/html; charset=UTF-8");
-
-					StringTokenizer st = new StringTokenizer(sendReportForm.getSendTo(), ";");
-					while (st.hasMoreTokens()) {
-
-						String sendTo = st.nextToken(";");
-						if (sendTo != null && sendTo.length() > 0 && sendTo.contains("@") && sendTo.contains(".com")) {
-							log.info("send report cho " + sendTo);
-							helper.setTo(sendTo);
-
-							mailSender.send(mimeMessage);
-							// System.err.println("sent");
+			if((sendReportForm.getSendTo()==null || sendReportForm.getSendTo().length()==0) && (sendReportForm.getSendToOut() == null || sendReportForm.getSendToOut().length() == 0)) {
+				model.addAttribute("error", "Vui lòng nhập đầy đủ, chính sác địa chỉ email ...");
+			}else {			
+				if (formTitle == null) {	
+					MimeMessage mimeMessage = mailSender.createMimeMessage();
+					MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+					String path = properties.getProperty("REPORT_PATH");
+	
+					File file = new File(path + sendReportForm.getFileName());
+					log.info("sending report: " + path +"|" + sendReportForm.getSubject()+"|"+sendReportForm.getFileName());
+			
+					if (file.exists()) {
+	
+						mimeMessage.setFrom("IDITask-NotReply");
+						helper.setSubject(sendReportForm.getSubject());
+						mimeMessage.setContent(sendReportForm.getFileName(), "text/html; charset=UTF-8");
+	
+						Multipart multipart = new MimeMultipart();
+						BodyPart attach = new MimeBodyPart();
+						DataSource source = new FileDataSource(path + sendReportForm.getFileName());
+						attach.setDataHandler(new DataHandler(source));
+						attach.setFileName(path + sendReportForm.getFileName());
+	
+						multipart.addBodyPart(attach);
+						BodyPart content = new MimeBodyPart();
+						content.setContent("Báo cáo công việc", "text/html; charset=UTF-8");
+						multipart.addBodyPart(content);
+	
+						mimeMessage.setContent(multipart, "text/html; charset=UTF-8");
+						String sendToList = "";
+						boolean sendOut = false; 
+						if(sendReportForm.getSendToOut() != null && sendReportForm.getSendToOut().length() > 5 && sendReportForm.getSendToOut().contains("@") && sendReportForm.getSendToOut().contains(".com")) {
+							sendToList = sendReportForm.getSendToOut();
+							sendOut = true;
 						}
+						if(sendReportForm.getSendTo() != null && sendReportForm.getSendTo().length() > 0) {
+							if(sendOut)
+								sendToList = sendToList + "," + sendReportForm.getSendTo();	
+							else
+								sendToList = sendReportForm.getSendTo();	
+						}
+						StringTokenizer st = new StringTokenizer(sendToList, ",");
+						while (st.hasMoreTokens()) {						
+							String sendTo = st.nextToken();
+							if (sendTo != null && sendTo.length() > 0 && sendTo.contains("@") && sendTo.contains(".com")) {
+								log.info("send report cho " + sendTo);
+								helper.setTo(sendTo);
+		
+								mailSender.send(mimeMessage);
+							}
+						}
+
+						// model.addAttribute("isReload","Yes");
+						model.addAttribute("formTitle", "Gửi báo cáo công việc");
+						model.addAttribute("message", "Đã gửi báo cáo công việc thành công");					
+					} else {
+						log.info("File nay khong to tai");
+						model.addAttribute("formTitle", "Gửi báo cáo công việc");
+						model.addAttribute("warning", "Vui lòng export file trước khi gửi");					
 					}
-					// model.addAttribute("isReload","Yes");
-					model.addAttribute("formTitle", "Gửi báo cáo công việc");
-					return "redirect:/sendReport";
 				} else {
-					model.addAttribute("formTitle", "Vui lòng export file trước khi gửi báo cáo công việc");
+					log.info("try to sending report again...");
+					model.addAttribute("message", "Đã gửi báo cáo công việc thành công");
+					model.addAttribute("formTitle", "Gửi báo cáo công việc");
 				}
-			} else {
-				log.info("try to sending report again...");
-				model.addAttribute("formTitle", "Gửi báo cáo công việc");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			model.addAttribute("error", "Có lỗi trong quá trình gửi mail, vui lòng thử lại ...");
+			model.addAttribute("formTitle", "Gửi báo cáo công việc");
+			e.printStackTrace();			
 		}
+		
 		return "sentReport";
 	}	
 

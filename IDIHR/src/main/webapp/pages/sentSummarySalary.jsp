@@ -19,7 +19,7 @@
 		<div class="alert alert-warning">${warning}</div>
 	</c:if>
 	<c:if test="${not empty error}">
-		<div class="alert alert-error">${error}</div>
+		<div class="alert alert-danger">${error}</div>
 	</c:if>	
 </body>
 </html>

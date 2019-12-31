@@ -59,19 +59,23 @@ td, th {
 		<%-- <form:input type="hidden" path="subject" value="${sendReportForm.subject}" /> --%>
 		<table class="table table-bordered table-hover">
 			<tr>
-				<td nowrap="nowrap"	title="Nhập địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com. Các email cách nhau bằng dấu ';' ">Gửi tới:(*)</td>
-				<td><form:select id="sendTo" path="sendTo" multiple="multiple"	class="form-control animated" required="required">
+				<td nowrap="nowrap"	title="Nhập địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com. Các email cách nhau bằng dấu ',' ">Gửi tới:(*)</td>
+				<td>Nhập đ/c email với những người không có trên hệ thống <form:input path="sendToOut" 
+						class="form-control animated" /></td>
+						
+				<td>Chọn đ/c email với những người có trên hệ thống <form:select id="sendTo" path="sendTo" multiple="multiple"	class="form-control animated" >
+						<%-- <form:option value="" label="Chọn đ/c email cần gửi" /> --%>
 						<form:options items="${employeeEmailMap}" /> 
 					</form:select> 
-				</td>	
+				</td>					
 			</tr>			
 			<tr>
 				<td>Tiêu đề:</td>
-				<td><form:input path="subject" class="form-control animated" /></td>
+				<td colspan="3"><form:input path="subject" class="form-control animated" /></td>
 			</tr>
 			<tr>
 				<td>Nội dung:</td>
-				<td>
+				<td colspan="3">
 					<table class="table table-striped">
 						<tr>
 							<c:if test="${ not empty isTaskId}">
