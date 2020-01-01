@@ -225,7 +225,7 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("PhieuThuDs", null, req);
+			JasperReport jasperReport = ReportUtils.compileReport("PhieuThuDs", null, "chungtu", req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, phieuThuDs);
 
 			res.reset();
@@ -314,7 +314,7 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = ReportUtils.compileReport("PhieuThu", null, req);
+			JasperReport jasperReport = ReportUtils.compileReport("PhieuThu", null, "chungtu", req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
@@ -603,7 +603,7 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_CHI);
 			List<ChungTu> phieuChiDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("PhieuChiDs", null, req);
+			JasperReport jasperReport = ReportUtils.compileReport("PhieuChiDs", null, "chungtu", req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, phieuChiDs);
 
 			res.reset();
@@ -692,7 +692,7 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = ReportUtils.compileReport("PhieuChi", null, req);
+			JasperReport jasperReport = ReportUtils.compileReport("PhieuChi", null, "chungtu", req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
@@ -981,7 +981,7 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_CO);
 			List<ChungTu> baoCoDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("BaoCoDs", null, req);
+			JasperReport jasperReport = ReportUtils.compileReport("BaoCoDs", null, "chungtu", req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, baoCoDs);
 
 			res.reset();
@@ -1069,7 +1069,7 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = ReportUtils.compileReport("BaoCo", null, req);
+			JasperReport jasperReport = ReportUtils.compileReport("BaoCo", null, "chungtu", req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
@@ -1358,7 +1358,7 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_NO);
 			List<ChungTu> baoNoDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("BaoNoDs", null, req);
+			JasperReport jasperReport = ReportUtils.compileReport("BaoNoDs", null, "chungtu", req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, baoNoDs);
 
 			res.reset();
@@ -1446,7 +1446,7 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = ReportUtils.compileReport("BaoNo", null, req);
+			JasperReport jasperReport = ReportUtils.compileReport("BaoNo", null, "chungtu", req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
@@ -1736,7 +1736,7 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_KT_TH);
 			List<ChungTu> ktthDs = chungTuDAO.danhSachChungTuKtth(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("KeToanTongHopDs", null, req);
+			JasperReport jasperReport = ReportUtils.compileReport("KeToanTongHopDs", null, "chungtu", req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, ktthDs);
 
 			res.reset();
@@ -1827,7 +1827,7 @@ public class ChungTuController {
 
 			List<String> baoCaoConDs = new ArrayList<>();
 			baoCaoConDs.add("NghiepVuKeToan");
-			JasperReport jasperReport = ReportUtils.compileReport("KeToanTongHop", baoCaoConDs, req);
+			JasperReport jasperReport = ReportUtils.compileReport("KeToanTongHop", baoCaoConDs, "chungtu", req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
@@ -2119,7 +2119,7 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_MUA_HANG);
 			List<ChungTu> muaHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("muaHangDs", null, req);
+			JasperReport jasperReport = ReportUtils.compileReport("muaHangDs", null, "chungtu", req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, muaHangDs);
 
 			res.reset();
@@ -2207,7 +2207,7 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = ReportUtils.compileReport("MuaHang", null, req);
+			JasperReport jasperReport = ReportUtils.compileReport("MuaHang", null, "chungtu", req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
@@ -2711,7 +2711,7 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_BAN_HANG);
 			List<ChungTu> banHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("banHangDs", null, req);
+			JasperReport jasperReport = ReportUtils.compileReport("banHangDs", null, "chungtu", req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, banHangDs);
 
 			res.reset();
@@ -2799,7 +2799,7 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = ReportUtils.compileReport("BanHang", null, req);
+			JasperReport jasperReport = ReportUtils.compileReport("BanHang", null, "chungtu", req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();
@@ -3458,7 +3458,7 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = ReportUtils.compileReport("KetChuyenButToan", null, req);
+			JasperReport jasperReport = ReportUtils.compileReport("KetChuyenButToan", null, "chungtu", req);
 			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
 
 			res.reset();

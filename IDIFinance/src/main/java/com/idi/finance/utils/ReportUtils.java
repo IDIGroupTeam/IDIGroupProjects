@@ -42,9 +42,16 @@ public class ReportUtils {
 		return "";
 	}
 
-	public static JasperReport compileReport(String fileName, HttpServletRequest req) throws JRException {
-		String jrxml = req.getSession().getServletContext().getRealPath("/baocao/bctc/" + fileName + ".jrxml");
-		String jasper = req.getSession().getServletContext().getRealPath("/baocao/bctc/" + fileName + ".jasper");
+	public static JasperReport compileReport(String fileName, String relativePath, HttpServletRequest req)
+			throws JRException {
+		if (relativePath == null) {
+			relativePath = "";
+		}
+
+		String jrxml = req.getSession().getServletContext()
+				.getRealPath("/baocao/" + relativePath + "/" + fileName + ".jrxml");
+		String jasper = req.getSession().getServletContext()
+				.getRealPath("/baocao/" + relativePath + "/" + fileName + ".jasper");
 
 		File reportFile = new File(jasper);
 		// If compiled file is not found, then compile XML template
@@ -56,14 +63,14 @@ public class ReportUtils {
 		return jasperReport;
 	}
 
-	public static JasperReport compileReport(String fileName, List<String> subFiles, HttpServletRequest req)
-			throws JRException {
+	public static JasperReport compileReport(String fileName, List<String> subFiles, String relativePath,
+			HttpServletRequest req) throws JRException {
 		if (subFiles != null) {
 			for (String subFile : subFiles) {
-				compileReport(subFile, req);
+				compileReport(subFile, relativePath, req);
 			}
 		}
 
-		return compileReport(fileName, req);
+		return compileReport(fileName, relativePath, req);
 	}
 }

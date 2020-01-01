@@ -640,7 +640,7 @@ public class BaoCaoTaiChinhController {
 			// Sinh bảng cân đối kế toán ra pdf
 			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			params.put("bctcCon", bctcCon);
-			JasperReport jasperReport = ReportUtils.compileReport("BCDKT", req);
+			JasperReport jasperReport = ReportUtils.compileReport("BCDKT", "bctc", req);
 			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bctcCon.getChiTietDs());
 
 			res.reset();
@@ -674,7 +674,7 @@ public class BaoCaoTaiChinhController {
 			// Sinh bảng cân đối kế toán ra pdf
 			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			params.put("bctcCon", bctcCon);
-			JasperReport jasperReport = ReportUtils.compileReport("BKQHDKD", req);
+			JasperReport jasperReport = ReportUtils.compileReport("BKQHDKD", "bctc", req);
 			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bctcCon.getChiTietDs());
 
 			res.reset();
@@ -708,7 +708,7 @@ public class BaoCaoTaiChinhController {
 			// Sinh bảng cân đối kế toán ra pdf
 			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			params.put("bctcCon", bctcCon);
-			JasperReport jasperReport = ReportUtils.compileReport("BLCTT", req);
+			JasperReport jasperReport = ReportUtils.compileReport("BLCTT", "bctc", req);
 			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bctcCon.getChiTietDs());
 
 			res.reset();

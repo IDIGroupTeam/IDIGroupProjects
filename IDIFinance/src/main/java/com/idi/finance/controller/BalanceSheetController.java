@@ -1945,7 +1945,7 @@ public class BalanceSheetController {
 			duLieuKeToan = tongPhatSinh(duLieuKeToan, tongPsDs, dauKyDs);
 
 			// Sinh bảng cân đối phát sinh ra pdf
-			JasperReport jasperReport = ReportUtils.compileReport("CDPS", req);
+			JasperReport jasperReport = ReportUtils.compileReport("CDPS", "bctc", req);
 
 			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			params.put("KY_KE_TOAN", kyKt);

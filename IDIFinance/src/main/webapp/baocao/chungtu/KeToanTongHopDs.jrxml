@@ -106,8 +106,7 @@
 				<textFieldExpression><![CDATA[WordUtils.capitalize($P{DIA_CHI}.getGiaTri())]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="250" y="50" width="300" height="25" uuid="576678c5-d178-41b9-b738-961fd2a10378">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<reportElement x="250" y="50" width="400" height="25" uuid="576678c5-d178-41b9-b738-961fd2a10378">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -118,11 +117,11 @@
 				<text><![CDATA[DANH SÁCH PHIẾU KẾ TOÁN TỔNG HỢP]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="250" y="75" width="300" height="20" uuid="695536f6-d684-4293-b401-3dc222193e4d">
+				<reportElement x="250" y="75" width="400" height="20" uuid="695536f6-d684-4293-b401-3dc222193e4d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="16" isBold="false" isItalic="true"/>
