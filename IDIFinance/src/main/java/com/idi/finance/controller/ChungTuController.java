@@ -219,7 +219,7 @@ public class ChungTuController {
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			hmParams.put(Contants.BAT_DAU, batDau);
-			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.KET_THUC, ketThuc);
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_THU);
@@ -255,7 +255,7 @@ public class ChungTuController {
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			hmParams.put(Contants.BAT_DAU, batDau);
-			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.KET_THUC, ketThuc);
 			hmParams.put(Contants.COMPANY, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri());
 			hmParams.put(Contants.DIA_CHI, props.getCauHinh(PropCont.DIA_CHI).getGiaTri());
 			hmParams.put(Contants.PAGE_TITLE, "DANH SÁCH PHIẾU THU");
@@ -597,7 +597,7 @@ public class ChungTuController {
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			hmParams.put(Contants.BAT_DAU, batDau);
-			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.KET_THUC, ketThuc);
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_CHI);
@@ -633,7 +633,7 @@ public class ChungTuController {
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			hmParams.put(Contants.BAT_DAU, batDau);
-			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.KET_THUC, ketThuc);
 			hmParams.put(Contants.COMPANY, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri());
 			hmParams.put(Contants.DIA_CHI, props.getCauHinh(PropCont.DIA_CHI).getGiaTri());
 			hmParams.put(Contants.PAGE_TITLE, "DANH SÁCH PHIẾU CHI");
@@ -975,7 +975,7 @@ public class ChungTuController {
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			hmParams.put(Contants.BAT_DAU, batDau);
-			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.KET_THUC, ketThuc);
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_CO);
@@ -1011,7 +1011,7 @@ public class ChungTuController {
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			hmParams.put(Contants.BAT_DAU, batDau);
-			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.KET_THUC, ketThuc);
 			hmParams.put(Contants.COMPANY, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri());
 			hmParams.put(Contants.DIA_CHI, props.getCauHinh(PropCont.DIA_CHI).getGiaTri());
 			hmParams.put(Contants.PAGE_TITLE, "DANH SÁCH BÁO CÓ");
@@ -1352,7 +1352,7 @@ public class ChungTuController {
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			hmParams.put(Contants.BAT_DAU, batDau);
-			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.KET_THUC, ketThuc);
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_NO);
@@ -1388,7 +1388,7 @@ public class ChungTuController {
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			hmParams.put(Contants.BAT_DAU, batDau);
-			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.KET_THUC, ketThuc);
 			hmParams.put(Contants.COMPANY, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri());
 			hmParams.put(Contants.DIA_CHI, props.getCauHinh(PropCont.DIA_CHI).getGiaTri());
 			hmParams.put(Contants.PAGE_TITLE, "DANH SÁCH BÁO NỢ");
@@ -1730,7 +1730,7 @@ public class ChungTuController {
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			hmParams.put(Contants.BAT_DAU, batDau);
-			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.KET_THUC, ketThuc);
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_KT_TH);
@@ -1766,7 +1766,7 @@ public class ChungTuController {
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			hmParams.put(Contants.BAT_DAU, batDau);
-			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.KET_THUC, ketThuc);
 			hmParams.put(Contants.COMPANY, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri());
 			hmParams.put(Contants.DIA_CHI, props.getCauHinh(PropCont.DIA_CHI).getGiaTri());
 			hmParams.put(Contants.PAGE_TITLE, "DANH SÁCH PHIẾU KẾ TOÁN TỔNG HỢP");
@@ -2113,7 +2113,7 @@ public class ChungTuController {
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			hmParams.put(Contants.BAT_DAU, batDau);
-			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.KET_THUC, ketThuc);
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_MUA_HANG);
@@ -2149,7 +2149,7 @@ public class ChungTuController {
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			hmParams.put(Contants.BAT_DAU, batDau);
-			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.KET_THUC, ketThuc);
 			hmParams.put(Contants.COMPANY, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri());
 			hmParams.put(Contants.DIA_CHI, props.getCauHinh(PropCont.DIA_CHI).getGiaTri());
 			hmParams.put(Contants.PAGE_TITLE, "DANH SÁCH CHỨNG TỪ MUA HÀNG");
@@ -2705,7 +2705,7 @@ public class ChungTuController {
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			hmParams.put(Contants.BAT_DAU, batDau);
-			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.KET_THUC, ketThuc);
 
 			List<String> loaiCts = new ArrayList<>();
 			loaiCts.add(ChungTu.CHUNG_TU_BAN_HANG);
@@ -2741,7 +2741,7 @@ public class ChungTuController {
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			hmParams.put(Contants.BAT_DAU, batDau);
-			hmParams.put(Contants.KET_THUC, batDau);
+			hmParams.put(Contants.KET_THUC, ketThuc);
 			hmParams.put(Contants.COMPANY, props.getCauHinh(PropCont.TEN_CONG_TY).getGiaTri());
 			hmParams.put(Contants.DIA_CHI, props.getCauHinh(PropCont.DIA_CHI).getGiaTri());
 			hmParams.put(Contants.PAGE_TITLE, "DANH SÁCH CHỨNG TỪ BÁN HÀNG");
