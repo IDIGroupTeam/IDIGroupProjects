@@ -139,7 +139,7 @@ $.fn.cellEditable = function(options) {
 				}
 				$(this).html(div + text);
 			} catch (e) {
-				console.log("Create editable cell", "error", e);
+				console.log("Create editable cell error", e);
 			}
 		});
 
@@ -165,7 +165,7 @@ $.fn.cellEditable = function(options) {
 			inputData = params.beforeRemove[name].call(tr, inputData);
 			inputData = JSON.stringify(inputData);
 		} catch (e) {
-			console.log("beforeRemove is not defined correctly");
+			console.log("beforeRemove is not defined correctly", e);
 		}
 		console.log("rowRemove inputData", inputData);
 		console.log("rowRemove url", url);
@@ -180,7 +180,7 @@ $.fn.cellEditable = function(options) {
 				try {
 					params.afterRemove[name].call(tr, data);
 				} catch (e) {
-					console.log("afterRemove is not defined correctly");
+					console.log("afterRemove is not defined correctly", e);
 				}
 			},
 			error : function(data) {
@@ -232,13 +232,13 @@ $.fn.cellEditable = function(options) {
 			console.log("beforeSave for row ", name);
 			sendingData = params.beforeSave[name].call(tr, inputData);
 		} catch (e) {
-			console.log("beforeSave is not defined exactly");
+			console.log("beforeSave is not defined exactly", e);
 		}
 
 		sendingData = JSON.stringify(sendingData);
 		console.log("rowSave data (row & cell)", inputData);
 		console.log("rowSave sending data", sendingData);
-		console.log("rowSave", "url", url);
+		console.log("rowSave url", url);
 
 		$.ajax({
 			type : "POST",
@@ -255,10 +255,10 @@ $.fn.cellEditable = function(options) {
 					inputData = params.afterSave[name]
 							.call(tr, inputData, data);
 				} catch (e) {
-					console.log("afterSave is not defined exactly");
+					console.log("afterSave is not defined exactly", e);
 				}
 
-				console.log("Update row's key ...");
+				console.log("Update row's key ... ");
 				$.each(keyRow, function(key, value) {
 					if (!$.isEmptyObject(inputData[key])
 							&& !$.isEmptyObject(inputData[key].value)) {
@@ -282,7 +282,7 @@ $.fn.cellEditable = function(options) {
 				disableConfimButtons($(tr));
 			},
 			error : function(data) {
-				console.log("Saving row", "error", data);
+				console.log("Saving row error", data);
 				alert("Lỗi khi lưu thay đổi, xin hãy thử lại");
 			}
 		});

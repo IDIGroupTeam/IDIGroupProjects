@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
@@ -104,7 +105,7 @@ public class BaoCaoTaiChinhController {
 	}
 
 	@RequestMapping("/bctc/danhsach")
-	public String danhSachBctc(@ModelAttribute("mainFinanceForm") BaoCaoTaiChinh form, Model model) {
+	public String danhSachBctc(Model model) {
 		try {
 			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
 			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
@@ -123,6 +124,19 @@ public class BaoCaoTaiChinhController {
 
 		model.addAttribute("tab", "tabBCTCDS");
 		return "danhSachBctc";
+	}
+
+	@RequestMapping("/bctc/danhsach/{maKyKt}")
+	public @ResponseBody List<BaoCaoTaiChinh> danhSachBctcTheoKyKeToan(@PathVariable("maKyKt") int maKyKt) {
+		try {
+			List<BaoCaoTaiChinh> bctcDs = bctcDAO.danhSachBctc(maKyKt);
+
+			return bctcDs;
+		} catch (Exception e) {
+			logger.info(e);
+		}
+
+		return null;
 	}
 
 	@RequestMapping("/bctc/taomoi")

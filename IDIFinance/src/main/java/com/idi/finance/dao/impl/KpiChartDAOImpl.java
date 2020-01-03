@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.idi.finance.bean.bctc.BaoCaoTaiChinh;
 import com.idi.finance.bean.bieudo.KpiChart;
@@ -29,6 +30,18 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 
 	@Value("${LAY_KPI_CHART_THEO_ID}")
 	private String LAY_KPI_CHART_THEO_ID;
+
+	@Value("${LAY_KPI_KY_BCTC_THEO_KKT}")
+	private String LAY_KPI_KY_BCTC_THEO_KKT;
+
+	@Value("${THEM_KPI_KY_BCTC}")
+	private String THEM_KPI_KY_BCTC;
+
+	@Value("${CAP_NHAT_KPI_KY_BCTC}")
+	private String CAP_NHAT_KPI_KY_BCTC;
+
+	@Value("${XOA_KPI_KY_BCTC}")
+	private String XOA_KPI_KY_BCTC;
 
 	private JdbcTemplate jdbcTmpl;
 
@@ -406,13 +419,14 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 	}
 
 	@Override
-	public List<KpiKyBctc> listKpiKyBctcs() {
-		String query = "SELECT * FROM BAO_CAO_TAI_CHINH_KY_KPI AS BCTCKPI, BAO_CAO_TAI_CHINH AS BCTC WHERE BCTCKPI.MA_BCTC=BCTC.MA_BCTC ORDER BY BCTCKPI.MA_KY_KPI";
+	public List<KpiKyBctc> listKpiKyBctcsByKyKeToan(int maKyKt) {
+		String query = LAY_KPI_KY_BCTC_THEO_KKT;
 
-		logger.info("Get kpi - bctc ...");
+		logger.info("Get kpi - bctc by maKyKt: " + maKyKt);
 		logger.info(query);
 
-		List<KpiKyBctc> kpiKyBctcs = jdbcTmpl.query(query, new KpiKyBctcMapper());
+		Object[] params = { maKyKt };
+		List<KpiKyBctc> kpiKyBctcs = jdbcTmpl.query(query, params, new KpiKyBctcMapper());
 
 		return kpiKyBctcs;
 	}
@@ -422,21 +436,42 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 			KpiKyBctc kpiKyBctc = new KpiKyBctc();
 
 			int maKyKpi = rs.getInt("MA_KY_KPI");
-			for (KpiMonthCont cont : KpiMonthCont.values()) {
-				if (cont.getKey() == maKyKpi) {
-					kpiKyBctc.setKpiKy(cont);
-					break;
-				}
-			}
+			kpiKyBctc.setKpiKy(KpiMonthCont.getByKey(maKyKpi));
 
 			BaoCaoTaiChinh bctc = new BaoCaoTaiChinh();
 			bctc.setMaBctc(rs.getInt("MA_BCTC"));
 			bctc.setTieuDe(rs.getString("TIEU_DE"));
+			bctc.setBatDau(rs.getDate("BAT_DAU"));
+			bctc.setKetThuc(rs.getDate("KET_THUC"));
 			kpiKyBctc.setBctc(bctc);
 
 			logger.info(kpiKyBctc);
 
 			return kpiKyBctc;
 		}
+	}
+
+	@Override
+	@Transactional
+	public int saveKpiKyBctc(KpiKyBctc kpiKyBctcOld, KpiKyBctc kpiKyBctc) {
+		int count = 0;
+		if (kpiKyBctcOld != null && kpiKyBctc != null) {
+			logger.info("Lưu kpi kỳ - báo cáo tài chính");
+			String themKpiKyBctc = THEM_KPI_KY_BCTC;
+			String xoaKpiKyBctc = XOA_KPI_KY_BCTC;
+
+			try {
+				logger.info(themKpiKyBctc);
+				logger.info("maBctc: " + kpiKyBctc.getBctc().getMaBctc());
+				logger.info("kpiKy.key: " + kpiKyBctc.getKpiKy().getKey());
+
+				count = jdbcTmpl.update(xoaKpiKyBctc, kpiKyBctcOld.getKpiKy().getKey());
+				count = jdbcTmpl.update(themKpiKyBctc, kpiKyBctc.getBctc().getMaBctc(), kpiKyBctc.getKpiKy().getKey());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return count;
 	}
 }

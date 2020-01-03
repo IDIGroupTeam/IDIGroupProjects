@@ -8,6 +8,57 @@
 	prefix="cewolf"%>
 <c:set var="url" value="${pageContext.request.contextPath}"></c:set>
 
+<script type="text/javascript">
+	// Shorthand for $( document ).ready()
+	$(function() {
+		$('#dataTable').cellEditable({
+			beforeLoad : {
+				maBctc : function(data) {
+					if (data == null)
+						return null;
+
+					var sendingData = new Object();
+					return sendingData;
+				}
+			},
+			afterLoad : {
+				maBctc : function(data) {
+					if (data == null)
+						return null;
+
+					var list = new Array();
+					for (var i = 0; i < data.length; i++) {
+						var obj = new Object();
+						obj.value = data[i].maBctc;
+						obj.label = data[i].tieuDe;
+						list[i] = obj;
+					}
+					return list;
+				}
+			},
+			beforeSave : {
+				kpiKyBctc : function(data) {
+					if (data == null)
+						return null;
+
+					var sendingData = new Object();
+					sendingData.kpiKyKey = data.kpiKyKey;
+
+					sendingData.bctc = new Object();
+					sendingData.bctc.maBctc = eval(data.maBctc.value);
+					if (isNaN(data.maBctc.maBctcCu)) {
+						sendingData.bctc.maBctcCu = 0;
+					} else {
+						sendingData.bctc.maBctcCu = data.maBctc.maBctcCu;
+					}
+
+					return sendingData;
+				}
+			}
+		});
+	});
+</script>
+
 <h4>Cấu hình kỳ - báo cáo tài chính</h4>
 
 <div class="table-responsive">
@@ -16,16 +67,18 @@
 			<tr>
 				<th class="text-center">Tháng</th>
 				<th class="text-center">Báo cáo tài chính</th>
-				<th></th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:forEach items="${kpiKyBctcs}" var="kpiKyBctc" varStatus="status">
-				<tr>
+				<tr data-save-url="${url}/quanly/bieudo/bctc/capnhat"
+					data-name="kpiKyBctc" data-ma-bctc="${kpiKyBctc.bctc.maBctc}"
+					data-kpi-ky-key="${kpiKyBctc.kpiKy.key}">
 					<td>${kpiKyBctc.kpiKy.value}</td>
-					<td><c:if test="${not empty kpiKyBctc.bctc}">${kpiKyBctc.bctc.tieuDe}</c:if>
-					</td>
-					<td></td>
+					<td><span class="cell-editable dis-removable"
+						data-type="combobox" data-field="maBctc"
+						data-ma-bctc-cu="${kpiKyBctc.bctc.maBctc}"
+						data-load-url="${url}/bctc/danhsach/${kyKeToan.maKyKt}">${kpiKyBctc.bctc.tieuDe}</span></td>
 				</tr>
 			</c:forEach>
 		</tbody>

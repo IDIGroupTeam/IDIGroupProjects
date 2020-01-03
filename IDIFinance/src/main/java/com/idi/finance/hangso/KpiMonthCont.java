@@ -20,4 +20,14 @@ public enum KpiMonthCont {
 	public String getValue() {
 		return value;
 	}
+
+	public static KpiMonthCont getByKey(int key) {
+		for (KpiMonthCont kpiMonthCont : KpiMonthCont.values()) {
+			if (kpiMonthCont.getKey() == key) {
+				return kpiMonthCont;
+			}
+		}
+
+		return null;
+	}
 }

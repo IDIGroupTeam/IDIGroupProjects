@@ -25,6 +25,8 @@ public class BaoCaoTaiChinh {
 	private BaoCaoTaiChinhCon bangLctt;
 	private BaoCaoTaiChinhCon bangCdps;
 
+	private int maBctcCu;
+
 	public int getMaBctc() {
 		return maBctc;
 	}
@@ -159,6 +161,14 @@ public class BaoCaoTaiChinh {
 
 	public void setBangCdps(BaoCaoTaiChinhCon bangCdps) {
 		this.bangCdps = bangCdps;
+	}
+
+	public int getMaBctcCu() {
+		return maBctcCu;
+	}
+
+	public void setMaBctcCu(int maBctcCu) {
+		this.maBctcCu = maBctcCu;
 	}
 
 	@Override

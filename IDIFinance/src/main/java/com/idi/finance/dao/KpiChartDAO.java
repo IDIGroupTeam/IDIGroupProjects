@@ -28,5 +28,7 @@ public interface KpiChartDAO {
 
 	public KpiMeasure listKpiMeasureById(String kpiMeasureId);
 
-	public List<KpiKyBctc> listKpiKyBctcs();
+	public List<KpiKyBctc> listKpiKyBctcsByKyKeToan(int maKyKt);
+
+	public int saveKpiKyBctc(KpiKyBctc kpiKyBctcOld, KpiKyBctc kpiKyBctc);
 }

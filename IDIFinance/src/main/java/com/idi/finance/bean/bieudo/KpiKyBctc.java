@@ -6,6 +6,7 @@ import com.idi.finance.hangso.KpiMonthCont;
 public class KpiKyBctc {
 	private KpiMonthCont kpiKy;
 	private BaoCaoTaiChinh bctc;
+	private int kpiKyKey;
 
 	public KpiMonthCont getKpiKy() {
 		return kpiKy;
@@ -13,6 +14,14 @@ public class KpiKyBctc {
 
 	public void setKpiKy(KpiMonthCont kpiKy) {
 		this.kpiKy = kpiKy;
+	}
+
+	public int getKpiKyKey() {
+		return kpiKyKey;
+	}
+
+	public void setKpiKyKey(int kpiKyKey) {
+		this.kpiKyKey = kpiKyKey;
 	}
 
 	public BaoCaoTaiChinh getBctc() {

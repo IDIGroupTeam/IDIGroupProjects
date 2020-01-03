@@ -18,20 +18,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.idi.finance.bean.DungChung;
 import com.idi.finance.bean.bctc.BalanceAssetData;
 import com.idi.finance.bean.bctc.BalanceAssetItem;
+import com.idi.finance.bean.bctc.BaoCaoTaiChinh;
 import com.idi.finance.bean.bieudo.KpiChart;
 import com.idi.finance.bean.bieudo.KpiGroup;
 import com.idi.finance.bean.bieudo.KpiKyBctc;
 import com.idi.finance.bean.bieudo.KpiMeasure;
+import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.charts.KpiMeasureBarChart;
 import com.idi.finance.charts.KpiMeasureChartProcessor;
 import com.idi.finance.charts.KpiMeasureLineChart;
 import com.idi.finance.dao.BalanceSheetDAO;
+import com.idi.finance.dao.BaoCaoTaiChinhDAO;
 import com.idi.finance.dao.KpiChartDAO;
 import com.idi.finance.form.TkKpiChartForm;
 import com.idi.finance.hangso.Contants;
@@ -58,6 +63,9 @@ public class KpiChartController {
 
 	@Autowired
 	KpiChartDAO kpiChartDAO;
+
+	@Autowired
+	BaoCaoTaiChinhDAO bctcDAO;
 
 	@RequestMapping("/")
 	public String kpiChart(Model model) {
@@ -503,11 +511,10 @@ public class KpiChartController {
 	@RequestMapping("/quanly/bieudo/bctc")
 	public String chartManagementBctc(Model model) {
 		model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+		KyKeToan kyKeToan = dungChung.getKyKeToan();
 
-		List<KpiKyBctc> kpiKyBctcs = kpiChartDAO.listKpiKyBctcs();
-
+		List<KpiKyBctc> kpiKyBctcs = kpiChartDAO.listKpiKyBctcsByKyKeToan(kyKeToan.getMaKyKt());
 		List<KpiKyBctc> kpiKyBctcFulls = initiateKpiKyBctc();
-
 		List<KpiKyBctc> kpiKyBctcRs = new ArrayList<>();
 
 		for (KpiKyBctc kpiKyBctc : kpiKyBctcFulls) {
@@ -526,9 +533,26 @@ public class KpiChartController {
 		}
 
 		model.addAttribute("kpiKyBctcs", kpiKyBctcRs);
+		model.addAttribute("kyKeToan", kyKeToan);
 		model.addAttribute("tab", "tabQLBDBCTC");
 
 		return "chartManagementBctc";
+	}
+
+	@RequestMapping(value = "/quanly/bieudo/bctc/capnhat", method = RequestMethod.POST)
+	public @ResponseBody int saveChartManagementBctc(@RequestBody KpiKyBctc kpiKyBctc) {
+		logger.info("Saving KpiKyBctc ... ");
+		KpiMonthCont kpiKyCu = KpiMonthCont.getByKey(kpiKyBctc.getKpiKyKey());
+
+		KpiKyBctc kpiKyBctcCu = new KpiKyBctc();
+		kpiKyBctcCu.setKpiKy(kpiKyCu);
+		BaoCaoTaiChinh bctcCu = new BaoCaoTaiChinh();
+		bctcCu.setMaBctc(kpiKyBctc.getBctc().getMaBctcCu());
+		kpiKyBctcCu.setBctc(bctcCu);
+
+		kpiKyBctc.setKpiKy(kpiKyCu);
+
+		return kpiChartDAO.saveKpiKyBctc(kpiKyBctcCu, kpiKyBctc);
 	}
 
 	private List<KpiKyBctc> initiateKpiKyBctc() {

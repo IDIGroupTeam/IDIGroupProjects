@@ -986,7 +986,7 @@ public class BalanceSheetController {
 
 	@RequestMapping(value = "/bctc/cdkt/chitieu/capthap/capnhat", method = RequestMethod.POST)
 	public @ResponseBody BalanceAssetItem luuLowBalanceAssetItem(@RequestBody BalanceAssetItem bai) {
-		logger.info("Come here");
+		logger.info("Saving BalanceAssetItem ...");
 		String assetCode = bai.getAssetCode();
 		String maTk = bai.getTaiKhoanDs().get(0).getMaTk();
 		String maTkCu = bai.getTaiKhoanDs().get(0).getMaTkGoc();
