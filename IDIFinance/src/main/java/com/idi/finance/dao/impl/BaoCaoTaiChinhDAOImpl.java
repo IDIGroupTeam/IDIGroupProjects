@@ -22,6 +22,7 @@ import com.idi.finance.bean.bctc.BalanceAssetItem;
 import com.idi.finance.bean.bctc.BaoCaoTaiChinh;
 import com.idi.finance.bean.bctc.BaoCaoTaiChinhChiTiet;
 import com.idi.finance.bean.bctc.BaoCaoTaiChinhCon;
+import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.dao.BaoCaoTaiChinhDAO;
 
@@ -424,6 +425,7 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 					break;
 				case BaoCaoTaiChinhCon.LOAI_CDPS:
 					logger.info("Thêm Bảng cân đối phát sinh vào bảng BAO_CAO_TAI_CHINH_CHI_TIẾT");
+					themCapNhapBctcChiTietCdps(bctcCon.getDuLieuKeToan());
 					break;
 				default:
 					break;
@@ -444,6 +446,14 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 
 			themCapNhapBctcChiTiet(bctcChiTiet);
 		}
+	}
+
+	private void themCapNhapBctcChiTietCdps(DuLieuKeToan duLieuKeToan) {
+		if (duLieuKeToan == null) {
+			return;
+		}
+
+		
 	}
 
 	private void themCapNhapBctcChiTiet(BaoCaoTaiChinhChiTiet bctcChiTiet) {

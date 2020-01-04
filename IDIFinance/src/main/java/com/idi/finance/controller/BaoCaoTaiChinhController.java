@@ -605,7 +605,9 @@ public class BaoCaoTaiChinhController {
 		DuLieuKeToan duLieuKeToan = bctcService.taoBangCdps(bctc.getBatDau(), bctc.getKetThuc(), loaiTaiKhoanDs,
 				kyKeToan);
 
-		return null;
+		bctcCon.setDuLieuKeToan(duLieuKeToan);
+
+		return bctcCon;
 	}
 
 	@RequestMapping("/bctc/xem/{id}")
