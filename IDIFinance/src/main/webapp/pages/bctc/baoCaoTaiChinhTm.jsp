@@ -126,8 +126,7 @@
 		<div class="row">
 			<div class="col-sm-12 checkbox">
 				<label><form:checkbox path="bctcDs[3].loaiBctc"
-						value="${BaoCaoTaiChinhCon.LOAI_CDPS}" disabled="true" /> Bảng cân
-					đối phát sinh</label>
+						value="${BaoCaoTaiChinhCon.LOAI_CDPS}" /> Bảng cân đối phát sinh</label>
 			</div>
 		</div>
 		<form:errors path="bctcDs" cssClass="error" />

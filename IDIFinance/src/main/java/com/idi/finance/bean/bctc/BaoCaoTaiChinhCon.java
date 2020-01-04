@@ -13,6 +13,7 @@ public class BaoCaoTaiChinhCon {
 	private int loaiBctc;
 	private BaoCaoTaiChinh bctc;
 	private List<BaoCaoTaiChinhChiTiet> chiTietDs;
+	private DuLieuKeToan duLieuKeToan;
 
 	public int getMaBctcCon() {
 		return maBctcCon;
@@ -68,6 +69,14 @@ public class BaoCaoTaiChinhCon {
 		for (BaoCaoTaiChinhChiTiet bctcChiTiet : bctcChiTietDs) {
 			themBctcChiTiet(bctcChiTiet);
 		}
+	}
+
+	public DuLieuKeToan getDuLieuKeToan() {
+		return duLieuKeToan;
+	}
+
+	public void setDuLieuKeToan(DuLieuKeToan duLieuKeToan) {
+		this.duLieuKeToan = duLieuKeToan;
 	}
 
 	@Override

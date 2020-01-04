@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -59,6 +58,7 @@ import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.form.KyKeToanForm;
 import com.idi.finance.hangso.PropCont;
+import com.idi.finance.utils.ReportUtils;
 import com.idi.finance.validator.KyKeToanValidator;
 
 @Controller
@@ -1113,16 +1113,8 @@ public class KyKeToanController {
 
 			logger.info("Trả kết quả về máy khác download ...");
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
-			res.setHeader("Content-disposition",
-					"attachment; filename=" + props.getCauHinh(PropCont.SO_DU_DAU_KY_EXCEL_TEN_FILE).getGiaTri());
-			ServletOutputStream out = res.getOutputStream();
-			wb.write(out);
-			out.flush();
-			out.close();
-			wb.close();
+			ReportUtils.writeExcel2Response(wb, props.getCauHinh(PropCont.SO_DU_DAU_KY_EXCEL_TEN_FILE).getGiaTri(),
+					res);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

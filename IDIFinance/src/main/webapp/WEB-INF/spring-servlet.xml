@@ -161,11 +161,6 @@
 		<property name="jdbcTmpl" ref="jdbcTmpl" />
 	</bean>
 
-	<bean id="baoCaoDAO"
-		class="com.idi.finance.dao.impl.BaoCaoDAOImpl">
-		<property name="jdbcTmpl" ref="jdbcTmpl" />
-	</bean>
-
 	<bean id="congViecDAO"
 		class="com.idi.finance.dao.impl.CongViecDAOImpl">
 		<property name="jdbcTmpl" ref="jdbcTmpl" />

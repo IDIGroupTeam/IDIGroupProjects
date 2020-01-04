@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -50,7 +49,6 @@ import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.soketoan.NghiepVuKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.bean.taikhoan.TaiKhoan;
-import com.idi.finance.dao.BaoCaoDAO;
 import com.idi.finance.dao.CauHinhDAO;
 import com.idi.finance.dao.ChungTuDAO;
 import com.idi.finance.dao.HangHoaDAO;
@@ -65,6 +63,7 @@ import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.form.ChungTuForm;
 import com.idi.finance.hangso.Contants;
 import com.idi.finance.hangso.PropCont;
+import com.idi.finance.service.BaoCaoService;
 import com.idi.finance.utils.ReportUtils;
 import com.idi.finance.utils.Utils;
 import com.idi.finance.validator.ChungTuValidator;
@@ -111,9 +110,6 @@ public class ChungTuController {
 	NhanVienDAO nhanVienDAO;
 
 	@Autowired
-	BaoCaoDAO baoCaoDAO;
-
-	@Autowired
 	HangHoaDAO hangHoaDAO;
 
 	@Autowired
@@ -121,6 +117,9 @@ public class ChungTuController {
 
 	@Autowired
 	KyKeToanDAO kyKeToanDAO;
+
+	@Autowired
+	BaoCaoService baoCaoService;
 
 	@Autowired
 	private ChungTuValidator chungTuValidator;
@@ -225,18 +224,10 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("PhieuThuDs", null, "chungtu", req);
-			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, phieuThuDs);
+			JasperReport jasperReport = ReportUtils.compileReport("PhieuThuDs", "chungtu", req);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, phieuThuDs);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=PhieuThuDs.pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "PhieuThuDs", res);
 		} catch (JRException | IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -265,17 +256,9 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_THU);
 			List<ChungTu> phieuThuDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			XSSFWorkbook wb = baoCaoDAO.taoChungTuDs(phieuThuDs, hmParams);
+			XSSFWorkbook wb = baoCaoService.taoChungTuDs(phieuThuDs, hmParams);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
-			res.setHeader("Content-disposition", "attachment; filename=PhieuThuDs.xlsx");
-			ServletOutputStream out = res.getOutputStream();
-			wb.write(out);
-			out.flush();
-			out.close();
-			wb.close();
+			ReportUtils.writeExcel2Response(wb, "PhieuThuDs", res);
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -314,18 +297,10 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = ReportUtils.compileReport("PhieuThu", null, "chungtu", req);
-			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
+			JasperReport jasperReport = ReportUtils.compileReport("PhieuThu", "chungtu", req);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, chungTuDs);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=PhieuThu" + maCt + ".pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "PhieuThu" + maCt, res);
 		} catch (JRException | IOException e) {
 			e.printStackTrace();
 		}
@@ -603,18 +578,10 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_CHI);
 			List<ChungTu> phieuChiDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("PhieuChiDs", null, "chungtu", req);
-			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, phieuChiDs);
+			JasperReport jasperReport = ReportUtils.compileReport("PhieuChiDs", "chungtu", req);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, phieuChiDs);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=PhieuChiDs.pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "PhieuChiDs", res);
 		} catch (JRException | IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -643,17 +610,9 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_PHIEU_CHI);
 			List<ChungTu> phieuChiDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			XSSFWorkbook wb = baoCaoDAO.taoChungTuDs(phieuChiDs, hmParams);
+			XSSFWorkbook wb = baoCaoService.taoChungTuDs(phieuChiDs, hmParams);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
-			res.setHeader("Content-disposition", "attachment; filename=PhieuChiDs.xlsx");
-			ServletOutputStream out = res.getOutputStream();
-			wb.write(out);
-			out.flush();
-			out.close();
-			wb.close();
+			ReportUtils.writeExcel2Response(wb, "PhieuChiDs", res);
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -692,18 +651,10 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = ReportUtils.compileReport("PhieuChi", null, "chungtu", req);
-			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
+			JasperReport jasperReport = ReportUtils.compileReport("PhieuChi", "chungtu", req);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, chungTuDs);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=PhieuChi" + maCt + ".pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "PhieuChi" + maCt, res);
 		} catch (JRException | IOException e) {
 			e.printStackTrace();
 		}
@@ -981,18 +932,10 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_CO);
 			List<ChungTu> baoCoDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("BaoCoDs", null, "chungtu", req);
-			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, baoCoDs);
+			JasperReport jasperReport = ReportUtils.compileReport("BaoCoDs", "chungtu", req);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, baoCoDs);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=BaoCoDs.pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "BaoCoDs", res);
 		} catch (JRException | IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -1021,17 +964,9 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_CO);
 			List<ChungTu> baoCoDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			XSSFWorkbook wb = baoCaoDAO.taoChungTuDs(baoCoDs, hmParams);
+			XSSFWorkbook wb = baoCaoService.taoChungTuDs(baoCoDs, hmParams);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
-			res.setHeader("Content-disposition", "attachment; filename=BaoCoDs.xlsx");
-			ServletOutputStream out = res.getOutputStream();
-			wb.write(out);
-			out.flush();
-			out.close();
-			wb.close();
+			ReportUtils.writeExcel2Response(wb, "BaoCoDs", res);
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -1069,18 +1004,10 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = ReportUtils.compileReport("BaoCo", null, "chungtu", req);
-			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
+			JasperReport jasperReport = ReportUtils.compileReport("BaoCo", "chungtu", req);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, chungTuDs);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=BaoCo" + maCt + ".pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "BaoCo" + maCt, res);
 		} catch (JRException | IOException e) {
 			e.printStackTrace();
 		}
@@ -1358,18 +1285,10 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_NO);
 			List<ChungTu> baoNoDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("BaoNoDs", null, "chungtu", req);
-			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, baoNoDs);
+			JasperReport jasperReport = ReportUtils.compileReport("BaoNoDs", "chungtu", req);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, baoNoDs);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=BaoNoDs.pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "BaoNoDs", res);
 		} catch (JRException | IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -1398,17 +1317,9 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_BAO_NO);
 			List<ChungTu> baoNoDs = chungTuDAO.danhSachChungTu(loaiCts, batDau, ketThuc);
 
-			XSSFWorkbook wb = baoCaoDAO.taoChungTuDs(baoNoDs, hmParams);
+			XSSFWorkbook wb = baoCaoService.taoChungTuDs(baoNoDs, hmParams);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
-			res.setHeader("Content-disposition", "attachment; filename=BaoNoDs.xlsx");
-			ServletOutputStream out = res.getOutputStream();
-			wb.write(out);
-			out.flush();
-			out.close();
-			wb.close();
+			ReportUtils.writeExcel2Response(wb, "BaoNoDs", res);
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -1446,18 +1357,10 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = ReportUtils.compileReport("BaoNo", null, "chungtu", req);
-			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
+			JasperReport jasperReport = ReportUtils.compileReport("BaoNo", "chungtu", req);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, chungTuDs);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=BaoNo" + maCt + ".pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "BaoNo" + maCt, res);
 		} catch (JRException | IOException e) {
 			e.printStackTrace();
 		}
@@ -1736,18 +1639,10 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_KT_TH);
 			List<ChungTu> ktthDs = chungTuDAO.danhSachChungTuKtth(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("KeToanTongHopDs", null, "chungtu", req);
-			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, ktthDs);
+			JasperReport jasperReport = ReportUtils.compileReport("KeToanTongHopDs", "chungtu", req);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, ktthDs);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=KeToanTongHopDs.pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "KeToanTongHopDs", res);
 		} catch (JRException | IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -1776,17 +1671,9 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_KT_TH);
 			List<ChungTu> ktthDs = chungTuDAO.danhSachChungTuKtth(loaiCts, batDau, ketThuc);
 
-			XSSFWorkbook wb = baoCaoDAO.taoChungTuKtthDs(ktthDs, hmParams);
+			XSSFWorkbook wb = baoCaoService.taoChungTuKtthDs(ktthDs, hmParams);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
-			res.setHeader("Content-disposition", "attachment; filename=KeToanTongHopDs.xlsx");
-			ServletOutputStream out = res.getOutputStream();
-			wb.write(out);
-			out.flush();
-			out.close();
-			wb.close();
+			ReportUtils.writeExcel2Response(wb, "KeToanTongHopDs", res);
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -1828,17 +1715,9 @@ public class ChungTuController {
 			List<String> baoCaoConDs = new ArrayList<>();
 			baoCaoConDs.add("NghiepVuKeToan");
 			JasperReport jasperReport = ReportUtils.compileReport("KeToanTongHop", baoCaoConDs, "chungtu", req);
-			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, chungTuDs);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=KeToanTongHop" + maCt + ".pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "KeToanTongHop" + maCt, res);
 		} catch (JRException | IOException e) {
 			e.printStackTrace();
 		}
@@ -2119,18 +1998,10 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_MUA_HANG);
 			List<ChungTu> muaHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("muaHangDs", null, "chungtu", req);
-			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, muaHangDs);
+			JasperReport jasperReport = ReportUtils.compileReport("muaHangDs", "chungtu", req);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, muaHangDs);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=muaHangDs.pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "muaHangDs", res);
 		} catch (JRException | IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -2159,17 +2030,9 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_MUA_HANG);
 			List<ChungTu> muaHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
 
-			XSSFWorkbook wb = baoCaoDAO.taoChungTuDs(muaHangDs, hmParams);
+			XSSFWorkbook wb = baoCaoService.taoChungTuDs(muaHangDs, hmParams);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
-			res.setHeader("Content-disposition", "attachment; filename=MuaHangDs.xlsx");
-			ServletOutputStream out = res.getOutputStream();
-			wb.write(out);
-			out.flush();
-			out.close();
-			wb.close();
+			ReportUtils.writeExcel2Response(wb, "MuaHangDs", res);
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -2207,18 +2070,10 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = ReportUtils.compileReport("MuaHang", null, "chungtu", req);
-			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
+			JasperReport jasperReport = ReportUtils.compileReport("MuaHang", "chungtu", req);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, chungTuDs);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "attachment; filename=MuaHang" + maCt + ".pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "MuaHang" + maCt, res);
 		} catch (JRException | IOException e) {
 			e.printStackTrace();
 		}
@@ -2711,18 +2566,10 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_BAN_HANG);
 			List<ChungTu> banHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("banHangDs", null, "chungtu", req);
-			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, banHangDs);
+			JasperReport jasperReport = ReportUtils.compileReport("banHangDs", "chungtu", req);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, banHangDs);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=banHangDs.pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "banHangDs", res);
 		} catch (JRException | IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -2751,17 +2598,9 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_BAN_HANG);
 			List<ChungTu> banHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
 
-			XSSFWorkbook wb = baoCaoDAO.taoChungTuDs(banHangDs, hmParams);
+			XSSFWorkbook wb = baoCaoService.taoChungTuDs(banHangDs, hmParams);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
-			res.setHeader("Content-disposition", "attachment; filename=BanHangDs.xlsx");
-			ServletOutputStream out = res.getOutputStream();
-			wb.write(out);
-			out.flush();
-			out.close();
-			wb.close();
+			ReportUtils.writeExcel2Response(wb, "BanHangDs", res);
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -2799,18 +2638,10 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = ReportUtils.compileReport("BanHang", null, "chungtu", req);
-			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
+			JasperReport jasperReport = ReportUtils.compileReport("BanHang", "chungtu", req);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, chungTuDs);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "attachment; filename=BanHang" + maCt + ".pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "BanHang" + maCt, res);
 		} catch (JRException | IOException e) {
 			e.printStackTrace();
 		}
@@ -3458,18 +3289,10 @@ public class ChungTuController {
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
-			JasperReport jasperReport = ReportUtils.compileReport("KetChuyenButToan", null, "chungtu", req);
-			byte[] bytes = baoCaoDAO.taoChungTu(jasperReport, hmParams, chungTuDs);
+			JasperReport jasperReport = ReportUtils.compileReport("KetChuyenButToan", "chungtu", req);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, chungTuDs);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "attachment; filename=KetChuyenButToan" + maCt + ".pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "KetChuyenButToan" + maCt, res);
 		} catch (JRException | IOException e) {
 			e.printStackTrace();
 		}

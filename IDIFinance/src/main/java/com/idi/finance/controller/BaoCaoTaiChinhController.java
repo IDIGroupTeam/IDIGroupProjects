@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,14 +36,17 @@ import com.idi.finance.bean.bctc.BalanceAssetItem;
 import com.idi.finance.bean.bctc.BaoCaoTaiChinh;
 import com.idi.finance.bean.bctc.BaoCaoTaiChinhChiTiet;
 import com.idi.finance.bean.bctc.BaoCaoTaiChinhCon;
+import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.kyketoan.KyKeToan;
+import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BalanceSheetDAO;
-import com.idi.finance.dao.BaoCaoDAO;
 import com.idi.finance.dao.BaoCaoTaiChinhDAO;
 import com.idi.finance.dao.KyKeToanDAO;
 import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.hangso.PropCont;
+import com.idi.finance.service.BaoCaoService;
+import com.idi.finance.service.BaoCaoTaiChinhService;
 import com.idi.finance.utils.ExpressionEval;
 import com.idi.finance.utils.ReportUtils;
 import com.idi.finance.utils.Utils;
@@ -73,9 +75,6 @@ public class BaoCaoTaiChinhController {
 	TaiKhoanDAO taiKhoanDAO;
 
 	@Autowired
-	BaoCaoDAO baoCaoDAO;
-
-	@Autowired
 	SoKeToanDAO soKeToanDAO;
 
 	@Autowired
@@ -83,6 +82,12 @@ public class BaoCaoTaiChinhController {
 
 	@Autowired
 	BaoCaoTaiChinhDAO bctcDAO;
+
+	@Autowired
+	BaoCaoService baoCaoService;
+
+	@Autowired
+	BaoCaoTaiChinhService bctcService;
 
 	@Autowired
 	private BaoCaoTaiChinhValidator bctcValidator;
@@ -586,12 +591,20 @@ public class BaoCaoTaiChinhController {
 	}
 
 	private BaoCaoTaiChinhCon sinhBangCdps(BaoCaoTaiChinhCon bctcCon) {
+		if (bctcCon == null || bctcCon.getBctc() == null || bctcCon.getBctc().getKyKeToan() == null
+				|| bctcCon.getBctc().getBatDau() == null || bctcCon.getBctc().getKetThuc() == null) {
+			return bctcCon;
+		}
+
 		logger.info("Sinh bảng cân đối phát sinh");
-		// Lấy danh sách các chỉ tiêu vào BalanceAssetItem
 
-		// Tổ chức lại danh sách chỉ tiêu vào BaoCaoTaiChinhCon
+		KyKeToan kyKeToan = bctcCon.getBctc().getKyKeToan();
+		BaoCaoTaiChinh bctc = bctcCon.getBctc();
+		List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.cayTaiKhoan();
 
-		// Tính giá trị cho các chỉ tiêu đó
+		DuLieuKeToan duLieuKeToan = bctcService.taoBangCdps(bctc.getBatDau(), bctc.getKetThuc(), loaiTaiKhoanDs,
+				kyKeToan);
+
 		return null;
 	}
 
@@ -655,17 +668,9 @@ public class BaoCaoTaiChinhController {
 			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			params.put("bctcCon", bctcCon);
 			JasperReport jasperReport = ReportUtils.compileReport("BCDKT", "bctc", req);
-			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bctcCon.getChiTietDs());
+			byte[] bytes = baoCaoService.taoBangCdkt(jasperReport, params, bctcCon.getChiTietDs());
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=BangCdkt.pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "BangCdkt", res);
 		} catch (JRException | IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -689,17 +694,9 @@ public class BaoCaoTaiChinhController {
 			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			params.put("bctcCon", bctcCon);
 			JasperReport jasperReport = ReportUtils.compileReport("BKQHDKD", "bctc", req);
-			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bctcCon.getChiTietDs());
+			byte[] bytes = baoCaoService.taoBangCdkt(jasperReport, params, bctcCon.getChiTietDs());
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=BangKqhdkd.pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "BangKqhdkd", res);
 		} catch (JRException | IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -723,17 +720,9 @@ public class BaoCaoTaiChinhController {
 			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 			params.put("bctcCon", bctcCon);
 			JasperReport jasperReport = ReportUtils.compileReport("BLCTT", "bctc", req);
-			byte[] bytes = baoCaoDAO.taoBangCdkt(jasperReport, params, bctcCon.getChiTietDs());
+			byte[] bytes = baoCaoService.taoBangCdkt(jasperReport, params, bctcCon.getChiTietDs());
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=BangLctt.pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "BangLctt", res);
 		} catch (JRException | IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {

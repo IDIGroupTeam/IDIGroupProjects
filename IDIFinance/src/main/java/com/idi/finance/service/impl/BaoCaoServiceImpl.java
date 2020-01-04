@@ -1,4 +1,4 @@
-package com.idi.finance.dao.impl;
+package com.idi.finance.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,13 +18,13 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
 import com.idi.finance.bean.bctc.BaoCaoTaiChinhChiTiet;
 import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.chungtu.ChungTu;
-import com.idi.finance.dao.BaoCaoDAO;
 import com.idi.finance.hangso.Contants;
+import com.idi.finance.service.BaoCaoService;
 import com.idi.finance.utils.DateUtils;
 
 import net.sf.jasperreports.engine.JRException;
@@ -35,18 +35,9 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
-public class BaoCaoDAOImpl implements BaoCaoDAO {
-	private static final Logger logger = Logger.getLogger(BaoCaoDAOImpl.class);
-
-	private JdbcTemplate jdbcTmpl;
-
-	public JdbcTemplate getJdbcTmpl() {
-		return jdbcTmpl;
-	}
-
-	public void setJdbcTmpl(JdbcTemplate jdbcTmpl) {
-		this.jdbcTmpl = jdbcTmpl;
-	}
+@Service
+public class BaoCaoServiceImpl implements BaoCaoService {
+	private static final Logger logger = Logger.getLogger(BaoCaoServiceImpl.class);
 
 	@Override
 	public XSSFWorkbook taoChungTuDs(List<ChungTu> chungTuDs, HashMap<String, Object> hmParams) {
@@ -538,5 +529,4 @@ public class BaoCaoDAOImpl implements BaoCaoDAO {
 		}
 		return null;
 	}
-
 }

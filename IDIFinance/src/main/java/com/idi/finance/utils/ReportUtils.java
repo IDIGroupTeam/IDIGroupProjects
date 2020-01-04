@@ -1,12 +1,16 @@
 package com.idi.finance.utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.idi.finance.bean.taikhoan.TaiKhoan;
 
@@ -72,5 +76,48 @@ public class ReportUtils {
 		}
 
 		return compileReport(fileName, relativePath, req);
+	}
+
+	public static void writePdf2Response(byte[] bytes, String fileName, HttpServletResponse res) throws IOException {
+		if (res == null) {
+			return;
+		}
+
+		if (bytes == null) {
+			bytes = new byte[0];
+		}
+
+		res.reset();
+		res.resetBuffer();
+		res.setContentType("application/pdf");
+		res.setContentLength(bytes.length);
+		res.setHeader("Content-disposition", "inline; filename=" + fileName + ".pdf");
+
+		ServletOutputStream out = res.getOutputStream();
+		out.write(bytes, 0, bytes.length);
+		out.flush();
+		out.close();
+	}
+
+	public static void writeExcel2Response(XSSFWorkbook wb, String fileName, HttpServletResponse res)
+			throws IOException {
+		if (res == null) {
+			return;
+		}
+
+		if (wb == null) {
+			wb = new XSSFWorkbook();
+		}
+
+		res.reset();
+		res.resetBuffer();
+		res.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
+		res.setHeader("Content-disposition", "inline; filename=" + fileName + ".xlsx");
+
+		ServletOutputStream out = res.getOutputStream();
+		wb.write(out);
+		out.flush();
+		out.close();
+		wb.close();
 	}
 }

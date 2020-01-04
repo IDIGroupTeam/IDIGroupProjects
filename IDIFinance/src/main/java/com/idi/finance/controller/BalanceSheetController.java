@@ -31,24 +31,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.idi.finance.bean.CauHinh;
 import com.idi.finance.bean.DungChung;
-import com.idi.finance.bean.Tien;
 import com.idi.finance.bean.bctc.BalanceAssetData;
 import com.idi.finance.bean.bctc.BalanceAssetItem;
 import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.bctc.KyKeToanCon;
 import com.idi.finance.bean.bieudo.KpiGroup;
 import com.idi.finance.bean.kyketoan.KyKeToan;
-import com.idi.finance.bean.kyketoan.SoDuKy;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
-import com.idi.finance.bean.taikhoan.TaiKhoan;
 import com.idi.finance.dao.BalanceSheetDAO;
-import com.idi.finance.dao.BaoCaoDAO;
 import com.idi.finance.dao.KyKeToanDAO;
 import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
 import com.idi.finance.form.BalanceAssetForm;
 import com.idi.finance.form.TkSoKeToanForm;
 import com.idi.finance.hangso.PropCont;
+import com.idi.finance.service.BaoCaoService;
+import com.idi.finance.service.BaoCaoTaiChinhService;
 import com.idi.finance.utils.ExcelProcessor;
 import com.idi.finance.utils.ExpressionEval;
 import com.idi.finance.utils.ReportUtils;
@@ -75,13 +73,16 @@ public class BalanceSheetController {
 	TaiKhoanDAO taiKhoanDAO;
 
 	@Autowired
-	BaoCaoDAO baoCaoDAO;
-
-	@Autowired
 	SoKeToanDAO soKeToanDAO;
 
 	@Autowired
 	KyKeToanDAO kyKeToanDAO;
+
+	@Autowired
+	BaoCaoService baoCaoService;
+
+	@Autowired
+	BaoCaoTaiChinhService bctcService;
 
 	@Autowired
 	private BalanceSheetValidator balanceSheetValidator;
@@ -1859,14 +1860,7 @@ public class BalanceSheetController {
 
 			while (kyKt != null && kyKt.getCuoi() != null && !kyKt.getCuoi().after(form.getCuoi())) {
 				logger.info("KỲ: " + kyKt);
-				KyKeToanCon kyKtTruoc = kyKt.kyTruoc();
-				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
-
-				List<TaiKhoan> dauKyDs = soKeToanDAO.tongPhatSinh(form.getKyKeToan().getBatDau(), kyKtTruoc.getCuoi());
-				dauKyDs = tronNoCoDauKy(dauKyDs, kyKeToan.getSoDuKyDs());
-
-				List<TaiKhoan> tongPsDs = soKeToanDAO.tongPhatSinh(kyKt.getDau(), kyKt.getCuoi());
-				duLieuKeToan = tongPhatSinh(duLieuKeToan, tongPsDs, dauKyDs);
+				DuLieuKeToan duLieuKeToan = bctcService.taoBangCdps(kyKt, loaiTaiKhoan, kyKeToan);
 
 				duLieuKeToanMap.put(kyKt, duLieuKeToan);
 				kyKt = Utils.nextPeriod(kyKt);
@@ -1935,14 +1929,7 @@ public class BalanceSheetController {
 
 			// Lặp theo kỳ
 			KyKeToanCon kyKt = new KyKeToanCon(form.getDau(), form.getCuoi());
-			KyKeToanCon kyKtTruoc = kyKt.kyTruoc();
-			DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKt, loaiTaiKhoan);
-
-			List<TaiKhoan> dauKyDs = soKeToanDAO.tongPhatSinh(form.getKyKeToan().getBatDau(), kyKtTruoc.getCuoi());
-			dauKyDs = tronNoCoDauKy(dauKyDs, kyKeToan.getSoDuKyDs());
-
-			List<TaiKhoan> tongPsDs = soKeToanDAO.tongPhatSinh(kyKt.getDau(), kyKt.getCuoi());
-			duLieuKeToan = tongPhatSinh(duLieuKeToan, tongPsDs, dauKyDs);
+			DuLieuKeToan duLieuKeToan = bctcService.taoBangCdps(kyKt, loaiTaiKhoan, kyKeToan);
 
 			// Sinh bảng cân đối phát sinh ra pdf
 			JasperReport jasperReport = ReportUtils.compileReport("CDPS", "bctc", req);
@@ -1952,17 +1939,9 @@ public class BalanceSheetController {
 			String path = req.getSession().getServletContext().getRealPath("/baocao/bctc/");
 			params.put("SUBREPORT_DIR", path);
 
-			byte[] bytes = baoCaoDAO.taoBangCdps(jasperReport, params, duLieuKeToan);
+			byte[] bytes = baoCaoService.taoBangCdps(jasperReport, params, duLieuKeToan);
 
-			res.reset();
-			res.resetBuffer();
-			res.setContentType("application/pdf");
-			res.setContentLength(bytes.length);
-			res.setHeader("Content-disposition", "inline; filename=BangCdps.pdf");
-			ServletOutputStream out = res.getOutputStream();
-			out.write(bytes, 0, bytes.length);
-			out.flush();
-			out.close();
+			ReportUtils.writePdf2Response(bytes, "BangCdps", res);
 		} catch (JRException | IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -1970,171 +1949,4 @@ public class BalanceSheetController {
 		}
 	}
 
-	private List<TaiKhoan> tronNoCoDauKy(List<TaiKhoan> dauKyDs, List<SoDuKy> soDuKyDs) {
-		if (dauKyDs == null || soDuKyDs == null) {
-			return dauKyDs;
-		}
-
-		logger.info("Trộn nợ/có đầu kỳ");
-		Iterator<TaiKhoan> dkIter = dauKyDs.iterator();
-		while (dkIter.hasNext()) {
-			TaiKhoan taiKhoan = dkIter.next();
-
-			Iterator<SoDuKy> sdkIter = soDuKyDs.iterator();
-			while (sdkIter.hasNext()) {
-				SoDuKy soDuKy = sdkIter.next();
-
-				if (taiKhoan.getLoaiTaiKhoan().equals(soDuKy.getLoaiTaiKhoan())) {
-					Tien soTien = taiKhoan.getSoTien();
-					if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
-						soTien.setGiaTri(soTien.getGiaTri() + soDuKy.getNoDauKy());
-					} else {
-						soTien.setGiaTri(soTien.getGiaTri() + soDuKy.getCoDauKy());
-					}
-
-					taiKhoan.setSoTien(soTien);
-				}
-			}
-		}
-
-		Iterator<SoDuKy> sdkIter = soDuKyDs.iterator();
-		while (sdkIter.hasNext()) {
-			SoDuKy soDuKy = sdkIter.next();
-
-			boolean daXuLy = false;
-			Iterator<TaiKhoan> iter = dauKyDs.iterator();
-			while (iter.hasNext()) {
-				TaiKhoan taiKhoan = iter.next();
-
-				if (soDuKy.getLoaiTaiKhoan().equals(taiKhoan.getLoaiTaiKhoan())) {
-					daXuLy = true;
-					break;
-				}
-			}
-
-			if (!daXuLy) {
-				if (soDuKy.getNoDauKy() > 0) {
-					TaiKhoan taiKhoan = new TaiKhoan();
-
-					Tien tien = new Tien();
-					tien.setGiaTri(soDuKy.getNoDauKy());
-
-					taiKhoan.setLoaiTaiKhoan(soDuKy.getLoaiTaiKhoan());
-					taiKhoan.setSoTien(tien);
-					taiKhoan.setSoDu(LoaiTaiKhoan.NO);
-
-					dauKyDs.add(taiKhoan);
-				}
-
-				if (soDuKy.getCoDauKy() > 0) {
-					TaiKhoan taiKhoan = new TaiKhoan();
-
-					Tien tien = new Tien();
-					tien.setGiaTri(soDuKy.getCoDauKy());
-
-					taiKhoan.setLoaiTaiKhoan(soDuKy.getLoaiTaiKhoan());
-					taiKhoan.setSoTien(tien);
-					taiKhoan.setSoDu(LoaiTaiKhoan.CO);
-
-					dauKyDs.add(taiKhoan);
-				}
-			}
-		}
-
-		logger.info("Số dư đầu kỳ");
-		for (Iterator<TaiKhoan> iter = dauKyDs.iterator(); iter.hasNext();) {
-			TaiKhoan taiKhoan = iter.next();
-			logger.info(taiKhoan);
-		}
-
-		return dauKyDs;
-	}
-
-	private DuLieuKeToan tongPhatSinh(DuLieuKeToan duLieuKeToan, List<TaiKhoan> tongPsDs, List<TaiKhoan> dauKyDs) {
-		if (duLieuKeToan == null || duLieuKeToan.getKyKeToan() == null || duLieuKeToan.getLoaiTaiKhoan() == null)
-			return null;
-
-		if (tongPsDs == null) {
-			tongPsDs = new ArrayList<>();
-		}
-
-		if (dauKyDs == null) {
-			dauKyDs = new ArrayList<>();
-		}
-
-		List<LoaiTaiKhoan> loaiTaiKhoanDs = duLieuKeToan.getLoaiTaiKhoan().getLoaiTaiKhoanDs();
-		if (loaiTaiKhoanDs != null && loaiTaiKhoanDs.size() > 0) {
-			List<DuLieuKeToan> duLieuKeToanDs = new ArrayList<>();
-			List<LoaiTaiKhoan> loaiTaiKhoanConDs = new ArrayList<>();
-
-			Iterator<LoaiTaiKhoan> iter = loaiTaiKhoanDs.iterator();
-			while (iter.hasNext()) {
-				LoaiTaiKhoan loaiTaiKhoan = iter.next();
-
-				DuLieuKeToan duLieuKeToanCon = new DuLieuKeToan(duLieuKeToan.getKyKeToan(), loaiTaiKhoan);
-				duLieuKeToanCon.setDuLieuKeToan(duLieuKeToan);
-				boolean coDuLieu = false;
-
-				Iterator<TaiKhoan> tpsIter = tongPsDs.iterator();
-				while (tpsIter.hasNext()) {
-					TaiKhoan taiKhoan = tpsIter.next();
-
-					if (taiKhoan.getLoaiTaiKhoan().equals(loaiTaiKhoan)) {
-						if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
-							duLieuKeToanCon.setTongNoPhatSinh(taiKhoan.getSoTien().getGiaTri());
-						} else {
-							duLieuKeToanCon.setTongCoPhatSinh(taiKhoan.getSoTien().getGiaTri());
-						}
-						coDuLieu = true;
-					}
-				}
-
-				Iterator<TaiKhoan> dkIter = dauKyDs.iterator();
-				while (dkIter.hasNext()) {
-					TaiKhoan taiKhoan = dkIter.next();
-
-					if (taiKhoan.getLoaiTaiKhoan().equals(loaiTaiKhoan)) {
-						if (taiKhoan.getSoDu() == LoaiTaiKhoan.NO) {
-							duLieuKeToanCon.setNoDauKy(taiKhoan.getSoTien().getGiaTri());
-						} else {
-							duLieuKeToanCon.setCoDauKy(taiKhoan.getSoTien().getGiaTri());
-						}
-						coDuLieu = true;
-					}
-				}
-
-				if (coDuLieu) {
-					loaiTaiKhoanConDs.add(loaiTaiKhoan);
-					duLieuKeToanCon = tongPhatSinh(duLieuKeToanCon, tongPsDs, dauKyDs);
-					duLieuKeToanDs.add(duLieuKeToanCon);
-				}
-			}
-
-			duLieuKeToan.getLoaiTaiKhoan().setLoaiTaiKhoanDs(loaiTaiKhoanConDs);
-			duLieuKeToan.setDuLieuKeToanDs(duLieuKeToanDs);
-		}
-
-		if (duLieuKeToan.getLoaiTaiKhoan().getMaTk() == null
-				|| duLieuKeToan.getLoaiTaiKhoan().getMaTk().trim().equals("")) {
-			// Đây là gốc cây
-			if (duLieuKeToan.getDuLieuKeToanDs() != null && duLieuKeToan.getDuLieuKeToanDs().size() > 0) {
-				Iterator<DuLieuKeToan> iter = duLieuKeToan.getDuLieuKeToanDs().iterator();
-				while (iter.hasNext()) {
-					DuLieuKeToan duLieuKeToanCon = iter.next();
-
-					// Tính tổng nợ/có phát sinh cho dữ liệu kế toán gốc
-					duLieuKeToan
-							.setTongNoPhatSinh(duLieuKeToan.getTongNoPhatSinh() + duLieuKeToanCon.getTongNoPhatSinh());
-					duLieuKeToan
-							.setTongCoPhatSinh(duLieuKeToan.getTongCoPhatSinh() + duLieuKeToanCon.getTongCoPhatSinh());
-
-					// Tính nơ/có đầu kỳ cho dữ liệu kế toán gốc
-					duLieuKeToan.setNoDauKy(duLieuKeToan.getNoDauKy() + duLieuKeToanCon.getNoDauKy());
-					duLieuKeToan.setCoDauKy(duLieuKeToan.getCoDauKy() + duLieuKeToanCon.getCoDauKy());
-				}
-			}
-		}
-
-		return duLieuKeToan;
-	}
 }

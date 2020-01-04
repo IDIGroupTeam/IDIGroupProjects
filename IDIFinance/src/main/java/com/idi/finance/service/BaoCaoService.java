@@ -1,4 +1,4 @@
-package com.idi.finance.dao;
+package com.idi.finance.service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +11,7 @@ import com.idi.finance.bean.chungtu.ChungTu;
 
 import net.sf.jasperreports.engine.JasperReport;
 
-public interface BaoCaoDAO {
+public interface BaoCaoService {
 	public XSSFWorkbook taoChungTuDs(List<ChungTu> chungTuDs, HashMap<String, Object> hmParams);
 
 	public XSSFWorkbook taoChungTuKtthDs(List<ChungTu> chungTuDs, HashMap<String, Object> hmParams);

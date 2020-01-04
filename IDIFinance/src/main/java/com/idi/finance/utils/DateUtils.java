@@ -8,6 +8,14 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtils {
+	public static Date prevMilisecond(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		cal.set(Calendar.MILLISECOND, -1);
+		return cal.getTime();
+	}
+
 	public static String format(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
