@@ -17,6 +17,7 @@ import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 
 public class DuLieuKeToan {
 	private static final Logger logger = Logger.getLogger(DuLieuKeToan.class);
+
 	private KyKeToanCon kyKeToan;
 	private LoaiTaiKhoan loaiTaiKhoan;
 	private DoiTuong doiTuong;

@@ -58,9 +58,11 @@ public class BaoCaoTaiChinhServiceImpl implements BaoCaoTaiChinhService {
 
 		List<TaiKhoan> dauKyDs = soKeToanDAO.tongPhatSinh(kyKeToan.getBatDau(),
 				DateUtils.prevMilisecond(kktCon.getDau()));
+
 		dauKyDs = tronNoCoDauKy(dauKyDs, kyKeToan.getSoDuKyDs());
 
 		List<TaiKhoan> tongPsDs = soKeToanDAO.tongPhatSinh(kktCon.getDau(), kktCon.getCuoi());
+
 		duLieuKeToan = tongPhatSinh(duLieuKeToan, tongPsDs, dauKyDs);
 
 		return duLieuKeToan;

@@ -44,6 +44,12 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 	@Value("${CAP_NHAT_BCTC_CHI_TIET}")
 	private String CAP_NHAT_BCTC_CHI_TIET;
 
+	@Value("${THEM_BCTC_CHI_TIET_CDPS}")
+	private String THEM_BCTC_CHI_TIET_CDPS;
+
+	@Value("${CAP_NHAT_BCTC_CHI_TIET_CDPS}")
+	private String CAP_NHAT_BCTC_CHI_TIET_CDPS;
+
 	@Value("${LAY_BCTC}")
 	private String LAY_BCTC;
 
@@ -413,19 +419,19 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 				switch (bctcCon.getLoaiBctc()) {
 				case BaoCaoTaiChinhCon.LOAI_CDKT:
 					logger.info("Thêm Vảng cân đối kế toán vào bảng BAO_CAO_TAI_CHINH_CHI_TIẾT");
-					themCapNhapBctcChiTiet(bctcCon.getChiTietDs());
+					themCapNhatBctcChiTiet(bctcCon.getChiTietDs());
 					break;
 				case BaoCaoTaiChinhCon.LOAI_KQHDKD:
 					logger.info("Thêm Bảng kết quả HDKD vào bảng BAO_CAO_TAI_CHINH_CHI_TIẾT");
-					themCapNhapBctcChiTiet(bctcCon.getChiTietDs());
+					themCapNhatBctcChiTiet(bctcCon.getChiTietDs());
 					break;
 				case BaoCaoTaiChinhCon.LOAI_LCTT:
 					logger.info("Thêm Bảng lưu chuyển tiền tệ vào bảng BAO_CAO_TAI_CHINH_CHI_TIẾT");
-					themCapNhapBctcChiTiet(bctcCon.getChiTietDs());
+					themCapNhatBctcChiTiet(bctcCon.getChiTietDs());
 					break;
 				case BaoCaoTaiChinhCon.LOAI_CDPS:
 					logger.info("Thêm Bảng cân đối phát sinh vào bảng BAO_CAO_TAI_CHINH_CHI_TIẾT");
-					themCapNhapBctcChiTietCdps(bctcCon.getDuLieuKeToan());
+					themCapNhatBctcChiTietCdps(bctcCon, bctcCon.getDuLieuKeToan());
 					break;
 				default:
 					break;
@@ -436,27 +442,19 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 		return bctc;
 	}
 
-	private void themCapNhapBctcChiTiet(List<BaoCaoTaiChinhChiTiet> bctcChiTietDs) {
+	private void themCapNhatBctcChiTiet(List<BaoCaoTaiChinhChiTiet> bctcChiTietDs) {
 		if (bctcChiTietDs == null) {
 			return;
 		}
 
 		for (BaoCaoTaiChinhChiTiet bctcChiTiet : bctcChiTietDs) {
-			themCapNhapBctcChiTiet(bctcChiTiet.getChiTietDs());
+			themCapNhatBctcChiTiet(bctcChiTiet.getChiTietDs());
 
-			themCapNhapBctcChiTiet(bctcChiTiet);
+			themCapNhatBctcChiTiet(bctcChiTiet);
 		}
 	}
 
-	private void themCapNhapBctcChiTietCdps(DuLieuKeToan duLieuKeToan) {
-		if (duLieuKeToan == null) {
-			return;
-		}
-
-		
-	}
-
-	private void themCapNhapBctcChiTiet(BaoCaoTaiChinhChiTiet bctcChiTiet) {
+	private void themCapNhatBctcChiTiet(BaoCaoTaiChinhChiTiet bctcChiTiet) {
 		if (bctcChiTiet == null || bctcChiTiet.getAsset() == null || bctcChiTiet.getAsset().getAssetCode() == null
 				|| bctcChiTiet.getBctc() == null) {
 			return;
@@ -477,6 +475,46 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 			Object[] params = { bctcChiTiet.getGiaTri().getGiaTri(), bctcChiTiet.getGiaTriKyTruoc().getGiaTri(),
 					bctcChiTiet.getBctc().getMaBctcCon(), bctcChiTiet.getAsset().getAssetCode() };
 			jdbcTmpl.update(capNhatBctcChiTiet, params);
+		}
+	}
+
+	private void themCapNhatBctcChiTietCdps(BaoCaoTaiChinhCon bctcCon, DuLieuKeToan duLieuKeToan) {
+		if (bctcCon == null || duLieuKeToan == null) {
+			return;
+		}
+
+		List<DuLieuKeToan> duLieuKeToanDs = duLieuKeToan.getDuLieuKeToanDs();
+		if (duLieuKeToanDs != null) {
+			for (DuLieuKeToan duLieuKeToanCon : duLieuKeToanDs) {
+				themCapNhatBctcChiTietCdps(bctcCon, duLieuKeToanCon);
+			}
+		}
+
+		themCapNhatBctcChiTietCdps(bctcCon.getMaBctcCon(), duLieuKeToan);
+	}
+
+	private void themCapNhatBctcChiTietCdps(int maBctcCon, DuLieuKeToan duLieuKeToan) {
+		if (duLieuKeToan == null || duLieuKeToan.getLoaiTaiKhoan() == null
+				|| duLieuKeToan.getLoaiTaiKhoan().getMaTk() == null
+				|| duLieuKeToan.getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+			return;
+		}
+
+		String themBctcChiTietCdps = THEM_BCTC_CHI_TIET_CDPS;
+		String capNhatBctcChiTietCdps = CAP_NHAT_BCTC_CHI_TIET_CDPS;
+
+		try {
+			logger.info("Thêm báo cáo tài chính chi tiết cdps vào BAO_CAO_TAI_CHINH_CHI_TIET_CDPS");
+			logger.info(themBctcChiTietCdps);
+			Object[] params = { maBctcCon, duLieuKeToan.getLoaiTaiKhoan().getMaTk(), duLieuKeToan.getNoDauKy(),
+					duLieuKeToan.getCoDauKy(), duLieuKeToan.getTongNoPhatSinh(), duLieuKeToan.getTongCoPhatSinh() };
+			jdbcTmpl.update(themBctcChiTietCdps, params);
+		} catch (Exception e) {
+			logger.info("Nếu không được thì cập nhật");
+			logger.info(capNhatBctcChiTietCdps);
+			Object[] params = { duLieuKeToan.getNoDauKy(), duLieuKeToan.getCoDauKy(), duLieuKeToan.getTongNoPhatSinh(),
+					duLieuKeToan.getTongCoPhatSinh(), maBctcCon, duLieuKeToan.getLoaiTaiKhoan().getMaTk() };
+			jdbcTmpl.update(capNhatBctcChiTietCdps, params);
 		}
 	}
 
