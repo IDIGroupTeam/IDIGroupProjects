@@ -24,6 +24,7 @@ import com.idi.finance.bean.bctc.BaoCaoTaiChinhChiTiet;
 import com.idi.finance.bean.bctc.BaoCaoTaiChinhCon;
 import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.kyketoan.KyKeToan;
+import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BaoCaoTaiChinhDAO;
 
 public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
@@ -70,6 +71,9 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 
 	@Value("${LAY_BCTC_LCTT_CHI_TIET}")
 	private String LAY_BCTC_LCTT_CHI_TIET;
+
+	@Value("${LAY_BCTC_CDPS_CHI_TIET}")
+	private String LAY_BCTC_CDPS_CHI_TIET;
 
 	@Value("${XOA_BCTC}")
 	private String XOA_BCTC;
@@ -168,33 +172,48 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 				switch (bctcCon.getLoaiBctc()) {
 				case BaoCaoTaiChinhCon.LOAI_CDKT:
 					layBctcChiTiet = LAY_BCTC_CDKT_CHI_TIET;
+					bctcCon.setChiTietDs(layBctcChiTiet(layBctcChiTiet, bctcCon));
 					break;
 				case BaoCaoTaiChinhCon.LOAI_KQHDKD:
 					layBctcChiTiet = LAY_BCTC_KQHDKD_CHI_TIET;
+					bctcCon.setChiTietDs(layBctcChiTiet(layBctcChiTiet, bctcCon));
 					break;
 				case BaoCaoTaiChinhCon.LOAI_LCTT:
 					layBctcChiTiet = LAY_BCTC_LCTT_CHI_TIET;
+					bctcCon.setChiTietDs(layBctcChiTiet(layBctcChiTiet, bctcCon));
 					break;
 				case BaoCaoTaiChinhCon.LOAI_CDPS:
+					layBctcChiTiet = LAY_BCTC_CDPS_CHI_TIET;
+					bctcCon.setDuLieuKeToanDs(layBctcChiTietCdps(layBctcChiTiet, bctcCon));
 					break;
 				default:
 					break;
 				}
-
-				logger.info(layBctcChiTiet);
-				Object[] objTmpl = { bctcCon.getMaBctcCon() };
-				List<BaoCaoTaiChinhChiTiet> bctcChiTietDs = jdbcTmpl.query(layBctcChiTiet, objTmpl,
-						new BaoCaoTaiChinhChiTietDayDuMapper());
-				for (BaoCaoTaiChinhChiTiet bctcChiTiet : bctcChiTietDs) {
-					bctcChiTiet.setBctc(bctcCon);
-				}
-
-				bctcCon.setChiTietDs(bctcChiTietDs);
 			}
 		}
 
 		return ketQua;
 	};
+
+	private List<BaoCaoTaiChinhChiTiet> layBctcChiTiet(String query, BaoCaoTaiChinhCon bctcCon) {
+		if (query == null || bctcCon == null) {
+			return null;
+		}
+
+		logger.info(query);
+		Object[] objTmpl = { bctcCon.getMaBctcCon() };
+		List<BaoCaoTaiChinhChiTiet> bctcChiTietDs = jdbcTmpl.query(query, objTmpl,
+				new BaoCaoTaiChinhChiTietDayDuMapper());
+
+		if (bctcChiTietDs != null) {
+			for (BaoCaoTaiChinhChiTiet bctcChiTiet : bctcChiTietDs) {
+				bctcChiTiet.setBctc(bctcCon);
+			}
+
+		}
+
+		return bctcChiTietDs;
+	}
 
 	public class BaoCaoTaiChinhDayDuMapper implements RowMapper<BaoCaoTaiChinh> {
 		public BaoCaoTaiChinh mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -223,6 +242,53 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 
 				logger.info(bctc);
 				return bctc;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+	}
+
+	private List<DuLieuKeToan> layBctcChiTietCdps(String query, BaoCaoTaiChinhCon bctcCon) {
+		if (query == null || bctcCon == null) {
+			return null;
+		}
+
+		logger.info(query);
+		Object[] objTmpl = { bctcCon.getMaBctcCon() };
+		List<DuLieuKeToan> duLieuKeToanDs = jdbcTmpl.query(query, objTmpl, new BaoCaoTaiChinhChiTietDayDuCdpsMapper());
+
+		if (duLieuKeToanDs != null) {
+			for (DuLieuKeToan duLieuKeToan : duLieuKeToanDs) {
+				duLieuKeToan.setBctcCon(bctcCon);
+			}
+		}
+
+		return duLieuKeToanDs;
+	}
+
+	public class BaoCaoTaiChinhChiTietDayDuCdpsMapper implements RowMapper<DuLieuKeToan> {
+		public DuLieuKeToan mapRow(ResultSet rs, int rowNum) throws SQLException {
+			try {
+				DuLieuKeToan duLieuKeToan = new DuLieuKeToan();
+				duLieuKeToan.setNoDauKy(rs.getDouble("NO_DAU_KY"));
+				duLieuKeToan.setCoDauKy(rs.getDouble("CO_DAU_KY"));
+				duLieuKeToan.setTongNoPhatSinh(rs.getDouble("NO_PHAT_SINH"));
+				duLieuKeToan.setTongCoPhatSinh(rs.getDouble("CO_PHAT_SINH"));
+
+				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
+				loaiTaiKhoan.setTenTk(rs.getString("TEN_TK"));
+				loaiTaiKhoan.setSoDu(rs.getInt("SO_DU"));
+				duLieuKeToan.setLoaiTaiKhoan(loaiTaiKhoan);
+
+				BaoCaoTaiChinhCon bctcCon = new BaoCaoTaiChinhCon();
+				bctcCon.setMaBctcCon(rs.getInt("MA_BCTC_CON"));
+				duLieuKeToan.setBctcCon(bctcCon);
+
+				logger.info(duLieuKeToan);
+
+				return duLieuKeToan;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;

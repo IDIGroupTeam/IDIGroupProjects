@@ -217,7 +217,98 @@
 							<th class="text-center" style="width: 130px;">Có</th>
 						</tr>
 					</thead>
-					<tbody></tbody>
+					<tbody>
+						<c:forEach items="${bctc.bangCdps.duLieuKeToan.duLieuKeToanDs}"
+							var="duLieuKeToanCon">
+							<tr style="font-weight: bold;">
+								<td><a
+									href="${url}/soketoan/socai/${duLieuKeToanCon.loaiTaiKhoan.maTk}/${mainFinanceForm.kyKeToan.maKyKt}/<fmt:formatDate
+							value='${bctc.bangCdps.duLieuKeToan.kyKeToan.dau}' pattern='dd_MM_yyyy' />/<fmt:formatDate
+							value='${bctc.bangCdps.duLieuKeToan.kyKeToan.cuoi}' pattern='dd_MM_yyyy' />"
+									target="_blank">${duLieuKeToanCon.loaiTaiKhoan.maTk}</a></td>
+								<td>${duLieuKeToanCon.loaiTaiKhoan.tenTk}</td>
+								<c:choose>
+									<c:when test="${duLieuKeToanCon.loaiTaiKhoan.luongTinh}">
+										<td class="text-right"><fmt:formatNumber
+												value="${duLieuKeToanCon.noDauKy}" type="NUMBER"
+												maxFractionDigits="0"></fmt:formatNumber></td>
+										<td class="text-right"><fmt:formatNumber
+												value="${duLieuKeToanCon.coDauKy}" type="NUMBER"
+												maxFractionDigits="0"></fmt:formatNumber></td>
+									</c:when>
+									<c:when
+										test="${!duLieuKeToanCon.loaiTaiKhoan.luongTinh && duLieuKeToanCon.soDuDauKy>=0}">
+										<td class="text-right"><fmt:formatNumber
+												value="${duLieuKeToanCon.soDuDauKy}" type="NUMBER"
+												maxFractionDigits="0"></fmt:formatNumber></td>
+										<td class="text-right">0</td>
+									</c:when>
+									<c:when
+										test="${!duLieuKeToanCon.loaiTaiKhoan.luongTinh && duLieuKeToanCon.soDuDauKy<0}">
+										<td class="text-right">0</td>
+										<td class="text-right"><fmt:formatNumber
+												value="${0-duLieuKeToanCon.soDuDauKy}" type="NUMBER"
+												maxFractionDigits="0"></fmt:formatNumber></td>
+									</c:when>
+								</c:choose>
+								<td class="text-right"><fmt:formatNumber
+										value="${duLieuKeToanCon.tongNoPhatSinh}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
+								<td class="text-right"><fmt:formatNumber
+										value="${duLieuKeToanCon.tongCoPhatSinh}" type="NUMBER"
+										maxFractionDigits="0"></fmt:formatNumber></td>
+								<c:choose>
+									<c:when test="${duLieuKeToanCon.loaiTaiKhoan.luongTinh}">
+										<td class="text-right"><fmt:formatNumber
+												value="${duLieuKeToanCon.noCuoiKy}" type="NUMBER"
+												maxFractionDigits="0"></fmt:formatNumber></td>
+										<td class="text-right"><fmt:formatNumber
+												value="${duLieuKeToanCon.coCuoiKy}" type="NUMBER"
+												maxFractionDigits="0"></fmt:formatNumber></td>
+									</c:when>
+									<c:when
+										test="${!duLieuKeToanCon.loaiTaiKhoan.luongTinh && duLieuKeToanCon.soDuCuoiKy>=0}">
+										<td class="text-right"><fmt:formatNumber
+												value="${duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"
+												maxFractionDigits="0"></fmt:formatNumber></td>
+										<td class="text-right">0</td>
+									</c:when>
+									<c:when
+										test="${!duLieuKeToanCon.loaiTaiKhoan.luongTinh && duLieuKeToanCon.soDuCuoiKy<0}">
+										<td class="text-right">0</td>
+										<td class="text-right"><fmt:formatNumber
+												value="${0-duLieuKeToanCon.soDuCuoiKy}" type="NUMBER"
+												maxFractionDigits="0"></fmt:formatNumber></td>
+									</c:when>
+								</c:choose>
+							</tr>
+							<c:set var="duLieuKeToanDs"
+								value="${duLieuKeToanCon.duLieuKeToanDs}" scope="request" />
+							<jsp:include page="bangCanDoiPhatSinhCon.jsp" />
+						</c:forEach>
+						<tr style="font-weight: bold;">
+							<td></td>
+							<td>Tổng</td>
+							<td class="text-right"><fmt:formatNumber
+									value="${bctc.bangCdps.duLieuKeToan.noDauKy}" type="NUMBER"
+									maxFractionDigits="0"></fmt:formatNumber></td>
+							<td class="text-right"><fmt:formatNumber
+									value="${bctc.bangCdps.duLieuKeToan.coDauKy}" type="NUMBER"
+									maxFractionDigits="0"></fmt:formatNumber></td>
+							<td class="text-right"><fmt:formatNumber
+									value="${bctc.bangCdps.duLieuKeToan.tongNoPhatSinh}"
+									type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
+							<td class="text-right"><fmt:formatNumber
+									value="${bctc.bangCdps.duLieuKeToan.tongCoPhatSinh}"
+									type="NUMBER" maxFractionDigits="0"></fmt:formatNumber></td>
+							<td class="text-right"><fmt:formatNumber
+									value="${bctc.bangCdps.duLieuKeToan.noCuoiKy}" type="NUMBER"
+									maxFractionDigits="0"></fmt:formatNumber></td>
+							<td class="text-right"><fmt:formatNumber
+									value="${bctc.bangCdps.duLieuKeToan.coCuoiKy}" type="NUMBER"
+									maxFractionDigits="0"></fmt:formatNumber></td>
+						</tr>
+					</tbody>
 				</table>
 			</div>
 		</div>

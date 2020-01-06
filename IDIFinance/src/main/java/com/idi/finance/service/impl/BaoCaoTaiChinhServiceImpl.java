@@ -35,11 +35,6 @@ public class BaoCaoTaiChinhServiceImpl implements BaoCaoTaiChinhService {
 	public DuLieuKeToan taoBangCdps(Date batDau, Date ketThuc, List<LoaiTaiKhoan> loaiTaiKhoanDs, KyKeToan kyKeToan) {
 		KyKeToanCon kktCon = new KyKeToanCon(batDau, ketThuc);
 
-		return taoBangCdps(kktCon, loaiTaiKhoanDs, kyKeToan);
-	}
-
-	@Override
-	public DuLieuKeToan taoBangCdps(KyKeToanCon kktCon, List<LoaiTaiKhoan> loaiTaiKhoanDs, KyKeToan kyKeToan) {
 		LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
 		loaiTaiKhoan.themLoaiTaiKhoan(loaiTaiKhoanDs);
 
@@ -210,6 +205,90 @@ public class BaoCaoTaiChinhServiceImpl implements BaoCaoTaiChinhService {
 
 			duLieuKeToan.getLoaiTaiKhoan().setLoaiTaiKhoanDs(loaiTaiKhoanConDs);
 			duLieuKeToan.setDuLieuKeToanDs(duLieuKeToanDs);
+		}
+
+		if (duLieuKeToan.getLoaiTaiKhoan().getMaTk() == null
+				|| duLieuKeToan.getLoaiTaiKhoan().getMaTk().trim().equals("")) {
+			// Đây là gốc cây
+			if (duLieuKeToan.getDuLieuKeToanDs() != null && duLieuKeToan.getDuLieuKeToanDs().size() > 0) {
+				Iterator<DuLieuKeToan> iter = duLieuKeToan.getDuLieuKeToanDs().iterator();
+				while (iter.hasNext()) {
+					DuLieuKeToan duLieuKeToanCon = iter.next();
+
+					// Tính tổng nợ/có phát sinh cho dữ liệu kế toán gốc
+					duLieuKeToan
+							.setTongNoPhatSinh(duLieuKeToan.getTongNoPhatSinh() + duLieuKeToanCon.getTongNoPhatSinh());
+					duLieuKeToan
+							.setTongCoPhatSinh(duLieuKeToan.getTongCoPhatSinh() + duLieuKeToanCon.getTongCoPhatSinh());
+
+					// Tính nơ/có đầu kỳ cho dữ liệu kế toán gốc
+					duLieuKeToan.setNoDauKy(duLieuKeToan.getNoDauKy() + duLieuKeToanCon.getNoDauKy());
+					duLieuKeToan.setCoDauKy(duLieuKeToan.getCoDauKy() + duLieuKeToanCon.getCoDauKy());
+				}
+			}
+		}
+
+		return duLieuKeToan;
+	}
+
+	@Override
+	public DuLieuKeToan chuyenDoiCdps(Date batDau, Date ketThuc, List<LoaiTaiKhoan> loaiTaiKhoanDs,
+			List<DuLieuKeToan> duLieuKeToanDs) {
+		if (batDau == null || ketThuc == null || loaiTaiKhoanDs == null || duLieuKeToanDs == null) {
+			return null;
+		}
+
+		KyKeToanCon kktCon = new KyKeToanCon(batDau, ketThuc);
+
+		LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+		loaiTaiKhoan.themLoaiTaiKhoan(loaiTaiKhoanDs);
+
+		DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kktCon, loaiTaiKhoan);
+		duLieuKeToan = chuyenDoiCdps(duLieuKeToan, duLieuKeToanDs);
+
+		return duLieuKeToan;
+	}
+
+	private DuLieuKeToan chuyenDoiCdps(DuLieuKeToan duLieuKeToan, List<DuLieuKeToan> duLieuKeToanDs) {
+		if (duLieuKeToan == null || duLieuKeToan.getKyKeToan() == null || duLieuKeToan.getLoaiTaiKhoan() == null
+				|| duLieuKeToanDs == null) {
+			return null;
+		}
+		logger.info("duLieuKeToan: " + duLieuKeToan);
+		logger.info("loaiTaiKhoan: " + duLieuKeToan.getLoaiTaiKhoan());
+		List<LoaiTaiKhoan> loaiTaiKhoanDs = duLieuKeToan.getLoaiTaiKhoan().getLoaiTaiKhoanDs();
+		if (loaiTaiKhoanDs != null && loaiTaiKhoanDs.size() > 0) {
+			List<DuLieuKeToan> duLieuKeToanConDs = new ArrayList<>();
+			List<LoaiTaiKhoan> loaiTaiKhoanConDs = new ArrayList<>();
+
+			Iterator<LoaiTaiKhoan> iter = loaiTaiKhoanDs.iterator();
+			while (iter.hasNext()) {
+				LoaiTaiKhoan loaiTaiKhoan = iter.next();
+
+				DuLieuKeToan duLieuKeToanCon = new DuLieuKeToan(duLieuKeToan.getKyKeToan(), loaiTaiKhoan);
+				duLieuKeToanCon.setDuLieuKeToan(duLieuKeToan);
+				boolean coDuLieu = false;
+
+				for (DuLieuKeToan duLieuKeToanGoc : duLieuKeToanDs) {
+					if (duLieuKeToanGoc.getLoaiTaiKhoan().equals(loaiTaiKhoan)) {
+						duLieuKeToanCon.setNoDauKy(duLieuKeToanGoc.getNoDauKy());
+						duLieuKeToanCon.setCoDauKy(duLieuKeToanGoc.getCoDauKy());
+						duLieuKeToanCon.setTongNoPhatSinh(duLieuKeToanGoc.getTongNoPhatSinh());
+						duLieuKeToanCon.setTongCoPhatSinh(duLieuKeToanGoc.getTongCoPhatSinh());
+						coDuLieu = true;
+						break;
+					}
+				}
+
+				if (coDuLieu) {
+					loaiTaiKhoanConDs.add(loaiTaiKhoan);
+					duLieuKeToanCon = chuyenDoiCdps(duLieuKeToanCon, duLieuKeToanDs);
+					duLieuKeToanConDs.add(duLieuKeToanCon);
+				}
+			}
+
+			duLieuKeToan.getLoaiTaiKhoan().setLoaiTaiKhoanDs(loaiTaiKhoanConDs);
+			duLieuKeToan.setDuLieuKeToanDs(duLieuKeToanConDs);
 		}
 
 		if (duLieuKeToan.getLoaiTaiKhoan().getMaTk() == null

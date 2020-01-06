@@ -44,6 +44,7 @@ import com.idi.finance.dao.BaoCaoTaiChinhDAO;
 import com.idi.finance.dao.KyKeToanDAO;
 import com.idi.finance.dao.SoKeToanDAO;
 import com.idi.finance.dao.TaiKhoanDAO;
+import com.idi.finance.form.TkSoKeToanForm;
 import com.idi.finance.hangso.PropCont;
 import com.idi.finance.service.BaoCaoService;
 import com.idi.finance.service.BaoCaoTaiChinhService;
@@ -621,6 +622,11 @@ public class BaoCaoTaiChinhController {
 				return "redirect:/bctc/danhsach";
 			}
 
+			// Lấy kỳ kế toán mặc định
+			KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(bctc.getKyKeToan().getMaKyKt());
+			TkSoKeToanForm form = new TkSoKeToanForm();
+			form.setKyKeToan(kyKeToan);
+
 			if (bctc.getBctcDs() != null) {
 				for (BaoCaoTaiChinhCon bctcCon : bctc.getBctcDs()) {
 					switch (bctcCon.getLoaiBctc()) {
@@ -634,6 +640,10 @@ public class BaoCaoTaiChinhController {
 						bctc.setBangLctt(bctcCon);
 						break;
 					case BaoCaoTaiChinhCon.LOAI_CDPS:
+						List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.cayTaiKhoan();
+						DuLieuKeToan duLieuKeToan = bctcService.chuyenDoiCdps(bctc.getBatDau(), bctc.getKetThuc(),
+								loaiTaiKhoanDs, bctcCon.getDuLieuKeToanDs());
+						bctcCon.setDuLieuKeToan(duLieuKeToan);
 						bctc.setBangCdps(bctcCon);
 						break;
 					default:
@@ -642,9 +652,8 @@ public class BaoCaoTaiChinhController {
 				}
 			}
 
-			KyKeToan kyKeToan = kyKeToanDAO.layKyKeToan(bctc.getKyKeToan().getMaKyKt());
-
 			model.addAttribute("bctc", bctc);
+			model.addAttribute("mainFinanceForm", form);
 			model.addAttribute("kyKeToan", kyKeToan);
 			model.addAttribute("tab", "tabBCTCDS");
 			return "xemBctc";

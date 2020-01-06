@@ -11,7 +11,8 @@ import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 public interface BaoCaoTaiChinhService {
 	public DuLieuKeToan taoBangCdps(Date batDau, Date ketThuc, List<LoaiTaiKhoan> loaiTaiKhoanDs, KyKeToan kyKeToan);
 
-	public DuLieuKeToan taoBangCdps(KyKeToanCon kktCon, List<LoaiTaiKhoan> loaiTaiKhoanDs, KyKeToan kyKeToan);
-
 	public DuLieuKeToan taoBangCdps(KyKeToanCon kktCon, LoaiTaiKhoan loaiTaiKhoan, KyKeToan kyKeToan);
+
+	public DuLieuKeToan chuyenDoiCdps(Date batDau, Date ketThuc, List<LoaiTaiKhoan> loaiTaiKhoanDs,
+			List<DuLieuKeToan> duLieuKeToanDs);
 }

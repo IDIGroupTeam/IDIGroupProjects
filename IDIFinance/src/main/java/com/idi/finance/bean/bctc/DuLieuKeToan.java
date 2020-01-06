@@ -24,6 +24,8 @@ public class DuLieuKeToan {
 	private List<DoiTuong> doiTuongDs;
 	private HangHoa hangHoa;
 	private KhoHang khoHang;
+	private BaoCaoTaiChinhCon bctcCon;
+
 	private int chieu = ChungTu.MUA;
 
 	private double soDuDauKy;
@@ -120,6 +122,14 @@ public class DuLieuKeToan {
 
 	public void setKhoHang(KhoHang khoHang) {
 		this.khoHang = khoHang;
+	}
+
+	public BaoCaoTaiChinhCon getBctcCon() {
+		return bctcCon;
+	}
+
+	public void setBctcCon(BaoCaoTaiChinhCon bctcCon) {
+		this.bctcCon = bctcCon;
 	}
 
 	public int getChieu() {
