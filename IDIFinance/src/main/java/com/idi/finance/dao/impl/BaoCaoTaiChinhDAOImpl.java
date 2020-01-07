@@ -23,6 +23,7 @@ import com.idi.finance.bean.bctc.BaoCaoTaiChinh;
 import com.idi.finance.bean.bctc.BaoCaoTaiChinhChiTiet;
 import com.idi.finance.bean.bctc.BaoCaoTaiChinhCon;
 import com.idi.finance.bean.bctc.DuLieuKeToan;
+import com.idi.finance.bean.bctc.KyKeToanCon;
 import com.idi.finance.bean.kyketoan.KyKeToan;
 import com.idi.finance.bean.taikhoan.LoaiTaiKhoan;
 import com.idi.finance.dao.BaoCaoTaiChinhDAO;
@@ -62,6 +63,9 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 
 	@Value("${LAY_BCTC_CON_LCTT}")
 	private String LAY_BCTC_CON_LCTT;
+
+	@Value("${LAY_BCTC_CON_CDPS}")
+	private String LAY_BCTC_CON_CDPS;
 
 	@Value("${LAY_BCTC_CDKT_CHI_TIET}")
 	private String LAY_BCTC_CDKT_CHI_TIET;
@@ -369,6 +373,80 @@ public class BaoCaoTaiChinhDAOImpl implements BaoCaoTaiChinhDAO {
 		}
 
 		return ketQua;
+	}
+
+	@Override
+	public BaoCaoTaiChinhCon layBctcConCdps(int maBctcCon) {
+		String layBctcCon = LAY_BCTC_CON_CDPS;
+
+		logger.info("Lấy báo cáo tài chính con cdps có MA_BCTC_CON: " + maBctcCon);
+		logger.info(layBctcCon);
+
+		Object[] objs = { maBctcCon };
+		List<BaoCaoTaiChinhCon> bctcConDs = jdbcTmpl.query(layBctcCon, objs, new BaoCaoTaiChinhConCdpsMapper());
+
+		BaoCaoTaiChinhCon ketQua = null;
+		if (bctcConDs != null) {
+			logger.info("Trộn kết quả thành một báo cáo tài chính con cdps");
+			for (BaoCaoTaiChinhCon bctcCon : bctcConDs) {
+				if (ketQua == null) {
+					ketQua = bctcCon;
+				} else {
+					ketQua.themDuLieuKeToan(bctcCon.getDuLieuKeToanDs());
+				}
+			}
+		}
+
+		return ketQua;
+	}
+
+	public class BaoCaoTaiChinhConCdpsMapper implements RowMapper<BaoCaoTaiChinhCon> {
+		public BaoCaoTaiChinhCon mapRow(ResultSet rs, int rowNum) throws SQLException {
+			try {
+				BaoCaoTaiChinh bctc = new BaoCaoTaiChinh();
+				bctc.setMaBctc(rs.getInt("MA_BCTC"));
+				bctc.setTieuDe(rs.getString("TIEU_DE"));
+				bctc.setLoaiTg(rs.getInt("LOAI_TG"));
+				bctc.setBatDau(rs.getDate("BAT_DAU"));
+				bctc.setKetThuc(rs.getDate("KET_THUC"));
+				bctc.setNguoiLap(rs.getString("NGUOI_LAP"));
+				bctc.setGiamDoc(rs.getString("GIAM_DOC"));
+				bctc.setNgayLap(rs.getDate("NGAY_LAP"));
+
+				KyKeToan kyKeToan = new KyKeToan();
+				kyKeToan.setMaKyKt(rs.getInt("MA_KKT"));
+				bctc.setKyKeToan(kyKeToan);
+
+				BaoCaoTaiChinhCon bctcCon = new BaoCaoTaiChinhCon();
+				bctcCon.setMaBctcCon(rs.getInt("MA_BCTC_CON"));
+				bctcCon.setLoaiBctc(rs.getInt("LOAI_BCTC"));
+				bctcCon.setBctc(bctc);
+
+				LoaiTaiKhoan loaiTaiKhoan = new LoaiTaiKhoan();
+				loaiTaiKhoan.setMaTk(rs.getString("MA_TK"));
+				loaiTaiKhoan.setTenTk(rs.getString("TEN_TK"));
+				loaiTaiKhoan.setSoDu(rs.getInt("SO_DU"));
+
+				KyKeToanCon kyKeToanCon = new KyKeToanCon(bctc.getBatDau(), bctc.getKetThuc());
+
+				DuLieuKeToan duLieuKeToan = new DuLieuKeToan(kyKeToanCon, loaiTaiKhoan);
+				duLieuKeToan.setLoaiTaiKhoan(loaiTaiKhoan);
+				duLieuKeToan.setBctcCon(bctcCon);
+				duLieuKeToan.setNoDauKy(rs.getDouble("NO_DAU_KY"));
+				duLieuKeToan.setCoDauKy(rs.getDouble("CO_DAU_KY"));
+				duLieuKeToan.setTongNoPhatSinh(rs.getDouble("NO_PHAT_SINH"));
+				duLieuKeToan.setTongCoPhatSinh(rs.getDouble("CO_PHAT_SINH"));
+
+				bctcCon.themDuLieuKeToan(duLieuKeToan);
+				bctc.themBctcCon(bctcCon);
+
+				logger.info(bctcCon);
+				return bctcCon;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 	}
 
 	public class BaoCaoTaiChinhConMapper implements RowMapper<BaoCaoTaiChinhCon> {

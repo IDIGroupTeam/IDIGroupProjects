@@ -88,6 +88,30 @@ public class BaoCaoTaiChinhCon {
 		this.duLieuKeToanDs = duLieuKeToanDs;
 	}
 
+	public void themDuLieuKeToan(DuLieuKeToan duLieuKeToan) {
+		if (duLieuKeToan == null) {
+			return;
+		}
+
+		if (duLieuKeToanDs == null) {
+			duLieuKeToanDs = new ArrayList<>();
+		}
+
+		if (!duLieuKeToanDs.contains(duLieuKeToan)) {
+			duLieuKeToanDs.add(duLieuKeToan);
+		}
+	}
+
+	public void themDuLieuKeToan(List<DuLieuKeToan> duLieuKeToanDs) {
+		if (duLieuKeToanDs == null) {
+			return;
+		}
+
+		for (DuLieuKeToan duLieuKeToan : duLieuKeToanDs) {
+			themDuLieuKeToan(duLieuKeToan);
+		}
+	}
+
 	@Override
 	public String toString() {
 		String out = maBctcCon + "  " + bctc + " " + loaiBctc;

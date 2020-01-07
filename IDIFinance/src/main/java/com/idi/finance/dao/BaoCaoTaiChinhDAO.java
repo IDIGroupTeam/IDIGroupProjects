@@ -17,10 +17,12 @@ public interface BaoCaoTaiChinhDAO {
 	public void xoaBctc(int maBctc);
 
 	public BaoCaoTaiChinhCon layBctcConCdkt(int maBctcCon);
-	
+
 	public BaoCaoTaiChinhCon layBctcConKqhdkd(int maBctcCon);
-	
+
 	public BaoCaoTaiChinhCon layBctcConLctt(int maBctcCon);
+
+	public BaoCaoTaiChinhCon layBctcConCdps(int maBctcCon);
 
 	public List<BaoCaoTaiChinhChiTiet> calculateEndBs(Date start, Date end, int maKkt);
 

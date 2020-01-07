@@ -741,6 +741,39 @@ public class BaoCaoTaiChinhController {
 		}
 	}
 
+	@RequestMapping(value = "/bctc/cdps/pdf/{id}", method = RequestMethod.GET)
+	public void pdfCdps(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maBctcCon,
+			Model model) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tabcdps
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+
+			BaoCaoTaiChinhCon bctcCon = bctcDAO.layBctcConCdps(maBctcCon);
+			if (bctcCon == null) {
+				return;
+			}
+
+			List<LoaiTaiKhoan> loaiTaiKhoanDs = taiKhoanDAO.cayTaiKhoan();
+			DuLieuKeToan duLieuKeToan = bctcService.chuyenDoiCdps(bctcCon.getBctc().getBatDau(),
+					bctcCon.getBctc().getKetThuc(), loaiTaiKhoanDs, bctcCon.getDuLieuKeToanDs());
+
+			// Sinh bảng cân đối phát sinh ra pdf
+			HashMap<String, Object> params = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+			params.put("KY_KE_TOAN", duLieuKeToan.getKyKeToan());
+			String path = req.getSession().getServletContext().getRealPath("/baocao/bctc/");
+			params.put("SUBREPORT_DIR", path);
+
+			JasperReport jasperReport = ReportUtils.compileReport("CDPS", "bctc", req);
+			byte[] bytes = baoCaoService.taoBangCdps(jasperReport, params, duLieuKeToan);
+
+			ReportUtils.writePdf2Response(bytes, "BangLctt", res);
+		} catch (JRException | IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	@RequestMapping("/bctc/xoa/{id}")
 	public String xoaBctc(@PathVariable("id") int maBctc, Model model) {
 		logger.info("Xóa báo cáo tài chính có MA_BCTC: " + maBctc);

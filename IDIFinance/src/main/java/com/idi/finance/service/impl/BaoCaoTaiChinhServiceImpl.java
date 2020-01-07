@@ -254,6 +254,7 @@ public class BaoCaoTaiChinhServiceImpl implements BaoCaoTaiChinhService {
 				|| duLieuKeToanDs == null) {
 			return null;
 		}
+
 		logger.info("duLieuKeToan: " + duLieuKeToan);
 		logger.info("loaiTaiKhoan: " + duLieuKeToan.getLoaiTaiKhoan());
 		List<LoaiTaiKhoan> loaiTaiKhoanDs = duLieuKeToan.getLoaiTaiKhoan().getLoaiTaiKhoanDs();
