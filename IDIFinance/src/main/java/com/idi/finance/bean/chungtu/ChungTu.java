@@ -29,6 +29,7 @@ public class ChungTu implements Comparable<ChungTu> {
 	public static final String CHUNG_TU_MUA_HANG = "MH";
 	public static final String CHUNG_TU_BAN_HANG = "BH";
 	public static final String CHUNG_TU_KET_CHUYEN = "KC";
+	public static final String CHUNG_TU = "CHUNG_TU";
 
 	// Các hằng số dùng cho chứng từ mua và bán hàng
 	public static final int HANG_HOA_TRONG_NUOC = 1;

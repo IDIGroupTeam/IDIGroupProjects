@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import com.idi.finance.bean.bctc.BaoCaoTaiChinhChiTiet;
 import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.chungtu.ChungTu;
+import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.hangso.Contants;
 import com.idi.finance.service.BaoCaoService;
 import com.idi.finance.utils.DateUtils;
@@ -479,6 +480,38 @@ public class BaoCaoServiceImpl implements BaoCaoService {
 		try {
 			JRBeanCollectionDataSource chungTuColDs = new JRBeanCollectionDataSource(chungTuDs);
 			return JasperRunManager.runReportToPdf(jasperReport, hmParams, chungTuColDs);
+		} catch (JRException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public byte[] taoChungTuKho(JasperReport jasperReport, HashMap<String, Object> hmParams, ChungTu chungTu) {
+		if (jasperReport == null || chungTu == null) {
+			return null;
+		}
+
+		if (hmParams == null) {
+			hmParams = new HashMap<>();
+		}
+
+		try {
+			List<HangHoa> hangHoaDs = chungTu.getHangHoaDs();
+			if (hangHoaDs == null) {
+				hangHoaDs = new ArrayList<>();
+			}
+
+			hmParams.put(ChungTu.CHUNG_TU, chungTu);
+			if (hangHoaDs.size() < 5) {
+				for (int i = 0; i < 5 - hangHoaDs.size(); i++) {
+					HangHoa hangHoa = new HangHoa();
+					hangHoaDs.add(hangHoa);
+				}
+			}
+
+			JRBeanCollectionDataSource hangHoaColDs = new JRBeanCollectionDataSource(hangHoaDs);
+			return JasperRunManager.runReportToPdf(jasperReport, hmParams, hangHoaColDs);
 		} catch (JRException e) {
 			e.printStackTrace();
 		}

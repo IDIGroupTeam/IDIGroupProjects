@@ -18,6 +18,8 @@ public interface BaoCaoService {
 
 	public byte[] taoChungTu(JasperReport jasperReport, HashMap<String, Object> hmParams, List<ChungTu> chungTuDs);
 
+	public byte[] taoChungTuKho(JasperReport jasperReport, HashMap<String, Object> hmParams, ChungTu chungTu);
+
 	public byte[] taoBangCdkt(JasperReport jasperReport, HashMap<String, Object> hmParams,
 			List<BaoCaoTaiChinhChiTiet> chiTietDs);
 
