@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MuaHang" pageWidth="595" pageHeight="420" orientation="Landscape" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cf8322ff-d79f-440b-abac-61aa6a86f6a7">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MuaHang" pageWidth="595" pageHeight="420" orientation="Landscape" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="cf8322ff-d79f-440b-abac-61aa6a86f6a7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -14,6 +14,7 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
 	<import value="com.idi.finance.utils.ReportUtils"/>
+	<import value="com.idi.finance.bean.LoaiTien"/>
 	<import value="org.apache.commons.lang.WordUtils"/>
 	<style name="Base" isDefault="true" fontName="VU Times" fontSize="11" isBold="false" isItalic="false" isPdfEmbedded="true"/>
 	<parameter name="TEN_CONG_TY" class="com.idi.finance.bean.CauHinh" isForPrompting="false"/>
@@ -27,6 +28,15 @@
 	<queryString language="SQL">
 		<![CDATA[]]>
 	</queryString>
+	<field name="tenHh" class="java.lang.String"/>
+	<field name="kyHieuHh" class="java.lang.String"/>
+	<field name="donVi" class="com.idi.finance.bean.hanghoa.DonVi"/>
+	<field name="soLuong" class="java.lang.Double"/>
+	<field name="donGia" class="com.idi.finance.bean.Tien"/>
+	<variable name="tongThanhTien" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{soLuong}*$F{donGia}.getSoTien()]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -158,8 +168,9 @@
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="200" y="74" width="15" height="14" uuid="cae970da-c82f-4199-a35d-ef603d7bc393">
+				<reportElement x="200" y="74" width="20" height="14" uuid="cae970da-c82f-4199-a35d-ef603d7bc393">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$P{CHUNG_TU}.getLoaiCt()]]></textFieldExpression>
 			</textField>
@@ -169,7 +180,7 @@
 				</reportElement>
 			</textField>
 			<textField>
-				<reportElement x="215" y="74" width="15" height="14" uuid="4a26f557-6569-4587-a455-9bb5a9f53b2b">
+				<reportElement x="220" y="74" width="15" height="14" uuid="4a26f557-6569-4587-a455-9bb5a9f53b2b">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$P{CHUNG_TU}.getSoCt()]]></textFieldExpression>
@@ -261,8 +272,8 @@
 				<textElement>
 					<font fontName="VU Times" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{CHUNG_TU}.getSoTien().getGiaTri()/$P{CHUNG_TU}.getLoaiTien().getBanRa();]]></textFieldExpression>
-				<patternExpression><![CDATA["#,##0.## "+$P{CHUNG_TU}.getLoaiTien().getMaLt()]]></patternExpression>
+				<textFieldExpression><![CDATA[$P{CHUNG_TU}.getSoTien().getGiaTri()]]></textFieldExpression>
+				<patternExpression><![CDATA["#,##0.## "+LoaiTien.VND]]></patternExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="42" width="110" height="14" uuid="93d597da-bdfb-4417-99cd-c52b506aa183">
@@ -454,10 +465,15 @@
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
 				</box>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{COLUMN_NUMBER}.intValue()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="30" y="0" width="155" height="14" uuid="3b773b9a-8851-4d0e-8e2e-3666dd7ed446">
@@ -469,6 +485,10 @@
 				<box>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
 				</box>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tenHh}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="185" y="0" width="55" height="14" uuid="a4c0846d-d149-47b0-b760-ddb37160f19d">
@@ -480,6 +500,10 @@
 				<box>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
 				</box>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kyHieuHh}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="240" y="0" width="55" height="14" uuid="f1ae4377-c297-40ab-a5f6-34430d00412c">
@@ -491,39 +515,42 @@
 				<box>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
 				</box>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{donVi}.getTenDv()]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="295" y="0" width="60" height="14" uuid="dffd773a-82a8-43fd-bd2a-4d016bc67041">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineWidth="0.25" lineStyle="Solid"/>
-				</box>
-			</textField>
-			<textField>
+			<textField pattern="#,##0.##">
 				<reportElement x="415" y="0" width="70" height="14" uuid="797c01d8-d858-416a-a00c-fde78ca5a6df">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
 				</box>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{donGia}.getGiaTri()]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.##">
 				<reportElement x="485" y="0" width="70" height="14" uuid="c8e7876c-aa7b-4a1d-ad70-f041653680db">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
 				</box>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{soLuong}*$F{donGia}.getGiaTri()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="355" y="0" width="60" height="14" uuid="d0517b20-3ad8-408b-9b54-86ca8dbbeced">
@@ -535,12 +562,28 @@
 				<box>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
 				</box>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{soLuong}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="295" y="0" width="60" height="14" uuid="1594776d-0052-42e7-8a01-988c8b8c90c1">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[]]></text>
+			</staticText>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="28" splitType="Stretch">
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		<band height="30" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="30" height="14" uuid="5df0dcbe-2df2-4953-83ef-4aa0d065c200">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -560,6 +603,7 @@
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="0.5" lineStyle="Solid"/>
@@ -632,19 +676,22 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="485" y="0" width="70" height="14" uuid="ab89ffe3-6b3d-4300-b755-621e01f3118b">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField pattern="#,##0.##">
+				<reportElement x="485" y="0" width="70" height="14" uuid="286cc7fa-43c4-49cd-8288-d3d36c7c98f7">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="0.5" lineStyle="Solid"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<text><![CDATA[]]></text>
-			</staticText>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{tongThanhTien}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnFooter>
 	<pageFooter>

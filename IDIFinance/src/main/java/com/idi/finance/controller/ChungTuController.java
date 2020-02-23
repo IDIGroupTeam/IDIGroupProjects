@@ -2632,14 +2632,14 @@ public class ChungTuController {
 	@RequestMapping(value = "/chungtu/banhang/pdf/{id}", method = RequestMethod.GET)
 	public void pdfBanHang(HttpServletRequest req, HttpServletResponse res, @PathVariable("id") int maCt, Model model) {
 		try {
-			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
-
 			ChungTu chungTu = chungTuDAO.layChungTuKho(maCt, ChungTu.CHUNG_TU_BAN_HANG);
 			List<ChungTu> chungTuDs = new ArrayList<>();
 			chungTuDs.add(chungTu);
 
+			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+
 			JasperReport jasperReport = ReportUtils.compileReport("BanHang", "chungtu", req);
-			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, chungTuDs);
+			byte[] bytes = baoCaoService.taoChungTuKho(jasperReport, hmParams, chungTu);
 
 			ReportUtils.writePdf2Response(bytes, "BanHang" + maCt, res);
 		} catch (JRException | IOException e) {

@@ -397,8 +397,14 @@
 							"chiPhi" + soDongTk);
 
 					// Thêm dòng mới vào tab ktth nếu có
+					var nvktDsPatt = new RegExp("nvktDs\\[" + soDongTk + "\\]",
+							"g");
+					var nvktDsPatt1 = new RegExp("nvktDs" + soDongTk, "g");
+
 					ktthDongMoi = ktthDong.replace(patt, "[" + soDongTk + "]");
 					ktthDongMoi = ktthDongMoi.replace(patt1, "Ds" + soDongTk);
+					ktthDongMoi = ktthDongMoi.replace(nvktDsPatt, "nvktDs[0]");
+					ktthDongMoi = ktthDongMoi.replace(nvktDsPatt1, "nvktDs0");
 					$(ktthDongMoi).appendTo($("#ktthTbl")).prop("id",
 							"ktth" + soDongTk);
 

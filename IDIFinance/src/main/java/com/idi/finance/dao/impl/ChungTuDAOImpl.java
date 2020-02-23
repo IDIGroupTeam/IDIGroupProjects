@@ -1177,9 +1177,12 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 			// Kiểm tra xem có chưa, chưa có thì mới thêm, có rồi thì lấy maGia ra
 			if (hangHoa.getGiaKho() != null && hangHoa.getGiaKho().getMaGia() == 0) {
 				double giaKho = hangHoa.getGiaKho().getGiaTri();
+				try {
+					maGia = jdbcTmpl.queryForObject(kiemTraDonGia, new Object[] { hangHoa.getMaHh(), giaKho },
+							Integer.class);
+				} catch (Exception e) {
+				}
 
-				maGia = jdbcTmpl.queryForObject(kiemTraDonGia, new Object[] { hangHoa.getMaHh(), giaKho },
-						Integer.class);
 				if (maGia > 0) {
 					logger.info("Đã có đơn giá " + giaKho + " của hàng hóa " + hangHoa.getMaHh() + ". maGia=" + maGia);
 				} else {
@@ -1543,9 +1546,12 @@ public class ChungTuDAOImpl implements ChungTuDAO {
 			// Kiểm tra xem có chưa, chưa có thì mới thêm, có rồi thì lấy maGia ra
 			if (hangHoa.getGiaKho() != null && hangHoa.getGiaKho().getMaGia() == 0) {
 				double giaKho = hangHoa.getGiaKho().getGiaTri();
+				try {
+					maGia = jdbcTmpl.queryForObject(kiemTraDonGia, new Object[] { hangHoa.getMaHh(), giaKho },
+							Integer.class);
+				} catch (Exception e) {
+				}
 
-				maGia = jdbcTmpl.queryForObject(kiemTraDonGia, new Object[] { hangHoa.getMaHh(), giaKho },
-						Integer.class);
 				if (maGia > 0) {
 					logger.info("Đã có đơn giá " + giaKho + " của hàng hóa " + hangHoa.getMaHh() + ". maGia=" + maGia);
 				} else {
