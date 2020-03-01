@@ -456,6 +456,10 @@ public class ChungTu implements Comparable<ChungTu> {
 			hangHoaDs.add(hangHoa);
 			if (hangHoa.getGiaKho() != null) {
 				double tien = hangHoa.getSoLuong() * hangHoa.getGiaKho().getSoTien();
+				if (loaiCt.equals(ChungTu.CHUNG_TU_BAN_HANG)) {
+					tien = hangHoa.getSoLuong() * hangHoa.getDonGia().getSoTien();
+				}
+
 				soTien.setLoaiTien(this.getLoaiTien());
 				soTien.setSoTien(tien + soTien.getSoTien());
 				soTien.setGiaTri(soTien.getSoTien() * soTien.getLoaiTien().getBanRa());

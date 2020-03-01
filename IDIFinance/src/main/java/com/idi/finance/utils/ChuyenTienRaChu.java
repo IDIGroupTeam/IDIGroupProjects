@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.HashMap;
 
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class ChuyenTienRaChu {
 	public static HashMap<String, String> hm_tien = new HashMap<String, String>() {
@@ -43,11 +43,15 @@ public class ChuyenTienRaChu {
 	};
 
 	public static void main(String[] args) throws ParseException {
-		String tien = "411304";
+		double tien = 411304;
 		String kq = chuyenSangChu(tien);
-		System.out.println(currencyFormat(tien));
+		System.out.println(currencyFormat("411304"));
 		System.out.println(kq);
 
+	}
+
+	public static String chuyenSangChu(double x) {
+		return chuyenSangChu(new DecimalFormat("#").format(x));
 	}
 
 	public static String chuyenSangChu(String x) {
@@ -73,7 +77,6 @@ public class ChuyenTienRaChu {
 					kq += "mười ";
 					flag10 = 1;
 				} else if (dem % 3 == 2 && m.startsWith("0") && m.length() >= 2 && !m.substring(1, 2).equals("0")) {
-					// System.out.println("a "+m.substring(1, 2));
 					kq += "lẻ ";
 					flag10 = 1;
 				} else {
@@ -94,6 +97,10 @@ public class ChuyenTienRaChu {
 			dem = m.length();
 		}
 		kq = kq.substring(0, kq.length() - 1);
+
+		kq = kq.toLowerCase();
+		kq = kq.substring(0, 1).toUpperCase() + kq.substring(1);
+
 		return kq;
 	}
 
