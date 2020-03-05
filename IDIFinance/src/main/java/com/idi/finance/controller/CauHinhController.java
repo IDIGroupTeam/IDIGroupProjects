@@ -11,8 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.idi.finance.bean.CauHinh;
@@ -75,14 +76,9 @@ public class CauHinhController {
 		}
 	}
 
-	@RequestMapping("/cauhinh/capnhat")
-	public @ResponseBody CauHinh cauHinhCapNhat(@RequestParam("maCh") String maCh,
-			@RequestParam("giaTri") String giaTri) {
-		logger.info("maCh " + maCh + ". giaTri " + giaTri);
+	@RequestMapping(value = "/cauhinh/capnhat", method = RequestMethod.POST)
+	public @ResponseBody CauHinh cauHinhCapNhat(@RequestBody CauHinh cauHinh) {
 
-		CauHinh cauHinh = new CauHinh();
-		cauHinh.setMa(maCh);
-		cauHinh.setGiaTri(giaTri);
 		cauHinhDAO.capNhatCauHinh(cauHinh);
 
 		return cauHinh;

@@ -1998,10 +1998,10 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_MUA_HANG);
 			List<ChungTu> muaHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("muaHangDs", "chungtu", req);
+			JasperReport jasperReport = ReportUtils.compileReport("MuaHangDs", "chungtu", req);
 			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, muaHangDs);
 
-			ReportUtils.writePdf2Response(bytes, "muaHangDs", res);
+			ReportUtils.writePdf2Response(bytes, "MuaHangDs", res);
 		} catch (JRException | IOException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -2566,10 +2566,10 @@ public class ChungTuController {
 			loaiCts.add(ChungTu.CHUNG_TU_BAN_HANG);
 			List<ChungTu> banHangDs = chungTuDAO.danhSachChungTuKho(loaiCts, batDau, ketThuc);
 
-			JasperReport jasperReport = ReportUtils.compileReport("banHangDs", "chungtu", req);
+			JasperReport jasperReport = ReportUtils.compileReport("BanHangDs", "chungtu", req);
 			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, banHangDs);
 
-			ReportUtils.writePdf2Response(bytes, "banHangDs", res);
+			ReportUtils.writePdf2Response(bytes, "BanHangDs", res);
 		} catch (JRException | IOException | ParseException e) {
 			e.printStackTrace();
 		}

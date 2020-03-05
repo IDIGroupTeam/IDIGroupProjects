@@ -12,10 +12,17 @@
 	$(function() {
 		// Khởi tạo action/method cho mainFinanceForm form
 		$(".table").cellEditable({
-			beforeSave : function(key, cells) {
-				return "maCh=" + key.ma + "&giaTri=" + cells[0].value;
+			beforeSave : {
+				cauHinh : function(data) {
+					console.log("beforeSave cauHinh", data);
+
+					var sendingData = new Object();
+					sendingData.ma = data.ma;
+					sendingData.giaTri = data.giaTri.value;
+
+					return sendingData;
+				}
 			},
-			urlSave : "${url}/cauhinh/capnhat",
 			removable : false
 		});
 	});
@@ -51,7 +58,8 @@
 			</thead>
 			<tbody>
 				<c:forEach items="${cauHinhCongTyDs}" var="cauHinh">
-					<tr data-ma="${cauHinh.ma}">
+					<tr data-ma="${cauHinh.ma}" data-save-url="${url}/cauhinh/capnhat"
+						data-name="cauHinh">
 						<td style="width: 300px;">${cauHinh.ten}</td>
 						<td class="cell-editable" data-field="giaTri">${cauHinh.giaTri}</td>
 					</tr>
@@ -72,7 +80,8 @@
 			</thead>
 			<tbody>
 				<c:forEach items="${cauHinhTkDs}" var="cauHinh">
-					<tr data-ma="${cauHinh.ma}">
+					<tr data-ma="${cauHinh.ma}" data-save-url="${url}/cauhinh/capnhat"
+						data-name="cauHinh">
 						<td style="width: 300px;">${cauHinh.ten}</td>
 						<td class="cell-editable" data-field="giaTri">${cauHinh.giaTri}</td>
 					</tr>
@@ -91,7 +100,8 @@
 			</thead>
 			<tbody>
 				<c:forEach items="${cauHinhKhacDs}" var="cauHinh">
-					<tr data-ma="${cauHinh.ma}">
+					<tr data-ma="${cauHinh.ma}" data-save-url="${url}/cauhinh/capnhat"
+						data-name="cauHinh">
 						<td style="width: 300px;">${cauHinh.ten}</td>
 						<td class="cell-editable" data-field="giaTri">${cauHinh.giaTri}</td>
 					</tr>
