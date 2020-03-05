@@ -50,18 +50,14 @@
 		<band height="95" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement x="0" y="0" width="555" height="14" uuid="c2f3b8d3-3349-4c0f-8867-5cd92a3f8a80"/>
+				<reportElement x="50" y="0" width="505" height="14" uuid="c2f3b8d3-3349-4c0f-8867-5cd92a3f8a80">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{TEN_CONG_TY}.getGiaTri().toUpperCase()]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="0" y="14" width="555" height="14" uuid="33179850-f560-4eed-91ec-f01788612df7"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[WordUtils.capitalize($P{DIA_CHI}.getGiaTri())]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="160" y="42" width="180" height="18" uuid="b89a22f1-9386-432a-94a5-cd64bbf2707d">
@@ -193,6 +189,30 @@
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 			</textField>
+			<staticText>
+				<reportElement x="0" y="14" width="50" height="14" uuid="2fe2aea6-56c7-408b-8fd3-b979ab9b7d41">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bộ phận:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="50" height="14" uuid="2e74b3c2-c8c9-4760-acd1-28cbe2a7cb78">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Đơn vị:]]></text>
+			</staticText>
 		</band>
 	</title>
 	<pageHeader>
