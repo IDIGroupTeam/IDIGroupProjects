@@ -101,7 +101,7 @@ tr:nth-child(even) {
 				<th title="Check để thêm cột này vào báo cáo">Mô tả &nbsp;<form:checkbox path="desCheck" value="Y" class="form-check-input" id="desCheck"/></th>
 				<th>Người làm</th>
 				<th nowrap="nowrap">Trạng thái</th>			
-				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Thời gian ước lượng  &nbsp;<form:checkbox path="estimateCheck" value="Y" class="form-check-input" id="estimateCheck"/></th>
+				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Thời gian kế hoạch  &nbsp;<form:checkbox path="estimateCheck" value="Y" class="form-check-input" id="estimateCheck"/></th>
 				<th nowrap="nowrap">Thời gian đã làm</th>	
 				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Cập nhật gần nhất  &nbsp;<form:checkbox path="updateTimeCheck" value="Y" class="form-check-input" id="updateTimeCheck"/></th>
 				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Ngày phải xong  &nbsp;<form:checkbox path="dueDateCheck" value="Y" class="form-check-input" id="dueDateCheck"/></th>
@@ -139,7 +139,7 @@ tr:nth-child(even) {
 				<th title="Check để thêm cột này vào báo cáo">Mô tả </th>
 				<th>Người làm</th>
 				<th nowrap="nowrap">Trạng thái</th>			
-				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Thời gian ước lượng </th>
+				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Thời gian kế hoạch</th>
 				<th nowrap="nowrap">Thời gian đã làm</th>	
 				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Cập nhật gần nhất </th>
 				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Ngày phải xong </th>

@@ -74,7 +74,7 @@ tr:nth-child(even) {
 			<th nowrap="nowrap">Đã xong</th>
 			<th nowrap="nowrap">Tổng số</th>
 			<th nowrap="nowrap">Thời gian đã làm</th>
-			<th nowrap="nowrap">Thời gian ước lượng</th>
+			<th nowrap="nowrap">Thời gian kế hoạch</th>
 		</tr>
 		<c:forEach var="task" items="${listTaskSummary}">
 			<tr>

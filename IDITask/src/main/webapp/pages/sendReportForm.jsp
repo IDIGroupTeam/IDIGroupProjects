@@ -88,7 +88,7 @@ td, th {
 							<th>Người làm</th>
 							<th nowrap="nowrap">Trạng thái</th>
 							<c:if test="${ not empty isEstimateTime}">
-								<th nowrap="nowrap">Thời gian ước lượng</th>
+								<th nowrap="nowrap">Thời gian kế hoạch</th>
 							</c:if>
 							<th nowrap="nowrap">Thời gian đã làm</th>
 							<c:if test="${ not empty isUpdatedTime}">

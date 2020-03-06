@@ -382,7 +382,7 @@ public class TaskDAO extends JdbcDaoSupport {
 		if(status != null && status.length() > 0)
 			sql = sql + " AND STATUS IN (" + status + ")";
 		
-		sql = sql + " ORDER BY T.UPDATE_TS DESC";
+		sql = sql + " ORDER BY T.OWNED_BY, T.TASK_NAME, T.UPDATE_TS DESC";
 
 		log.info("GET_TASKS_FOR_REPORT query: " + sql);
 
@@ -426,8 +426,7 @@ public class TaskDAO extends JdbcDaoSupport {
 			TaskSummayMapper mapper = new TaskSummayMapper();
 			log.info("GET_SUMMARY_TASK query: " + sql);
 			taskSummay = jdbcTmpl.queryForObject(sql, params, mapper);
-		}catch (EmptyResultDataAccessException e) {
-			
+		}catch (EmptyResultDataAccessException e) {			
 			//taskSummay.setTaskNew(0);
 		}
 		return taskSummay;

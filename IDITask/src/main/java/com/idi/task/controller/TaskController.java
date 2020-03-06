@@ -1004,6 +1004,7 @@ public class TaskController {
 				taskReportForm.setToDate(tDate);
 			}else
 				taskReportForm.setToDate(Utils.convertDateToDisplay(tDate));
+		
 		if(dept != null && dept.length() > 0)
 			taskReportForm.setDepartment(dept);
 		/*
@@ -1617,11 +1618,11 @@ public class TaskController {
 		table.addCell(header);				
 		
 		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-		header.setPhrase(new Phrase("Tgian đã làm", font));
+		header.setPhrase(new Phrase("Thời gian làm", font));
 		table.addCell(header);
 		
 		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-		header.setPhrase(new Phrase("Tgian ước lượng", font));
+		header.setPhrase(new Phrase("Thời gian kế hoạch", font));
 		table.addCell(header);
 
 	}
