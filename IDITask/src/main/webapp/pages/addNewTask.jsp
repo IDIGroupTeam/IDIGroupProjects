@@ -207,9 +207,9 @@
 								</c:forEach>
 							</form:select></td>
 						<td bgcolor="#FAFAFA">Thời gian ước lượng để làm:</td>
-						<td><form:input path="estimate" type="number" step="0.5" min="0" value="0" />&nbsp;&nbsp;
+						<td><form:input path="estimate" type="number" step="0.25" min="0" value="0" />&nbsp;&nbsp;
 							<form:select path="estimateTimeType">
-								<form:option value="m" label="Phút" />
+								<%-- <form:option value="m" label="Phút" /> --%>
 								<form:option value="h" label="Giờ" />
 								<form:option value="d" label="Ngày" />
 								<form:option value="w" label="Tuần" />
@@ -225,9 +225,9 @@
 								</c:forEach>
 							</form:select></td>							
 						<td bgcolor="#FAFAFA">Thời gian đã làm:</td>
-						<td><form:input path="timeSpent" type="number" step="0.5" min="0" value="0" />&nbsp;&nbsp;
+						<td><form:input path="timeSpent" type="number" step="0.25" min="0" value="0" />&nbsp;&nbsp;
 							<form:select path="timeSpentType">
-								<form:option value="m" label="Phút" />
+								<%-- <form:option value="m" label="Phút" /> --%>
 								<form:option value="h" label="Giờ" />
 								<form:option value="d" label="Ngày" />
 								<form:option value="w" label="Tuần" />
