@@ -358,7 +358,6 @@ public class TaskDAO extends JdbcDaoSupport {
 	 * 
 	 */
 	public List<Task> getTasksForReport(ReportForm reportForm, String status) {
-
 		String sql = properties.getProperty("GET_TASKS_FOR_REPORT").toString();
 		
 		if (reportForm.getFromDate() != null && reportForm.getFromDate().length() > 0)
@@ -367,9 +366,11 @@ public class TaskDAO extends JdbcDaoSupport {
 		if (reportForm.getToDate() != null && reportForm.getToDate().length() > 0)
 			sql = sql.replaceAll("%TO_DATE%", reportForm.getToDate());
 		
-		if (reportForm.getEmployeeId() > 0)
-			sql = sql + " AND T.OWNED_BY = " + reportForm.getEmployeeId();
-		else if (reportForm.getDepartment() != null && !reportForm.getDepartment().equalsIgnoreCase("all"))
+		if (reportForm.getIds() != null && reportForm.getIds().trim().length() > 0) {
+			if(reportForm.getIds().trim().startsWith(","))
+				reportForm.setIds(reportForm.getIds().trim().substring(1));
+			sql = sql + " AND T.OWNED_BY IN (" + reportForm.getIds() + ")";
+		}else if (reportForm.getDepartment() != null && !reportForm.getDepartment().equalsIgnoreCase("all"))
 			sql = sql + " AND T.AREA = '" + reportForm.getDepartment() + "'";
 		
 		if(status != null && status.contains("Đã xong"))
@@ -395,13 +396,56 @@ public class TaskDAO extends JdbcDaoSupport {
 	}
 	
 	/**
+	 * Get tasks from DB for report
+	 * 
+	 * @param reportForm
+	 * @return List of task
+	 * 
+	 */
+	public List<Task> getTasksForSumReport(ReportForm reportForm, String status) {
+		String sql = properties.getProperty("GET_TASKS_FOR_REPORT").toString();
+		
+		if (reportForm.getFromDate() != null && reportForm.getFromDate().length() > 0)
+			sql = sql.replaceAll("%FROM_DATE%", reportForm.getFromDate());
+		
+		if (reportForm.getToDate() != null && reportForm.getToDate().length() > 0)
+			sql = sql.replaceAll("%TO_DATE%", reportForm.getToDate());
+		
+		if ((reportForm.getIds() != null && reportForm.getIds().trim().length() > 0) || (reportForm.getEmployeeId() > 0))
+			sql = sql + " AND T.OWNED_BY IN (" + reportForm.getEmployeeId() + ")";
+		else if (reportForm.getDepartment() != null && !reportForm.getDepartment().equalsIgnoreCase("all"))
+			sql = sql + " AND T.AREA = '" + reportForm.getDepartment() + "'";
+		
+		if(status != null && status.contains("Đã xong"))
+			if(reportForm.getUnSelect() != null && reportForm.getUnSelect().length() > 0)
+				sql = sql + " AND T.TASK_ID NOT IN (" + reportForm.getUnSelect() + ")";
+		else
+			if(reportForm.getUnSelected() != null && reportForm.getUnSelected().length() > 0)
+				sql = sql + " AND T.TASK_ID NOT IN (" + reportForm.getUnSelected() + ")";
+		
+		if(status != null && status.length() > 0)
+			sql = sql + " AND STATUS IN (" + status + ")";
+		
+		sql = sql + " ORDER BY T.OWNED_BY, T.TASK_NAME, T.UPDATE_TS DESC";
+
+		log.info("GET_TASKS_FOR_REPORT query: " + sql);
+
+		Object[] params = new Object[] {};
+		TaskMapper mapper = new TaskMapper();
+
+		List<Task> list = jdbcTmpl.query(sql, params, mapper);
+
+		return list;
+	}	
+	
+	/**
 	 * 
 	 * @param fromDate
 	 * @param toDate
 	 * @param dept
 	 * @return
 	 */		
-	public TaskSummay getSummaryTasksForChat(String fromDate, String toDate, String dept) {
+	public TaskSummay getSummaryTasksForChat(String fromDate, String toDate, String dept, String ids) {
 		TaskSummay taskSummay = new TaskSummay();
 		try {
 			String sql = properties.getProperty("GET_SUMMARY_TASK_FOR_CHAT").toString();
@@ -409,10 +453,14 @@ public class TaskDAO extends JdbcDaoSupport {
 				sql = sql.replaceAll("%FROM_DATE%", fromDate);
 			if (toDate != null && toDate.length() > 0)
 				sql = sql.replaceAll("%TO_DATE%", toDate);
-			if (dept != null && !dept.equalsIgnoreCase("all")) {
-				sql = sql.replaceAll("%ID%", " AND AREA = '" + dept + "'");
+			if( ids != null && ids.trim().length() > 0) {
+				sql = sql.replaceAll("%ID%", " AND OWNED_BY IN (" + ids + ")");
 			}else {
-				sql = sql.replaceAll("%ID%", "");
+				if (dept != null && !dept.equalsIgnoreCase("all")) {
+					sql = sql.replaceAll("%ID%", " AND AREA = '" + dept + "'");
+				}else {
+					sql = sql.replaceAll("%ID%", "");
+				}
 			}
 	
 			sql = sql.replaceAll("%NEW%", "Mới', 'Mới tạo");
@@ -441,6 +489,7 @@ public class TaskDAO extends JdbcDaoSupport {
 	 */
 	public TaskSummay getSummaryTasksForReport(String fromDate, String toDate, int id) {
 		TaskSummay taskSummay = new TaskSummay();
+		//System.out.println("id, getSummaryTasksForReport DAO:" + id) ;
 		try {
 			String sql = properties.getProperty("GET_SUMMARY_TASK").toString();
 			if (fromDate != null && fromDate.length() > 0)
@@ -462,9 +511,15 @@ public class TaskDAO extends JdbcDaoSupport {
 			TaskSummayMapper mapper = new TaskSummayMapper();
 			log.info("GET_SUMMARY_TASK query: " + sql);
 			taskSummay = jdbcTmpl.queryForObject(sql, params, mapper);
-		}catch (EmptyResultDataAccessException e) {
-			
-			//taskSummay.setTaskNew(0);
+		}catch (EmptyResultDataAccessException e) {		
+			/*
+			 * System.err.println("Deo co ban ghi nao"); taskSummay.setTaskNew(0);
+			 * taskSummay.setTaskinvalid(0); taskSummay.setTaskInprogess(0);
+			 * taskSummay.setTaskReviewing(0); taskSummay.setTaskStoped(0);
+			 * taskSummay.setTaskCompleted(0); taskSummay.setTaskTotal(0);
+			 * 
+			 * return taskSummay
+			 */;
 		}
 		return taskSummay;
 	}

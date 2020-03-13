@@ -49,6 +49,6 @@ tr:nth-child(even) {
 			Báo cáo công việc đã được export ra file PDF và lưu tại thư mục ${path} 
 		</div>
 	</c:if>
-	<a href="${url}/sendReportForm?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${reportForm.employeeName}&dept=${reportForm.department}&eId=${reportForm.employeeId}"><button class="btn btn-primary btn-sm">Gửi báo cáo</button></a>
+	<a href="${url}/sendReportForm?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${reportForm.employeeName}&dept=${reportForm.department}&ids=${reportForm.ids}"><button class="btn btn-primary btn-sm">Gửi báo cáo</button></a>
 </body>
 </html>

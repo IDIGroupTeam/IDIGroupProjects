@@ -44,17 +44,16 @@ $j(function() {
 						data : {
 							department : val
 						},
-						success : function(obj) {
-							employeeIdSel = "<option value='0'>Tất cả nhân viên</option>";
+						success : function(obj) {	
+							idsSel = "<option value=''></option>";						
 							for (i = 0; i < obj.length; i++) {
-								employeeIdSel += "<option value='" + obj[i].employeeId + "'>"
-										+ "Mã NV " + obj[i].employeeId +", "
+								idsSel += "<option value='" + obj[i].idsSel + "'>"										
 										+ obj[i].fullName
 										+ ", chức vụ: "
 										+ obj[i].jobTitle
 										+ "</option>";
 							}
-							$j("#employeeId").html(employeeIdSel);
+							$j("#ids").html(idsSel);
 						}
 					});
 				
@@ -105,11 +104,15 @@ $j(function() {
 						<form:options items="${departmentMap}" var="department"/>
 					</form:select>
 				</td>
-				<td>Nhân viên:</td>
+				<td title="Mặc định là chọn tất cả">Nhân viên:</td>
 				<td>
-					<form:select path="employeeId" class="form-control animated">
+					<%-- <form:select path="employeeId" class="form-control" multiple="multiple" size="3">
 						<form:option value="0" label="Tất cả nhân viên"></form:option>
 						<form:options items="${employeesList}" var="employeeId"/>
+					</form:select> --%>
+					<form:select path="ids" class="form-control" multiple="multiple" size="3">
+						<form:option value="" label=""></form:option>
+						<form:options items="${employeesList}" var="ids"/>
 					</form:select>
 				</td>
 			</tr>

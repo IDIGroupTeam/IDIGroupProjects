@@ -12,6 +12,7 @@ public class ReportForm implements Serializable{
 	private String fromDate;
 	private String toDate;
 	private int employeeId;
+	private String ids;
 	private String employeeName;
 	private String department;
 	private String sender;
@@ -43,6 +44,12 @@ public class ReportForm implements Serializable{
 	}
 	public void setEmployeeId(int employeeId) {
 		this.employeeId = employeeId;
+	}	
+	public String getIds() {
+		return ids;
+	}
+	public void setIds(String ids) {
+		this.ids = ids;
 	}
 	public String getEmployeeName() {
 		return employeeName;

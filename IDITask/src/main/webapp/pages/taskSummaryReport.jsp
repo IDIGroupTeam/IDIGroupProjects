@@ -42,25 +42,17 @@ tr:nth-child(even) {
 	<h3>
 		Thống kê khối lượng công việc từ ngày ${reportForm.fromDate} đến ngày
 		${reportForm.toDate}
-		<c:if test="${reportForm.employeeId > 0}">
-			của ${reportForm.employeeName}
-       	</c:if>
+		<c:if test="${not empty reportForm.ids}"> của một/nhiều người </c:if>
 		<c:if test="${reportForm.department != 'all'}"> phòng ${reportForm.department}</c:if>
-		<c:if test="${reportForm.department == 'all'}"> tất cả các phòng ban</c:if>
+		<c:if test="${reportForm.department == 'all' && empty reportForm.ids}"> tất cả các phòng ban</c:if>
 	</h3>
 	<br />
-	<c:if test="${listTaskSummary.size() > 1}">
-		<a href="${url}/exportSummaryToPDF?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eId=0&dept=${reportForm.department}"><button
-			class="btn btn-primary btn-sm">Export ra file PDF và gửi</button></a>
-		<a href="${url}/exportSummaryToExcel?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eId=0&dept=${reportForm.department}"><button
-			class="btn btn-primary btn-sm">Export ra file Excel và gửi</button></a>
-	</c:if>	
-	<c:if test="${listTaskSummary.size() < 2}">
-		<a href="${url}/exportSummaryToPDF?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eId=${reportForm.employeeId}&dept=${reportForm.department}"><button
-			class="btn btn-primary btn-sm">Export ra file PDF và gửi</button></a>
-		<a href="${url}/exportSummaryToExcel?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eId=${reportForm.employeeId}&dept=${reportForm.department}"><button
-			class="btn btn-primary btn-sm">Export ra file Excel và gửi</button></a>
-	</c:if>
+
+	<a href="${url}/exportSummaryToPDF?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eId=${reportForm.ids}&dept=${reportForm.department}"><button
+		class="btn btn-primary btn-sm">Export ra file PDF và gửi</button></a>
+	<a href="${url}/exportSummaryToExcel?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eId=${reportForm.ids}&dept=${reportForm.department}"><button
+		class="btn btn-primary btn-sm">Export ra file Excel và gửi</button></a>
+
 	<br/><br/>
 	<input type="hidden" name="employeeName" value="${tasks[0].ownerName}">
 	<table class="table table-striped">
@@ -73,8 +65,8 @@ tr:nth-child(even) {
 			<th nowrap="nowrap">Chờ đánh giá</th>
 			<th nowrap="nowrap">Đã xong</th>
 			<th nowrap="nowrap">Tổng số</th>
-			<th nowrap="nowrap">Thời gian đã làm</th>
-			<th nowrap="nowrap">Thời gian kế hoạch</th>
+			<th nowrap="nowrap">Thời gian đã làm (h)</th>
+			<th nowrap="nowrap">Thời gian kế hoạch (h)</th>
 		</tr>
 		<c:forEach var="task" items="${listTaskSummary}">
 			<tr>
@@ -86,8 +78,8 @@ tr:nth-child(even) {
 				<td>${task.taskReviewing}</td>
 				<td>${task.taskCompleted}</td>	
 				<td><B>${task.taskTotal}</B></td>			
-				<td>${task.totalSpent} h</td>
-				<td>${task.totalEstimate} h</td>	
+				<td>${task.totalSpent}</td>
+				<td>${task.totalEstimate}</td>	
 			</tr>
 		</c:forEach>
 	</table>
