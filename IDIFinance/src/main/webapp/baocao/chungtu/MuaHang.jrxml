@@ -26,6 +26,7 @@
 	<parameter name="THU_QUY" class="com.idi.finance.bean.CauHinh" isForPrompting="false"/>
 	<parameter name="THU_KHO" class="com.idi.finance.bean.CauHinh" isForPrompting="false"/>
 	<parameter name="CHUNG_TU" class="com.idi.finance.bean.chungtu.ChungTu"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false"/>
 	<queryString language="SQL">
 		<![CDATA[]]>
 	</queryString>
@@ -79,29 +80,6 @@
 					<font fontName="VU Times" size="11"/>
 				</textElement>
 				<text><![CDATA[Số phiếu:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="470" y="56" width="25" height="14" uuid="5fbdc26a-a0e4-4f67-8638-32e40c12a0b8">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-				<textElement>
-					<font fontName="VU Times" size="11"/>
-				</textElement>
-				<text><![CDATA[Nợ:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="470" y="70" width="25" height="14" uuid="2c388445-ab33-408c-883d-be3d94497835">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-				<textElement>
-					<font fontName="VU Times" size="11"/>
-				</textElement>
-				<text><![CDATA[Có:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="170" y="60" width="25" height="14" uuid="f837b78f-b549-4756-b5d0-ad2fa6ee23c3">
@@ -172,22 +150,10 @@
 				<textFieldExpression><![CDATA[$P{CHUNG_TU}.getLoaiCt()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="495" y="56" width="60" height="14" uuid="a225a081-9bb3-4160-92f5-3447ffc04727">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-			</textField>
-			<textField>
 				<reportElement x="240" y="74" width="15" height="14" uuid="4a26f557-6569-4587-a455-9bb5a9f53b2b">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$P{CHUNG_TU}.getSoCt()]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="495" y="70" width="60" height="14" uuid="1bfb6aa1-f016-4ee5-a5cc-9fc3c30adfae">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="14" width="50" height="14" uuid="2fe2aea6-56c7-408b-8fd3-b979ab9b7d41">
@@ -212,6 +178,51 @@
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Đơn vị:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="430" y="60" width="25" height="14" uuid="c7d755e8-00ff-41df-b698-d100f929ad32">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="VU Times" size="11"/>
+				</textElement>
+				<text><![CDATA[Nợ:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="455" y="74" width="100" height="14" uuid="571b7752-fab7-43e4-aa80-a0b7bc5c4769">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportUtils.layDanhSachTaiKhoan($P{CHUNG_TU}.getTaiKhoanCoDs())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="60" width="100" height="14" uuid="a11123a9-7471-48d8-a986-8ac83034ae2e">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportUtils.layDanhSachTaiKhoan($P{CHUNG_TU}.getTaiKhoanNoDs())]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="430" y="74" width="25" height="14" uuid="c233576c-2e5a-4bc3-b6c8-b8ccb8607e79">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="VU Times" size="11"/>
+				</textElement>
+				<text><![CDATA[Có:]]></text>
 			</staticText>
 		</band>
 	</title>

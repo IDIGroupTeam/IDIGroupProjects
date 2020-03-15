@@ -1,8 +1,6 @@
 package com.idi.finance.bean.chungtu;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -87,8 +85,6 @@ public class ChungTu implements Comparable<ChungTu> {
 	private TaiKhoan tkThueXk;
 	private TaiKhoan tkThueNk;
 	private TaiKhoan tkThue;
-
-	private List<TaiKhoan> taiKhoanKhoDs;
 
 	public int getMaCt() {
 		return maCt;
@@ -211,7 +207,6 @@ public class ChungTu implements Comparable<ChungTu> {
 	}
 
 	public void themTaiKhoan(TaiKhoan taiKhoan) {
-		logger.info("themTaiKhoan: " + taiKhoan);
 		if (taiKhoan == null) {
 			return;
 		}
@@ -440,7 +435,6 @@ public class ChungTu implements Comparable<ChungTu> {
 		tkThueXk = null;
 		tkThueNk = null;
 		tkThue = null;
-		taiKhoanKhoDs = new ArrayList<>();
 
 		themHangHoa(hangHoaDs);
 	}
@@ -491,10 +485,6 @@ public class ChungTu implements Comparable<ChungTu> {
 		if (hangHoa == null)
 			return;
 
-		if (taiKhoanKhoDs == null) {
-			taiKhoanKhoDs = new ArrayList<>();
-		}
-
 		// Các tk dùng cho mua bán
 		if (hangHoa.getTkThanhtoan() != null && hangHoa.getTkThanhtoan().getLoaiTaiKhoan() != null
 				&& hangHoa.getTkThanhtoan().getLoaiTaiKhoan().getMaTk() != null
@@ -522,7 +512,7 @@ public class ChungTu implements Comparable<ChungTu> {
 						tkThanhtoan.getSoTien().getGiaTri() + hangHoa.getTkThanhtoan().getSoTien().getGiaTri());
 			}
 
-			taiKhoanKhoDs.add(tkThanhtoan);
+			themTaiKhoan(tkThanhtoan);
 		}
 
 		if (hangHoa.getTkKho() != null && hangHoa.getTkKho().getLoaiTaiKhoan() != null
@@ -548,7 +538,7 @@ public class ChungTu implements Comparable<ChungTu> {
 				tkKho.getSoTien().setGiaTri(tkKho.getSoTien().getGiaTri() + hangHoa.getTkKho().getSoTien().getGiaTri());
 			}
 
-			taiKhoanKhoDs.add(tkKho);
+			themTaiKhoan(tkKho);
 		}
 
 		if (hangHoa.getTkDoanhThu() != null && hangHoa.getTkDoanhThu().getLoaiTaiKhoan() != null
@@ -577,7 +567,7 @@ public class ChungTu implements Comparable<ChungTu> {
 						tkDoanhThu.getSoTien().getGiaTri() + hangHoa.getTkDoanhThu().getSoTien().getGiaTri());
 			}
 
-			taiKhoanKhoDs.add(tkDoanhThu);
+			themTaiKhoan(tkDoanhThu);
 		}
 
 		if (hangHoa.getTkChiPhi() != null && hangHoa.getTkChiPhi().getLoaiTaiKhoan() != null
@@ -605,7 +595,7 @@ public class ChungTu implements Comparable<ChungTu> {
 						.setGiaTri(tkChiPhi.getSoTien().getGiaTri() + hangHoa.getTkChiPhi().getSoTien().getGiaTri());
 			}
 
-			taiKhoanKhoDs.add(tkChiPhi);
+			themTaiKhoan(tkChiPhi);
 		}
 
 		if (hangHoa.getTkGiaVon() != null && hangHoa.getTkGiaVon().getLoaiTaiKhoan() != null
@@ -633,7 +623,7 @@ public class ChungTu implements Comparable<ChungTu> {
 						.setGiaTri(tkGiaVon.getSoTien().getGiaTri() + hangHoa.getTkGiaVon().getSoTien().getGiaTri());
 			}
 
-			taiKhoanKhoDs.add(tkGiaVon);
+			themTaiKhoan(tkGiaVon);
 		}
 
 		if (hangHoa.getTkChietKhau() != null && hangHoa.getTkChietKhau().getLoaiTaiKhoan() != null
@@ -662,7 +652,7 @@ public class ChungTu implements Comparable<ChungTu> {
 						tkChietKhau.getSoTien().getGiaTri() + hangHoa.getTkChietKhau().getSoTien().getGiaTri());
 			}
 
-			taiKhoanKhoDs.add(tkChietKhau);
+			themTaiKhoan(tkChietKhau);
 		}
 
 		if (hangHoa.getTkGiamGia() != null && hangHoa.getTkGiamGia().getLoaiTaiKhoan() != null
@@ -690,7 +680,7 @@ public class ChungTu implements Comparable<ChungTu> {
 						.setGiaTri(tkGiamGia.getSoTien().getGiaTri() + hangHoa.getTkGiamGia().getSoTien().getGiaTri());
 			}
 
-			taiKhoanKhoDs.add(tkGiamGia);
+			themTaiKhoan(tkGiamGia);
 		}
 
 		if (hangHoa.getTkTraLai() != null && hangHoa.getTkTraLai().getLoaiTaiKhoan() != null
@@ -718,7 +708,7 @@ public class ChungTu implements Comparable<ChungTu> {
 						.setGiaTri(tkTraLai.getSoTien().getGiaTri() + hangHoa.getTkTraLai().getSoTien().getGiaTri());
 			}
 
-			taiKhoanKhoDs.add(tkTraLai);
+			themTaiKhoan(tkTraLai);
 		}
 
 		// Các tk thuế
@@ -748,7 +738,7 @@ public class ChungTu implements Comparable<ChungTu> {
 						tkThueGtgt.getSoTien().getGiaTri() + hangHoa.getTkThueGtgt().getSoTien().getGiaTri());
 			}
 
-			taiKhoanKhoDs.add(tkThueGtgt);
+			themTaiKhoan(tkThueGtgt);
 		}
 
 		if (hangHoa.getTkThueTtdb() != null && hangHoa.getTkThueTtdb().getLoaiTaiKhoan() != null
@@ -777,7 +767,7 @@ public class ChungTu implements Comparable<ChungTu> {
 						tkThueTtdb.getSoTien().getGiaTri() + hangHoa.getTkThueTtdb().getSoTien().getGiaTri());
 			}
 
-			taiKhoanKhoDs.add(tkThueTtdb);
+			themTaiKhoan(tkThueTtdb);
 		}
 
 		if (hangHoa.getTkThueXk() != null && hangHoa.getTkThueXk().getLoaiTaiKhoan() != null
@@ -805,7 +795,7 @@ public class ChungTu implements Comparable<ChungTu> {
 						.setGiaTri(tkThueXk.getSoTien().getGiaTri() + hangHoa.getTkThueXk().getSoTien().getGiaTri());
 			}
 
-			taiKhoanKhoDs.add(tkThueXk);
+			themTaiKhoan(tkThueXk);
 		}
 
 		if (hangHoa.getTkThueNk() != null && hangHoa.getTkThueNk().getLoaiTaiKhoan() != null
@@ -833,7 +823,7 @@ public class ChungTu implements Comparable<ChungTu> {
 						.setGiaTri(tkThueNk.getSoTien().getGiaTri() + hangHoa.getTkThueNk().getSoTien().getGiaTri());
 			}
 
-			taiKhoanKhoDs.add(tkThueNk);
+			themTaiKhoan(tkThueNk);
 		}
 
 		if (hangHoa.getTkThue() != null && hangHoa.getTkThue().getLoaiTaiKhoan() != null
@@ -861,20 +851,8 @@ public class ChungTu implements Comparable<ChungTu> {
 						.setGiaTri(tkThue.getSoTien().getGiaTri() + hangHoa.getTkThue().getSoTien().getGiaTri());
 			}
 
-			taiKhoanKhoDs.add(tkThue);
+			themTaiKhoan(tkThue);
 		}
-
-		Collections.sort(taiKhoanKhoDs, new Comparator<TaiKhoan>() {
-			public int compare(TaiKhoan taikhoan1, TaiKhoan taiKhoan2) {
-				LoaiTaiKhoan loaiTaiKhoan1 = taikhoan1.getLoaiTaiKhoan();
-				LoaiTaiKhoan loaiTaiKhoan2 = taiKhoan2.getLoaiTaiKhoan();
-
-				if (loaiTaiKhoan1 != null && loaiTaiKhoan2 != null) {
-					return loaiTaiKhoan2.getSoDu() - loaiTaiKhoan1.getSoDu();
-				}
-				return 0;
-			};
-		});
 	}
 
 	public int getSoTkLonNhat() {
@@ -1076,14 +1054,6 @@ public class ChungTu implements Comparable<ChungTu> {
 
 	public void setTkThue(TaiKhoan tkThue) {
 		this.tkThue = tkThue;
-	}
-
-	public List<TaiKhoan> getTaiKhoanKhoDs() {
-		if (taiKhoanKhoDs == null) {
-			taiKhoanKhoDs = new ArrayList<>();
-		}
-
-		return taiKhoanKhoDs;
 	}
 
 	@Override

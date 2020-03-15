@@ -2069,6 +2069,8 @@ public class ChungTuController {
 			chungTuDs.add(chungTu);
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+			String path = req.getSession().getServletContext().getRealPath("/baocao/chungtu/");
+			hmParams.put("SUBREPORT_DIR", path);
 
 			JasperReport jasperReport = ReportUtils.compileReport("MuaHang", "chungtu", req);
 			byte[] bytes = baoCaoService.taoChungTuKho(jasperReport, hmParams, chungTu);
@@ -2637,6 +2639,8 @@ public class ChungTuController {
 			chungTuDs.add(chungTu);
 
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
+			String path = req.getSession().getServletContext().getRealPath("/baocao/chungtu/");
+			hmParams.put("SUBREPORT_DIR", path);
 
 			JasperReport jasperReport = ReportUtils.compileReport("BanHang", "chungtu", req);
 			byte[] bytes = baoCaoService.taoChungTuKho(jasperReport, hmParams, chungTu);
