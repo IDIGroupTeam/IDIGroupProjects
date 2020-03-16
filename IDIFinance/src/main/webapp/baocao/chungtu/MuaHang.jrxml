@@ -26,7 +26,6 @@
 	<parameter name="THU_QUY" class="com.idi.finance.bean.CauHinh" isForPrompting="false"/>
 	<parameter name="THU_KHO" class="com.idi.finance.bean.CauHinh" isForPrompting="false"/>
 	<parameter name="CHUNG_TU" class="com.idi.finance.bean.chungtu.ChungTu"/>
-	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false"/>
 	<queryString language="SQL">
 		<![CDATA[]]>
 	</queryString>
@@ -119,7 +118,7 @@
 				<textElement textAlignment="Center">
 					<font isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{CHUNG_TU}.getNgayHt()]]></textFieldExpression>
 			</textField>
 			<textField pattern="yyyy">
 				<reportElement x="300" y="60" width="25" height="14" uuid="046e4330-b3f9-48c7-9d2e-646c2270ff88">
@@ -129,7 +128,7 @@
 				<textElement textAlignment="Center">
 					<font isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{CHUNG_TU}.getNgayHt()]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd">
 				<reportElement x="195" y="60" width="25" height="14" uuid="ba72ac61-6b96-4ff2-ac8a-9a3f7224cb89">
@@ -140,7 +139,7 @@
 				<textElement textAlignment="Center">
 					<font isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{CHUNG_TU}.getNgayHt()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="220" y="74" width="20" height="14" uuid="cae970da-c82f-4199-a35d-ef603d7bc393">
@@ -542,7 +541,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{donVi}.getTenDv()]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.##">
+			<textField pattern="#,##0">
 				<reportElement x="415" y="0" width="70" height="14" uuid="797c01d8-d858-416a-a00c-fde78ca5a6df">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -558,7 +557,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{donGia}.getGiaTri()]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.##">
+			<textField pattern="#,##0">
 				<reportElement x="485" y="0" width="70" height="14" uuid="c8e7876c-aa7b-4a1d-ad70-f041653680db">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -574,7 +573,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{soLuong}*$F{donGia}.getGiaTri()]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0">
 				<reportElement x="355" y="0" width="60" height="14" uuid="d0517b20-3ad8-408b-9b54-86ca8dbbeced">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -655,7 +654,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[]]></text>
 			</staticText>
-			<textField pattern="#,##0.##">
+			<textField pattern="#,##0">
 				<reportElement x="485" y="0" width="70" height="14" uuid="286cc7fa-43c4-49cd-8288-d3d36c7c98f7">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -791,7 +790,7 @@
 				<textElement textAlignment="Center">
 					<font isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{CHUNG_TU}.getNgayHt()]]></textFieldExpression>
 			</textField>
 			<textField pattern="MM">
 				<reportElement x="450" y="50" width="25" height="14" uuid="858a73a4-66d3-4537-99b6-7190a7168270">
@@ -800,7 +799,7 @@
 				<textElement textAlignment="Center">
 					<font isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{CHUNG_TU}.getNgayHt()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="475" y="50" width="25" height="14" uuid="587302b8-916e-4ce2-ac5a-6e5e5997ee8f">
@@ -841,7 +840,7 @@
 				<textElement textAlignment="Center">
 					<font isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{CHUNG_TU}.getNgayHt()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="278" y="81" width="139" height="14" uuid="9b7f9ce9-20b4-4302-936b-c0085a1b45d2"/>

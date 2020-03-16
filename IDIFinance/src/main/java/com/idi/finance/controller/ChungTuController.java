@@ -1709,13 +1709,9 @@ public class ChungTuController {
 			HashMap<String, Object> hmParams = props.getCauHinhTheoNhom(CauHinh.NHOM_CONG_TY);
 
 			ChungTu chungTu = chungTuDAO.layChungTuKtth(maCt, ChungTu.CHUNG_TU_KT_TH);
-			List<ChungTu> chungTuDs = new ArrayList<>();
-			chungTuDs.add(chungTu);
 
-			List<String> baoCaoConDs = new ArrayList<>();
-			baoCaoConDs.add("NghiepVuKeToan");
-			JasperReport jasperReport = ReportUtils.compileReport("KeToanTongHop", baoCaoConDs, "chungtu", req);
-			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, chungTuDs);
+			JasperReport jasperReport = ReportUtils.compileReport("KeToanTongHop", "chungtu", req);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, chungTu, chungTu.getTaiKhoanKtthDs());
 
 			ReportUtils.writePdf2Response(bytes, "KeToanTongHop" + maCt, res);
 		} catch (JRException | IOException e) {
@@ -2073,7 +2069,7 @@ public class ChungTuController {
 			hmParams.put("SUBREPORT_DIR", path);
 
 			JasperReport jasperReport = ReportUtils.compileReport("MuaHang", "chungtu", req);
-			byte[] bytes = baoCaoService.taoChungTuKho(jasperReport, hmParams, chungTu);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, chungTu, chungTu.getHangHoaDs());
 
 			ReportUtils.writePdf2Response(bytes, "MuaHang" + maCt, res);
 		} catch (JRException | IOException e) {
@@ -2643,7 +2639,7 @@ public class ChungTuController {
 			hmParams.put("SUBREPORT_DIR", path);
 
 			JasperReport jasperReport = ReportUtils.compileReport("BanHang", "chungtu", req);
-			byte[] bytes = baoCaoService.taoChungTuKho(jasperReport, hmParams, chungTu);
+			byte[] bytes = baoCaoService.taoChungTu(jasperReport, hmParams, chungTu, chungTu.getHangHoaDs());
 
 			ReportUtils.writePdf2Response(bytes, "BanHang" + maCt, res);
 		} catch (JRException | IOException e) {

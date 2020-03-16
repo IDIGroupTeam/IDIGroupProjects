@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import com.idi.finance.bean.bctc.BaoCaoTaiChinhChiTiet;
 import com.idi.finance.bean.bctc.DuLieuKeToan;
 import com.idi.finance.bean.chungtu.ChungTu;
-import com.idi.finance.bean.hanghoa.HangHoa;
 import com.idi.finance.hangso.Contants;
 import com.idi.finance.service.BaoCaoService;
 import com.idi.finance.utils.DateUtils;
@@ -487,7 +486,8 @@ public class BaoCaoServiceImpl implements BaoCaoService {
 	}
 
 	@Override
-	public byte[] taoChungTuKho(JasperReport jasperReport, HashMap<String, Object> hmParams, ChungTu chungTu) {
+	public <T> byte[] taoChungTu(JasperReport jasperReport, HashMap<String, Object> hmParams, ChungTu chungTu,
+			List<T> details) {
 		if (jasperReport == null || chungTu == null) {
 			return null;
 		}
@@ -497,15 +497,14 @@ public class BaoCaoServiceImpl implements BaoCaoService {
 		}
 
 		try {
-			List<HangHoa> hangHoaDs = chungTu.getHangHoaDs();
-			if (hangHoaDs == null) {
-				hangHoaDs = new ArrayList<>();
+			if (details == null) {
+				details = new ArrayList<>();
 			}
 
 			hmParams.put(ChungTu.CHUNG_TU, chungTu);
 
-			JRBeanCollectionDataSource hangHoaColDs = new JRBeanCollectionDataSource(hangHoaDs);
-			return JasperRunManager.runReportToPdf(jasperReport, hmParams, hangHoaColDs);
+			JRBeanCollectionDataSource detailsDs = new JRBeanCollectionDataSource(details);
+			return JasperRunManager.runReportToPdf(jasperReport, hmParams, detailsDs);
 		} catch (JRException e) {
 			e.printStackTrace();
 		}
