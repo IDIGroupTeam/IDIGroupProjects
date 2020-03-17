@@ -2170,8 +2170,12 @@ public class TaskController {
 		if(lc.getPrincipal() != null) {
 			String username = lc.getPrincipal();
 			log.info("Using usename = " + username);
-			if (username != null && username.length() > 0) {
-				taskReportForm.setSender(username);
+			if (username != null && username.length() > 0 && !username.equalsIgnoreCase("anonymousUser")) {
+				String fullName = employeeDAO.getEmployeeName(username);
+				taskReportForm.setSender(fullName);
+			}else {
+				log.info("Chua login ... ");				
+				taskReportForm.setSender("");
 			}
 		}		 
 
@@ -2505,7 +2509,11 @@ public class TaskController {
 			String currentDate = dateFormat.format(date);
 			document.add(new Paragraph("                     " + title, fontB));
 			document.add(new Paragraph("                     ", font));
-			document.add(new Paragraph("I) Kết quả thực hiện                 ", font));
+			document.add(new Paragraph("I) TÓM TẮT ĐÁNH GIÁ KẾ HOẠCH THỰC HIỆN ", font));
+			document.add(new Paragraph("       " + taskReportForm.getSummary(), font));
+			
+			document.add(new Paragraph("                     ", font));
+			document.add(new Paragraph("II) CHI TIẾT KẾT QUẢ THỰC HIỆN                 ", font));
 			document.add(new Paragraph("                       ", font));
 			document.add(table);
 			document.add(
@@ -2513,20 +2521,16 @@ public class TaskController {
 									+ spentTT + " giờ/" + estimateTT + " giờ, tương đương " + percentCurrent + "%",
 							font));	
 			document.add(new Paragraph("                     ", font));
-			document.add(new Paragraph("II) Kế hoạch                         ", font));
+			document.add(new Paragraph("III) CHI TIẾT KẾ HOẠCH                         ", font));
 			document.add(new Paragraph("                       ", font));
 			PdfPTable table1 = new PdfPTable(5 + columnAdded);
 			addTableHeader(table1, font);
 			addRows(table1, listNext);
 			document.add(table1);
-			document.add(new Paragraph("                     ", font));
-			document.add(new Paragraph("III) Đánh giá thực hiện kế hoạch: ", font));
-			document.add(new Paragraph(taskReportForm.getSummary(), font));
 			document.add(new Paragraph("                       ", font));
 					
-			document.add(new Paragraph("VI) Ý kiến/ Đề xuất: ", font));
-			document.add(new Paragraph(taskReportForm.getComment(), font));
-			document.add(new Paragraph("                       ", font));
+			document.add(new Paragraph("IV) Ý KIẾN, ĐỀ XUẤT ", font));
+			document.add(new Paragraph("       " + taskReportForm.getComment(), font));
 			document.add(new Paragraph("                       ", font));
 			document.add(new Paragraph(
 					"                                                                                                                                  Ngày tạo báo cáo: "
@@ -2760,7 +2764,7 @@ public class TaskController {
 
 	public static Map<String, String> timeStypeMap() {
 		Map<String, String> timeStype = new LinkedHashMap<String, String>();
-		/* timeStype.put("m", "Phút"); */
+		timeStype.put("m", "Phút"); 
 		timeStype.put("h", "Giờ");
 		timeStype.put("d", "Ngày");
 		timeStype.put("w", "Tuần");

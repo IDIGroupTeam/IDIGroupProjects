@@ -143,5 +143,21 @@ public class EmployeeDAO extends JdbcDaoSupport {
 
 		return list;
 	}	
+	
+	/**
+	 * get full name by account
+	 * @param account
+	 * @return
+	 */
+	public String getEmployeeName(String account) {
+
+		String sql = properties.get("GET_NAME_BY_ACCOUNT").toString();
+		log.info("GET_NAME_BY_ACCOUNT query: " + sql);
+		Object[] params = new Object[] { account };
+		
+		String empName = jdbcTmpl.queryForObject(sql, String.class, params);
+
+		return empName;
+	}
 
 }
