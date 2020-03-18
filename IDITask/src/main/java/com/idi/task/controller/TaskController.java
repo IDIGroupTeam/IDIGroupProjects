@@ -64,6 +64,7 @@ import com.idi.task.validator.TaskValidator;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
@@ -1470,7 +1471,7 @@ public class TaskController {
 				for (int j = 0; j < employees.size(); j++) {
 					EmployeeInfo emp = new EmployeeInfo();
 					emp = employees.get(j);
-					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, emp.getEmployeeId());					
+					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDateStore, tDateStore, emp.getEmployeeId());					
 					// tinh tong thoi gian da lam va thoi gian estimate
 					List<Task> list = null;
 					taskReportForm.setIds(String.valueOf(emp.getEmployeeId()));
@@ -1533,7 +1534,7 @@ public class TaskController {
 				for (int i = 0; i < employees.size(); i++) {
 					EmployeeInfo emp = new EmployeeInfo();
 					emp = employees.get(i);
-					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDate, tDate, emp.getEmployeeId());
+					TaskSummay taskSummay = taskDAO.getSummaryTasksForReport(fDateStore, tDateStore, emp.getEmployeeId());
 					
 					// tinh tong thoi gian da lam va thoi gian estimate
 					List<Task> list = null;
@@ -2368,7 +2369,6 @@ public class TaskController {
 			isUpdatedTime = false;
 			isdueDate = false;
 			isDes = false;
-			
 			// Document document = new Document();
 			Document document = new Document(PageSize.A4.rotate());
 			String path = properties.getProperty("REPORT_PATH");
@@ -2399,25 +2399,21 @@ public class TaskController {
 				columnAdded = columnAdded + 1;
 				isDes = true;
 			}
-			
 			String eIds = taskReportForm.getIds();
 			String dept = taskReportForm.getDepartment();
 			String fDate = taskReportForm.getFromDate();
 			String tDate = taskReportForm.getToDate();
 			String eName = allEmployeesMap().get(taskReportForm.getEmployeeId());
 			taskReportForm.setEmployeeName(eName);
-
 			String fDateStore = Utils.convertDateToStore(fDate);
 			taskReportForm.setFromDate(fDateStore);
 			String tDateStore = Utils.convertDateToStore(tDate);
 			taskReportForm.setToDate(tDateStore);
-			
 			String fileName = "IDI-BCCV";	
-			String title = "IDI-BCCV";	
-			
+			String title = "BCCV";	
 			if (eIds != null && eIds.trim().length() > 0 && !dept.equalsIgnoreCase("all")) {
 				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot-nhieu nguoi phong " + dept + ".pdf";
-				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một/nhiều người phòng " + dept;
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một/nhiều người Phòng " + dept;
 			}else if ((eIds == null || eIds.trim().length() == 0) && !dept.equalsIgnoreCase("all")) {
 				fileName = "Phong " + dept + "-BCCV tu ngay " + fDateStore + " den ngay " + tDateStore + ".pdf";
 				title = "Phòng " + dept + "-BCCV từ ngày " + fDate + " đến ngày " + tDate;
@@ -2426,32 +2422,31 @@ public class TaskController {
 				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một/nhiều người";
 			}else {
 				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua tat ca cac phong ban" + ".pdf";
-				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban";
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của Tất cả các Phòng ban";
 			}
-
 			PdfWriter.getInstance(document, new FileOutputStream(dir + "/" + fileName));
 			BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 			// BaseFont bfB = BaseFont.createFont(fontBFile.getAbsolutePath(),
 			// BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-			Font fontB = new Font(bf, 18);
+			Font fontB = new Font(bf, 14);
+			Font fontB1 = new Font(bf, 20);
 			// Font fontB14 = new Font(bfB,14);
-			Font font = new Font(bf, 14);
+			Font font = new Font(bf, 12);
 			document.open();
 			// Font font = FontFactory.getFont(FontFactory.TIMES_ROMAN, "UTF-8");
 			// Chunk chunk = new Chunk(fileName, font);
 			// document.add(chunk);
-
 			PdfPTable table = new PdfPTable(5 + columnAdded);
-			addTableHeader(table, font);
+			table.setHorizontalAlignment(Element.ALIGN_LEFT);
+			table.setWidthPercentage(100f);
+			addTableHeader(table, fontB);
 			//List<Task> list = null;
 			//List<Task> listTask = null;
 			//list = taskDAO.getTasksForReport(taskReportForm);
 			List<Task> listCurrent = null;
 			listCurrent = taskDAO.getTasksForReport(taskReportForm, "'Đang làm','Tạm dừng','Hủy bỏ','Chờ đánh giá','Đã xong'");
-
 			List<Task> listNext = null;
 			listNext = taskDAO.getTasksForReport(taskReportForm, "'Mới','Mới tạo','Đang làm','Chờ đánh giá'");			
-			
 			unSelected = taskReportForm.getUnSelect();
 			// tinh tong thoi gian da lam va tg estimate
 			float timeEstimateTotal = 0;
@@ -2484,68 +2479,78 @@ public class TaskController {
 						timeEstimateTotal = timeEstimateTotal + Float.valueOf(taskDTO.getEstimate());
 				}
 			}
-			
 			BigDecimal spentTT = new BigDecimal(0);
 			BigDecimal estimateTT = new BigDecimal(0);
 			BigDecimal percentCurrent = new BigDecimal(0);
 			if(timeEstimateTotal > 0 && timeSpentTotal > 0) {
 				BigDecimal s = new BigDecimal(timeSpentTotal);
 				spentTT = s.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-	
 				BigDecimal e = new BigDecimal(timeEstimateTotal);
 				estimateTT = e.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-	
 				float percent = (timeSpentTotal / timeEstimateTotal) * 100;
 				BigDecimal p = new BigDecimal(percent);
 				percentCurrent = p.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 			}
 			// System.err.println("time estimate:= " + estimateTT + "/time spent: " +
 			// spentTT);
-
 			addRows(table, listCurrent);
 			// addCustomRows(table);
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = new Date();
 			String currentDate = dateFormat.format(date);
-			document.add(new Paragraph("                     " + title, fontB));
+			document.add(new Paragraph("                     " + title, fontB1));
 			document.add(new Paragraph("                     ", font));
-			document.add(new Paragraph("I) TÓM TẮT ĐÁNH GIÁ KẾ HOẠCH THỰC HIỆN ", font));
+			String retDepartment="IDIGROUP";
+			if (!"all".equals(dept.trim())) {
+				 retDepartment=dept;
+			}
+			document.add(new Paragraph("Tên đơn vị:  " +retDepartment, fontB));
+			document.add(new Paragraph("Người báo cáo: " +taskReportForm.getSender(), fontB));
+			document.add(new Paragraph("                     ", font));
+			document.add(new Paragraph("I) TÓM TẮT ĐÁNH GIÁ KẾ HOẠCH THỰC HIỆN ", fontB));
 			document.add(new Paragraph("       " + taskReportForm.getSummary(), font));
-			
 			document.add(new Paragraph("                     ", font));
-			document.add(new Paragraph("II) CHI TIẾT KẾT QUẢ THỰC HIỆN                 ", font));
+			document.add(new Paragraph("II) CHI TIẾT KẾT QUẢ THỰC HIỆN                 ", fontB));
 			document.add(new Paragraph("                       ", font));
 			document.add(table);
+			document.add(new Paragraph("                       ", font));
 			document.add(
-					new Paragraph("                       Tổng thời gian thực tế đã làm/Tổng thời gian kế hoạch: "
-									+ spentTT + " giờ/" + estimateTT + " giờ, tương đương " + percentCurrent + "%",
-							font));	
+					new Paragraph("    Tổng thời gian Thực tế đã làm: "	+ spentTT + " (giờ)",	fontB));	
+			document.add(
+					new Paragraph("    Tổng thời gian Kế hoạch: " + estimateTT + " (giờ)",fontB));	
+			document.add(
+					new Paragraph("    Tổng thời gian thực tế đã làm/Tổng thời gian kế hoạch: " + percentCurrent + "%",	fontB));	
+			document.add(
+					new Paragraph("    Tổng số công việc đã làm: " + listCurrent.size() + " (công việc)",fontB));	
 			document.add(new Paragraph("                     ", font));
-			document.add(new Paragraph("III) CHI TIẾT KẾ HOẠCH                         ", font));
+			document.add(new Paragraph("III) CHI TIẾT KẾ HOẠCH                         ", fontB));
 			document.add(new Paragraph("                       ", font));
 			PdfPTable table1 = new PdfPTable(5 + columnAdded);
-			addTableHeader(table1, font);
+			table1.setHorizontalAlignment(Element.ALIGN_LEFT);
+			table1.setWidthPercentage(100f);
+			addTableHeader(table1, fontB);
 			addRows(table1, listNext);
 			document.add(table1);
 			document.add(new Paragraph("                       ", font));
-					
-			document.add(new Paragraph("IV) Ý KIẾN, ĐỀ XUẤT ", font));
+			document.add(new Paragraph("    Tổng số công việc Kế hoạch: " + listNext.size()+" (công việc)" ,fontB));	
+			document.add(new Paragraph("                       ", font));
+			document.add(new Paragraph("IV) Ý KIẾN, ĐỀ XUẤT ", fontB));
 			document.add(new Paragraph("       " + taskReportForm.getComment(), font));
+			document.add(new Paragraph("                       ", font));
+			document.add(new Paragraph("V) NHẬN XÉT CỦA CẤP QUẢN LÝ TRỰC TIẾP ", fontB));
 			document.add(new Paragraph("                       ", font));
 			document.add(new Paragraph(
 					"                                                                                                                                  Ngày tạo báo cáo: "
-							+ Utils.convertDateToDisplay(currentDate),
-					font));
+							+ Utils.convertDateToDisplay(currentDate),fontB));
 			document.add(new Paragraph(
-					"                                                                                                                                  Người báo cáo: " 
-							+ taskReportForm.getSender(),
-					font));
-
+					"                                                                                                                                  Người báo cáo ",fontB));
+			document.add(new Paragraph("                       ", font));
+			document.add(new Paragraph("                       ", font));
+			document.add(new Paragraph(
+					"                                                                                                                                  " + taskReportForm.getSender(),	fontB));
 			document.close();
-			
 			taskReportForm.setFromDate(fDate);
 			taskReportForm.setToDate(tDate);
-			
 			model.addAttribute("reportForm", taskReportForm);
 			model.addAttribute("path", path);
 			model.addAttribute("formTitle", "Export báo cáo công việc");
@@ -2554,6 +2559,7 @@ public class TaskController {
 			e.printStackTrace();
 		}
 		return "taskExport";
+	
 	}
 
 	private void addTableHeader(PdfPTable table, Font font) throws Exception {

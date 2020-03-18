@@ -63,7 +63,7 @@ td, th {
 				<td>Nhập đ/c email với những người không có trên hệ thống <form:input path="sendToOut" 
 						class="form-control animated" /></td>
 						
-				<td>Chọn đ/c email với những người có trên hệ thống <form:select id="sendTo" path="sendTo" multiple="multiple"	class="form-control animated" >
+				<td>Chọn đ/c email với những người có trên hệ thống <form:select id="sendTo" path="sendTo" multiple="multiple"	class="form-control animated" size="6">
 						<%-- <form:option value="" label="Chọn đ/c email cần gửi" /> --%>
 						<form:options items="${employeeEmailMap}" /> 
 					</form:select> 

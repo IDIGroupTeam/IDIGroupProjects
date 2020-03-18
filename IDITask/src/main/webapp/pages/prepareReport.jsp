@@ -110,7 +110,7 @@ $j(function() {
 						<form:option value="0" label="Tất cả nhân viên"></form:option>
 						<form:options items="${employeesList}" var="employeeId"/>
 					</form:select> --%>
-					<form:select path="ids" class="form-control" multiple="multiple" size="3">
+					<form:select path="ids" class="form-control" multiple="multiple" size="10">
 						<form:option value="" label=""></form:option>
 						<form:options items="${employeesList}" var="ids"/>
 					</form:select>

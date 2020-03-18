@@ -72,7 +72,7 @@ tr:nth-child(even) {
 			<form:hidden path="ids" />
 			<form:hidden path="employeeName" />
 			<tr>
-				<td width="15%">&nbsp; Người báo cáo:</td>
+				<td width="15%">&nbsp;<b> Người báo cáo:</b></td>
 				<td width="85%"><form:input path="sender" type="text" class="form-control animated" /></td>			
 <%-- 				<td>						
 					<form:select path="sender" class="form-control animated">
@@ -81,11 +81,11 @@ tr:nth-child(even) {
 				</td> --%>	
 			</tr>			
 			<tr>
-				<td>&nbsp; Đánh giá thực hiện kế hoạch:</td>
+				<td>&nbsp; <b> Đánh giá thực hiện kế hoạch:</b></td>
 				<td><form:textarea path="summary" class="form-control animatedArea" rows="2" /></td>
 			</tr>
 			<tr>
-				<td>&nbsp; Ý kiến/ Đề xuất:</td>
+				<td>&nbsp; <b> Ý kiến/ Đề xuất:</b></td>
 				<td><form:textarea path="comment" class="form-control animatedArea" rows="2" /></td>
 			</tr>
 		</table>
