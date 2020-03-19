@@ -206,7 +206,7 @@
 									<form:option value="${employee.employeeId}">${employee.fullName},&nbsp;${employee.jobTitle}</form:option>
 								</c:forEach>
 							</form:select></td>
-						<td bgcolor="#FAFAFA">Thời gian ước lượng để làm:</td>
+						<td bgcolor="#FAFAFA">Thời gian kế hoạch:</td>
 						<td><form:input path="estimate" type="number" step="0.25" min="0" value="0" />&nbsp;&nbsp;
 							<form:select path="estimateTimeType">
 								<%-- <form:option value="m" label="Phút" /> --%>

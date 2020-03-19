@@ -47,7 +47,7 @@ $j(function() {
 						success : function(obj) {	
 							idsSel = "<option value=''></option>";						
 							for (i = 0; i < obj.length; i++) {
-								idsSel += "<option value='" + obj[i].idsSel + "'>"										
+								idsSel += "<option value='" + obj[i].employeeId + "'>"										
 										+ obj[i].fullName
 										+ ", chức vụ: "
 										+ obj[i].jobTitle

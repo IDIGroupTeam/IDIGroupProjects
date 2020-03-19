@@ -282,7 +282,7 @@
 									<form:option value="10" label="10" />
 								</form:select></td>
 
-							<td bgcolor="#FAFAFA">Thời gian ước lượng để làm:</td>
+							<td bgcolor="#FAFAFA">Thời gian kế hoạch:</td>
 							<td><form:input path="estimate" type="number" step="0.25"
 									min="0" class="col-xs-4" /> &nbsp; <form:select
 									path="estimateTimeType">
