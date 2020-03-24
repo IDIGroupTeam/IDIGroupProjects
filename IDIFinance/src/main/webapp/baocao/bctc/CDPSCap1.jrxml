@@ -14,6 +14,12 @@
 	<import value="com.idi.finance.bean.taikhoan.LoaiTaiKhoan"/>
 	<style name="Base" isDefault="true" fontName="VU Times" fontSize="12" isBold="false" isItalic="false" isPdfEmbedded="true"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="coDauKy" class="java.lang.Double" isForPrompting="false"/>
+	<parameter name="noDauKy" class="java.lang.Double" isForPrompting="false"/>
+	<parameter name="coCuoiKy" class="java.lang.Double" isForPrompting="false"/>
+	<parameter name="noCuoiKy" class="java.lang.Double" isForPrompting="false"/>
+	<parameter name="tongCoPhatSinh" class="java.lang.Double" isForPrompting="false"/>
+	<parameter name="tongNoPhatSinh" class="java.lang.Double" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -73,6 +79,7 @@
 					<pen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+					<font isBold="true"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{loaiTaiKhoan}.getMaTk()]]></textFieldExpression>
@@ -84,7 +91,9 @@
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.25"/>
 				</box>
-				<textElement verticalAlignment="Middle"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{loaiTaiKhoan}.getTenTk()]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
@@ -96,6 +105,7 @@
 					<pen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{loaiTaiKhoan}.isLuongTinh()==false ? $F{soDuDauKy} >=0 ? $F{soDuDauKy}:0 : $F{noDauKy}]]></textFieldExpression>
@@ -109,6 +119,7 @@
 					<pen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{loaiTaiKhoan}.isLuongTinh()==false ? $F{soDuDauKy} <0 ? 0-$F{soDuDauKy}:0 : $F{coDauKy}]]></textFieldExpression>
@@ -122,6 +133,7 @@
 					<pen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tongNoPhatSinh}]]></textFieldExpression>
@@ -135,6 +147,7 @@
 					<pen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tongCoPhatSinh}]]></textFieldExpression>
@@ -148,6 +161,7 @@
 					<pen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{loaiTaiKhoan}.isLuongTinh()==false ? $F{soDuCuoiKy} >=0 ? $F{soDuCuoiKy}:0 : $F{noCuoiKy}]]></textFieldExpression>
@@ -161,6 +175,7 @@
 					<pen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{loaiTaiKhoan}.isLuongTinh()==false ? $F{soDuCuoiKy} <0 ? 0-$F{soDuCuoiKy}:0 : $F{coCuoiKy}]]></textFieldExpression>
@@ -185,6 +200,131 @@
 		<band splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band splitType="Stretch"/>
+		<band height="18" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField pattern="#,##0">
+				<reportElement x="365" y="0" width="87" height="18" uuid="271da57a-5a69-4785-98c7-afa1dd825d26">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{coDauKy}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="713" y="0" width="87" height="18" uuid="cab2882a-f993-48ed-86c2-f6f781d664ec">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{coCuoiKy}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="626" y="0" width="87" height="18" uuid="1ecac285-efc3-4d39-9c97-c2c5141ee556">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{noCuoiKy}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="45" y="0" width="233" height="18" uuid="db1df383-5239-4cb2-ac67-0f2d9db6d889">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tổng]]></text>
+			</staticText>
+			<textField pattern="#,##0">
+				<reportElement x="452" y="0" width="87" height="18" uuid="895e66d3-6426-4bc7-8ba5-9009e2045ab8">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tongNoPhatSinh}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="45" height="18" uuid="ac7d52af-2dfc-480a-b528-a0762efc3b5a">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField pattern="#,##0">
+				<reportElement x="278" y="0" width="87" height="18" uuid="313d47b5-45be-4d22-968b-42dc74f011ef">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{noDauKy}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="539" y="0" width="87" height="18" uuid="faa7701d-e4eb-40e8-be70-4da0b6676a5d">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tongCoPhatSinh}]]></textFieldExpression>
+			</textField>
+		</band>
 	</summary>
 </jasperReport>
