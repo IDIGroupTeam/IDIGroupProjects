@@ -20,10 +20,10 @@
 
 <h4>Quản lý biểu đồ KPI</h4>
 <div class="pull-right">
-	<a href="${url}/bctc/cdkt/chitieu/capthap/taomoi"
+	<%-- <a href="${url}/bctc/cdkt/chitieu/capthap/taomoi"
 		class="btn btn-info btn-sm"> <span
 		class="glyphicon glyphicon-plus"></span> Tạo mới biểu đồ
-	</a>
+	</a> --%>
 </div>
 <br />
 <br />
@@ -35,6 +35,7 @@
 				<th class="text-center">STT</th>
 				<th class="text-center">Biểu đồ</th>
 				<th class="text-center">Nhóm</th>
+				<th class="text-center">Công thức</th>
 				<th class="text-center">Hiển thị</th>
 				<th class="text-center">Ngưỡng</th>
 			</tr>
@@ -43,9 +44,11 @@
 			<c:forEach items="${kpiCharts}" var="kpiChart" varStatus="status">
 				<tr>
 					<td>${status.index+1}</td>
-					<td><a href="${url}/quanly/bieudo/xem/${kpiChart.chartId}"
-						class="text-primary"> ${kpiChart.chartTitle}</a></td>
+					<%-- <td><a href="${url}/quanly/bieudo/xem/${kpiChart.chartId}"
+						class="text-primary"> ${kpiChart.chartTitle}</a></td> --%>
+					<td>${kpiChart.chartTitle}</td>
 					<td>${kpiChart.kpiGroup.groupName}</td>
+					<td>${kpiChart.kpiMeasures.get(0).expression}</td>
 					<td><c:choose>
 							<c:when test="${kpiChart.homeFlag}">
 								<span class="glyphicon glyphicon-ok" style="color: green;"></span>

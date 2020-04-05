@@ -68,9 +68,10 @@
 <div class="row form-group">
 	<div class="col-sm-12">
 		<a href="${url}/quanly/bieudo" class="btn btn-info btn-sm">Danh
-			sách biểu đồ</a> <a href="${url}/quanly/bieudo"
+			sách biểu đồ</a>
+		<%-- <a href="${url}/quanly/bieudo"
 			class="btn btn-info btn-sm">Sửa</a> <a href="${url}/quanly/bieudo"
 			class="btn btn-info btn-sm">Sao chép</a> <a
-			href="${url}/quanly/bieudo" class="btn btn-info btn-sm">Tạo mới</a>
+			href="${url}/quanly/bieudo" class="btn btn-info btn-sm">Tạo mới</a> --%>
 	</div>
 </div>

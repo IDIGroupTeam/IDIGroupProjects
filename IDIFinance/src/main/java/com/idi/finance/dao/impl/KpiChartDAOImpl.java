@@ -28,6 +28,9 @@ import com.idi.finance.hangso.KpiMonthCont;
 public class KpiChartDAOImpl implements KpiChartDAO {
 	private static final Logger logger = Logger.getLogger(KpiChartDAOImpl.class);
 
+	@Value("${DANH_SACH_KPI_CHART}")
+	private String DANH_SACH_KPI_CHART;
+
 	@Value("${LAY_KPI_CHART_THEO_ID}")
 	private String LAY_KPI_CHART_THEO_ID;
 
@@ -231,47 +234,20 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 	public class KpiGroupMapper implements RowMapper<KpiGroup> {
 		public KpiGroup mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-			KpiGroup kpiGroup = new KpiGroup();
-			kpiGroup.setGroupId(rs.getInt("GROUP_ID"));
-			kpiGroup.setGroupName(rs.getString("GROUP_NAME"));
-
-			// logger.info(kpiGroup);
-
-			return kpiGroup;
+			return createKpiGroup(rs);
 		}
 	}
 
 	@Override
 	public List<KpiChart> listKpiCharts() {
-		String query = "SELECT * FROM KPI_CHART AS CHA, KPI_GROUP AS GRO WHERE CHA.GROUP_ID=GRO.GROUP_ID ORDER BY CHA.CHART_ID";
+		String query = DANH_SACH_KPI_CHART;
 
 		logger.info("Get list of kpi charts ... ");
 		logger.info(query);
 
-		List<KpiChart> kpiCharts = jdbcTmpl.query(query, new KpiChartWithGroupMapper());
+		List<KpiChart> kpiCharts = jdbcTmpl.query(query, new KpiChartDetailMapper());
 
 		return kpiCharts;
-	}
-
-	public class KpiChartWithGroupMapper implements RowMapper<KpiChart> {
-		public KpiChart mapRow(ResultSet rs, int rowNum) throws SQLException {
-
-			KpiChart kpiChart = new KpiChart();
-			kpiChart.setChartId(rs.getInt("CHART_ID"));
-			kpiChart.setHomeFlag(rs.getBoolean("HOME_FLAG"));
-			kpiChart.setChartTitle(rs.getString("CHART_TITLE"));
-			kpiChart.setThreshold(rs.getDouble("THRESHOLD"));
-
-			KpiGroup kpiGroup = new KpiGroup();
-			kpiGroup.setGroupId(rs.getInt("GROUP_ID"));
-			kpiGroup.setGroupName(rs.getString("GROUP_NAME"));
-
-			kpiChart.setKpiGroup(kpiGroup);
-
-			logger.info(kpiChart);
-
-			return kpiChart;
-		}
 	}
 
 	@Override
@@ -293,25 +269,13 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 	public class KpiChartDetailMapper implements RowMapper<KpiChart> {
 		public KpiChart mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-			KpiChart kpiChart = new KpiChart();
-			kpiChart.setChartId(rs.getInt("CHART_ID"));
-			kpiChart.setHomeFlag(rs.getBoolean("HOME_FLAG"));
-			kpiChart.setChartTitle(rs.getString("CHART_TITLE"));
-			kpiChart.setThreshold(rs.getDouble("THRESHOLD"));
-
-			KpiGroup kpiGroup = new KpiGroup();
-			kpiGroup.setGroupId(rs.getInt("GROUP_ID"));
-			kpiGroup.setGroupName(rs.getString("GROUP_NAME"));
-
+			KpiChart kpiChart = createKpiChart(rs);
+			KpiGroup kpiGroup = createKpiGroup(rs);
 			kpiChart.setKpiGroup(kpiGroup);
 
 			try {
-				KpiMeasure kpiMeasure = new KpiMeasure();
+				KpiMeasure kpiMeasure = createKpiMeasure(rs);
 				kpiMeasure.setChart(kpiChart);
-				kpiMeasure.setMeasureId(rs.getInt("MEASURE_ID"));
-				kpiMeasure.setMeasureName(rs.getString("MEASURE_NAME"));
-				kpiMeasure.setExpression(rs.getString("EXPRESSION"));
-				kpiMeasure.setTypeChart(rs.getInt("TYPE_CHART"));
 				kpiChart.addKpiMeasure(kpiMeasure);
 			} catch (Exception e) {
 			}
@@ -339,15 +303,7 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 	public class KpiChartMapper implements RowMapper<KpiChart> {
 		public KpiChart mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-			KpiChart kpiChart = new KpiChart();
-			kpiChart.setChartId(rs.getInt("CHART_ID"));
-			kpiChart.setHomeFlag(rs.getBoolean("HOME_FLAG"));
-			kpiChart.setChartTitle(rs.getString("CHART_TITLE"));
-			kpiChart.setThreshold(rs.getDouble("THRESHOLD"));
-
-			// logger.info(kpiChart);
-
-			return kpiChart;
+			return createKpiChart(rs);
 		}
 	}
 
@@ -386,15 +342,8 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 
 	public class KpiMeasureMapper implements RowMapper<KpiMeasure> {
 		public KpiMeasure mapRow(ResultSet rs, int rowNum) throws SQLException {
-			KpiMeasure kpiMeasure = new KpiMeasure();
-			kpiMeasure.setMeasureId(rs.getInt("MEASURE_ID"));
-			kpiMeasure.setMeasureName(rs.getString("MEASURE_NAME"));
-			kpiMeasure.setExpression(rs.getString("EXPRESSION"));
-			kpiMeasure.setTypeChart(rs.getInt("TYPE_CHART"));
 
-			// logger.info(kpiMeasure);
-
-			return kpiMeasure;
+			return createKpiMeasure(rs);
 		}
 	}
 
@@ -473,5 +422,33 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 		}
 
 		return count;
+	}
+
+	private KpiGroup createKpiGroup(ResultSet rs) throws SQLException {
+		KpiGroup kpiGroup = new KpiGroup();
+		kpiGroup.setGroupId(rs.getInt("GROUP_ID"));
+		kpiGroup.setGroupName(rs.getString("GROUP_NAME"));
+
+		return kpiGroup;
+	}
+
+	private KpiChart createKpiChart(ResultSet rs) throws SQLException {
+		KpiChart kpiChart = new KpiChart();
+		kpiChart.setChartId(rs.getInt("CHART_ID"));
+		kpiChart.setHomeFlag(rs.getBoolean("HOME_FLAG"));
+		kpiChart.setChartTitle(rs.getString("CHART_TITLE"));
+		kpiChart.setThreshold(rs.getDouble("THRESHOLD"));
+
+		return kpiChart;
+	}
+
+	private KpiMeasure createKpiMeasure(ResultSet rs) throws SQLException {
+		KpiMeasure kpiMeasure = new KpiMeasure();
+		kpiMeasure.setMeasureId(rs.getInt("MEASURE_ID"));
+		kpiMeasure.setMeasureName(rs.getString("MEASURE_NAME"));
+		kpiMeasure.setExpression(rs.getString("EXPRESSION"));
+		kpiMeasure.setTypeChart(rs.getInt("TYPE_CHART"));
+
+		return kpiMeasure;
 	}
 }
