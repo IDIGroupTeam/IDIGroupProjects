@@ -91,6 +91,10 @@
 	   }
 	}	
 	
+	function ConfirmSave() {
+	  return confirm("Bạn có muốn lưu không?");
+	}
+	
 	var $j = jQuery.noConflict();		
 	$j(function() {
 		$j(".datetime").datetimepicker({
@@ -380,7 +384,7 @@
 					</tbody>
 				</table>
 				<input class="btn btn-lg btn-primary btn-sm" type="submit"
-					value="Lưu" name="Lưu" />
+					value="Lưu" name="Lưu" Onclick="return ConfirmSave()" />
 				<br />
 				<br />
 				<table class="table table-bordered">
@@ -474,7 +478,7 @@
 					</tr>
 				</table>
 				<input class="btn btn-lg btn-primary btn-sm" type="submit"
-					value="Lưu" name="Lưu" />
+					value="Lưu" name="Lưu" Onclick="return ConfirmSave()"/>
 			</form:form>
 		</div>
 		<div class="${tabActive3}" id="3">

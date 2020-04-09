@@ -62,9 +62,9 @@ tr:nth-child(even) {
 	</h3>
 	<br />
 	<form:form action="exportToPDF" modelAttribute="reportForm" method="POST">
-		<c:if test="${tasks.size() > 0}">
+		<c:if test="${tasks.size() > 0 || tasksNext.size() > 0}">
 			<input class="btn btn-lg btn-primary btn-sm" type="submit" name="Export ra file PDF và gửi báo cáo" value="Export ra file PDF và gửi báo cáo" /> <br/><br/>
-		</c:if>
+		</c:if> 
 		<table>
 			<form:hidden path="fromDate" />
 			<form:hidden path="toDate" />
