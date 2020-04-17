@@ -22,8 +22,9 @@ public class SalaryReportMapper  implements RowMapper<SalaryReport> {
 		//int month = rs.getInt("MONTH");
 		//int year = rs.getInt("YEAR");
 		String payedInsurance = rs.getString("PAYED_INSURANCE");
-
-		return new SalaryReport(finalSalary, overTimeN, overTimeW, overTimeH, 
-			overTimeSalary, bounus, subsidize, advancePayed, taxPersonal, payedInsurance);
+		String cPayedInsur = rs.getString("C_PAYED_INSUR");
+		
+		return new SalaryReport(finalSalary, overTimeN, overTimeW, overTimeH, overTimeSalary, 
+				bounus, subsidize, advancePayed, taxPersonal, payedInsurance, cPayedInsur);
 	}	
 }

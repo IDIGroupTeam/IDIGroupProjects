@@ -192,15 +192,21 @@ public class SalaryDAO extends JdbcDaoSupport {
 	}
 
 	/**
-	 * 
+	 * @param dept
 	 * @param year
 	 * @return
 	 */
-	public List<SalaryReportPerEmployee> getSalaryReportDetail(String year) {
+	public List<SalaryReportPerEmployee> getSalaryReportDetail(String year, String dept) {
 
 		String sql = hr.get("GET_SUMMARY_SALARY_DETAIL_FOR_YEAR").toString();
-		log.info("GET_SUMMARY_SALARY_DETAIL_FOR_YEAR query: " + sql);
 		
+		if(dept != null && !dept.equalsIgnoreCase("all"))
+			sql = sql.replaceAll("%DEPT%", " AND E.DEPARTMENT = '" + dept + "' ");
+		else
+			sql = sql.replaceAll("%DEPT%", " ");
+		
+		log.info("GET_SUMMARY_SALARY_DETAIL_FOR_YEAR query: " + sql);
+		 
 		Object[] params = new Object[] { year };
 		SalaryReportPerEmployeeMapper mapper = new SalaryReportPerEmployeeMapper();
 		List<SalaryReportPerEmployee> list = jdbcTmpl.query(sql, params, mapper); 
@@ -209,14 +215,38 @@ public class SalaryDAO extends JdbcDaoSupport {
 	}
 	
 	/**
+	 * countMonthPerYearByEmp
+	 * @param empId
+	 * @param year
+	 * @return number
+	 */
+	public int countMonthPerYearByEmp(int empId, String year) {
+
+		String sql = hr.get("COUNT_MONTH_PER_YEAR_BY_EMPLOYEE").toString();
+		log.info("COUNT_MONTH_PER_YEAR_BY_EMPLOYEE query: " + sql);
+		Object[] params = new Object[] {empId, year};
+		
+		String numberEmployee = jdbcTmpl.queryForObject(sql, String.class, params);
+		
+		return Integer.parseInt(numberEmployee);
+	}
+	
+	/**
 	 * 
 	 * @param month
 	 * @param year
+	 * @param dept
 	 * @return
 	 */
-	public List<SalaryDetail> getSalaryReportDetail(String month, String year) {
+	public List<SalaryDetail> getSalaryReportDetail(String month, String year, String dept) {
 
 		String sql = hr.get("GET_SUMMARY_SALARY_DETAIL").toString();
+		
+		if(dept != null && !dept.equalsIgnoreCase("all"))
+			sql = sql.replaceAll("%DEPT%", " AND E.DEPARTMENT = '" + dept + "' ");
+		else
+			sql = sql.replaceAll("%DEPT%", " ");
+		
 		log.info("GET_SUMMARY_SALARY_DETAIL query: " + sql);
 		
 		Object[] params = new Object[] { month, year };
@@ -301,8 +331,8 @@ public class SalaryDAO extends JdbcDaoSupport {
 					salaryDetail.getBounus(), salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(),
 					salaryDetail.getTaxPersonal(), salaryDetail.getBasicSalary(), salaryDetail.getExchangeRate(),
 					salaryDetail.getFinalSalary(), salaryDetail.getMonth(), salaryDetail.getYear(), salaryDetail.getDesc(), 
-					salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(),
-					salaryDetail.getOther(), salaryDetail.getArrears(), salaryDetail.getPayStatus() };
+					salaryDetail.getPayedInsurance(), salaryDetail.getcPayedInsur(), salaryDetail.getWorkComplete(), 
+					salaryDetail.getWorkedDay(), salaryDetail.getOther(), salaryDetail.getArrears(), salaryDetail.getPayStatus() };
 			jdbcTmpl.update(sql, params);
 
 		} catch (Exception e) {
@@ -393,8 +423,8 @@ public class SalaryDAO extends JdbcDaoSupport {
 					salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(),
 					salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(),
 					salaryDetail.getBasicSalary(), salaryDetail.getExchangeRate(), salaryDetail.getFinalSalary(),
-					salaryDetail.getDesc(),	salaryDetail.getPayedInsurance(), salaryDetail.getWorkComplete(), 
-					salaryDetail.getWorkedDay(), salaryDetail.getOther(), salaryDetail.getArrears(),
+					salaryDetail.getDesc(),	salaryDetail.getPayedInsurance(), salaryDetail.getcPayedInsur(), 
+					salaryDetail.getWorkComplete(), salaryDetail.getWorkedDay(), salaryDetail.getOther(), salaryDetail.getArrears(),
 					salaryDetail.getPayStatus(), salaryDetail.getEmployeeId(), salaryDetail.getMonth(), salaryDetail.getYear() };
 			jdbcTmpl.update(sql, params);
 

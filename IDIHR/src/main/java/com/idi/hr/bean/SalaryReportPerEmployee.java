@@ -26,6 +26,8 @@ public class SalaryReportPerEmployee implements Serializable {
 	private int month;
 	private int year;	
 	private String payedInsurance;
+	private String cPayedInsur;
+	private String averageSalary;
 	
 	public SalaryReportPerEmployee() {
 		
@@ -33,7 +35,7 @@ public class SalaryReportPerEmployee implements Serializable {
 
 	public SalaryReportPerEmployee(int employeeId, String fullName, String department, String jobTitle,
 			String salary, String finalSalary, String overTimeN, String overTimeW, String overTimeH, String overTimeSalary,
-		    String bounus, String subsidize, String advancePayed, String taxPersonal, String payedInsurance) {
+		    String bounus, String subsidize, String advancePayed, String taxPersonal, String payedInsurance, String cPayedInsur) {
 		this.employeeId = employeeId;
 		this.fullName = fullName;
 		this.salary = salary;
@@ -52,6 +54,7 @@ public class SalaryReportPerEmployee implements Serializable {
 /*		this.month = month;
 		this.year = year;*/
 		this.payedInsurance = payedInsurance;
+		this.cPayedInsur = cPayedInsur;
 
 	}	
 
@@ -194,4 +197,21 @@ public class SalaryReportPerEmployee implements Serializable {
 	public void setDepartment(String payedInsurance) {
 		this.payedInsurance = payedInsurance;
 	}
+
+	public String getcPayedInsur() {
+		return cPayedInsur;
+	}
+
+	public void setcPayedInsur(String cPayedInsur) {
+		this.cPayedInsur = cPayedInsur;
+	}
+
+	public String getAverageSalary() {
+		return averageSalary;
+	}
+
+	public void setAverageSalary(String averageSalary) {
+		this.averageSalary = averageSalary;
+	}
+	
 }

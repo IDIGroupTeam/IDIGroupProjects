@@ -174,11 +174,14 @@ tr:nth-child(even) {
 			</tr>
 		</table>	
 	</form:form>
-	
+<%-- 	<c:if test="${salaryDetails.size() > 0}">
+		<a href="${pageContext.request.contextPath}/salary/generateSalaryReportToPDF?year=${yearReport}&month=${monthReport}"><button class="btn btn-primary btn-sm">Export ra file PDF</button></a>
+		<br/> <br/>
+	</c:if>	 --%>
 	<div class="table-responsive">		
 		<table class="table table-striped">
 			<tr>
-				<th>Mã NV</th>
+				<!-- <th>Mã NV</th> -->
 				<th>Họ tên</th>
 				<th>Phòng</th>
 				<th>Chức danh</th>				
@@ -188,22 +191,26 @@ tr:nth-child(even) {
 				<th>Trợ cấp/ trách nhiệm</th>
 				<th>Lương ngoài giờ</th>
 				<th>Tạm ứng</th>
+				<th>Thu nhập bình quân</th>						
 				<th><i>Thuế TNCN</i></th>
-				<th><i>Đóng BHXH</i></th>				
+				<th><i>NV đóng BHXH</i></th>
+				<th><i>Cty đóng BHXH</i></th>				
 			</tr>
 			<c:if test="${not empty salaryReport}">
-				<th colspan="5" align="center"> Tổng: </th>		
+				<th colspan="4" align="center"> Tổng: </th>		
 				<th><fmt:formatNumber value="${salaryReport.finalSalary + salaryReport.advancePayed}" type="number"/></th>		
 				<th><fmt:formatNumber value="${salaryReport.bounus}" type="number"/></th>
 				<th><fmt:formatNumber value="${salaryReport.subsidize}" type="number"/></th>
 				<th><fmt:formatNumber value="${salaryReport.overTimeSalary}" type="number"/></th>
 				<th><fmt:formatNumber value="${salaryReport.advancePayed}" type="number"/></th>
+				<th><fmt:formatNumber value="${salaryReport.averageSalary}" type="number"/>/người</th>				
 				<th><fmt:formatNumber value="${salaryReport.taxPersonal}" type="number"/></th>
 				<th><fmt:formatNumber value="${salaryReport.payedInsurance}" type="number"/></th>
+				<th><fmt:formatNumber value="${salaryReport.cPayedInsur}" type="number"/></th>
 			</c:if>
 			<c:forEach var="salary" items="${salaryDetails}">
 				<tr>
-					<td>${salary.employeeId}</td>
+					<%-- <td>${salary.employeeId}</td> --%>
 					<td nowrap="nowrap">${salary.fullName}</td>
 					<td>${salary.department}</td>					
 					<td>${salary.jobTitle}</td>
@@ -213,8 +220,10 @@ tr:nth-child(even) {
 					<td><fmt:formatNumber value="${salary.subsidize}" type="number"/> </td>
 					<td><fmt:formatNumber value="${salary.overTimeSalary}" type="number"/> </td>
 					<td><fmt:formatNumber value="${salary.advancePayed}" type="number"/> </td>
+					<td><fmt:formatNumber value="${salary.averageSalary}" type="number"/> </td>					
 					<td><fmt:formatNumber value="${salary.taxPersonal}" type="number"/> </td>
 					<td><fmt:formatNumber value="${salary.payedInsurance}" type="number"/> </td>
+					<td><fmt:formatNumber value="${salary.cPayedInsur}" type="number"/> </td>					
 				</tr>
 			</c:forEach>
 		</table>
@@ -222,6 +231,7 @@ tr:nth-child(even) {
 			<div class="alert alert-success">${message}</div>
 		</c:if>
 	</div>
+	
 	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary"><button class="btn btn-primary btn-sm">Quay lại lựa chọn thông tin cần thống kê</button></a>
 </body>
 </html>

@@ -26,6 +26,7 @@ public class SalaryDetail implements Serializable {
 	private int year;
 	private String desc;
 	private String payedInsurance;
+	private String cPayedInsur;
 	private String fullName;
 	private String phoneNo;
 	private String bankNo;
@@ -37,6 +38,7 @@ public class SalaryDetail implements Serializable {
 	private String salaryInsurance;
 	private String percentCompanyPay;
 	private String percentEmployeePay;
+	private String averageSalary;
 	private int workComplete;
 	private String workedDay;
 	private String salaryForWorkedDay;
@@ -51,7 +53,7 @@ public class SalaryDetail implements Serializable {
 
 	public SalaryDetail(int employeeId, String basicSalary, String exchangeRate, String finalSalary, String overTimeN, String overTimeW, String overTimeH, 
 			String overTimeSalary, String bounus, String subsidize, String advancePayed, String taxPersonal, int month, int year,	
-			String description, String payedInsurance, String fullName, String phoneNo, String bankNo, String bankName, String bankBranch,
+			String description, String payedInsurance, String cPayedInsur, String fullName, String phoneNo, String bankNo, String bankName, String bankBranch,
 			String salary, String department, String jobTitle, String salaryInsurance, String percentCompanyPay, String percentEmployeePay, 
 			int workComplete, String workedDay, String other, String arrears, String payStatus) {
 		
@@ -71,7 +73,7 @@ public class SalaryDetail implements Serializable {
 		this.year = year;
 		this.desc = description;		
 		this.payedInsurance = payedInsurance;
-		
+		this.cPayedInsur = cPayedInsur;
 		this.fullName = fullName;
 		this.phoneNo = phoneNo;
 		this.bankNo = bankNo;
@@ -226,6 +228,14 @@ public class SalaryDetail implements Serializable {
 		this.payedInsurance = payedInsurance;
 	}
 
+	public String getcPayedInsur() {
+		return cPayedInsur;
+	}
+
+	public void setcPayedInsur(String cPayedInsur) {
+		this.cPayedInsur = cPayedInsur;
+	}
+
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
@@ -372,6 +382,14 @@ public class SalaryDetail implements Serializable {
 
 	public void setWorkingDayOfMonth(Float workingDayOfMonth) {
 		this.workingDayOfMonth = workingDayOfMonth;
+	}
+
+	public String getAverageSalary() {
+		return averageSalary;
+	}
+
+	public void setAverageSalary(String averageSalary) {
+		this.averageSalary = averageSalary;
 	}
 		
 }

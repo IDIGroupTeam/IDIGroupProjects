@@ -48,7 +48,7 @@ td, th {
 		<table class="table table-bordered table-hover">
 			<tr>
 				<td>Gửi tới:</td>
-				<td>${sendForm.sendTo}</td>
+				<td><form:input path="sendTo" class="form-control"/></td>
 			</tr>
 			<tr>
 				<td>Tiêu đề:</td>

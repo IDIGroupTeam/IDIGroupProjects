@@ -20,38 +20,39 @@ Include the plugin's CSS and JS:
 <!-- Initialize the plugin: -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript">
-	/*$(function() {
-	 $("#department")
-	 .change(
-	 function() {
-	 // Lấy dữ liệu của phòng
-	 val = $(this).val();
-	 $
-	 .ajax({
-	 dataType : "json",
-	 url : "${url}/salary/selection",
-	 data : {
-	 department : val
-	 },
-	 success : function(obj) {
-	 employeeIdSel = "<option value='0'>Tất cả nhân viên hiện tại</option>";
-	 for (i = 0; i < obj.length; i++) {
-	 employeeIdSel += "<option value='" + obj[i].employeeId + "'>"
-	 + "Mã NV "
-	 + obj[i].employeeId
-	 + ", "
-	 + obj[i].fullName
-	 + ", chức vụ: "
-	 + obj[i].jobTitle
-	 + "</option>";
-	 }
-	 $("#employeeId")
-	 .html(employeeIdSel);
-	 }
-	 });
 
-	 });
-	 }); */
+	$(function() {
+		$("#department")
+				.change(
+						function() {
+							// Lấy dữ liệu của phòng
+							val = $(this).val();
+							$
+									.ajax({
+										dataType : "json",
+										url : "${url}/salary/selection",
+										data : {
+											department : val
+										},
+										success : function(obj) {
+											employeeIdSel = "<option value='0'>Tất cả nhân viên hiện tại</option>";
+											for (i = 0; i < obj.length; i++) {
+												employeeIdSel += "<option value='" + obj[i].employeeId + "'>"
+														+ "Mã NV "
+														+ obj[i].employeeId
+														+ ", "
+														+ obj[i].fullName
+														+ ", chức vụ: "
+														+ obj[i].jobTitle
+														+ "</option>";
+											}
+											$("#employeeId")
+													.html(employeeIdSel);
+										}
+									});
+
+						});
+	});
 </script>
 <title>Báo cáo, thống kê lương nhân viên</title>
 </head>
@@ -66,12 +67,6 @@ Include the plugin's CSS and JS:
 			<jsp:useBean id="now" class="java.util.Date" />
 			<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
 			<tr>
-				<%-- 				<td bgcolor="#FAFAFA" nowrap="nowrap">Chọn phòng ban:</td>
-				<td><form:select path="department"
-						class="form-control animated">
-						<form:option value="all" label="Cả công ty"></form:option>
-						<form:options items="${departmentMap}" var="department" />
-					</form:select></td> --%>
 				<td bgcolor="#FAFAFA" width="30%">Chọn năm:</td>
 				<td><form:select path="yearReport"
 						class="form-control animated">
@@ -100,6 +95,15 @@ Include the plugin's CSS and JS:
 						<form:option value="11" label="Tháng 11" />
 						<form:option value="12" label="Tháng 12" />
 					</form:select></td>
+			</tr>
+			<tr>
+				<td bgcolor="#FAFAFA" nowrap="nowrap">Chọn phòng ban:</td>
+				<td><form:select path="department"
+						class="form-control animated">
+						<form:option value="all" label="Cả công ty"></form:option>
+						<form:options items="${departmentMap}" var="department" />
+					</form:select>
+				</td>
 			</tr>
 			<tr>
 				<td bgcolor="#FAFAFA" nowrap="nowrap">Chọn nhân viên:</td>

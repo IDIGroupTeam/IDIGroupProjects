@@ -58,7 +58,8 @@
 					<form:hidden path="bankBranch"/>
 					<form:hidden path="salaryInsurance"/>
 					<form:hidden path="salaryPerHour"/> 	
-					<form:hidden path="percentEmployeePay"/>				
+					<form:hidden path="percentEmployeePay"/>		
+					<form:hidden path="percentCompanyPay"/>				
 					<tr>
 						<td colspan="6" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin nhân viên</td>
 					</tr>

@@ -18,17 +18,19 @@ public class SalaryReport implements Serializable {
 	private String bounus;
 	private String subsidize;
 	private String advancePayed;
+	private String averageSalary;
 	private String taxPersonal;
 	private int month;
 	private int year;	
 	private String payedInsurance;
+	private String cPayedInsur;
 	
 	public SalaryReport() {
 		
 	}
 
 	public SalaryReport(String finalSalary, String overTimeN, String overTimeW, String overTimeH, String overTimeSalary,
-		String bounus, String subsidize, String advancePayed, String taxPersonal, String payedInsurance) {
+		String bounus, String subsidize, String advancePayed, String taxPersonal, String payedInsurance, String cPayedInsur) {
 		
 		this.finalSalary = finalSalary;
 		this.overTimeN = overTimeN;
@@ -42,7 +44,7 @@ public class SalaryReport implements Serializable {
 /*		this.month = month;
 		this.year = year;*/
 		this.payedInsurance = payedInsurance;
-
+		this.cPayedInsur = cPayedInsur;
 	}	
 
 	public String getFinalSalary() {
@@ -152,4 +154,25 @@ public class SalaryReport implements Serializable {
 	public void setDepartment(String payedInsurance) {
 		this.payedInsurance = payedInsurance;
 	}
+
+	public String getcPayedInsur() {
+		return cPayedInsur;
+	}
+
+	public void setcPayedInsur(String cPayedInsur) {
+		this.cPayedInsur = cPayedInsur;
+	}
+
+	public void setPayedInsurance(String payedInsurance) {
+		this.payedInsurance = payedInsurance;
+	}
+
+	public String getAverageSalary() {
+		return averageSalary;
+	}
+
+	public void setAverageSalary(String averageSalary) {
+		this.averageSalary = averageSalary;
+	}
+	
 }

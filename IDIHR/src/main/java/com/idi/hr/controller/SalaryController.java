@@ -32,11 +32,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.idi.hr.bean.Department;
 import com.idi.hr.bean.EmployeeInfo;
 import com.idi.hr.bean.LeaveReport;
 import com.idi.hr.bean.Salary;
@@ -46,17 +48,22 @@ import com.idi.hr.bean.SalaryReportPerEmployee;
 import com.idi.hr.bean.WorkingDay;
 import com.idi.hr.common.PropertiesManager;
 import com.idi.hr.common.Utils;
+import com.idi.hr.dao.DepartmentDAO;
 import com.idi.hr.dao.EmployeeDAO;
 import com.idi.hr.dao.SalaryDAO;
 import com.idi.hr.dao.WorkingDayDAO;
 import com.idi.hr.form.SalaryForm;
 import com.idi.hr.form.SendReportForm;
+
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
@@ -72,6 +79,9 @@ public class SalaryController {
 
 	@Autowired
 	private WorkingDayDAO workingDayDAO;
+	
+	@Autowired
+	private DepartmentDAO departmentDAO;
 	
 	@Autowired
 	private JavaMailSender mailSender;
@@ -485,9 +495,15 @@ public class SalaryController {
 			overTimeSalary = Math.round(overTimeSalary);
 			salaryDetail.setOverTimeSalary(String.valueOf(overTimeSalary));
 
+			//tinh phan dong bhxh cua nv
 			if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0)
 				salaryDetail.setPayedInsurance(String.valueOf(Float.parseFloat(salaryDetail.getSalaryInsurance())
 						* Float.parseFloat(salaryDetail.getPercentEmployeePay()) / 100));
+			
+			//tinh so tien cty chi cho bhxh
+			if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0)
+				salaryDetail.setcPayedInsur(String.valueOf(Float.parseFloat(salaryDetail.getSalaryInsurance())
+						* Float.parseFloat(salaryDetail.getPercentCompanyPay()) / 100));
 
 			salaryDAO.insertSalaryDetail(salaryDetail);
 			model.addAttribute("salaryDetail", salaryDetail);
@@ -984,12 +1000,17 @@ public class SalaryController {
 			overTimeSalary = Math.round(overTimeSalary);
 			salaryDetail.setOverTimeSalary(String.valueOf(overTimeSalary));
 
+			//tinh so tien nv chi cho bhxh
 			if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0)
 				salaryDetail.setPayedInsurance(String.valueOf(Float.parseFloat(salaryDetail.getSalaryInsurance())
 						* Float.parseFloat(salaryDetail.getPercentEmployeePay()) / 100));
 
-			// update ... lay salary o bang salary info sang bang salary detail lam basic
-			// salary
+			//tinh so tien cty chi cho bhxh
+			if (salaryDetail.getSalaryInsurance() != null && salaryDetail.getSalaryInsurance().length() > 0)
+				salaryDetail.setcPayedInsur(String.valueOf(Float.parseFloat(salaryDetail.getSalaryInsurance())
+						* Float.parseFloat(salaryDetail.getPercentCompanyPay()) / 100));
+			
+			// update ... lay salary o bang salary info sang bang salary detail lam basic salary
 			if (salaryDetail.getBasicSalary() == null) {
 				salaryDetail.setBasicSalary(String.valueOf(s));
 			}
@@ -1013,8 +1034,8 @@ public class SalaryController {
 			model.addAttribute("salaryReportForm", leaveReport);
 
 			// get list department
-			// Map<String, String> departmentMap = this.dataForDepartments();
-			// model.addAttribute("departmentMap", departmentMap);
+			Map<String, String> departmentMap = this.dataForDepartments();
+			model.addAttribute("departmentMap", departmentMap);
 
 			// get list employee id
 			Map<String, String> employeeMap = this.employees();
@@ -1029,6 +1050,132 @@ public class SalaryController {
 		return "prepareSummarySalary";
 	}
 
+	@RequestMapping(value = "/salary/generateSalaryReportToPDF", method = RequestMethod.POST)
+	public String generateSalaryReportToPDF(Model model, @RequestParam("month") String month, @RequestParam("year") String year, @RequestParam("dept") String dept) throws Exception {
+
+		String fileName = "Thong ke thong tin luong chi tiet ";
+		String title = "Thống kê thông tin lương nhân viên lương chi tiết ";
+		String path = hr.getProperty("REPORT_PATH");
+		File dir = new File(path);
+		try {						
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = new Date();
+			String currentDate = dateFormat.format(date);		
+			
+			if(month  != null && Integer.parseInt(month) > 0) {
+				fileName = fileName + "thang " + month + " nam " + year + " cua ";					
+				title = title + "tháng " + month + " năm " + year + " của " + " phòng " + dept;
+				if(dept.equalsIgnoreCase("all")) {
+					fileName = fileName + " phong " + dept;					
+					title = title + " phòng " + dataForDepartments().get(dept);
+				}
+				List<SalaryDetail> list = salaryDAO.getSalaryReportDetail(month, year, dept);
+			}else {
+				fileName = fileName + "nam " + year + " cua ";					
+				title = title + "năm " + year + " của " + " phòng " + dept;
+				if(dept.equalsIgnoreCase("all")) {
+					fileName = fileName + " phong " + dept;					
+					title = title + " phòng " + dataForDepartments().get(dept);
+				}
+				List<SalaryReportPerEmployee> list = salaryDAO.getSalaryReportDetail(year, dept);
+			}			
+	
+			Document document = new Document(PageSize.A4.rotate());
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+	
+			PdfWriter.getInstance(document, new FileOutputStream(dir + "/" + fileName + ".pdf"));
+			BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+			Font fontB = new Font(bf, 18);
+			Font font = new Font(bf, 14);
+			document.open();
+	
+			PdfPTable table = new PdfPTable(4);
+			
+			//addSummarySalaryToPDFRows(table, salaryDetail);
+			document.add(new Paragraph("                  " + title, fontB));
+			document.add(new Paragraph("                  ", font));
+			document.add(table);
+			document.add(new Paragraph("                  ", font));
+			document.add(new Paragraph("                                                                                                                                                          Ngày: "	+ Utils.convertDateToDisplay(currentDate), font));
+			document.add(new Paragraph("                  ", font));
+			document.add(new Paragraph("                                                                                                                                                            " + hr.getProperty("KTT"), font));			
+			
+			document.close();
+		} catch (Exception e) {
+			model.addAttribute("isOpen", "Yes");
+			model.addAttribute("warning", "Vui lòng tắt file " + dir + fileName + " nếu đang mở trước khi export");
+			e.printStackTrace();
+		}
+		return "sendSummarySalary";
+	}
+	
+	private void addTableHeaderSummaryReportToPDF(PdfPTable table, Font font) throws Exception {
+		PdfPCell header = new PdfPCell();		
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Họ tên", font));
+		table.addCell(header);			
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Phòng", font));
+		table.addCell(header);		
+
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Chức danh", font));
+		table.addCell(header);
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Lương cơ bản", font));
+		table.addCell(header);
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Lương thực nhận", font));
+		table.addCell(header);		
+
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Thưởng", font));
+		table.addCell(header);
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Trợ cấp/trách nhiệm", font));
+		table.addCell(header);		
+
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Lương ngoài giờ", font));
+		table.addCell(header);				
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Tạm ứng", font));
+		table.addCell(header);
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Thuế TNCN", font));
+		table.addCell(header);
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("NV đóng BHXH", font));
+		table.addCell(header);
+		
+		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		header.setPhrase(new Phrase("Cty đóng BHXH", font));
+		table.addCell(header);		
+
+	}
+
+	private void addSummaryReportToPDFRows(PdfPTable table, List<SalaryReportPerEmployee> SalaryReportPerEmployees) throws DocumentException, IOException {
+		BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+		Font font = new Font(bf, 12);
+		for (int i = 0; i < SalaryReportPerEmployees.size(); i++) {
+			SalaryReportPerEmployee salaryReportPerEmployee = new SalaryReportPerEmployee();
+			salaryReportPerEmployee = (SalaryReportPerEmployee) SalaryReportPerEmployees.get(i);
+
+			table.addCell(new Paragraph(salaryReportPerEmployee.getFullName(), font));
+			//...
+		}
+	}	
+	
 	@RequestMapping(value = "/salary/generateSalaryReport", method = RequestMethod.POST)
 	public String generateSalaryReport(Model model, HttpServletResponse response, HttpServletRequest request,
 			@ModelAttribute("salaryReportForm") @Validated LeaveReport leaveReport,
@@ -1037,24 +1184,36 @@ public class SalaryController {
 		try {
 			Map<String, String> employeeMap = this.employees();
 			String name = "";
+			
 			if (leaveReport.getMonthReport() == null || Integer.parseInt(leaveReport.getMonthReport()) == 0) {
 				if (leaveReport.getEmployeeId() > 0) {
 					String id = String.valueOf(leaveReport.getEmployeeId());
 					name = employeeMap.get(id);
 					model.addAttribute("formTitle",
-							"Thông tin thông kê lương của " + name + " năm " + leaveReport.getYearReport());
+							"Thông tin thống kê lương của " + name + " năm " + leaveReport.getYearReport());
 					SalaryReport salaryReport = new SalaryReport();
 					salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(), leaveReport.getMonthReport(),
 							leaveReport.getYearReport());
 					model.addAttribute("salaryReport", salaryReport);
 					return "summarySalaryReport";
 				} else {
-					List<SalaryReportPerEmployee> list = salaryDAO.getSalaryReportDetail(leaveReport.getYearReport());
-					model.addAttribute("formTitle",
-							"Thông tin thông kê lương nhân viên năm " + leaveReport.getYearReport());
-					// System.err.println("fan trang");
-					// System.err.println("fan trang" + form.getYearReport());
-					// System.err.println("fan trang" + leaveReport.getYearReport());
+					List<SalaryReportPerEmployee> list = salaryDAO.getSalaryReportDetail(leaveReport.getYearReport(), leaveReport.getDepartment());
+					model.addAttribute("formTitle",	"Thông tin thống kê lương nhân viên năm " + leaveReport.getYearReport());
+					
+					//Xu ly tinh luong trung binh
+					float averageSalaryTotal = 0;
+					float averageSalary = 0;
+					for(int i = 0; i < list.size() ; i++) {
+						SalaryReportPerEmployee salaryReport = list.get(i);
+						int empId = salaryReport.getEmployeeId();
+						//tinh so thang da tra luong cho tung nv
+						int months = salaryDAO.countMonthPerYearByEmp(empId, leaveReport.getYearReport());
+						averageSalary = (Float.valueOf(salaryReport.getFinalSalary()) + Float.valueOf(salaryReport.getAdvancePayed()))/months;						
+						salaryReport.setAverageSalary(String.valueOf(averageSalary));			
+						
+						averageSalaryTotal = averageSalaryTotal + averageSalary;
+					}
+
 					if (form.getNumberRecordsOfPage() == 0) {
 						form.setNumberRecordsOfPage(25);
 					}
@@ -1097,12 +1256,16 @@ public class SalaryController {
 					// form.setYearReport(Integer.parseInt(leaveReport.getYearReport()));
 					model.addAttribute("salaryForm", form);
 					model.addAttribute("salaryDetails", listSalaryForPage);
-					model.addAttribute("formTitle",
-							"Thông tin thông kê lương nhân viên tổng cả năm " + leaveReport.getYearReport());
+					model.addAttribute("formTitle",	"Thông tin thống kê lương nhân viên tổng cả năm " + leaveReport.getYearReport());
 					// model.addAttribute("listSalaryReportDetail", listSalaryReportDetail);
-					SalaryReport salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(),
-							leaveReport.getMonthReport(), leaveReport.getYearReport());
+					SalaryReport salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(), leaveReport.getMonthReport(), leaveReport.getYearReport());
+					//Xu ly tinh luong trung binh
+					salaryReport.setAverageSalary(String.valueOf(averageSalaryTotal/list.size()));					
+					
 					model.addAttribute("salaryReport", salaryReport);
+					model.addAttribute("listSalaryReport", list);
+					model.addAttribute("monthReport", leaveReport.getMonthReport());
+					model.addAttribute("yearReport", leaveReport.getYearReport());
 					// model.addAttribute("yearReport", leaveReport.getYearReport());
 					return "listSalarySumaryDetail";
 				}
@@ -1110,7 +1273,7 @@ public class SalaryController {
 				if (leaveReport.getEmployeeId() > 0) {
 					String id = String.valueOf(leaveReport.getEmployeeId());
 					name = employeeMap.get(id);
-					model.addAttribute("formTitle", "Thông tin thông kê lương của " + name + " tháng "
+					model.addAttribute("formTitle", "Thông tin thống kê lương của " + name + " tháng "
 							+ leaveReport.getMonthReport() + ", năm " + leaveReport.getYearReport());
 					SalaryReport salaryReport = new SalaryReport();
 					salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(), leaveReport.getMonthReport(),
@@ -1120,7 +1283,7 @@ public class SalaryController {
 					return "summarySalaryReport";
 				} else {
 					List<SalaryDetail> list = salaryDAO.getSalaryReportDetail(leaveReport.getMonthReport(),
-							leaveReport.getYearReport());
+							leaveReport.getYearReport(), leaveReport.getDepartment());
 
 					if (form.getNumberRecordsOfPage() == 0) {
 						form.setNumberRecordsOfPage(25);
@@ -1163,12 +1326,18 @@ public class SalaryController {
 					}
 					SalaryReport salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(),
 							leaveReport.getMonthReport(), leaveReport.getYearReport());
+					salaryReport.setAverageSalary(String.valueOf((Float.valueOf(salaryReport.getFinalSalary()) + Float.valueOf(salaryReport.getAdvancePayed()))/list.size()));		
+					
+					
 					model.addAttribute("salaryReport", salaryReport);
 					model.addAttribute("salaryForm", form);
 					model.addAttribute("salaryDetails", listSalaryForPage);
-					model.addAttribute("formTitle", "Thông tin thông kê lương nhân viên tháng "
+					model.addAttribute("formTitle", "Thông tin thống kê lương nhân viên tháng "
 							+ leaveReport.getMonthReport() + ", năm " + leaveReport.getYearReport());
 					// model.addAttribute("listSalaryReportDetail", listSalaryReportDetail);
+					model.addAttribute("monthReport", leaveReport.getMonthReport());
+					model.addAttribute("yearReport", leaveReport.getYearReport());
+					model.addAttribute("listSalaryReport", list);
 					return "listSalarySumaryDetail";
 				}
 			}
@@ -1176,29 +1345,35 @@ public class SalaryController {
 			log.error(e, e);
 			e.printStackTrace();
 		}
-		return "summarySalaryReport";
+		return "listSalarySumaryDetail";
 	}
+	
+	private Map<String, String> dataForDepartments() {
+		Map<String, String> departmentMap = new LinkedHashMap<String, String>();
+		try {
+			List<Department> list = departmentDAO.getDepartments();
+			Department department = new Department();
+			for (int i = 0; i < list.size(); i++) {
+				department = (Department) list.get(i);
+				departmentMap.put(department.getDepartmentId(), department.getDepartmentName());
+			}
 
-	/*
-	 * private Map<String, String> dataForDepartments() { Map<String, String>
-	 * departmentMap = new LinkedHashMap<String, String>(); try { List<Department>
-	 * list = departmentDAO.getDepartments(); Department department = new
-	 * Department(); for (int i = 0; i < list.size(); i++) { department =
-	 * (Department) list.get(i); departmentMap.put(department.getDepartmentId(),
-	 * department.getDepartmentName()); }
-	 * 
-	 * } catch (Exception e) { log.error(e, e); e.printStackTrace(); } return
-	 * departmentMap; }
-	 */
+		} catch (Exception e) {
+			log.error(e, e);
+			e.printStackTrace();
+		}
+		return departmentMap;
+	}	 
 
-	// For Ajax
-	/*
-	 * @RequestMapping("/salary/selection") public @ResponseBody List<EmployeeInfo>
-	 * employeesByDepartment(@RequestParam("department") String department) {
-	 * List<EmployeeInfo> list = null; if (!department.equalsIgnoreCase("all")) list
-	 * = employeeDAO.getEmployeesByDepartment(department); else list =
-	 * employeeDAO.getEmployees();
-	 * 
-	 * return list; }
-	 */
+	// For Ajax	
+	@RequestMapping("/salary/selection")
+	public @ResponseBody List<EmployeeInfo> employeesByDepartment(@RequestParam("department") String department) {
+		List<EmployeeInfo> list = null;
+		if (!department.equalsIgnoreCase("all"))
+			list = employeeDAO.getEmployeesByDepartment(department);
+		else
+			list = employeeDAO.getEmployees();
+
+		return list;
+	}	 
 }

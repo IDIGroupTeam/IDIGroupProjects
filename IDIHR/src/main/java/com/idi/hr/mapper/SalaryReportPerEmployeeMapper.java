@@ -12,7 +12,7 @@ public class SalaryReportPerEmployeeMapper  implements RowMapper<SalaryReportPer
 	public SalaryReportPerEmployee mapRow(ResultSet rs, int nowNum) throws SQLException {
 		int employeeId = rs.getInt("EMPLOYEE_ID");
 		String fullName = rs.getString("FULL_NAME");
-		String salary = rs.getString("SALARY");
+		String salary = rs.getString("BASIC_SALARY");
 		String department = rs.getString("DEPARTMENT");
 		String jobTitle = rs.getString("JOB_TITLE");
 		String finalSalary = rs.getString("ACTUAL_SALARY");
@@ -27,9 +27,10 @@ public class SalaryReportPerEmployeeMapper  implements RowMapper<SalaryReportPer
 		//int month = rs.getInt("MONTH");
 		//int year = rs.getInt("YEAR");
 		String payedInsurance = rs.getString("PAYED_INSURANCE");
-
+		String cPayedInsur = rs.getString("C_PAYED_INSUR");
+		
 		return new SalaryReportPerEmployee(employeeId, fullName, department, jobTitle,
 				salary, finalSalary, overTimeN, overTimeW, overTimeH, overTimeSalary, 
-				bounus, subsidize, advancePayed, taxPersonal, payedInsurance);
+				bounus, subsidize, advancePayed, taxPersonal, payedInsurance, cPayedInsur);
 	}	
 }

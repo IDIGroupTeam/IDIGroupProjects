@@ -26,6 +26,7 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 		int year = rs.getInt("YEAR");;
 		String desc = rs.getString("S.COMMENT");		
 		String payedInsurance = rs.getString("PAYED_INSURANCE");
+		String cPayedInsur = rs.getString("C_PAYED_INSUR");
 		String fullName = rs.getString("FULL_NAME");
 		String phoneNo = rs.getString("PHONE_NO");
 		String bankNo = rs.getString("BANK_NO");
@@ -44,7 +45,7 @@ public class SalaryDetailMapper  implements RowMapper<SalaryDetail> {
 		String payStatus = rs.getString("PAY_STATUS");
 		return new SalaryDetail(employeeId, basicSalary, exchangeRate, finalSalary, overTimeN, overTimeW, overTimeH, 
 				overTimeSalary, bounus, subsidize, advancePayed, taxPersonal, month, year, desc,
-				payedInsurance,fullName, phoneNo, bankNo, bankName, bankBranch, salary, department, 
+				payedInsurance, cPayedInsur, fullName, phoneNo, bankNo, bankName, bankBranch, salary, department, 
 				jobTitle, salaryInsurance, percentCompanyPay, percentEmployeePay, workcomplete, 
 				workedDay, other, arrears, payStatus);
 	}	
