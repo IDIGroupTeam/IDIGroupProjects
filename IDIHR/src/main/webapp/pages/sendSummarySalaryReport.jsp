@@ -25,9 +25,13 @@ td, th {
 <title>${formTitle}</title>
 </head>
 <body>
-	<a href="${pageContext.request.contextPath}/salary/listSalaryDetail?employeeId=${employeeId}">
-	<button	class="btn btn-lg btn-primary btn-sm">Quay lại danh sách lương các tháng</button></a>			
-	<form:form action="sendSummarySalary" modelAttribute="sendForm"
+	<a href="${pageContext.request.contextPath}/salary/prepareSummarySalary">
+	<button	class="btn btn-lg btn-primary btn-sm">Quay lại thống kê lương</button></a>		
+	<c:if test="${not empty message}">		
+		<a href="${pageContext.request.contextPath}/salary/viewPDF?fileName=${link}" target="_blank"><button	class="btn btn-lg btn-primary btn-sm">Xem và In</button></a>			
+		<br/><br/>
+	</c:if>		
+	<form:form action="sendSummarySalaryReport" modelAttribute="sendForm"
 		enctype="multipart/form-data" method="POST" >
 		<br />
 		<c:if test="${not empty message}">
@@ -43,25 +47,25 @@ td, th {
 		</c:if>
 		
 		<form:input type="hidden" path="fileName" value="${fileName}" />
-		<%-- <form:input type="hidden" path="sendTo" value="${sendForm.sendTo}" /> --%>
-		<form:input type="hidden" path="employeeId" value="${sendForm.employeeId}" />
+<%-- 		<form:input type="hidden" path="sendTo" value="${sendForm.sendTo}" /> --%>
+		
 		<table class="table table-bordered table-hover">
 			<tr>
-				<td>Gửi tới:</td>
-				<td><form:input path="sendTo" class="form-control"/></td>
+				<td title="Nhập địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com. Các email cách nhau bằng dấu phẩy , ">Gửi tới:</td>
+				<td title="Nhập địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com. Các email cách nhau bằng dấu phẩy , "><form:input path="sendTo" class="form-control"/></td>
 			</tr>
 			<tr>
 				<td>Tiêu đề:</td>
-				<td>${formTitle}</td>
+				<td>${title}</td>
 			</tr>
 			<tr>
 				<td>Nội dung:</td>
-				<td>Gửi file '${fileSave}</td>
+				<td>Gửi file '${fileName}'</td>
 			</tr>
 		</table>
 		
 		<c:if test="${empty validateEmail}">
-			<input class="btn btn-lg btn-primary btn-sm" type="submit"	value="Gửi" /> &nbsp;
+			<input class="btn btn-lg btn-primary btn-sm" type="submit"	value="Gửi mail" /> &nbsp;
 		</c:if>		
 	</form:form>
 </body>

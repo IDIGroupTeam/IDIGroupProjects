@@ -3,8 +3,10 @@ package com.idi.hr.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,11 +17,15 @@ import java.util.Map;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+
 import javax.mail.BodyPart;
 import javax.mail.Multipart;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -58,6 +64,7 @@ import com.idi.hr.form.SendReportForm;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
@@ -643,10 +650,10 @@ public class SalaryController {
 			document.add(new Paragraph("                  ", font));
 			document.add(table);
 			document.add(new Paragraph("                  ", font));
-			document.add(new Paragraph("                                                                                                                                                          Ngày: "	+ Utils.convertDateToDisplay(currentDate), font));
+			document.add(new Paragraph("                                                                                                                                                          Ngày lập: " + Utils.convertDateToDisplay(currentDate), font));
+			document.add(new Paragraph("                                                                                                                                                          Người lập: Vũ Quốc Vinh " , font));			
 			document.add(new Paragraph("                  ", font));
-			document.add(new Paragraph("                                                                                                                                                            " + hr.getProperty("KTT"), font));			
-			
+			document.add(new Paragraph("                  ", font));
 			document.close();
 		} catch (Exception e) {
 			model.addAttribute("isOpen", "Yes");
@@ -676,6 +683,66 @@ public class SalaryController {
 		model.addAttribute("message",  title + " được export thành công tại thư mục " + dir);
 		
 		return "sendSummarySalary";
+	}
+	
+	@RequestMapping(value = "/salary/sendSummarySalaryReport")
+	public String sendSummarySalaryReport(Model model, @ModelAttribute("sendForm") @Validated SendReportForm sendForm,
+			@RequestParam(required = false, value = "formTitle") String formTitle) throws Exception {
+		log.info("sending SummaryReport");
+		try {
+			//System.err.println("formTitle " + formTitle);
+			if (formTitle == null) {
+				MimeMessage mimeMessage = mailSender.createMimeMessage();
+				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+				String path = hr.getProperty("REPORT_PATH");
+
+				File file = new File(path + sendForm.getFileName() + ".pdf");
+				log.info("sending report: " + path + sendForm.getFileName() + ".pdf");
+				if (file.exists()) {
+					mimeMessage.setFrom("IDIHR-NotReply");
+					helper.setSubject("Thông tin lương tháng chi tiết --> Gửi từ PM Quản lý tiền lương");
+					//System.err.println("Subject: " + sendReportForm.getSubject());
+					mimeMessage.setContent(sendForm.getFileName(), "text/html; charset=UTF-8");
+
+					Multipart multipart = new MimeMultipart();
+					BodyPart attach = new MimeBodyPart();
+					DataSource source = new FileDataSource(path + sendForm.getFileName() + ".pdf");
+					attach.setDataHandler(new DataHandler(source));
+					attach.setFileName(path + sendForm.getFileName() + ".pdf");
+
+					multipart.addBodyPart(attach);
+					BodyPart content = new MimeBodyPart();
+					content.setContent("Thông tin lương tháng chi tiết ", "text/html; charset=UTF-8");
+					multipart.addBodyPart(content);
+					mimeMessage.setContent(multipart, "text/html; charset=UTF-8");
+					//helper.setTo(sendForm.getSendTo()); //gui cho 1 nguoi
+					helper.setTo(InternetAddress.parse(sendForm.getSendTo()));//gui cho nhieu nguoi
+					mailSender.send(mimeMessage);
+							
+					model.addAttribute("message", "Đã gửi thông tin lương tháng chi tiết thành công ...");
+					model.addAttribute("formTitle", "Gửi thông tin lương tháng chi tiết");
+					model.addAttribute("employeeId", sendForm.getEmployeeId());
+					
+					return "sentSummarySalaryReport";
+				} else {
+					log.info("File ko ton tai hoac chua dc export");
+					model.addAttribute("formTitle", "Gửi thông tin lương tháng chi tiết");
+					model.addAttribute("message", "Vui lòng export file trước khi gửi");
+				}
+			} else {
+				log.info("try to sending report again...");		
+				model.addAttribute("formTitle", "Gửi thông tin lương tháng chi tiết");
+				model.addAttribute("warning", "Vui lòng export file trước khi gửi");
+			}
+			
+			model.addAttribute("formTitle", "Gửi thông tin lương tháng chi tiết");			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("formTitle", "Gửi thông tin lương tháng chi tiết");
+			model.addAttribute("error", "Xin lỗi, đã có lỗi xẩy ra trong quá trình gửi mail, vui lòng thử lại!");
+		}
+		return "sentSummarySalaryReport";
 	}
 	
 	@RequestMapping(value = "/salary/sendSummarySalary")
@@ -708,7 +775,7 @@ public class SalaryController {
 					content.setContent("Thông tin lương tháng chi tiết ", "text/html; charset=UTF-8");
 					multipart.addBodyPart(content);
 					mimeMessage.setContent(multipart, "text/html; charset=UTF-8");
-					helper.setTo(sendForm.getSendTo());
+					helper.setTo(sendForm.getSendTo());//xxx
 					mailSender.send(mimeMessage);
 							
 					model.addAttribute("message", "Đã gửi thông tin lương tháng chi tiết thành công ...");
@@ -718,11 +785,13 @@ public class SalaryController {
 					return "sentSummarySalary";
 				} else {
 					log.info("File ko ton tai hoac chua dc export");
+					model.addAttribute("employeeId", sendForm.getEmployeeId());
 					model.addAttribute("formTitle", "Gửi thông tin lương tháng chi tiết");
 					model.addAttribute("message", "Vui lòng export file trước khi gửi");
 				}
 			} else {
 				log.info("try to sending report again...");		
+				model.addAttribute("employeeId", sendForm.getEmployeeId());
 				model.addAttribute("formTitle", "Gửi thông tin lương tháng chi tiết");
 				model.addAttribute("warning", "Vui lòng export file trước khi gửi");
 			}
@@ -731,6 +800,8 @@ public class SalaryController {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			model.addAttribute("employeeId", sendForm.getEmployeeId());
+			model.addAttribute("formTitle", "Gửi thông tin lương tháng chi tiết");
 			model.addAttribute("error", "Xin lỗi, đã có lỗi xẩy ra trong quá trình gửi mail, vui lòng thử lại!");
 		}
 		return "sentSummarySalary";
@@ -1050,70 +1121,153 @@ public class SalaryController {
 		return "prepareSummarySalary";
 	}
 
-	@RequestMapping(value = "/salary/generateSalaryReportToPDF", method = RequestMethod.POST)
+	@RequestMapping(value = "/salary/viewPDF", method = RequestMethod.GET)
+	public void viewSalaryReportToPDF(HttpServletRequest req, HttpServletResponse res, @RequestParam("fileName") String fileName, Model model) {
+		try {
+		    byte[] bytes = Files.readAllBytes(new File(fileName).toPath());			
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=" + fileName);
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/salary/generateSalaryReportToPDF")
 	public String generateSalaryReportToPDF(Model model, @RequestParam("month") String month, @RequestParam("year") String year, @RequestParam("dept") String dept) throws Exception {
 
-		String fileName = "Thong ke thong tin luong chi tiet ";
-		String title = "Thống kê thông tin lương nhân viên lương chi tiết ";
+		String fileName = "Thong ke thong tin chi tiet luong ";
+		String title = "Thống kê thông tin chi tiết lương nhân viên ";
 		String path = hr.getProperty("REPORT_PATH");
 		File dir = new File(path);
 		try {						
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = new Date();
 			String currentDate = dateFormat.format(date);		
-			
+			List<SalaryReportPerEmployee> listY = new ArrayList<SalaryReportPerEmployee>();
+			List<SalaryDetail> listM = new ArrayList<SalaryDetail>();
+			SalaryReport salaryReportS = new SalaryReport();
 			if(month  != null && Integer.parseInt(month) > 0) {
-				fileName = fileName + "thang " + month + " nam " + year + " cua ";					
-				title = title + "tháng " + month + " năm " + year + " của " + " phòng " + dept;
-				if(dept.equalsIgnoreCase("all")) {
-					fileName = fileName + " phong " + dept;					
-					title = title + " phòng " + dataForDepartments().get(dept);
+				fileName = fileName + "thang " + month + " nam " + year;					
+				title = title + "tháng " + month + " năm " + year;
+				if(dept != null && !dept.equalsIgnoreCase("all")) {
+					fileName = fileName + " cua phong " + dept;					
+					title = title + " của phòng " + dataForDepartments().get(dept);
 				}
-				List<SalaryDetail> list = salaryDAO.getSalaryReportDetail(month, year, dept);
+				listM = salaryDAO.getSalaryReportDetail(month, year, dept);
+				
+				salaryReportS = salaryDAO.getSalaryReport(0, month, year);
+				if(listM.size() > 0)
+					salaryReportS.setAverageSalary(String.valueOf((Float.valueOf(salaryReportS.getFinalSalary()) + Float.valueOf(salaryReportS.getAdvancePayed()))/listM.size()));	
+				
 			}else {
-				fileName = fileName + "nam " + year + " cua ";					
-				title = title + "năm " + year + " của " + " phòng " + dept;
-				if(dept.equalsIgnoreCase("all")) {
-					fileName = fileName + " phong " + dept;					
-					title = title + " phòng " + dataForDepartments().get(dept);
+				fileName = fileName + "nam " + year;					
+				title = title + "năm " + year;
+				if(dept != null && !dept.equalsIgnoreCase("all")) {
+					fileName = fileName + " cua phong " + dept;					
+					title = title + " của phòng " + dataForDepartments().get(dept);
 				}
-				List<SalaryReportPerEmployee> list = salaryDAO.getSalaryReportDetail(year, dept);
+				listY = salaryDAO.getSalaryReportDetail(year, dept);
+				//Xu ly tinh luong trung binh
+				float averageSalaryTotal = 0;
+				float averageSalary = 0;
+				for(int i = 0; i < listY.size() ; i++) {
+					SalaryReportPerEmployee salaryReport = listY.get(i);
+					int empId = salaryReport.getEmployeeId();
+					//tinh so thang da tra luong cho tung nv
+					int months = salaryDAO.countMonthPerYearByEmp(empId, year);
+					
+					averageSalary = (Float.valueOf(salaryReport.getFinalSalary()) + Float.valueOf(salaryReport.getAdvancePayed()))/months;						
+					salaryReport.setAverageSalary(String.valueOf(averageSalary));			
+					
+					averageSalaryTotal = averageSalaryTotal + averageSalary;
+				}		
+				
+				salaryReportS = salaryDAO.getSalaryReport(0, month, year);
+				//Xu ly tinh luong trung binh
+				if(listY.size() > 0)
+					salaryReportS.setAverageSalary(String.valueOf(averageSalaryTotal/listY.size()));	
 			}			
 	
-			Document document = new Document(PageSize.A4.rotate());
+			Document document = new Document(PageSize.A3.rotate());
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
 	
 			PdfWriter.getInstance(document, new FileOutputStream(dir + "/" + fileName + ".pdf"));
 			BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-			Font fontB = new Font(bf, 18);
+			Font fontB = new Font(bf, 23);
 			Font font = new Font(bf, 14);
 			document.open();
-	
-			PdfPTable table = new PdfPTable(4);
+			PdfPTable table = new PdfPTable(12);			
+			table.setHorizontalAlignment(Element.ALIGN_LEFT);
+			table.setWidthPercentage(100f);
 			
-			//addSummarySalaryToPDFRows(table, salaryDetail);
-			document.add(new Paragraph("                  " + title, fontB));
-			document.add(new Paragraph("                  ", font));
-			document.add(table);
-			document.add(new Paragraph("                  ", font));
-			document.add(new Paragraph("                                                                                                                                                          Ngày: "	+ Utils.convertDateToDisplay(currentDate), font));
-			document.add(new Paragraph("                  ", font));
-			document.add(new Paragraph("                                                                                                                                                            " + hr.getProperty("KTT"), font));			
+			PdfPTable tableM = new PdfPTable(11);
+			tableM.setHorizontalAlignment(Element.ALIGN_LEFT);
+			tableM.setWidthPercentage(100f);
+								
+			if(month  != null && Integer.parseInt(month) > 0) {
+				addTableHeaderSummaryReportToPDF(tableM, font, month);	
+				addSummaryReportToPDFRowsForMonth(tableM, listM);
+			}else {
+				addTableHeaderSummaryReportToPDF(table, font, null);	
+				addSummaryReportToPDFRows(table, listY);
+			}
 			
+			document.add(new Paragraph("                  	                " + title, fontB));
+			document.add(new Paragraph("                  ", font));
+			document.add(new Paragraph(" - Tổng tiền lương phải chi: " + Utils.customFormat(Float.valueOf(salaryReportS.getFinalSalary()) + Float.valueOf(salaryReportS.getAdvancePayed())), font));
+			document.add(new Paragraph(" - Trong đó bao gồm: Thưởng: " + Utils.customFormat(Float.valueOf(salaryReportS.getBounus())) +", trợ cấp/trách nhiệm: " + Utils.customFormat(Float.valueOf(salaryReportS.getSubsidize())) + ", lương ngoài giờ: " + Utils.customFormat(Float.valueOf(salaryReportS.getOverTimeSalary())), font));
+			document.add(new Paragraph(" - Đã trừ đi: Tạm ứng: " + Utils.customFormat(Float.valueOf(salaryReportS.getAdvancePayed())) + ", thuế thu nhập cá nhân: " + Utils.customFormat(Float.valueOf(salaryReportS.getTaxPersonal())) + ", phần nhân viên đóng BHXH: " + Utils.customFormat(Float.valueOf(salaryReportS.getPayedInsurance())), font));
+			document.add(new Paragraph(" - Thu nhập bình quân của người lao động: " + Utils.customFormat(Float.valueOf(salaryReportS.getAverageSalary())) + " người/tháng", font));
+			if(salaryReportS.getcPayedInsur() != null && salaryReportS.getcPayedInsur().trim().length() > 0)
+				document.add(new Paragraph(" - Phần công ty đóng BHXH: " + Utils.customFormat(Float.valueOf(salaryReportS.getcPayedInsur())), font));
+			else
+				document.add(new Paragraph(" - Phần công ty đóng BHXH --> dữ liệu cũ chưa tính cho phần công ty chi trả" , font));
+			document.add(new Paragraph("                  ", font));
+			document.add(new Paragraph(" (Đơn vị: Việt Nam đồng)", font));
+			document.add(new Paragraph("                  ", font));
+			if(month  != null && Integer.parseInt(month) > 0) 
+				document.add(tableM);
+			else
+				document.add(table);
+			document.add(new Paragraph("                  ", font));
+			document.add(new Paragraph(" Ngày lập:  "	+ Utils.convertDateToDisplay(currentDate), font)); 
+			document.add(new Paragraph(" Người lập: Vũ Quốc Vinh                                                                                                                                                          Người duyệt: Nguyễn Công Điểm ", font));	
+			document.add(new Paragraph("                  ", font));		
+			document.add(new Paragraph("                  ", font));
 			document.close();
+			
+			SendReportForm sendForm = new SendReportForm();			
+			sendForm.setSubject(title);
+			sendForm.setFileName(fileName);
+			sendForm.setSendFrom("Phần mềm quản lý tiền lương");
+			sendForm.setSendTo(hr.getProperty("emailCT"));
+			model.addAttribute("title", title);
+			model.addAttribute("fileName", fileName);
+			model.addAttribute("sendForm", sendForm);
+			model.addAttribute("formTitle", title);	
+			model.addAttribute("message",  title + " đã được export thành công. Vui lòng click 'Xem và In' bên trên để xem hoặc in báo cáo");
+			model.addAttribute("link", path + fileName + ".pdf");			
+			
 		} catch (Exception e) {
 			model.addAttribute("isOpen", "Yes");
 			model.addAttribute("warning", "Vui lòng tắt file " + dir + fileName + " nếu đang mở trước khi export");
 			e.printStackTrace();
 		}
-		return "sendSummarySalary";
+		
+		return "sendSummarySalaryReport";
 	}
 	
-	private void addTableHeaderSummaryReportToPDF(PdfPTable table, Font font) throws Exception {
+	private void addTableHeaderSummaryReportToPDF(PdfPTable table, Font font, String month) throws Exception {
 		PdfPCell header = new PdfPCell();		
-		
 		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
 		header.setPhrase(new Phrase("Họ tên", font));
 		table.addCell(header);			
@@ -1122,9 +1276,10 @@ public class SalaryController {
 		header.setPhrase(new Phrase("Phòng", font));
 		table.addCell(header);		
 
-		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-		header.setPhrase(new Phrase("Chức danh", font));
-		table.addCell(header);
+		/*
+		 * header.setBackgroundColor(BaseColor.LIGHT_GRAY); header.setPhrase(new
+		 * Phrase("Chức danh", font)); table.addCell(header);
+		 */
 		
 		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
 		header.setPhrase(new Phrase("Lương cơ bản", font));
@@ -1139,7 +1294,7 @@ public class SalaryController {
 		table.addCell(header);
 		
 		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-		header.setPhrase(new Phrase("Trợ cấp/trách nhiệm", font));
+		header.setPhrase(new Phrase("Trợ cấp - trách nhiệm", font));
 		table.addCell(header);		
 
 		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
@@ -1149,6 +1304,12 @@ public class SalaryController {
 		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
 		header.setPhrase(new Phrase("Tạm ứng", font));
 		table.addCell(header);
+		
+		if(month == null) {
+			header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+			header.setPhrase(new Phrase("Thu nhập bình quân", font));
+			table.addCell(header);
+		}
 		
 		header.setBackgroundColor(BaseColor.LIGHT_GRAY);
 		header.setPhrase(new Phrase("Thuế TNCN", font));
@@ -1172,9 +1333,82 @@ public class SalaryController {
 			salaryReportPerEmployee = (SalaryReportPerEmployee) SalaryReportPerEmployees.get(i);
 
 			table.addCell(new Paragraph(salaryReportPerEmployee.getFullName(), font));
-			//...
+			table.addCell(new Paragraph(salaryReportPerEmployee.getDepartment(), font));
+			/* table.addCell(new Paragraph(salaryReportPerEmployee.getJobTitle(), font)); */
+			table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getBasicSalary())), font));
+			table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getFinalSalary()) + Float.valueOf(salaryReportPerEmployee.getAdvancePayed())), font));
+			table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getBounus())), font));
+			table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getSubsidize())), font));
+			table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getOverTimeSalary())), font));
+			table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getAdvancePayed())), font));
+			table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getAverageSalary())), font));
+			table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getTaxPersonal())), font));
+			
+			if(salaryReportPerEmployee.getPayedInsurance() != null && salaryReportPerEmployee.getPayedInsurance().length() > 0)
+				table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getPayedInsurance())), font));
+			else
+				table.addCell(new Paragraph("không đóng", font));
+			//xu ly cho truong hop du leu cu 
+			if(salaryReportPerEmployee.getcPayedInsur() != null && salaryReportPerEmployee.getcPayedInsur().length() > 0)
+				table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getcPayedInsur())), font));
+			else
+				table.addCell(new Paragraph("dữ liệu cũ chưa tính", font));
 		}
 	}	
+	
+	private void addSummaryReportToPDFRowsForMonth(PdfPTable table, List<SalaryDetail> SalaryReportPerEmployees) throws DocumentException, IOException {
+		BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+		Font font = new Font(bf, 12);
+		for (int i = 0; i < SalaryReportPerEmployees.size(); i++) {
+			SalaryDetail salaryReportPerEmployee = new SalaryDetail();
+			salaryReportPerEmployee = (SalaryDetail) SalaryReportPerEmployees.get(i);
+
+			table.addCell(new Paragraph(salaryReportPerEmployee.getFullName(), font));
+			table.addCell(new Paragraph(salaryReportPerEmployee.getDepartment(), font));
+			/* table.addCell(new Paragraph(salaryReportPerEmployee.getJobTitle(), font)); */
+			table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getBasicSalary())), font));
+			
+			if(salaryReportPerEmployee.getAdvancePayed() != null && salaryReportPerEmployee.getAdvancePayed().trim().length() > 0)
+				table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getFinalSalary()) + Float.valueOf(salaryReportPerEmployee.getAdvancePayed())), font));
+			else
+				table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getFinalSalary())), font));
+			
+			if(salaryReportPerEmployee.getBounus() != null && salaryReportPerEmployee.getBounus().trim().length() > 0)
+				table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getBounus())), font));
+			else
+				table.addCell(new Paragraph("0", font));
+			
+			if(salaryReportPerEmployee.getSubsidize() != null && salaryReportPerEmployee.getSubsidize().trim().length() > 0)
+				table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getSubsidize())), font));
+			else
+				table.addCell(new Paragraph("0", font));
+			
+			table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getOverTimeSalary())), font));
+			
+			if(salaryReportPerEmployee.getAdvancePayed() != null && salaryReportPerEmployee.getAdvancePayed().trim().length() > 0)
+				table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getAdvancePayed())), font));
+			else
+				table.addCell(new Paragraph("0", font));			
+	
+			//table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getAverageSalary())), font));
+			
+			if(salaryReportPerEmployee.getTaxPersonal() != null && salaryReportPerEmployee.getTaxPersonal().trim().length() > 0)
+				table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getTaxPersonal())), font));
+			else
+				table.addCell(new Paragraph("0", font));
+			
+			if(salaryReportPerEmployee.getPayedInsurance() != null && salaryReportPerEmployee.getPayedInsurance().length() > 0)
+				table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getPayedInsurance())), font));
+			else
+				table.addCell(new Paragraph("không đóng", font));
+			//xu ly cho truong hop du leu cu 
+			if(salaryReportPerEmployee.getcPayedInsur() != null && salaryReportPerEmployee.getcPayedInsur().length() > 0)
+				table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getcPayedInsur())), font));
+			else
+				table.addCell(new Paragraph("dữ liệu cũ chưa tính", font));
+		
+		}
+	}
 	
 	@RequestMapping(value = "/salary/generateSalaryReport", method = RequestMethod.POST)
 	public String generateSalaryReport(Model model, HttpServletResponse response, HttpServletRequest request,
@@ -1256,17 +1490,21 @@ public class SalaryController {
 					// form.setYearReport(Integer.parseInt(leaveReport.getYearReport()));
 					model.addAttribute("salaryForm", form);
 					model.addAttribute("salaryDetails", listSalaryForPage);
-					model.addAttribute("formTitle",	"Thông tin thống kê lương nhân viên tổng cả năm " + leaveReport.getYearReport());
+					if(leaveReport.getDepartment() != null && !leaveReport.getDepartment().equalsIgnoreCase("all"))
+						model.addAttribute("formTitle",	"Thông tin thống kê lương nhân viên tổng cả năm " + leaveReport.getYearReport() + " của " + dataForDepartments().get(leaveReport.getDepartment()));
+					else
+						model.addAttribute("formTitle",	"Thông tin thống kê lương nhân viên tổng cả năm " + leaveReport.getYearReport());
 					// model.addAttribute("listSalaryReportDetail", listSalaryReportDetail);
 					SalaryReport salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(), leaveReport.getMonthReport(), leaveReport.getYearReport());
 					//Xu ly tinh luong trung binh
-					salaryReport.setAverageSalary(String.valueOf(averageSalaryTotal/list.size()));					
+					if(list.size() > 0)
+						salaryReport.setAverageSalary(String.valueOf(averageSalaryTotal/list.size()));					
 					
 					model.addAttribute("salaryReport", salaryReport);
 					model.addAttribute("listSalaryReport", list);
 					model.addAttribute("monthReport", leaveReport.getMonthReport());
 					model.addAttribute("yearReport", leaveReport.getYearReport());
-					// model.addAttribute("yearReport", leaveReport.getYearReport());
+					model.addAttribute("dept", leaveReport.getDepartment());
 					return "listSalarySumaryDetail";
 				}
 			} else {
@@ -1324,17 +1562,18 @@ public class SalaryController {
 							listSalaryForPage.add(salary);
 						}
 					}
-					SalaryReport salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(),
-							leaveReport.getMonthReport(), leaveReport.getYearReport());
-					salaryReport.setAverageSalary(String.valueOf((Float.valueOf(salaryReport.getFinalSalary()) + Float.valueOf(salaryReport.getAdvancePayed()))/list.size()));		
-					
-					
+					SalaryReport salaryReport = salaryDAO.getSalaryReport(leaveReport.getEmployeeId(), leaveReport.getMonthReport(), leaveReport.getYearReport());
+					if(list.size() > 0)
+						salaryReport.setAverageSalary(String.valueOf((Float.valueOf(salaryReport.getFinalSalary()) + Float.valueOf(salaryReport.getAdvancePayed()))/list.size()));		
+										
 					model.addAttribute("salaryReport", salaryReport);
 					model.addAttribute("salaryForm", form);
 					model.addAttribute("salaryDetails", listSalaryForPage);
-					model.addAttribute("formTitle", "Thông tin thống kê lương nhân viên tháng "
-							+ leaveReport.getMonthReport() + ", năm " + leaveReport.getYearReport());
-					// model.addAttribute("listSalaryReportDetail", listSalaryReportDetail);
+					if(leaveReport.getDepartment() != null && !leaveReport.getDepartment().equalsIgnoreCase("all"))
+						model.addAttribute("formTitle", "Thông tin thống kê lương nhân viên tháng "	+ leaveReport.getMonthReport() + ", năm " + leaveReport.getYearReport() + " của " + dataForDepartments().get(leaveReport.getDepartment()));
+					else
+						model.addAttribute("formTitle", "Thông tin thống kê lương nhân viên tháng "	+ leaveReport.getMonthReport() + ", năm " + leaveReport.getYearReport());
+					model.addAttribute("dept", leaveReport.getDepartment());
 					model.addAttribute("monthReport", leaveReport.getMonthReport());
 					model.addAttribute("yearReport", leaveReport.getYearReport());
 					model.addAttribute("listSalaryReport", list);

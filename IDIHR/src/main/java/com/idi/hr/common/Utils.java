@@ -1,6 +1,7 @@
 package com.idi.hr.common;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,6 +11,14 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Utils {
+	
+    static public String customFormat(float value ) {
+    	String pattern = "###,###";
+        DecimalFormat myFormatter = new DecimalFormat(pattern);
+        String output = myFormatter.format(value);        
+        //System.out.println(value + "  " + pattern + "  " + output);
+        return output;
+    }
 	
 	public static Calendar firstDayOfWeek(Calendar calendar){
 	     Calendar cal = (Calendar) calendar.clone();

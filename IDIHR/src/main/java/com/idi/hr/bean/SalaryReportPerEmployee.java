@@ -12,6 +12,7 @@ public class SalaryReportPerEmployee implements Serializable {
 	private int employeeId; 
 	private String fullName;
 	private String salary;
+	private String basicSalary;
 	private String department;
 	private String jobTitle;
 	private String finalSalary;
@@ -34,10 +35,11 @@ public class SalaryReportPerEmployee implements Serializable {
 	}
 
 	public SalaryReportPerEmployee(int employeeId, String fullName, String department, String jobTitle,
-			String salary, String finalSalary, String overTimeN, String overTimeW, String overTimeH, String overTimeSalary,
+			String basicSalary, String salary, String finalSalary, String overTimeN, String overTimeW, String overTimeH, String overTimeSalary,
 		    String bounus, String subsidize, String advancePayed, String taxPersonal, String payedInsurance, String cPayedInsur) {
 		this.employeeId = employeeId;
 		this.fullName = fullName;
+		this.basicSalary = basicSalary;
 		this.salary = salary;
 		this.department = department;
 		this.jobTitle = jobTitle;
@@ -88,6 +90,14 @@ public class SalaryReportPerEmployee implements Serializable {
 
 	public void setSalary(String salary) {
 		this.salary = salary;
+	}
+
+	public String getBasicSalary() {
+		return basicSalary;
+	}
+
+	public void setBasicSalary(String basicSalary) {
+		this.basicSalary = basicSalary;
 	}
 
 	public String getJobTitle() {

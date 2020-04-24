@@ -174,10 +174,10 @@ tr:nth-child(even) {
 			</tr>
 		</table>	
 	</form:form>
-<%-- 	<c:if test="${salaryDetails.size() > 0}">
-		<a href="${pageContext.request.contextPath}/salary/generateSalaryReportToPDF?year=${yearReport}&month=${monthReport}"><button class="btn btn-primary btn-sm">Export ra file PDF</button></a>
+	<c:if test="${salaryDetails.size() > 0}">
+		<a href="${pageContext.request.contextPath}/salary/generateSalaryReportToPDF?year=${yearReport}&month=${monthReport}&dept=${dept}"><button class="btn btn-primary btn-sm">Export ra file PDF</button></a>
 		<br/> <br/>
-	</c:if>	 --%>
+	</c:if>	
 	<div class="table-responsive">		
 		<table class="table table-striped">
 			<tr>
@@ -214,7 +214,7 @@ tr:nth-child(even) {
 					<td nowrap="nowrap">${salary.fullName}</td>
 					<td>${salary.department}</td>					
 					<td>${salary.jobTitle}</td>
-					<td><fmt:formatNumber value="${salary.salary}" type="number"/> </td>					
+					<td><fmt:formatNumber value="${salary.basicSalary}" type="number"/> </td>					
 					<td><fmt:formatNumber value="${salary.finalSalary + salary.advancePayed}" type="number"/></td>
 					<td><fmt:formatNumber value="${salary.bounus}" type="number"/> </td>
 					<td><fmt:formatNumber value="${salary.subsidize}" type="number"/> </td>
