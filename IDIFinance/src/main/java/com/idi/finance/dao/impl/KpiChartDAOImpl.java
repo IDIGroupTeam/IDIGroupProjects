@@ -28,6 +28,18 @@ import com.idi.finance.hangso.KpiMonthCont;
 public class KpiChartDAOImpl implements KpiChartDAO {
 	private static final Logger logger = Logger.getLogger(KpiChartDAOImpl.class);
 
+	@Value("${CAP_NHAT_KPI_CHART}")
+	private String CAP_NHAT_KPI_CHART;
+
+	@Value("${CAP_NHAT_KPI_MEASURE}")
+	private String CAP_NHAT_KPI_MEASURE;
+
+	@Value("${XOA_KPI_CHART}")
+	private String XOA_KPI_CHART;
+
+	@Value("${XOA_KPI_MEASURE}")
+	private String XOA_KPI_MEASURE;
+
 	@Value("${DANH_SACH_KPI_CHART}")
 	private String DANH_SACH_KPI_CHART;
 
@@ -54,6 +66,69 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 
 	public void setJdbcTmpl(JdbcTemplate jdbcTmpl) {
 		this.jdbcTmpl = jdbcTmpl;
+	}
+
+	@Override
+	public int updateKpiChart(KpiChart kpiChart) {
+		if (kpiChart == null) {
+			return 0;
+		}
+
+		String query = CAP_NHAT_KPI_CHART;
+
+		KpiGroup kpiGroup = kpiChart.getKpiGroup();
+		int groupId = 0;
+		if (kpiGroup != null) {
+			groupId = kpiGroup.getGroupId();
+		}
+
+		logger.info("getChartId: " + kpiChart.getChartId());
+		logger.info("isHomeFlag: " + kpiChart.isHomeFlag());
+		logger.info("getThreshold: " + kpiChart.getThreshold());
+
+		try {
+			int count = jdbcTmpl.update(query, kpiChart.getChartTitle(), kpiChart.getChartTitleEn(), groupId,
+					kpiChart.isHomeFlag(), kpiChart.getThreshold(), kpiChart.getChartId());
+
+			List<KpiMeasure> kpiMeasures = kpiChart.getKpiMeasures();
+			if (count > 0 && kpiMeasures != null) {
+				for (KpiMeasure kpiMeasure : kpiMeasures) {
+					updateKpiMeasure(kpiMeasure);
+				}
+			}
+
+			return count;
+		} catch (Exception e) {
+			logger.info("Error at updateKpiChart: " + e.getMessage());
+		}
+
+		return 0;
+	}
+
+	@Override
+	public int updateKpiMeasure(KpiMeasure kpiMeasure) {
+		if (kpiMeasure == null) {
+			return 0;
+		}
+
+		String query = CAP_NHAT_KPI_MEASURE;
+
+		KpiChart kpiChart = kpiMeasure.getChart();
+		int chartId = 0;
+		if (kpiChart != null) {
+			chartId = kpiChart.getChartId();
+		}
+
+		logger.info("getMeasureId: " + kpiMeasure.getMeasureId());
+		logger.info("getExpression: " + kpiMeasure.getExpression());
+		try {
+			return jdbcTmpl.update(query, kpiMeasure.getMeasureName(), kpiMeasure.getExpression(), chartId,
+					kpiMeasure.getTypeChart(), kpiMeasure.getMeasureId());
+		} catch (Exception e) {
+			logger.info("Error at updateKpiMeasure: " + e.getMessage());
+		}
+
+		return 0;
 	}
 
 	@Override
@@ -94,15 +169,22 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 					}, holder);
 
 					kpiGroup.setGroupId(holder.getKey().intValue());
+
+					// Update or Insert kpi charts
+					List<KpiChart> kpiCharts = kpiGroup.getKpiCharts();
+					if (kpiCharts != null) {
+						for (KpiChart kpiChart : kpiCharts) {
+							kpiChart.setKpiGroup(kpiGroup);
+						}
+
+						insertOrUpdateKpiCharts(kpiCharts);
+					}
 				}
 			} catch (Exception e) {
 				// e.printStackTrace();
 			}
 
 			// logger.info(kpiGroup);
-
-			// Update or Insert kpi charts
-			insertOrUpdateKpiCharts(kpiGroup.getKpiCharts());
 		}
 	}
 
@@ -112,7 +194,7 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 			return;
 
 		String selectKpiChart = "SELECT CHART_ID FROM KPI_CHART WHERE CHART_TITLE=?";
-		String insertKpiChart = "INSERT INTO KPI_CHART(CHART_TITLE, CHART_TITLE_EN, GROUP_ID) VALUES(?, ?, ?)";
+		String insertKpiChart = "INSERT INTO KPI_CHART(CHART_TITLE, CHART_TITLE_EN, GROUP_ID, HOME_FLAG, THRESHOLD) VALUES(?, ?, ?, ?, ?)";
 
 		Iterator<KpiChart> iter = kpiCharts.iterator();
 		while (iter.hasNext()) {
@@ -141,18 +223,32 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 							statement.setString(1, kpiChart.getChartTitle());
 							statement.setString(2, kpiChart.getChartTitleEn());
 							statement.setInt(3, kpiChart.getKpiGroup().getGroupId());
+							statement.setBoolean(4, kpiChart.isHomeFlag());
+							statement.setDouble(5, kpiChart.getThreshold());
 							return statement;
 						}
 					}, holder);
 
 					kpiChart.setChartId(holder.getKey().intValue());
+
+					// Update or Insert kpi measures
+					List<KpiMeasure> kpiMeasures = kpiChart.getKpiMeasures();
+					if (kpiMeasures != null) {
+						for (KpiMeasure kpiMeasure : kpiMeasures) {
+							kpiMeasure.setChart(kpiChart);
+							String measureName = kpiMeasure.getMeasureName();
+							if (measureName == null || measureName.trim().equals("")) {
+								kpiMeasure.setMeasureName(kpiChart.getChartTitle());
+							}
+						}
+
+						insertOrUpdateKpiMeasures(kpiMeasures);
+					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				// e.printStackTrace();
 			}
 
-			// Update or Insert kpi measures
-			insertOrUpdateKpiMeasures(kpiChart.getKpiMeasures());
 		}
 	}
 
@@ -175,7 +271,7 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 				Object[] objs = { kpiMeasure.getMeasureName() };
 				count = jdbcTmpl.queryForObject(selectKpiMeasure, objs, Integer.class);
 			} catch (Exception e) {
-				e.printStackTrace();
+				// e.printStackTrace();
 				count = 0;
 			}
 
@@ -348,7 +444,7 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 	}
 
 	@Override
-	public KpiMeasure listKpiMeasureById(String kpiMeasureId) {
+	public KpiMeasure getKpiMeasureById(String kpiMeasureId) {
 		if (kpiMeasureId == null)
 			return null;
 
@@ -424,6 +520,44 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 		return count;
 	}
 
+	@Override
+	public int deleteKpiChart(int chartId) {
+		String query = XOA_KPI_CHART;
+
+		KpiChart kpiChart = getKpiChart(chartId);
+		if (kpiChart == null) {
+			return 0;
+		}
+
+		try {
+			int count = jdbcTmpl.update(query, chartId);
+
+			List<KpiMeasure> kpiMeasures = kpiChart.getKpiMeasures();
+			if (count > 0 && kpiMeasures != null) {
+				for (KpiMeasure kpiMeasure : kpiMeasures) {
+					deleteKpiMeasure(kpiMeasure.getMeasureId());
+				}
+			}
+
+			return count;
+		} catch (Exception e) {
+		}
+
+		return 0;
+	}
+
+	@Override
+	public int deleteKpiMeasure(int measureId) {
+		String query = XOA_KPI_MEASURE;
+
+		try {
+			return jdbcTmpl.update(query, measureId);
+		} catch (Exception e) {
+		}
+
+		return 0;
+	}
+
 	private KpiGroup createKpiGroup(ResultSet rs) throws SQLException {
 		KpiGroup kpiGroup = new KpiGroup();
 		kpiGroup.setGroupId(rs.getInt("GROUP_ID"));
@@ -451,4 +585,5 @@ public class KpiChartDAOImpl implements KpiChartDAO {
 
 		return kpiMeasure;
 	}
+
 }

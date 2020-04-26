@@ -41,6 +41,11 @@
 		<put-attribute name="body"
 			value="/pages/bieudo/chartManagement.jsp" />
 	</definition>
+	<definition name="chartManagementInsert" extends="taichinh">
+		<put-attribute name="title" value="Tạo mới biểu đồ" />
+		<put-attribute name="body"
+			value="/pages/bieudo/chartManagementInsert.jsp" />
+	</definition>
 	<definition name="chartManagementView" extends="taichinh">
 		<put-attribute name="title" value="Biểu đồ KPI" />
 		<put-attribute name="body"

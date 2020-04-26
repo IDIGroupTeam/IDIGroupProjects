@@ -1,5 +1,6 @@
 package com.idi.finance.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -13,9 +14,14 @@ import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,12 +44,16 @@ import com.idi.finance.charts.KpiMeasureLineChart;
 import com.idi.finance.dao.BalanceSheetDAO;
 import com.idi.finance.dao.BaoCaoTaiChinhDAO;
 import com.idi.finance.dao.KpiChartDAO;
+import com.idi.finance.form.KpiChartForm;
+import com.idi.finance.form.KpiMeasureForm;
 import com.idi.finance.form.TkKpiChartForm;
 import com.idi.finance.hangso.Contants;
 import com.idi.finance.hangso.KpiMonthCont;
 import com.idi.finance.hangso.PropCont;
 import com.idi.finance.utils.ExpressionEval;
+import com.idi.finance.utils.KpiMeasureUtils;
 import com.idi.finance.utils.Utils;
+import com.idi.finance.validator.KpiChartValidator;
 
 @Controller
 public class KpiChartController {
@@ -66,6 +76,26 @@ public class KpiChartController {
 
 	@Autowired
 	BaoCaoTaiChinhDAO bctcDAO;
+
+	@Autowired
+	KpiChartValidator kpiChartValidator;
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
+		dateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+
+		// Form mục tiêu
+		Object target = binder.getTarget();
+		if (target == null) {
+			return;
+		}
+
+		if (target.getClass() == KpiChart.class) {
+			binder.setValidator(kpiChartValidator);
+		}
+	}
 
 	@RequestMapping("/")
 	public String kpiChart(Model model) {
@@ -394,7 +424,7 @@ public class KpiChartController {
 					}
 				} else if (partOperands[0].equals(Contants.KPI)) {
 					// Toán hạng này lấy dữ liệu từ một chỉ số KPI khác, nên ta tính kpi đó trước
-					KpiMeasure kpiMeasureTmpl = kpiChartDAO.listKpiMeasureById(partOperands[1]);
+					KpiMeasure kpiMeasureTmpl = kpiChartDAO.getKpiMeasureById(partOperands[1]);
 					kpiMeasureTmpl = calculateKpiMeasure(kpiMeasureTmpl, currentYear, periodType);
 					kpiMeasure.addKpis(kpiMeasureTmpl, kpiMeasureTmpl.getValues());
 
@@ -446,15 +476,6 @@ public class KpiChartController {
 		return kpiMeasure;
 	}
 
-	/**
-	 * 
-	 * @param exps
-	 * @param patternExp
-	 * @param period
-	 * @param operand
-	 * @param value
-	 * @return
-	 */
 	private HashMap<Date, String> replaceRealValueForExp(HashMap<Date, String> exps, String patternExp, Date period,
 			String operand, double value) {
 		if (exps == null) {
@@ -496,6 +517,49 @@ public class KpiChartController {
 		return "chartManagement";
 	}
 
+	@RequestMapping("/quanly/bieudo/taomoi")
+	public String chartManagementInsert(Model model) {
+		try {
+			KpiChart kpiChart = new KpiChart();
+
+			return chuanBiFormKpiChart(model, kpiChart);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+	@RequestMapping(value = "/quanly/bieudo/luu", method = RequestMethod.POST)
+	public String chartManagementSave(@ModelAttribute("mainFinanceForm") @Validated KpiChart kpiChart,
+			BindingResult result, Model model) {
+		try {
+			if (result.hasErrors()) {
+				return chuanBiFormKpiChart(model, kpiChart);
+			}
+
+			logger.info("Lưu biểu đồ kpi: " + kpiChart);
+			kpiChartDAO.insertOrUpdateKpiCharts(Collections.singletonList(kpiChart));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "redirect:/quanly/bieudo";
+	}
+
+	private String chuanBiFormKpiChart(Model model, KpiChart kpiChart) {
+		try {
+			// Lấy danh sách các nhóm KPI từ csdl để tạo các tab
+			model.addAttribute("kpiGroups", dungChung.getKpiGroups());
+			model.addAttribute("mainFinanceForm", kpiChart);
+
+			model.addAttribute("tab", "tabQLBD");
+			return "chartManagementInsert";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
 	@RequestMapping("/quanly/bieudo/xem/{id}")
 	public String chartManagementView(@PathVariable("id") int chartId, Model model) {
 		model.addAttribute("kpiGroups", dungChung.getKpiGroups());
@@ -506,6 +570,46 @@ public class KpiChartController {
 		model.addAttribute("tab", "tabQLBD");
 
 		return "chartManagementView";
+	}
+
+	@RequestMapping(value = "/quanly/bieudo/capnhat", method = RequestMethod.POST)
+	@ResponseBody
+	KpiChartForm chartManagementUpdate(@RequestBody KpiChartForm kpiChartForm) {
+		if (kpiChartForm == null) {
+			return kpiChartForm;
+		}
+
+		KpiChart kpiChart = kpiChartDAO.getKpiChart(kpiChartForm.getChartId());
+		if (kpiChart != null) {
+			kpiChart.setHomeFlag(kpiChartForm.isHomeFlag());
+			kpiChart.setThreshold(kpiChartForm.getThreshold());
+
+			List<KpiMeasureForm> kpiMeasureForms = kpiChartForm.getKpiMeasures();
+			if (kpiMeasureForms != null && kpiMeasureForms.size() > 0) {
+				KpiMeasureForm kpiMeasureForm = kpiMeasureForms.get(0);
+				if (kpiMeasureForm != null) {
+					KpiMeasure kpiMeasure = KpiMeasureUtils.getKpiMeasureById(kpiMeasureForm.getMeasureId(),
+							kpiChart.getKpiMeasures());
+					kpiMeasure.setExpression(kpiMeasureForm.getExpression());
+				}
+			}
+
+			kpiChartDAO.updateKpiChart(kpiChart);
+		}
+
+		return kpiChartForm;
+	}
+
+	@RequestMapping(value = { "/quanly/bieudo/xoa" }, method = { RequestMethod.POST })
+	public @ResponseBody KpiChartForm chartManagementDelete(@RequestBody KpiChartForm kpiChartForm) {
+		if (kpiChartForm == null) {
+			return kpiChartForm;
+		}
+
+		logger.info("Xóa biểu đổ kpi có id " + kpiChartForm.getChartId());
+		kpiChartDAO.deleteKpiChart(kpiChartForm.getChartId());
+
+		return kpiChartForm;
 	}
 
 	@RequestMapping("/quanly/bieudo/bctc")

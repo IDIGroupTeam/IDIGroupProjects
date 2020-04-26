@@ -8,6 +8,10 @@ import com.idi.finance.bean.bieudo.KpiKyBctc;
 import com.idi.finance.bean.bieudo.KpiMeasure;
 
 public interface KpiChartDAO {
+	public int updateKpiChart(KpiChart kpiChart);
+
+	public int updateKpiMeasure(KpiMeasure kpiMeasure);
+
 	public void insertOrUpdateKpiGroups(List<KpiGroup> kpiGroups);
 
 	public void insertOrUpdateKpiCharts(List<KpiChart> kpiCharts);
@@ -26,9 +30,13 @@ public interface KpiChartDAO {
 
 	public List<KpiChart> listSelectedKpiChartInDetails(Integer[] selectedKpiChartIds);
 
-	public KpiMeasure listKpiMeasureById(String kpiMeasureId);
+	public KpiMeasure getKpiMeasureById(String kpiMeasureId);
 
 	public List<KpiKyBctc> listKpiKyBctcsByKyKeToan(int maKyKt);
 
 	public int saveKpiKyBctc(KpiKyBctc kpiKyBctcOld, KpiKyBctc kpiKyBctc);
+
+	public int deleteKpiChart(int charId);
+
+	public int deleteKpiMeasure(int measureId);
 }

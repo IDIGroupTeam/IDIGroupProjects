@@ -76,6 +76,8 @@
 		class="com.idi.finance.validator.BalanceSheetValidator" />
 	<bean id="bctcValidator"
 		class="com.idi.finance.validator.BaoCaoTaiChinhValidator" />
+	<bean id="kpiChartValidator"
+		class="com.idi.finance.validator.KpiChartValidator" />
 
 	<!-- Config for upload file feature -->
 	<bean id="multipartResolver"

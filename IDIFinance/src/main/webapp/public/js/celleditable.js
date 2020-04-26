@@ -239,53 +239,68 @@ $.fn.cellEditable = function(options) {
 		console.log("rowSave data (row & cell)", inputData);
 		console.log("rowSave sending data", sendingData);
 		console.log("rowSave url", url);
+		console.log("rowSave inputData", inputData);
 
-		$.ajax({
-			type : "POST",
-			url : url,
-			data : sendingData,
-			contentType : "application/json",
-			dataType : "json",
-			success : function(data) {
-				console.log("return data", data);
+		$
+				.ajax({
+					type : "POST",
+					url : url,
+					data : sendingData,
+					contentType : "application/json",
+					dataType : "json",
+					success : function(data) {
+						console.log("return data", data);
 
-				var sendingData = null;
-				try {
-					console.log("afterSave for row ", name);
-					inputData = params.afterSave[name]
-							.call(tr, inputData, data);
-				} catch (e) {
-					console.log("afterSave is not defined exactly", e);
-				}
+						console.log("Update row's key ... ");
+						$.each(keyRow, function(key, value) {
+							if (!$.isEmptyObject(inputData[key])
+									&& !$.isEmptyObject(inputData[key].value)) {
+								$(tr).data(key, inputData[key].value);
+							}
+						})
 
-				console.log("Update row's key ... ");
-				$.each(keyRow, function(key, value) {
-					if (!$.isEmptyObject(inputData[key])
-							&& !$.isEmptyObject(inputData[key].value)) {
-						$(tr).data(key, inputData[key].value);
-					}
-				})
+						console.log("Update each cell's value ...");
+						$(tr)
+								.find("." + params.cellClass)
+								.each(
+										function() {
+											var cell = $(this);
+											var cellData = $(cell).data();
+											var cellField = cellData.field;
 
-				console.log("Update each cell's value ...");
-				$(tr).find("." + params.cellClass).each(function() {
-					var cell = $(this);
-					var cellData = $(cell).data();
+											if (cellData.type == "combobox") {
+												$(cell)
+														.html(
+																inputData[cellField].label);
+											} else {
+												$(cell)
+														.html(
+																inputData[cellField].value);
+											}
 
-					if (cellData.type == "combobox") {
-						$(cell).html(inputData[cellData.field].label);
-					} else {
-						$(cell).html(inputData[cellData.field].value);
+											console.log(cellField,
+													cellData[cellField],
+													inputData[cellField]);
+											if (cellData[cellField] != undefined) {
+												cellData[cellField] = inputData[cellField].value;
+											}
+										});
+
+						try {
+							console.log("afterSave for row ", name);
+							params.afterSave[name].call(tr, inputData, data);
+						} catch (e) {
+							console.log("afterSave is not defined exactly", e);
+						}
+
+						// Back to normal
+						disableConfimButtons($(tr));
+					},
+					error : function(data) {
+						console.log("Saving row error", data);
+						alert("Lỗi khi lưu thay đổi, xin hãy thử lại");
 					}
 				});
-
-				// Back to normal
-				disableConfimButtons($(tr));
-			},
-			error : function(data) {
-				console.log("Saving row error", data);
-				alert("Lỗi khi lưu thay đổi, xin hãy thử lại");
-			}
-		});
 	}
 
 	function rowCancel() {
@@ -312,6 +327,7 @@ $.fn.cellEditable = function(options) {
 		var cellDatas = $(cell).data();
 		var inputData = $.extend(true, {}, key, cellDatas);
 		var field = cellDatas.field;
+		var fieldValue = cellDatas[field];
 
 		try {
 			delete inputData.loadUrl;
@@ -329,38 +345,61 @@ $.fn.cellEditable = function(options) {
 			console.log("createCombobox error", e);
 		}
 
-		$.ajax({
-			type : "POST",
-			url : cellDatas.loadUrl,
-			data : inputData,
-			contentType : "application/json",
-			dataType : "json",
-			success : function(data) {
-				console.log("createCombobox result", data);
-				var result = "";
-				try {
-					var list = params.afterLoad[field].call(cell, data);
+		if (inputData) {
+			$.ajax({
+				type : "POST",
+				url : cellDatas.loadUrl,
+				data : inputData,
+				contentType : "application/json",
+				dataType : "json",
+				success : function(data) {
+					console.log("createCombobox result", data);
 
 					// append data to combobox
-					for (var i = 0; i < list.length; i++) {
-						try {
-							var option = '<option value="' + list[i].value
-									+ '">' + list[i].label + '</option>';
-							result += option;
-						} catch (e) {
-							// alert(e);
-						}
-					}
-				} catch (e) {
-					console.log("Error " + e);
+					var result = prepareShowCombobox(field, cell, data,
+							fieldValue);
+					$(cell).find("select").html(result);
+				},
+				error : function(data) {
+					$(cell).find("select").html("");
 				}
+			});
+		} else {
+			// append data to combobox
+			result = prepareShowCombobox(field, cell, inputData, fieldValue);
+			result = '<select class="form-control input-sm">' + result
+					+ '</select>';
+		}
 
-				$(cell).find("select").html(result);
-			},
-			error : function(data) {
-				$(cell).find("select").html("");
+		return result;
+	}
+
+	function prepareShowCombobox(field, cell, data, fieldValue) {
+		var list = null;
+		try {
+			list = params.afterLoad[field].call(cell, data);
+		} catch (e) {
+			console.log("Error", e);
+		}
+
+		var result = "";
+		if (list) {
+			for (var i = 0; i < list.length; i++) {
+				try {
+					var option = '<option value="' + list[i].value + '">'
+							+ list[i].label + '</option>';
+					if (eval(fieldValue) == list[i].value) {
+						var option = '<option value="' + list[i].value
+								+ '" selected>' + list[i].label + '</option>';
+					}
+
+					result += option;
+				} catch (e) {
+					console.log("error", e);
+				}
 			}
-		});
+		}
+		console.log("result", result);
 
 		return result;
 	}

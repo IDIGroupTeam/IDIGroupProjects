@@ -58,7 +58,7 @@
 				data-asset-code="${assetCode}" data-ma-tk="${taiKhoan.maTk}">
 				<td><span class="cell-editable" data-type="combobox"
 					data-load-url="${url}/taikhoan/danhsach/capduoi" data-field="maTk"
-					data-ma-tk-goc="${taiKhoan.maTkGoc}">${taiKhoan.maTenTk}</span></td>
+					data-ma-tk="${taiKhoan.maTk}" data-ma-tk-goc="${taiKhoan.maTkGoc}">${taiKhoan.maTenTk}</span></td>
 				<c:choose>
 					<c:when test="${taiKhoan.soDuGiaTri==LoaiTaiKhoan.NO}">
 						<td>Nợ</td>
