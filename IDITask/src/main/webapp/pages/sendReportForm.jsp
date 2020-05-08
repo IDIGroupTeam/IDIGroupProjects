@@ -59,7 +59,7 @@ td, th {
 		<%-- <form:input type="hidden" path="subject" value="${sendReportForm.subject}" /> --%>
 		<table class="table table-bordered table-hover">
 			<tr>
-				<td nowrap="nowrap"	title="Nhập địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com. Các email cách nhau bằng dấu ',' ">Gửi tới:(*)</td>
+				<td nowrap="nowrap"	title="Nhập địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com. Các email cách nhau bằng dấu phẩy ',' ">Gửi tới:(*)</td>
 				<td>Nhập đ/c email với những người không có trên hệ thống <form:input path="sendToOut" 
 						class="form-control animated" /></td>
 						

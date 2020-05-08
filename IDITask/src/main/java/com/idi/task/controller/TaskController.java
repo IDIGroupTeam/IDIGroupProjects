@@ -79,6 +79,7 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.BodyPart;
 import javax.mail.Multipart;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
@@ -541,18 +542,28 @@ public class TaskController {
 				List<String> mailList = taskDAO
 						.getEmail(task.getOwnedBy() + "," + task.getVerifyBy() + "," + task.getSecondOwned());
 
+				//gui lan luot cho tung nguoi
+				String sendToList = "";
 				for (int i = 0; i < mailList.size(); i++) {
 					String sendTo = mailList.get(i);
 					// System.err.println("chuan bi send mail");
-					if (sendTo != null && sendTo.length() > 0) {
+					if (sendToList.length() > 3 && sendTo != null && sendTo.length() > 0) {
 						// System.err.println("send mail cho " + sendTo);
-						helper.setTo(sendTo);
-						helper.setSubject("[Tạo mới công việc] - " + task.getTaskName());
-						helper.setFrom("IDITaskNotReply");
-						mailSender.send(mimeMessage);
+						//helper.setTo(sendTo);
+						//helper.setSubject("[Tạo mới công việc] - " + task.getTaskName());
+						//helper.setFrom("IDITaskNotReply");
+						//mailSender.send(mimeMessage);
 						// System.err.println("sent");
+						sendToList = sendToList + "," + sendTo;
+					}else if (sendToList.length() <= 3 && sendTo != null && sendTo.length() > 0) {
+						sendToList = sendToList + sendTo;
 					}
 				}
+				//gui cho nhieu nguoi 1 lan
+				helper.setTo(InternetAddress.parse(sendToList));//gui cho nhieu nguoi
+				helper.setSubject("[Tạo mới công việc] - " + task.getTaskName());
+				helper.setFrom("IDITaskNotReply");
+				mailSender.send(mimeMessage);				
 			}
 		} catch (Exception e) {
 			log.error(e, e);
@@ -792,18 +803,35 @@ public class TaskController {
 					// mimeMessage.setContent(htmlMsg, "text/html");
 				}
 				// System.err.println("chuan bi send mail " + mailList.size());
+				
+			//	  for (int i = 0; i < mailList.size(); i++) { 
+			//		  String sendTo = mailList.get(i);
+					  // System.err.println("chuan bi send mail");
+			//		  if (sendTo != null &&  sendTo.length() > 0) { // System.err.println("send mail cho " + sendTo);
+			//		  helper.setTo(sendTo); 
+			//		  helper.setSubject("[Mã công việc: " + taskForm.getTaskId() + "] - " + taskForm.getTaskName());
+			//		  helper.setFrom("IDITaskNotReply"); 
+			//		  mailSender.send(mimeMessage); //
+			//		  System.err.println("sent"); 
+			//	  	} 
+			//	  }
+				 
+				
+				String sendToList = "";
 				for (int i = 0; i < mailList.size(); i++) {
 					String sendTo = mailList.get(i);
-					// System.err.println("chuan bi send mail");
-					if (sendTo != null && sendTo.length() > 0) {
-						// System.err.println("send mail cho " + sendTo);
-						helper.setTo(sendTo);
-						helper.setSubject("[Mã công việc: " + taskForm.getTaskId() + "] - " + taskForm.getTaskName());
-						helper.setFrom("IDITaskNotReply");
-						mailSender.send(mimeMessage);
-						// System.err.println("sent");
+					if (sendToList.length() > 3 && sendTo != null && sendTo.length() > 0) {
+						sendToList = sendToList + "," + sendTo;
+					}else if (sendToList.length() <= 3 && sendTo != null && sendTo.length() > 0) {
+						sendToList = sendToList + sendTo;
 					}
 				}
+				//gui cho nhieu nguoi 1 lan
+				helper.setTo(InternetAddress.parse(sendToList));//gui cho nhieu nguoi
+				helper.setSubject("[Mã công việc: " + taskForm.getTaskId() + "] - " + taskForm.getTaskName());
+				helper.setFrom("IDITaskNotReply");
+				mailSender.send(mimeMessage);					
+				
 				// Add message to flash scope
 				model.addAttribute("message", "Cập nhật thông tin công việc thành công!");
 			}
@@ -1768,18 +1796,22 @@ public class TaskController {
 
 					mimeMessage.setContent(multipart, "text/html; charset=UTF-8");
 
-					StringTokenizer st = new StringTokenizer(sendReportForm.getSendTo(), ";");
-					while (st.hasMoreTokens()) {
-
-						String sendTo = st.nextToken(";");
-						if (sendTo != null && sendTo.length() > 0 && sendTo.contains("@") && sendTo.contains(".com")) {
-							log.info("send report to " + sendTo);
-							helper.setTo(sendTo);
-
-							mailSender.send(mimeMessage);
-							//System.err.println("sent");
-						}
-					}
+					//gui cho tung nguoi 1
+					/*
+					 * StringTokenizer st = new StringTokenizer(sendReportForm.getSendTo(), ";");
+					 * while (st.hasMoreTokens()) {
+					 * 
+					 * String sendTo = st.nextToken(";"); if (sendTo != null && sendTo.length() > 0
+					 * && sendTo.contains("@") && sendTo.contains(".com")) {
+					 * log.info("send report to " + sendTo); helper.setTo(sendTo);
+					 * 
+					 * mailSender.send(mimeMessage); //System.err.println("sent"); } }
+					 */
+					
+					//gui cho nhieu nguoi 1 lan
+					helper.setTo(InternetAddress.parse(sendReportForm.getSendTo()));//gui cho nhieu nguoi
+					mailSender.send(mimeMessage);
+					
 					// model.addAttribute("isReload","Yes");
 					model.addAttribute("formTitle", "Đã gửi thống kê khối lượng công việc");
 					model.addAttribute("message", "Đã gửi thống kê khối lượng công việc thành công");
@@ -2317,7 +2349,7 @@ public class TaskController {
 						String sendToList = "";
 						boolean sendOut = false; 
 						if(sendReportForm.getSendToOut() != null && sendReportForm.getSendToOut().length() > 5 && sendReportForm.getSendToOut().contains("@") && sendReportForm.getSendToOut().contains(".com")) {
-							sendToList = sendReportForm.getSendToOut();
+							sendToList = sendToList + sendReportForm.getSendToOut();							
 							sendOut = true;
 						}
 						if(sendReportForm.getSendTo() != null && sendReportForm.getSendTo().length() > 0) {
@@ -2326,17 +2358,19 @@ public class TaskController {
 							else
 								sendToList = sendReportForm.getSendTo();	
 						}
-						StringTokenizer st = new StringTokenizer(sendToList, ",");
-						while (st.hasMoreTokens()) {						
-							String sendTo = st.nextToken();
-							if (sendTo != null && sendTo.length() > 0 && sendTo.contains("@") && sendTo.contains(".com")) {
-								log.info("send report cho " + sendTo);
-								helper.setTo(sendTo);
-		
-								mailSender.send(mimeMessage);
-							}
-						}
-
+						//gui cho 1/tung nguoi
+						/*
+						 * StringTokenizer st = new StringTokenizer(sendToList, ","); while
+						 * (st.hasMoreTokens()) { String sendTo = st.nextToken(); if (sendTo != null &&
+						 * sendTo.length() > 0 && sendTo.contains("@") && sendTo.contains(".com")) {
+						 * log.info("send report cho " + sendTo); helper.setTo(sendTo);
+						 * 
+						 * mailSender.send(mimeMessage); } }
+						 */
+						//gui cho nhieu nguoi
+						helper.setTo(InternetAddress.parse(sendToList));//gui cho nhieu nguoi
+						mailSender.send(mimeMessage);
+						
 						// model.addAttribute("isReload","Yes");
 						model.addAttribute("formTitle", "Gửi báo cáo công việc");
 						model.addAttribute("message", "Đã gửi báo cáo công việc thành công");					
@@ -2370,7 +2404,7 @@ public class TaskController {
 			isdueDate = false;
 			isDes = false;
 			// Document document = new Document();
-			Document document = new Document(PageSize.A4.rotate());
+			Document document = new Document(PageSize.A3.rotate());
 			String path = properties.getProperty("REPORT_PATH");
 			File dir = new File(path);
 			if (!dir.exists()) {
@@ -2508,7 +2542,7 @@ public class TaskController {
 			document.add(new Paragraph("Người báo cáo: " +taskReportForm.getSender(), fontB));
 			document.add(new Paragraph("                     ", font));
 			document.add(new Paragraph("I) TÓM TẮT ĐÁNH GIÁ KẾ HOẠCH THỰC HIỆN ", fontB));
-			document.add(new Paragraph("       " + taskReportForm.getSummary(), font));
+			document.add(new Paragraph("  " + taskReportForm.getSummary(), font));
 			document.add(new Paragraph("                     ", font));
 			document.add(new Paragraph("II) CHI TIẾT KẾT QUẢ THỰC HIỆN                 ", fontB));
 			document.add(new Paragraph("                       ", font));

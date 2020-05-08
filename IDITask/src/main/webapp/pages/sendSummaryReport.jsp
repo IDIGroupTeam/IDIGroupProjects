@@ -70,7 +70,7 @@ $(function(){
 		<%-- <form:input type="hidden" path="subject" value="${sendReportForm.subject}" /> --%>
 		<table class="table table-bordered table-hover">
 			<tr>
-				<td nowrap="nowrap" title="Nhập chính xác địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com. Các email cách nhau bằng dấu ';' ">Gửi tới:(*)</td>
+				<td nowrap="nowrap" title="Nhập chính xác địa chỉ email của người nhận ví dụ: bcsidigroup@gmail.com. Các email cách nhau bằng dấu phẩy ',' ">Gửi tới:(*)</td>
 	<%-- 			<td>
 					<form:select path="sendTo" multiple="multiple" class="form-control animated"> 
 						<form:options items="${employeeEmailMap}" />
