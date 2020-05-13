@@ -2248,14 +2248,24 @@ public class TaskController {
 		//System.err.println("ids: " + eIds); 
 		
 		if (eIds != null && eIds.trim().length() > 0 && !dept.equalsIgnoreCase("all")) {
-			fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot-nhieu nguoi phong " + dept + ".pdf";
-			title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một/nhiều người phòng " + dept;
+			if(eIds.contains(",")) {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot so nguoi phong " + dept + ".pdf";
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một số người Phòng " + dept;
+			}else {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + allEmployeesMap().get(Integer.parseInt(eIds)) + " phong " + dept + ".pdf";
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của " + allEmployeesMap().get(Integer.parseInt(eIds)) + " Phòng " + dept;
+			}
 		}else if ((eIds == null || eIds.trim().length() == 0) && !dept.equalsIgnoreCase("all")) {
 			fileName = "Phong " + dept + "-BCCV tu ngay " + fDateStore + " den ngay " + tDateStore + ".pdf";
 			title = "Phòng " + dept + "-BCCV từ ngày " + fDate + " đến ngày " + tDate;
 		}else if (eIds != null && eIds.trim().length() > 0 && dept.equalsIgnoreCase("all")) {
-			fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot-nhieu nguoi.pdf";
-			title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một/nhiều người";
+			if(eIds.contains(",")) {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot so nguoi phong " + dept + ".pdf";
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một số người Phòng " + dept;
+			}else {
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + allEmployeesMap().get(Integer.parseInt(eIds)) + ".pdf";
+				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của " + allEmployeesMap().get(Integer.parseInt(eIds));
+			}
 		}else {
 			fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua tat ca cac phong ban" + ".pdf";
 			title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban";
@@ -2446,14 +2456,25 @@ public class TaskController {
 			String fileName = "IDI-BCCV";	
 			String title = "BCCV";	
 			if (eIds != null && eIds.trim().length() > 0 && !dept.equalsIgnoreCase("all")) {
-				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot-nhieu nguoi phong " + dept + ".pdf";
-				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một/nhiều người Phòng " + dept;
+				if(eIds.contains(",")) {
+					fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot so nguoi phong " + dept + ".pdf";
+					title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một số người Phòng " + dept;
+				}else {
+					fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + allEmployeesMap().get(Integer.parseInt(eIds)) + " phong " + dept + ".pdf";
+					title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của " + allEmployeesMap().get(Integer.parseInt(eIds)) + " Phòng " + dept;
+				}
 			}else if ((eIds == null || eIds.trim().length() == 0) && !dept.equalsIgnoreCase("all")) {
 				fileName = "Phong " + dept + "-BCCV tu ngay " + fDateStore + " den ngay " + tDateStore + ".pdf";
 				title = "Phòng " + dept + "-BCCV từ ngày " + fDate + " đến ngày " + tDate;
 			}else if (eIds != null && eIds.trim().length() > 0 && dept.equalsIgnoreCase("all")) {
-				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot-nhieu nguoi.pdf";
-				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một/nhiều người";
+				if(eIds.contains(",")) {
+					fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot so nguoi.pdf";
+					title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một số người";
+				}else {
+					fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + allEmployeesMap().get(Integer.parseInt(eIds)) + ".pdf";
+					title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của " + allEmployeesMap().get(Integer.parseInt(eIds));
+				}
+				
 			}else {
 				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua tat ca cac phong ban" + ".pdf";
 				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của Tất cả các Phòng ban";

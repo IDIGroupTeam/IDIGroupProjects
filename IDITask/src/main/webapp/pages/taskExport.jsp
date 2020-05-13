@@ -33,10 +33,10 @@ tr:nth-child(even) {
 	<h3>
 		Export báo cáo công việc từ ngày ${reportForm.fromDate} đến ngày
 		${reportForm.toDate}
-		<c:if test="${reportForm.employeeId > 0}">
-			của ${reportForm.employeeName}
-       	</c:if>
+		<c:if test="${not empty reportForm.ids && reportForm.ids.contains(',')}"> của một số người	</c:if>
+		<c:if test="${not empty reportForm.ids && !reportForm.ids.contains(',')}"> của nv mã ${reportForm.ids} </c:if>
 		<c:if test="${reportForm.department != 'all'}"> phòng ${reportForm.department}</c:if>
+		<c:if test="${reportForm.department == 'all' && empty reportForm.ids}"> tất cả các phòng ban</c:if>
 	</h3>
 	<br />	
 	<c:if test="${not empty isOpen}">

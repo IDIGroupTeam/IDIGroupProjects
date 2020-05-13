@@ -56,7 +56,8 @@ tr:nth-child(even) {
 	</c:if>	 --%>
 	<br />
 	<h3>Báo cáo công việc từ ngày ${reportForm.fromDate} đến ngày ${reportForm.toDate}
-		<c:if test="${not empty reportForm.ids}"> của một/nhiều người	</c:if>
+		<c:if test="${not empty reportForm.ids && reportForm.ids.contains(',')}"> của một số người	</c:if>
+		<c:if test="${not empty reportForm.ids && !reportForm.ids.contains(',')}"> của nv mã ${reportForm.ids} </c:if>
 		<c:if test="${reportForm.department != 'all'}"> phòng ${reportForm.department}</c:if>
 		<c:if test="${reportForm.department == 'all' && empty reportForm.ids}"> tất cả các phòng ban</c:if>
 	</h3>
