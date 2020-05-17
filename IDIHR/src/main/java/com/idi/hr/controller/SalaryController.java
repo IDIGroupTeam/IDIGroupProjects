@@ -1335,7 +1335,10 @@ public class SalaryController {
 			table.addCell(new Paragraph(salaryReportPerEmployee.getFullName(), font));
 			table.addCell(new Paragraph(salaryReportPerEmployee.getDepartment(), font));
 			/* table.addCell(new Paragraph(salaryReportPerEmployee.getJobTitle(), font)); */
-			table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getBasicSalary())), font));
+			if(salaryReportPerEmployee.getBasicSalary() != null && salaryReportPerEmployee.getBasicSalary().length() > 0)
+				table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getBasicSalary())), font));
+			else
+				table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getSalary())), font));
 			table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getFinalSalary()) + Float.valueOf(salaryReportPerEmployee.getAdvancePayed())), font));
 			table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getBounus())), font));
 			table.addCell(new Paragraph(Utils.customFormat(Float.valueOf(salaryReportPerEmployee.getSubsidize())), font));
