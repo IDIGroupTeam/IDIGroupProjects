@@ -30,6 +30,9 @@
 	<br/><br/>
 	<form:form modelAttribute="insuranceForm" method="POST"
 		action="updateInsurance">
+		<c:if test="${not empty duplicate}">
+			<table><tr><td style="color: red;"> ${duplicate} </td></tr></table>	
+		</c:if>
 			<table class="table">
 				<form:hidden path="socicalInsuNo"/>
 				<form:hidden path="employeeId"/>

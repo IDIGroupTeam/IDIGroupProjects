@@ -9,6 +9,7 @@ public class InsuranceForm implements Serializable {
 	 */
 	private static final long serialVersionUID = -347100333072628695L;
 	
+	private String searchValue;
 	//Paging
 	private int pageIndex;
 	private int totalRecords;
@@ -45,6 +46,14 @@ public class InsuranceForm implements Serializable {
 
 	public void setTotalPages(int totalPages) {
 		this.totalPages = totalPages;
+	}
+
+	public String getSearchValue() {
+		return searchValue;
+	}
+
+	public void setSearchValue(String searchValue) {
+		this.searchValue = searchValue;
 	}	
 
 }

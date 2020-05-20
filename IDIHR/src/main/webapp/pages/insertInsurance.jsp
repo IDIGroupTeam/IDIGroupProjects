@@ -34,13 +34,14 @@
 <body>
 	<a href="${url}/insurance/"><button class="btn btn-primary btn-sm">Quay lại danh sách bảo hiểm</button></a>
 	<br/><br/>
-	<form:form modelAttribute="insuranceForm" method="POST"
-		action="insertInsurance">		
+	<form:form modelAttribute="insuranceForm" method="POST"	action="insertInsurance">		
+		<c:if test="${not empty duplicate}">
+			<table><tr><td style="color: red;"> ${duplicate} </td></tr></table>			
+		</c:if>
 			<table class="table">
 				<tbody>
 					<tr>
-						<td colspan="4" nowrap="nowrap" bgcolor="#C4C4C4">Thông tin
-							Bảo hiểm xã hội</td>
+						<td colspan="4" nowrap="nowrap" bgcolor="#C4C4C4">Thông tin	bảo hiểm xã hội</td>
 					</tr>
 					<tr>
 						<td bgcolor="#EEEEEE">Chọn NV:</td>
@@ -69,8 +70,7 @@
 								<form:option value="2" label="Vùng 2" />
 								<form:option value="3" label="Vùng 3" />
 								<form:option value="4" label="Vùng 4" />
-							</form:select></td>	
-								
+							</form:select></td>									
 					</tr>
 					<tr>
 <%-- 					<td bgcolor="#E6E6E6">Cty đóng:</td>

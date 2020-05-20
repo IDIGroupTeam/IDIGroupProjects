@@ -53,8 +53,16 @@ public class InsuranceController {
 				form.setPageIndex(1);
 			}
 			
-			List<Insurance> list = insuranceDAO.getInsurances();
+			boolean search = false;
+			List<Insurance> list = new ArrayList<Insurance>();
 			
+			if (form.getSearchValue() != null && form.getSearchValue().length() > 0) {
+				log.info("Searching for: " + form.getSearchValue());
+				search = true;
+				list = insuranceDAO.getInsurances(form.getSearchValue());
+			}else {
+				list = insuranceDAO.getInsurances(null);
+			}
 			form.setTotalRecords(list.size());
 			
 			int totalPages = form.getTotalRecords() % form.getNumberRecordsOfPage() > 0
@@ -88,6 +96,11 @@ public class InsuranceController {
 				}
 			}					
 			
+			if (list != null && list.size() < 1 && !search)
+				model.addAttribute("message", "Chưa có thông tin BHXH của nhân viên nào");
+			else if (list != null && list.size() < 1 && search)
+				model.addAttribute("message",
+						"Không có thông tin BHXH nào khớp với thông tin tìm kiếm là: '" + form.getSearchValue() + "'");
 			model.addAttribute("insurances", listInsuranceForPage);
 			model.addAttribute("formTitle", "Danh sách NV đóng bảo hiểm ");
 		} catch (Exception e) {
@@ -154,7 +167,14 @@ public class InsuranceController {
 	public String addInsurance(Model model, @ModelAttribute("insuranceForm") @Validated Insurance sInsurance,
 			final RedirectAttributes redirectAttributes) {
 		try {
-			insuranceDAO.insertInsurance(sInsurance);
+			System.err.println("insuranceForm: " + sInsurance.getEmployeeName() + sInsurance.getSocicalInsuNo());
+			if(insuranceDAO.getInsurance(sInsurance.getSocicalInsuNo()).getEmployeeId() > 0) {
+				System.err.println("Trung so so bhxh roi: " + sInsurance.getSocicalInsuNo());
+				String duplicate = "Số sổ bhxh này đã đc xử dụng cho " + insuranceDAO.getInsurance(sInsurance.getSocicalInsuNo()).getEmployeeName() + ". Vui lòng kiểm tra lại";
+				return insuranceForm(model, sInsurance, duplicate, "insert");
+			}else {
+				insuranceDAO.insertInsurance(sInsurance);
+			}
 			// Add message to flash scope
 			redirectAttributes.addFlashAttribute("message", "Thêm thông tin bảo hiểm thành công!");
 
@@ -168,30 +188,40 @@ public class InsuranceController {
 	public String updateInsurance(Model model, @ModelAttribute("insuranceForm") @Validated Insurance insurance,
 			final RedirectAttributes redirectAttributes) {
 		try {
-			insuranceDAO.updateInsurance(insurance);
+			int row = insuranceDAO.updateInsurance(insurance);
 			// Add message to flash scope
-			redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin bảo hiểm thành công!");
-
+			if(row > 0)
+				redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin bảo hiểm thành công!");
+			else {
+				String duplicate = "Số sổ bhxh này đã đc xử dụng. Vui lòng kiểm tra lại";
+				return insuranceForm(model, insurance, duplicate, "update");
+			}
 		} catch (Exception e) {
 			log.error(e, e);
+			String duplicate = "Số sổ bhxh này đã đc xử dụng. Vui lòng kiểm tra lại";
+			return insuranceForm(model, insurance, duplicate, "update");
 		}
 		return "redirect:/insurance/";
 	}
 
-	private String insuranceForm(Model model, Insurance insurance) {
+	private String insuranceForm(Model model, Insurance insurance, String duplicate, String type) {
 		model.addAttribute("insuranceForm", insurance);
 		// get list employee id
 		Map<String, String> employeeMap = null;
 		
-
 		String actionform = "";
-		if (insurance.getSocicalInsuNo() != null) {
+		System.err.println(duplicate);
+		if (insurance.getSocicalInsuNo() != null && type.equalsIgnoreCase("update")) {
 			employeeMap = this.allEmployees();
-			model.addAttribute("formTitle", "Sửa thông tin bảo hiểm ");
+			model.addAttribute("formTitle", "Sửa thông tin bảo hiểm ");		
+			if(duplicate != null)
+				model.addAttribute("duplicate", duplicate);
 			actionform = "editInsurance";
 		} else {
 			employeeMap = this.employeesForInsert();
-			model.addAttribute("formTitle", "Thêm mới thông tin bảo hiểm");
+			model.addAttribute("formTitle", "Thêm mới thông tin bảo hiểm");			
+			if(duplicate != null)
+				model.addAttribute("duplicate", duplicate);
 			actionform = "insertInsurance";
 		}
 		model.addAttribute("employeeMap", employeeMap);
@@ -202,7 +232,7 @@ public class InsuranceController {
 	@RequestMapping("/insurance/insertInsurance")
 	public String addInsurance(Model model) {
 		Insurance insurance = new Insurance();
-		return this.insuranceForm(model, insurance);
+		return this.insuranceForm(model, insurance, null, "insert");
 	}
 
 	@RequestMapping("/insurance/viewInsurance")
@@ -235,7 +265,7 @@ public class InsuranceController {
 			return "redirect:/insurance/";
 		}
 
-		return this.insuranceForm(model, insurance);
+		return this.insuranceForm(model, insurance, null, "update");
 	}
 
 	// ------ Quá trình đóng BHXH   --------//

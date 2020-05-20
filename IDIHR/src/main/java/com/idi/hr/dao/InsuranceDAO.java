@@ -43,9 +43,17 @@ public class InsuranceDAO extends JdbcDaoSupport {
 	 * @return List of Insurance
 	 * @throws Exception
 	 */
-	public List<Insurance> getInsurances() {
+	public List<Insurance> getInsurances(String searchValue) {
 
 		String sql = hr.getProperty("GET_INSURANCES").toString();
+		
+		if(searchValue != null) {
+			sql = sql.replaceAll("%SEARCH_VALUE%", "AND ( I.EMPLOYEE_ID='" + searchValue.trim() + "' OR E.FULL_NAME LIKE '%" +  searchValue.trim() + "%' OR I.SOCIAL_INSU_NO LIKE '%" + searchValue.trim() + "%' )");
+			
+		}else {
+			sql = sql.replaceAll("%SEARCH_VALUE%", "");
+		}
+			
 		log.info("GET_INSURANCES query: " + sql);
 		InsuranceMapper mapper = new InsuranceMapper();
 
@@ -106,7 +114,7 @@ public class InsuranceDAO extends JdbcDaoSupport {
 	 * 
 	 * @param Insurance
 	 */
-	public void updateInsurance(Insurance insurance) throws Exception {
+	public int updateInsurance(Insurance insurance) throws Exception {
 		try {
 
 			log.info("Cập nhật thông tin bảo hiểm cho sổ BH số: " + insurance.getSocicalInsuNo() + " ....");
@@ -118,10 +126,10 @@ public class InsuranceDAO extends JdbcDaoSupport {
 					insurance.getSalaryZone(), insurance.getPlace(), insurance.getStatus(), insurance.gethInsuNo(),
 					insurance.gethInsuPlace(), insurance.getComment(), insurance.getSocicalInsuNo() };
 			jdbcTmpl.update(sql, params);
-
+			return 1;
 		} catch (Exception e) {
 			log.error(e, e);
-			throw e;
+			return 0;
 		}
 	}
 

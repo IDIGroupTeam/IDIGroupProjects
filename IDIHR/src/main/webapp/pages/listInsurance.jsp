@@ -80,6 +80,17 @@ tr:nth-child(even) {
 	<form:form modelAttribute="insuranceForm" method="POST">
 		<table class="table">
 			<tr>
+				<td style="color: purple;" title="Để trống để search/list toàn bộ thông tin"><i>Nhập thông tin muốn tìm kiếm: Họ tên/mã số NV hoặc số sổ bhxh </i></td>
+				<td align="center">
+					<form:input path="searchValue" class="form-control animated"/>
+				</td>
+				<td>
+					<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Tìm" />
+				</td>	
+			</tr>
+		</table>
+		<table class="table">
+			<tr>
 				<td><span>Tổng số ${insuranceForm.totalRecords} bản ghi</span></td>
 				<td><span>Số trang: ${insuranceForm.totalPages}</span></td>
 				<form:hidden path="pageIndex" /> 

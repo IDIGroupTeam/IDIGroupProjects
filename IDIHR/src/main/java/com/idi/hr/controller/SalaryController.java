@@ -1325,12 +1325,12 @@ public class SalaryController {
 
 	}
 
-	private void addSummaryReportToPDFRows(PdfPTable table, List<SalaryReportPerEmployee> SalaryReportPerEmployees) throws DocumentException, IOException {
+	private void addSummaryReportToPDFRows(PdfPTable table, List<SalaryReportPerEmployee> salaryReportPerEmployees) throws DocumentException, IOException {
 		BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 		Font font = new Font(bf, 12);
-		for (int i = 0; i < SalaryReportPerEmployees.size(); i++) {
+		for (int i = 0; i < salaryReportPerEmployees.size(); i++) {
 			SalaryReportPerEmployee salaryReportPerEmployee = new SalaryReportPerEmployee();
-			salaryReportPerEmployee = (SalaryReportPerEmployee) SalaryReportPerEmployees.get(i);
+			salaryReportPerEmployee = (SalaryReportPerEmployee) salaryReportPerEmployees.get(i);
 
 			table.addCell(new Paragraph(salaryReportPerEmployee.getFullName(), font));
 			table.addCell(new Paragraph(salaryReportPerEmployee.getDepartment(), font));
