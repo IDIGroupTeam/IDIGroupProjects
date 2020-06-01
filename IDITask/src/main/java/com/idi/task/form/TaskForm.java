@@ -22,6 +22,7 @@ public class TaskForm implements Serializable{
 	private int updateId; // auto not edit show only 
 	private Timestamp updateTS;
 	private int resolvedBy; // auto not edit show only when completed
+	private String resolvedByName;
 	private Timestamp creationDate;
 	private String dueDate;
 	private Timestamp resolutionDate; // auto not edit show only when completed
@@ -150,6 +151,14 @@ public class TaskForm implements Serializable{
 
 	public void setResolvedBy(int resolvedBy) {
 		this.resolvedBy = resolvedBy;
+	}
+
+	public String getResolvedByName() {
+		return resolvedByName;
+	}
+
+	public void setResolvedByName(String resolvedByName) {
+		this.resolvedByName = resolvedByName;
 	}
 
 	public Timestamp getCreationDate() {

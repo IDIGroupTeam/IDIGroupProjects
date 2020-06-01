@@ -126,7 +126,7 @@
 						</td>							
 					</tr>
 					<tr>
-						<td bgcolor="#FAFAFA">Công việc thuộc phòng:</td>
+						<td bgcolor="#FAFAFA">Công việc thuộc:</td>
 						<td><form:select path="area" class="form-control animated">
 								<form:option value="" label="-Phòng ban-" />
 								<form:options items="${departmentMap}" />

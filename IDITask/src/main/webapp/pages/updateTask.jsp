@@ -220,11 +220,22 @@
 										style="color:navy" />
 									<form:option value="Đã xong" label="Đã xong" style="color:blue" />
 								</form:select></td>
+							<c:if test="${taskForm.resolvedBy > 0}">
+								<td>
+							 		Sác nhận bởi: ${taskForm.resolvedByName}
+							 	</td>	
+							</c:if>	
 						</tr>
 						<tr>
 							<td bgcolor="#FAFAFA">Tên việc:(*)</td>
-							<td colspan="3"><form:input path="taskName"
+							<c:if test="${taskForm.resolvedBy > 0}">
+								<td colspan="4"><form:input path="taskName"
 									required="required" size="110" class="form-control animated" /></td>
+							</c:if>		
+							<c:if test="${taskForm.resolvedBy == 0}">
+								<td colspan="3"><form:input path="taskName"
+									required="required" size="110" class="form-control animated" /></td>
+							</c:if>	
 						</tr>
 					</tbody>
 				</table>
@@ -233,7 +244,7 @@
 				<table class="table table-bordered">
 					<tbody>
 						<tr>
-							<td bgcolor="#FAFAFA">Công việc thuộc phòng:</td>
+							<td bgcolor="#FAFAFA">Công việc thuộc:</td>
 							<td><form:select path="area" class="form-control animated">
 									<form:option value="" label="-Phòng ban-" />
 									<form:options items="${departmentMap}" />
@@ -354,8 +365,8 @@
 										<form:option value="${employee.employeeId}">${employee.fullName},&nbsp;${employee.jobTitle}</form:option>
 									</c:forEach>
 								</form:select></td>
-							<td bgcolor="#FAFAFA"></td>
-							<td></td>
+							<td bgcolor="#FAFAFA"><c:if test="${taskForm.resolvedBy > 0}">Ngày làm xong:</c:if></td>
+							<td><c:if test="${taskForm.resolvedBy > 0}"> ${taskForm.resolutionDate}</c:if></td>
 						</tr>
 						<%--<tr>
 								<td bgcolor="#FAFAFA">Những người liên quan:</td>

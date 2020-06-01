@@ -576,6 +576,10 @@ public class TaskController {
 	public String updateTask(Model model, @ModelAttribute("taskForm") @Validated TaskForm taskForm,
 			BindingResult result, final RedirectAttributes redirectAttributes) throws Exception {
 		try {
+			// inject from Login account
+			String username = new LoginController().getPrincipal();
+			log.info("Using usename = " + username + " in update task");
+			
 			if (taskForm.getDueDate() != null && taskForm.getDueDate().length() > 10) {
 				model.addAttribute("message", "Vui lòng nhập ngày phải xong đúng định dạng, ví dụ như 06/24/2019");
 				//System.err.println("sai dinh dang ngay fai xong");
@@ -584,41 +588,57 @@ public class TaskController {
 				TaskComment taskComment = new TaskComment();
 				int currentMaxCommentIndex = 0;
 				UserLogin userLogin = new UserLogin();
+				if (username != null && username.length() > 0) {
+					userLogin = userRoleDAO.getAUserLoginFull(username);
+				}	
 				if (taskForm.getContent() != null && taskForm.getContent().length() > 0) {
 					currentMaxCommentIndex = taskDAO.getMaxCommentIndex(taskForm.getTaskId());
 					currentMaxCommentIndex = currentMaxCommentIndex + 1;
 					taskComment.setCommentIndex(currentMaxCommentIndex);
 					taskComment.setTaskId(taskForm.getTaskId());
 					taskComment.setCommentedBy(taskForm.getCommentedBy());
-					taskComment.setContent(taskForm.getContent());
+					taskComment.setContent(taskForm.getContent());					
 
-					// inject from Login account
-					String username = new LoginController().getPrincipal();
-					log.info("Using usename = " + username + " in insert new task");
-
-					if (username != null && username.length() > 0) {
-						userLogin = userRoleDAO.getAUserLoginFull(username);
+					if (username != null && username.length() > 0) {						
 						taskComment.setCommentedBy(userLogin.getUserID());
 					}
-
 					taskDAO.insertTaskComment(taskComment);
 				}
 
 				// Xu ly cho task
 				Task task = new Task();
+				Task taskOld = new Task();
+				taskOld = taskDAO.getTask(taskForm.getTaskId()); //use to case check set task to complete
 				// get info from taskForm then put to task bean
 				task.setTaskId(taskForm.getTaskId());
 				task.setTaskName(taskForm.getTaskName());
 				task.setCreatedBy(taskForm.getCreatedBy());
 				task.setOwnedBy(taskForm.getOwnedBy());
 				task.setSecondOwned(taskForm.getSecondOwned());
-				task.setVerifyBy(taskForm.getVerifyBy());
-				task.setUpdateId(taskForm.getUpdateId()); // auto not edit show only
-				task.setUpdateTS(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
-				task.setResolvedBy(taskForm.getResolvedBy()); // auto not edit show only when completed
+				task.setVerifyBy(taskForm.getVerifyBy());				
+				
+				if (username != null && username.length() > 0) {
+					task.setUpdateId(userLogin.getUserID());
+				}else{
+					task.setUpdateId(taskForm.getUpdateId()); // auto not edit show only
+				}
+				
+				task.setUpdateTS(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));				
 				task.setCreationDate(taskForm.getCreationDate());
 				task.setDueDate(taskForm.getDueDate());
-				task.setResolutionDate(taskForm.getResolutionDate()); // auto not edit show only when completed
+				
+				if(taskForm.getStatus() != null && taskForm.getStatus().trim().equalsIgnoreCase("Đã xong")
+						&& taskOld.getStatus() !=null && !taskOld.getStatus().trim().equalsIgnoreCase("Đã xong")) {
+					task.setResolutionDate(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime())); // auto not edit show only when completed
+					task.setResolvedBy(userLogin.getUserID()); // auto not edit show only when completed
+				}else if(taskForm.getStatus() != null && !taskForm.getStatus().trim().equalsIgnoreCase("Đã xong")
+						&& taskOld.getStatus() !=null && taskOld.getStatus().trim().equalsIgnoreCase("Đã xong")) {
+					task.setResolutionDate(null); // auto not edit show only when completed
+					task.setResolvedBy(0); // auto not edit show only when completed
+				}else{
+					task.setResolutionDate(taskOld.getResolutionDate()); // auto not edit show only when completed
+					task.setResolvedBy(taskOld.getResolvedBy()); // auto not edit show only when completed
+				}
 				task.setType(taskForm.getType());
 				task.setArea(taskForm.getArea()); // viec cua phong kt , cntt, ns, ...
 				task.setPriority(taskForm.getPriority());
@@ -906,6 +926,8 @@ public class TaskController {
 			taskForm.setUpdateId(task.getUpdateId()); // auto not edit show only
 			taskForm.setUpdateTS(task.getUpdateTS());
 			taskForm.setResolvedBy(task.getResolvedBy()); // auto not edit show only when completed
+			if(task.getResolvedBy() > 0)
+				taskForm.setResolvedByName(allEmployeesMap().get(task.getResolvedBy()));
 			taskForm.setCreationDate(task.getCreationDate());
 			taskForm.setDueDate(task.getDueDate());
 			taskForm.setResolutionDate(task.getResolutionDate()); // auto not edit show only when completed
@@ -1690,7 +1712,7 @@ public class TaskController {
 			model.addAttribute("formTitle", "Gửi thống kê khối lượng công việc ");
 			model.addAttribute("fileSave", fileName + "', đã được export tại thư mục " + dir );
 			model.addAttribute("reportForm", taskReportForm);
-			model.addAttribute("message", "Thống kê khối lượng công việc được export thành công ra file " + dir + fileName);
+			model.addAttribute("message", "Thống kê khối lượng công việc '" + fileName + "'. Được export thành công tại thư mục: " + dir );
 		} catch (Exception e) {
 			model.addAttribute("isOpen", "Yes");
 			model.addAttribute("warning", "Vui lòng tắt file " + dir + fileName + " nếu đang mở trước khi export");
@@ -2180,6 +2202,7 @@ public class TaskController {
 		return "sendSummaryReport";
 	}
 	
+	// For bccv
 	@RequestMapping(value = "/generateTaskReport", params = "generateTaskReport")
 	public String generateTaskReport(Model model,
 			@ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm) throws Exception {
@@ -2198,7 +2221,6 @@ public class TaskController {
 		listNext = taskDAO.getTasksForReport(taskReportForm, "'Mới','Mới tạo','Đang làm','Chờ đánh giá'");
 		
 		// inject from Login account
-
 		LoginController lc = new LoginController(); 
 		if(lc.getPrincipal() != null) {
 			String username = lc.getPrincipal();
