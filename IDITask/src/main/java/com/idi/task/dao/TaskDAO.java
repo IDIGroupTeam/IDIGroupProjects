@@ -373,10 +373,11 @@ public class TaskDAO extends JdbcDaoSupport {
 		}else if (reportForm.getDepartment() != null && !reportForm.getDepartment().equalsIgnoreCase("all"))
 			sql = sql + " AND T.AREA = '" + reportForm.getDepartment() + "'";
 		
-		if(status != null && status.contains("Đã xong"))
+		if(status != null && status.contains("Đã xong")) {
+			sql = sql + " AND (T.RESOLVED_BY < 1 OR (T.RESOLUTION_DATE IS NOT NULL AND DATE(T.RESOLUTION_DATE) >= '" + reportForm.getFromDate() + "' AND DATE(T.RESOLUTION_DATE) <= '" + reportForm.getToDate() + "'))" ;
 			if(reportForm.getUnSelect() != null && reportForm.getUnSelect().length() > 0)
 				sql = sql + " AND T.TASK_ID NOT IN (" + reportForm.getUnSelect() + ")";
-		else
+		}else
 			if(reportForm.getUnSelected() != null && reportForm.getUnSelected().length() > 0)
 				sql = sql + " AND T.TASK_ID NOT IN (" + reportForm.getUnSelected() + ")";
 		

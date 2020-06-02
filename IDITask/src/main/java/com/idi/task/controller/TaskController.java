@@ -1420,17 +1420,30 @@ public class TaskController {
 			@RequestParam(required = false, value = "dept") String dept	) throws Exception{		
 		
 		String fileName = "IDI-Thong ke khoi luong cong viec";		
-		String title = "IDI-Thống kê khối lượng công việc";		
+		String title = "IDI-THỐNG KÊ KHỐI LƯỢNG CÔNG VIỆC";		
 		String path = properties.getProperty("REPORT_PATH");
 		File dir = new File(path);
 		try {
+			List<TaskSummay> listTaskSummary = new ArrayList<TaskSummay>();
+			ReportForm taskReportForm = new ReportForm();
+			
+			// inject from Login account
+			LoginController lc = new LoginController(); 
+			if(lc.getPrincipal() != null) {
+				String username = lc.getPrincipal();
+				log.info("Using usename = " + username);
+				if (username != null && username.length() > 0 && !username.equalsIgnoreCase("anonymousUser")) {
+					String fullName = employeeDAO.getEmployeeName(username);
+					taskReportForm.setSender(fullName);
+				}else {
+					log.info("Chua login ... ");				
+					taskReportForm.setSender("");
+				}
+			}	
 			/*
 			 * int id = 0; String eName = ""; if(eId != null && eId.length() > 0) { id =
 			 * Integer.parseInt(eId); eName = allEmployeesMap().get(id); }
-			 */	
-			
-			List<TaskSummay> listTaskSummary = new ArrayList<TaskSummay>();
-			ReportForm taskReportForm = new ReportForm();			
+			 */						
 			
 			String fDateStore = fDate;
 			String tDateStore = tDate;
@@ -1640,49 +1653,53 @@ public class TaskController {
 				}
 			}
 			
-			Document document = new Document(PageSize.A4.rotate());			
+			Document document = new Document(PageSize.A3.rotate());			
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}			
 					
+//			if (eId != null && eId.trim().length() > 0 && !dept.equalsIgnoreCase("all")) {
+//				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot-nhieu nguoi phong " + dept + ".pdf";
+//				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một/nhiều người phòng " + dept;
+//			}else if ((eId == null || eId.trim().length() == 0) && !dept.equalsIgnoreCase("all")) {
+//				fileName = "Phong " + dept + "-Thong ke khoi luong cong viec tu ngay " + fDateStore + " den ngay " + tDateStore + ".pdf";
+//				title = "Phòng " + dept + "-Thống kê khối lượng công việc từ ngày " + fDate + " đến ngày " + tDate;
+//			}else if (eId != null && eId.trim().length() > 0 && dept.equalsIgnoreCase("all")) {
+//				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot-nhieu nguoi.pdf";
+//				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một/nhiều người";
+//			}else {
+//				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua tat ca cac phong ban" + ".pdf";
+//				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban";
+//			}
+
 			if (eId != null && eId.trim().length() > 0 && !dept.equalsIgnoreCase("all")) {
-				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot-nhieu nguoi phong " + dept + ".pdf";
-				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một/nhiều người phòng " + dept;
+				if(eId.contains(",")) {
+					fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot so nguoi phong " + dept + ".pdf";
+					title = title + " TỪ NGÀY " + fDate + " ĐẾN NGÀY " + tDate + " CỦA MỘT SỐ NGƯỜI PHÒNG " + dept;
+				}else {
+					fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + allEmployeesMap().get(Integer.parseInt(eId)) + " phong " + dept + ".pdf";
+					title = title + " TỪ NGÀY " + fDate + " ĐẾN NGÀY " + tDate + " CỦA " + allEmployeesMap().get(Integer.parseInt(eId)) + " PHÒNG " + dept;
+				}
 			}else if ((eId == null || eId.trim().length() == 0) && !dept.equalsIgnoreCase("all")) {
 				fileName = "Phong " + dept + "-Thong ke khoi luong cong viec tu ngay " + fDateStore + " den ngay " + tDateStore + ".pdf";
-				title = "Phòng " + dept + "-Thống kê khối lượng công việc từ ngày " + fDate + " đến ngày " + tDate;
+				title = "PHÒNG " + dept + "-THỐNG KÊ KHỐI LƯỢNG CÔNG VIỆC " + fDate + " ĐẾN NGÀY " + tDate;
 			}else if (eId != null && eId.trim().length() > 0 && dept.equalsIgnoreCase("all")) {
-				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot-nhieu nguoi.pdf";
-				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một/nhiều người";
+				if(eId.contains(",")) {
+					fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot so nguoi.pdf";
+					title = title + " TỪ NGÀY " + fDate + " ĐẾN NGÀY " + tDate + " CỦA MỘT SỐ NGƯỜI";
+				}else {
+					fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + allEmployeesMap().get(Integer.parseInt(eId)) + ".pdf";
+					title = title + " TỪ NGÀY " + fDate + " ĐẾN NGÀY " + tDate + " CỦA " + allEmployeesMap().get(Integer.parseInt(eId));
+				}
+				
 			}else {
 				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua tat ca cac phong ban" + ".pdf";
-				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban";
+				title = title + " TỪ NGÀY " + fDate + " ĐẾN NGÀY " + tDate + " CỦA TẤT CẢ CÁC PHÒNG BAN";
 			}
-			
-			/*
-			 * if (id > 0 && !dept.equalsIgnoreCase("all")) { fileName = fileName +
-			 * " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + eName +
-			 * " phong " + dept + ".pdf"; title = title + " từ ngày " +
-			 * Utils.convertDateToDisplay(fDate) + " đến ngày " +
-			 * Utils.convertDateToDisplay(tDate) + " của " + eName + " phòng " + dept; }else
-			 * if (id < 1 && !dept.equalsIgnoreCase("all")) { fileName = fileName +
-			 * " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua phong " + dept +
-			 * ".pdf"; title = title + " từ ngày " + Utils.convertDateToDisplay(fDate) +
-			 * " đến ngày " + Utils.convertDateToDisplay(tDate) + " của phòng " + dept;
-			 * }else if (id > 0 && dept.equalsIgnoreCase("all")) { fileName = fileName +
-			 * " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua " + eName +
-			 * ".pdf"; title = title + " từ ngày " + Utils.convertDateToDisplay(fDate) +
-			 * " đến ngày " + Utils.convertDateToDisplay(tDate) + " của " + eName; }else {
-			 * fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore +
-			 * " cua tat ca cac phong ban.pdf"; title = title + " từ ngày " +
-			 * Utils.convertDateToDisplay(fDate) + " đến ngày " +
-			 * Utils.convertDateToDisplay(tDate) + " của tất cả các phòng ban"; }
-			 */
 			
 			PdfWriter.getInstance(document, new FileOutputStream(dir + "/" + fileName));
 			BaseFont bf = BaseFont.createFont(fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 			Font fontB = new Font(bf, 18);
-			//Font fontT = new Font(bf, 16);
 			Font font = new Font(bf, 14);
 			document.open();
 
@@ -1694,14 +1711,19 @@ public class TaskController {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = new Date();
 			String currentDate = dateFormat.format(date);
-			document.add(new Paragraph(title, fontB));
+			document.add(new Paragraph("                       " + title, fontB));
 			document.add(new Paragraph("                       ", font));
 			document.add(new Paragraph("                       ", font));
 			document.add(table);
 			document.add(new Paragraph("                       ", font));
-			document.add(new Paragraph("                       Ngày thống kê: "
-							+ Utils.convertDateToDisplay(currentDate),
-					font));
+			document.add(new Paragraph(
+					"                                                                                                                                           Ngày thống kê: "
+							+ Utils.convertDateToDisplay(currentDate),fontB));
+			document.add(new Paragraph(
+					"                                                                                                                                           Người thống kê ",fontB));
+			document.add(new Paragraph("                       ", font));
+			document.add(new Paragraph(
+					"                                                                                                                                           " + taskReportForm.getSender(),	fontB));
 	
 			document.close();
 			SendReportForm sendReportForm = new SendReportForm();
@@ -1863,9 +1885,22 @@ public class TaskController {
 			@RequestParam(required = false, value = "eId") String eId, 			
 			@RequestParam(required = false, value = "dept") String dept) throws Exception {
 		try {
-			List<TaskSummay> listTaskSummary = new ArrayList<TaskSummay>();
+			List<TaskSummay> listTaskSummary = new ArrayList<TaskSummay>();			
 			ReportForm taskReportForm = new ReportForm();
-
+			
+			// inject from Login account
+			LoginController lc = new LoginController(); 
+			if(lc.getPrincipal() != null) {
+				String username = lc.getPrincipal();
+				log.info("Using usename = " + username);
+				if (username != null && username.length() > 0 && !username.equalsIgnoreCase("anonymousUser")) {
+					String fullName = employeeDAO.getEmployeeName(username);
+					taskReportForm.setSender(fullName);
+				}else {
+					log.info("Chua login ... ");				
+					taskReportForm.setSender("");
+				}
+			}
 			taskReportForm.setDepartment(dept);
 			
 			String fDateStore = fDate;
@@ -2100,13 +2135,14 @@ public class TaskController {
 			int rowNum = 1;
 			Row row2 = sheet.createRow(rowNum);
 			Cell cell0 = row2.createCell(2);
+			
 			CellStyle cellStyle1 = sheet.getWorkbook().createCellStyle();
 			org.apache.poi.ss.usermodel.Font font1 = sheet.getWorkbook().createFont();
 			font1.setBold(true);
 			font1.setFontHeightInPoints((short) 11);
 			cellStyle1.setFont(font1);
 			cell0.setCellStyle(cellStyle1);
-			cell0.setCellValue("Ngày thống kê: " + Utils.convertDateToDisplay(currentDate));
+			cell0.setCellValue("Ngày thống kê: " + Utils.convertDateToDisplay(currentDate) + "                     Người thống kê: " + taskReportForm.getSender());
 
 			// Generate column name
 			rowNum = 3;
