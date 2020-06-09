@@ -14,11 +14,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.idi.task.bean.Task;
+import com.idi.task.bean.TaskCategory;
 import com.idi.task.bean.TaskComment;
 import com.idi.task.bean.TaskSummay;
 import com.idi.task.common.PropertiesManager;
 import com.idi.task.form.ReportForm;
 import com.idi.task.mapper.MailListMapping;
+import com.idi.task.mapper.TaskCategoryMapper;
 import com.idi.task.mapper.TaskCommentMapper;
 import com.idi.task.mapper.TaskMapper;
 import com.idi.task.mapper.TaskSummayMapper;
@@ -62,6 +64,23 @@ public class TaskDAO extends JdbcDaoSupport {
 	}
 	
 	/**
+	 * Get list Task type category from DB
+	 * 
+	 * @return List of Task category
+	 * @throws Exception
+	 */
+	public List<TaskCategory> getListTaskTypeCalegory() {
+
+		String sql = properties.getProperty("GET_TASK_CATEGORY").toString();
+		log.info("GET_TASK_CATEGORY query: " + sql);
+		TaskCategoryMapper mapper = new TaskCategoryMapper();
+
+		List<TaskCategory> list = jdbcTmpl.query(sql, mapper);
+		return list;
+
+	}	
+	
+	/**
 	 * Get list Task from DB
 	 * 
 	 * @param ownerBy
@@ -77,7 +96,6 @@ public class TaskDAO extends JdbcDaoSupport {
 
 		List<Task> list = jdbcTmpl.query(sql, params, mapper);
 		return list;
-
 	}
 
 	/**
@@ -384,7 +402,7 @@ public class TaskDAO extends JdbcDaoSupport {
 		if(status != null && status.length() > 0)
 			sql = sql + " AND STATUS IN (" + status + ")";
 		
-		sql = sql + " ORDER BY T.OWNED_BY, T.TASK_NAME, T.UPDATE_TS DESC";
+		sql = sql + " ORDER BY T.TYPE DESC, T.OWNED_BY, T.TASK_NAME, T.UPDATE_TS DESC";
 
 		log.info("GET_TASKS_FOR_REPORT query: " + sql);
 
@@ -559,7 +577,6 @@ public class TaskDAO extends JdbcDaoSupport {
 		Object[] params = new Object[] { taskId };
 
 		String listIds = jdbcTmpl.queryForObject(sql, params, mapper);
-		// System.err.println(listIds);
 		return listIds;
 	}
 

@@ -29,6 +29,7 @@ public class TaskMapper implements RowMapper<Task> {
 		String dueDate = rs.getString("DUE_DATE");
 		Timestamp resolutionDate = rs.getTimestamp("RESOLUTION_DATE"); // auto not edit show only when completed
 		String type = rs.getString("TYPE");
+		String typeName = rs.getString("CATEGORY_NAME");
 		String area = rs.getString("AREA"); // viec cua phong kt , cntt hoac ns, ...
 		String priority = rs.getString("PRIORITY");
 		String status = rs.getString("STATUS");
@@ -41,7 +42,7 @@ public class TaskMapper implements RowMapper<Task> {
 		String reviewComment = rs.getString("REVIEW_COMMENT");
 
 		return new Task(taskId, taskName, createdBy, ownedBy, ownerName, secondOwned, subscriber, related, verifyBy,
-				updateId, updateTS, resolvedBy, creationDate, dueDate, resolutionDate, type, area, priority, status, 
+				updateId, updateTS, resolvedBy, creationDate, dueDate, resolutionDate, type, typeName, area, priority, status, 
 				plannedFor, timeSpent, estimate, timeSpentType, estimateTimeType, description, reviewComment);
 	}
 

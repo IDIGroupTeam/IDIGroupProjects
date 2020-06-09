@@ -29,6 +29,7 @@ public class Task implements Serializable {
 	private String dueDateConverted;
 	private Timestamp resolutionDate; // auto not edit show only when completed
 	private String type;
+	private String typeName;
 	private String area; // viec cua phong kt , cntt, ns, ...
 	private String priority;
 	private String status;
@@ -51,7 +52,7 @@ public class Task implements Serializable {
 
 	public Task(int taskId, String taskName, int createdBy, int ownedBy, String ownerName, int secondOwned, String subscriber,
 			String related, int verifyBy, int updateId, Timestamp updateTS,	int resolvedBy, Timestamp creationDate, String dueDate, 
-			Timestamp resolutionDate, String type, String area, String priority, String status, String plannedFor, 
+			Timestamp resolutionDate, String type, String typeName, String area, String priority, String status, String plannedFor, 
 			String timeSpent, String estimate, String timeSpentType, String estimateTimeType, String description, String reviewComment) {
 
 		this.taskId = taskId;
@@ -70,6 +71,7 @@ public class Task implements Serializable {
 		this.dueDate = dueDate;
 		this.resolutionDate = resolutionDate; 
 		this.type = type;
+		this.typeName = typeName;
 		this.area = area;
 		this.priority = priority;
 		this.status = status;
@@ -223,6 +225,14 @@ public class Task implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
 	}
 
 	public String getArea() {

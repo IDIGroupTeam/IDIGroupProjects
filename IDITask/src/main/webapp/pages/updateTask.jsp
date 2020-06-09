@@ -208,7 +208,7 @@
 						<tr>
 							<td bgcolor="#FAFAFA">Mã công việc:</td>
 							<td>${taskForm.taskId}</td>
-							<td nowrap="nowrap" align="right">Trạng thái:</td>
+							<td  bgcolor="#FAFAFA" nowrap="nowrap" align="right">Trạng thái:</td>
 							<td><form:select path="status" class="form-control animated">
 									<form:option value="Mới" label="Mới" />
 									<form:option value="Đang làm" label="Đang làm"
@@ -219,17 +219,21 @@
 									<form:option value="Chờ đánh giá" label="Chờ đánh giá"
 										style="color:navy" />
 									<form:option value="Đã xong" label="Đã xong" style="color:blue" />
-								</form:select></td>
-							<c:if test="${taskForm.resolvedBy > 0}">
-								<td>
-							 		Sác nhận bởi: ${taskForm.resolvedByName}
-							 	</td>	
-							</c:if>	
+								</form:select></td>							
+						</tr>
+						<tr>
+							<td bgcolor="#FAFAFA">Nhóm/loại việc:(*)</td>
+							<td colspan="3">
+								<form:select path="type" class="form-control animated">
+									<form:option value="" label="-Chọn nhóm/loại công việc-" />
+									<form:options items="${taskCategoryMap}" />
+								</form:select>
+							</td>							
 						</tr>
 						<tr>
 							<td bgcolor="#FAFAFA">Tên việc:(*)</td>
 							<c:if test="${taskForm.resolvedBy > 0}">
-								<td colspan="4"><form:input path="taskName"
+								<td colspan="3"><form:input path="taskName"
 									required="required" size="110" class="form-control animated" /></td>
 							</c:if>		
 							<c:if test="${taskForm.resolvedBy == 0}">
@@ -237,12 +241,6 @@
 									required="required" size="110" class="form-control animated" /></td>
 							</c:if>	
 						</tr>
-					</tbody>
-				</table>
-
-				<br />
-				<table class="table table-bordered">
-					<tbody>
 						<tr>
 							<td bgcolor="#FAFAFA">Công việc thuộc:</td>
 							<td><form:select path="area" class="form-control animated">
@@ -366,7 +364,9 @@
 									</c:forEach>
 								</form:select></td>
 							<td bgcolor="#FAFAFA"><c:if test="${taskForm.resolvedBy > 0}">Ngày làm xong:</c:if></td>
-							<td><c:if test="${taskForm.resolvedBy > 0}"> ${taskForm.resolutionDate}</c:if></td>
+							<td><c:if test="${taskForm.resolvedBy > 0}"> ${taskForm.resolutionDate} &nbsp;&nbsp; ==> Xác nhận bởi: ${taskForm.resolvedByName}					 		
+								</c:if>
+							</td>
 						</tr>
 						<%--<tr>
 								<td bgcolor="#FAFAFA">Những người liên quan:</td>
@@ -515,7 +515,7 @@
 										onclick="javascript:saveTasksRelated()">Lưu</button>
 								</td>
 							</c:if>
-							<td colspan="3">Thêm công việc liên quan: Nhập mã/tên/người
+							<td colspan="4">Thêm công việc liên quan: Nhập mã/tên/người
 								làm/trạng thái/mã phòng/kế hoạch cho tháng</td>
 							<td><form:input path="searchValue" required="required"
 									class="form-control" /></td>
@@ -531,6 +531,7 @@
 									onclick="toggleAll(this)" id="chkBoxAll" />
 								</th>
 								<th>Mã cv</th>
+								<th>Nhóm/loại công việc</th>
 								<th>Tên công việc</th>
 								<th>Người làm</th>
 								<th>Trạng thái</th>
@@ -544,6 +545,7 @@
 										name="taskIds" value="<c:out value='${task.taskId}'/>"
 										onclick="javascript: check(this)" /></td>
 									<td>${task.taskId}</td>
+									<td nowrap="nowrap">${task.typeName}</td>
 									<td><a
 										href="/IDITask/editTask?tab=1&taskId=${task.taskId}">${task.taskName}</a></td>
 									<c:if test="${task.ownedBy == 0}">
@@ -570,8 +572,9 @@
 				</c:if>
 				<c:if test="${tasksRelated != null}">
 					<tr>
-						<th>Bỏ lq</th>
+						<th>Bỏ liên quan</th>
 						<th>Mã cv</th>
+						<th>Nhóm/loại công việc</th>
 						<th>Tên công việc</th>
 						<th>Người làm</th>
 						<th>Trạng thái</th>
@@ -583,6 +586,7 @@
 								href="/IDITask/removeTaskRelated?tab=3&taskIdRemove=${task.taskId}&taskId=${taskForm.taskId}"><button
 										class="small" style="background-color: orange;">Bỏ</button></a></td>
 							<td>${task.taskId}</td>
+							<td nowrap="nowrap">${task.typeName}</td>
 							<td><a href="/IDITask/editTask?tab=1&taskId=${task.taskId}">${task.taskName}</a></td>
 							<c:if test="${task.ownedBy == 0}">
 								<td>Chưa giao cho ai</td>

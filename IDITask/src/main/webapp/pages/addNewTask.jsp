@@ -118,7 +118,16 @@
 				</tr>
 			</table>
 			<table class="table">
-				<tbody>
+				<tbody>		
+					<tr>
+						<td bgcolor="#FAFAFA">Nhóm/loại công việc:(*)</td>
+						<td colspan="3">
+							<form:select path="type" class="form-control animated">
+								<form:option value="" label="-Chọn nhóm/loại công việc-" />
+								<form:options items="${taskCategoryMap}" />
+							</form:select>
+						</td>							
+					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Tên việc:(*)</td>
 						<td colspan="3"><form:input path="taskName"

@@ -233,6 +233,7 @@ tr:nth-child(even) {
 		<table class="table table-striped">
 			<tr>
 				<th nowrap="nowrap">Mã cv</th>
+				<th>Nhóm/loại công việc</th>
 				<th>Tên công việc</th>
 				<th>Người làm</th>
 				<th>Phòng</th>			
@@ -273,6 +274,7 @@ tr:nth-child(even) {
 				    <c:when test="${overDate == 'yes'}">
 				       	<tr>
 							<td>${task.taskId}</td>
+							<td nowrap="nowrap">${task.typeName}</td>
 							<td><a href="/IDITask/editTask?tab=1&taskId=${task.taskId}">${task.taskName}</a></td>					
 							<c:if test="${task.ownedBy == 0}">
 								<td nowrap="nowrap">Chưa giao cho ai</td>
@@ -292,6 +294,7 @@ tr:nth-child(even) {
 				    <c:otherwise>
 				       	<tr>
 							<td>${task.taskId}</td>
+							<td nowrap="nowrap">${task.typeName}</td>
 							<td><a href="/IDITask/editTask?tab=1&taskId=${task.taskId}">${task.taskName}</a></td>					
 							<c:if test="${task.ownedBy == 0}">
 								<td nowrap="nowrap">Chưa giao cho ai</td>

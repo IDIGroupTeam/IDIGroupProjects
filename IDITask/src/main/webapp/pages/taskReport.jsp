@@ -93,10 +93,11 @@ tr:nth-child(even) {
 		<br/>
 	
 		<table class="table table-striped">
-			<tr><td colspan="11"><b><i>Kết quả thực hiện:</i></b></td></tr>
+			<tr><td colspan="12"><b><i>Kết quả thực hiện:</i></b></td></tr>
 			<tr>
 				<th title="Check để loại bỏ trong báo cáo">Bỏ</th>
 				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Mã việc &nbsp;<form:checkbox path="idCheck" class="form-check-input" value="Y" id="idCheck"/></th>
+				<th>Nhóm/loại công việc</th>
 				<th>Tên việc</th>
 				<th title="Check để thêm cột này vào báo cáo">Mô tả &nbsp;<form:checkbox path="desCheck" value="Y" class="form-check-input" id="desCheck"/></th>
 				<th>Người làm</th>
@@ -111,6 +112,7 @@ tr:nth-child(even) {
 				<tr>
 					<td title="Check để loại bỏ dòng này trong báo cáo"><form:checkbox path="unSelect" class="form-check-input" value="${task.taskId}" id="unSelect"/></td>
 					<td>${task.taskId}</td>
+					<td nowrap="nowrap">${task.typeName}</td>
 					<td>${task.taskName}</td>
 					<td>${task.description}</td>
 					<c:if test="${task.ownedBy == 0}">
@@ -131,10 +133,11 @@ tr:nth-child(even) {
 			</table>
 			
 			<table  class="table table-striped">
-			<tr><td colspan="11"><b><i>Kế hoạch:</i></b></td></tr>
+			<tr><td colspan="12"><b><i>Kế hoạch:</i></b></td></tr>
 			<tr>
 				<th title="Check để loại bỏ trong báo cáo">Bỏ</th>
 				<th nowrap="nowrap" title="Check để thêm cột này vào báo cáo">Mã việc </th>
+				<th>Nhóm/loại công việc</th>
 				<th>Tên việc</th>
 				<th title="Check để thêm cột này vào báo cáo">Mô tả </th>
 				<th>Người làm</th>
@@ -149,6 +152,7 @@ tr:nth-child(even) {
 				<tr>
 					<td  title="Check để loại bỏ dòng này trong báo cáo"><form:checkbox path="unSelected" class="form-check-input" value="${taskNext.taskId}" id="unSelect"/></td>
 					<td>${taskNext.taskId}</td>
+					<td nowrap="nowrap">${taskNext.typeName}</td>
 					<td>${taskNext.taskName}</td>
 					<td>${taskNext.description}</td>
 					<c:if test="${taskNext.ownedBy == 0}">
