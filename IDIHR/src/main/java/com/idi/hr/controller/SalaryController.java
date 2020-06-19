@@ -421,8 +421,10 @@ public class SalaryController {
 			final RedirectAttributes redirectAttributes) {
 		try {
 			// System.err.println(salaryDetail.getMonth());
+			//tinh/xac dinh luong co ban
 			Float s = null;
 			if (salaryDetail.getExchangeRate() != null && salaryDetail.getExchangeRate().length() > 0) {
+				//cho t/h tinh luong theo ngoai te
 				s = Float.valueOf(salaryDetail.getSalary()) * Float.valueOf(salaryDetail.getExchangeRate());
 				salaryDetail.setBasicSalary(String.valueOf(s));
 			} else if (s == null)
@@ -1004,13 +1006,18 @@ public class SalaryController {
 		try {
 			// System.err.println(salaryDetail.getSalary());
 			Float s = null;
-			if (salaryDetail.getExchangeRate() != null && salaryDetail.getExchangeRate().length() > 0) {
-				s = Float.valueOf(salaryDetail.getSalary()) * Float.valueOf(salaryDetail.getExchangeRate());
-				salaryDetail.setBasicSalary(String.valueOf(s));
-			} else if (s == null)
-				s = Float.valueOf(salaryDetail.getSalary());
-			/// System.err.println(s);
-
+			//vi la update nen chck de lay luong co ban cu			
+			if(salaryDetail.getBasicSalary() != null && salaryDetail.getBasicSalary().trim().length()>0) {
+				s = Float.valueOf(salaryDetail.getBasicSalary());
+			}else {
+				//binh thuong t/h nay se ko xay ra --> care cho t/h data cu co van de
+				if (salaryDetail.getExchangeRate() != null && salaryDetail.getExchangeRate().length() > 0) {
+					s = Float.valueOf(salaryDetail.getSalary()) * Float.valueOf(salaryDetail.getExchangeRate());
+					salaryDetail.setBasicSalary(String.valueOf(s));
+				} else if (s == null)
+					s = Float.valueOf(salaryDetail.getSalary());
+				/// System.err.println(s);
+			}
 			WorkingDay workingDay = null;
 			int month = salaryDetail.getMonth();
 			int year = salaryDetail.getYear();
@@ -1082,9 +1089,10 @@ public class SalaryController {
 						* Float.parseFloat(salaryDetail.getPercentCompanyPay()) / 100));
 			
 			// update ... lay salary o bang salary info sang bang salary detail lam basic salary
-			if (salaryDetail.getBasicSalary() == null) {
-				salaryDetail.setBasicSalary(String.valueOf(s));
-			}
+			//-->vi la update nen se ko can
+			//if (salaryDetail.getBasicSalary() == null) {
+			//	salaryDetail.setBasicSalary(String.valueOf(s));
+			//}
 
 			model.addAttribute("salaryPerHour", salaryPerHour);
 			model.addAttribute("employeeId", salaryDetail.getEmployeeId());

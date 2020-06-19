@@ -28,6 +28,10 @@
 		moneyConvert("other");
 		moneyConvert("arrears");
 	});
+	
+	function ConfirmSave() {
+		  return confirm("Bạn có muốn lưu không?");
+	}
 </script>
 </head>
 <body>
@@ -40,7 +44,7 @@
 	<br/><br/>
 	<form:form modelAttribute="salaryDetail" method="POST"
 		action="updateSalaryDetail" enctype="multipart/form-data">
-		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Sửa và Lưu" name="Sửa và Lưu" /><br/><br/>
+		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Sửa và Lưu" name="Sửa và Lưu" Onclick="return ConfirmSave()"/><br/><br/>
 		<c:if test="${not empty workDayDefine}">
 			<div class="alert alert-warning">
 	     		${workDayDefine}
@@ -62,7 +66,7 @@
 				<form:hidden path="salaryInsurance"/>
 				<form:hidden path="percentEmployeePay"/>
 				<form:hidden path="percentCompanyPay"/>
-				
+				<form:hidden path="basicSalary"/>
 				<tbody>
 					<tr>
 						<td colspan="6" nowrap="nowrap" bgcolor="#E6E6E6">Thông tin nhân viên</td>
@@ -131,12 +135,12 @@
 						</c:if>
 						<c:if test="${empty salaryDetail.basicSalary}"> --%>
 						<td>
-							<fmt:formatNumber value="${salaryDetail.salary}" /> ${moneyType}
+							<fmt:formatNumber value="${salaryDetail.basicSalary}" /><%--  ${moneyType} --%>
 						</td>
 						<%-- </c:if>	 --%>		
 						<c:if test="${moneyType != 'VND'}">
-							<td bgcolor="#FAFAFA">tỷ giá:</td>
-							<td><form:input path="exchangeRate" class="form-control animated" maxlength="16" min="0" step="0.01" type="number" /></td>
+							<td bgcolor="#FAFAFA">Đã nhân với tỷ giá:</td>
+							<td>${salaryDetail.exchangeRate}</td>
 						</c:if>										
 						<c:if test="${moneyType == 'VND'}">
 							<td bgcolor="#FAFAFA"></td>
@@ -149,7 +153,7 @@
 						<c:if test="${empty salaryDetail.salaryInsurance}">
 							<td><i>Không tham gia BHXH</i></td> 
 						</c:if>		
-					 
+						<td></td><td></td>
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Bắt buộc phải > hoăc = 0">Hệ số hoàn thành cv (%):</td>
@@ -269,7 +273,7 @@
 				</tbody>
 			</table>
 		</div>
-		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Sửa và Lưu" name="Sửa và Lưu" /><br/>
+		<input class="btn btn-lg btn-primary btn-sm" type="submit" value="Sửa và Lưu" name="Sửa và Lưu" Onclick="return ConfirmSave()"/><br/>
 	</form:form>
 	<br/>
 	<a href="${pageContext.request.contextPath}/salary/listSalaryDetail?employeeId=${employeeId}">
