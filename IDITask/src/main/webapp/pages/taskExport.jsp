@@ -46,7 +46,8 @@ tr:nth-child(even) {
 	</c:if>
 	<c:if test="${empty isOpen}">
 		<div class="alert alert-success">
-			Báo cáo công việc đã được export ra file PDF và lưu tại thư mục ${path} 
+			Báo cáo công việc đã được export ra file PDF và lưu tại thư mục ${path}. 		
+			<a href="${pageContext.request.contextPath}/viewPDF?fileName=${path}${fileName}" target="_blank"><button class="btn btn-lg btn-primary btn-sm">Xem file</button></a>			
 		</div>
 	</c:if>
 	<a href="${url}/sendReportForm?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${reportForm.employeeName}&dept=${reportForm.department}&ids=${reportForm.ids}"><button class="btn btn-primary btn-sm">Gửi báo cáo</button></a>

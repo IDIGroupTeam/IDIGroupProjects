@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -84,6 +85,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -2124,16 +2126,16 @@ public class TaskController {
 			String title = "IDI-Thống kê khối lượng công việc";	
 			
 			if (eId != null && eId.trim().length() > 0 && !dept.equalsIgnoreCase("all")) {
-				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot-nhieu nguoi phong " + dept + ".pdf";
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot-nhieu nguoi phong " + dept;
 				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một/nhiều người phòng " + dept;
 			}else if ((eId == null || eId.trim().length() == 0) && !dept.equalsIgnoreCase("all")) {
-				fileName = "Phong " + dept + "-Thong ke khoi luong cong viec tu ngay " + fDateStore + " den ngay " + tDateStore + ".pdf";
+				fileName = "Phong " + dept + "-Thong ke khoi luong cong viec tu ngay " + fDateStore + " den ngay " + tDateStore;
 				title = "Phòng " + dept + "-Thống kê khối lượng công việc từ ngày " + fDate + " đến ngày " + tDate;
 			}else if (eId != null && eId.trim().length() > 0 && dept.equalsIgnoreCase("all")) {
-				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot-nhieu nguoi.pdf";
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua mot-nhieu nguoi";
 				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của một/nhiều người";
 			}else {
-				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua tat ca cac phong ban" + ".pdf";
+				fileName = fileName + " tu ngay " + fDateStore + " den ngay " + tDateStore + " cua tat ca cac phong ban";
 				title = title + " từ ngày " + fDate + " đến ngày " + tDate + " của tất cả các phòng ban";
 			}
 			
@@ -2469,7 +2471,43 @@ public class TaskController {
 		
 		return "sentReport";
 	}	
+	
+	@RequestMapping(value = "/viewPDF", method = RequestMethod.GET)
+	public void viewPDF(HttpServletRequest req, HttpServletResponse res, @RequestParam("fileName") String fileName, Model model) {
+		try {
+		    byte[] bytes = Files.readAllBytes(new File(fileName).toPath());			
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/pdf");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=" + fileName);
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
+	@RequestMapping(value = "/viewExcel", method = RequestMethod.GET)
+	public void viewExcel(HttpServletRequest req, HttpServletResponse res, @RequestParam("fileName") String fileName, Model model) {
+		try {
+		    byte[] bytes = Files.readAllBytes(new File(fileName).toPath());			
+			res.reset();
+			res.resetBuffer();
+			res.setContentType("application/Excel");
+			res.setContentLength(bytes.length);
+			res.setHeader("Content-disposition", "inline; filename=" + fileName);
+			ServletOutputStream out = res.getOutputStream();
+			out.write(bytes, 0, bytes.length);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@RequestMapping("/exportToPDF")
 	public String getPDF(Model model, @ModelAttribute("taskReportForm") @Validated ReportForm taskReportForm)
 			throws Exception {
@@ -2661,19 +2699,19 @@ public class TaskController {
 			document.add(new Paragraph("V) NHẬN XÉT CỦA CẤP QUẢN LÝ TRỰC TIẾP ", fontB));
 			document.add(new Paragraph("                       ", font));
 			document.add(new Paragraph(
-					"                                                                                                                                  Ngày tạo báo cáo: "
+					"                                                                                                                                                                                                              Ngày tạo báo cáo: "
 							+ Utils.convertDateToDisplay(currentDate),fontB));
 			document.add(new Paragraph(
-					"                                                                                                                                  Người báo cáo ",fontB));
-			document.add(new Paragraph("                       ", font));
+					"                                                                                                                                                                                                              Người báo cáo ",fontB));
 			document.add(new Paragraph("                       ", font));
 			document.add(new Paragraph(
-					"                                                                                                                                  " + taskReportForm.getSender(),	fontB));
+					"                                                                                                                                                                                                              " + taskReportForm.getSender(),	fontB));
 			document.close();
 			taskReportForm.setFromDate(fDate);
 			taskReportForm.setToDate(tDate);
 			model.addAttribute("reportForm", taskReportForm);
 			model.addAttribute("path", path);
+			model.addAttribute("fileName", fileName);
 			model.addAttribute("formTitle", "Export báo cáo công việc");
 		} catch (Exception e) {
 			model.addAttribute("isOpen", "Yes");

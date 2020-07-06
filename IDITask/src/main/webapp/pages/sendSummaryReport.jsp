@@ -55,17 +55,25 @@ $(function(){
 	<a href="${url}/prepareReport?fDate=${reportForm.fromDate}&tDate=${reportForm.toDate}&eName=${tasks[0].ownerName}&dept=${reportForm.department}"><button
 			class="btn btn-primary btn-sm">Quay lại lựa chọn thông tin cần
 			thống kê khối lượng công việc</button></a>		
-	<form:form action="sendSummaryReport" modelAttribute="sendReportForm"
-		enctype="multipart/form-data" method="POST" >
-		<br />
+	<br /><br />
 		<c:if test="${not empty message}">
-			<div class="alert alert-success">${message}</div>
+			<div class="alert alert-success">${message}. 
+			<c:if test="${message.contains('.pdf')}">
+				<a href="${pageContext.request.contextPath}/viewPDF?fileName=${path}${sendReportForm.fileName}" target="_blank"><button class="btn btn-lg btn-primary btn-sm"> Xem file</button></a>	
+			</c:if>
+			<c:if test="${message.contains('.xlsx')}">
+				<a href="${pageContext.request.contextPath}/viewExcel?fileName=${path}${sendReportForm.fileName}" target="_blank"><button class="btn btn-lg btn-primary btn-sm"> Download</button></a>	
+			</c:if>
+			</div>
 		</c:if>
 		
 		<c:if test="${not empty warning}">
 			<div class="alert alert-warning">${warning}</div>
 		</c:if>
 
+	<form:form action="sendSummaryReport" modelAttribute="sendReportForm"
+		enctype="multipart/form-data" method="POST" >
+		
 		<form:input type="hidden" path="fileName" value="${sendReportForm.fileName}" />
 		<%-- <form:input type="hidden" path="subject" value="${sendReportForm.subject}" /> --%>
 		<table class="table table-bordered table-hover">
