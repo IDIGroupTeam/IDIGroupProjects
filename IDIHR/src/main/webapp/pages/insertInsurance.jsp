@@ -100,7 +100,7 @@
 					</tr>
 					<tr>
 						<td bgcolor="#EEEEEE">Số thẻ BHYT (*):</td>
-						<td><form:input path="hInsuNo" required="required" maxlength="12" class="form-control animated"/></td>
+						<td><form:input path="hInsuNo" required="required" maxlength="32" class="form-control animated"/></td>
 						<td bgcolor="#EEEEEE">Nơi ĐK khám chữa bệnh:</td>
 						<td><form:input path="hInsuPlace" maxlength="64" class="form-control animated"/></td>
 					<tr>
