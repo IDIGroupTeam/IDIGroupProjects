@@ -710,7 +710,7 @@ public class SalaryController {
 					BodyPart attach = new MimeBodyPart();
 					DataSource source = new FileDataSource(path + sendForm.getFileName() + ".pdf");
 					attach.setDataHandler(new DataHandler(source));
-					attach.setFileName(path + sendForm.getFileName() + ".pdf");
+					attach.setFileName(sendForm.getFileName() + ".pdf");
 
 					multipart.addBodyPart(attach);
 					BodyPart content = new MimeBodyPart();

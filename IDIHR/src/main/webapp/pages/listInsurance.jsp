@@ -186,7 +186,9 @@ tr:nth-child(even) {
 	</form:form>
 	
 	<div class="table-responsive">
-		
+		<c:if test="${not empty message}">
+			<div class="alert alert-success">${message}</div>
+		</c:if>
 		<table class="table table-striped">
 			<tr>
 				<th>Mã NV</th>
@@ -216,10 +218,7 @@ tr:nth-child(even) {
 					<td><a href="editInsurance?socicalInsuNo=${insurance.socicalInsuNo}">Sửa</a></td>
 				</tr>
 			</c:forEach>
-		</table>
-		<c:if test="${not empty message}">
-			<div class="alert alert-success">${message}</div>
-		</c:if>
+		</table>		
 	</div>
 </body>
 </html>

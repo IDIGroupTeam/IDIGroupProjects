@@ -31,14 +31,18 @@ public class LoginController {
 	private UserRoleDAOImpl userRoleDAO;
 
 	@RequestMapping(value = { "/login" }, method = RequestMethod.GET)
-	public String login(@RequestParam(value = "error", required = false) final String error, Model model) {
-		String strMsg = "Xin điền thông tin chi tiết của bạn để truy cập";
-		model.addAttribute("message", strMsg);
-		logger.info("====================================================");
-		logger.info("In login controller: " + this.getClass().getName());
-		if (error != null) {
-			strMsg = strMsg + "/n" + "Bạn nên xem lại tên truy cập hay mật khẩu!";
+	public String login(@RequestParam(value = "error", required = false) final String error, Model model) throws Exception {
+		try {
+			String strMsg = "Xin điền thông tin chi tiết của bạn để truy cập";
 			model.addAttribute("message", strMsg);
+			logger.info("====================================================");
+			logger.info("In login controller: " + this.getClass().getName());
+			if (error != null) {
+				strMsg = strMsg + "/n" + "Bạn nên xem lại tên truy cập hay mật khẩu!";
+				model.addAttribute("message", strMsg);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 		return "login";
 	}
@@ -50,7 +54,7 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public String logoutSuccessfulPage(Model model, HttpServletRequest request, HttpServletResponse response) {
+	public String logoutSuccessfulPage(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.info(" in logout controller");
 		model.addAttribute("title", "Logout");
 		model.addAttribute("message", "Dang Xuat");
@@ -62,7 +66,7 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = "/userInfo", method = RequestMethod.GET)
-	public String userInfo(Model model, Principal principal) {
+	public String userInfo(Model model, Principal principal) throws Exception {
 		logger.info("in userinfo controller ");
 		String userName = principal.getName();
 		String strPrin = principal.toString();
@@ -102,7 +106,7 @@ public class LoginController {
 	 */
 
 	@RequestMapping(value = "/403", method = RequestMethod.GET)
-	public String accessDenied(Model model, Principal principal) {
+	public String accessDenied(Model model, Principal principal) throws Exception {
 		logger.info("in 403 controller->>" + principal.getName());
 		if (principal != null) {
 			model.addAttribute("message",
@@ -116,12 +120,12 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = "/Access_Denied", method = RequestMethod.GET)
-	public String accessDeniedPage(ModelMap model) {
+	public String accessDeniedPage(ModelMap model) throws Exception{
 		model.addAttribute("user", getPrincipal());
 		return "accessDenied";
 	}
 
-	public String getPrincipal() {
+	public String getPrincipal() throws Exception{
 		String userName = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

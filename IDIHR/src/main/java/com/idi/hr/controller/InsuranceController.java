@@ -167,9 +167,9 @@ public class InsuranceController {
 	public String addInsurance(Model model, @ModelAttribute("insuranceForm") @Validated Insurance sInsurance,
 			final RedirectAttributes redirectAttributes) {
 		try {
-			System.err.println("insuranceForm: " + sInsurance.getEmployeeName() + sInsurance.getSocicalInsuNo());
+			//System.err.println("insuranceForm: " + sInsurance.getSocicalInsuNo());
 			if(insuranceDAO.getInsurance(sInsurance.getSocicalInsuNo()).getEmployeeId() > 0) {
-				System.err.println("Trung so so bhxh roi: " + sInsurance.getSocicalInsuNo());
+				//System.err.println("Trung so so bhxh roi: " + sInsurance.getSocicalInsuNo());
 				String duplicate = "Số sổ bhxh này đã đc xử dụng cho " + insuranceDAO.getInsurance(sInsurance.getSocicalInsuNo()).getEmployeeName() + ". Vui lòng kiểm tra lại";
 				return insuranceForm(model, sInsurance, duplicate, "insert");
 			}else {
@@ -210,7 +210,7 @@ public class InsuranceController {
 		Map<String, String> employeeMap = null;
 		
 		String actionform = "";
-		System.err.println(duplicate);
+		//System.err.println(duplicate);
 		if (insurance.getSocicalInsuNo() != null && type.equalsIgnoreCase("update")) {
 			employeeMap = this.allEmployees();
 			model.addAttribute("formTitle", "Sửa thông tin bảo hiểm ");		
@@ -236,7 +236,7 @@ public class InsuranceController {
 	}
 
 	@RequestMapping("/insurance/viewInsurance")
-	public String viewInsurance(Model model, @RequestParam("socicalInsuNo") String socicalInsuNo) {
+	public String viewInsurance(Model model, @RequestParam("socicalInsuNo") String socicalInsuNo) throws Exception{
 		Insurance insurance = null;
 		if (socicalInsuNo != null) {
 			insurance = this.insuranceDAO.getInsurance(socicalInsuNo);
@@ -256,7 +256,7 @@ public class InsuranceController {
 	}
 
 	@RequestMapping("/insurance/editInsurance")
-	public String editSocialInsurance(Model model, @RequestParam("socicalInsuNo") String socicalInsuNo) {
+	public String editSocialInsurance(Model model, @RequestParam("socicalInsuNo") String socicalInsuNo) throws Exception{
 		Insurance insurance = null;
 		if (socicalInsuNo != null) {
 			insurance = this.insuranceDAO.getInsurance(socicalInsuNo);
