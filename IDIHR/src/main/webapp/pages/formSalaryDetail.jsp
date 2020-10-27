@@ -197,10 +197,33 @@
 						<td bgcolor="#FAFAFA" nowrap="nowrap" title="Yêu cầu định nghĩa số ngày công chuẩn cho tháng này trước">Làm thêm ngày lễ (h):</td>
 						<td><form:input path="overTimeH" maxlength="12" class="form-control animated" type="number" min="0"/></td>
 						<td nowrap="nowrap"> x <fmt:formatNumber value="${salaryPerHour}" /> x 3</td>
-						<td>= <fmt:formatNumber value="${salaryDetail.overTimeH*salaryPerHour*3}" /> </td>
-						
+						<td>= <fmt:formatNumber value="${salaryDetail.overTimeH*salaryPerHour*3}" /> </td>						
 						<td bgcolor="#FAFAFA" nowrap="nowrap"></td>
 						<td></td> 											
+					</tr>
+					<tr>
+						<td bgcolor="#FAFAFA">Làm thêm đêm ngày thường (h):</td>
+						<td><form:input path="overTimeNN" class="form-control animated" maxlength="12" type="number" min="0"/></td>
+						<td nowrap="nowrap"> x <fmt:formatNumber value="${salaryPerHour}" type="number"/> x 1.8</td>
+						<td>= <fmt:formatNumber value="${salaryDetail.overTimeNN*salaryPerHour*1.8}" /> </td>
+						<td></td>
+						<td></td>						
+					</tr>
+					<tr>
+						<td bgcolor="#FAFAFA">Làm thêm đêm cuối tuần (h):</td>
+						<td><form:input path="overTimeWN" class="form-control animated" maxlength="12" type="number" min="0"/></td>
+						<td nowrap="nowrap"> x <fmt:formatNumber value="${salaryPerHour}" type="number"/> x 2.3</td>
+						<td>= <fmt:formatNumber value="${salaryDetail.overTimeWN*salaryPerHour*2.3}" /> </td>
+						<td></td>
+						<td></td>						
+					</tr>
+					<tr>
+						<td bgcolor="#FAFAFA">Làm thêm đêm ngày lễ (h):</td>
+						<td><form:input path="overTimeHN" class="form-control animated" maxlength="12" type="number" min="0"/></td>
+						<td nowrap="nowrap"> x <fmt:formatNumber value="${salaryPerHour}" /> x 3.3</td>
+						<td>= <fmt:formatNumber value="${salaryDetail.overTimeHN*salaryPerHour*3.3}" /> </td>
+						<td></td>
+						<td></td>						
 					</tr>
 					<tr>
 						<td bgcolor="#FAFAFA">Khác:</td>

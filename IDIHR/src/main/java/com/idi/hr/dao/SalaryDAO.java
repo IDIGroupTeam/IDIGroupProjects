@@ -287,6 +287,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 				finalSalary = finalSalary + Float.valueOf(salaryDetail.getBounus().replaceAll(",", ""));
 			if (salaryDetail.getSubsidize() != null && salaryDetail.getSubsidize().length() > 0)
 				finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubsidize().replaceAll(",", ""));
+			
 			if (salaryDetail.getOverTimeN() != null && salaryDetail.getOverTimeN().length() > 0) {
 				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeN()) * (float) 1.5;
 			}
@@ -296,6 +297,17 @@ public class SalaryDAO extends JdbcDaoSupport {
 			if (salaryDetail.getOverTimeH() != null && salaryDetail.getOverTimeH().length() > 0) {
 				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeH()) * 3;
 			}
+			
+			if (salaryDetail.getOverTimeNN() != null && salaryDetail.getOverTimeNN().length() > 0) {
+				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeNN()) * (float) 1.8;
+			}
+			if (salaryDetail.getOverTimeWN() != null && salaryDetail.getOverTimeWN().length() > 0) {
+				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeWN()) * (float) 2.3;
+			}
+			if (salaryDetail.getOverTimeHN() != null && salaryDetail.getOverTimeHN().length() > 0) {
+				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeHN()) * (float) 3.3;
+			}
+			
 			if (salaryDetail.getOther() != null && salaryDetail.getOther().length() > 0) {
 				finalSalary = finalSalary + Float.valueOf(salaryDetail.getOther().replaceAll(",", ""));
 			}
@@ -327,7 +339,8 @@ public class SalaryDAO extends JdbcDaoSupport {
 				salaryDetail.setArrears(salaryDetail.getArrears().replaceAll(",", ""));
 			//update ... lay salary o bang salary info sang bang salary detail lam basic salary
 			Object[] params = new Object[] { salaryDetail.getEmployeeId(), salaryDetail.getOverTimeN(),
-					salaryDetail.getOverTimeW(), salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(),
+					salaryDetail.getOverTimeW(), salaryDetail.getOverTimeH(), salaryDetail.getOverTimeNN(),
+					salaryDetail.getOverTimeWN(), salaryDetail.getOverTimeHN(), salaryDetail.getOverTimeSalary(),
 					salaryDetail.getBounus(), salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(),
 					salaryDetail.getTaxPersonal(), salaryDetail.getBasicSalary(), salaryDetail.getExchangeRate(),
 					salaryDetail.getFinalSalary(), salaryDetail.getMonth(), salaryDetail.getYear(), salaryDetail.getDesc(), 
@@ -337,6 +350,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 
 		} catch (Exception e) {
 			try {
+				e.printStackTrace();
 				updateSalaryDetail(salaryDetail);
 			} catch (Exception ex) {
 				log.error(ex, ex);
@@ -378,6 +392,7 @@ public class SalaryDAO extends JdbcDaoSupport {
 				finalSalary = finalSalary + Float.valueOf(salaryDetail.getBounus().replaceAll(",", ""));
 			if (salaryDetail.getSubsidize() != null && salaryDetail.getSubsidize().length() > 0)
 				finalSalary = finalSalary + Float.valueOf(salaryDetail.getSubsidize().replaceAll(",", ""));
+			
 			if (salaryDetail.getOverTimeN() != null && salaryDetail.getOverTimeN().length() > 0) {
 				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeN()) * (float) 1.5;
 			}
@@ -387,6 +402,17 @@ public class SalaryDAO extends JdbcDaoSupport {
 			if (salaryDetail.getOverTimeH() != null && salaryDetail.getOverTimeH().length() > 0) {
 				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeH()) * 3;
 			}
+			
+			if (salaryDetail.getOverTimeNN() != null && salaryDetail.getOverTimeNN().length() > 0) {
+				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeNN()) * (float) 1.8;
+			}
+			if (salaryDetail.getOverTimeWN() != null && salaryDetail.getOverTimeWN().length() > 0) {
+				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeWN()) * (float) 2.3;
+			}
+			if (salaryDetail.getOverTimeHN() != null && salaryDetail.getOverTimeHN().length() > 0) {
+				finalSalary = finalSalary + salaryPerHour * Float.valueOf(salaryDetail.getOverTimeHN()) * (float) 3.3;
+			}
+			
 			if (salaryDetail.getOther() != null && salaryDetail.getOther().length() > 0) {
 				finalSalary = finalSalary + Float.valueOf(salaryDetail.getOther().replaceAll(",", ""));
 			}
@@ -420,7 +446,8 @@ public class SalaryDAO extends JdbcDaoSupport {
 				salaryDetail.setArrears(salaryDetail.getArrears().replaceAll(",", ""));
 			
 			Object[] params = new Object[] { salaryDetail.getOverTimeN(), salaryDetail.getOverTimeW(),
-					salaryDetail.getOverTimeH(), salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(),
+					salaryDetail.getOverTimeH(), salaryDetail.getOverTimeNN(), salaryDetail.getOverTimeWN(), 
+					salaryDetail.getOverTimeHN(), salaryDetail.getOverTimeSalary(), salaryDetail.getBounus(),
 					salaryDetail.getSubsidize(), salaryDetail.getAdvancePayed(), salaryDetail.getTaxPersonal(),
 					salaryDetail.getBasicSalary(), salaryDetail.getExchangeRate(), salaryDetail.getFinalSalary(),
 					salaryDetail.getDesc(),	salaryDetail.getPayedInsurance(), salaryDetail.getcPayedInsur(), 

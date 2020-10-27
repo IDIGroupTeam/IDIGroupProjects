@@ -492,6 +492,22 @@ public class SalaryController {
 				overTimeSalary = overTimeSalary + Float.parseFloat(overTimeH) * salaryPerHour * 3;
 				// System.err.println(overTimeSalary + " overTime H controller " + overTimeH);
 			}
+			
+			String overTimeNN = salaryDetail.getOverTimeNN();
+			if (overTimeNN != null && overTimeNN.length() > 0 && Float.parseFloat(overTimeNN) > 0) {
+				overTimeSalary = overTimeSalary + Float.parseFloat(overTimeNN) * salaryPerHour * 1.8;
+				// System.err.println(overTimeSalary + " overTime NN controller " + overTimeNN);
+			}
+			String overTimeWN = salaryDetail.getOverTimeWN();
+			if (overTimeWN != null && overTimeWN.length() > 0 && Float.parseFloat(overTimeWN) > 0) {
+				overTimeSalary = overTimeSalary + Float.parseFloat(overTimeWN) * salaryPerHour * 2.3;
+				// System.err.println(overTimeSalary + " overTime WN controller " + overTimeWN);
+			}
+			String overTimeHN = salaryDetail.getOverTimeHN();
+			if (overTimeHN != null && overTimeHN.length() > 0 && Float.parseFloat(overTimeHN) > 0) {
+				overTimeSalary = overTimeSalary + Float.parseFloat(overTimeHN) * salaryPerHour * 3.3;
+				// System.err.println(overTimeSalary + " overTime HN controller " + overTimeHN);
+			}
 
 			// update ... lay salary o bang salary info sang bang salary detail lam basic
 			// salary
@@ -770,7 +786,7 @@ public class SalaryController {
 					BodyPart attach = new MimeBodyPart();
 					DataSource source = new FileDataSource(path + sendForm.getFileName() + ".pdf");
 					attach.setDataHandler(new DataHandler(source));
-					attach.setFileName(path + sendForm.getFileName() + ".pdf");
+					attach.setFileName(sendForm.getFileName() + ".pdf");
 
 					multipart.addBodyPart(attach);
 					BodyPart content = new MimeBodyPart();
@@ -830,8 +846,11 @@ public class SalaryController {
 		float overTimeN = 0;
 		float overTimeH = 0;
 		float overTimeW = 0;
+		float overTimeNN = 0;
+		float overTimeHN = 0;
+		float overTimeWN = 0;
 		
-		for (int i = 0; i < 14; i++) {
+		for (int i = 0; i < 16; i++) {
 			if(i==1) { 
 				table.addCell(new Paragraph("Số tài khoản: ", font));
 				table.addCell(String.valueOf(salaryDetail.getBankNo()));
@@ -926,8 +945,44 @@ public class SalaryController {
 						table.addCell("");
 						table.addCell("");
 						table.addCell("");
-					}
+					}					
 				}if(i==11) {
+					table.addCell(new Paragraph("Làm thêm đêm ngày thường: ", font));
+					if(salaryDetail.getOverTimeNN() != null && salaryDetail.getOverTimeNN().length() > 0) {
+						overTimeNN = salaryDetail.getSalaryPerHour()*Float.valueOf(salaryDetail.getOverTimeNN())*(float)1.8;
+						table.addCell(salaryDetail.getOverTimeNN() + "h*" + String.format ("%,.0f", Float.valueOf(salaryDetail.getSalaryPerHour())) + "/h*1.8 = " + String.format ("%,.0f", overTimeNN));
+						table.addCell("");
+						table.addCell("");
+					}else {
+						table.addCell("");
+						table.addCell("");
+						table.addCell("");
+					}
+				}if(i==12) {
+					table.addCell(new Paragraph("Làm thêm đêm cuối tuần: ", font));
+					if(salaryDetail.getOverTimeWN() != null && salaryDetail.getOverTimeWN().length() > 0) {
+						overTimeWN = salaryDetail.getSalaryPerHour()*Float.valueOf(salaryDetail.getOverTimeWN())*(float)2.3;
+						table.addCell(salaryDetail.getOverTimeWN() + "h*" + String.format ("%,.0f", Float.valueOf(salaryDetail.getSalaryPerHour())) + "/h*2.3 = " + String.format ("%,.0f", overTimeWN));
+						table.addCell("");
+						table.addCell("");
+					}else {
+						table.addCell("");
+						table.addCell("");
+						table.addCell("");
+					}	
+				}if(i==13) {
+					table.addCell(new Paragraph("Làm thêm đêm ngày lễ: ", font));
+					if(salaryDetail.getOverTimeHN() != null && salaryDetail.getOverTimeHN().length() > 0) {
+						overTimeHN = salaryDetail.getSalaryPerHour()*Float.valueOf(salaryDetail.getOverTimeH())*(float)3.3;
+						table.addCell(salaryDetail.getOverTimeHN() + "h*" + String.format ("%,.0f", Float.valueOf(salaryDetail.getSalaryPerHour())) + "/h*3.3 = " + String.format ("%,.0f", overTimeHN));
+						table.addCell("");
+						table.addCell("");
+					}else {
+						table.addCell("");
+						table.addCell("");
+						table.addCell("");
+					}
+				}if(i==14) {
 					float other = 0;
 					if(salaryDetail.getOther() != null && salaryDetail.getOther().length() > 0)
 						other = Float.valueOf(salaryDetail.getOther());
@@ -951,11 +1006,11 @@ public class SalaryController {
 						salary = bSsalary*salaryDetail.getWorkComplete()/100;
 					
 					table.addCell(new Paragraph("Tổng thu: ", font));
-					table.addCell(String.valueOf(String.format ("%,.0f", overTimeH + overTimeN + overTimeW + other + subsidize + bounus + salary)));
+					table.addCell(String.valueOf(String.format ("%,.0f", overTimeH + overTimeN + overTimeW + overTimeHN + overTimeNN + overTimeWN + other + subsidize + bounus + salary)));
 
 					table.addCell(new Paragraph("Tổng giảm trừ: ", font));						
 					table.addCell(new Paragraph(String.valueOf(String.format ("%,.0f", arreas + tax + advance + insurance)), font));
-				}if(i==12) {
+				}if(i==15) {
 					table.addCell(new Paragraph("Lương thực nhận: ", font));
 					table.addCell(new Paragraph(String.valueOf(String.format ("%,.0f", Float.valueOf(salaryDetail.getFinalSalary()))) + " vnđ", font));
 					table.addCell("");
@@ -987,7 +1042,7 @@ public class SalaryController {
 						salary = bSsalary*salaryDetail.getWorkComplete()/100;
 
 					table.addCell(new Paragraph("Tổng thu: ", font));
-					table.addCell(String.valueOf(String.format ("%,.0f", overTimeH + overTimeN + overTimeW + other + bounus + subsidize + salary)));
+					table.addCell(String.valueOf(String.format ("%,.0f", other + bounus + subsidize + salary)));
 					table.addCell(new Paragraph("Tổng giảm trừ: ", font));
 					table.addCell(String.valueOf(String.format ("%,.0f", arreas + tax + advance + insurance)));
 				}if(i==9){
@@ -1075,6 +1130,21 @@ public class SalaryController {
 			if (overTimeH != null && overTimeH.length() > 0 && Float.parseFloat(overTimeH) > 0)
 				overTimeSalary = overTimeSalary + Float.parseFloat(overTimeH) * salaryPerHour * 3;
 
+			String overTimeNN = salaryDetail.getOverTimeNN();
+			if (overTimeNN != null && overTimeNN.length() > 0 && Float.parseFloat(overTimeNN) > 0) {
+				overTimeSalary = overTimeSalary + Float.parseFloat(overTimeNN) * salaryPerHour * 1.8;
+				// System.err.println(overTimeSalary + " overTime NN controller " + overTimeNN);
+			}
+			String overTimeWN = salaryDetail.getOverTimeWN();
+			if (overTimeWN != null && overTimeWN.length() > 0 && Float.parseFloat(overTimeWN) > 0) {
+				overTimeSalary = overTimeSalary + Float.parseFloat(overTimeWN) * salaryPerHour * 2.3;
+				// System.err.println(overTimeSalary + " overTime WN controller " + overTimeWN);
+			}
+			String overTimeHN = salaryDetail.getOverTimeHN();
+			if (overTimeHN != null && overTimeHN.length() > 0 && Float.parseFloat(overTimeHN) > 0) {
+				overTimeSalary = overTimeSalary + Float.parseFloat(overTimeHN) * salaryPerHour * 3.3;
+				// System.err.println(overTimeSalary + " overTime HN controller " + overTimeHN);
+			}
 			overTimeSalary = Math.round(overTimeSalary);
 			salaryDetail.setOverTimeSalary(String.valueOf(overTimeSalary));
 

@@ -16,6 +16,9 @@ public class SalaryDetail implements Serializable {
 	private String overTimeN;
 	private String overTimeW;
 	private String overTimeH;
+	private String overTimeNN;
+	private String overTimeWN;
+	private String overTimeHN;
 	private String overTimeSalary;
 	private float salaryPerHour;
 	private String bounus;
@@ -52,10 +55,10 @@ public class SalaryDetail implements Serializable {
 	}
 
 	public SalaryDetail(int employeeId, String basicSalary, String exchangeRate, String finalSalary, String overTimeN, String overTimeW, String overTimeH, 
-			String overTimeSalary, String bounus, String subsidize, String advancePayed, String taxPersonal, int month, int year,	
-			String description, String payedInsurance, String cPayedInsur, String fullName, String phoneNo, String bankNo, String bankName, String bankBranch,
-			String salary, String department, String jobTitle, String salaryInsurance, String percentCompanyPay, String percentEmployeePay, 
-			int workComplete, String workedDay, String other, String arrears, String payStatus) {
+			String overTimeNN, String overTimeWN, String overTimeHN, String overTimeSalary, String bounus, String subsidize, String advancePayed, 
+			String taxPersonal, int month, int year, String description, String payedInsurance, String cPayedInsur, String fullName, String phoneNo,
+			String bankNo, String bankName, String bankBranch, String salary, String department, String jobTitle, String salaryInsurance, String percentCompanyPay, 
+			String percentEmployeePay, int workComplete, String workedDay, String other, String arrears, String payStatus) {
 		
 		this.employeeId = employeeId;
 		this.finalSalary = finalSalary;
@@ -64,6 +67,9 @@ public class SalaryDetail implements Serializable {
 		this.overTimeN = overTimeN;
 		this.overTimeW = overTimeW;
 		this.overTimeH = overTimeH;
+		this.overTimeNN = overTimeNN;
+		this.overTimeWN = overTimeWN;
+		this.overTimeHN = overTimeHN;
 		this.overTimeSalary = overTimeSalary;
 		this.bounus = bounus;
 		this.subsidize = subsidize;
@@ -146,6 +152,30 @@ public class SalaryDetail implements Serializable {
 
 	public void setOverTimeH(String overTimeH) {
 		this.overTimeH = overTimeH;
+	}
+
+	public String getOverTimeNN() {
+		return overTimeNN;
+	}
+
+	public void setOverTimeNN(String overTimeNN) {
+		this.overTimeNN = overTimeNN;
+	}
+
+	public String getOverTimeWN() {
+		return overTimeWN;
+	}
+
+	public void setOverTimeWN(String overTimeWN) {
+		this.overTimeWN = overTimeWN;
+	}
+
+	public String getOverTimeHN() {
+		return overTimeHN;
+	}
+
+	public void setOverTimeHN(String overTimeHN) {
+		this.overTimeHN = overTimeHN;
 	}
 
 	public String getOverTimeSalary() {
